@@ -91,18 +91,15 @@ def main(v, tsv):
                 if mt == 'function' and m.isidentifier():
                     C.append(f'function {g}{":" if h else "."}{m}(...) end')
             if g.isidentifier():
-                (sdir / f'{g}.lua').write_text('\n'.join(C) + '\n', encoding='utf-8', newline='
-')
+                (sdir / f'{g}.lua').write_text('\n'.join(C) + '\n', encoding='utf-8', newline='\n')
     L += ['## Global functions missing from the sources and from scriptBinding.xml', '']
     L.append(', '.join(f'`{g}`' for g in sorted(absents) if absents[g] == 'function') or '—')
-    (ROOT / 'doc' / v / 'releve.md').write_text('\n'.join(L) + '\n', encoding='utf-8', newline='
-')
+    (ROOT / 'doc' / v / 'releve.md').write_text('\n'.join(L) + '\n', encoding='utf-8', newline='\n')
     S.append('')
     for g in sorted(absents):
         if absents[g] == 'function' and g.isidentifier():
             S.append(f'function {g}(...) end')
-    (sdir / '_fonctions.lua').write_text('\n'.join(S) + '\n', encoding='utf-8', newline='
-')
+    (sdir / '_fonctions.lua').write_text('\n'.join(S) + '\n', encoding='utf-8', newline='\n')
     print(f'{len(mods)} env de mods ignorés, {len(top)} globales, {len(absents)} absentes du dump, {len(env)} surcharges env')
 
 
