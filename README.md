@@ -1,44 +1,44 @@
-# Atlas Lua FS25 : référence de l'API Lua de Farming Simulator 25
+# FS25 Lua Atlas: Farming Simulator 25 Lua API reference
 
-**Consulter en ligne : https://tim0219800.github.io/fs25-lua-atlas/**
+*[Version française : README.fr.md](README.fr.md)* · **Browse online: https://tim0219800.github.io/fs25-lua-atlas/**
 
-Référence de l'API Lua de Farming Simulator 25 et stubs LuaLS pour l'autocomplétion dans VS Code.
-L'atlas est généré à partir des sources Lua fournies dans le SDK du jeu (lues sans être recopiées)
-et d'un relevé en jeu des globales réellement disponibles.
+A detailed reference of the Farming Simulator 25 Lua API, plus LuaLS stubs for autocompletion in VS Code.
+It is generated from the Lua sources shipped with the game's SDK (read, never copied) and from an in-game scan
+of the globals that actually exist at runtime.
 
-**Version du jeu couverte : 1.25.1.0.**
+**Game version covered: 1.25.1.0.**
 
-> Projet non officiel, sans lien avec GIANTS Software GmbH ni approuvé par elle. Voir [LEGAL.md](LEGAL.md).
-> *English: unofficial FS25 Lua API atlas and LuaLS stubs. Written descriptions are in French; signatures and stubs are language-neutral.*
+> Unofficial project, not affiliated with or endorsed by GIANTS Software GmbH. See [LEGAL.md](LEGAL.md).
+> The written descriptions are in **French**; signatures, types, events and stubs are language-neutral.
 
-## Contenu
-| Dossier | Contenu |
+## What's inside
+| Folder | Content |
 |---|---|
-| [`doc/1.25.1.0/index.md`](doc/1.25.1.0/index.md) | Point d'entrée : tous les fichiers de script, regroupés par dossier |
-| [`doc/1.25.1.0/evenements.md`](doc/1.25.1.0/evenements.md) | Événements de spécialisation : qui les déclare et combien de fichiers les écoutent |
-| [`doc/1.25.1.0/messages.md`](doc/1.25.1.0/messages.md) | `MessageType` : qui publie, qui écoute |
-| [`doc/1.25.1.0/globales.md`](doc/1.25.1.0/globales.md) | Globales `g_*` et l'endroit où elles sont affectées |
-| [`doc/1.25.1.0/moteur.md`](doc/1.25.1.0/moteur.md) | Fonctions moteur (signatures issues de `scriptBinding.xml`) |
-| [`doc/1.25.1.0/releve.md`](doc/1.25.1.0/releve.md) | Relevé en jeu : classes et fonctions présentes en jeu mais absentes des sources du SDK (`Weather`, `Environment`, `FSBaseMission`…) |
-| `stubs/1.25.1.0/` | Stubs `---@meta` : `scripts/` (même arborescence que `dataS/scripts`), `moteur.lua`, `releve/` |
-| `descriptions/1.25.1.0/` | Descriptions rédigées à la main (JSON), fusionnées par le générateur |
+| [`doc/1.25.1.0/index.md`](doc/1.25.1.0/index.md) | Entry point: every script file, grouped by folder |
+| [`doc/1.25.1.0/evenements.md`](doc/1.25.1.0/evenements.md) | Specialization events: who declares them, how many files listen |
+| [`doc/1.25.1.0/messages.md`](doc/1.25.1.0/messages.md) | `MessageType`: publishers and subscribers |
+| [`doc/1.25.1.0/globales.md`](doc/1.25.1.0/globales.md) | `g_*` globals and where they are assigned |
+| [`doc/1.25.1.0/moteur.md`](doc/1.25.1.0/moteur.md) | Engine functions (signatures from `scriptBinding.xml`) |
+| [`doc/1.25.1.0/releve.md`](doc/1.25.1.0/releve.md) | In-game scan: classes and functions present at runtime but missing from the SDK sources (`Weather`, `Environment`, `FSBaseMission`…) |
+| `stubs/1.25.1.0/` | `---@meta` stubs: `scripts/` (same tree as `dataS/scripts`), `moteur.lua`, `releve/` |
+| `descriptions/1.25.1.0/` | Hand-written descriptions (JSON, French), merged by the generator |
 | `outils/` | `extraire.py`, `generer.py`, `importer_releve.py`, `empaqueter.py`, `mod_releve/` |
 
-### Couverture
-| Couche | Contenu |
+### Coverage
+| Layer | Content |
 |---|---|
-| Sources du SDK | 961 fichiers, 13 390 fonctions (signatures, types, héritage, renvois `fichier:ligne`) |
-| Fonctions moteur | 819 signatures |
-| Relevé en jeu | 4 308 globales, dont 2 651 absentes des sources du SDK (noms seulement) |
-| Descriptions ✍ | 35 fichiers, 1 325 fonctions : effets, particules, roues, météo et humidité, moteur, lumières, outils de travail du sol et de récolte |
+| SDK sources | 961 files, 13,390 functions (signatures, types, inheritance, `file:line` references) |
+| Engine functions | 819 signatures |
+| In-game scan | 4,308 globals, 2,651 of them missing from the SDK sources (names only) |
+| Written descriptions ✍ | 35 files, 1,325 functions: effects, particles, wheels, weather and wetness, motor, lights, soil-working and harvesting tools |
 
-Les descriptions ont été écrites en priorité pour les systèmes d'effets visuels et d'environnement.
-Elles signalent aussi les bugs apparents du jeu repérés en lisant le code (« à noter… »).
+Descriptions were written first for the visual-effect and environment systems.
+They also point out apparent game bugs spotted while reading the code ("à noter…").
 
-## Utiliser les stubs dans VS Code
-1. Installe l'extension **Lua** (sumneko / LuaLS).
-2. Télécharge `stubs-1.25.1.0.zip` depuis la [dernière release](https://github.com/Tim0219800/fs25-lua-atlas/releases/latest), ou clone le dépôt.
-3. À la racine de ton mod, crée `.luarc.json` :
+## Using the stubs in VS Code
+1. Install the **Lua** extension (sumneko / LuaLS).
+2. Download `stubs-1.25.1.0.zip` from the [latest release](https://github.com/Tim0219800/fs25-lua-atlas/releases/latest), or clone this repository.
+3. At the root of your mod, create `.luarc.json`:
 ```json
 {
   "runtime.version": "LuaJIT",
@@ -47,27 +47,27 @@ Elles signalent aussi les bugs apparents du jeu repérés en lisant le code (« 
 }
 ```
 
-## Ce qui est repris, ce qui ne l'est pas
-Seuls les **noms, signatures, types, héritages et numéros de ligne** sont extraits.
-Aucun corps de fonction, aucun commentaire GIANTS et aucune description de `scriptBinding.xml` ne sont recopiés.
-Les textes ✍ sont rédigés pour l'atlas. Les sources du jeu ne sont pas dans ce dépôt : il faut le jeu installé pour régénérer.
+## What is extracted, and what is not
+Only **names, signatures, types, inheritance and line numbers** are extracted.
+No function body, no GIANTS comment and no `scriptBinding.xml` description is copied.
+The ✍ texts are written for the atlas. The game sources are not in this repository: regenerating requires the game.
 
-## Régénérer
+## Regenerating
 ```
-python -I outils/extraire.py "<gameSource.zip extrait>/dataS/scripts" "<FS25>/sdk/debugger/scriptBinding.xml" donnees/1.25.1.0/statique.json
-python -I outils/importer_releve.py 1.25.1.0 "<profil FS25>/atlas_releve.tsv"
+python -I outils/extraire.py "<extracted gameSource.zip>/dataS/scripts" "<FS25>/sdk/debugger/scriptBinding.xml" donnees/1.25.1.0/statique.json
+python -I outils/importer_releve.py 1.25.1.0 "<FS25 profile>/atlas_releve.tsv"
 python -I outils/generer.py 1.25.1.0
 python -I outils/empaqueter.py 1.25.1.0
 ```
-**Relevé en jeu** : copie `outils/mod_releve/` dans `mods/FS25_atlasReleve/`, active le mod et charge une partie.
-Le fichier `atlas_releve.tsv` apparaît dans le dossier du profil (la commande console `atlasReleve` le réécrit). Retire le mod ensuite.
-Passage à une nouvelle version du jeu : voir [NOUVELLE_VERSION.md](NOUVELLE_VERSION.md).
+**In-game scan**: copy `outils/mod_releve/` to `mods/FS25_atlasReleve/`, enable the mod and load a savegame.
+`atlas_releve.tsv` appears in the profile folder (console command `atlasReleve` rewrites it). It changes nothing in the game. Remove the mod afterwards.
+Moving to a new game version: see [NOUVELLE_VERSION.md](NOUVELLE_VERSION.md) (French).
 
-## Fiabilité
-- **Statique** : fiable pour les fonctions Lua présentes dans le dump du SDK. 9 fichiers n'y contiennent que des signatures, sans corps (signalés ⚠), et certains en-têtes de fichiers (constantes) sont vides.
-- **Relevé en jeu** : la bibliothèque `debug` n'existe pas en jeu, donc les classes absentes du SDK n'ont que leurs noms, sans paramètres.
-- `scriptBinding.xml` est incomplet : certaines fonctions moteur appelées par le jeu n'y figurent pas.
-- Les descriptions indiquent leur niveau de confiance : **NON VÉRIFIÉ** (dépend de code absent), « non relu » (partie survolée), « non vérifié en jeu » (lu dans le code mais pas testé).
+## Reliability
+- **Static**: reliable for the Lua functions present in the SDK dump. 9 files only contain signatures, without bodies (flagged ⚠), and some file headers (constants) are empty.
+- **In-game scan**: the `debug` library is not available in game, so classes missing from the SDK only have their names, without parameters.
+- `scriptBinding.xml` is incomplete: some engine functions called by the game are not listed.
+- Descriptions state their confidence level: **NON VÉRIFIÉ** (depends on missing code), « non relu » (skimmed), « non vérifié en jeu » (read in code, not tested in game).
 
-## Licence
-Textes, doc et stubs : [CC BY 4.0](LICENSE). Outils (`outils/`) : [MIT](LICENSE-tools).
+## License
+Texts, docs and stubs: [CC BY 4.0](LICENSE). Tools (`outils/`): [MIT](LICENSE-tools).
