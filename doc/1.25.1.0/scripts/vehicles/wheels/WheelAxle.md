@@ -1,12 +1,12 @@
 # vehicles/wheels/WheelAxle.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelAxle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelAxle.lua` — FS25 1.25.1.0
 
 - **WheelAxle** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelAxle.new(vehicle: any, customMt: any)` | 16 |  |
 | `WheelAxle:delete()` | 26 |  |

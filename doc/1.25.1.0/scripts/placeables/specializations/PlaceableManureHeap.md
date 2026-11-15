@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableManureHeap.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableManureHeap.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableManureHeap.lua` — FS25 1.25.1.0
 
 - **PlaceableManureHeap** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableManureHeap.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableManureHeap.registerOverwrittenFunctions(placeableType: any)` | 24 |  |
@@ -28,9 +28,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableManureHeap.lua` — 
 | `PlaceableManureHeap.loadSpecValueCapacity(xmlFile: any, customEnvironment: any, baseDir: any)` | 300 |  |
 | `PlaceableManureHeap.getSpecValueCapacity(storeItem: any, realItem: any)` | 306 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `setOwnerFarmId` | 25 |
 | registerOverwrittenFunction | `collectPickObjects` | 26 |

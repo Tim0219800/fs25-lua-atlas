@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/SoilSampler.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/SoilSampler.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/SoilSampler.lua` — FS25 1.25.1.0
 
 - **SoilSampler** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SoilSampler.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `SoilSampler.initSpecialization()` | 28 |  |

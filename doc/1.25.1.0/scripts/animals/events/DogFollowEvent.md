@@ -1,12 +1,12 @@
 # animals/events/DogFollowEvent.lua
 
-Source : `dataS/scripts/animals/events/DogFollowEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/events/DogFollowEvent.lua` — FS25 1.25.1.0
 
-- **DogFollowEvent** hérite de `Event` (l.6)
+- **DogFollowEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DogFollowEvent.emptyNew()` | 12 |  |
 | `DogFollowEvent.new(dog: any, player: any)` | 19 |  |

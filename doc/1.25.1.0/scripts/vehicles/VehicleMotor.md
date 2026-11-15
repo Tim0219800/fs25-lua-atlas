@@ -1,12 +1,12 @@
 # vehicles/VehicleMotor.lua
 
-Source : `dataS/scripts/vehicles/VehicleMotor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleMotor.lua` — FS25 1.25.1.0
 
 - **VehicleMotor** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleMotor.new(vehicle: integer, minRpm: integer, maxRpm: integer, maxForwardSpeed: number, maxBackwardSpeed: number, torqueCurve: table, brakeForce: number, forwardGears: number, backwardGears: number, minForwardGearRatio: number, maxForwardGearRatio: number, minBackwardGearRatio: number, maxBackwardGearRatio: number, ptoMotorRpmRatio: integer, minSpeed: any) → table` | 66 |  |
 | `VehicleMotor:postLoad(savegame: table)` | 317 |  |

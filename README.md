@@ -61,7 +61,7 @@ python -I outils/empaqueter.py 1.25.1.0
 ```
 **In-game scan**: copy `outils/mod_releve/` to `mods/FS25_atlasReleve/`, enable the mod and load a savegame.
 `atlas_releve.tsv` appears in the profile folder (console command `atlasReleve` rewrites it). It changes nothing in the game. Remove the mod afterwards.
-Moving to a new game version: see [NOUVELLE_VERSION.md](NOUVELLE_VERSION.md) (French).
+Moving to a new game version: see [NEW_VERSION.md](NEW_VERSION.md).
 
 ## Reliability
 - **Static**: reliable for the Lua functions present in the SDK dump. 9 files only contain signatures, without bodies (flagged ⚠), and some file headers (constants) are empty.

@@ -1,11 +1,11 @@
 # vehicles/specializations/HUDInfoTrigger.lua
 
-Source : `dataS/scripts/vehicles/specializations/HUDInfoTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/HUDInfoTrigger.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HUDInfoTrigger.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `HUDInfoTrigger.initSpecialization()` | 24 |  |
@@ -19,9 +19,9 @@ Source : `dataS/scripts/vehicles/specializations/HUDInfoTrigger.lua` — FS25 1.
 | `HUDInfoTrigger:getAllowHudInfoTrigger()` | 130 |  |
 | `HUDInfoTrigger:getIsPlayerInHudInfoTrigger()` | 136 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getIsPlayerInHudInfoTrigger` | 37 |
 | registerFunction | `getAllowHudInfoTrigger` | 38 |

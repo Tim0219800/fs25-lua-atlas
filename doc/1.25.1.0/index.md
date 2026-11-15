@@ -1,8 +1,8 @@
-# Atlas Lua FS25 — version du jeu 1.25.1.0
+# FS25 Lua Atlas — game version 1.25.1.0
 
-961 fichiers, 13390 fonctions, 819 fonctions moteur. Descriptions rédigées (✍) : 35 fichiers, 1325 fonctions.
+961 files, 13390 functions, 819 engine functions. Written descriptions (✍, French): 35 files, 1325 functions.
 
-- [Événements de spécialisation](evenements.md) · [Messages](messages.md) · [Globales g_*](globales.md) · [Fonctions moteur](moteur.md)
+- [Specialization events](evenements.md) · [Messages](messages.md) · [g_* globals](globales.md) · [Engine functions](moteur.md) · [In-game scan](releve.md)
 
 ## (racine)
 

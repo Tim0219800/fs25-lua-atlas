@@ -1,14 +1,14 @@
 # vehicles/specializations/Mulcher.lua
 
-Source : `dataS/scripts/vehicles/specializations/Mulcher.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Mulcher.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des broyeurs (de fanes, de chaumes, de couvert, de vignes). C'est l'une des rares spécialisations de ce lot avec un vrai système d'effets par zone de travail. EFFETS : vehicle.mulcher.effects.effect(?), chargés par g_effectManager:loadEffect ; chaque entrée a workAreaIndex (zone liée), activeDirection (0 = toutes, sinon doit égaler movingDirection) et une durée d'activité de 250 ms. Le type de remplissage transmis à l'effet est fixe : spec.effectFillType = WHEAT (setEffectTypeInfo avec ce seul argument) ; aucune lecture de la culture réellement broyée ni de son stade. Pour les effets de classe CultivatorMotionPathEffect, autoTurnOffSpeed est forcé à -infini (l'arrêt est donc piloté par ce script, pas par la vitesse). Les classes d'effets et EffectManager sont absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT (serveur ou client à distance <= Mulcher.CLIENT_DM_UPDATE_RADIUS, constante non définie ici, NON VÉRIFIÉ) : dans processMulcherArea, si l'appel FSDensityMapUtil.updateMulcherArea renvoie une surface réellement modifiée > 0 ET que la vitesse est > 0.5, les effets de cette zone dont la direction convient sont (re)armés : activeTime = temps courant + 250 ms et démarrage s'ils étaient arrêtés. Autrement dit, la poussière/les débris ne partent que lorsque de la matière est réellement broyée dans la carte de densité (pas simplement en roulant). ARRÊT : onUpdateTick (côté serveur uniquement) coupe les effets expirés. RÉSEAU : booléen par effet envoyé au flux initial (onWriteStream) et en mise à jour via effectDirtyFlag ; le client applique setEffectTypeInfo + startEffects/stopEffects à la réception. Un client ne calcule donc pas l'effet lui-même, sauf s'il fait aussi tourner processMulcherArea. À noter : onLoad retire l'écouteur onUpdateTick quand l'instance n'est pas client (Mulcher.lua:173) alors que cette fonction ne s'exécute que côté serveur ; sur un serveur dédié, l'expiration des effets ne serait donc jamais traitée et isActive resterait vrai, ce qui empêcherait tout nouveau drapeau d'arrêt (non vérifié en jeu). MÉTÉO/HUMIDITÉ : aucune lecture. CARTES : eraseTireTrack (toujours, même client lointain), updateMulcherArea (corps absent du dump), getStoneArea pour l'usure. isWorking = moins de 500 ms écoulées depuis le dernier broyage réel (g_time) ; getDoGroundManipulation (surcharge) renvoie faux si pas isWorking, ce que WorkParticles.lua:238 consulte pour ses particules de sol. dt : activeTime en millisecondes de temps de jeu, indépendant du FPS. POINTS D'EXTENSION : fonctions processMulcherArea ; surcharges doCheckSpeedLimit, getDoGroundManipulation, getDirtMultiplier, getWearMultiplier, getAIImplementUseVineSegment, loadWorkAreaFromXML (type MULCHER) ; événements onLoad, onPostLoad, onDelete, flux réseau, onUpdateTick, onDeactivate, onStart/EndWorkAreaProcessing, onAIFieldCourseSettingsInitialized. Vitesse limite par défaut : 15.
 
 - **Mulcher** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Mulcher.initSpecialization()` | 26 | ✍ Déclare le type de zone mulcher et le schéma XML : effets (vehicle.mulcher.effects.effect(?) avec workAreaIndex/activeDirection) et sons idle/work. Non relu clé par clé. |
 | `Mulcher.prerequisitesPresent(specializations: table) → boolean` | 46 | ✍ Exige WorkArea et GroundReference. |
@@ -36,9 +36,9 @@ Source : `dataS/scripts/vehicles/specializations/Mulcher.lua` — FS25 1.25.1.0
 | `Mulcher:onAIFieldCourseSettingsInitialized(fieldCourseSettings: any)` | 475 | ✍ Paramètres de parcours IA : bordures d'abord, segment initial travaillé. |
 | `Mulcher.getDefaultSpeedLimit() → number` | 483 | ✍ Limite de vitesse par défaut : 15. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processMulcherArea` | 53 |
 | registerOverwrittenFunction | `doCheckSpeedLimit` | 59 |

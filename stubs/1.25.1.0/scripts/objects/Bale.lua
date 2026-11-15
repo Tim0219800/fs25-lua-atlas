@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : objects/Bale.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : objects/Bale.lua (generated stub, FS25 Lua Atlas)
 
 ---@class Bale : MountableObject
 Bale = {}

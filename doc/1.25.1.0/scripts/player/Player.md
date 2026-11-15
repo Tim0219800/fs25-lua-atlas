@@ -1,12 +1,12 @@
 # player/Player.lua
 
-Source : `dataS/scripts/player/Player.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/Player.lua` — FS25 1.25.1.0
 
-- **Player** hérite de `Object` (l.23)
+- **Player** inherits from `Object` (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Player.createServerInstance(isClient: boolean, isOwner: boolean, connection: Connection, userId: integer, farmId: integer, userManager: UserManager) → Player` | 209 |  |
 | `Player.new(isServer: boolean, isClient: boolean) → Player` | 271 |  |
@@ -42,5 +42,5 @@ Source : `dataS/scripts/player/Player.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.PLAYER_FARM_CHANGED` (l.407)
-- publie `MessageType.OWN_PLAYER_ENTERED` (l.2189)
+- subscribes `MessageType.PLAYER_FARM_CHANGED` (l.407)
+- publishes `MessageType.OWN_PLAYER_ENTERED` (l.2189)

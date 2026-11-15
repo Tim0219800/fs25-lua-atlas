@@ -1,12 +1,12 @@
 # vehicles/specializations/events/TrailerToggleManualTipEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/TrailerToggleManualTipEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/TrailerToggleManualTipEvent.lua` — FS25 1.25.1.0
 
-- **TrailerToggleManualTipEvent** hérite de `Event` (l.7)
+- **TrailerToggleManualTipEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TrailerToggleManualTipEvent.emptyNew() → table` | 14 |  |
 | `TrailerToggleManualTipEvent.new(object: table, state: boolean) → TrailerToggleManualTipEvent` | 24 |  |

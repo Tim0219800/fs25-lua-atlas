@@ -1,12 +1,12 @@
 # vehicles/specializations/components/RealLight.lua
 
-Source : `dataS/scripts/vehicles/specializations/components/RealLight.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/components/RealLight.lua` — FS25 1.25.1.0
 
 - **RealLight** (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RealLight.new(vehicle: any, customMt: any)` | 27 |  |
 | `RealLight:loadFromXML(xmlFile: any, baseKey: any, components: any, i3dMappings: any, loadLightTypes: any)` | 39 |  |

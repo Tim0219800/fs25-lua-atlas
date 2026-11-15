@@ -1,12 +1,12 @@
 # ai/tasks/AITask.lua
 
-Source : `dataS/scripts/ai/tasks/AITask.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/tasks/AITask.lua` — FS25 1.25.1.0
 
 - **AITask** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AITask.new(isServer: any, job: any, customMt: any)` | 16 |  |
 | `AITask:delete()` | 30 |  |

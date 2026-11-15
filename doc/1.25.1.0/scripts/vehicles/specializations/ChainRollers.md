@@ -1,12 +1,12 @@
 # vehicles/specializations/ChainRollers.lua
 
-Source : `dataS/scripts/vehicles/specializations/ChainRollers.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ChainRollers.lua` — FS25 1.25.1.0
 
 - **ChainRollers** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ChainRollers.prerequisitesPresent(specializations: any)` | 15 |  |
 | `ChainRollers.initSpecialization()` | 21 |  |
@@ -21,9 +21,9 @@ Source : `dataS/scripts/vehicles/specializations/ChainRollers.lua` — FS25 1.25
 | `ChainRollers:loadExtraDependentParts(superFunc: any, xmlFile: any, baseName: any, entry: any)` | 237 |  |
 | `ChainRollers:updateExtraDependentParts(superFunc: any, part: any, dt: any)` | 252 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadChainRollerFromXML` | 45 |
 | registerFunction | `updateChainRoller` | 46 |

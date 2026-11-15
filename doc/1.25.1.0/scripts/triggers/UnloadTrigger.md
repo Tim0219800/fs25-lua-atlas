@@ -1,12 +1,12 @@
 # triggers/UnloadTrigger.lua
 
-Source : `dataS/scripts/triggers/UnloadTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/UnloadTrigger.lua` — FS25 1.25.1.0
 
-- **UnloadTrigger** hérite de `Object` (l.63)
+- **UnloadTrigger** inherits from `Object` (l.63)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `UnloadTrigger.registerXMLPaths(schema: any, basePath: any)` | 51 |  |
 | `UnloadTrigger.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 71 |  |

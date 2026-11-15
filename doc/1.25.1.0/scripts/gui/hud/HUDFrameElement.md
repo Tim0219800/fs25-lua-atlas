@@ -1,12 +1,12 @@
 # gui/hud/HUDFrameElement.lua
 
-Source : `dataS/scripts/gui/hud/HUDFrameElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/HUDFrameElement.lua` — FS25 1.25.1.0
 
-- **HUDFrameElement** hérite de `HUDElement` (l.14)
+- **HUDFrameElement** inherits from `HUDElement` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HUDFrameElement.new(posX: number, posY: number, width: number, height: number, parent: table?, showBar: any, frameThickness: any, barThickness: any)` | 23 |  |
 | `HUDFrameElement:createComponents(baseX: any, baseY: any, width: any, height: any)` | 44 |  |

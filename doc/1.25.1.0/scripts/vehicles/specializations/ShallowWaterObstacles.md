@@ -1,11 +1,11 @@
 # vehicles/specializations/ShallowWaterObstacles.lua
 
-Source : `dataS/scripts/vehicles/specializations/ShallowWaterObstacles.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ShallowWaterObstacles.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ShallowWaterObstacles.prerequisitesPresent(specializations: any)` | 18 |  |
 | `ShallowWaterObstacles.initSpecialization()` | 24 |  |
@@ -17,9 +17,9 @@ Source : `dataS/scripts/vehicles/specializations/ShallowWaterObstacles.lua` — 
 | `ShallowWaterObstacles:loadObstacleNodeFromXML(xmlFile: any, key: any, obstacleNode: any)` | 107 |  |
 | `ShallowWaterObstacles.getShallowWaterParameters(obstacleNode: any)` | 127 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadObstacleNodeFromXML` | 40 |
 | registerEventListener | `onPostLoad` | 50 |

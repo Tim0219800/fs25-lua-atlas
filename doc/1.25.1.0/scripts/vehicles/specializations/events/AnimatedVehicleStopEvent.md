@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AnimatedVehicleStopEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AnimatedVehicleStopEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AnimatedVehicleStopEvent.lua` — FS25 1.25.1.0
 
-- **AnimatedVehicleStopEvent** hérite de `Event` (l.7)
+- **AnimatedVehicleStopEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimatedVehicleStopEvent.emptyNew() → table` | 14 |  |
 | `AnimatedVehicleStopEvent.new(object: table, name: string)` | 23 |  |

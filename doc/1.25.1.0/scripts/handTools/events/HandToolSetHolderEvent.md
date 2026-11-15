@@ -1,12 +1,12 @@
 # handTools/events/HandToolSetHolderEvent.lua
 
-Source : `dataS/scripts/handTools/events/HandToolSetHolderEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/events/HandToolSetHolderEvent.lua` — FS25 1.25.1.0
 
-- **HandToolSetHolderEvent** hérite de `Event` (l.11)
+- **HandToolSetHolderEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolSetHolderEvent.emptyNew() → table` | 18 |  |
 | `HandToolSetHolderEvent.new(handTool: any, holder: any)` | 25 |  |

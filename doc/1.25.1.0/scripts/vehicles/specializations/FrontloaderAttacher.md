@@ -1,12 +1,12 @@
 # vehicles/specializations/FrontloaderAttacher.lua
 
-Source : `dataS/scripts/vehicles/specializations/FrontloaderAttacher.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FrontloaderAttacher.lua` — FS25 1.25.1.0
 
 - **FrontloaderAttacher** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FrontloaderAttacher.prerequisitesPresent(specializations: any)` | 15 |  |
 | `FrontloaderAttacher.registerEventListeners(vehicleType: any)` | 21 |  |
@@ -15,9 +15,9 @@ Source : `dataS/scripts/vehicles/specializations/FrontloaderAttacher.lua` — FS
 | `FrontloaderAttacher:onPreDetachImplement(implement: any)` | 70 |  |
 | `FrontloaderAttacher:onPreAttachImplement(attachable: any, inputJointDescIndex: any, jointDescIndex: any, loadFromSavegame: any)` | 92 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 22 |
 | registerEventListener | `onPreDetachImplement` | 23 |

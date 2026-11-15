@@ -1,12 +1,12 @@
 # vehicles/VehicleLoadingData.lua
 
-Source : `dataS/scripts/vehicles/VehicleLoadingData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleLoadingData.lua` — FS25 1.25.1.0
 
 - **VehicleLoadingData** (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleLoadingData.new(customMt: any) → VehicleLoadingData` | 26 |  |
 | `VehicleLoadingData:setFilename(filename: string)` | 71 |  |

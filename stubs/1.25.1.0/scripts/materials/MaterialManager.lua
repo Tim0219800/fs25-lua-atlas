@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : materials/MaterialManager.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : materials/MaterialManager.lua (generated stub, FS25 Lua Atlas)
 
 --- Gestionnaire global des matériaux (g_materialManager, dérive d'AbstractManager). Il tient cinq registres : (1) types de matériau (liste de noms), (2) matériaux de base par nom, (3) matériaux par type de remplissage (self.materials), (4) matériaux de particules par type de remplissage (self.particleMaterials), (5) polices (FontMaterial). Les matériaux ne sont pas créés ici : ils sont enregistrés par des rappels « onCreate » de MaterialUtil lors du chargement des I3D « porte-matériaux » (material holders) ; ces I3D et le fichier XML des polices (MaterialManager.DEFAULT_FONT_MATERIAL_XML, constante absente du dump) ne sont pas dans le dump.
 --- 

@@ -1,12 +1,12 @@
 # player/events/PlayerSetFarmEvent.lua
 
-Source : `dataS/scripts/player/events/PlayerSetFarmEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/events/PlayerSetFarmEvent.lua` — FS25 1.25.1.0
 
-- **PlayerSetFarmEvent** hérite de `Event` (l.6)
+- **PlayerSetFarmEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerSetFarmEvent.emptyNew() → table` | 13 |  |
 | `PlayerSetFarmEvent.new(player: table, farmId: integer, password: any) → table` | 23 |  |
@@ -17,5 +17,5 @@ Source : `dataS/scripts/player/events/PlayerSetFarmEvent.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.PLAYER_FARM_CHANGED` (l.90)
-- publie `MessageType.PLAYER_FARM_CHANGED` (l.113)
+- publishes `MessageType.PLAYER_FARM_CHANGED` (l.90)
+- publishes `MessageType.PLAYER_FARM_CHANGED` (l.113)

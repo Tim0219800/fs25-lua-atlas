@@ -1,12 +1,12 @@
 # player/PlayerInputComponent.lua
 
-Source : `dataS/scripts/player/PlayerInputComponent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/PlayerInputComponent.lua` — FS25 1.25.1.0
 
 - **PlayerInputComponent** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerInputComponent.new(player: Player) → PlayerInputComponent` | 24 |  |
 | `PlayerInputComponent:addPauseListeners(isControlling: boolean)` | 129 |  |

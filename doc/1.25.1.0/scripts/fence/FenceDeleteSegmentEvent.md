@@ -1,12 +1,12 @@
 # fence/FenceDeleteSegmentEvent.lua
 
-Source : `dataS/scripts/fence/FenceDeleteSegmentEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/fence/FenceDeleteSegmentEvent.lua` — FS25 1.25.1.0
 
-- **FenceDeleteSegmentEvent** hérite de `Event` (l.7)
+- **FenceDeleteSegmentEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FenceDeleteSegmentEvent.emptyNew() → table` | 14 |  |
 | `FenceDeleteSegmentEvent:readStream(streamId: integer, connection: Connection)` | 32 |  |

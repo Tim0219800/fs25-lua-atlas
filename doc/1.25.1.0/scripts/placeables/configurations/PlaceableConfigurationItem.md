@@ -1,12 +1,12 @@
 # placeables/configurations/PlaceableConfigurationItem.lua
 
-Source : `dataS/scripts/placeables/configurations/PlaceableConfigurationItem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/configurations/PlaceableConfigurationItem.lua` — FS25 1.25.1.0
 
 - **PlaceableConfigurationItem** (l.19)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableConfigurationItem.new(configName: any, customMt: any)` | 25 |  |
 | `PlaceableConfigurationItem:loadFromXML(xmlFile: any, baseKey: any, configKey: any, baseDirectory: any, customEnvironment: any)` | 46 |  |

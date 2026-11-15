@@ -1,14 +1,14 @@
 # vehicles/specializations/Weeder.lua
 
-Source : `dataS/scripts/vehicles/specializations/Weeder.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Weeder.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des bineuses / herses étrilles (désherbage), avec option binage (isHoe) et option prairie (isGrasslandWeeder). Pas de chargement d'effets EffectManager ; l'originalité côté visuel est la coloration des particules de sol : pour chaque correspondance de particules de sol déclarée avec adjustColor (clé XML sur le noeud de WorkParticles), onUpdateTick recolore le shader de ce système de particules. TRAVAIL : processWeederArea (serveur, ou client à distance <= Weeder.CLIENT_DM_UPDATE_RADIUS, constante non définie ici : NON VÉRIFIÉ) appelle FSDensityMapUtil.updateWeederArea (carte des mauvaises herbes ; corps absent du dump, NON VÉRIFIÉ) et, en mode prairie, updateGrassRollerArea ; isWorking = vitesse > 0.5. getStoneArea est lu pour l'usure (pierres). CONDITIONS de zone : getIsWorkAreaActive exige le contact sol du noeud de référence (si requiresGroundContact) et, si disableBackwards, movingDirection > 0 ; l'état abaissé n'est pas testé ici (la limite de vitesse suit getIsImplementChainLowered). À noter : startActivationTime est armé à l'attelage (2000 ms) mais n'est jamais consulté dans ce fichier (non vérifié en jeu : peut-être sans effet). COLORATION (onUpdateTick, client et serveur, tant que isWorking) : la couleur de base est lue à la position monde du noeud : sur un champ, getFieldGroundTyreTrackColor(densityBits) du fieldGroundSystem (couleur de trace de pneu du type de sol), sinon getTerrainAttributesAtWorldPos (couleur d'attribut de terrain) ; une transition lissée sur 1 s (alpha += dt/1000, interpolation vector3ArrayLerp) puis setShaderParameter psColor (alpha final 1). Le paramètre psColor du shader de particules n'est pas vérifiable dans le dump. À noter : la condition de relance de transition (lignes 144-147) compare les composantes par ET logique de différences, ce qui ne se déclenche que si les trois canaux changent à la fois (non vérifié en jeu). MÉTÉO/HUMIDITÉ : aucune donnée lue ; la couleur du sol est celle des cartes de terrain, donc indirectement liée à ce qu'elles encodent (pas relu). RÉSEAU : aucun flux ni dirtyFlag ; la coloration et l'état isWorking sont recalculés localement par chaque client. dt : utilisé pour la transition de couleur (secondes = dt/1000). POINTS D'EXTENSION : fonctions processWeederArea, updateWeederAIRequirements ; surcharges doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML (type WEEDER), getIsWorkAreaActive, loadGroundParticleMapping (ajoute adjustColor). Les particules de sol elles-mêmes sont chargées/pilotées par WorkParticles (WorkParticles.lua:238 : actif si getDoGroundManipulation() et sur champ ; Weeder ne surcharge pas getDoGroundManipulation, donc la valeur par défaut vrai de WorkParticles.lua:311 s'applique). Vitesse limite par défaut : 15.
 
 - **Weeder** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Weeder.initSpecialization()` | 17 | ✍ Déclare le type de zone de travail weeder, le schéma XML (sons de travail, vehicle.weeder#isHoe, #isGrasslandWeeder) et ajoute à la table de correspondance de WorkParticles la clé adjustColor. |
 | `Weeder.prerequisitesPresent(specializations: table) → boolean` | 36 | ✍ Exige WorkArea et AttacherJoints. |
@@ -33,9 +33,9 @@ Source : `dataS/scripts/vehicles/specializations/Weeder.lua` — FS25 1.25.1.0
 | `Weeder:onPostAttach(attacherVehicle: table, inputJointDescIndex: integer, jointDescIndex: integer)` | 403 | ✍ Arme startActivationTime (2000 ms), valeur non consultée ailleurs dans ce fichier. |
 | `Weeder.getDefaultSpeedLimit() → number` | 411 | ✍ Limite de vitesse par défaut : 15. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processWeederArea` | 44 |
 | registerFunction | `updateWeederAIRequirements` | 45 |

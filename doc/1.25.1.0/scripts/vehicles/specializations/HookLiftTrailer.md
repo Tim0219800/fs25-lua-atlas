@@ -1,12 +1,12 @@
 # vehicles/specializations/HookLiftTrailer.lua
 
-Source : `dataS/scripts/vehicles/specializations/HookLiftTrailer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/HookLiftTrailer.lua` — FS25 1.25.1.0
 
 - **HookLiftTrailer** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HookLiftTrailer.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `HookLiftTrailer.initSpecialization()` | 23 |  |
@@ -33,9 +33,9 @@ Source : `dataS/scripts/vehicles/specializations/HookLiftTrailer.lua` — FS25 1
 | `HookLiftTrailer:getDoConsumePtoPower(superFunc: any) → boolean` | 587 |  |
 | `HookLiftTrailer:getPtoRpm(superFunc: any) → number` | 597 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `startTipping` | 77 |
 | registerFunction | `stopTipping` | 78 |

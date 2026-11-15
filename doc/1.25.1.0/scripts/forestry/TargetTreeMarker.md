@@ -1,12 +1,12 @@
 # forestry/TargetTreeMarker.lua
 
-Source : `dataS/scripts/forestry/TargetTreeMarker.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/forestry/TargetTreeMarker.lua` — FS25 1.25.1.0
 
 - **TargetTreeMarker** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TargetTreeMarker.new(vehicle: any, linkNode: any, customMt: any)` | 16 |  |
 | `TargetTreeMarker.registerXMLPaths(schema: any, baseKey: any)` | 32 |  |

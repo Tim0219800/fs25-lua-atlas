@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/ExtendedMower.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedMower.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedMower.lua` — FS25 1.25.1.0
 
 - **ExtendedMower** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedMower.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `ExtendedMower:onUpdateTick(dt: any, isActiveForInput: any, isActiveForInputIgnoreSelection: any, isSelected: any)` | 36 |  |

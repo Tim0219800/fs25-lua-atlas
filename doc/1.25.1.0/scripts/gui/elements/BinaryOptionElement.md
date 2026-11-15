@@ -1,12 +1,12 @@
 # gui/elements/BinaryOptionElement.lua
 
-Source : `dataS/scripts/gui/elements/BinaryOptionElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/BinaryOptionElement.lua` — FS25 1.25.1.0
 
-- **BinaryOptionElement** hérite de `MultiTextOptionElement` (l.23)
+- **BinaryOptionElement** inherits from `MultiTextOptionElement` (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BinaryOptionElement.new(target: any, custom_mt: any)` | 30 |  |
 | `BinaryOptionElement:loadFromXML(xmlFile: any, key: any)` | 45 |  |

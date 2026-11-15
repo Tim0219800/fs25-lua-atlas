@@ -1,12 +1,12 @@
 # vehicles/VehicleLeaveEvent.lua
 
-Source : `dataS/scripts/vehicles/VehicleLeaveEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleLeaveEvent.lua` — FS25 1.25.1.0
 
-- **VehicleLeaveEvent** hérite de `Event` (l.7)
+- **VehicleLeaveEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleLeaveEvent.emptyNew() → table` | 14 |  |
 | `VehicleLeaveEvent.new(vehicle: table, userId: any) → table` | 23 |  |

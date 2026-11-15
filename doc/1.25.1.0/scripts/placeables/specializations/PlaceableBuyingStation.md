@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableBuyingStation.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableBuyingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableBuyingStation.lua` — FS25 1.25.1.0
 
 - **PlaceableBuyingStation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableBuyingStation.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableBuyingStation.registerFunctions(placeableType: any)` | 24 |  |
@@ -22,9 +22,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableBuyingStation.lua` �
 | `PlaceableBuyingStation:collectPickObjects(superFunc: any, node: any)` | 123 |  |
 | `PlaceableBuyingStation:getBuyingStation()` | 138 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getBuyingStation` | 25 |
 | registerOverwrittenFunction | `collectPickObjects` | 31 |

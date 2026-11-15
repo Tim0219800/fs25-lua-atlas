@@ -1,12 +1,12 @@
 # player/PlayerTargeter.lua
 
-Source : `dataS/scripts/player/PlayerTargeter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/PlayerTargeter.lua` — FS25 1.25.1.0
 
 - **PlayerTargeter** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerTargeter.new(player: Player) → PlayerTargeter` | 19 |  |
 | `PlayerTargeter:getLastLookRay() → number, number, number, number, number, number` | 62 |  |

@@ -1,12 +1,12 @@
 # debug/DebugManager.lua
 
-Source : `dataS/scripts/debug/DebugManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/DebugManager.lua` — FS25 1.25.1.0
 
-- **DebugManager** hérite de `AbstractManager` (l.16)
+- **DebugManager** inherits from `AbstractManager` (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugManager:initDataStructures()` | 29 |  |
 | `DebugManager:unloadMapData()` | 75 |  |

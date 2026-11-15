@@ -1,12 +1,12 @@
 # ai/errors/AIMessageErrorOutOfMoney.lua
 
-Source : `dataS/scripts/ai/errors/AIMessageErrorOutOfMoney.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/errors/AIMessageErrorOutOfMoney.lua` — FS25 1.25.1.0
 
-- **AIMessageErrorOutOfMoney** hérite de `AIMessage` (l.12)
+- **AIMessageErrorOutOfMoney** inherits from `AIMessage` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIMessageErrorOutOfMoney.new(customMt: any)` | 16 |  |
 | `AIMessageErrorOutOfMoney:getI18NText()` | 23 |  |

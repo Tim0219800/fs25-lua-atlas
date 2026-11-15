@@ -1,14 +1,14 @@
 # utils/SplineUtil.lua
 
-Source : `dataS/scripts/utils/SplineUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/SplineUtil.lua` — FS25 1.25.1.0
 
-> ⚠ Dans le dump du SDK ce fichier ne contient **que des signatures** (pas de corps).
+> ⚠ In the SDK dump this file only contains **signatures** (no bodies).
 
 - **SplineUtil** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SplineUtil.getValidSplineTime(t: number) → number` | 17 |  |
 | `SplineUtil.getSplineTimeAtWorldPos(spline: integer, t: number, posX: number, posZ: number, checkDistance: number, maxSteps: number) → number, integer` | 31 |  |

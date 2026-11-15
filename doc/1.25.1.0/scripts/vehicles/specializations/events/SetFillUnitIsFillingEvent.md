@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetFillUnitIsFillingEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetFillUnitIsFillingEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetFillUnitIsFillingEvent.lua` — FS25 1.25.1.0
 
-- **SetFillUnitIsFillingEvent** hérite de `Event` (l.7)
+- **SetFillUnitIsFillingEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetFillUnitIsFillingEvent.emptyNew() → table` | 14 |  |
 | `SetFillUnitIsFillingEvent.new(vehicle: table, isFilling: boolean)` | 23 |  |

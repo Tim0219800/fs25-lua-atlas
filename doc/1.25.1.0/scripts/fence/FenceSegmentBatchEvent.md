@@ -1,12 +1,12 @@
 # fence/FenceSegmentBatchEvent.lua
 
-Source : `dataS/scripts/fence/FenceSegmentBatchEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/fence/FenceSegmentBatchEvent.lua` — FS25 1.25.1.0
 
-- **FenceSegmentBatchEvent** hérite de `Event` (l.28)
+- **FenceSegmentBatchEvent** inherits from `Event` (l.28)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FenceSegmentBatchEvent.emptyNew() → FenceSegmentBatchEvent` | 39 |  |
 | `FenceSegmentBatchEvent.newSegments(fencePlaceable: Placeable, segments: table) → FenceSegmentBatchEvent` | 50 |  |

@@ -1,13 +1,13 @@
 # objects/InlineBale.lua
 
-Source : `dataS/scripts/objects/InlineBale.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/InlineBale.lua` — FS25 1.25.1.0
 
-- **InlineBale** hérite de `Object` (l.21)
+- **InlineBale** inherits from `Object` (l.21)
 - **InlineBaleActivatable** (l.942)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InlineBale.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 66 |  |
 | `InlineBale:delete()` | 111 |  |

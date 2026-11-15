@@ -1,12 +1,12 @@
 # gui/elements/ScreenElement.lua
 
-Source : `dataS/scripts/gui/elements/ScreenElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/ScreenElement.lua` — FS25 1.25.1.0
 
-- **ScreenElement** hérite de `FrameElement` (l.17)
+- **ScreenElement** inherits from `FrameElement` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ScreenElement.new(target: any, custom_mt: any)` | 21 |  |
 | `ScreenElement:onOpen()` | 37 |  |

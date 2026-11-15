@@ -1,12 +1,12 @@
 # gui/hud/TopNotification.lua
 
-Source : `dataS/scripts/gui/hud/TopNotification.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/TopNotification.lua` — FS25 1.25.1.0
 
-- **TopNotification** hérite de `HUDDisplay` (l.25)
+- **TopNotification** inherits from `HUDDisplay` (l.25)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TopNotification.new()` | 29 |  |
 | `TopNotification:storeScaledValues()` | 59 |  |

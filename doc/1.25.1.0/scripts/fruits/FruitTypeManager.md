@@ -1,12 +1,12 @@
 # fruits/FruitTypeManager.lua
 
-Source : `dataS/scripts/fruits/FruitTypeManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/fruits/FruitTypeManager.lua` — FS25 1.25.1.0
 
-- **FruitTypeManager** hérite de `AbstractManager` (l.43)
+- **FruitTypeManager** inherits from `AbstractManager` (l.43)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FruitTypeManager.new(customMt: table?) → any` | 49 |  |
 | `FruitTypeManager:initDataStructures()` | 57 |  |

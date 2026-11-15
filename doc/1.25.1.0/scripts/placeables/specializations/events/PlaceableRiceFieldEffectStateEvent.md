@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableRiceFieldEffectStateEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableRiceFieldEffectStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableRiceFieldEffectStateEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableRiceFieldEffectStateEvent** hérite de `Event` (l.7)
+- **PlaceableRiceFieldEffectStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableRiceFieldEffectStateEvent.emptyNew() → table` | 14 |  |
 | `PlaceableRiceFieldEffectStateEvent.new(placeableRiceField: any, fieldIndex: any, isFilling: any, isEmptying: any)` | 20 |  |

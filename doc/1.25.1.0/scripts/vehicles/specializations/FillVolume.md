@@ -1,12 +1,12 @@
 # vehicles/specializations/FillVolume.lua
 
-Source : `dataS/scripts/vehicles/specializations/FillVolume.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FillVolume.lua` — FS25 1.25.1.0
 
 - **FillVolume** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillVolume.prerequisitesPresent(specializations: any)` | 31 |  |
 | `FillVolume.initSpecialization()` | 37 |  |
@@ -34,9 +34,9 @@ Source : `dataS/scripts/vehicles/specializations/FillVolume.lua` — FS25 1.25.1
 | `FillVolume:onFillUnitFillLevelChanged(fillUnitIndex: any, fillLevelDelta: any, _: any, toolType: any, fillPositionData: any, appliedDelta: any)` | 767 |  |
 | `FillVolume:updateDebugValues(values: any)` | 962 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadFillVolume` | 112 |
 | registerFunction | `loadFillVolumeInfo` | 113 |

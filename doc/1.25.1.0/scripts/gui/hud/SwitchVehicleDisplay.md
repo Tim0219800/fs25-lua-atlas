@@ -1,12 +1,12 @@
 # gui/hud/SwitchVehicleDisplay.lua
 
-Source : `dataS/scripts/gui/hud/SwitchVehicleDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/SwitchVehicleDisplay.lua` — FS25 1.25.1.0
 
-- **SwitchVehicleDisplay** hérite de `HUDDisplayElement` (l.34)
+- **SwitchVehicleDisplay** inherits from `HUDDisplayElement` (l.34)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SwitchVehicleDisplay.new(hud: string, hudAtlasPath: string, controlHudAtlasPath: any)` | 39 |  |
 | `SwitchVehicleDisplay:setVehicle(vehicle: table)` | 75 |  |

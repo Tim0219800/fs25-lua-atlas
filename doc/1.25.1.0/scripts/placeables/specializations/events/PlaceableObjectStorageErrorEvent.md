@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableObjectStorageErrorEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableObjectStorageErrorEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableObjectStorageErrorEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableObjectStorageErrorEvent** hérite de `Event` (l.18)
+- **PlaceableObjectStorageErrorEvent** inherits from `Event` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableObjectStorageErrorEvent.emptyNew() → table` | 25 |  |
 | `PlaceableObjectStorageErrorEvent.new(placeable: table, errorId: integer)` | 33 |  |

@@ -1,12 +1,12 @@
 # debug/elements/DebugPath.lua
 
-Source : `dataS/scripts/debug/elements/DebugPath.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/elements/DebugPath.lua` — FS25 1.25.1.0
 
-- **DebugPath** hérite de `DebugElement` (l.12)
+- **DebugPath** inherits from `DebugElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugPath.new(customMt: table?) → DebugPath` | 18 |  |
 | `DebugPath:getShouldBeDrawn() → boolean` | 54 |  |

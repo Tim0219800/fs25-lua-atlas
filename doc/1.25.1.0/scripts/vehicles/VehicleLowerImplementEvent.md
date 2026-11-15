@@ -1,12 +1,12 @@
 # vehicles/VehicleLowerImplementEvent.lua
 
-Source : `dataS/scripts/vehicles/VehicleLowerImplementEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleLowerImplementEvent.lua` — FS25 1.25.1.0
 
-- **VehicleLowerImplementEvent** hérite de `Event` (l.7)
+- **VehicleLowerImplementEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleLowerImplementEvent.emptyNew() → table` | 14 |  |
 | `VehicleLowerImplementEvent.new(vehicle: table, jointIndex: integer, moveDown: boolean) → table` | 25 |  |

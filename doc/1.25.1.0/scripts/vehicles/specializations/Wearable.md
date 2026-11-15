@@ -1,12 +1,12 @@
 # vehicles/specializations/Wearable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Wearable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Wearable.lua` — FS25 1.25.1.0
 
 - **Wearable** (l.19)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Wearable.prerequisitesPresent(specializations: any)` | 29 |  |
 | `Wearable.initSpecialization()` | 35 |  |
@@ -54,9 +54,9 @@ Source : `dataS/scripts/vehicles/specializations/Wearable.lua` — FS25 1.25.1.0
 | `Wearable.loadSpecValueCondition(xmlFile: any, customEnvironment: any, baseDir: any)` | 629 |  |
 | `Wearable.getSpecValueCondition(storeItem: any, realItem: any)` | 636 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `addAllSubWearableNodes` | 58 |
 | registerFunction | `addDamageAmount` | 59 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/Dashboard.lua
 
-Source : `dataS/scripts/vehicles/specializations/Dashboard.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Dashboard.lua` — FS25 1.25.1.0
 
 - **Dashboard** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Dashboard.prerequisitesPresent(specializations: any)` | 53 |  |
 | `Dashboard.initSpecialization()` | 59 |  |
@@ -39,9 +39,9 @@ Source : `dataS/scripts/vehicles/specializations/Dashboard.lua` — FS25 1.25.1.
 | `Dashboard.registerDashboardXMLPaths(schema: XMLSchema, basePath: string, availableValueTypes: array)` | 1855 |  |
 | `Dashboard.addDelayedRegistrationFunc(schema: any, func: any)` | 1890 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onRegisterDashboardValueTypes` | 100 |
 | registerFunction | `registerDashboardValueType` | 106 |

@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableHotspots.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableHotspots.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableHotspots.lua` — FS25 1.25.1.0
 
 - **PlaceableHotspots** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHotspots.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableHotspots.registerFunctions(placeableType: any)` | 24 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableHotspots.lua` — FS
 | `PlaceableHotspots:onOwnerChanged()` | 135 |  |
 | `PlaceableHotspots:getHotspot(index: any)` | 159 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getHotspot` | 25 |
 | registerFunction | `updateHotspots` | 26 |

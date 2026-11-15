@@ -1,12 +1,12 @@
 # triggers/WoodUnloadTrigger.lua
 
-Source : `dataS/scripts/triggers/WoodUnloadTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/WoodUnloadTrigger.lua` — FS25 1.25.1.0
 
-- **WoodUnloadTrigger** hérite de `UnloadTrigger` (l.16)
+- **WoodUnloadTrigger** inherits from `UnloadTrigger` (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodUnloadTrigger.registerXMLPaths(schema: any, basePath: any)` | 24 |  |
 | `WoodUnloadTrigger.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 38 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/Motorbike.lua
 
-Source : `dataS/scripts/vehicles/specializations/Motorbike.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Motorbike.lua` — FS25 1.25.1.0
 
 - **Motorbike** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Motorbike.prerequisitesPresent(specializations: any)` | 15 |  |
 | `Motorbike.initSpecialization()` | 21 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/vehicles/specializations/Motorbike.lua` — FS25 1.25.1.
 | `Motorbike:onUpdate(dt: number, isActiveForInput: boolean, isActiveForInputIgnoreSelection: boolean, isSelected: boolean)` | 108 |  |
 | `Motorbike:onLeaveVehicle()` | 167 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 57 |
 | registerEventListener | `onPostLoad` | 58 |

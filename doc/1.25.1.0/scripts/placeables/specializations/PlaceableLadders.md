@@ -1,18 +1,18 @@
 # placeables/specializations/PlaceableLadders.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableLadders.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableLadders.lua` — FS25 1.25.1.0
 
 - **PlaceableLadders** (l.9)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableLadders.registerOverwrittenFunctions(placeableType: any)` | 22 |  |
 | `PlaceableLadders:collectPickObjects(superFunc: any, node: any)` | 60 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `collectPickObjects` | 23 |

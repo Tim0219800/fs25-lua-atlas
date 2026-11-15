@@ -1,12 +1,12 @@
 # vehicles/specializations/Locomotive.lua
 
-Source : `dataS/scripts/vehicles/specializations/Locomotive.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Locomotive.lua` — FS25 1.25.1.0
 
 - **Locomotive** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Locomotive.prerequisitesPresent(specializations: table) → boolean` | 30 |  |
 | `Locomotive.initSpecialization()` | 36 |  |
@@ -44,9 +44,9 @@ Source : `dataS/scripts/vehicles/specializations/Locomotive.lua` — FS25 1.25.1
 | `Locomotive:getCanBeReset(superFunc: any)` | 646 |  |
 | `Locomotive:getStopMotorOnLeave(superFunc: any)` | 652 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onAutomatedTrainTravelActive` | 48 |
 | registerFunction | `getDownhillForce` | 54 |
@@ -80,5 +80,5 @@ Source : `dataS/scripts/vehicles/specializations/Locomotive.lua` — FS25 1.25.1
 
 ## Messages
 
-- écoute `MessageType.PLAYER_FARM_CHANGED` (l.121)
-- écoute `MessageType.PLAYER_CREATED` (l.122)
+- subscribes `MessageType.PLAYER_FARM_CHANGED` (l.121)
+- subscribes `MessageType.PLAYER_CREATED` (l.122)

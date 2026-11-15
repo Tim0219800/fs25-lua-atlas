@@ -1,12 +1,12 @@
 # vehicles/specializations/Honk.lua
 
-Source : `dataS/scripts/vehicles/specializations/Honk.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Honk.lua` — FS25 1.25.1.0
 
 - **Honk** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Honk.prerequisitesPresent(specializations: any)` | 18 |  |
 | `Honk.initSpecialization()` | 24 |  |
@@ -22,9 +22,9 @@ Source : `dataS/scripts/vehicles/specializations/Honk.lua` — FS25 1.25.1.0
 | `Honk:onRegisterActionEvents(isActiveForInput: any, isActiveForInputIgnoreSelection: any)` | 132 |  |
 | `Honk.actionEventHonk(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 148 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getIsHonkAvailable` | 34 |
 | registerFunction | `setHonkInput` | 35 |

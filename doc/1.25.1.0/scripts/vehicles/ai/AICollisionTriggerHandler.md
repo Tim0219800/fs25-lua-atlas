@@ -1,12 +1,12 @@
 # vehicles/ai/AICollisionTriggerHandler.lua
 
-Source : `dataS/scripts/vehicles/ai/AICollisionTriggerHandler.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/ai/AICollisionTriggerHandler.lua` — FS25 1.25.1.0
 
 - **AICollisionTriggerHandler** (l.8)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AICollisionTriggerHandler.new(customMt: any)` | 20 |  |
 | `AICollisionTriggerHandler:init(vehicle: any, strategy: any)` | 40 |  |

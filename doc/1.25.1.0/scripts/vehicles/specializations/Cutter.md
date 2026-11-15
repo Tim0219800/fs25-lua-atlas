@@ -1,14 +1,14 @@
 # vehicles/specializations/Cutter.lua
 
-Source : `dataS/scripts/vehicles/specializations/Cutter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Cutter.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des tables de coupe et ramasseurs (moissonneuse, ensileuse, andaineuse-ramasseuse) : détermine, dans les cartes de densité, la culture coupée (processCutterArea), le ramassage d'andains (processPickupCutterArea) et le dépôt de haulm (processHaulmDropArea), puis transmet litres et surfaces au Combine via addCutterArea (appelé dans onEndWorkAreaProcessing, côté serveur). EFFETS : deux groupes, chargés côté client par g_effectManager:loadEffect : cutterEffects (clé vehicle.cutter.effect, effet de coupe de la culture) et fillEffects (vehicle.cutter.fillEffect, flux de matière) plus animationNodes ; EffectManager étant absent du dump, leur rendu est NON VÉRIFIÉ. Conditions d'allumage dans onUpdateTick (client et serveur) : outil allumé, movingDirection égal à celui configuré (vehicle.cutter#movingDirection), getLastSpeed() > 0.5, outil abaissé (sauf allowCuttingWhileRaised) et un Combine valide trouvé (workAreaParameters.combineVehicle). Le fillEffect démarre si un type de remplissage est connu et que l'outil a coupé durant les 300 dernières ms (lastAreaBiggerZeroTime) ; le cutterEffect démarre si un fruit d'entrée valide est connu et que la zone de test n'est pas réinitialisée. L'effet reçoit : type de remplissage, fruit, stade de croissance (setEffectTypeInfo) et la largeur couverte par le test (setMinMaxWidth, bornes min/max et alphas normalisés par rapport à la zone de test), ce qui permet de limiter l'effet à la largeur réellement coupée. Un cutterLoad (charge lissée 0..1, 0.95/0.05 ou décroissance 0.9) sert de densité au Combine et au HUD. DONNÉES MÉTÉO/HUMIDITÉ : aucune lue (ni pluie, ni vent, ni humidité) ; la pluie n'agit que dans Combine.addCutterArea. Donnée de culture utilisée pour le rendu : stade de croissance (growthState) lu dans la carte de densité. RÉSEAU : les états d'effet (stade, fruit d'entrée, type de remplissage, windrow) sont envoyés via effectDirtyFlag (writeCutterToStream / readCutterFromStream, 4 bits pour le stade) et lastAreaBiggerZero à chaque mise à jour ; le client rétablit les zones de test (setTestAreaRequirements) pour pouvoir piloter l'effet localement. Sur un client, les trois fonctions process* ne travaillent que si currentUpdateDistance <= Cutter.CLIENT_DM_UPDATE_RADIUS (constante non définie dans ce fichier : valeur NON VÉRIFIÉE). Points d'extension : fonctions enregistrées getCombine, getCutterLoad, getCutterStoneMultiplier, processCutterArea, processPickupCutterArea, processHaulmDropArea, setCutterCutHeight, getCutterTilt* ; surcharges getIsWorkAreaActive, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, isAttachAllowed, getConsumingLoad, getIsGroundReferenceNodeThreshold, loadInputAttacherJoint, getFruitExtraObjectTypeData ; vitesse par défaut Cutter.getDefaultSpeedLimit. Pour un mod de poussière de récolte, onUpdateTick est le seul endroit qui connaît à la fois la largeur coupée, la culture et son stade.
 
 - **Cutter** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Cutter.initSpecialization()` | 18 | ✍ Enregistre dans le schéma XML les clés vehicle.cutter (fruitTypes, fruitTypeCategories, fruitTypeConverter, fillTypeConverter, supportsPickupAI, effet de coupe, fillEffect, allowsForageGrowthState, allowCuttingWhileRaised, movingDirection, strawRatio, haulmDrop, tambours à dents, sons, inclinaison) et vehicles.vehicle(?).cutter#cutHeight pour la sauvegarde. Non relu clé par clé. |
 | `Cutter.prerequisitesPresent(specializations: any)` | 71 | ✍ Exige WorkArea et TestAreas (la liste continue sur la même ligne, non relue en entier). |
@@ -65,9 +65,9 @@ Source : `dataS/scripts/vehicles/specializations/Cutter.lua` — FS25 1.25.1.0
 | `Cutter.getDefaultSpeedLimit()` | 1555 | ✍ Limite de vitesse par défaut : 10. |
 | `Cutter:updateDebugValues(values: any)` | 1561 | ✍ Ajoute à l'affichage de débogage le type de sortie prioritaire, la hauteur de coupe et la répartition du tampon par type de remplissage. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `readCutterFromStream` | 78 |
 | registerFunction | `writeCutterToStream` | 79 |

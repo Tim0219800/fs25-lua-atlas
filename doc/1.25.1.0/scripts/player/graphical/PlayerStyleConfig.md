@@ -1,12 +1,12 @@
 # player/graphical/PlayerStyleConfig.lua
 
-Source : `dataS/scripts/player/graphical/PlayerStyleConfig.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/graphical/PlayerStyleConfig.lua` — FS25 1.25.1.0
 
 - **PlayerStyleConfig** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerStyleConfig:ENABLED_GETTER_FILTER(index: integer) → boolean` | 34 |  |
 | `PlayerStyleConfig:NOT_HIDDEN_GETTER_FILTER(index: integer, gear: PlayerStyleItem) → boolean` | 43 |  |

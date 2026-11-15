@@ -1,12 +1,12 @@
 # gui/elements/TableHeaderElement.lua
 
-Source : `dataS/scripts/gui/elements/TableHeaderElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/TableHeaderElement.lua` — FS25 1.25.1.0
 
-- **TableHeaderElement** hérite de `ButtonElement` (l.37)
+- **TableHeaderElement** inherits from `ButtonElement` (l.37)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TableHeaderElement.new(target: any, custom_mt: any)` | 43 |  |
 | `TableHeaderElement:loadFromXML(xmlFile: any, key: any)` | 67 |  |

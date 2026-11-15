@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/hud/ExtendedCombineHUDExtension.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedCombineHUDExtension.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedCombineHUDExtension.lua` — FS25 1.25.1.0
 
 - **ExtendedCombineHUDExtension** (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedCombineHUDExtension.new(vehicle: table, customMt: any)` | 26 |  |
 | `ExtendedCombineHUDExtension:delete()` | 71 |  |
@@ -16,5 +16,5 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedC
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.61)
-- écoute `MessageType.SETTING_CHANGED` (l.62)
+- subscribes `MessageType.SETTING_CHANGED` (l.61)
+- subscribes `MessageType.SETTING_CHANGED` (l.62)

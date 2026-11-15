@@ -1,12 +1,12 @@
 # vehicles/specializations/Cover.lua
 
-Source : `dataS/scripts/vehicles/specializations/Cover.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Cover.lua` — FS25 1.25.1.0
 
 - **Cover** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Cover.prerequisitesPresent(specializations: any)` | 21 |  |
 | `Cover.initSpecialization()` | 27 |  |
@@ -41,9 +41,9 @@ Source : `dataS/scripts/vehicles/specializations/Cover.lua` — FS25 1.25.1.0
 | `Cover.updateActionText(self: any)` | 602 |  |
 | `Cover.actionEventToggleCover(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 621 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadCoverFromXML` | 63 |
 | registerFunction | `getIsNextCoverStateAllowed` | 64 |

@@ -1,11 +1,11 @@
 # utils/IKUtil.lua
 
-Source : `dataS/scripts/utils/IKUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/IKUtil.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `IKUtil.registerIKChainTargetsXMLPaths(schema: any, basePath: any)` | 398 |  |
 | `IKUtil.registerIKChainXMLPaths(schema: any, basePath: any)` | 411 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/BaleCounterResetEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/BaleCounterResetEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/BaleCounterResetEvent.lua` — FS25 1.25.1.0
 
-- **BaleCounterResetEvent** hérite de `Event` (l.12)
+- **BaleCounterResetEvent** inherits from `Event` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleCounterResetEvent.emptyNew() → table` | 19 |  |
 | `BaleCounterResetEvent.new(object: table) → table` | 29 |  |

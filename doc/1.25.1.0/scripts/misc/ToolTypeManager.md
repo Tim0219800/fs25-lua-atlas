@@ -1,12 +1,12 @@
 # misc/ToolTypeManager.lua
 
-Source : `dataS/scripts/misc/ToolTypeManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/ToolTypeManager.lua` — FS25 1.25.1.0
 
-- **ToolTypeManager** hérite de `AbstractManager` (l.14)
+- **ToolTypeManager** inherits from `AbstractManager` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ToolTypeManager.new(customMt: any) → table` | 19 |  |
 | `ToolTypeManager:initDataStructures()` | 27 |  |

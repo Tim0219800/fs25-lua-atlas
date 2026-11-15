@@ -1,12 +1,12 @@
 # vehicles/specializations/events/FellerBuncherCutEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/FellerBuncherCutEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/FellerBuncherCutEvent.lua` — FS25 1.25.1.0
 
-- **FellerBuncherCutEvent** hérite de `Event` (l.12)
+- **FellerBuncherCutEvent** inherits from `Event` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FellerBuncherCutEvent.emptyNew() → table` | 19 |  |
 | `FellerBuncherCutEvent.new(object: table) → table` | 29 |  |

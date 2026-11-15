@@ -1,12 +1,12 @@
 # vehicles/specializations/WorkArea.lua
 
-Source : `dataS/scripts/vehicles/specializations/WorkArea.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/WorkArea.lua` — FS25 1.25.1.0
 
 - **WorkArea** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WorkArea.initSpecialization()` | 18 |  |
 | `WorkArea.registerWorkAreaXMLPaths(schema: any, basePath: any)` | 37 |  |
@@ -36,9 +36,9 @@ Source : `dataS/scripts/vehicles/specializations/WorkArea.lua` — FS25 1.25.1.0
 | `WorkArea:checkMovingPartDirtyUpdateNode(superFunc: any, node: any, movingPart: any)` | 673 |  |
 | `WorkArea:getImplementAllowAutomaticSteering(superFunc: any)` | 693 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onStartWorkAreaProcessing` | 63 |
 | registerEvent | `onEndWorkAreaProcessing` | 64 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AIJobVehicleStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AIJobVehicleStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AIJobVehicleStateEvent.lua` — FS25 1.25.1.0
 
-- **AIJobVehicleStateEvent** hérite de `Event` (l.7)
+- **AIJobVehicleStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobVehicleStateEvent.emptyNew() → table` | 14 |  |
 | `AIJobVehicleStateEvent.new(vehicle: table, job: boolean, helperIndex: any, startedFarmId: any)` | 23 |  |

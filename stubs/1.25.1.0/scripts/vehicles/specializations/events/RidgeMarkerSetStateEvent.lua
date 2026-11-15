@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : vehicles/specializations/events/RidgeMarkerSetStateEvent.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : vehicles/specializations/events/RidgeMarkerSetStateEvent.lua (generated stub, FS25 Lua Atlas)
 
 ---@class RidgeMarkerSetStateEvent : Event
 RidgeMarkerSetStateEvent = {}

@@ -1,12 +1,12 @@
 # gui/AnimalScreen.lua
 
-Source : `dataS/scripts/gui/AnimalScreen.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/AnimalScreen.lua` — FS25 1.25.1.0
 
-- **AnimalScreen** hérite de `ScreenElement` (l.18)
+- **AnimalScreen** inherits from `ScreenElement` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimalScreen.new(custom_mt: table) → table` | 35 |  |
 | `AnimalScreen:delete()` | 133 |  |
@@ -19,4 +19,4 @@ Source : `dataS/scripts/gui/AnimalScreen.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.MONEY_CHANGED` (l.165)
+- subscribes `MessageType.MONEY_CHANGED` (l.165)

@@ -1,12 +1,12 @@
 # forestry/ForestryPhysicsRope.lua
 
-Source : `dataS/scripts/forestry/ForestryPhysicsRope.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/forestry/ForestryPhysicsRope.lua` — FS25 1.25.1.0
 
 - **ForestryPhysicsRope** (l.33)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ForestryPhysicsRope.new(vehicle: any, linkActor: any, linkNode: any, isServer: any, customMt: any)` | 37 |  |
 | `ForestryPhysicsRope.registerXMLPaths(schema: any, baseKey: any)` | 66 |  |

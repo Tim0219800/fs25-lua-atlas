@@ -1,12 +1,12 @@
 # gui/elements/RenderElement.lua
 
-Source : `dataS/scripts/gui/elements/RenderElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/RenderElement.lua` — FS25 1.25.1.0
 
-- **RenderElement** hérite de `GuiElement` (l.17)
+- **RenderElement** inherits from `GuiElement` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RenderElement.new(target: table, custom_mt: table?) → RenderElement` | 26 |  |
 | `RenderElement:delete()` | 50 |  |

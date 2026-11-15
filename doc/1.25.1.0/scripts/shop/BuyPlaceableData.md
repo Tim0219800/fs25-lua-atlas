@@ -1,12 +1,12 @@
 # shop/BuyPlaceableData.lua
 
-Source : `dataS/scripts/shop/BuyPlaceableData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/shop/BuyPlaceableData.lua` — FS25 1.25.1.0
 
 - **BuyPlaceableData** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BuyPlaceableData.new(customMt: table?) → BuyPlaceableData` | 19 |  |
 | `BuyPlaceableData:isValid() → boolean` | 41 |  |

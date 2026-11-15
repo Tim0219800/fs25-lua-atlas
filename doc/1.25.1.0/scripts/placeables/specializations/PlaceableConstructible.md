@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableConstructible.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableConstructible.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableConstructible.lua` — FS25 1.25.1.0
 
 - **PlaceableConstructible** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableConstructible.prerequisitesPresent(specializations: table) → boolean` | 25 |  |
 | `PlaceableConstructible.registerFunctions(placeableType: any)` | 31 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableConstructible.lua` �
 | `PlaceableConstructible:onWriteStream(streamId: any, connection: any)` | 373 |  |
 | `PlaceableConstructible.loadSpecValueFillTypes(xmlFile: XMLFile, customEnvironment: string?, baseDir: string?, resultTable: table?) → table?` | 687 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setConstructibleState` | 32 |
 | registerFunction | `finalizeConstruction` | 33 |

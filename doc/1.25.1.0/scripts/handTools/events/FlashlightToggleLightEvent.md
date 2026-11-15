@@ -1,12 +1,12 @@
 # handTools/events/FlashlightToggleLightEvent.lua
 
-Source : `dataS/scripts/handTools/events/FlashlightToggleLightEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/events/FlashlightToggleLightEvent.lua` — FS25 1.25.1.0
 
-- **FlashlightToggleLightEvent** hérite de `Event` (l.4)
+- **FlashlightToggleLightEvent** inherits from `Event` (l.4)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FlashlightToggleLightEvent.emptyNew() → table` | 11 |  |
 | `FlashlightToggleLightEvent.new(flashlight: HandTool, isActive: boolean) → table` | 21 |  |

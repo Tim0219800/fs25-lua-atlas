@@ -1,12 +1,12 @@
 # vehicles/specializations/Attachable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Attachable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Attachable.lua` — FS25 1.25.1.0
 
 - **Attachable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Attachable.prerequisitesPresent(specializations: table) → boolean` | 26 |  |
 | `Attachable.registerEvents(vehicleType: any)` | 32 |  |
@@ -112,9 +112,9 @@ Source : `dataS/scripts/vehicles/specializations/Attachable.lua` — FS25 1.25.1
 | `Attachable:onRegisterAnimationValueTypes()` | 2555 |  |
 | `Attachable:onBottomArmBallsI3DLoaded(i3dNode: integer, failedReason: table, inputAttacherJoint: any)` | 2778 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onPreAttach` | 33 |
 | registerEvent | `onPostAttach` | 34 |

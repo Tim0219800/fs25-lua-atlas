@@ -1,11 +1,11 @@
 # missions/field/SowMission.lua
 
-Source : `dataS/scripts/missions/field/SowMission.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/missions/field/SowMission.lua` — FS25 1.25.1.0
 
-- **SowMission** hérite de `AbstractFieldMission` (l.13)
+- **SowMission** inherits from `AbstractFieldMission` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SowMission:getPartitionCompletion(partitionIndex: any)` | 167 |  |

@@ -1,12 +1,12 @@
 # ai/HelperManager.lua
 
-Source : `dataS/scripts/ai/HelperManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/HelperManager.lua` — FS25 1.25.1.0
 
-- **HelperManager** hérite de `AbstractManager` (l.27)
+- **HelperManager** inherits from `AbstractManager` (l.27)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HelperManager.new(customMt: any) → table` | 32 |  |
 | `HelperManager:initDataStructures()` | 39 |  |

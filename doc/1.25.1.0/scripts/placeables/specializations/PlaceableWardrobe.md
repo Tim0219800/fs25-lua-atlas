@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableWardrobe.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableWardrobe.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableWardrobe.lua` — FS25 1.25.1.0
 
 - **PlaceableWardrobe** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableWardrobe.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `PlaceableWardrobe.registerFunctions(placeableType: any)` | 25 |  |
@@ -21,9 +21,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableWardrobe.lua` — FS
 | `PlaceableWardrobe:onWriteStream(streamId: integer, connection: Connection)` | 117 |  |
 | `PlaceableWardrobe:wardrobeTriggerCallback(triggerId: any, otherActorId: any, onEnter: any, onLeave: any, onStay: any, otherShapeId: any)` | 124 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `wardrobeTriggerCallback` | 26 |
 | registerEventListener | `onLoad` | 32 |

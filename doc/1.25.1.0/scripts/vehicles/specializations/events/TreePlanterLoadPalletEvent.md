@@ -1,12 +1,12 @@
 # vehicles/specializations/events/TreePlanterLoadPalletEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/TreePlanterLoadPalletEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/TreePlanterLoadPalletEvent.lua` — FS25 1.25.1.0
 
-- **TreePlanterLoadPalletEvent** hérite de `Event` (l.7)
+- **TreePlanterLoadPalletEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TreePlanterLoadPalletEvent.emptyNew() → table` | 14 |  |
 | `TreePlanterLoadPalletEvent.new(object: table, palletObjectId: integer)` | 23 |  |

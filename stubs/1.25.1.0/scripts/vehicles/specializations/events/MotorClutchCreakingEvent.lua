@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : vehicles/specializations/events/MotorClutchCreakingEvent.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : vehicles/specializations/events/MotorClutchCreakingEvent.lua (generated stub, FS25 Lua Atlas)
 
 ---@class MotorClutchCreakingEvent : Event
 MotorClutchCreakingEvent = {}

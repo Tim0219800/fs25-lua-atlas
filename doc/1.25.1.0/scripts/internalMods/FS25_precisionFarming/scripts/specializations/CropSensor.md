@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/CropSensor.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/CropSensor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/CropSensor.lua` — FS25 1.25.1.0
 
 - **CropSensor** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CropSensor.prerequisitesPresent(specializations: table) → boolean` | 40 |  |
 | `CropSensor.initSpecialization()` | 46 |  |

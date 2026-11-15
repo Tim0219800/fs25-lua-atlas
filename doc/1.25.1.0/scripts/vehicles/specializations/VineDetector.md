@@ -1,11 +1,11 @@
 # vehicles/specializations/VineDetector.lua
 
-Source : `dataS/scripts/vehicles/specializations/VineDetector.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/VineDetector.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VineDetector.initSpecialization()` | 15 |  |
 | `VineDetector.prerequisitesPresent(specializations: any)` | 25 |  |
@@ -14,9 +14,9 @@ Source : `dataS/scripts/vehicles/specializations/VineDetector.lua` — FS25 1.25
 | `VineDetector:onLoad(savegame: any)` | 54 |  |
 | `VineDetector:onUpdate(dt: number, isActiveForInput: boolean, isActiveForInputIgnoreSelection: boolean, isSelected: boolean)` | 77 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `raycastCallbackVineDetection` | 32 |
 | registerFunction | `finishedVineDetection` | 33 |

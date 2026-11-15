@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolSprayCan.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolSprayCan.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolSprayCan.lua` — FS25 1.25.1.0
 
 - **HandToolSprayCan** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolSprayCan.registerXMLPaths(xmlSchema: any)` | 16 |  |
 | `HandToolSprayCan.registerSavegameXMLPaths(savegameXMLSchema: any, baseKey: any)` | 31 |  |
@@ -32,9 +32,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolSprayCan.lua` — FS25
 | `HandToolSprayCan:changeTreeMarkerType(_: any, inputValue: any)` | 470 |  |
 | `HandToolSprayCan:getIsSprayingAllowed(shape: any)` | 490 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `tryToAddTreeMarker` | 38 |
 | registerFunction | `processDelayedMarker` | 39 |

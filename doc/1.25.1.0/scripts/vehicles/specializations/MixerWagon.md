@@ -1,12 +1,12 @@
 # vehicles/specializations/MixerWagon.lua
 
-Source : `dataS/scripts/vehicles/specializations/MixerWagon.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/MixerWagon.lua` — FS25 1.25.1.0
 
 - **MixerWagon** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MixerWagon.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `MixerWagon.initSpecialization()` | 28 |  |
@@ -36,9 +36,9 @@ Source : `dataS/scripts/vehicles/specializations/MixerWagon.lua` — FS25 1.25.1
 | `MixerWagon:onTurnedOff()` | 696 |  |
 | `MixerWagon:updateDebugValues(values: any)` | 705 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `mixerWagonBaleTriggerCallback` | 55 |
 | registerFunction | `onMixerWagonBaleDeleted` | 56 |

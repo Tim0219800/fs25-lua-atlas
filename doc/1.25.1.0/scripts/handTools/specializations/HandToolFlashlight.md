@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolFlashlight.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolFlashlight.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolFlashlight.lua` — FS25 1.25.1.0
 
 - **HandToolFlashlight** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolFlashlight.registerXMLPaths(xmlSchema: any)` | 17 |  |
 | `HandToolFlashlight.registerFunctions(handToolType: any)` | 32 |  |
@@ -19,9 +19,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolFlashlight.lua` — FS
 | `HandToolFlashlight:setFlashlightIsActive(isActive: any, noEventSend: any)` | 136 |  |
 | `HandToolFlashlight:updateTransform(isHeld: any)` | 160 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setFlashlightIsActive` | 33 |
 | registerFunction | `updateTransform` | 34 |

@@ -1,12 +1,12 @@
 # vehicles/configurations/VehicleConfigurationItemTreeSapling.lua
 
-Source : `dataS/scripts/vehicles/configurations/VehicleConfigurationItemTreeSapling.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/configurations/VehicleConfigurationItemTreeSapling.lua` — FS25 1.25.1.0
 
-- **VehicleConfigurationItemTreeSapling** hérite de `VehicleConfigurationItem` (l.14)
+- **VehicleConfigurationItemTreeSapling** inherits from `VehicleConfigurationItem` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleConfigurationItemTreeSapling.new(configName: any, customMt: any)` | 18 |  |
 | `VehicleConfigurationItemTreeSapling:loadFromXML(xmlFile: any, baseKey: any, configKey: any, baseDirectory: any, customEnvironment: any)` | 26 |  |

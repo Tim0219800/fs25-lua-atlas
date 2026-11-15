@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableWashingStation.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableWashingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableWashingStation.lua` — FS25 1.25.1.0
 
 - **PlaceableWashingStation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableWashingStation.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableWashingStation.registerOverwrittenFunctions(placeableType: any)` | 24 |  |
@@ -19,9 +19,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableWashingStation.lua` 
 | `PlaceableWashingStation:onWriteStream(streamId: any, connection: any)` | 103 |  |
 | `PlaceableWashingStation:setOwnerFarmId(superFunc: any, farmId: any, noEventSend: any)` | 117 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `setOwnerFarmId` | 25 |
 | registerEventListener | `onLoad` | 31 |

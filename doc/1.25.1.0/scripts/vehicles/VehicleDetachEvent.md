@@ -1,12 +1,12 @@
 # vehicles/VehicleDetachEvent.lua
 
-Source : `dataS/scripts/vehicles/VehicleDetachEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleDetachEvent.lua` — FS25 1.25.1.0
 
-- **VehicleDetachEvent** hérite de `Event` (l.11)
+- **VehicleDetachEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleDetachEvent.emptyNew() → table` | 18 |  |
 | `VehicleDetachEvent.new(vehicle: table, implement: table) → table` | 28 |  |

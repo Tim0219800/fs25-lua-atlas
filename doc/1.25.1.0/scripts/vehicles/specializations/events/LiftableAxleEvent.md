@@ -1,12 +1,12 @@
 # vehicles/specializations/events/LiftableAxleEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/LiftableAxleEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/LiftableAxleEvent.lua` — FS25 1.25.1.0
 
-- **LiftableAxleEvent** hérite de `Event` (l.7)
+- **LiftableAxleEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LiftableAxleEvent.emptyNew() → table` | 14 |  |
 | `LiftableAxleEvent.new(object: table, state: any, fixedHeight: any)` | 22 |  |

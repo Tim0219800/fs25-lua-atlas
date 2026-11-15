@@ -1,14 +1,14 @@
 # utils/ClassUtil.lua
 
-Source : `dataS/scripts/utils/ClassUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/ClassUtil.lua` — FS25 1.25.1.0
 
-> ⚠ Dans le dump du SDK ce fichier ne contient **que des signatures** (pas de corps).
+> ⚠ In the SDK dump this file only contains **signatures** (no bodies).
 
 - **ClassUtil** (l.8)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ClassUtil.getIsValidClassName(className: string) → boolean` | 14 |  |
 | `ClassUtil.getIsValidIndexName(indexName: string) → boolean` | 25 |  |

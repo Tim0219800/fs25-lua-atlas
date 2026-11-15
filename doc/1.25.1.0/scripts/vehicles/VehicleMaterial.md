@@ -1,12 +1,12 @@
 # vehicles/VehicleMaterial.lua
 
-Source : `dataS/scripts/vehicles/VehicleMaterial.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleMaterial.lua` — FS25 1.25.1.0
 
 - **VehicleMaterial** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleMaterial.new(baseDirectory: any, customMt: any)` | 16 |  |
 | `VehicleMaterial:clone()` | 27 |  |

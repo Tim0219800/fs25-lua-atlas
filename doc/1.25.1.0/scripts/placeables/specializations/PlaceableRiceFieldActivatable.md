@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableRiceFieldActivatable.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableRiceFieldActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableRiceFieldActivatable.lua` — FS25 1.25.1.0
 
 - **PlaceableRiceFieldActivatable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableRiceFieldActivatable.new(riceFieldPlaceable: any)` | 15 |  |
 | `PlaceableRiceFieldActivatable:getIsActivatable()` | 28 |  |

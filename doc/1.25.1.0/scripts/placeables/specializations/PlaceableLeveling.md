@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableLeveling.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableLeveling.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableLeveling.lua` — FS25 1.25.1.0
 
 - **PlaceableLeveling** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableLeveling.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableLeveling.registerFunctions(placeableType: table)` | 25 |  |
@@ -21,9 +21,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableLeveling.lua` — FS
 | `PlaceableLeveling:getRequiresRealignAfterLeveling() → boolean` | 268 |  |
 | `PlaceableLeveling:applyDeformation(isPreview: boolean, callback: function)` | 277 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadLevelArea` | 26 |
 | registerFunction | `loadPaintArea` | 27 |

@@ -1,12 +1,12 @@
 # ai/jobs/AIJob.lua
 
-Source : `dataS/scripts/ai/jobs/AIJob.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/jobs/AIJob.lua` — FS25 1.25.1.0
 
 - **AIJob** (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJob.new(isServer: any, customMt: any)` | 22 |  |
 | `AIJob:delete()` | 41 |  |

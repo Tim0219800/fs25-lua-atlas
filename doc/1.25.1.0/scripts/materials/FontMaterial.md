@@ -1,12 +1,12 @@
 # materials/FontMaterial.lua
 
-Source : `dataS/scripts/materials/FontMaterial.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/materials/FontMaterial.lua` — FS25 1.25.1.0
 
 - **FontMaterial** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FontMaterial.new(customMt: any)` | 16 |  |
 | `FontMaterial:loadFromXML(xmlFile: any, key: any, customEnvironment: any, baseDirectory: any, callback: any)` | 24 |  |

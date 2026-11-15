@@ -1,12 +1,12 @@
 # vehicles/specializations/events/PlowRotationEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/PlowRotationEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/PlowRotationEvent.lua` — FS25 1.25.1.0
 
-- **PlowRotationEvent** hérite de `Event` (l.7)
+- **PlowRotationEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlowRotationEvent.emptyNew() → table` | 14 |  |
 | `PlowRotationEvent.new(object: table, rotationMax: boolean)` | 23 |  |

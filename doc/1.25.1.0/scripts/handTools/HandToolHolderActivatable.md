@@ -1,12 +1,12 @@
 # handTools/HandToolHolderActivatable.lua
 
-Source : `dataS/scripts/handTools/HandToolHolderActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/HandToolHolderActivatable.lua` — FS25 1.25.1.0
 
 - **HandToolHolderActivatable** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolHolderActivatable.new(handToolHolder: any, takeText: any, storeText: any, needTargeting: any)` | 16 |  |
 | `HandToolHolderActivatable:getIsActivatable()` | 31 |  |

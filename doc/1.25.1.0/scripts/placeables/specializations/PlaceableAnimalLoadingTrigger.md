@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableAnimalLoadingTrigger.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableAnimalLoadingTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableAnimalLoadingTrigger.lua` — FS25 1.25.1.0
 
 - **PlaceableAnimalLoadingTrigger** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableAnimalLoadingTrigger.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableAnimalLoadingTrigger.registerEventListeners(placeableType: any)` | 24 |  |
@@ -17,9 +17,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableAnimalLoadingTrigger
 | `PlaceableAnimalLoadingTrigger:onLoad(savegame: table)` | 55 |  |
 | `PlaceableAnimalLoadingTrigger:onDelete()` | 67 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 25 |
 | registerEventListener | `onDelete` | 26 |

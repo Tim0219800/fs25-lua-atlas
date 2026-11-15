@@ -1,12 +1,12 @@
 # ai/parameters/AIParameterLooping.lua
 
-Source : `dataS/scripts/ai/parameters/AIParameterLooping.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/parameters/AIParameterLooping.lua` — FS25 1.25.1.0
 
-- **AIParameterLooping** hérite de `AIParameter` (l.12)
+- **AIParameterLooping** inherits from `AIParameter` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIParameterLooping.new(customMt: any)` | 16 |  |
 | `AIParameterLooping:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 28 |  |

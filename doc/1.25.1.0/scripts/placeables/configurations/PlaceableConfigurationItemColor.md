@@ -1,12 +1,12 @@
 # placeables/configurations/PlaceableConfigurationItemColor.lua
 
-Source : `dataS/scripts/placeables/configurations/PlaceableConfigurationItemColor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/configurations/PlaceableConfigurationItemColor.lua` — FS25 1.25.1.0
 
-- **PlaceableConfigurationItemColor** hérite de `PlaceableConfigurationItem` (l.14)
+- **PlaceableConfigurationItemColor** inherits from `PlaceableConfigurationItem` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableConfigurationItemColor.new(configName: any, customMt: any)` | 18 |  |
 | `PlaceableConfigurationItemColor:loadFromXML(xmlFile: any, baseKey: any, configKey: any, baseDirectory: any, customEnvironment: any)` | 29 |  |

@@ -1,12 +1,12 @@
 # shop/BrandManager.lua
 
-Source : `dataS/scripts/shop/BrandManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/shop/BrandManager.lua` — FS25 1.25.1.0
 
-- **BrandManager** hérite de `AbstractManager` (l.13)
+- **BrandManager** inherits from `AbstractManager` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BrandManager.new(customMt: any) → table` | 18 |  |
 | `BrandManager:initDataStructures()` | 28 |  |

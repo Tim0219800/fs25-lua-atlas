@@ -1,12 +1,12 @@
 # i3d/I3DManager.lua
 
-Source : `dataS/scripts/i3d/I3DManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/i3d/I3DManager.lua` — FS25 1.25.1.0
 
 - **I3DManager** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `I3DManager.new(customMt: table?) → I3DManager` | 21 |  |
 | `I3DManager:init()` | 33 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/LogGrabClawStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/LogGrabClawStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/LogGrabClawStateEvent.lua` — FS25 1.25.1.0
 
-- **LogGrabClawStateEvent** hérite de `Event` (l.12)
+- **LogGrabClawStateEvent** inherits from `Event` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LogGrabClawStateEvent.emptyNew() → table` | 19 |  |
 | `LogGrabClawStateEvent.new(object: table, state: table, grabIndex: any) → table` | 29 |  |

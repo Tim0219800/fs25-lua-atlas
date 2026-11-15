@@ -1,11 +1,11 @@
 # misc/NoteManager.lua
 
-Source : `dataS/scripts/misc/NoteManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/NoteManager.lua` — FS25 1.25.1.0
 
-- **NoteManager** hérite de `AbstractManager` (l.15)
+- **NoteManager** inherits from `AbstractManager` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `NoteManager:initDataStructures()` | 25 |  |

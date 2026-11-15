@@ -1,12 +1,12 @@
 # triggers/BasketTrigger.lua
 
-Source : `dataS/scripts/triggers/BasketTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/BasketTrigger.lua` — FS25 1.25.1.0
 
 - **BasketTrigger** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BasketTrigger:onCreate(id: integer)` | 16 |  |
 | `BasketTrigger.new(customMt: table?) → table` | 29 |  |

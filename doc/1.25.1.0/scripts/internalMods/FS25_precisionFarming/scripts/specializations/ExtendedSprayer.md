@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSprayer.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSprayer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSprayer.lua` — FS25 1.25.1.0
 
 - **ExtendedSprayer** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedSprayer.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `ExtendedSprayer.initSpecialization()` | 28 |  |

@@ -1,11 +1,11 @@
 # vehicles/specializations/RidgeFormer.lua
 
-Source : `dataS/scripts/vehicles/specializations/RidgeFormer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/RidgeFormer.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RidgeFormer.prerequisitesPresent(specializations: table) → boolean` | 26 |  |
 | `RidgeFormer.initSpecialization()` | 32 |  |
@@ -22,9 +22,9 @@ Source : `dataS/scripts/vehicles/specializations/RidgeFormer.lua` — FS25 1.25.
 | `RidgeFormer:getDirtMultiplier(superFunc: any)` | 176 |  |
 | `RidgeFormer:getWearMultiplier(superFunc: any) → number` | 190 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processRidgeFormerArea` | 46 |
 | registerOverwrittenFunction | `doCheckSpeedLimit` | 52 |

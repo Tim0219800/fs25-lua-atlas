@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/AdditionalFieldBuyInfoEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/AdditionalFieldBuyInfoEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/AdditionalFieldBuyInfoEvent.lua` — FS25 1.25.1.0
 
-- **AdditionalFieldBuyInfoEvent** hérite de `Event` (l.7)
+- **AdditionalFieldBuyInfoEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AdditionalFieldBuyInfoEvent.emptyNew() → table` | 14 |  |
 | `AdditionalFieldBuyInfoEvent.new(farmlandId: table)` | 22 |  |

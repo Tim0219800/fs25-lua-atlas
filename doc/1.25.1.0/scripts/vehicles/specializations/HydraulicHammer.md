@@ -1,12 +1,12 @@
 # vehicles/specializations/HydraulicHammer.lua
 
-Source : `dataS/scripts/vehicles/specializations/HydraulicHammer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/HydraulicHammer.lua` — FS25 1.25.1.0
 
 - **HydraulicHammer** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HydraulicHammer.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `HydraulicHammer.initSpecialization()` | 24 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/vehicles/specializations/HydraulicHammer.lua` — FS25 1
 | `HydraulicHammer:getWearMultiplier(superFunc: any) → number` | 276 |  |
 | `HydraulicHammer:getConsumingLoad(superFunc: any)` | 289 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `hydraulicHammerRaycastCallback` | 54 |
 | registerOverwrittenFunction | `getDirtMultiplier` | 60 |

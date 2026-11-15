@@ -1,12 +1,12 @@
 # placeables/PlaceableLoadingData.lua
 
-Source : `dataS/scripts/placeables/PlaceableLoadingData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/PlaceableLoadingData.lua` — FS25 1.25.1.0
 
 - **PlaceableLoadingData** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableLoadingData.new(customMt: any) → PlaceableLoadingData` | 17 |  |
 | `PlaceableLoadingData:setFilename(filename: string)` | 55 |  |

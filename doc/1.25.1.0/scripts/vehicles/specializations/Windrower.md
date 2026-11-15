@@ -1,14 +1,14 @@
 # vehicles/specializations/Windrower.lua
 
-Source : `dataS/scripts/vehicles/specializations/Windrower.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Windrower.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des andaineurs : ramasse le fourrage étalé (types listés par vehicle.windrower#fillTypes / #fillTypeCategories) sur la zone de travail via la carte de hauteur (DensityMapHeightUtil.tipToGroundAroundLine avec -infini) et le redépose en andain dans une zone de dépôt (dropWindrowWorkAreaIndex). Même architecture que Tedder. EFFETS : animationNodes (client, démarrés à l'allumage) et liste vehicle.windrower.effects.effect(?) chargés par g_effectManager:loadEffect, chacun lié à une zone (workAreaIndex) et optionnellement à une zone de dépôt (dropAreaIndex), fenêtre d'activité 250 ms ; si l'effet expose setWorkAreaIndex, la zone lui est communiquée. Classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT (serveur) : dans processWindrowerArea, quand la zone a ramassé des litres, si le dépôt a effectivement déposé de la matière (dropped > 0) et que la vitesse (getLastSpeed(true)) dépasse 0.5, les effets de la zone dont dropAreaIndex correspond sont armés (activeTime = temps + 250 ms), démarrés au besoin et recalés sur le type déposé (setEffectTypeInfo). Aucune densité réglée (contrairement à Tedder). Le type transmis est celui du dernier andain ramassé (lastValidPickupFillType), jamais un stade de culture. Chaque ramassage appelle aussi setTestAreaRequirements(nil, type, nil) avec le type ramassé (rôle exact dans le rendu NON VÉRIFIÉ : fonction hors fichier). CONDITIONS : isWorking = vitesse > 0.5 au traitement d'une zone ; doCheckSpeedLimit s'applique si allumé (ou sans TurnOnVehicle) et chaîne abaissée ; aucun test d'allumage dans la zone elle-même (getIsWorkAreaActive non surchargé ici : NON VÉRIFIÉ). Traitement sauté pour un client éloigné (> Windrower.CLIENT_DM_UPDATE_RADIUS, constante non définie ici : NON VÉRIFIÉ). ARRÊT : onUpdateTick (côté serveur) coupe les effets expirés et lève effectDirtyFlag ; onTurnedOff coupe tout. Sur serveur dédié, g_effectManager est appelé sans garde isClient (inoffensif ? non vérifié). MÉTÉO/HUMIDITÉ : aucune donnée lue. RÉSEAU : types de remplissage par zone (fillTypesDirtyFlag) et booléen par effet (effectDirtyFlag), diffusés au flux initial et en mise à jour ; le client applique type et démarrage/arrêt. dt : 250 ms de temps de jeu ; pas de dt dans la physique du dépôt. À noter : onPostLoad utilise table.insert(spec.effects, i) au lieu de table.remove pour un indice invalide (Windrower.lua:171), vraisemblable faute (non vérifié en jeu). particleSystemIndex est lu dans loadWorkAreaFromXML mais jamais utilisé dans ce fichier (reliquat de l'ancien système de particules ; les clés vehicle.windrowerParticleSystems sont signalées obsolètes). POINTS D'EXTENSION : fonctions processWindrowerArea, processDropArea ; surcharges doCheckSpeedLimit, loadWorkAreaFromXML (type WINDROWER), getDirtMultiplier, getWearMultiplier ; événements onLoad, onPostLoad, flux, onUpdateTick, onTurnedOn/Off, onStart/EndWorkAreaProcessing, onAIFieldCourseSettingsInitialized. Vitesse limite par défaut : 15.
 
 - **Windrower** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Windrower.initSpecialization()` | 17 | ✍ Déclare le type de zone windrower et le schéma XML : effets, animationNodes, types de remplissage supportés, limitToLineHeight, sons. Non relu clé par clé. |
 | `Windrower.prerequisitesPresent(specializations: any)` | 46 | ✍ Exige la spécialisation WorkArea (seule). |
@@ -36,9 +36,9 @@ Source : `dataS/scripts/vehicles/specializations/Windrower.lua` — FS25 1.25.1.
 | `Windrower:processWindrowerArea(workArea: any, dt: any)` | 442 | ✍ Ramasse l'andain sous la zone : cherche un type supporté (ou reprend le dernier type, herbe fraîche et sèche équivalentes), mémorise lastValidPickupFillType et appelle setTestAreaRequirements, cumule litres à déposer, dépose via processDropArea et, côté serveur à vitesse > 0.5 avec dépôt réel, met à jour le type par zone et arme/démarre les effets. Renvoie litres déposés et surface (largeur * distance parcourue). |
 | `Windrower:processDropArea(dropArea: any, litersToDrop: any, fillType: any)` | 562 | ✍ Dépose les litres sur la ligne de la zone de dépôt (tipToGroundAroundLine), mémorise le décalage de ligne et renvoie les litres réellement déposés. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processWindrowerArea` | 53 |
 | registerFunction | `processDropArea` | 54 |

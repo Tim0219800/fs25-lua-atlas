@@ -1,12 +1,12 @@
 # gui/elements/GuiElement.lua
 
-Source : `dataS/scripts/gui/elements/GuiElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/GuiElement.lua` — FS25 1.25.1.0
 
 - **GuiElement** (l.99)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GuiElement.new(target: target, custom_mt: any)` | 144 |  |
 | `GuiElement:loadFromXML(xmlFile: xmlFile, key: key)` | 222 |  |

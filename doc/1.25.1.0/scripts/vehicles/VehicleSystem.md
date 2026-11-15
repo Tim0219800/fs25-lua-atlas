@@ -1,14 +1,14 @@
 # vehicles/VehicleSystem.lua
 
-Source : `dataS/scripts/vehicles/VehicleSystem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleSystem.lua` — FS25 1.25.1.0
 
 ✍ Classe de gestion (pas une spécialisation) : registre global de tous les véhicules de la partie (vehicles, vehicleByUniqueId, enterables, interactiveVehicles, joints d'attache), chargement/sauvegarde des véhicules en XML et commandes console de débogage. Instance créée par la mission (accès exact, par ex. g_currentMission.vehicleSystem, dans FSBaseMission/Mission00 absents du dump : NON VÉRIFIÉ). POINT CLÉ MÉTÉO : VehicleSystem:update(dt) (VehicleSystem.lua:~137-175) est le SEUL endroit du vanilla (parmi les fichiers lus) qui pilote l'HUMIDITÉ des véhicules : côté serveur seulement (g_server ~= nil), il lit weather:getRainFallScale(), puis, si > 0.1, weather:getTimeSinceLastRain() et weather:getCurrentTemperature() ; si temps depuis la dernière pluie < 30 et température > 0, il appelle pour chaque véhicule présent (hors showroom, avec updateWetness) vehicle:updateWetness(true, dt x échelle de temps effective) quand le véhicule est à l'extérieur (indoorMask:getIsIndoorAtWorldPosition(x, z) à la position de rootNode) et updateWetness(false, ...) quand il est à l'intérieur (donc séchage sous abri), en tenant à jour la table wetVehicles. Quand rainScale <= 0.1 et que wetVehicles n'est pas vide, tous les véhicules mouillés sèchent (updateWetness(false)) jusqu'à ne plus l'être. À noter : si rainScale > 0.1 mais que la condition (temps depuis la pluie < 30 ET température > 0) est fausse, aucun branchement ne sèche ni ne mouille (apparent trou de logique ; non vérifié en jeu). L'échelle de temps vient de g_currentMission:getEffectiveTimeScale() (corps absent du dump : NON VÉRIFIÉ) : c'est donc ici que la pause/l'accélération du temps est prise en compte pour l'humidité. Unités et plages des valeurs météo : implémentation Weather absente du dump, NON VÉRIFIÉ. Aucune lecture du vent ici. RÉSEAU : le registre existe sur toutes les machines ; la mise à jour d'humidité et la sauvegarde/le chargement sont côté serveur (le chargement exige un serveur pour la plupart des commandes console). Les valeurs d'humidité résultantes sont ensuite synchronisées par Washable. Chargement : asynchrone via g_asyncTaskManager et VehicleLoadingData ; les véhicules sont ajoutés à la physique seulement quand tous sont chargés (loadVehicleFinished). Points d'extension pour un moddeur : surcharger VehicleSystem:update (global, non enregistré par SpecializationUtil) pour modifier la règle de mouillage ou prendre en compte d'autres sources ; lire vehicles / wetVehicles / enterables pour énumérer les véhicules sans scan global ; s'abonner aux messages MessageType.VEHICLE_ADDED / VEHICLE_REMOVED publiés par addVehicle / removeVehicle.
 
 - **VehicleSystem** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleSystem.new(mission: any, customMt: any)` | 18 | ✍ Crée le registre (tables vehicles, wetVehicles, enterables, interactiveVehicles, joints, chargements en attente), déclare les commandes console (certaines seulement serveur ou avec g_addCheatCommands / g_addTestCommands) et s'abonne à BuyVehicleEvent. |
 | `VehicleSystem:delete()` | 74 | ✍ Annule les chargements en attente, supprime tous les véhicules, vide les tables, désabonne les messages et retire les commandes console. |
@@ -59,5 +59,5 @@ Source : `dataS/scripts/vehicles/VehicleSystem.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.VEHICLE_ADDED` (l.247)
-- publie `MessageType.VEHICLE_REMOVED` (l.266)
+- publishes `MessageType.VEHICLE_ADDED` (l.247)
+- publishes `MessageType.VEHICLE_REMOVED` (l.266)

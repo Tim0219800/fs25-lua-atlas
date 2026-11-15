@@ -1,11 +1,11 @@
 # animals/wildlife/instances/WildlifeInstanceSimple.lua
 
-Source : `dataS/scripts/animals/wildlife/instances/WildlifeInstanceSimple.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/wildlife/instances/WildlifeInstanceSimple.lua` — FS25 1.25.1.0
 
-- **WildlifeInstanceSimple** hérite de `WildlifeInstance` (l.11)
+- **WildlifeInstanceSimple** inherits from `WildlifeInstance` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WildlifeInstanceSimple:getCanDespawnNow() → boolean` | 94 |  |

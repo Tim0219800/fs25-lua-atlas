@@ -1,12 +1,12 @@
 # vehicles/specializations/events/BaleWrapperStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/BaleWrapperStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/BaleWrapperStateEvent.lua` — FS25 1.25.1.0
 
-- **BaleWrapperStateEvent** hérite de `Event` (l.7)
+- **BaleWrapperStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleWrapperStateEvent.emptyNew() → table` | 14 |  |
 | `BaleWrapperStateEvent.new(object: table, stateId: integer, nearestBaleServerId: integer?) → BaleWrapperStateEvent` | 25 |  |

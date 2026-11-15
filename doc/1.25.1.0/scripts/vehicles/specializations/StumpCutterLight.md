@@ -1,11 +1,11 @@
 # vehicles/specializations/StumpCutterLight.lua
 
-Source : `dataS/scripts/vehicles/specializations/StumpCutterLight.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/StumpCutterLight.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StumpCutterLight.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `StumpCutterLight.initSpecialization()` | 25 |  |
@@ -25,9 +25,9 @@ Source : `dataS/scripts/vehicles/specializations/StumpCutterLight.lua` — FS25 
 | `StumpCutterLight:getWearMultiplier(superFunc: any) → number` | 243 |  |
 | `StumpCutterLight:getConsumingLoad(superFunc: any)` | 255 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `removeTreeStump` | 41 |
 | registerFunction | `stumpCutterLightOverlapCallback` | 42 |

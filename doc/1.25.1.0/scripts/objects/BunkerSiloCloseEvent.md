@@ -1,12 +1,12 @@
 # objects/BunkerSiloCloseEvent.lua
 
-Source : `dataS/scripts/objects/BunkerSiloCloseEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/BunkerSiloCloseEvent.lua` — FS25 1.25.1.0
 
-- **BunkerSiloCloseEvent** hérite de `Event` (l.6)
+- **BunkerSiloCloseEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BunkerSiloCloseEvent.emptyNew() → table` | 13 |  |
 | `BunkerSiloCloseEvent.new(bunkerSilo: table) → table` | 22 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/Leveler.lua
 
-Source : `dataS/scripts/vehicles/specializations/Leveler.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Leveler.lua` — FS25 1.25.1.0
 
 - **Leveler** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Leveler.prerequisitesPresent(specializations: table) → boolean` | 23 |  |
 | `Leveler.initSpecialization()` | 29 |  |
@@ -23,9 +23,9 @@ Source : `dataS/scripts/vehicles/specializations/Leveler.lua` — FS25 1.25.1.0
 | `Leveler:getIsAttacherJointControlDampingAllowed(superFunc: any) → boolean` | 526 |  |
 | `Leveler.onLevelerRaycastCallback(levelerNode: integer, hitObjectId: integer, x: number, y: number, z: number, distance: number, nx: number, ny: number, nz: number, subShapeIndex: integer, shapeId: integer, isLast: boolean) → boolean` | 557 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getIsLevelerPickupNodeActive` | 77 |
 | registerFunction | `loadLevelerNodeFromXML` | 78 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/PowerConsumer.lua
 
-Source : `dataS/scripts/vehicles/specializations/PowerConsumer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/PowerConsumer.lua` — FS25 1.25.1.0
 
 - **PowerConsumer** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PowerConsumer.initSpecialization()` | 15 |  |
 | `PowerConsumer.registerPowerConsumerXMLPaths(schema: any, basePath: any)` | 40 |  |
@@ -36,9 +36,9 @@ Source : `dataS/scripts/vehicles/specializations/PowerConsumer.lua` — FS25 1.2
 | `PowerConsumer.loadSpecValueNeededPower(xmlFile: XMLFile, customEnvironment: string, baseDir: any) → number` | 500 |  |
 | `PowerConsumer.getSpecValueNeededPower(storeItem: table, realItem: table, configurations: any, saleItem: any, returnValues: any, returnRange: any) → string, number, number` | 529 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadPowerSetup` | 77 |
 | registerFunction | `getPtoRpm` | 78 |

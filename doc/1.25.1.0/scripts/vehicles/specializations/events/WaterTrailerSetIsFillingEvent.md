@@ -1,12 +1,12 @@
 # vehicles/specializations/events/WaterTrailerSetIsFillingEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/WaterTrailerSetIsFillingEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/WaterTrailerSetIsFillingEvent.lua` — FS25 1.25.1.0
 
-- **WaterTrailerSetIsFillingEvent** hérite de `Event` (l.7)
+- **WaterTrailerSetIsFillingEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WaterTrailerSetIsFillingEvent.emptyNew() → table` | 14 |  |
 | `WaterTrailerSetIsFillingEvent.new(vehicle: table, isFilling: boolean)` | 23 |  |

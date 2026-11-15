@@ -1,6 +1,6 @@
 # materials/MaterialUtil.lua
 
-Source : `dataS/scripts/materials/MaterialUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/materials/MaterialUtil.lua` — FS25 1.25.1.0
 
 ✍ Fonctions utilitaires liées aux matériaux. Les quatre fonctions « onCreate » sont des rappels destinés à être déclarés dans un I3D (attribut onCreate du nœud, résolu par nom de fonction globale) : ils lisent les attributs utilisateur du nœud (getUserAttribute) et enregistrent le résultat dans g_materialManager ou g_particleSystemManager. Elles s'exécutent donc au chargement des I3D porte-matériaux et porte-particules (absents du dump), sur chaque pair.
 
@@ -10,9 +10,9 @@ GESTION D'ERREUR : tous les cas invalides sont signalés par Logging.i3dWarning 
 
 - **MaterialUtil** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MaterialUtil.onCreateBaseMaterial(_: any, id: integer)` | 17 | ✍ Rappel de porte-matériaux : lit l'attribut materialName du nœud et enregistre le matériau d'emplacement 0 comme matériau de base (g_materialManager:addBaseMaterial) ; avertit si l'attribut manque. |
 | `MaterialUtil.validateMaterialAttributes(node: integer, sourceFuncName: string) → boolean, integer, integer, integer` | 35 | ✍ Valide les attributs fillType, materialType et materialIndex d'un nœud et renvoie, en cas de succès, vrai puis l'indice du type de remplissage, le nom de type de matériau et l'indice (1 par défaut). Renvoie faux avec avertissement I3D si un attribut manque, si le type de remplissage ou de matériau est inconnu, ou si l'indice n'est pas numérique. |

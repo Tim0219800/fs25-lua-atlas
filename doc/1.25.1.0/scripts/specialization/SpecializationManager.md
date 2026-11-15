@@ -1,12 +1,12 @@
 # specialization/SpecializationManager.lua
 
-Source : `dataS/scripts/specialization/SpecializationManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/specialization/SpecializationManager.lua` — FS25 1.25.1.0
 
-- **SpecializationManager** hérite de `AbstractManager` (l.11)
+- **SpecializationManager** inherits from `AbstractManager` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SpecializationManager.new(typeName: string, xmlFilename: string, customMt: table?) → SpecializationManager` | 34 |  |
 | `SpecializationManager:initDataStructures()` | 45 |  |

@@ -1,11 +1,11 @@
 # gui/dialogs/TourDialog.lua
 
-Source : `dataS/scripts/gui/dialogs/TourDialog.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/dialogs/TourDialog.lua` — FS25 1.25.1.0
 
-- **TourDialog** hérite de `MessageDialog` (l.15)
+- **TourDialog** inherits from `MessageDialog` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TourDialog:inputEvent(action: any, value: any, eventUsed: any)` | 184 |  |

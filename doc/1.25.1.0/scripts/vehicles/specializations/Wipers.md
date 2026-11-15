@@ -1,14 +1,14 @@
 # vehicles/specializations/Wipers.lua
 
-Source : `dataS/scripts/vehicles/specializations/Wipers.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Wipers.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation d'essuie-glaces (prérequis : Enterable et AnimatedVehicle). Elle ne produit aucun effet de particules ni de goutte : elle joue des animations de véhicule (nom d'animation par essuie-glace, vehicle.wipers.wiper(?)#animName) dont la vitesse (state(?)#animSpeed) et la pause (#animPause, en secondes, converties en ms) dépendent de l'intensité de pluie. Seule donnée météo lue : g_currentMission.environment.weather:getRainFallScale() à chaque onUpdateTick, stockée dans spec.lastRainScale ; la valeur est comparée à un seuil de 0.01 puis répartie sur [0..1] en autant de tranches égales que d'états (state.maxRainValue = k / nombreÉtats), l'état retenu étant la première tranche dont le plafond est >= à la pluie. Le comportement de getRainFallScale (unité, plage, lissage) est dans Weather, absent du dump : NON VÉRIFIÉ. La logique ne s'exécute que si getIsControlled() est vrai (véhicule occupé/contrôlé) et que getIsActiveForWipers() est vrai ; elle n'a pas de garde isServer/isClient propre (les animations passent par AnimatedVehicle ; leur synchronisation est NON VÉRIFIÉE), seule la mise à jour du tableau de bord est limitée au client. La boucle d'animation : lecture jusqu'à la fin, puis retour inverse déclenché par onFinishAnimation, et prochaine passe retardée de 2 x durée/vitesse + pause (g_currentMission.time). Point d'extension : fonctions enregistrées loadWiperFromXML et getIsActiveForWipers (renvoie true ; surchargeable pour désactiver les essuie-glaces, par exemple hors cabine) ; événements écoutés onLoad, onRegisterDashboardValueTypes, onUpdateTick, onFinishAnimation ; commande console de forçage via Wipers.forcedState (global à toutes les instances). Valeur de dashboard exposée : « wipers » / « state » (champ lastState du plus riche des essuie-glaces). Utile pour un mod d'humidité : c'est un consommateur de getRainFallScale, pas une source d'effets visuels.
 
 - **Wipers** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Wipers.prerequisitesPresent(specializations: any)` | 16 | ✍ Exige les spécialisations Enterable et AnimatedVehicle. |
 | `Wipers.initSpecialization()` | 22 | ✍ Enregistre dans Vehicle.xmlSchema les clés vehicle.wipers.wiper(?)#animName, state(?)#animSpeed et state(?)#animPause, ainsi que les chemins de tableaux de bord vehicle.wipers.dashboards (valeur « state »). |
@@ -22,9 +22,9 @@ Source : `dataS/scripts/vehicles/specializations/Wipers.lua` — FS25 1.25.1.0
 | `Wipers:getIsActiveForWipers()` | 229 | ✍ Renvoie true par défaut ; point de surcharge pour autoriser ou non l'activation automatique selon la pluie. |
 | `Wipers:consoleSetWiperState(state: any)` | 235 | ✍ Commande console gsWiperStateSet : fixe Wipers.forcedState (-1 pour revenir à l'état déduit de la météo, 0..n pour forcer un état, borné à 999) et renvoie un message de confirmation ou d'erreur. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadWiperFromXML` | 38 |
 | registerFunction | `getIsActiveForWipers` | 39 |

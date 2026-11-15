@@ -1,12 +1,12 @@
 # vehicles/specializations/SplineVehicle.lua
 
-Source : `dataS/scripts/vehicles/specializations/SplineVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SplineVehicle.lua` — FS25 1.25.1.0
 
 - **SplineVehicle** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SplineVehicle.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `SplineVehicle.initSpecialization()` | 23 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/vehicles/specializations/SplineVehicle.lua` — FS25 1.2
 | `SplineVehicle:loadDischargeNode(superFunc: any, xmlFile: any, key: any, entry: any)` | 251 |  |
 | `SplineVehicle:getIsDischargeNodeActive(superFunc: any, dischargeNode: any)` | 263 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getFrontToBackDistance` | 44 |
 | registerFunction | `getSplineTimeFromDistance` | 45 |

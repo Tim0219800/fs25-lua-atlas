@@ -1,12 +1,12 @@
 # graphics/HumanGraphicsComponent.lua
 
-Source : `dataS/scripts/graphics/HumanGraphicsComponent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/graphics/HumanGraphicsComponent.lua` — FS25 1.25.1.0
 
 - **HumanGraphicsComponent** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HumanGraphicsComponent.new() → HumanGraphicsComponent` | 20 |  |
 | `HumanGraphicsComponent:initialize()` | 95 |  |

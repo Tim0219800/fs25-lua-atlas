@@ -1,11 +1,11 @@
 # vehicles/specializations/StandaloneMotor.lua
 
-Source : `dataS/scripts/vehicles/specializations/StandaloneMotor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/StandaloneMotor.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StandaloneMotor.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `StandaloneMotor.initSpecialization()` | 25 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/vehicles/specializations/StandaloneMotor.lua` — FS25 1
 | `StandaloneMotor:updateDebugValues(values: any)` | 302 |  |
 | `StandaloneMotor.getMotorIgnitionState(self: any) → boolean` | 323 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateStandaloneMotorTemperature` | 51 |
 | registerFunction | `getNeedsStandaloneMotorRunning` | 52 |

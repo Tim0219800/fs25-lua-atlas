@@ -1,12 +1,12 @@
 # vehicles/specializations/SupportVehicle.lua
 
-Source : `dataS/scripts/vehicles/specializations/SupportVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SupportVehicle.lua` — FS25 1.25.1.0
 
 - **SupportVehicle** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SupportVehicle.prerequisitesPresent(specializations: any)` | 15 |  |
 | `SupportVehicle.initSpecialization()` | 21 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/vehicles/specializations/SupportVehicle.lua` — FS25 1.
 | `SupportVehicle:getIsReadyToFinishDetachProcess(superFunc: any)` | 322 |  |
 | `SupportVehicle:startDetachProcess(superFunc: any, noEventSend: any)` | 329 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `addSupportVehicle` | 40 |
 | registerFunction | `enableSupportVehicle` | 41 |

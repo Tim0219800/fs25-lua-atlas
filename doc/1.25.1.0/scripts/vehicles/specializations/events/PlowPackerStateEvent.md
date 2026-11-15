@@ -1,12 +1,12 @@
 # vehicles/specializations/events/PlowPackerStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/PlowPackerStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/PlowPackerStateEvent.lua` — FS25 1.25.1.0
 
-- **PlowPackerStateEvent** hérite de `Event` (l.7)
+- **PlowPackerStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlowPackerStateEvent.emptyNew() → table` | 14 |  |
 | `PlowPackerStateEvent.new(object: table, state: boolean, updateAnimations: boolean)` | 23 |  |

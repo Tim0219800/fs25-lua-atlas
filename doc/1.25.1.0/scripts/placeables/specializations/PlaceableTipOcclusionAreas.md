@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableTipOcclusionAreas.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableTipOcclusionAreas.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableTipOcclusionAreas.lua` — FS25 1.25.1.0
 
 - **PlaceableTipOcclusionAreas** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableTipOcclusionAreas.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableTipOcclusionAreas.registerFunctions(placeableType: any)` | 24 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableTipOcclusionAreas.lu
 | `PlaceableTipOcclusionAreas:onFinalizePlacement()` | 141 |  |
 | `PlaceableTipOcclusionAreas:updateTipOcclusionAreas()` | 155 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadTipOcclusionArea` | 25 |
 | registerFunction | `updateTipOcclusionAreas` | 26 |

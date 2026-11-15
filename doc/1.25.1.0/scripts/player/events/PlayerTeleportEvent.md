@@ -1,12 +1,12 @@
 # player/events/PlayerTeleportEvent.lua
 
-Source : `dataS/scripts/player/events/PlayerTeleportEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/events/PlayerTeleportEvent.lua` — FS25 1.25.1.0
 
-- **PlayerTeleportEvent** hérite de `Event` (l.4)
+- **PlayerTeleportEvent** inherits from `Event` (l.4)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerTeleportEvent.emptyNew() → table` | 11 |  |
 | `PlayerTeleportEvent.new(x: number, y: number, z: number, isAbsolute: boolean, isRootNode: boolean) → table` | 24 |  |

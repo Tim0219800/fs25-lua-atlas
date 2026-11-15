@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableAnimatedObjects.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableAnimatedObjects.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableAnimatedObjects.lua` — FS25 1.25.1.0
 
 - **PlaceableAnimatedObjects** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableAnimatedObjects.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableAnimatedObjects.registerFunctions(placeableType: any)` | 24 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableAnimatedObjects.lua`
 | `PlaceableAnimatedObjects:getAnimatedObjectBySaveId(saveId: string) → table?` | 207 |  |
 | `PlaceableAnimatedObjects:setOwnerFarmId(superFunc: any, ownerFarmId: any, noEventSend: any)` | 219 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getCanTriggerAnimatedObject` | 25 |
 | registerFunction | `getAnimatedObjectBySaveId` | 26 |

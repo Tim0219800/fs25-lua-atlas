@@ -1,12 +1,12 @@
 # misc/SprayTypeManager.lua
 
-Source : `dataS/scripts/misc/SprayTypeManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/SprayTypeManager.lua` — FS25 1.25.1.0
 
-- **SprayTypeManager** hérite de `AbstractManager` (l.14)
+- **SprayTypeManager** inherits from `AbstractManager` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SprayTypeManager.new(customMt: any) → table` | 19 |  |
 | `SprayTypeManager:initDataStructures()` | 26 |  |

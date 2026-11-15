@@ -1,12 +1,12 @@
 # ai/tasks/AITaskConveyor.lua
 
-Source : `dataS/scripts/ai/tasks/AITaskConveyor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/tasks/AITaskConveyor.lua` — FS25 1.25.1.0
 
-- **AITaskConveyor** hérite de `AITask` (l.12)
+- **AITaskConveyor** inherits from `AITask` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AITaskConveyor.new(isServer: any, job: any, customMt: any)` | 16 |  |
 | `AITaskConveyor:reset()` | 26 |  |

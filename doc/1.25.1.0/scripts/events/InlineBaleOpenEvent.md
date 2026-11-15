@@ -1,12 +1,12 @@
 # events/InlineBaleOpenEvent.lua
 
-Source : `dataS/scripts/events/InlineBaleOpenEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/events/InlineBaleOpenEvent.lua` — FS25 1.25.1.0
 
-- **InlineBaleOpenEvent** hérite de `Event` (l.6)
+- **InlineBaleOpenEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InlineBaleOpenEvent.emptyNew() → table` | 13 |  |
 | `InlineBaleOpenEvent.new(inlineBale: table, x: number, y: number, z: number) → table` | 25 |  |

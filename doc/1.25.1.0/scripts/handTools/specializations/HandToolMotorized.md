@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolMotorized.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolMotorized.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolMotorized.lua` — FS25 1.25.1.0
 
 - **HandToolMotorized** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolMotorized.registerXMLPaths(xmlSchema: any)` | 16 |  |
 | `HandToolMotorized.registerFunctions(handToolType: any)` | 42 |  |
@@ -43,9 +43,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolMotorized.lua` — FS2
 | `HandToolMotorized:setTargetRPMToMax()` | 439 |  |
 | `HandToolMotorized:onDebugDraw(x: any, y: any, textSize: any)` | 445 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getTimeToReachRPM` | 43 |
 | registerFunction | `getRPMGainPerSecond` | 44 |

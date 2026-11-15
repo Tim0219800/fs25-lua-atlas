@@ -1,12 +1,12 @@
 # economy/FarmlandManager.lua
 
-Source : `dataS/scripts/economy/FarmlandManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/economy/FarmlandManager.lua` — FS25 1.25.1.0
 
-- **FarmlandManager** hérite de `AbstractManager` (l.15)
+- **FarmlandManager** inherits from `AbstractManager` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FarmlandManager.new(customMt: any) → table` | 37 |  |
 | `FarmlandManager:initDataStructures()` | 44 |  |
@@ -41,6 +41,6 @@ Source : `dataS/scripts/economy/FarmlandManager.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.FARM_DELETED` (l.207)
-- écoute `MessageType.FARM_SETTINGS_CHANGED` (l.208)
-- publie `MessageType.FARMLAND_OWNER_CHANGED` (l.483)
+- subscribes `MessageType.FARM_DELETED` (l.207)
+- subscribes `MessageType.FARM_SETTINGS_CHANGED` (l.208)
+- publishes `MessageType.FARMLAND_OWNER_CHANGED` (l.483)

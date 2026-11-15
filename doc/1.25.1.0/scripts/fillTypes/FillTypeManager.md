@@ -1,12 +1,12 @@
 # fillTypes/FillTypeManager.lua
 
-Source : `dataS/scripts/fillTypes/FillTypeManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/fillTypes/FillTypeManager.lua` — FS25 1.25.1.0
 
-- **FillTypeManager** hérite de `AbstractManager` (l.67)
+- **FillTypeManager** inherits from `AbstractManager` (l.67)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillTypeManager.new(customMt: table?) → table` | 73 |  |
 | `FillTypeManager:initDataStructures()` | 80 |  |

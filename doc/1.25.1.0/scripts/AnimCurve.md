@@ -1,11 +1,11 @@
 # AnimCurve.lua
 
-Source : `dataS/scripts/AnimCurve.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/AnimCurve.lua` — FS25 1.25.1.0
 
 - **AnimCurve** (l.167)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimCurve:reset()` | 187 |  |

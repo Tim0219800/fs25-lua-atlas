@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : utils/ParticleUtil.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : utils/ParticleUtil.lua (generated stub, FS25 Lua Atlas)
 
 --- Utilitaires de systèmes de particules : chargement depuis le XML ou un nœud I3D, émission, vitesses, échelles, durée de vie, matériau et copie. ⚠ Le dump du SDK ne contient que les signatures : le comportement interne n'est pas lisible. Les descriptions ci-dessous viennent de l'usage observé dans le code vanilla (WorkParticles notamment) ; le reste est NON VÉRIFIÉ. Les fonctions qui portent sur « particleSystem » prennent la table renvoyée par les fonctions de chargement, pas un id de nœud.
 ---@class ParticleUtil

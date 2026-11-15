@@ -1,12 +1,12 @@
 # objects/ProductionPointOutputModeEvent.lua
 
-Source : `dataS/scripts/objects/ProductionPointOutputModeEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/ProductionPointOutputModeEvent.lua` — FS25 1.25.1.0
 
-- **ProductionPointOutputModeEvent** hérite de `Event` (l.6)
+- **ProductionPointOutputModeEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ProductionPointOutputModeEvent.emptyNew() → table` | 13 |  |
 | `ProductionPointOutputModeEvent.new(productionPoint: any, outputFillTypeId: any, outputMode: any)` | 20 |  |

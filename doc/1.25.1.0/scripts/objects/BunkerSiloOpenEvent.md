@@ -1,12 +1,12 @@
 # objects/BunkerSiloOpenEvent.lua
 
-Source : `dataS/scripts/objects/BunkerSiloOpenEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/BunkerSiloOpenEvent.lua` — FS25 1.25.1.0
 
-- **BunkerSiloOpenEvent** hérite de `Event` (l.6)
+- **BunkerSiloOpenEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BunkerSiloOpenEvent.emptyNew() → table` | 13 |  |
 | `BunkerSiloOpenEvent.new(bunkerSilo: table, x: number, y: number, z: number) → table` | 25 |  |

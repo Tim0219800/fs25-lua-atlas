@@ -1,12 +1,12 @@
 # gui/base/GuiOverlay.lua
 
-Source : `dataS/scripts/gui/base/GuiOverlay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/GuiOverlay.lua` — FS25 1.25.1.0
 
 - **GuiOverlay** (l.9)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GuiOverlay.loadOverlay(self: table, overlay: table, overlayName: string, imageSize: table, profile: table?, xmlFile: integer?, key: string?) → table` | 37 |  |
 | `GuiOverlay.loadXMLUVs(xmlFile: integer, key: string, overlay: table, overlayName: string, imageSize: table)` | 78 |  |

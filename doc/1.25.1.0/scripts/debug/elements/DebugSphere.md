@@ -1,11 +1,11 @@
 # debug/elements/DebugSphere.lua
 
-Source : `dataS/scripts/debug/elements/DebugSphere.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/elements/DebugSphere.lua` — FS25 1.25.1.0
 
-- **DebugSphere** hérite de `DebugElement` (l.12)
+- **DebugSphere** inherits from `DebugElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugSphere:draw()` | 35 |  |

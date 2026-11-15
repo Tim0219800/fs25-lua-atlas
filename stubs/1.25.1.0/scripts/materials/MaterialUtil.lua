@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : materials/MaterialUtil.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : materials/MaterialUtil.lua (generated stub, FS25 Lua Atlas)
 
 --- Fonctions utilitaires liées aux matériaux. Les quatre fonctions « onCreate » sont des rappels destinés à être déclarés dans un I3D (attribut onCreate du nœud, résolu par nom de fonction globale) : ils lisent les attributs utilisateur du nœud (getUserAttribute) et enregistrent le résultat dans g_materialManager ou g_particleSystemManager. Elles s'exécutent donc au chargement des I3D porte-matériaux et porte-particules (absents du dump), sur chaque pair.
 --- 

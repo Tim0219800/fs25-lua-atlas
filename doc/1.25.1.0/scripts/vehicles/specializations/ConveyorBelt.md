@@ -1,12 +1,12 @@
 # vehicles/specializations/ConveyorBelt.lua
 
-Source : `dataS/scripts/vehicles/specializations/ConveyorBelt.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ConveyorBelt.lua` — FS25 1.25.1.0
 
 - **ConveyorBelt** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConveyorBelt.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `ConveyorBelt.initSpecialization()` | 23 |  |
@@ -33,9 +33,9 @@ Source : `dataS/scripts/vehicles/specializations/ConveyorBelt.lua` — FS25 1.25
 | `ConveyorBelt:onMovingToolChanged(movingTool: any, speed: any, dt: any)` | 551 |  |
 | `ConveyorBelt:updateDebugValues(values: any)` | 589 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getConveyorBeltFillLevel` | 47 |
 | registerFunction | `getConveyorBeltTargetObject` | 48 |

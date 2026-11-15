@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/SoilSamplerSendEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/SoilSamplerSendEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/SoilSamplerSendEvent.lua` — FS25 1.25.1.0
 
-- **SoilSamplerSendEvent** hérite de `Event` (l.7)
+- **SoilSamplerSendEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SoilSamplerSendEvent.emptyNew() → table` | 14 |  |
 | `SoilSamplerSendEvent.new(object: table)` | 22 |  |

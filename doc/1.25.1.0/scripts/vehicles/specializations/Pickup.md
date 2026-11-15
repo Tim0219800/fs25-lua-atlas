@@ -1,12 +1,12 @@
 # vehicles/specializations/Pickup.lua
 
-Source : `dataS/scripts/vehicles/specializations/Pickup.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Pickup.lua` — FS25 1.25.1.0
 
 - **Pickup** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Pickup.prerequisitesPresent(specializations: any)` | 19 |  |
 | `Pickup.initSpecialization()` | 25 |  |
@@ -35,9 +35,9 @@ Source : `dataS/scripts/vehicles/specializations/Pickup.lua` — FS25 1.25.1.0
 | `Pickup.updateActionEvents(self: any)` | 295 |  |
 | `Pickup.actionEventTogglePickup(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 314 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `allowPickingUp` | 40 |
 | registerFunction | `setPickupState` | 41 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/YarderTowerSetTargetEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/YarderTowerSetTargetEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/YarderTowerSetTargetEvent.lua` — FS25 1.25.1.0
 
-- **YarderTowerSetTargetEvent** hérite de `Event` (l.13)
+- **YarderTowerSetTargetEvent** inherits from `Event` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `YarderTowerSetTargetEvent.emptyNew() → table` | 20 |  |
 | `YarderTowerSetTargetEvent.new(object: table, state: table, x: any, y: any, z: any) → table` | 30 |  |

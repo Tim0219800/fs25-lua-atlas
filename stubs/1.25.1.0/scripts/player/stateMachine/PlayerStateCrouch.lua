@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : player/stateMachine/PlayerStateCrouch.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : player/stateMachine/PlayerStateCrouch.lua (generated stub, FS25 Lua Atlas)
 
 ---@class PlayerStateCrouch : BaseStateMachineState
 PlayerStateCrouch = {}

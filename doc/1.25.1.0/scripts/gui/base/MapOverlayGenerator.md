@@ -1,12 +1,12 @@
 # gui/base/MapOverlayGenerator.lua
 
-Source : `dataS/scripts/gui/base/MapOverlayGenerator.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/MapOverlayGenerator.lua` — FS25 1.25.1.0
 
 - **MapOverlayGenerator** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MapOverlayGenerator.new(l10n: table, fruitTypeManager: table, fillTypeManager: table, farmlandManager: table, farmManager: table, weedSystem: table) → MapOverlayGenerator` | 50 |  |
 | `MapOverlayGenerator:delete()` | 103 |  |

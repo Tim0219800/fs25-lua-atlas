@@ -1,12 +1,12 @@
 # vehicles/specializations/components/SharedLight.lua
 
-Source : `dataS/scripts/vehicles/specializations/components/SharedLight.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/components/SharedLight.lua` — FS25 1.25.1.0
 
 - **SharedLight** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SharedLight.new(vehicle: any, staticLights: any, customMt: any)` | 18 |  |
 | `SharedLight:delete()` | 33 |  |

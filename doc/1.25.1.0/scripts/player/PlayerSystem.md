@@ -1,12 +1,12 @@
 # player/PlayerSystem.lua
 
-Source : `dataS/scripts/player/PlayerSystem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/PlayerSystem.lua` — FS25 1.25.1.0
 
 - **PlayerSystem** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerSystem:saveToXMLFile(xmlFilename: string) → boolean` | 118 |  |
 | `PlayerSystem:saveUnloadedPlayers(xmlFile: XMLFile, baseKey: string)` | 153 |  |

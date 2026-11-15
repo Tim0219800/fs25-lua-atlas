@@ -57,19 +57,19 @@ def main(v, tsv):
 
     absents = {g: t for g, t in top.items() if g not in connus}
     nfn_moteur = sum(1 for g, t in absents.items() if t == 'function')
-    L = [f'# Relevé en jeu — FS25 {v}', '', f'`{entete}`', '',
-         f'{len(top)} globales relevées, dont {len(absents)} absentes des sources du SDK '
-         f'({nfn_moteur} fonctions, probablement moteur).', '']
+    L = [f'# In-game scan — FS25 {v}', '', f'`{entete}`', '',
+         f'{len(top)} globals found, {len(absents)} of them missing from the SDK sources '
+         f'({nfn_moteur} functions, probably engine).', '']
     if racines:
-        L += ['## Racines explorées', '', '| Racine | Type | Clés |', '|---|---|---|']
+        L += ['## Explored roots', '', '| Root | Type | Keys |', '|---|---|---|']
         L += [f'| {r[0]} | {r[1] if len(r) > 1 else ""} | {r[2] if len(r) > 2 else ""} |' for r in racines]
         L.append('')
-    L += [f'Environnements de mods tiers ignorés : {len(mods)}.', '']
-    L += ['## Surcharges de l\'environnement des mods', '',
-          'Noms définis directement dans l\'environnement isolé où tourne le code d\'un mod '
-          '(ils masquent ou remplacent la version globale).', '']
+    L += [f'Third-party mod environments skipped: {len(mods)}.', '']
+    L += ['## Mod environment overrides', '',
+          'Names defined directly in the sandboxed environment where mod code runs '
+          '(they shadow or replace the global version).', '']
     L += [f'- `{n}` ({t})' for n, t in env]
-    L += ['', '## Tables absentes des sources du SDK', '']
+    L += ['', '## Tables missing from the SDK sources', '']
     sdir = ROOT / 'stubs' / v / 'releve'
     if sdir.exists():
         shutil.rmtree(sdir)
@@ -77,13 +77,13 @@ def main(v, tsv):
     old = ROOT / 'stubs' / v / 'releve.lua'
     if old.exists():
         old.unlink()
-    TETE = ['---@meta', f'-- FS25 {v} : relevé en jeu, absent des sources du SDK (types inconnus)', '']
+    TETE = ['---@meta', f'-- FS25 {v} : in-game scan, missing from the SDK sources (types unknown)', '']
     S = list(TETE)
     for g in sorted(absents):
         t = absents[g]
         if t == 'table':
             ms = membres.get(g, [])
-            L.append(f'### {g} ({len(ms)} membres)')
+            L.append(f'### {g} ({len(ms)} members)')
             L.append(', '.join(f'`{m}`' for m, mt, _ in sorted(ms) if mt == 'function') or '—')
             L.append('')
             C = TETE + [f'---@class {g}', f'{g} = {{}}', '']
@@ -92,7 +92,7 @@ def main(v, tsv):
                     C.append(f'function {g}{":" if h else "."}{m}(...) end')
             if g.isidentifier():
                 (sdir / f'{g}.lua').write_text('\n'.join(C) + '\n', encoding='utf-8')
-    L += ['## Fonctions globales absentes des sources et de scriptBinding.xml', '']
+    L += ['## Global functions missing from the sources and from scriptBinding.xml', '']
     L.append(', '.join(f'`{g}`' for g in sorted(absents) if absents[g] == 'function') or '—')
     (ROOT / 'doc' / v / 'releve.md').write_text('\n'.join(L) + '\n', encoding='utf-8')
     S.append('')

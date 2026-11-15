@@ -1,12 +1,12 @@
 # vehicles/specializations/events/WearableRepairEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/WearableRepairEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/WearableRepairEvent.lua` — FS25 1.25.1.0
 
-- **WearableRepairEvent** hérite de `Event` (l.7)
+- **WearableRepairEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WearableRepairEvent.emptyNew() → table` | 14 |  |
 | `WearableRepairEvent.new(vehicle: table, atSellingPoint: any)` | 21 |  |
@@ -16,4 +16,4 @@ Source : `dataS/scripts/vehicles/specializations/events/WearableRepairEvent.lua`
 
 ## Messages
 
-- publie `MessageType.VEHICLE_REPAIRED` (l.59)
+- publishes `MessageType.VEHICLE_REPAIRED` (l.59)

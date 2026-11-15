@@ -1,12 +1,12 @@
 # vehicles/specializations/AutoLoadable.lua
 
-Source : `dataS/scripts/vehicles/specializations/AutoLoadable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AutoLoadable.lua` — FS25 1.25.1.0
 
 - **AutoLoadable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AutoLoadable.prerequisitesPresent(specializations: any)` | 15 |  |
 | `AutoLoadable.registerFunctions(vehicleType: any)` | 21 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/vehicles/specializations/AutoLoadable.lua` — FS25 1.25
 | `AutoLoadable:getAutoLoadBoundingBox()` | 71 |  |
 | `AutoLoadable:autoLoad(autoLoader: any, node: any, posX: any, posZ: any, sizeX: any, sizeZ: any)` | 85 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getAutoLoadIsSupported` | 22 |
 | registerFunction | `getAutoLoadIsAllowed` | 23 |

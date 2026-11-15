@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableRiceFieldRemoveFieldEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableRiceFieldRemoveFieldEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableRiceFieldRemoveFieldEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableRiceFieldRemoveFieldEvent** hérite de `Event` (l.7)
+- **PlaceableRiceFieldRemoveFieldEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableRiceFieldRemoveFieldEvent.emptyNew() → table` | 14 |  |
 | `PlaceableRiceFieldRemoveFieldEvent.new(placeableRiceField: any, fieldIndex: any)` | 20 |  |

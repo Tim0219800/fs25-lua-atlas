@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : player/graphical/PlayerStyleConfig.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : player/graphical/PlayerStyleConfig.lua (generated stub, FS25 Lua Atlas)
 
 ---@class PlayerStyleConfig
 PlayerStyleConfig = {}

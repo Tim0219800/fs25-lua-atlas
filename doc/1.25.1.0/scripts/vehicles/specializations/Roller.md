@@ -1,14 +1,14 @@
 # vehicles/specializations/Roller.lua
 
-Source : `dataS/scripts/vehicles/specializations/Roller.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Roller.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des rouleaux (sol et prairie). Aucun effet ni particule propre : le fichier ne charge ni EffectManager, ni animationNodes ; seul un échantillon sonore de travail (vehicle.roller.sounds.work) est géré côté client. Les poussières/terre éventuelles d'un rouleau viennent donc d'autres spécialisations (WorkParticles, via getDoGroundManipulation, voir ci-dessous). TRAVAIL : processRollerArea efface d'abord les traces de pneus (eraseTireTrack, y compris sur un client éloigné), puis, sauf sur un client plus loin que Roller.CLIENT_DM_UPDATE_RADIUS (constante non définie dans ce fichier : valeur NON VÉRIFIÉE), appelle updateGrassRollerArea (rouleau prairie) et/ou updateRollerArea (rouleau sol, avec l'angle de la direction de l'outil converti en angle de carte de densité). Les fonctions FSDensityMapUtil étant sans corps dans le dump, leur effet exact sur le terrain est NON VÉRIFIÉ. CONDITIONS : zone active seulement si l'outil est abaissé (onlyActiveWhenLowered, vrai par défaut) et si 2000 ms se sont écoulées depuis l'attelage (startActivationTimeout) ; spec.isWorking = vitesse > 0.5 (unité de getLastSpeed : km/h, selon l'usage vanilla, non relu dans Vehicle). getDoGroundManipulation (surcharge) renvoie vrai seulement si isWorking : c'est l'interrupteur que WorkParticles.lua:238 consulte avec isOnField pour activer ses particules de sol (WorkParticles.getDoGroundManipulation renvoie vrai par défaut, WorkParticles.lua:311). MÉTÉO/HUMIDITÉ : aucune donnée lue. RÉSEAU : aucune variable synchronisée ; le dirtyFlag est alloué mais jamais levé dans ce fichier. dt : non utilisé hors signature. POINTS D'EXTENSION : fonctions enregistrées processRollerArea, updateRollerAIRequirements ; surcharges doCheckSpeedLimit, getDoGroundManipulation, getDirtMultiplier, getWearMultiplier, getIsWorkAreaActive ; événements onLoad, onDelete, onPostAttach, onDeactivate, onStartWorkAreaProcessing, onEndWorkAreaProcessing. Type de zone de travail : roller. Vitesse limite par défaut : 15.
 
 - **Roller** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Roller.initSpecialization()` | 31 | ✍ Déclare la configuration « roller » (choix de design) et le type de zone de travail roller (3 booléens de addWorkAreaType, signification non relue), puis enregistre le schéma XML sous vehicle.roller et sous chaque rollerConfiguration. |
 | `Roller.registerRollerXMLPaths(schema: any, basePath: any)` | 46 | ✍ Enregistre les clés XML d'un rouleau : directionNode, onlyActiveWhenLowered (vrai), isSoilRoller (vrai), isGrassRoller (faux), usingAIRequirements (vrai) et les sons de travail. |
@@ -31,9 +31,9 @@ Source : `dataS/scripts/vehicles/specializations/Roller.lua` — FS25 1.25.1.0
 | `Roller:onDeactivate()` | 339 | ✍ Coupe le son de travail. |
 | `Roller.getDefaultSpeedLimit()` | 347 | ✍ Limite de vitesse par défaut : 15. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processRollerArea` | 64 |
 | registerFunction | `updateRollerAIRequirements` | 65 |

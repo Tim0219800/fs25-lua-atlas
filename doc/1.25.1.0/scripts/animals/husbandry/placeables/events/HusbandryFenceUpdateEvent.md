@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/events/HusbandryFenceUpdateEvent.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/events/HusbandryFenceUpdateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/events/HusbandryFenceUpdateEvent.lua` — FS25 1.25.1.0
 
-- **HusbandryFenceUpdateEvent** hérite de `Event` (l.6)
+- **HusbandryFenceUpdateEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HusbandryFenceUpdateEvent.emptyNew()` | 12 |  |
 | `HusbandryFenceUpdateEvent.new(placeable: any, deleteCustomizableSegments: any)` | 19 |  |

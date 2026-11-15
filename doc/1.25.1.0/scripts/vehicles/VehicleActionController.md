@@ -1,12 +1,12 @@
 # vehicles/VehicleActionController.lua
 
-Source : `dataS/scripts/vehicles/VehicleActionController.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleActionController.lua` — FS25 1.25.1.0
 
 - **VehicleActionController** (l.8)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleActionController.new(vehicle: any, customMt: any)` | 14 |  |
 | `VehicleActionController:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 35 |  |

@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableDoghouse.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableDoghouse.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableDoghouse.lua` — FS25 1.25.1.0
 
 - **PlaceableDoghouse** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableDoghouse.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `PlaceableDoghouse.initSpecialization()` | 28 |  |
@@ -36,9 +36,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableDoghouse.lua` — FS
 | `PlaceableDoghouse:getNeedHourChanged(superFunc: any)` | 436 |  |
 | `PlaceableDoghouse:onHourChanged()` | 442 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `dogInteractionTriggerCallback` | 36 |
 | registerFunction | `isDoghouseRegistered` | 37 |

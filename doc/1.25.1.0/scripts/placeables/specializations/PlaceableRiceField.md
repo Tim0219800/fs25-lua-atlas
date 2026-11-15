@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableRiceField.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableRiceField.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableRiceField.lua` — FS25 1.25.1.0
 
 - **PlaceableRiceField** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableRiceField.registerXMLPaths(schema: XMLSchema, basePath: string)` | 58 |  |
 | `PlaceableRiceField.registerSavegameXMLPaths(schema: any, basePath: any)` | 96 |  |
@@ -32,9 +32,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableRiceField.lua` — F
 | `PlaceableRiceField:performTerrainDeformation(field: any, callback: any)` | 1467 |  |
 | `PlaceableRiceField:getHasValidFields()` | 1667 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onPumpI3DLoaded` | 120 |
 | registerFunction | `drawDebug` | 121 |
@@ -98,4 +98,4 @@ Source : `dataS/scripts/placeables/specializations/PlaceableRiceField.lua` — F
 
 ## Messages
 
-- écoute `MessageType.FINISHED_GROWTH_PERIOD` (l.295)
+- subscribes `MessageType.FINISHED_GROWTH_PERIOD` (l.295)

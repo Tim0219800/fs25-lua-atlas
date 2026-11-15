@@ -1,12 +1,12 @@
 # vehicles/specializations/components/BeaconLight.lua
 
-Source : `dataS/scripts/vehicles/specializations/components/BeaconLight.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/components/BeaconLight.lua` — FS25 1.25.1.0
 
 - **BeaconLight** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BeaconLight.new(vehicle: any, customMt: any)` | 18 |  |
 | `BeaconLight:delete()` | 43 |  |

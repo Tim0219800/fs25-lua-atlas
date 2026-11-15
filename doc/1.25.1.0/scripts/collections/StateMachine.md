@@ -1,12 +1,12 @@
 # collections/StateMachine.lua
 
-Source : `dataS/scripts/collections/StateMachine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/collections/StateMachine.lua` — FS25 1.25.1.0
 
 - **StateMachine** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StateMachine.new(custom_mt: table) → StateMachine` | 22 |  |
 | `StateMachine:implementStateInterface()` | 73 |  |

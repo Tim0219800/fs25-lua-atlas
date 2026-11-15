@@ -1,12 +1,12 @@
 # player/events/PlayerHoldHandToolEvent.lua
 
-Source : `dataS/scripts/player/events/PlayerHoldHandToolEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/events/PlayerHoldHandToolEvent.lua` — FS25 1.25.1.0
 
-- **PlayerHoldHandToolEvent** hérite de `Event` (l.11)
+- **PlayerHoldHandToolEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerHoldHandToolEvent.emptyNew() → table` | 18 |  |
 | `PlayerHoldHandToolEvent.new(player: any, handToolId: any, isHolding: any)` | 25 |  |

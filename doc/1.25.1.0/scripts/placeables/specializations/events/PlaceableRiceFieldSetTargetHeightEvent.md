@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableRiceFieldSetTargetHeightEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableRiceFieldSetTargetHeightEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableRiceFieldSetTargetHeightEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableRiceFieldSetTargetHeightEvent** hérite de `Event` (l.7)
+- **PlaceableRiceFieldSetTargetHeightEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableRiceFieldSetTargetHeightEvent.emptyNew() → table` | 14 |  |
 | `PlaceableRiceFieldSetTargetHeightEvent.new(placeableRiceField: any, fieldIndex: any, targetHeight: any)` | 20 |  |

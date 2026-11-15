@@ -1,12 +1,12 @@
 # vehicles/specializations/BaseMaterial.lua
 
-Source : `dataS/scripts/vehicles/specializations/BaseMaterial.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BaseMaterial.lua` — FS25 1.25.1.0
 
 - **BaseMaterial** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaseMaterial.prerequisitesPresent(specializations: any)` | 15 |  |
 | `BaseMaterial.initSpecialization()` | 21 |  |
@@ -14,8 +14,8 @@ Source : `dataS/scripts/vehicles/specializations/BaseMaterial.lua` — FS25 1.25
 | `BaseMaterial.registerEventListeners(vehicleType: any)` | 31 |  |
 | `BaseMaterial:onLoad(savegame: any)` | 37 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 32 |

@@ -1,12 +1,12 @@
 # gui/base/PlaySampleMixin.lua
 
-Source : `dataS/scripts/gui/base/PlaySampleMixin.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/PlaySampleMixin.lua` — FS25 1.25.1.0
 
-- **PlaySampleMixin** hérite de `GuiMixin` (l.19)
+- **PlaySampleMixin** inherits from `GuiMixin` (l.19)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaySampleMixin.new()` | 25 |  |
 | `PlaySampleMixin:addTo(guiElement: any)` | 31 |  |

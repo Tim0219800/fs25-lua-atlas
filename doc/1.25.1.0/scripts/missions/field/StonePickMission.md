@@ -1,12 +1,12 @@
 # missions/field/StonePickMission.lua
 
-Source : `dataS/scripts/missions/field/StonePickMission.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/missions/field/StonePickMission.lua` — FS25 1.25.1.0
 
-- **StonePickMission** hérite de `AbstractFieldMission` (l.13)
+- **StonePickMission** inherits from `AbstractFieldMission` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StonePickMission.new(isServer: any, isClient: any, customMt: any)` | 24 |  |
 | `StonePickMission:getFieldPreparingTask()` | 51 |  |

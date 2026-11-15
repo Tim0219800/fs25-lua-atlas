@@ -1,12 +1,12 @@
 # vehicles/specializations/events/MotorStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/MotorStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/MotorStateEvent.lua` — FS25 1.25.1.0
 
-- **MotorStateEvent** hérite de `Event` (l.11)
+- **MotorStateEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MotorStateEvent.emptyNew() → table` | 18 |  |
 | `MotorStateEvent.new(vehicle: table, motorState: integer)` | 27 |  |

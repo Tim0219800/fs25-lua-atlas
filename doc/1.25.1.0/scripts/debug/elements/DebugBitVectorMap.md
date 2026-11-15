@@ -1,12 +1,12 @@
 # debug/elements/DebugBitVectorMap.lua
 
-Source : `dataS/scripts/debug/elements/DebugBitVectorMap.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/elements/DebugBitVectorMap.lua` — FS25 1.25.1.0
 
 - **DebugBitVectorMap** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugBitVectorMap.new(customMt: table?) → DebugBitVectorMap` | 18 |  |
 | `DebugBitVectorMap:draw()` | 71 |  |

@@ -1,6 +1,6 @@
-# Fonctions moteur
+# Engine functions
 
-Signatures issues de `sdk/debugger/scriptBinding.xml` (incomplet : certaines fonctions appelées par le jeu ou des mods n'y figurent pas).
+Signatures from `sdk/debugger/scriptBinding.xml` (incomplete: some functions called by the game or by mods are not listed).
 
 ## Animation
 

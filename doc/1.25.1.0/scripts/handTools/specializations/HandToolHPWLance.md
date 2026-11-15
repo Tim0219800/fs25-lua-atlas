@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolHPWLance.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolHPWLance.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolHPWLance.lua` — FS25 1.25.1.0
 
 - **HandToolHPWLance** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolHPWLance.registerXMLPaths(xmlSchema: any)` | 14 |  |
 | `HandToolHPWLance.registerFunctions(handToolType: any)` | 26 |  |
@@ -26,9 +26,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolHPWLance.lua` — FS25
 | `HandToolHPWLance:onHeldEnd()` | 275 |  |
 | `HandToolHPWLance:onDebugDraw(x: any, y: any, textSize: any)` | 282 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onWashAction` | 27 |
 | registerFunction | `setIsActivated` | 28 |

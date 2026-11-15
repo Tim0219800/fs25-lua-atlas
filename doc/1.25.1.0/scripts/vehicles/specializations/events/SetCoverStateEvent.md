@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetCoverStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetCoverStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetCoverStateEvent.lua` — FS25 1.25.1.0
 
-- **SetCoverStateEvent** hérite de `Event` (l.7)
+- **SetCoverStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetCoverStateEvent.emptyNew() → table` | 14 |  |
 | `SetCoverStateEvent.new(vehicle: table, state: integer)` | 22 |  |

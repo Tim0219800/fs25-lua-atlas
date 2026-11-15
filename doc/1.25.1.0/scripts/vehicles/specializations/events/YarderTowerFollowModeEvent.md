@@ -1,12 +1,12 @@
 # vehicles/specializations/events/YarderTowerFollowModeEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/YarderTowerFollowModeEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/YarderTowerFollowModeEvent.lua` — FS25 1.25.1.0
 
-- **YarderTowerFollowModeEvent** hérite de `Event` (l.13)
+- **YarderTowerFollowModeEvent** inherits from `Event` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `YarderTowerFollowModeEvent.emptyNew() → table` | 20 |  |
 | `YarderTowerFollowModeEvent.new(object: table, state: table) → table` | 30 |  |

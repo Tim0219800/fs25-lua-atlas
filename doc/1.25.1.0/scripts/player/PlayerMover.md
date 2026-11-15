@@ -1,12 +1,12 @@
 # player/PlayerMover.lua
 
-Source : `dataS/scripts/player/PlayerMover.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/PlayerMover.lua` — FS25 1.25.1.0
 
 - **PlayerMover** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerMover.new(player: Player) → PlayerMover` | 59 |  |
 | `PlayerMover:initialise()` | 148 |  |
@@ -30,4 +30,4 @@ Source : `dataS/scripts/player/PlayerMover.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.PLAYER_PRE_TELEPORT` (l.479)
+- publishes `MessageType.PLAYER_PRE_TELEPORT` (l.479)

@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/PrecisionFarmingStatistic.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/PrecisionFarmingStatistic.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/PrecisionFarmingStatistic.lua` — FS25 1.25.1.0
 
 - **PrecisionFarmingStatistic** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PrecisionFarmingStatistic.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `PrecisionFarmingStatistic:onUpdateTick(dt: any, isActiveForInput: any, isActiveForInputIgnoreSelection: any, isSelected: any)` | 60 |  |

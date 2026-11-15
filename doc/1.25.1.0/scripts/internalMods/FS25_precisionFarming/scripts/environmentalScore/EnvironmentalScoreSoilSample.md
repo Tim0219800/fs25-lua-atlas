@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreSoilSample.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreSoilSample.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreSoilSample.lua` — FS25 1.25.1.0
 
-- **EnvironmentalScoreSoilSample** hérite de `EnvironmentalScoreValue` (l.16)
+- **EnvironmentalScoreSoilSample** inherits from `EnvironmentalScoreValue` (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `EnvironmentalScoreSoilSample.new(pfModule: any, customMt: any)` | 20 |  |
 | `EnvironmentalScoreSoilSample:loadFromXML(xmlFile: any, key: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 35 |  |

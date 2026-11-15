@@ -1,12 +1,12 @@
 # animals/events/DogPetEvent.lua
 
-Source : `dataS/scripts/animals/events/DogPetEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/events/DogPetEvent.lua` — FS25 1.25.1.0
 
-- **DogPetEvent** hérite de `Event` (l.6)
+- **DogPetEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DogPetEvent.emptyNew()` | 12 |  |
 | `DogPetEvent.new(dog: any)` | 19 |  |

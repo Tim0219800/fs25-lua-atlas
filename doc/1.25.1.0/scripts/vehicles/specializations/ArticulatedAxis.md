@@ -1,12 +1,12 @@
 # vehicles/specializations/ArticulatedAxis.lua
 
-Source : `dataS/scripts/vehicles/specializations/ArticulatedAxis.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ArticulatedAxis.lua` — FS25 1.25.1.0
 
 - **ArticulatedAxis** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ArticulatedAxis.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `ArticulatedAxis.initSpecialization()` | 23 |  |
@@ -20,9 +20,9 @@ Source : `dataS/scripts/vehicles/specializations/ArticulatedAxis.lua` — FS25 1
 | `ArticulatedAxis:getSteeringRotTimeByCurvature(superFunc: any, curvature: any)` | 328 |  |
 | `ArticulatedAxis:getTurningRadiusByRotTime(superFunc: any, rotTime: any)` | 334 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `getSteeringRotTimeByCurvature` | 53 |
 | registerOverwrittenFunction | `getTurningRadiusByRotTime` | 54 |

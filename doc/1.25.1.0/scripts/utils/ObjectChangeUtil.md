@@ -1,12 +1,12 @@
 # utils/ObjectChangeUtil.lua
 
-Source : `dataS/scripts/utils/ObjectChangeUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/ObjectChangeUtil.lua` — FS25 1.25.1.0
 
 - **ObjectChangeUtil** (l.4)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ObjectChangeUtil.loadObjectChangeFromXML(xmlFile: XMLFile, key: string, objects: table?, rootNode: integer, parent: table?) → array?` | 14 |  |
 | `ObjectChangeUtil.loadValuesFromXML(xmlFile: XMLFile, key: string, node: integer, object: table, parent: table?, rootNode: integer?, i3dMappings: table?)` | 81 |  |

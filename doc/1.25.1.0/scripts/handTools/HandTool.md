@@ -1,12 +1,12 @@
 # handTools/HandTool.lua
 
-Source : `dataS/scripts/handTools/HandTool.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/HandTool.lua` — FS25 1.25.1.0
 
-- **HandTool** hérite de `Object` (l.14)
+- **HandTool** inherits from `Object` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandTool.init()` | 26 |  |
 | `HandTool.postInit()` | 41 |  |
@@ -56,9 +56,9 @@ Source : `dataS/scripts/handTools/HandTool.lua` — FS25 1.25.1.0
 | `HandTool:attachToolToCamera()` | 1156 |  |
 | `HandTool:clearActionEvents(clearCarriedActionEvents: boolean?)` | 1190 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onPreLoad` | 156 |
 | registerEvent | `onLoad` | 157 |
@@ -91,4 +91,4 @@ Source : `dataS/scripts/handTools/HandTool.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.PERIOD_CHANGED` (l.455)
+- subscribes `MessageType.PERIOD_CHANGED` (l.455)

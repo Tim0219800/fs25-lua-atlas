@@ -1,12 +1,12 @@
 # vehicles/wheels/WheelXMLObject.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelXMLObject.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelXMLObject.lua` — FS25 1.25.1.0
 
 - **WheelXMLObject** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelXMLObject.new(xmlFile: any, baseKey: any, configIndex: any, wheelKey: any, indexToParentIndex: any)` | 16 |  |
 | `WheelXMLObject:getValue(attributeKey: any, ...: any)` | 135 |  |

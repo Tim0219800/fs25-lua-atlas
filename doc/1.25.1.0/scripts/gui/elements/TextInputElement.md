@@ -1,12 +1,12 @@
 # gui/elements/TextInputElement.lua
 
-Source : `dataS/scripts/gui/elements/TextInputElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/TextInputElement.lua` — FS25 1.25.1.0
 
-- **TextInputElement** hérite de `ButtonElement` (l.26)
+- **TextInputElement** inherits from `ButtonElement` (l.26)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TextInputElement.new(target: any, custom_mt: any)` | 44 |  |
 | `TextInputElement:delete()` | 95 |  |
@@ -49,4 +49,4 @@ Source : `dataS/scripts/gui/elements/TextInputElement.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.PAUSE` (l.511)
+- subscribes `MessageType.PAUSE` (l.511)

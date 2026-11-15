@@ -1,12 +1,12 @@
 # construction/events/OrchardBuildFinishedEvent.lua
 
-Source : `dataS/scripts/construction/events/OrchardBuildFinishedEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/construction/events/OrchardBuildFinishedEvent.lua` — FS25 1.25.1.0
 
-- **OrchardBuildFinishedEvent** hérite de `Event` (l.17)
+- **OrchardBuildFinishedEvent** inherits from `Event` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `OrchardBuildFinishedEvent.emptyNew() → OrchardBuildFinishedEvent` | 39 |  |
 | `OrchardBuildFinishedEvent.new(requestId: integer, statusCode: integer, builtSteps: integer) → OrchardBuildFinishedEvent` | 51 |  |

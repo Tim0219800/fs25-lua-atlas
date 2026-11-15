@@ -1,11 +1,11 @@
 # vehicles/specializations/LiftableAxle.lua
 
-Source : `dataS/scripts/vehicles/specializations/LiftableAxle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/LiftableAxle.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LiftableAxle.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `LiftableAxle.initSpecialization()` | 26 |  |
@@ -30,9 +30,9 @@ Source : `dataS/scripts/vehicles/specializations/LiftableAxle.lua` — FS25 1.25
 | `LiftableAxle:getLiftableAxleAttacherJointHeight(attacherJointIndex: any)` | 481 |  |
 | `LiftableAxle:getIsSmoothAttachUpdateAllowed(superFunc: any, implement: any)` | 501 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setLiftableAxleState` | 70 |
 | registerFunction | `getLiftableAxleAttacherJointHeight` | 71 |

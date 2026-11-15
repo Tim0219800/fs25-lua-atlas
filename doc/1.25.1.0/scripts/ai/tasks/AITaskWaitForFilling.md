@@ -1,12 +1,12 @@
 # ai/tasks/AITaskWaitForFilling.lua
 
-Source : `dataS/scripts/ai/tasks/AITaskWaitForFilling.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/tasks/AITaskWaitForFilling.lua` — FS25 1.25.1.0
 
-- **AITaskWaitForFilling** hérite de `AITask` (l.12)
+- **AITaskWaitForFilling** inherits from `AITask` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AITaskWaitForFilling.new(isServer: any, job: any, customMt: any)` | 16 |  |
 | `AITaskWaitForFilling:reset()` | 31 |  |

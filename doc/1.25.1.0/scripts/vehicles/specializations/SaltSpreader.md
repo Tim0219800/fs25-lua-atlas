@@ -1,12 +1,12 @@
 # vehicles/specializations/SaltSpreader.lua
 
-Source : `dataS/scripts/vehicles/specializations/SaltSpreader.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SaltSpreader.lua` — FS25 1.25.1.0
 
 - **SaltSpreader** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SaltSpreader.initSpecialization()` | 15 |  |
 | `SaltSpreader.prerequisitesPresent(specializations: table) → boolean` | 35 |  |
@@ -28,9 +28,9 @@ Source : `dataS/scripts/vehicles/specializations/SaltSpreader.lua` — FS25 1.25
 | `SaltSpreader.getDefaultSpeedLimit() → number` | 234 |  |
 | `SaltSpreader:processSaltSpreaderArea(workArea: any)` | 240 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processSaltSpreaderArea` | 42 |
 | registerOverwrittenFunction | `doCheckSpeedLimit` | 48 |

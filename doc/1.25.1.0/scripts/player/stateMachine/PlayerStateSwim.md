@@ -1,12 +1,12 @@
 # player/stateMachine/PlayerStateSwim.lua
 
-Source : `dataS/scripts/player/stateMachine/PlayerStateSwim.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/stateMachine/PlayerStateSwim.lua` — FS25 1.25.1.0
 
-- **PlayerStateSwim** hérite de `BaseStateMachineState` (l.12)
+- **PlayerStateSwim** inherits from `BaseStateMachineState` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerStateSwim.new(player: Player, stateMachine: StateMachine) → BaseStateMachineState` | 34 |  |
 | `PlayerStateSwim:updateAsCurrent(dt: number)` | 83 |  |

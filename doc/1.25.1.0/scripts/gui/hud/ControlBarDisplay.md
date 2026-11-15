@@ -1,12 +1,12 @@
 # gui/hud/ControlBarDisplay.lua
 
-Source : `dataS/scripts/gui/hud/ControlBarDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/ControlBarDisplay.lua` — FS25 1.25.1.0
 
-- **ControlBarDisplay** hérite de `HUDDisplayElement` (l.34)
+- **ControlBarDisplay** inherits from `HUDDisplayElement` (l.34)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ControlBarDisplay.new(hud: string, hudAtlasPath: string, controlHudAtlasPath: any)` | 39 |  |
 | `ControlBarDisplay:createComponents()` | 226 |  |

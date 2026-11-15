@@ -1,12 +1,12 @@
 # gui/base/ButtonOverlay.lua
 
-Source : `dataS/scripts/gui/base/ButtonOverlay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/ButtonOverlay.lua` — FS25 1.25.1.0
 
 - **ButtonOverlay** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ButtonOverlay.new(customMt: any)` | 18 |  |
 | `ButtonOverlay:delete()` | 41 |  |

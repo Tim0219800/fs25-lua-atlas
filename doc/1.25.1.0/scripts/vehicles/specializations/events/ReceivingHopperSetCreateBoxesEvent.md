@@ -1,12 +1,12 @@
 # vehicles/specializations/events/ReceivingHopperSetCreateBoxesEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/ReceivingHopperSetCreateBoxesEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/ReceivingHopperSetCreateBoxesEvent.lua` — FS25 1.25.1.0
 
-- **ReceivingHopperSetCreateBoxesEvent** hérite de `Event` (l.7)
+- **ReceivingHopperSetCreateBoxesEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ReceivingHopperSetCreateBoxesEvent.emptyNew() → table` | 14 |  |
 | `ReceivingHopperSetCreateBoxesEvent.new(object: table, state: boolean)` | 23 |  |

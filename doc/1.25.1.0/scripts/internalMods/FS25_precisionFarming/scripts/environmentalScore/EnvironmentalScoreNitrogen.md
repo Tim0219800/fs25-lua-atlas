@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreNitrogen.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreNitrogen.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreNitrogen.lua` — FS25 1.25.1.0
 
-- **EnvironmentalScoreNitrogen** hérite de `EnvironmentalScoreValue` (l.15)
+- **EnvironmentalScoreNitrogen** inherits from `EnvironmentalScoreValue` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `EnvironmentalScoreNitrogen.new(pfModule: any, customMt: any)` | 19 |  |
 | `EnvironmentalScoreNitrogen:loadFromXML(xmlFile: any, key: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 29 |  |

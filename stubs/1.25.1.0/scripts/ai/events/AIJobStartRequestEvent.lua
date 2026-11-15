@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : ai/events/AIJobStartRequestEvent.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : ai/events/AIJobStartRequestEvent.lua (generated stub, FS25 Lua Atlas)
 
 ---@class AIJobStartRequestEvent : Event
 AIJobStartRequestEvent = {}

@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatistics.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatistics.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatistics.lua` — FS25 1.25.1.0
 
 - **FarmlandStatistics** (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FarmlandStatistics.new(pfModule: any, customMt: any)` | 20 |  |
 | `FarmlandStatistics:loadFromXML(xmlFile: any, key: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 34 |  |
@@ -27,4 +27,4 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/statistics/Fa
 
 ## Messages
 
-- écoute `MessageType.FARMLAND_OWNER_CHANGED` (l.35)
+- subscribes `MessageType.FARMLAND_OWNER_CHANGED` (l.35)

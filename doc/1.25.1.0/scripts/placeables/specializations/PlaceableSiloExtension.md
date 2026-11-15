@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableSiloExtension.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableSiloExtension.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableSiloExtension.lua` — FS25 1.25.1.0
 
 - **PlaceableSiloExtension** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableSiloExtension.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `PlaceableSiloExtension.registerOverwrittenFunctions(placeableType: any)` | 25 |  |
@@ -28,9 +28,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableSiloExtension.lua` �
 | `PlaceableSiloExtension.loadSpecValueVolume(xmlFile: any, customEnvironment: any, baseDir: any)` | 271 |  |
 | `PlaceableSiloExtension.getSpecValueVolume(storeItem: any, realItem: any)` | 277 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `setOwnerFarmId` | 26 |
 | registerOverwrittenFunction | `getCanBePlacedAt` | 27 |

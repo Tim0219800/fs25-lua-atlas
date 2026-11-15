@@ -1,13 +1,13 @@
 # objects/PackedBale.lua
 
-Source : `dataS/scripts/objects/PackedBale.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/PackedBale.lua` — FS25 1.25.1.0
 
-- **PackedBale** hérite de `Bale` (l.17)
+- **PackedBale** inherits from `Bale` (l.17)
 - **PackedBaleActivatable** (l.140)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PackedBale.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 27 |  |
 | `PackedBale:delete()` | 41 |  |

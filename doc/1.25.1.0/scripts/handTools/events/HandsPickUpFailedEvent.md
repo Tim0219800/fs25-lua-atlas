@@ -1,12 +1,12 @@
 # handTools/events/HandsPickUpFailedEvent.lua
 
-Source : `dataS/scripts/handTools/events/HandsPickUpFailedEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/events/HandsPickUpFailedEvent.lua` — FS25 1.25.1.0
 
-- **HandsPickUpFailedEvent** hérite de `Event` (l.11)
+- **HandsPickUpFailedEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandsPickUpFailedEvent.emptyNew() → table` | 18 |  |
 | `HandsPickUpFailedEvent.new(hands: any)` | 26 |  |

@@ -1,12 +1,12 @@
 # misc/Color.lua
 
-Source : `dataS/scripts/misc/Color.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/Color.lua` — FS25 1.25.1.0
 
 - **Color** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Color_mt.__index(color: Color, key: string) → any` | 19 |  |
 | `Color_mt.__mul(left: (table\|number\|Color), right: (table\|number\|Color)) → Color` | 55 |  |

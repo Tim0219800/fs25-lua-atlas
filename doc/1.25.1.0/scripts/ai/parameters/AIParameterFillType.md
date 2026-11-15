@@ -1,12 +1,12 @@
 # ai/parameters/AIParameterFillType.lua
 
-Source : `dataS/scripts/ai/parameters/AIParameterFillType.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/parameters/AIParameterFillType.lua` — FS25 1.25.1.0
 
-- **AIParameterFillType** hérite de `AIParameter` (l.12)
+- **AIParameterFillType** inherits from `AIParameter` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIParameterFillType.new(customMt: any)` | 16 |  |
 | `AIParameterFillType:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 29 |  |

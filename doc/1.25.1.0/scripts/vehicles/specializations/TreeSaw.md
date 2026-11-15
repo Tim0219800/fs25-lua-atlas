@@ -1,12 +1,12 @@
 # vehicles/specializations/TreeSaw.lua
 
-Source : `dataS/scripts/vehicles/specializations/TreeSaw.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/TreeSaw.lua` — FS25 1.25.1.0
 
 - **TreeSaw** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TreeSaw.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `TreeSaw.initSpecialization()` | 23 |  |
@@ -22,9 +22,9 @@ Source : `dataS/scripts/vehicles/specializations/TreeSaw.lua` — FS25 1.25.1.0
 | `TreeSaw:onTurnedOn()` | 273 |  |
 | `TreeSaw:onTurnedOff()` | 283 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 46 |
 | registerEventListener | `onDelete` | 47 |

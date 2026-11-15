@@ -1,4 +1,4 @@
-site_name: Atlas Lua FS25
+site_name: FS25 Lua Atlas
 site_description: Unofficial Farming Simulator 25 Lua API reference and LuaLS stubs
 site_url: https://tim0219800.github.io/fs25-lua-atlas/
 repo_url: https://github.com/Tim0219800/fs25-lua-atlas
@@ -7,7 +7,7 @@ docs_dir: doc
 use_directory_urls: false
 theme:
   name: material
-  language: fr
+  language: en
   features:
     - navigation.indexes
     - search.suggest

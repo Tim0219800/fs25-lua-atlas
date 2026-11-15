@@ -1,12 +1,12 @@
 # gui/elements/RoundCornerElement.lua
 
-Source : `dataS/scripts/gui/elements/RoundCornerElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/RoundCornerElement.lua` — FS25 1.25.1.0
 
-- **RoundCornerElement** hérite de `GuiElement` (l.12)
+- **RoundCornerElement** inherits from `GuiElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RoundCornerElement.new(target: any, custom_mt: any)` | 18 |  |
 | `RoundCornerElement:loadFromXML(xmlFile: any, key: any)` | 30 |  |

@@ -1,12 +1,12 @@
 # placeables/PlaceableSystem.lua
 
-Source : `dataS/scripts/placeables/PlaceableSystem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/PlaceableSystem.lua` — FS25 1.25.1.0
 
 - **PlaceableSystem** (l.20)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableSystem.new(mission: table, customMt: table?) → PlaceableSystem` | 27 |  |
 | `PlaceableSystem:delete()` | 90 |  |
@@ -36,5 +36,5 @@ Source : `dataS/scripts/placeables/PlaceableSystem.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.PLACEABLE_ADDED` (l.317)
-- publie `MessageType.PLACEABLE_REMOVED` (l.333)
+- publishes `MessageType.PLACEABLE_ADDED` (l.317)
+- publishes `MessageType.PLACEABLE_REMOVED` (l.333)

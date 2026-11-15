@@ -1,12 +1,12 @@
 # objects/ForestryLog.lua
 
-Source : `dataS/scripts/objects/ForestryLog.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/ForestryLog.lua` — FS25 1.25.1.0
 
-- **ForestryLog** hérite de `MountableObject` (l.5)
+- **ForestryLog** inherits from `MountableObject` (l.5)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ForestryLog.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 31 |  |
 | `ForestryLog:delete()` | 43 |  |

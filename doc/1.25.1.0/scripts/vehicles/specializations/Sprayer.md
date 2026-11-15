@@ -1,14 +1,14 @@
 # vehicles/specializations/Sprayer.lua
 
-Source : `dataS/scripts/vehicles/specializations/Sprayer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Sprayer.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des pulvérisateurs, épandeurs de fumier et tonnes à lisier (prérequis : FillUnit, WorkArea, TurnOnVehicle). Elle fait deux choses : (a) côté serveur (et côté client proche), le traitement agronomique : processSprayerArea appelle FSDensityMapUtil.updateSprayArea sur la zone de travail, onEndWorkAreaProcessing consomme le liquide (addFillUnitFillLevel) et met à jour les statistiques de la ferme ; (b) côté client, les effets visuels et sonores. EFFETS : spec.effects (clé XML vehicle.sprayer.effects) et, pour chaque « sprayType » (vehicle.sprayer.sprayTypes.sprayType(?), choisi selon le type de remplissage), des effets, animationNodes, sons et animations propres, tous chargés par g_effectManager:loadEffect (EffectManager absent du dump : comportement interne NON VÉRIFIÉ). Condition d'allumage : getAreEffectsVisible, vrai tant que workAreaParameters.lastSprayTime + 100 ms > g_time ; lastSprayTime n'est mis à jour que dans processSprayerArea, donc quand une zone de travail traite réellement avec un niveau de remplissage > 0 (sur un client, seulement si currentUpdateDistance <= Sprayer.CLIENT_DM_UPDATE_RADIUS, constante non définie dans ce fichier : valeur NON VÉRIFIÉE). updateSprayerEffects (appelé par onTurnedOn, onTurnedOff, onEndWorkAreaProcessing, changement de sprayType et de section de largeur variable) démarre ou arrête les effets en transmettant le type de remplissage via setEffectTypeInfo ; c'est une bascule binaire, sans modulation d'intensité, de largeur de rampe ni de vent dans ce fichier. DONNÉES MÉTÉO/HUMIDITÉ : aucune (ni vent, ni pluie, ni humidité ne sont lus). Autres données utilisées : fillType du réservoir, vitesse (isWorking si getLastSpeed() > 1), état allumé/abaissé, largeur de travail (usageScales). Réseau : le serveur décide de la consommation ; l'état « quantité doublée » est synchronisé par SprayerDoubledAmountEvent ; l'allumage passe par TurnOnVehicle ; il n'y a ni dirty flag ni lecture de flux dans ce fichier. Points d'extension pour un moddeur : fonctions enregistrées getAreEffectsVisible, updateSprayerEffects, getSprayerUsage, getActiveSprayType, getIsSprayTypeActive, getSprayerFillUnitIndex, getExternalFill, getIsSprayerExternallyFilled, setSprayerDoubledAmountActive, getSprayerDoubledAmountActive, processSprayerArea, loadSprayTypeFromXML ; événement enregistré onSprayTypeChange ; fonctions surchargées (via registerOverwrittenFunction) getEffectByNode, getRawSpeedLimit, doCheckSpeedLimit, getCanBeTurnedOn, getIsWorkAreaActive, getDirtMultiplier, getWearMultiplier, getFillVolumeUVScrollSpeed, getVariableWorkWidthUsage, etc. Surcharger getAreEffectsVisible est le moyen le plus direct de piloter l'allumage des effets vanilla sans toucher à la logique de pulvérisation. Vitesse limite par défaut : 15 (Sprayer.getDefaultSpeedLimit).
 
 - **Sprayer** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Sprayer.initSpecialization()` | 37 | ✍ Enregistre dans le schéma XML du véhicule toutes les clés de vehicle.sprayer (usageScales, sprayTypes avec fillTypes, effets, animations, sons, usageScales propres et objectChanges, doubledAmount, turnedAnimation, fillUnitIndex, fillVolumeIndex, effects, animationNodes, sounds) ainsi que l'attribut #sprayType des zones de travail. Détail non relu clé par clé. |
 | `Sprayer.prerequisitesPresent(specializations: any)` | 109 | ✍ Exige FillUnit, WorkArea et TurnOnVehicle. |
@@ -64,9 +64,9 @@ Source : `dataS/scripts/vehicles/specializations/Sprayer.lua` — FS25 1.25.1.0
 | `Sprayer:onVariableWorkWidthSectionChanged()` | 1474 | ✍ Force la mise à jour des effets quand une section de largeur variable change. |
 | `Sprayer.getDefaultSpeedLimit()` | 1480 | ✍ Limite de vitesse par défaut : 15. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onSprayTypeChange` | 118 |
 | registerFunction | `processSprayerArea` | 124 |

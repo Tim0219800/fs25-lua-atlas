@@ -1,12 +1,12 @@
 # vehicles/specializations/Ropes.lua
 
-Source : `dataS/scripts/vehicles/specializations/Ropes.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Ropes.lua` — FS25 1.25.1.0
 
 - **Ropes** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Ropes.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `Ropes.initSpecialization()` | 23 |  |
@@ -20,9 +20,9 @@ Source : `dataS/scripts/vehicles/specializations/Ropes.lua` — FS25 1.25.1.0
 | `Ropes:updateRopes(dt: any)` | 187 |  |
 | `Ropes:updateAdjusterNodes(adjusterNodes: any)` | 205 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadAdjusterNode` | 54 |
 | registerFunction | `updateRopes` | 55 |

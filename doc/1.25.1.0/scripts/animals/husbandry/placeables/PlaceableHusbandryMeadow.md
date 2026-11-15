@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryMeadow.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryMeadow.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryMeadow.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryMeadow** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryMeadow.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `PlaceableHusbandryMeadow.registerOverwrittenFunctions(placeableType: any)` | 41 |  |
@@ -23,9 +23,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryMeadow.lu
 | `PlaceableHusbandryMeadow:getFoodInfos(superFunc: any)` | 704 |  |
 | `PlaceableHusbandryMeadow:updateInfo(superFunc: any, infoTable: any)` | 717 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `updateInfo` | 42 |
 | registerOverwrittenFunction | `getFoodInfos` | 43 |
@@ -45,5 +45,5 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryMeadow.lu
 
 ## Messages
 
-- écoute `MessageType.START_GROWTH_PERIOD` (l.363)
-- écoute `MessageType.FINISHED_GROWTH_PERIOD` (l.364)
+- subscribes `MessageType.START_GROWTH_PERIOD` (l.363)
+- subscribes `MessageType.FINISHED_GROWTH_PERIOD` (l.364)

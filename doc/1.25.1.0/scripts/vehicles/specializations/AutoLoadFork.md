@@ -1,11 +1,11 @@
 # vehicles/specializations/AutoLoadFork.lua
 
-Source : `dataS/scripts/vehicles/specializations/AutoLoadFork.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AutoLoadFork.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AutoLoadFork.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `AutoLoadFork.initSpecialization()` | 26 |  |
@@ -25,9 +25,9 @@ Source : `dataS/scripts/vehicles/specializations/AutoLoadFork.lua` — FS25 1.25
 | `AutoLoadFork:addToPhysics(superFunc: any)` | 385 |  |
 | `AutoLoadFork:removeFromPhysics(superFunc: any)` | 406 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onAutoLoadForkTriggerCallback` | 47 |
 | registerFunction | `getCanUnloadFork` | 48 |

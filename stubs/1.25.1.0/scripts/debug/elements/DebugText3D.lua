@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : debug/elements/DebugText3D.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : debug/elements/DebugText3D.lua (generated stub, FS25 Lua Atlas)
 
 ---@class DebugText3D : DebugElement
 DebugText3D = {}

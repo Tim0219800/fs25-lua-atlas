@@ -1,11 +1,11 @@
 # vehicles/specializations/Consumable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Consumable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Consumable.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Consumable.prerequisitesPresent(specializations: table) → boolean` | 26 |  |
 | `Consumable.initSpecialization()` | 32 |  |
@@ -39,9 +39,9 @@ Source : `dataS/scripts/vehicles/specializations/Consumable.lua` — FS25 1.25.1
 | `Consumable:collectPalletTensionBeltNodes(superFunc: any, nodes: any)` | 959 |  |
 | `Consumable.updateActivatable(self: any)` | 976 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onConsumableVariationChanged` | 83 |
 | registerFunction | `getConsumableVariationIndexByFillUnitIndex` | 90 |

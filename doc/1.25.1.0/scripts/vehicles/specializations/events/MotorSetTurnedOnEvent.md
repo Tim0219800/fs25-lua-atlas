@@ -1,12 +1,12 @@
 # vehicles/specializations/events/MotorSetTurnedOnEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/MotorSetTurnedOnEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/MotorSetTurnedOnEvent.lua` — FS25 1.25.1.0
 
-- **MotorSetTurnedOnEvent** hérite de `Event` (l.11)
+- **MotorSetTurnedOnEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MotorSetTurnedOnEvent.emptyNew() → table` | 18 |  |
 | `MotorSetTurnedOnEvent.new(vehicle: table, turnedOn: boolean)` | 27 |  |

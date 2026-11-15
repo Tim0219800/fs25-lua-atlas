@@ -1,12 +1,12 @@
 # vehicles/specializations/events/ReverseDrivingSetStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/ReverseDrivingSetStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/ReverseDrivingSetStateEvent.lua` — FS25 1.25.1.0
 
-- **ReverseDrivingSetStateEvent** hérite de `Event` (l.7)
+- **ReverseDrivingSetStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ReverseDrivingSetStateEvent.emptyNew() → table` | 14 |  |
 | `ReverseDrivingSetStateEvent.new(vehicle: table, isReverseDriving: boolean)` | 23 |  |

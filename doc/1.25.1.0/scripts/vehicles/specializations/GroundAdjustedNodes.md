@@ -1,12 +1,12 @@
 # vehicles/specializations/GroundAdjustedNodes.lua
 
-Source : `dataS/scripts/vehicles/specializations/GroundAdjustedNodes.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/GroundAdjustedNodes.lua` — FS25 1.25.1.0
 
 - **GroundAdjustedNodes** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GroundAdjustedNodes.prerequisitesPresent(specializations: any)` | 20 |  |
 | `GroundAdjustedNodes.initSpecialization()` | 26 |  |
@@ -26,9 +26,9 @@ Source : `dataS/scripts/vehicles/specializations/GroundAdjustedNodes.lua` — FS
 | `GroundAdjustedNodes:getIsGroundAdjustedNodeActive(groundAdjustedNode: any, ignoreAttachState: any)` | 490 |  |
 | `GroundAdjustedNodes:onRegisterAnimationValueTypes()` | 497 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadGroundAdjustedNodeFromXML` | 84 |
 | registerFunction | `loadGroundAdjustedAdjustNodeFromXML` | 85 |

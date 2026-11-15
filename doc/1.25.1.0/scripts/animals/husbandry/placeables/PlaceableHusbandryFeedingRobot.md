@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryFeedingRobot.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFeedingRobot.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFeedingRobot.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryFeedingRobot** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryFeedingRobot.prerequisitesPresent(specializations: table) → boolean` | 29 |  |
 | `PlaceableHusbandryFeedingRobot.registerFunctions(placeableType: any)` | 35 |  |
@@ -28,9 +28,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFeedingRo
 | `PlaceableHusbandryFeedingRobot:collectPickObjects(superFunc: any, node: any)` | 279 |  |
 | `PlaceableHusbandryFeedingRobot:updateInfo(superFunc: any, infoTable: any)` | 292 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onFeedingRobotLoaded` | 36 |
 | registerOverwrittenFunction | `setOwnerFarmId` | 42 |

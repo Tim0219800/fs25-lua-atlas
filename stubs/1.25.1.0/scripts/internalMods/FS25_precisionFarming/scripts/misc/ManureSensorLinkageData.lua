@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : internalMods/FS25_precisionFarming/scripts/misc/ManureSensorLinkageData.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : internalMods/FS25_precisionFarming/scripts/misc/ManureSensorLinkageData.lua (generated stub, FS25 Lua Atlas)
 
 ---@class ManureSensorLinkageData
 ManureSensorLinkageData = {}

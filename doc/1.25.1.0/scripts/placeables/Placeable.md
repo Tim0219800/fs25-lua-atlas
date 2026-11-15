@@ -1,12 +1,12 @@
 # placeables/Placeable.lua
 
-Source : `dataS/scripts/placeables/Placeable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/Placeable.lua` — FS25 1.25.1.0
 
-- **Placeable** hérite de `Object` (l.18)
+- **Placeable** inherits from `Object` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Placeable.registerEvents(placeableType: any)` | 68 |  |
 | `Placeable.registerFunctions(placeableType: any)` | 103 |  |
@@ -83,9 +83,9 @@ Source : `dataS/scripts/placeables/Placeable.lua` — FS25 1.25.1.0
 | `Placeable:periodChanged(period: any)` | 1634 |  |
 | `Placeable.getSpecValueSlots(storeItem: any, realItem: any)` | 1641 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onPreLoad` | 69 |
 | registerEvent | `onLoad` | 70 |
@@ -157,14 +157,14 @@ Source : `dataS/scripts/placeables/Placeable.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.FARMLAND_OWNER_CHANGED` (l.754)
-- écoute `MessageType.DAY_NIGHT_CHANGED` (l.761)
-- écoute `MessageType.HOUR_CHANGED` (l.764)
-- écoute `MessageType.MINUTE_CHANGED` (l.767)
-- écoute `MessageType.DAY_CHANGED` (l.770)
-- écoute `MessageType.PERIOD_CHANGED` (l.772)
-- publie `MessageType.FARM_PROPERTY_CHANGED` (l.774)
-- publie `MessageType.PLACEABLE_PRE_DELETE` (l.822)
-- publie `MessageType.UNLOADING_STATIONS_CHANGED` (l.1268)
-- publie `MessageType.LOADING_STATIONS_CHANGED` (l.1269)
-- publie `MessageType.FARM_PROPERTY_CHANGED` (l.1305)
+- subscribes `MessageType.FARMLAND_OWNER_CHANGED` (l.754)
+- subscribes `MessageType.DAY_NIGHT_CHANGED` (l.761)
+- subscribes `MessageType.HOUR_CHANGED` (l.764)
+- subscribes `MessageType.MINUTE_CHANGED` (l.767)
+- subscribes `MessageType.DAY_CHANGED` (l.770)
+- subscribes `MessageType.PERIOD_CHANGED` (l.772)
+- publishes `MessageType.FARM_PROPERTY_CHANGED` (l.774)
+- publishes `MessageType.PLACEABLE_PRE_DELETE` (l.822)
+- publishes `MessageType.UNLOADING_STATIONS_CHANGED` (l.1268)
+- publishes `MessageType.LOADING_STATIONS_CHANGED` (l.1269)
+- publishes `MessageType.FARM_PROPERTY_CHANGED` (l.1305)

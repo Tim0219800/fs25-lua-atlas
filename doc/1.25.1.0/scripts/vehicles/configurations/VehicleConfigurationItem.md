@@ -1,12 +1,12 @@
 # vehicles/configurations/VehicleConfigurationItem.lua
 
-Source : `dataS/scripts/vehicles/configurations/VehicleConfigurationItem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/configurations/VehicleConfigurationItem.lua` — FS25 1.25.1.0
 
 - **VehicleConfigurationItem** (l.27)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleConfigurationItem.new(configName: any, customMt: any)` | 31 |  |
 | `VehicleConfigurationItem:loadFromXML(xmlFile: any, baseKey: any, configKey: any, baseDirectory: any, customEnvironment: any)` | 55 |  |

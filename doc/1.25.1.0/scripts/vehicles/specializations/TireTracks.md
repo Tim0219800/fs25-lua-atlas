@@ -1,12 +1,12 @@
 # vehicles/specializations/TireTracks.lua
 
-Source : `dataS/scripts/vehicles/specializations/TireTracks.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/TireTracks.lua` — FS25 1.25.1.0
 
 - **TireTracks** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TireTracks.prerequisitesPresent(specializations: any)` | 17 |  |
 | `TireTracks.initSpecialization()` | 23 |  |
@@ -21,9 +21,9 @@ Source : `dataS/scripts/vehicles/specializations/TireTracks.lua` — FS25 1.25.1
 | `TireTracks:removeTireTrackNode(tireTrackNodeIndex: any)` | 126 |  |
 | `TireTracks:updateTireTrackNode(tireTrackNode: any, allowTireTracks: any)` | 134 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getAllowTireTracks` | 29 |
 | registerFunction | `addTireTrackNode` | 30 |

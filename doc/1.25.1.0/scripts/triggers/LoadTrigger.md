@@ -1,13 +1,13 @@
 # triggers/LoadTrigger.lua
 
-Source : `dataS/scripts/triggers/LoadTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/LoadTrigger.lua` — FS25 1.25.1.0
 
-- **LoadTrigger** hérite de `Object` (l.13)
+- **LoadTrigger** inherits from `Object` (l.13)
 - **LoadTriggerActivatable** (l.699)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LoadTrigger.registerXMLPaths(schema: any, basePath: any)` | 19 |  |
 | `LoadTrigger.new(isServer: any, isClient: any, customMt: any)` | 51 |  |

@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatistic.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatistic.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatistic.lua` — FS25 1.25.1.0
 
 - **FarmlandStatistic** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FarmlandStatistic.new(farmlandId: any, customMt: any)` | 16 |  |
 | `FarmlandStatistic:loadFromItemsXML(xmlFile: any, key: any)` | 30 |  |

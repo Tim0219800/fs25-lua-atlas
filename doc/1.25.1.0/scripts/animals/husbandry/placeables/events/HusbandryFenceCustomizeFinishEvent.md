@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/events/HusbandryFenceCustomizeFinishEvent.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/events/HusbandryFenceCustomizeFinishEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/events/HusbandryFenceCustomizeFinishEvent.lua` — FS25 1.25.1.0
 
-- **HusbandryFenceCustomizeFinishEvent** hérite de `Event` (l.11)
+- **HusbandryFenceCustomizeFinishEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HusbandryFenceCustomizeFinishEvent.emptyNew()` | 17 |  |
 | `HusbandryFenceCustomizeFinishEvent.new(placeable: any, success: any)` | 24 |  |

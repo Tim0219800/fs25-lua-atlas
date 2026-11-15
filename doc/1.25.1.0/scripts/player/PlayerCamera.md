@@ -1,12 +1,12 @@
 # player/PlayerCamera.lua
 
-Source : `dataS/scripts/player/PlayerCamera.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/PlayerCamera.lua` — FS25 1.25.1.0
 
 - **PlayerCamera** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerCamera.new(player: Player) → PlayerCamera` | 59 |  |
 | `PlayerCamera:initialise()` | 126 |  |
@@ -34,5 +34,5 @@ Source : `dataS/scripts/player/PlayerCamera.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.117)
-- écoute `MessageType.SETTING_CHANGED` (l.118)
+- subscribes `MessageType.SETTING_CHANGED` (l.117)
+- subscribes `MessageType.SETTING_CHANGED` (l.118)

@@ -1,12 +1,12 @@
 # animals/events/AnimalRidingEvent.lua
 
-Source : `dataS/scripts/animals/events/AnimalRidingEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/events/AnimalRidingEvent.lua` — FS25 1.25.1.0
 
-- **AnimalRidingEvent** hérite de `Event` (l.6)
+- **AnimalRidingEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimalRidingEvent.emptyNew()` | 12 |  |
 | `AnimalRidingEvent.new(husbandry: any, clusterId: any, player: any)` | 19 |  |

@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryMilk.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryMilk.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryMilk.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryMilk** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryMilk.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `PlaceableHusbandryMilk.initSpecialization()` | 25 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryMilk.lua`
 | `PlaceableHusbandryMilk:updateInfo(superFunc: any, infoTable: any)` | 244 |  |
 | `PlaceableHusbandryMilk:getConditionInfos(superFunc: any)` | 260 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onMilkingRobotLoaded` | 32 |
 | registerOverwrittenFunction | `updateOutput` | 38 |

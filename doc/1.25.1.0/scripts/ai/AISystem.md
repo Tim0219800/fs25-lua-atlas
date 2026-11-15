@@ -1,12 +1,12 @@
 # ai/AISystem.lua
 
-Source : `dataS/scripts/ai/AISystem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/AISystem.lua` — FS25 1.25.1.0
 
 - **AISystem** (l.25)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AISystem.onCreateAIRoadSpline(_: integer, node: integer)` | 32 |  |
 | `AISystem.new(isServer: boolean, mission: table, customMt: table?) → AISystem` | 47 |  |
@@ -65,8 +65,8 @@ Source : `dataS/scripts/ai/AISystem.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.AI_JOB_REMOVED` (l.94)
-- publie `MessageType.AI_SYSTEM_LOADED` (l.377)
-- publie `MessageType.AI_JOB_REMOVED` (l.468)
-- publie `MessageType.AI_JOB_STARTED` (l.565)
-- publie `MessageType.AI_JOB_STOPPED` (l.587)
+- publishes `MessageType.AI_JOB_REMOVED` (l.94)
+- publishes `MessageType.AI_SYSTEM_LOADED` (l.377)
+- publishes `MessageType.AI_JOB_REMOVED` (l.468)
+- publishes `MessageType.AI_JOB_STARTED` (l.565)
+- publishes `MessageType.AI_JOB_STOPPED` (l.587)

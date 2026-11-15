@@ -1,12 +1,12 @@
 # ship/ferry/FerryStartEvent.lua
 
-Source : `dataS/scripts/ship/ferry/FerryStartEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ship/ferry/FerryStartEvent.lua` — FS25 1.25.1.0
 
-- **FerryStartEvent** hérite de `Event` (l.7)
+- **FerryStartEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FerryStartEvent.emptyNew() → table` | 14 |  |
 | `FerryStartEvent.new(ferry: table) → table` | 23 |  |

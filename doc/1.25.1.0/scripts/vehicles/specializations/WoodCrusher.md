@@ -1,12 +1,12 @@
 # vehicles/specializations/WoodCrusher.lua
 
-Source : `dataS/scripts/vehicles/specializations/WoodCrusher.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/WoodCrusher.lua` — FS25 1.25.1.0
 
 - **WoodCrusher** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodCrusher.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `WoodCrusher.initSpecialization()` | 25 |  |
@@ -39,9 +39,9 @@ Source : `dataS/scripts/vehicles/specializations/WoodCrusher.lua` — FS25 1.25.
 | `WoodCrusher.woodCrusherMoveTriggerCallback(self: integer, triggerId: integer, otherActorId: integer, onEnter: boolean, onLeave: boolean, onStay: boolean, otherShapeId: integer)` | 691 |  |
 | `WoodCrusher.woodCrusherDownForceTriggerCallback(self: integer, triggerId: integer, otherActorId: integer, onEnter: boolean, onLeave: boolean, onStay: boolean, otherShapeId: integer)` | 722 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onCrushedSplitShape` | 73 |
 | registerOverwrittenFunction | `getDirtMultiplier` | 79 |

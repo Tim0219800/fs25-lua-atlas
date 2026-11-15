@@ -1,12 +1,12 @@
 # vehicles/specializations/activatables/WinchAttachTreeActivatable.lua
 
-Source : `dataS/scripts/vehicles/specializations/activatables/WinchAttachTreeActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/activatables/WinchAttachTreeActivatable.lua` — FS25 1.25.1.0
 
 - **WinchAttachTreeActivatable** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WinchAttachTreeActivatable.new(vehicle: table, rope: any) → table` | 20 |  |
 | `WinchAttachTreeActivatable:registerCustomInput(inputContext: any)` | 35 |  |

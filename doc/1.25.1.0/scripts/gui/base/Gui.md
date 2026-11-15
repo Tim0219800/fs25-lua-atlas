@@ -1,12 +1,12 @@
 # gui/base/Gui.lua
 
-Source : `dataS/scripts/gui/base/Gui.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/Gui.lua` — FS25 1.25.1.0
 
 - **Gui** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Gui.new() → Gui` | 61 |  |
 | `Gui:loadPresets(xmlFile: any, rootKey: any)` | 121 |  |
@@ -58,8 +58,8 @@ Source : `dataS/scripts/gui/base/Gui.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.GUI_DIALOG_OPENED` (l.562)
-- publie `MessageType.GUI_BEFORE_OPEN` (l.954)
-- publie `MessageType.GUI_AFTER_OPEN` (l.965)
-- publie `MessageType.GUI_BEFORE_CLOSE` (l.970)
-- publie `MessageType.GUI_AFTER_CLOSE` (l.973)
+- publishes `MessageType.GUI_DIALOG_OPENED` (l.562)
+- publishes `MessageType.GUI_BEFORE_OPEN` (l.954)
+- publishes `MessageType.GUI_AFTER_OPEN` (l.965)
+- publishes `MessageType.GUI_BEFORE_CLOSE` (l.970)
+- publishes `MessageType.GUI_AFTER_CLOSE` (l.973)

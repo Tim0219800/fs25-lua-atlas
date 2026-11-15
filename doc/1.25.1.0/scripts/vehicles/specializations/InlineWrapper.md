@@ -1,13 +1,13 @@
 # vehicles/specializations/InlineWrapper.lua
 
-Source : `dataS/scripts/vehicles/specializations/InlineWrapper.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/InlineWrapper.lua` — FS25 1.25.1.0
 
 - **InlineWrapper** (l.11)
 - **InlineWrapperActivatable** (l.1347)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InlineWrapper.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `InlineWrapper.initSpecialization()` | 28 |  |
@@ -60,9 +60,9 @@ Source : `dataS/scripts/vehicles/specializations/InlineWrapper.lua` — FS25 1.2
 | `InlineWrapperActivatable:getIsActivatable()` | 1362 |  |
 | `InlineWrapperActivatable:run()` | 1374 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `readInlineBales` | 85 |
 | registerFunction | `writeInlineBales` | 86 |

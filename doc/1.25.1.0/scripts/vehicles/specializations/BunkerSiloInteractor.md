@@ -1,12 +1,12 @@
 # vehicles/specializations/BunkerSiloInteractor.lua
 
-Source : `dataS/scripts/vehicles/specializations/BunkerSiloInteractor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BunkerSiloInteractor.lua` — FS25 1.25.1.0
 
 - **BunkerSiloInteractor** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BunkerSiloInteractor.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `BunkerSiloInteractor.registerFunctions(vehicleType: any)` | 23 |  |
@@ -15,9 +15,9 @@ Source : `dataS/scripts/vehicles/specializations/BunkerSiloInteractor.lua` — F
 | `BunkerSiloInteractor:setBunkerSiloInteractorCallback(callback: function, callbackTarget: table)` | 47 |  |
 | `BunkerSiloInteractor:notifiyBunkerSilo(changedFillLevel: any, fillType: any, x: any, y: any, z: any)` | 55 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setBunkerSiloInteractorCallback` | 24 |
 | registerFunction | `notifiyBunkerSilo` | 25 |

@@ -1,12 +1,12 @@
 # shop/StoreItemUtil.lua
 
-Source : `dataS/scripts/shop/StoreItemUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/shop/StoreItemUtil.lua` — FS25 1.25.1.0
 
 - **StoreItemUtil** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StoreItemUtil.getIsVehicle(storeItem: table) → boolean` | 17 |  |
 | `StoreItemUtil.getIsAnimal(storeItem: table) → boolean` | 25 |  |

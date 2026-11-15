@@ -1,12 +1,12 @@
 # objects/ProductionPointProductionStateEvent.lua
 
-Source : `dataS/scripts/objects/ProductionPointProductionStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/ProductionPointProductionStateEvent.lua` — FS25 1.25.1.0
 
-- **ProductionPointProductionStateEvent** hérite de `Event` (l.6)
+- **ProductionPointProductionStateEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ProductionPointProductionStateEvent.emptyNew() → table` | 13 |  |
 | `ProductionPointProductionStateEvent.new(productionPoint: any, productionId: any, isEnabled: any)` | 20 |  |

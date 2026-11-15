@@ -1,12 +1,12 @@
 # player/graphical/PlayerStyle.lua
 
-Source : `dataS/scripts/player/graphical/PlayerStyle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/graphical/PlayerStyle.lua` — FS25 1.25.1.0
 
 - **PlayerStyle** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerStyle.new(customMt: any) → table` | 112 |  |
 | `PlayerStyle:writeStream(streamId: integer, connection: table)` | 166 |  |

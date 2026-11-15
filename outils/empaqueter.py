@@ -17,7 +17,7 @@ def main(v):
         for p in sorted((ROOT / 'stubs' / v).rglob('*.lua')):
             z.write(p, p.relative_to(ROOT).as_posix())
             n += 1
-        for f in ('LICENSE', 'LEGAL.md', 'README.md', 'README.fr.md'):
+        for f in ('LICENSE', 'LEGAL.md', 'LEGAL.fr.md', 'README.md', 'README.fr.md'):
             z.write(ROOT / f, f)
     print(f'{out.relative_to(ROOT)} : {n} stubs')
 

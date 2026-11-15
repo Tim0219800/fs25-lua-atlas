@@ -1,11 +1,11 @@
 # vehicles/specializations/PalletFiller.lua
 
-Source : `dataS/scripts/vehicles/specializations/PalletFiller.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/PalletFiller.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PalletFiller.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `PalletFiller.initSpecialization()` | 28 |  |
@@ -50,9 +50,9 @@ Source : `dataS/scripts/vehicles/specializations/PalletFiller.lua` — FS25 1.25
 | `PalletFiller.actionEventBuyPallets(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1335 |  |
 | `PalletFiller.onObjectDeleted(self: any, object: any)` | 1361 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadPalletFillerPallet` | 91 |
 | registerFunction | `unloadPalletFillerPallet` | 92 |

@@ -1,12 +1,12 @@
 # ai/NavigationSystem.lua
 
-Source : `dataS/scripts/ai/NavigationSystem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/NavigationSystem.lua` — FS25 1.25.1.0
 
 - **NavigationSystem** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `NavigationSystem.new(customMt: any)` | 25 |  |
 | `NavigationSystem:loadMapData(xmlFile: any, missionInfo: any, baseDirectory: any) → boolean` | 39 |  |

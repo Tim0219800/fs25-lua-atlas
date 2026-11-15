@@ -1,11 +1,11 @@
 # gui/InGameMenuAnimalsFrame.lua
 
-Source : `dataS/scripts/gui/InGameMenuAnimalsFrame.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/InGameMenuAnimalsFrame.lua` — FS25 1.25.1.0
 
-- **InGameMenuAnimalsFrame** hérite de `TabbedMenuFrameElement` (l.15)
+- **InGameMenuAnimalsFrame** inherits from `TabbedMenuFrameElement` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InGameMenuAnimalsFrame:delete()` | 71 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/ReceivingHopper.lua
 
-Source : `dataS/scripts/vehicles/specializations/ReceivingHopper.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ReceivingHopper.lua` — FS25 1.25.1.0
 
 - **ReceivingHopper** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ReceivingHopper.prerequisitesPresent(specializations: table) → boolean` | 21 |  |
 | `ReceivingHopper.initSpecialization()` | 27 |  |
@@ -28,9 +28,9 @@ Source : `dataS/scripts/vehicles/specializations/ReceivingHopper.lua` — FS25 1
 | `ReceivingHopper.actionEventToggleBoxCreation(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 297 |  |
 | `ReceivingHopper.updateActionEvents(self: any)` | 304 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setCreateBoxes` | 45 |
 | registerFunction | `getCanSpawnNextBox` | 46 |

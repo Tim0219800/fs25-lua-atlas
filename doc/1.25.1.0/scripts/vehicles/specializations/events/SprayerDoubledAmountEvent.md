@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SprayerDoubledAmountEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SprayerDoubledAmountEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SprayerDoubledAmountEvent.lua` — FS25 1.25.1.0
 
-- **SprayerDoubledAmountEvent** hérite de `Event` (l.7)
+- **SprayerDoubledAmountEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SprayerDoubledAmountEvent.emptyNew() → table` | 14 |  |
 | `SprayerDoubledAmountEvent.new(object: table, isActive: integer)` | 23 |  |

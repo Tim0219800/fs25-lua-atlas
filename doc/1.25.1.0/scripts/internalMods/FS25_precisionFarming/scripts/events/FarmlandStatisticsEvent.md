@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/FarmlandStatisticsEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/FarmlandStatisticsEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/FarmlandStatisticsEvent.lua` — FS25 1.25.1.0
 
-- **FarmlandStatisticsEvent** hérite de `Event` (l.7)
+- **FarmlandStatisticsEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FarmlandStatisticsEvent.emptyNew() → table` | 14 |  |
 | `FarmlandStatisticsEvent.new(farmlandId: table)` | 22 |  |

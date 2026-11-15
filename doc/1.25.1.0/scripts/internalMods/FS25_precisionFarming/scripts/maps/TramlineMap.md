@@ -1,11 +1,11 @@
 # internalMods/FS25_precisionFarming/scripts/maps/TramlineMap.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/maps/TramlineMap.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/maps/TramlineMap.lua` — FS25 1.25.1.0
 
-- **TramlineMap** hérite de `ValueMap` (l.17)
+- **TramlineMap** inherits from `ValueMap` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TramlineMap:setMapFrame(mapFrame: any)` | 174 |  |

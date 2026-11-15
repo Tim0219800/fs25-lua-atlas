@@ -1,12 +1,12 @@
 # misc/TensionBeltManager.lua
 
-Source : `dataS/scripts/misc/TensionBeltManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/TensionBeltManager.lua` — FS25 1.25.1.0
 
 - **TensionBeltManager** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TensionBeltManager.new(customMt: any) → table` | 17 |  |
 | `TensionBeltManager:initDataStructures()` | 27 |  |

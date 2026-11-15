@@ -1,11 +1,11 @@
 # gui/base/GlyphButtonOverlay.lua
 
-Source : `dataS/scripts/gui/base/GlyphButtonOverlay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/GlyphButtonOverlay.lua` — FS25 1.25.1.0
 
-- **GlyphButtonOverlay** hérite de `ButtonOverlay` (l.12)
+- **GlyphButtonOverlay** inherits from `ButtonOverlay` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GlyphButtonOverlay.new(customMt: table?) → GlyphButtonOverlay` | 18 |  |

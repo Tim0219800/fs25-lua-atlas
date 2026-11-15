@@ -1,12 +1,12 @@
 # vehicles/specializations/ReverseDriving.lua
 
-Source : `dataS/scripts/vehicles/specializations/ReverseDriving.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ReverseDriving.lua` — FS25 1.25.1.0
 
 - **ReverseDriving** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ReverseDriving.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `ReverseDriving.initSpecialization()` | 27 |  |
@@ -40,9 +40,9 @@ Source : `dataS/scripts/vehicles/specializations/ReverseDriving.lua` — FS25 1.
 | `ReverseDriving:onRegisterActionEvents(isActiveForInput: any, isActiveForInputIgnoreSelection: any)` | 512 |  |
 | `ReverseDriving.actionEventToggleReverseDriving(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 526 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onStartReverseDirectionChange` | 77 |
 | registerEvent | `onReverseDirectionChanged` | 78 |

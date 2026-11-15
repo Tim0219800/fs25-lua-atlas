@@ -1,6 +1,6 @@
 # MessageType
 
-| Message | Publié par | Écouté par |
+| Message | Published by | Subscribers |
 |---|---|---|
 | `MessageType.AI_JOB_REMOVED` | ai/AISystem.lua | 0 |
 | `MessageType.AI_JOB_STARTED` | ai/AISystem.lua | 0 |

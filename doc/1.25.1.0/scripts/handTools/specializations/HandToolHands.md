@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolHands.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolHands.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolHands.lua` — FS25 1.25.1.0
 
 - **HandToolHands** (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolHands.registerXMLPaths(xmlSchema: any)` | 49 |  |
 | `HandToolHands.registerFunctions(handToolType: any)` | 56 |  |
@@ -53,9 +53,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolHands.lua` — FS25 1.
 | `HandToolHands:onDebugDraw()` | 1231 |  |
 | `HandToolHands:consoleCommandToggleSuperStrength()` | 1254 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateKinematicNode` | 57 |
 | registerFunction | `getKinematicNode` | 59 |

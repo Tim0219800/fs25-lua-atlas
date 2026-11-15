@@ -1,11 +1,11 @@
 # vehicles/specializations/AutomaticArmControlForwarder.lua
 
-Source : `dataS/scripts/vehicles/specializations/AutomaticArmControlForwarder.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AutomaticArmControlForwarder.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AutomaticArmControlForwarder.prerequisitesPresent(specializations: table) → boolean` | 32 |  |
 | `AutomaticArmControlForwarder.initSpecialization()` | 38 |  |
@@ -38,9 +38,9 @@ Source : `dataS/scripts/vehicles/specializations/AutomaticArmControlForwarder.lu
 | `AutomaticArmControlForwarder:onTreeAutoTriggerCallback(triggerId: any, otherId: any, onEnter: any, onLeave: any, onStay: any, otherShapeId: any)` | 690 |  |
 | `AutomaticArmControlForwarder.drawDebugCircleRange(node: any, radius: any, steps: any, minRot: any, maxRot: any)` | 703 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getIsAutoTreeAlignmentAllowed` | 91 |
 | registerFunction | `setTreeArmAlignmentInput` | 92 |

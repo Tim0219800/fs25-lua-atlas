@@ -1,12 +1,12 @@
 # objects/TourIconsMobile.lua
 
-Source : `dataS/scripts/objects/TourIconsMobile.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/TourIconsMobile.lua` — FS25 1.25.1.0
 
 - **TourIconsMobile** (l.9)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TourIconsMobile:onCreate(id: integer)` | 14 |  |
 | `TourIconsMobile.new(id: integer) → table` | 24 |  |
@@ -19,4 +19,4 @@ Source : `dataS/scripts/objects/TourIconsMobile.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.GUIDED_TOUR_FINISHED` (l.328)
+- publishes `MessageType.GUIDED_TOUR_FINISHED` (l.328)

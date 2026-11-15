@@ -1,12 +1,12 @@
 # gui/elements/IngameMapElement.lua
 
-Source : `dataS/scripts/gui/elements/IngameMapElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/IngameMapElement.lua` — FS25 1.25.1.0
 
-- **IngameMapElement** hérite de `GuiElement` (l.24)
+- **IngameMapElement** inherits from `GuiElement` (l.24)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `IngameMapElement.new(target: any, custom_mt: any)` | 35 |  |
 | `IngameMapElement:delete()` | 106 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AnimatedVehicleStartEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AnimatedVehicleStartEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AnimatedVehicleStartEvent.lua` — FS25 1.25.1.0
 
-- **AnimatedVehicleStartEvent** hérite de `Event` (l.7)
+- **AnimatedVehicleStartEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimatedVehicleStartEvent.emptyNew() → table` | 14 |  |
 | `AnimatedVehicleStartEvent.new(object: table, name: string, speed: number, animTime: number)` | 25 |  |

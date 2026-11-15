@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AIAutomaticSteeringLineEndEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AIAutomaticSteeringLineEndEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AIAutomaticSteeringLineEndEvent.lua` — FS25 1.25.1.0
 
-- **AIAutomaticSteeringLineEndEvent** hérite de `Event` (l.7)
+- **AIAutomaticSteeringLineEndEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIAutomaticSteeringLineEndEvent.emptyNew() → table` | 14 |  |
 | `AIAutomaticSteeringLineEndEvent.new(vehicle: table, state: integer, segmentIndex: any, segmentIsLeft: any)` | 23 |  |

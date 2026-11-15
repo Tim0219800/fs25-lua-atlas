@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableIndoorAreas.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableIndoorAreas.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableIndoorAreas.lua` — FS25 1.25.1.0
 
 - **PlaceableIndoorAreas** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableIndoorAreas.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableIndoorAreas.registerFunctions(placeableType: any)` | 24 |  |
@@ -17,9 +17,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableIndoorAreas.lua` —
 | `PlaceableIndoorAreas:loadIndoorArea(xmlFile: any, key: any, area: any)` | 80 |  |
 | `PlaceableIndoorAreas:onFinalizePlacement()` | 108 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadIndoorArea` | 25 |
 | registerEventListener | `onLoad` | 31 |

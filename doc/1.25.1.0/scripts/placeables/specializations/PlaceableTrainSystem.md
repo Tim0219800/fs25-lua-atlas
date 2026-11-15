@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableTrainSystem.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableTrainSystem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableTrainSystem.lua` — FS25 1.25.1.0
 
 - **PlaceableTrainSystem** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableTrainSystem.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `PlaceableTrainSystem.registerFunctions(placeableType: any)` | 26 |  |
@@ -55,9 +55,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableTrainSystem.lua` —
 | `PlaceableTrainSystem:onSellGoodsQuestion(yes: any)` | 1184 |  |
 | `PlaceableTrainSystem:sellGoods()` | 1192 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateRailroadVehiclePositions` | 27 |
 | registerFunction | `createVehicles` | 28 |

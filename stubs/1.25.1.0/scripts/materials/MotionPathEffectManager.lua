@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : materials/MotionPathEffectManager.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : materials/MotionPathEffectManager.lua (generated stub, FS25 Lua Atlas)
 
 --- Gestionnaire des effets « motion path » définis par carte (g_motionPathEffectManager, dérive d'AbstractManager) : effets de végétation/terre à base de maillages animés par shader (coupe de la barre de coupe, chaumes, cultivateur, charrue, andaineur). Il ne crée pas les effets : il charge des définitions XML, des I3D partagés et des matériaux, puis fournit à la classe d'effet (MotionPathEffect et ses classes filles, absentes du dump) les maillages, matériaux et réglages de shader appropriés. Le comportement des classes d'effets est donc NON VÉRIFIÉ ici. Tourne sur chaque pair (client et serveur) ; aucun réseau.
 --- 

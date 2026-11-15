@@ -1,12 +1,12 @@
 # gui/hud/GameInfoDisplayMobile.lua
 
-Source : `dataS/scripts/gui/hud/GameInfoDisplayMobile.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/GameInfoDisplayMobile.lua` — FS25 1.25.1.0
 
-- **GameInfoDisplayMobile** hérite de `HUDDisplayElement` (l.31)
+- **GameInfoDisplayMobile** inherits from `HUDDisplayElement` (l.31)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GameInfoDisplayMobile.new(hud: string, hudAtlasPath: string, moneyUnit: any, controlHudAtlasPath: any)` | 38 |  |
 | `GameInfoDisplayMobile:setVehicle(vehicle: any)` | 70 |  |
@@ -30,4 +30,4 @@ Source : `dataS/scripts/gui/hud/GameInfoDisplayMobile.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.INSETS_CHANGED` (l.63)
+- subscribes `MessageType.INSETS_CHANGED` (l.63)

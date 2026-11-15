@@ -1,12 +1,12 @@
 # gui/elements/FrameReferenceElement.lua
 
-Source : `dataS/scripts/gui/elements/FrameReferenceElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/FrameReferenceElement.lua` — FS25 1.25.1.0
 
-- **FrameReferenceElement** hérite de `GuiElement` (l.15)
+- **FrameReferenceElement** inherits from `GuiElement` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FrameReferenceElement.new(target: any, custom_mt: any)` | 22 |  |
 | `FrameReferenceElement:loadFromXML(xmlFile: any, key: any)` | 32 |  |

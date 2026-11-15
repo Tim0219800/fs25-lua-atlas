@@ -1,12 +1,12 @@
 # player/events/PlayerSetNicknameEvent.lua
 
-Source : `dataS/scripts/player/events/PlayerSetNicknameEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/events/PlayerSetNicknameEvent.lua` — FS25 1.25.1.0
 
-- **PlayerSetNicknameEvent** hérite de `Event` (l.4)
+- **PlayerSetNicknameEvent** inherits from `Event` (l.4)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerSetNicknameEvent.emptyNew() → table` | 11 |  |
 | `PlayerSetNicknameEvent.new(player: any, nickname: any, userId: any)` | 18 |  |

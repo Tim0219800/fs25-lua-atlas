@@ -1,12 +1,12 @@
 # gui/hud/GamePausedDisplay.lua
 
-Source : `dataS/scripts/gui/hud/GamePausedDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/GamePausedDisplay.lua` — FS25 1.25.1.0
 
-- **GamePausedDisplay** hérite de `HUDDisplay` (l.23)
+- **GamePausedDisplay** inherits from `HUDDisplay` (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GamePausedDisplay.new() → table` | 28 |  |
 | `GamePausedDisplay:storeScaledValues()` | 43 |  |

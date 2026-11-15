@@ -1,14 +1,14 @@
 # vehicles/specializations/Washable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Washable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Washable.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation de véhicule (sans prérequis) qui gère la SALETÉ (boue/poussière accumulée) et l'HUMIDITÉ de surface des véhicules, via des paramètres de shader sur leurs nœuds. C'est la référence vanilla pour tout mod d'humidité/boue. MODÈLE : chaque « washable node » (nodeData) regroupe des nœuds I3D et porte dirtAmount (0..1), wetness (0..1), une couleur de saleté et une fonction de mise à jour updateFunc. Le nœud global (index 1) couvre tous les nœuds portant le paramètre de shader « scratches_dirt_snow_wetness » (composantes : y = saleté, w = humidité, d'après les setShaderParameter) ; les nœuds sans ce paramètre sont traités comme « mudNodes » (shader avec « mudAmount », « wetness », « dirtColor »). D'autres spécialisations (par ex. Wheels via validateWashableNode) créent des nœuds locaux avec leur propre fonction. SERVEUR / CLIENT : la simulation se fait uniquement sur le serveur (onUpdateTick) ; les valeurs sont envoyées aux clients (saleté et humidité quantifiées, couleur si changée) et appliquées aux shaders sur chaque machine par setNodeDirtAmount / setNodeWetness avec seuils d'envoi (Washable.SEND_THRESHOLD et SEND_THRESHOLD_WETNESS, définies hors de ce fichier : NON VÉRIFIÉ). DONNÉES MÉTÉO LUES : (1) onUpdateTick lit weather:getRainFallScale(), getTimeSinceLastRain() et getCurrentTemperature() (Washable.lua:~290-295 ; seulement si le véhicule autorise le lavage par la pluie, type WASHTYPE_RAIN non bloqué) et les passe à updateFunc ; (2) getDirtMultiplier lit weather:getGroundWetness() (Washable.lua:685) pour accélérer l'encrassement sur champ : x(1 + wetness x wetMultiplier). Unités et plages de ces valeurs : implémentation de Weather absente du dump, NON VÉRIFIÉ ; les seuils codés ici (pluie > 0.1, temps depuis la dernière pluie < 30, température > 0) suggèrent respectivement une échelle 0..1, des minutes de jeu et des degrés Celsius (hypothèse non vérifiée). L'HUMIDITÉ (wetness) n'est PAS calculée ici par la météo : updateWetness est appelée de l'extérieur par VehicleSystem:update (VehicleSystem.lua:~155-175) avec dt multiplié par l'échelle de temps effective. PAS DE TEMPS : onUpdateTick utilise le dt reçu directement (ms) ; l'accélération du temps n'y apparaît pas explicitement (NON VÉRIFIÉ si dt déjà mis à l'échelle ailleurs), alors que updateWetness reçoit dt x timeScale. Constantes XML par véhicule (vehicle.washable#...) : dirtDuration (défaut 90 min), washDuration (1), rainWashDuration (10 min), wetDuration (10), dryDuration (120 min), workMultiplier (4), fieldMultiplier (2), wetMultiplier (5), blockedWashTypes. Option de partie : missionInfo.dirtInterval règle la vitesse de salissure (1 = aucune, 2 = x0.25, 3 = x0.5, 4 et autres = x1). Points d'extension pour un moddeur : toutes les fonctions de la spécialisation sont des registerFunction (remplaçables par type de véhicule) ; validateWashableNode est le crochet prévu pour attribuer une logique à un nœud (renvoie global/fonction/index/paramètres) ; addWashableNode / addWashableNodes pour ajouter des nœuds a posteriori ; getDirtMultiplier et getWorkDirtMultiplier pour changer la vitesse d'encrassement ; setNodeDirtAmount, setNodeWetness et setNodeDirtColor pour agir sur l'apparence synchronisée. Ce que le vanilla ne fait PAS ici : aucune lecture du vent, et aucune évaporation liée à la température ou à l'ensoleillement (le séchage est un taux fixe modulé par la saleté et la vitesse).
 
 - **Washable** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Washable.prerequisitesPresent(specializations: any)` | 30 | ✍ Aucun prérequis. |
 | `Washable.initSpecialization()` | 36 | ✍ Déclare les clés de sauvegarde dirtNode (#amount, #snowScale, #wetness) et le schéma XML de la spécialisation. |
@@ -52,9 +52,9 @@ Source : `dataS/scripts/vehicles/specializations/Washable.lua` — FS25 1.25.1.0
 | `Washable:getAllowsWashingByType(type: any)` | 727 | ✍ Vrai si le type de lavage (par ex. WASHTYPE_RAIN) n'est pas bloqué dans le XML du véhicule. |
 | `Washable:updateDebugValues(values: any)` | 734 | ✍ Débogage : ajoute à une liste de valeurs le multiplicateur de saleté et, par nœud, les variations horaires de saleté et d'humidité estimées avec les données météo courantes. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `cleanVehicle` | 60 |
 | registerFunction | `updateDirtAmount` | 61 |

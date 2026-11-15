@@ -1,13 +1,13 @@
 # vehicles/specializations/SmartAttach.lua
 
-Source : `dataS/scripts/vehicles/specializations/SmartAttach.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SmartAttach.lua` — FS25 1.25.1.0
 
 - **SmartAttachActivatable** (l.225)
-- **SmartAttachEvent** hérite de `Event` (l.257)
+- **SmartAttachEvent** inherits from `Event` (l.257)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SmartAttach.prerequisitesPresent(specializations: any)` | 17 |  |
 | `SmartAttach.initSpecialization()` | 23 |  |
@@ -29,9 +29,9 @@ Source : `dataS/scripts/vehicles/specializations/SmartAttach.lua` — FS25 1.25.
 | `SmartAttachEvent:run(connection: any)` | 300 |  |
 | `SmartAttachEvent.sendEvent(vehicle: any, targetVehicle: any, inputJointDescIndex: any, jointDescIndex: any, noEventSend: any)` | 310 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `smartAttachCallback` | 36 |
 | registerFunction | `getCanBeSmartAttached` | 37 |

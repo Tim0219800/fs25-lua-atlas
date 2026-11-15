@@ -1,12 +1,12 @@
 # vehicles/specializations/VehicleSettings.lua
 
-Source : `dataS/scripts/vehicles/specializations/VehicleSettings.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/VehicleSettings.lua` — FS25 1.25.1.0
 
 - **VehicleSettings** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleSettings.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `VehicleSettings.initSpecialization()` | 25 |  |
@@ -21,9 +21,9 @@ Source : `dataS/scripts/vehicles/specializations/VehicleSettings.lua` — FS25 1
 | `VehicleSettings:getVehicleSettingState(gameSettingId: integer) → any` | 151 |  |
 | `VehicleSettings:onStateChange(state: any, vehicle: any, isControlling: any)` | 163 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `registerVehicleSetting` | 31 |
 | registerFunction | `setVehicleSettingState` | 32 |
@@ -37,4 +37,4 @@ Source : `dataS/scripts/vehicles/specializations/VehicleSettings.lua` — FS25 1
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.109)
+- subscribes `MessageType.SETTING_CHANGED` (l.109)

@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/misc/SprayerNodeData.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/SprayerNodeData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/SprayerNodeData.lua` — FS25 1.25.1.0
 
 - **SprayerNodeData** (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SprayerNodeData:delete()` | 42 |  |
 | `SprayerNodeData:loadFromXML(_: any, _: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 69 |  |

@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableRiceFieldFieldAnswerEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableRiceFieldFieldAnswerEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableRiceFieldFieldAnswerEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableRiceFieldFieldAnswerEvent** hérite de `Event` (l.7)
+- **PlaceableRiceFieldFieldAnswerEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableRiceFieldFieldAnswerEvent.emptyNew() → table` | 14 |  |
 | `PlaceableRiceFieldFieldAnswerEvent.new(placeableRiceField: any, statusCode: any)` | 20 |  |

@@ -1,12 +1,12 @@
 # vehicles/VehicleAttachRequestEvent.lua
 
-Source : `dataS/scripts/vehicles/VehicleAttachRequestEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleAttachRequestEvent.lua` — FS25 1.25.1.0
 
-- **VehicleAttachRequestEvent** hérite de `Event` (l.7)
+- **VehicleAttachRequestEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleAttachRequestEvent.emptyNew() → table` | 14 |  |
 | `VehicleAttachRequestEvent.new(info: table) → table` | 22 |  |

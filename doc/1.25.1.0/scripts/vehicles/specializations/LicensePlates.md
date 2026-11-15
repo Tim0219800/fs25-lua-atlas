@@ -1,12 +1,12 @@
 # vehicles/specializations/LicensePlates.lua
 
-Source : `dataS/scripts/vehicles/specializations/LicensePlates.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/LicensePlates.lua` — FS25 1.25.1.0
 
 - **LicensePlates** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LicensePlates.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `LicensePlates.initSpecialization()` | 23 |  |
@@ -26,9 +26,9 @@ Source : `dataS/scripts/vehicles/specializations/LicensePlates.lua` — FS25 1.2
 | `LicensePlates.loadSpecValuePlateText(xmlFile: any, customEnvironment: any, baseDir: any)` | 347 |  |
 | `LicensePlates.getSpecValuePlateText(storeItem: any, realItem: any)` | 354 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setLicensePlatesData` | 50 |
 | registerFunction | `getLicensePlatesData` | 51 |

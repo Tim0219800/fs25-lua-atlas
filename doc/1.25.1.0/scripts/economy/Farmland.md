@@ -1,12 +1,12 @@
 # economy/Farmland.lua
 
-Source : `dataS/scripts/economy/Farmland.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/economy/Farmland.lua` — FS25 1.25.1.0
 
 - **Farmland** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Farmland.new(customMt: any) → table` | 29 |  |
 | `Farmland:load(xmlFile: XMLFile, key: string) → boolean` | 46 |  |

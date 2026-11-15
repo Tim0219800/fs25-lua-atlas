@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryFood.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFood.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFood.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryFood** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryFood.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableHusbandryFood.registerFunctions(placeableType: any)` | 24 |  |
@@ -43,9 +43,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFood.lua`
 | `PlaceableHusbandryFood.loadSpecValueAnimalFoodFillTypes(xmlFile: any, customEnvironment: any, baseDir: any)` | 697 |  |
 | `PlaceableHusbandryFood.getSpecValueAnimalFoodFillTypes(storeItem: any, realItem: any)` | 715 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateFillPlanes` | 25 |
 | registerFunction | `updateFoodPlaces` | 26 |

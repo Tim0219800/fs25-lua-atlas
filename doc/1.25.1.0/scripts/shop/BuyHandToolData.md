@@ -1,12 +1,12 @@
 # shop/BuyHandToolData.lua
 
-Source : `dataS/scripts/shop/BuyHandToolData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/shop/BuyHandToolData.lua` — FS25 1.25.1.0
 
 - **BuyHandToolData** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BuyHandToolData.new(customMt: any) → table` | 17 |  |
 | `BuyHandToolData:isValid() → boolean` | 32 |  |

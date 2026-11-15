@@ -1,12 +1,12 @@
 # gui/elements/DynamicFadedBitmapElement.lua
 
-Source : `dataS/scripts/gui/elements/DynamicFadedBitmapElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/DynamicFadedBitmapElement.lua` — FS25 1.25.1.0
 
-- **DynamicFadedBitmapElement** hérite de `PictureElement` (l.13)
+- **DynamicFadedBitmapElement** inherits from `PictureElement` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DynamicFadedBitmapElement.new(target: any, custom_mt: any)` | 19 |  |
 | `DynamicFadedBitmapElement:delete()` | 38 |  |

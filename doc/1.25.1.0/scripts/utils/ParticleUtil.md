@@ -1,16 +1,16 @@
 # utils/ParticleUtil.lua
 
-Source : `dataS/scripts/utils/ParticleUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/ParticleUtil.lua` — FS25 1.25.1.0
 
-> ⚠ Dans le dump du SDK ce fichier ne contient **que des signatures** (pas de corps).
+> ⚠ In the SDK dump this file only contains **signatures** (no bodies).
 
 ✍ Utilitaires de systèmes de particules : chargement depuis le XML ou un nœud I3D, émission, vitesses, échelles, durée de vie, matériau et copie. ⚠ Le dump du SDK ne contient que les signatures : le comportement interne n'est pas lisible. Les descriptions ci-dessous viennent de l'usage observé dans le code vanilla (WorkParticles notamment) ; le reste est NON VÉRIFIÉ. Les fonctions qui portent sur « particleSystem » prennent la table renvoyée par les fonctions de chargement, pas un id de nœud.
 
 - **ParticleUtil** (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ParticleUtil.loadParticleSystemData(xmlFile: XMLFile\|integer, data: table, baseString: string)` | 12 |  |
 | `ParticleUtil.loadParticleSystem(xmlFile: integer, particleSystem: table, baseString: string, linkNodes: array, defaultEmittingState: boolean, defaultPsFile: string?, baseDir: string, defaultLinkNode: integer?) → boolean` | 44 |  |

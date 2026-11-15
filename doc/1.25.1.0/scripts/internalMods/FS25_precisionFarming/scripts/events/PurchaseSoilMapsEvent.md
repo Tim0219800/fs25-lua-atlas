@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/PurchaseSoilMapsEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/PurchaseSoilMapsEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/PurchaseSoilMapsEvent.lua` — FS25 1.25.1.0
 
-- **PurchaseSoilMapsEvent** hérite de `Event` (l.7)
+- **PurchaseSoilMapsEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PurchaseSoilMapsEvent.emptyNew() → table` | 14 |  |
 | `PurchaseSoilMapsEvent.new(farmlandId: table)` | 22 |  |

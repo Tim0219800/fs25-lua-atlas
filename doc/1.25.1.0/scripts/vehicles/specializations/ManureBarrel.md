@@ -1,12 +1,12 @@
 # vehicles/specializations/ManureBarrel.lua
 
-Source : `dataS/scripts/vehicles/specializations/ManureBarrel.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ManureBarrel.lua` — FS25 1.25.1.0
 
 - **ManureBarrel** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ManureBarrel.prerequisitesPresent(specializations: any)` | 15 |  |
 | `ManureBarrel.initSpecialization()` | 21 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/vehicles/specializations/ManureBarrel.lua` — FS25 1.25
 | `ManureBarrel:getAreEffectsVisible(superFunc: any)` | 84 |  |
 | `ManureBarrel:getIsWorkAreaActive(superFunc: any, workArea: any)` | 96 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `getAreEffectsVisible` | 33 |
 | registerOverwrittenFunction | `getIsWorkAreaActive` | 34 |

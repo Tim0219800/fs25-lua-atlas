@@ -1,12 +1,12 @@
 # placeables/PlaceablePreplacedInfoEvent.lua
 
-Source : `dataS/scripts/placeables/PlaceablePreplacedInfoEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/PlaceablePreplacedInfoEvent.lua` — FS25 1.25.1.0
 
-- **PlaceablePreplacedInfoEvent** hérite de `Event` (l.6)
+- **PlaceablePreplacedInfoEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceablePreplacedInfoEvent.emptyNew()` | 12 |  |
 | `PlaceablePreplacedInfoEvent.new()` | 19 |  |

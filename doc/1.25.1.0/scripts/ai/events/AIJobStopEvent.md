@@ -1,12 +1,12 @@
 # ai/events/AIJobStopEvent.lua
 
-Source : `dataS/scripts/ai/events/AIJobStopEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/events/AIJobStopEvent.lua` — FS25 1.25.1.0
 
-- **AIJobStopEvent** hérite de `Event` (l.11)
+- **AIJobStopEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobStopEvent.emptyNew()` | 17 |  |
 | `AIJobStopEvent.new(job: any, aiMessage: any)` | 24 |  |

@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableInfoTrigger.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableInfoTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableInfoTrigger.lua` — FS25 1.25.1.0
 
 - **PlaceableInfoTrigger** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableInfoTrigger.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableInfoTrigger.registerEvents(placeableType: any)` | 24 |  |
@@ -20,9 +20,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableInfoTrigger.lua` —
 | `PlaceableInfoTrigger:onInfoTriggerCallback(triggerId: any, otherId: any, onEnter: any, onLeave: any, onStay: any)` | 134 |  |
 | `PlaceableInfoTrigger:updateInfo(info: any)` | 156 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onInfoTriggerEnter` | 25 |
 | registerEvent | `onInfoTriggerLeave` | 26 |

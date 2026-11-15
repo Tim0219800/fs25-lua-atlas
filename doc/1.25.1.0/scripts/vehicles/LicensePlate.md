@@ -1,12 +1,12 @@
 # vehicles/LicensePlate.lua
 
-Source : `dataS/scripts/vehicles/LicensePlate.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/LicensePlate.lua` — FS25 1.25.1.0
 
 - **LicensePlate** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LicensePlate.new(customMt: table?) → LicensePlate` | 18 |  |
 | `LicensePlate:loadFromXML(node: integer, filename: string, customEnvironment: any, xmlFile: XMLFile, key: string) → boolean` | 37 |  |

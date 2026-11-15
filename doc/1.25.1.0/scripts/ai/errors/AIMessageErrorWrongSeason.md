@@ -1,12 +1,12 @@
 # ai/errors/AIMessageErrorWrongSeason.lua
 
-Source : `dataS/scripts/ai/errors/AIMessageErrorWrongSeason.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/errors/AIMessageErrorWrongSeason.lua` — FS25 1.25.1.0
 
-- **AIMessageErrorWrongSeason** hérite de `AIMessage` (l.12)
+- **AIMessageErrorWrongSeason** inherits from `AIMessage` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIMessageErrorWrongSeason.new(customMt: any)` | 16 |  |
 | `AIMessageErrorWrongSeason:getI18NText()` | 23 |  |

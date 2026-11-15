@@ -1,10 +1,13 @@
-# Journal des modifications
+# Changelog
 
-## 1.25.1.0 (2026-11-15) : première version
-- Extraction statique des 961 fichiers Lua du SDK : 13 390 fonctions, héritage, événements de spécialisation, `MessageType`, globales `g_*`.
-- 819 signatures de fonctions moteur depuis `scriptBinding.xml`.
-- Relevé en jeu : 4 308 globales, dont 2 651 absentes des sources du SDK (`Weather`, `Environment`, `FSBaseMission`, `EffectManager`…), noms seulement.
-- Descriptions rédigées pour 35 fichiers (1 325 fonctions) : `WorkParticles`, `ParticleUtil`, roues (`Wheels`, `WheelEffects`, `WheelPhysics`…),
-  `Washable`, `VehicleSystem`, `Enterable`, `Motorized`, `Lights`, `Dischargeable`, matériaux et particules, `Sprayer`, `Combine`, `Cutter`
-  et les outils de travail du sol et de récolte.
-- Stubs LuaLS, site mkdocs, CI de validation.
+*[Version française : CHANGELOG.fr.md](CHANGELOG.fr.md)*
+
+## 1.25.1.0 (2026-11-15): first release
+- Static extraction of the 961 SDK Lua files: 13,390 functions, inheritance, specialization events, `MessageType`, `g_*` globals.
+- 819 engine function signatures from `scriptBinding.xml`.
+- In-game scan: 4,308 globals, 2,651 of them missing from the SDK sources (`Weather`, `Environment`, `FSBaseMission`, `EffectManager`…), names only.
+- Written descriptions (French) for 35 files (1,325 functions): `WorkParticles`, `ParticleUtil`, wheels (`Wheels`, `WheelEffects`, `WheelPhysics`…),
+  `Washable`, `VehicleSystem`, `Enterable`, `Motorized`, `Lights`, `Dischargeable`, materials and particles, `Sprayer`, `Combine`, `Cutter`
+  and the soil-working and harvesting tools.
+- LuaLS stubs, mkdocs site, validation CI.
+- English README as the main one, French versions as `*.fr.md`.

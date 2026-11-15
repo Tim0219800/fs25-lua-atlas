@@ -1,12 +1,12 @@
 # vehicles/specializations/components/StaticLightCompound.lua
 
-Source : `dataS/scripts/vehicles/specializations/components/StaticLightCompound.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/components/StaticLightCompound.lua` — FS25 1.25.1.0
 
 - **StaticLightCompound** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StaticLightCompound.new(vehicle: any, customMt: any)` | 19 |  |
 | `StaticLightCompound.loadFunctionMappingData(xmlFile: any, baseKey: any)` | 29 |  |

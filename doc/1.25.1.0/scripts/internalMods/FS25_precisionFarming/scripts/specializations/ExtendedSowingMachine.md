@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSowingMachine.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSowingMachine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSowingMachine.lua` — FS25 1.25.1.0
 
 - **ExtendedSowingMachine** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedSowingMachine.prerequisitesPresent(specializations: table) → boolean` | 25 |  |
 | `ExtendedSowingMachine:onDelete()` | 84 |  |

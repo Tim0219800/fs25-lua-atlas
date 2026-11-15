@@ -1,12 +1,12 @@
 # vehicles/specializations/StumpCutter.lua
 
-Source : `dataS/scripts/vehicles/specializations/StumpCutter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/StumpCutter.lua` — FS25 1.25.1.0
 
 - **StumpCutter** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StumpCutter.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `StumpCutter.initSpecialization()` | 25 |  |
@@ -29,9 +29,9 @@ Source : `dataS/scripts/vehicles/specializations/StumpCutter.lua` — FS25 1.25.
 | `StumpCutter:getPlowForceLimitToField() → boolean` | 474 |  |
 | `StumpCutter:getConsumingLoad(superFunc: any)` | 480 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `crushSplitShape` | 61 |
 | registerFunction | `stumpCutterSplitShapeCallback` | 62 |

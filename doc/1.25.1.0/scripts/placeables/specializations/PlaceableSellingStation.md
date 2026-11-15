@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableSellingStation.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableSellingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableSellingStation.lua` — FS25 1.25.1.0
 
 - **PlaceableSellingStation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableSellingStation.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableSellingStation.registerFunctions(placeableType: any)` | 24 |  |
@@ -25,9 +25,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableSellingStation.lua` 
 | `PlaceableSellingStation:loadFromXMLFile(xmlFile: any, key: any)` | 144 |  |
 | `PlaceableSellingStation:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 151 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getSellingStation` | 25 |
 | registerOverwrittenFunction | `collectPickObjects` | 31 |

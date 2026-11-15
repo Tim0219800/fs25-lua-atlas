@@ -1,12 +1,12 @@
 # vehicles/specializations/components/StaticLight.lua
 
-Source : `dataS/scripts/vehicles/specializations/components/StaticLight.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/components/StaticLight.lua` — FS25 1.25.1.0
 
 - **StaticLight** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StaticLight.new(vehicle: any, customMt: any)` | 16 |  |
 | `StaticLight:loadFromXML(xmlFile: any, baseKey: any, components: any, i3dMappings: any, loadLightTypes: any, sharedLight: any)` | 28 |  |

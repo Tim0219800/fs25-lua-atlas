@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/PrecisionFarmingSettingsEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/PrecisionFarmingSettingsEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/PrecisionFarmingSettingsEvent.lua` — FS25 1.25.1.0
 
-- **PrecisionFarmingSettingsEvent** hérite de `Event` (l.7)
+- **PrecisionFarmingSettingsEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PrecisionFarmingSettingsEvent.emptyNew() → table` | 14 |  |
 | `PrecisionFarmingSettingsEvent.new(setting: table)` | 22 |  |

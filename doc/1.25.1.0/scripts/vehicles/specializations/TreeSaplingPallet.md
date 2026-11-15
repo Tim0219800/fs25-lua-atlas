@@ -1,12 +1,12 @@
 # vehicles/specializations/TreeSaplingPallet.lua
 
-Source : `dataS/scripts/vehicles/specializations/TreeSaplingPallet.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/TreeSaplingPallet.lua` — FS25 1.25.1.0
 
 - **TreeSaplingPallet** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TreeSaplingPallet.prerequisitesPresent(specializations: any)` | 15 |  |
 | `TreeSaplingPallet.initSpecialization()` | 21 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/vehicles/specializations/TreeSaplingPallet.lua` — FS25
 | `TreeSaplingPallet:onFillUnitFillLevelChanged(fillUnitIndex: any, fillLevelDelta: any, fillTypeIndex: any, toolType: any, fillPositionData: any, appliedDelta: any)` | 259 |  |
 | `TreeSaplingPallet:showInfo(superFunc: any, box: any)` | 265 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onTreeSaplingLoaded` | 47 |
 | registerFunction | `getTreeSaplingPalletType` | 48 |

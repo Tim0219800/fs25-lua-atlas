@@ -1,11 +1,11 @@
 # gui/elements/IngameMapPreviewElement.lua
 
-Source : `dataS/scripts/gui/elements/IngameMapPreviewElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/IngameMapPreviewElement.lua` — FS25 1.25.1.0
 
-- **IngameMapPreviewElement** hérite de `GuiElement` (l.10)
+- **IngameMapPreviewElement** inherits from `GuiElement` (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `IngameMapPreviewElement:onClose()` | 62 |  |

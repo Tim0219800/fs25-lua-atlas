@@ -1,6 +1,6 @@
 # materials/MotionPathEffectManager.lua
 
-Source : `dataS/scripts/materials/MotionPathEffectManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/materials/MotionPathEffectManager.lua` — FS25 1.25.1.0
 
 ✍ Gestionnaire des effets « motion path » définis par carte (g_motionPathEffectManager, dérive d'AbstractManager) : effets de végétation/terre à base de maillages animés par shader (coupe de la barre de coupe, chaumes, cultivateur, charrue, andaineur). Il ne crée pas les effets : il charge des définitions XML, des I3D partagés et des matériaux, puis fournit à la classe d'effet (MotionPathEffect et ses classes filles, absentes du dump) les maillages, matériaux et réglages de shader appropriés. Le comportement des classes d'effets est donc NON VÉRIFIÉ ici. Tourne sur chaque pair (client et serveur) ; aucun réseau.
 
@@ -10,11 +10,11 @@ SÉLECTION ET APPLICATION. Un effet de véhicule demande un effet partagé (getS
 
 POINTS D'EXTENSION. Un mod peut déclarer ses effets par le XML de carte/mod (effectClass d'un mod accepté avec préfixe d'environnement) ; la liste modMotionPathEffectsToLoad est initialisée mais jamais utilisée dans ce fichier (à noter, non vérifié en jeu).
 
-- **MotionPathEffectManager** hérite de `AbstractManager` (l.16)
+- **MotionPathEffectManager** inherits from `AbstractManager` (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MotionPathEffectManager.new(customMt: any) → table` | 25 | ✍ Crée le gestionnaire. |
 | `MotionPathEffectManager:initDataStructures()` | 32 | ✍ Initialise les listes de XML ouverts, d'identifiants de chargement partagé, d'effets par type, d'effets et d'effets de mods (cette dernière liste n'est pas utilisée ailleurs dans ce fichier). |

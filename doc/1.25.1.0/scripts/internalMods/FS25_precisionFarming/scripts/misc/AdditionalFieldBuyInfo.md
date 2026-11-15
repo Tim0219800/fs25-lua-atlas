@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/misc/AdditionalFieldBuyInfo.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/AdditionalFieldBuyInfo.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/AdditionalFieldBuyInfo.lua` — FS25 1.25.1.0
 
 - **AdditionalFieldBuyInfo** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AdditionalFieldBuyInfo.new(pfModule: any, customMt: any)` | 18 |  |
 | `AdditionalFieldBuyInfo:loadFromXML(xmlFile: any, key: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 59 |  |
@@ -29,5 +29,5 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/Addition
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.61)
-- écoute `MessageType.LOADED_ALL_SAVEGAME_PLACEABLES` (l.62)
+- subscribes `MessageType.SETTING_CHANGED` (l.61)
+- subscribes `MessageType.LOADED_ALL_SAVEGAME_PLACEABLES` (l.62)

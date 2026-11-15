@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/RequestEnvironmentalScoreEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/RequestEnvironmentalScoreEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/RequestEnvironmentalScoreEvent.lua` — FS25 1.25.1.0
 
-- **RequestEnvironmentalScoreEvent** hérite de `Event` (l.7)
+- **RequestEnvironmentalScoreEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RequestEnvironmentalScoreEvent.emptyNew() → table` | 14 |  |
 | `RequestEnvironmentalScoreEvent.new(farmId: table)` | 22 |  |

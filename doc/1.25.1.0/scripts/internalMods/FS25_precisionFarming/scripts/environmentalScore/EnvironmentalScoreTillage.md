@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreTillage.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreTillage.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreTillage.lua` — FS25 1.25.1.0
 
-- **EnvironmentalScoreTillage** hérite de `EnvironmentalScoreValue` (l.18)
+- **EnvironmentalScoreTillage** inherits from `EnvironmentalScoreValue` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `EnvironmentalScoreTillage.new(pfModule: any, customMt: any)` | 22 |  |
 | `EnvironmentalScoreTillage:loadFromXML(xmlFile: any, key: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 39 |  |

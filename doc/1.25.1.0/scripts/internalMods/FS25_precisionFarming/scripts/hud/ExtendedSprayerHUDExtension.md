@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/hud/ExtendedSprayerHUDExtension.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedSprayerHUDExtension.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedSprayerHUDExtension.lua` — FS25 1.25.1.0
 
 - **ExtendedSprayerHUDExtension** (l.22)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedSprayerHUDExtension.new(vehicle: table, customMt: any)` | 27 |  |
 | `ExtendedSprayerHUDExtension:delete()` | 116 |  |
@@ -16,5 +16,5 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedS
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.106)
-- écoute `MessageType.SETTING_CHANGED` (l.107)
+- subscribes `MessageType.SETTING_CHANGED` (l.106)
+- subscribes `MessageType.SETTING_CHANGED` (l.107)

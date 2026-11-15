@@ -1,12 +1,12 @@
 # ai/jobs/AIJobConveyor.lua
 
-Source : `dataS/scripts/ai/jobs/AIJobConveyor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/jobs/AIJobConveyor.lua` — FS25 1.25.1.0
 
-- **AIJobConveyor** hérite de `AIJob` (l.18)
+- **AIJobConveyor** inherits from `AIJob` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobConveyor.new(isServer: any, customMt: any)` | 22 |  |
 | `AIJobConveyor:getPricePerMs()` | 43 |  |

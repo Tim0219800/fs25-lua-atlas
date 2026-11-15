@@ -1,12 +1,12 @@
 # gui/elements/AnimationElement.lua
 
-Source : `dataS/scripts/gui/elements/AnimationElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/AnimationElement.lua` — FS25 1.25.1.0
 
-- **AnimationElement** hérite de `BitmapElement` (l.20)
+- **AnimationElement** inherits from `BitmapElement` (l.20)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimationElement.new(target: any, custom_mt: any)` | 31 |  |
 | `AnimationElement:loadFromXML(xmlFile: any, key: any)` | 51 |  |

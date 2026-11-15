@@ -1,12 +1,12 @@
 # vehicles/WorkAreaTypeManager.lua
 
-Source : `dataS/scripts/vehicles/WorkAreaTypeManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/WorkAreaTypeManager.lua` — FS25 1.25.1.0
 
-- **WorkAreaTypeManager** hérite de `AbstractManager` (l.14)
+- **WorkAreaTypeManager** inherits from `AbstractManager` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WorkAreaTypeManager.new(customMt: any) → table` | 19 |  |
 | `WorkAreaTypeManager:initDataStructures()` | 27 |  |

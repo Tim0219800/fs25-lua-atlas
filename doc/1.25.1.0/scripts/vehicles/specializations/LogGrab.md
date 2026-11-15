@@ -1,11 +1,11 @@
 # vehicles/specializations/LogGrab.lua
 
-Source : `dataS/scripts/vehicles/specializations/LogGrab.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/LogGrab.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LogGrab.prerequisitesPresent(specializations: table) → boolean` | 23 |  |
 | `LogGrab.initSpecialization()` | 29 |  |
@@ -45,9 +45,9 @@ Source : `dataS/scripts/vehicles/specializations/LogGrab.lua` — FS25 1.25.1.0
 | `LogGrab:removeNodeObjectMapping(superFunc: any, list: any)` | 1043 |  |
 | `LogGrab:updateDebugValues(values: any)` | 1057 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onLogGrabMountedTreesChanged` | 105 |
 | registerFunction | `loadLogGrabFromXML` | 112 |
@@ -75,4 +75,4 @@ Source : `dataS/scripts/vehicles/specializations/LogGrab.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.TREE_SHAPE_MOUNTED` (l.889)
+- publishes `MessageType.TREE_SHAPE_MOUNTED` (l.889)

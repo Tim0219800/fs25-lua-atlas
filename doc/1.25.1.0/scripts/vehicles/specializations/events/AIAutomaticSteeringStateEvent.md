@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AIAutomaticSteeringStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AIAutomaticSteeringStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AIAutomaticSteeringStateEvent.lua` — FS25 1.25.1.0
 
-- **AIAutomaticSteeringStateEvent** hérite de `Event` (l.7)
+- **AIAutomaticSteeringStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIAutomaticSteeringStateEvent.emptyNew() → table` | 14 |  |
 | `AIAutomaticSteeringStateEvent.new(vehicle: table, state: integer, segmentIndex: any, segmentIsLeft: any)` | 23 |  |

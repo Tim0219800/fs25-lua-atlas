@@ -1,12 +1,12 @@
 # vehicles/specializations/Suspensions.lua
 
-Source : `dataS/scripts/vehicles/specializations/Suspensions.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Suspensions.lua` — FS25 1.25.1.0
 
 - **Suspensions** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Suspensions.prerequisitesPresent(specializations: any)` | 19 |  |
 | `Suspensions.initSpecialization()` | 25 |  |
@@ -23,9 +23,9 @@ Source : `dataS/scripts/vehicles/specializations/Suspensions.lua` — FS25 1.25.
 | `Suspensions.subCollisionErrorFunction(collisionNode: any, xmlFile: any, nodeName: any)` | 376 |  |
 | `Suspensions:getSuspensionModfier()` | 384 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadSuspensionNodeFromXML` | 54 |
 | registerFunction | `getSuspensionNodeFromIndex` | 55 |

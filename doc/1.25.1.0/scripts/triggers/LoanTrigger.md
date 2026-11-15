@@ -1,13 +1,13 @@
 # triggers/LoanTrigger.lua
 
-Source : `dataS/scripts/triggers/LoanTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/LoanTrigger.lua` — FS25 1.25.1.0
 
 - **LoanTrigger** (l.9)
 - **LoanTriggerActivatable** (l.106)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LoanTrigger:onCreate(id: integer)` | 14 |  |
 | `LoanTrigger.new(name: integer) → table` | 22 |  |
@@ -22,5 +22,5 @@ Source : `dataS/scripts/triggers/LoanTrigger.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.PLAYER_FARM_CHANGED` (l.36)
-- publie `MessageType.GUI_INGAME_OPEN_FINANCES_SCREEN` (l.59)
+- subscribes `MessageType.PLAYER_FARM_CHANGED` (l.36)
+- publishes `MessageType.GUI_INGAME_OPEN_FINANCES_SCREEN` (l.59)

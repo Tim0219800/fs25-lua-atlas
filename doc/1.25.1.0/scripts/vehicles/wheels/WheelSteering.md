@@ -1,12 +1,12 @@
 # vehicles/wheels/WheelSteering.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelSteering.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelSteering.lua` — FS25 1.25.1.0
 
 - **WheelSteering** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelSteering.new(wheel: any)` | 14 |  |
 | `WheelSteering:loadFromXML(xmlObject: any)` | 28 |  |

@@ -1,14 +1,14 @@
 # vehicles/specializations/SowingMachine.lua
 
-Source : `dataS/scripts/vehicles/specializations/SowingMachine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SowingMachine.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des semoirs et planteuses (semis classique, semis direct, semis en eau, semis sur billons). Prérequis : FillUnit, WorkArea, TurnOnVehicle. EFFETS (client) : deux groupes chargés par g_effectManager:loadEffect : effects (vehicle.sowingMachine.effects : graines au sol, pilotés en continu) et fillEffects (vehicle.sowingMachine.fillEffects : effet de remplissage), plus animationNodes et sons (soufflerie airBlower à l'allumage, son de travail). Classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT : onUpdate (client uniquement : l'abonnement est retiré hors client) démarre les effects avec le type de matière forcée de l'unité de remplissage (getFillUnitForcedMaterialFillType, donc le type de graine affiché, pas le fruit) tant que spec.isProcessing est vrai, sinon les arrête, à chaque image. isProcessing est posé dans processSowingMachineArea, après toutes les gardes : vitesse > 0.5 (isWorking), semoir allumé (ou activation non requise), graines disponibles (ou IA qui achète les graines), fruit plantable (type possédant une carte de terrain ET période de plantation valide, sauf getCanPlantOutsideSeason), semis en eau cohérent avec l'eau (isInWater), et distance client <= SowingMachine.CLIENT_DM_UPDATE_RADIUS (constante non définie ici : NON VÉRIFIÉ). Un client ne reçoit AUCUN état d'effet par le réseau : il recalcule isProcessing localement, donc les effets de semis d'un client dépendent de sa propre exécution de processSowingMachineArea, et un semoir éloigné n'émet pas (retour anticipé avant isProcessing). Les fillEffects sont pilotés par onFillUnitFillLevelChanged (client) : démarrés si l'unité contient quelque chose, avec le type forcé ou le type reçu, arrêtés si vide. Aucun stade de croissance ni largeur n'est transmis aux effets. TERRAIN : FSDensityMapUtil.updateSowingArea (semis classique) ou updateDirectSowingArea (semis direct) avec fruit, type de sol de champ cible, option billons et angle de rangée (angle de la direction de l'outil, arrondi à directionSnapAngle du fruit s'il est non nul) ; corps absents du dump : conséquences NON VÉRIFIÉES. eraseTireTrack est appelé après les gardes. Contrôle de culture : fruitTypeDesc.seedRequiredFieldType (riz) comparé à FSDensityMapUtil.getFieldTypeAtWorldPos. SAISON : getIsPlantableInPeriod(growthMode, environment.currentPeriod) (période du calendrier), AUCUNE lecture de météo, de pluie ni d'humidité du sol. CONSOMMATION : serveur, en fin de passe, seedUsagePerSqm * surface * seedUsageScale (majoré par les dégâts du véhicule) soustrait de l'unité de remplissage ou du consommable, ou facturé à l'IA si les graines sont achetées. dt : seulement pour le temps semé (statistique sownTime). RÉSEAU : seul l'indice de graine est synchronisé (flux initial, SetSeedIndexEvent) ; les effets ne le sont pas. Avertissement : onStateChange teste `... or VehicleStateChange.FILLTYPE_CHANGE`, expression toujours vraie (SowingMachine.lua:1131) : la mise à jour des sources de graines s'exécute donc à chaque changement d'état (non vérifié en jeu). Le `updateCultivatorEnabledState` appelé par ce fichier est discuté dans Cultivator. POINTS D'EXTENSION : fonctions setSeedIndex, changeSeedIndex, setSeedFruitType, getIsSeedChangeAllowed, getSowingMachineFillUnitIndex, getSowingMachineSeedFillTypeIndex, getCurrentSeedTypeIcon, processSowingMachineArea, updateMissionSowingWarning, getUseSowingMachineAIRequirements, setFillTypeSourceDisplayFillType, getCanPlantOutsideSeason, getSowingMachineCanConsume, getAllowFillFromAir, getDirectionSnapAngle ; surcharges addFillUnitFillLevel, getFillUnitAllowsFillType, getCanBeTurnedOn, getCanToggleTurnedOn, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML (type SOWINGMACHINE), getCanAIImplementContinueWork ; événements onTurnedOn/Off, onStart/EndWorkAreaProcessing, onFillUnitFillLevelChanged, onChangedFillType, onStateChange. Vitesse limite par défaut : 15.
 
 - **SowingMachine** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SowingMachine.initSpecialization()` | 38 | ✍ Déclare le type de zone sowingMachine et le schéma XML : effets, fillEffects, animationNodes, graines (catégories ou types), semis direct/eau/billons, unité de remplissage, consommable, usage. Non relu clé par clé. |
 | `SowingMachine.prerequisitesPresent(specializations: any)` | 86 | ✍ Exige FillUnit, WorkArea et TurnOnVehicle. |
@@ -68,9 +68,9 @@ Source : `dataS/scripts/vehicles/specializations/SowingMachine.lua` — FS25 1.2
 | `SowingMachine.loadSpecValueSeedFillTypes(xmlFile: any, customEnvironment: any, baseDir: any)` | 1293 | ✍ Lit pour la boutique les types de graines d'un semoir depuis son XML. |
 | `SowingMachine.getSpecValueSeedFillTypes(storeItem: any, realItem: any)` | 1302 | ✍ Formate pour la boutique la liste des types de graines. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setSeedFruitType` | 95 |
 | registerFunction | `setSeedIndex` | 96 |

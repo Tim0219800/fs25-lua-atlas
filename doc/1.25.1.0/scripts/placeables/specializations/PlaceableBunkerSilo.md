@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableBunkerSilo.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableBunkerSilo.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableBunkerSilo.lua` — FS25 1.25.1.0
 
 - **PlaceableBunkerSilo** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableBunkerSilo.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableBunkerSilo.registerEventListeners(placeableType: any)` | 24 |  |
@@ -32,9 +32,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableBunkerSilo.lua` — 
 | `PlaceableBunkerSilo:getPlacementRotation(superFunc: any, x: any, y: any, z: any)` | 305 |  |
 | `PlaceableBunkerSilo:getPlacementPosition(superFunc: any, x: any, y: any, z: any)` | 319 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 25 |
 | registerEventListener | `onDelete` | 26 |

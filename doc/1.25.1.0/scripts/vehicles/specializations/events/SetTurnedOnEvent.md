@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetTurnedOnEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetTurnedOnEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetTurnedOnEvent.lua` — FS25 1.25.1.0
 
-- **SetTurnedOnEvent** hérite de `Event` (l.7)
+- **SetTurnedOnEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetTurnedOnEvent.emptyNew() → table` | 14 |  |
 | `SetTurnedOnEvent.new(object: table, isTurnedOn: boolean)` | 23 |  |

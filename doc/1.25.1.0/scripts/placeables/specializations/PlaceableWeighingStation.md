@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableWeighingStation.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableWeighingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableWeighingStation.lua` — FS25 1.25.1.0
 
 - **PlaceableWeighingStation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableWeighingStation.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableWeighingStation.registerFunctions(placeableType: any)` | 24 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableWeighingStation.lua`
 | `PlaceableWeighingStation:setWeightDisplay(mass: any)` | 153 |  |
 | `PlaceableWeighingStation:onWeighingTriggerCallback(triggerId: integer, otherId: integer, onEnter: boolean, onLeave: boolean, onStay: boolean)` | 170 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onWeighingTriggerCallback` | 25 |
 | registerFunction | `updateWeightDisplay` | 26 |

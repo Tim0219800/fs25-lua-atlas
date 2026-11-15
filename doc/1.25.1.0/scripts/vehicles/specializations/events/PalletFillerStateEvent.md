@@ -1,12 +1,12 @@
 # vehicles/specializations/events/PalletFillerStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/PalletFillerStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/PalletFillerStateEvent.lua` — FS25 1.25.1.0
 
-- **PalletFillerStateEvent** hérite de `Event` (l.12)
+- **PalletFillerStateEvent** inherits from `Event` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PalletFillerStateEvent.emptyNew() → table` | 19 |  |
 | `PalletFillerStateEvent.new(object: table, state: table) → table` | 29 |  |

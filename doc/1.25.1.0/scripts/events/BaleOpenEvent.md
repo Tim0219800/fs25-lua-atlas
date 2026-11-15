@@ -1,12 +1,12 @@
 # events/BaleOpenEvent.lua
 
-Source : `dataS/scripts/events/BaleOpenEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/events/BaleOpenEvent.lua` — FS25 1.25.1.0
 
-- **BaleOpenEvent** hérite de `Event` (l.6)
+- **BaleOpenEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleOpenEvent.emptyNew() → table` | 13 |  |
 | `BaleOpenEvent.new(bale: table) → table` | 25 |  |

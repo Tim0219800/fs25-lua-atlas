@@ -1,12 +1,12 @@
 # vehicles/VehicleStateRecorder.lua
 
-Source : `dataS/scripts/vehicles/VehicleStateRecorder.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleStateRecorder.lua` — FS25 1.25.1.0
 
 - **VehicleStateRecorder** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleStateRecorder.new(vehicle: any, name: any, duration: any, animationName: any)` | 18 |  |
 | `VehicleStateRecorder:update(dt: any)` | 72 |  |

@@ -1,12 +1,12 @@
 # animals/DogPetActivatable.lua
 
-Source : `dataS/scripts/animals/DogPetActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/DogPetActivatable.lua` — FS25 1.25.1.0
 
 - **DogPetActivatable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DogPetActivatable.new(dog: any)` | 15 |  |
 | `DogPetActivatable:getIsActivatable()` | 27 |  |

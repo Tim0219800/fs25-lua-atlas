@@ -1,12 +1,12 @@
 # specialization/TypeManager.lua
 
-Source : `dataS/scripts/specialization/TypeManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/specialization/TypeManager.lua` — FS25 1.25.1.0
 
 - **TypeManager** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TypeManager.new(typeName: any, rootElementName: any, xmlFilename: any, specializationManager: any, customMt: any) → table` | 17 |  |
 | `TypeManager:loadMapData() → boolean` | 40 |  |

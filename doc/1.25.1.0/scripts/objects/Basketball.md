@@ -1,12 +1,12 @@
 # objects/Basketball.lua
 
-Source : `dataS/scripts/objects/Basketball.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/Basketball.lua` — FS25 1.25.1.0
 
-- **Basketball** hérite de `PhysicsObject` (l.7)
+- **Basketball** inherits from `PhysicsObject` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Basketball:onCreate(id: integer)` | 14 |  |
 | `Basketball.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 35 |  |

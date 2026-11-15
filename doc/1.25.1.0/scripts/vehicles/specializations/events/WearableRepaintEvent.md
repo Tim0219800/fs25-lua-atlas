@@ -1,12 +1,12 @@
 # vehicles/specializations/events/WearableRepaintEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/WearableRepaintEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/WearableRepaintEvent.lua` — FS25 1.25.1.0
 
-- **WearableRepaintEvent** hérite de `Event` (l.7)
+- **WearableRepaintEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WearableRepaintEvent.emptyNew() → table` | 14 |  |
 | `WearableRepaintEvent.new(vehicle: table)` | 21 |  |
@@ -16,4 +16,4 @@ Source : `dataS/scripts/vehicles/specializations/events/WearableRepaintEvent.lua
 
 ## Messages
 
-- publie `MessageType.VEHICLE_REPAINTED` (l.56)
+- publishes `MessageType.VEHICLE_REPAINTED` (l.56)

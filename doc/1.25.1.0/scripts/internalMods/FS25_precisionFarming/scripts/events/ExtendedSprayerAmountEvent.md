@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/ExtendedSprayerAmountEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/ExtendedSprayerAmountEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/ExtendedSprayerAmountEvent.lua` — FS25 1.25.1.0
 
-- **ExtendedSprayerAmountEvent** hérite de `Event` (l.7)
+- **ExtendedSprayerAmountEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedSprayerAmountEvent.emptyNew() → table` | 14 |  |
 | `ExtendedSprayerAmountEvent.new(object: table, automaticMode: boolean, manualValue: integer)` | 24 |  |

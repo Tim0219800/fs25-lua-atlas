@@ -1,12 +1,12 @@
 # gui/elements/TimerElement.lua
 
-Source : `dataS/scripts/gui/elements/TimerElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/TimerElement.lua` — FS25 1.25.1.0
 
-- **TimerElement** hérite de `GuiElement` (l.21)
+- **TimerElement** inherits from `GuiElement` (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TimerElement.new(target: any, custom_mt: any)` | 27 |  |
 | `TimerElement:delete()` | 51 |  |

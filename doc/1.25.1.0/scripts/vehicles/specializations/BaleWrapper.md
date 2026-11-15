@@ -1,12 +1,12 @@
 # vehicles/specializations/BaleWrapper.lua
 
-Source : `dataS/scripts/vehicles/specializations/BaleWrapper.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BaleWrapper.lua` — FS25 1.25.1.0
 
 - **BaleWrapper** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleWrapper.prerequisitesPresent(specializations: table) → boolean` | 50 |  |
 | `BaleWrapper.initSpecialization()` | 56 |  |
@@ -81,9 +81,9 @@ Source : `dataS/scripts/vehicles/specializations/BaleWrapper.lua` — FS25 1.25.
 | `BaleWrapper.getSpecValueBaleSizeRound(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 2214 |  |
 | `BaleWrapper.getSpecValueBaleSizeSquare(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 2224 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadWrapperFromXML` | 214 |
 | registerFunction | `loadWrapperAnimationsFromXML` | 215 |

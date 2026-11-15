@@ -1,12 +1,12 @@
 # gui/ConstructionScreen.lua
 
-Source : `dataS/scripts/gui/ConstructionScreen.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/ConstructionScreen.lua` — FS25 1.25.1.0
 
-- **ConstructionScreen** hérite de `ScreenElement` (l.16)
+- **ConstructionScreen** inherits from `ScreenElement` (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConstructionScreen.new(target: table, custom_mt: table) → ConstructionScreen` | 36 |  |
 | `ConstructionScreen:onOpen()` | 123 |  |
@@ -19,6 +19,6 @@ Source : `dataS/scripts/gui/ConstructionScreen.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.INPUT_MODE_CHANGED` (l.158)
-- écoute `MessageType.SLOT_USAGE_CHANGED` (l.173)
-- écoute `MessageType.APP_WINDOW_FOCUS_CHANGED` (l.177)
+- subscribes `MessageType.INPUT_MODE_CHANGED` (l.158)
+- subscribes `MessageType.SLOT_USAGE_CHANGED` (l.173)
+- subscribes `MessageType.APP_WINDOW_FOCUS_CHANGED` (l.177)

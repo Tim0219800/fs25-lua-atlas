@@ -1,6 +1,6 @@
 # vehicles/specializations/Lights.lua
 
-Source : `dataS/scripts/vehicles/specializations/Lights.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Lights.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation d'éclairage des véhicules (spec_lights) : feux de croisement/route, feux de travail, de stop, de recul, clignotants, gyrophares, feux d'intérieur, feux de jour, feux hauts/bas. Elle pilote deux familles de feux décrites dans le XML du véhicule : les feux statiques (StaticLight : matériaux/shaders émissifs, sans source lumineuse) et les feux réels (RealLight : sources de lumière du moteur). Les classes StaticLight, SharedLight, StaticLightCompound et BeaconLight sont dans d'autres fichiers ; seul RealLight.lua est présent dans le dump (vehicles/specializations/components/RealLight.lua).
 
@@ -16,9 +16,9 @@ POINTS D'EXTENSION. Événements déclarés : onTurnLightStateChanged, onTopLigh
 
 - **Lights** (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Lights.prerequisitesPresent(specializations: table) → boolean` | 68 | ✍ Renvoie toujours vrai : aucun prérequis de spécialisation. |
 | `Lights.initSpecialization()` | 74 | ✍ Enregistre le type de configuration « beaconLight » et les chemins XML : états de lumière, feux statiques par catégorie (par défaut, haut, bas, stop, recul, jour, clignotants), compounds, feux partagés, gyrophares (avec #alwaysActive et configurations), sons, tableaux de bord et attributs #isTopLight / #isBottomLight. #reverseLightActivationSpeed vaut 1 km/h par défaut. |
@@ -104,9 +104,9 @@ POINTS D'EXTENSION. Événements déclarés : onTurnLightStateChanged, onTopLigh
 | `Lights.consoleCommandTopLights()` | 1669 | ✍ Commande console de développement : inverse feux hauts/bas du véhicule occupé. |
 | `Lights.consoleCommandProfile()` | 1680 | ✍ Commande console de développement : bascule le réglage LIGHTS_PROFILE entre bas et très haut (journalise le résultat). |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onTurnLightStateChanged` | 147 |
 | registerEvent | `onTopLightsVisibilityChanged` | 148 |
@@ -177,6 +177,6 @@ POINTS D'EXTENSION. Événements déclarés : onTurnLightStateChanged, onTopLigh
 
 ## Messages
 
-- écoute `MessageType.DAY_NIGHT_CHANGED` (l.404)
-- écoute `MessageType.SETTING_CHANGED` (l.407)
-- écoute `MessageType.SETTING_CHANGED` (l.408)
+- subscribes `MessageType.DAY_NIGHT_CHANGED` (l.404)
+- subscribes `MessageType.SETTING_CHANGED` (l.407)
+- subscribes `MessageType.SETTING_CHANGED` (l.408)

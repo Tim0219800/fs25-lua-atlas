@@ -1,12 +1,12 @@
 # gui/hud/ContextActionDisplay.lua
 
-Source : `dataS/scripts/gui/hud/ContextActionDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/ContextActionDisplay.lua` — FS25 1.25.1.0
 
-- **ContextActionDisplay** hérite de `HUDDisplay` (l.33)
+- **ContextActionDisplay** inherits from `HUDDisplay` (l.33)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ContextActionDisplay.new(customMt: any?) → any` | 39 |  |
 | `ContextActionDisplay:storeScaledValues()` | 75 |  |

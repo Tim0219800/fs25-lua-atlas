@@ -1,12 +1,12 @@
 # vehicles/specializations/VinePrepruner.lua
 
-Source : `dataS/scripts/vehicles/specializations/VinePrepruner.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/VinePrepruner.lua` — FS25 1.25.1.0
 
 - **VinePrepruner** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VinePrepruner.initSpecialization()` | 18 |  |
 | `VinePrepruner.prerequisitesPresent(specializations: any)` | 44 |  |
@@ -23,9 +23,9 @@ Source : `dataS/scripts/vehicles/specializations/VinePrepruner.lua` — FS25 1.2
 | `VinePrepruner.writePrePrunerToStream(self: any, streamId: any)` | 186 |  |
 | `VinePrepruner:onUpdate(dt: any, isActiveForInput: any, isActiveForInputIgnoreSelection: any, isSelected: any)` | 201 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadPreprunerNodeFromXML` | 51 |
 | registerFunction | `getIsPreprunerNodeActive` | 52 |

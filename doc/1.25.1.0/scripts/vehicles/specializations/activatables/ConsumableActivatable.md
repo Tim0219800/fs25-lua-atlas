@@ -1,12 +1,12 @@
 # vehicles/specializations/activatables/ConsumableActivatable.lua
 
-Source : `dataS/scripts/vehicles/specializations/activatables/ConsumableActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/activatables/ConsumableActivatable.lua` — FS25 1.25.1.0
 
 - **ConsumableActivatable** (l.19)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConsumableActivatable.new(vehicle: any)` | 23 |  |
 | `ConsumableActivatable:getIsActivatable()` | 35 |  |

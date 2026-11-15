@@ -1,12 +1,12 @@
 # guidedTour/GuidedTourManager.lua
 
-Source : `dataS/scripts/guidedTour/GuidedTourManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/guidedTour/GuidedTourManager.lua` — FS25 1.25.1.0
 
-- **GuidedTourManager** hérite de `AbstractManager` (l.12)
+- **GuidedTourManager** inherits from `AbstractManager` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GuidedTourManager.new(customMt: any) → table` | 32 |  |
 | `GuidedTourManager:initDataStructures()` | 40 |  |

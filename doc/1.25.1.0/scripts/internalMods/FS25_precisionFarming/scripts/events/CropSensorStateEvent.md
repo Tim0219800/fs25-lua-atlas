@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/CropSensorStateEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/CropSensorStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/CropSensorStateEvent.lua` — FS25 1.25.1.0
 
-- **CropSensorStateEvent** hérite de `Event` (l.7)
+- **CropSensorStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CropSensorStateEvent.emptyNew() → table` | 14 |  |
 | `CropSensorStateEvent.new(object: table, state: boolean)` | 23 |  |

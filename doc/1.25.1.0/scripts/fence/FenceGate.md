@@ -1,12 +1,12 @@
 # fence/FenceGate.lua
 
-Source : `dataS/scripts/fence/FenceGate.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/fence/FenceGate.lua` — FS25 1.25.1.0
 
-- **FenceGate** hérite de `FenceSegment` (l.16)
+- **FenceGate** inherits from `FenceSegment` (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FenceGate.registerXMLPaths(schema: XMLSchema, basePath: string)` | 22 |  |
 | `FenceGate.registerSavegameXMLPaths(schema: XMLSchema, basePath: string)` | 41 |  |

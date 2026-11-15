@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolHorseBrush.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolHorseBrush.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolHorseBrush.lua` — FS25 1.25.1.0
 
 - **HandToolHorseBrush** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolHorseBrush.registerXMLPaths(xmlSchema: any)` | 14 |  |
 | `HandToolHorseBrush.registerEventListeners(handToolType: any)` | 25 |  |
@@ -20,9 +20,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolHorseBrush.lua` — FS
 | `HandToolHorseBrush:onHeldStart()` | 207 |  |
 | `HandToolHorseBrush.getHusbandryAndClusterFromNode(carryingPlayer: any, node: any)` | 234 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 26 |
 | registerEventListener | `onDelete` | 27 |

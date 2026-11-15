@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableWorkshop.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableWorkshop.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableWorkshop.lua` — FS25 1.25.1.0
 
 - **PlaceableWorkshop** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableWorkshop.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableWorkshop.registerOverwrittenFunctions(placeableType: any)` | 24 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableWorkshop.lua` — FS
 | `PlaceableWorkshop:onDelete()` | 57 |  |
 | `PlaceableWorkshop:setOwnerFarmId(superFunc: any, ownerFarmId: any, noEventSend: any)` | 67 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `setOwnerFarmId` | 25 |
 | registerEventListener | `onLoad` | 31 |

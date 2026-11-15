@@ -1,14 +1,14 @@
 # vehicles/specializations/Cultivator.lua
 
-Source : `dataS/scripts/vehicles/specializations/Cultivator.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Cultivator.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des outils de travail du sol (cultivateur, déchaumeur à disques, herse rotative, sous-soleuse, outils de vigne). AUCUN effet, particule ni animation propre : le fichier ne charge qu'un échantillon sonore de travail (client). La terre/poussière soulevée vient de WorkParticles (WorkParticles.lua:238 : actif si getDoGroundManipulation() est vrai et que l'outil est sur un champ ; Cultivator ne surcharge pas getDoGroundManipulation, donc valeur par défaut vrai, WorkParticles.lua:311, quel que soit l'état de travail de ce script). TRAVAIL : processCultivatorArea efface les traces de pneus (aussi sur client lointain), puis, sauf client plus loin que Cultivator.CLIENT_DM_UPDATE_RADIUS (constante non définie ici : NON VÉRIFIÉ), appelle selon useDeepMode FSDensityMapUtil.updateCultivatorArea (mode cultivateur) ou updateDiscHarrowArea (mode herse/déchaumeur), avec l'angle de l'outil, les options limitToField et limitFruitDestructionToField, puis updateVineCultivatorArea ; si isSubsoiler, updateSubsoilerArea en plus. Les corps FSDensityMapUtil sont absents du dump : conséquences exactes sur le terrain NON VÉRIFIÉES. isWorking = vitesse > 0.5. CONDITIONS de zone : active seulement après 2000 ms suivant l'attelage et, par défaut, si l'outil est abaissé (onlyActiveWhenLowered) ; spec.isEnabled (vrai à l'initialisation ; rien dans ce fichier ne le modifie) conditionne l'appel de cultivation. À noter : updateCultivatorEnabledState et getIsCultivationEnabled sont enregistrées (Cultivator.lua:87-88) mais aucune fonction de ce nom n'est définie dans le dump, alors que onStateChange (ligne 504) et SowingMachine.lua:1208-1209 les appellent (définition possiblement hors du dump, NON VÉRIFIÉ ; échec possible à l'exécution, non vérifié en jeu). L'allumage n'est testé que pour les herses motrices (isPowerHarrow : onStateChange propage TURN_ON/TURN_OFF entre tracteur et outil attelé, côté serveur). MÉTÉO/HUMIDITÉ : aucune donnée lue. RÉSEAU : aucune variable ni flux ; les surfaces sont accumulées par passe (workAreaParameters) et envoyées aux statistiques de ferme côté serveur seulement (cultivatedHectares, cultivatedTime). dt : sert uniquement au temps cultivé (dt/60000, en minutes) et la durée d'activation est mesurée en temps de jeu. Les multiplicateurs de salissure et d'usure utilisent spec.speedLimit, champ non défini dans ce fichier (d'autres outils utilisent self.speedLimit) : si absent, la division échouerait (non vérifié en jeu, NON VÉRIFIÉ). POINTS D'EXTENSION : fonctions registerFunctions (processCultivatorArea, processVineCultivatorArea, getCultivatorLimitToField, getUseCultivatorAIRequirements, updateCultivatorAIRequirements, updateCultivatorEnabledState, getIsCultivationEnabled) ; surcharges doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML (type CULTIVATOR), getIsWorkAreaActive, loadWorkModeFromXML (#useDeepMode), getAIImplementUseVineSegment ; événements onLoad, onDelete, onPostAttach, onDeactivate, onStart/EndWorkAreaProcessing, onStateChange, onWorkModeChanged. Pour un mod de poussière de travail du sol : la seule donnée propre à ce script utile aux effets est spec.isWorking et le mode profond/plat ; la couleur et les particules sont gérées ailleurs (WorkParticles). Vitesse limite par défaut : 15.
 
 - **Cultivator** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Cultivator.initSpecialization()` | 50 | ✍ Déclare le type de zone cultivator et le schéma XML (sons de travail, clé useDeepMode des modes de travail, options du noeud cultivator). Non relu clé par clé. |
 | `Cultivator.prerequisitesPresent(specializations: table) → boolean` | 75 | ✍ Exige la spécialisation WorkArea. |
@@ -37,9 +37,9 @@ Source : `dataS/scripts/vehicles/specializations/Cultivator.lua` — FS25 1.25.1
 | `Cultivator:onWorkModeChanged(workMode: any, oldWorkMode: any)` | 546 | ✍ Adopte useDeepMode du nouveau mode de travail et recalcule les besoins IA. |
 | `Cultivator.getDefaultSpeedLimit() → number` | 556 | ✍ Limite de vitesse par défaut : 15. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processCultivatorArea` | 82 |
 | registerFunction | `processVineCultivatorArea` | 83 |

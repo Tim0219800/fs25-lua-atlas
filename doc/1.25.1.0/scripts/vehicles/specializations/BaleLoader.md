@@ -1,12 +1,12 @@
 # vehicles/specializations/BaleLoader.lua
 
-Source : `dataS/scripts/vehicles/specializations/BaleLoader.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BaleLoader.lua` — FS25 1.25.1.0
 
 - **BaleLoader** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleLoader.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `BaleLoader.initSpecialization()` | 24 |  |
@@ -92,9 +92,9 @@ Source : `dataS/scripts/vehicles/specializations/BaleLoader.lua` — FS25 1.25.1
 | `BaleLoader.getSpecValueBaleSizeRound(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 3512 |  |
 | `BaleLoader.getSpecValueBaleSizeSquare(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 3522 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadBaleTypeFromXML` | 278 |
 | registerFunction | `loadBalePlacesFromXML` | 279 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/LocomotiveStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/LocomotiveStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/LocomotiveStateEvent.lua` — FS25 1.25.1.0
 
-- **LocomotiveStateEvent** hérite de `Event` (l.7)
+- **LocomotiveStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LocomotiveStateEvent.emptyNew() → table` | 14 |  |
 | `LocomotiveStateEvent.new(object: table, state: boolean)` | 23 |  |

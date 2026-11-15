@@ -1,12 +1,12 @@
 # vehicles/specializations/SemiTrailerFront.lua
 
-Source : `dataS/scripts/vehicles/specializations/SemiTrailerFront.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SemiTrailerFront.lua` — FS25 1.25.1.0
 
 - **SemiTrailerFront** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SemiTrailerFront.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `SemiTrailerFront.registerOverwrittenFunctions(vehicleType: any)` | 23 |  |
@@ -19,9 +19,9 @@ Source : `dataS/scripts/vehicles/specializations/SemiTrailerFront.lua` — FS25 
 | `SemiTrailerFront:onPreDetach(attacherVehicle: table, implement: table)` | 132 |  |
 | `SemiTrailerFront:onPostAttach(attacherVehicle: table, inputJointDescIndex: integer, jointDescIndex: integer)` | 142 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `isDetachAllowed` | 24 |
 | registerEventListener | `onLoad` | 30 |

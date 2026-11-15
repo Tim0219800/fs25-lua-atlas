@@ -1,12 +1,12 @@
 # gui/hud/InputHelpDisplay.lua
 
-Source : `dataS/scripts/gui/hud/InputHelpDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/InputHelpDisplay.lua` — FS25 1.25.1.0
 
-- **InputHelpDisplay** hérite de `HUDDisplay` (l.35)
+- **InputHelpDisplay** inherits from `HUDDisplay` (l.35)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InputHelpDisplay.new()` | 39 |  |
 | `InputHelpDisplay:delete()` | 102 |  |
@@ -15,4 +15,4 @@ Source : `dataS/scripts/gui/hud/InputHelpDisplay.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.INPUT_DEVICES_CHANGED` (l.95)
+- subscribes `MessageType.INPUT_DEVICES_CHANGED` (l.95)

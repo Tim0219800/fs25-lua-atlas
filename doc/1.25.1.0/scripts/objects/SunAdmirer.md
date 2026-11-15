@@ -1,12 +1,12 @@
 # objects/SunAdmirer.lua
 
-Source : `dataS/scripts/objects/SunAdmirer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/SunAdmirer.lua` — FS25 1.25.1.0
 
 - **SunAdmirer** (l.9)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SunAdmirer:onCreate(id: integer)` | 14 |  |
 | `SunAdmirer.new(id: integer) → table` | 22 |  |
@@ -15,4 +15,4 @@ Source : `dataS/scripts/objects/SunAdmirer.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.DAY_NIGHT_CHANGED` (l.34)
+- subscribes `MessageType.DAY_NIGHT_CHANGED` (l.34)

@@ -1,12 +1,12 @@
 # gui/hud/PlayerControlPadDisplay.lua
 
-Source : `dataS/scripts/gui/hud/PlayerControlPadDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/PlayerControlPadDisplay.lua` — FS25 1.25.1.0
 
-- **PlayerControlPadDisplay** hérite de `HUDDisplayElement` (l.26)
+- **PlayerControlPadDisplay** inherits from `HUDDisplayElement` (l.26)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerControlPadDisplay.new(hud: string, hudAtlasPath: string)` | 31 |  |
 | `PlayerControlPadDisplay:setPlayer(player: any)` | 53 |  |

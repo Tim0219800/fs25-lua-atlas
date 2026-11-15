@@ -1,12 +1,12 @@
 # collections/DynamicDataGrid.lua
 
-Source : `dataS/scripts/collections/DynamicDataGrid.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/collections/DynamicDataGrid.lua` — FS25 1.25.1.0
 
 - **DynamicDataGrid** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DynamicDataGrid.new(size: any, tileSize: any, startX: any, startZ: any, cellConstructor: any, customMt: any)` | 15 |  |
 | `DynamicDataGrid:delete()` | 97 |  |

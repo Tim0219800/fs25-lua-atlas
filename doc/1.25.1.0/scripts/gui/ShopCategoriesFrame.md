@@ -1,11 +1,11 @@
 # gui/ShopCategoriesFrame.lua
 
-Source : `dataS/scripts/gui/ShopCategoriesFrame.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/ShopCategoriesFrame.lua` — FS25 1.25.1.0
 
-- **ShopCategoriesFrame** hérite de `TabbedMenuFrameElement` (l.15)
+- **ShopCategoriesFrame** inherits from `TabbedMenuFrameElement` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ShopCategoriesFrame.register()` | 19 |  |

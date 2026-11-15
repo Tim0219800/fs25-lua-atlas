@@ -1,12 +1,12 @@
 # ai/parameters/AIParameterVehicle.lua
 
-Source : `dataS/scripts/ai/parameters/AIParameterVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/parameters/AIParameterVehicle.lua` — FS25 1.25.1.0
 
-- **AIParameterVehicle** hérite de `AIParameter` (l.12)
+- **AIParameterVehicle** inherits from `AIParameter` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIParameterVehicle.new(customMt: any)` | 16 |  |
 | `AIParameterVehicle:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 27 |  |

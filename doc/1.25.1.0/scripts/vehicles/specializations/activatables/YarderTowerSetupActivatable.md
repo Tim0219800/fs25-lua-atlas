@@ -1,12 +1,12 @@
 # vehicles/specializations/activatables/YarderTowerSetupActivatable.lua
 
-Source : `dataS/scripts/vehicles/specializations/activatables/YarderTowerSetupActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/activatables/YarderTowerSetupActivatable.lua` — FS25 1.25.1.0
 
 - **YarderTowerSetupActivatable** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `YarderTowerSetupActivatable.new(vehicle: table) → table` | 20 |  |
 | `YarderTowerSetupActivatable:registerCustomInput(inputContext: any)` | 32 |  |

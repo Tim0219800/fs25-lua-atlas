@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : objects/AnimatedMapObject.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : objects/AnimatedMapObject.lua (generated stub, FS25 Lua Atlas)
 
 ---@class AnimatedMapObject : AnimatedObject
 AnimatedMapObject = {}

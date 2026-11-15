@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableDestructible.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableDestructible.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableDestructible.lua` — FS25 1.25.1.0
 
 - **PlaceableDestructible** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableDestructible.registerXMLPaths(schema: any, basePath: any)` | 20 |  |
 | `PlaceableDestructible.registerSavegameXMLPaths(schema: any, basePath: any)` | 34 |  |
@@ -20,9 +20,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableDestructible.lua` �
 | `PlaceableDestructible:loadFromXMLFile(xmlFile: any, key: any)` | 166 |  |
 | `PlaceableDestructible:onDestructibleTriggerCallback(triggerId: any, otherActorId: any, onEnter: any, onLeave: any, onStay: any)` | 283 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `destruct` | 49 |
 | registerFunction | `destructed` | 50 |

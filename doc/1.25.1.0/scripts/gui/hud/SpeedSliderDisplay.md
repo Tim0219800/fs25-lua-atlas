@@ -1,12 +1,12 @@
 # gui/hud/SpeedSliderDisplay.lua
 
-Source : `dataS/scripts/gui/hud/SpeedSliderDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/SpeedSliderDisplay.lua` — FS25 1.25.1.0
 
-- **SpeedSliderDisplay** hérite de `HUDDisplayElement` (l.30)
+- **SpeedSliderDisplay** inherits from `HUDDisplayElement` (l.30)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SpeedSliderDisplay.new(hud: string, hudAtlasPath: string, controlHudAtlasPath: any)` | 47 |  |
 | `SpeedSliderDisplay:delete()` | 79 |  |
@@ -36,7 +36,7 @@ Source : `dataS/scripts/gui/hud/SpeedSliderDisplay.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.GUI_BEFORE_OPEN` (l.69)
-- écoute `MessageType.GUI_DIALOG_OPENED` (l.70)
-- écoute `MessageType.GUIDED_TOUR_DIALOG` (l.71)
-- écoute `MessageType.INSETS_CHANGED` (l.72)
+- subscribes `MessageType.GUI_BEFORE_OPEN` (l.69)
+- subscribes `MessageType.GUI_DIALOG_OPENED` (l.70)
+- subscribes `MessageType.GUIDED_TOUR_DIALOG` (l.71)
+- subscribes `MessageType.INSETS_CHANGED` (l.72)

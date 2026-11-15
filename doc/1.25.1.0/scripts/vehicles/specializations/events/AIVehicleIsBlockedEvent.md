@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AIVehicleIsBlockedEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AIVehicleIsBlockedEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AIVehicleIsBlockedEvent.lua` — FS25 1.25.1.0
 
-- **AIVehicleIsBlockedEvent** hérite de `Event` (l.7)
+- **AIVehicleIsBlockedEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIVehicleIsBlockedEvent.emptyNew() → table` | 14 |  |
 | `AIVehicleIsBlockedEvent.new(object: table, isBlocked: boolean)` | 23 |  |

@@ -1,11 +1,11 @@
 # vehicles/specializations/AttacherJointsCompControl.lua
 
-Source : `dataS/scripts/vehicles/specializations/AttacherJointsCompControl.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AttacherJointsCompControl.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AttacherJointsCompControl.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `AttacherJointsCompControl.initSpecialization()` | 25 |  |
@@ -21,9 +21,9 @@ Source : `dataS/scripts/vehicles/specializations/AttacherJointsCompControl.lua` 
 | `AttacherJointsCompControl:loadAttacherJointFromXML(superFunc: table, attacherJoint: table, xmlFile: string, baseName: string, index: integer)` | 222 |  |
 | `AttacherJointsCompControl:updateDebugValues(values: any)` | 250 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setDependentComponentJointBaseFactors` | 44 |
 | registerFunction | `addDependentComponentJointData` | 45 |

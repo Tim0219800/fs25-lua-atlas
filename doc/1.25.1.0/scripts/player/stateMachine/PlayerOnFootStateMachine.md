@@ -1,12 +1,12 @@
 # player/stateMachine/PlayerOnFootStateMachine.lua
 
-Source : `dataS/scripts/player/stateMachine/PlayerOnFootStateMachine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/stateMachine/PlayerOnFootStateMachine.lua` — FS25 1.25.1.0
 
-- **PlayerOnFootStateMachine** hérite de `StateMachine` (l.12)
+- **PlayerOnFootStateMachine** inherits from `StateMachine` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerOnFootStateMachine.new(player: Player) → PlayerOnFootStateMachine` | 21 |  |
 | `PlayerOnFootStateMachine:onStateEntered(previousState: BaseStateMachineState)` | 67 |  |

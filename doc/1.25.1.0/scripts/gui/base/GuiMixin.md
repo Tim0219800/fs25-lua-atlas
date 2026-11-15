@@ -1,12 +1,12 @@
 # gui/base/GuiMixin.lua
 
-Source : `dataS/scripts/gui/base/GuiMixin.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/GuiMixin.lua` — FS25 1.25.1.0
 
 - **GuiMixin** (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GuiMixin.new(class: class, mixinType: mixinType) → New` | 24 |  |
 | `GuiMixin:addTo(guiElement: any)` | 42 |  |

@@ -1,12 +1,12 @@
 # gui/elements/FrameElement.lua
 
-Source : `dataS/scripts/gui/elements/FrameElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/FrameElement.lua` — FS25 1.25.1.0
 
-- **FrameElement** hérite de `GuiElement` (l.17)
+- **FrameElement** inherits from `GuiElement` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FrameElement.new(target: any, customMt: any)` | 24 |  |
 | `FrameElement:clone(parent: any, includeId: any, suppressOnCreate: any, blockFocusHandlingReload: any)` | 44 |  |

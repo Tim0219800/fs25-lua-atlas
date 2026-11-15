@@ -1,12 +1,12 @@
 # vehicles/ai/AIDriveStrategy.lua
 
-Source : `dataS/scripts/vehicles/ai/AIDriveStrategy.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/ai/AIDriveStrategy.lua` — FS25 1.25.1.0
 
 - **AIDriveStrategy** (l.8)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIDriveStrategy.new(reconstructionData: any, customMt: any)` | 12 |  |
 | `AIDriveStrategy:delete()` | 20 |  |

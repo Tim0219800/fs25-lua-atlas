@@ -1,12 +1,12 @@
 # debug/DebugUtil.lua
 
-Source : `dataS/scripts/debug/DebugUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/DebugUtil.lua` — FS25 1.25.1.0
 
 - **DebugUtil** (l.8)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugUtil.drawDebugNode(node: integer, text: string, alignToGround: any, offsetY: any)` | 28 |  |
 | `DebugUtil.drawDebugGizmoAtWorldPos(x: any, y: any, z: any, dirX: any, dirY: any, dirZ: any, upX: any, upY: any, upZ: any, text: any, alignToGround: any, color: any)` | 44 |  |

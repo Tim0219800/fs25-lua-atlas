@@ -1,12 +1,12 @@
 # ship/ferry/FerryActivatable.lua
 
-Source : `dataS/scripts/ship/ferry/FerryActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ship/ferry/FerryActivatable.lua` — FS25 1.25.1.0
 
 - **FerryActivatable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FerryActivatable.new(ferry: any)` | 15 |  |
 | `FerryActivatable:getIsActivatable()` | 32 |  |

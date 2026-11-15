@@ -1,12 +1,12 @@
 # missions/AbstractMission.lua
 
-Source : `dataS/scripts/missions/AbstractMission.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/missions/AbstractMission.lua` — FS25 1.25.1.0
 
-- **AbstractMission** hérite de `Object` (l.11)
+- **AbstractMission** inherits from `Object` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AbstractMission.new(isServer: any, isClient: any, title: any, description: any, customMt: any)` | 44 |  |
 | `AbstractMission:init()` | 76 |  |
@@ -85,9 +85,9 @@ Source : `dataS/scripts/missions/AbstractMission.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.FARM_DELETED` (l.65)
-- écoute `MessageType.SAVEGAME_LOADED` (l.66)
-- écoute `MessageType.VEHICLE_RESET` (l.99)
-- écoute `MessageType.VEHICLE_RESET` (l.448)
-- publie `MessageType.MISSION_DELETED` (l.119)
-- publie `MessageType.MISSION_GENERATED` (l.294)
+- subscribes `MessageType.FARM_DELETED` (l.65)
+- subscribes `MessageType.SAVEGAME_LOADED` (l.66)
+- subscribes `MessageType.VEHICLE_RESET` (l.99)
+- subscribes `MessageType.VEHICLE_RESET` (l.448)
+- publishes `MessageType.MISSION_DELETED` (l.119)
+- publishes `MessageType.MISSION_GENERATED` (l.294)

@@ -1,12 +1,12 @@
 # player/stateMachine/PlayerStateWalk.lua
 
-Source : `dataS/scripts/player/stateMachine/PlayerStateWalk.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/stateMachine/PlayerStateWalk.lua` — FS25 1.25.1.0
 
-- **PlayerStateWalk** hérite de `BaseStateMachineState` (l.11)
+- **PlayerStateWalk** inherits from `BaseStateMachineState` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerStateWalk.new(player: Player, stateMachine: StateMachine) → BaseStateMachineState` | 24 |  |
 | `PlayerStateWalk:createTransitions()` | 39 |  |

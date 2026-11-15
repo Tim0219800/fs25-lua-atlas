@@ -1,12 +1,12 @@
 # vehicles/LicensePlateManager.lua
 
-Source : `dataS/scripts/vehicles/LicensePlateManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/LicensePlateManager.lua` — FS25 1.25.1.0
 
-- **LicensePlateManager** hérite de `AbstractManager` (l.44)
+- **LicensePlateManager** inherits from `AbstractManager` (l.44)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LicensePlateManager.new(customMt: table?) → table` | 54 |  |
 | `LicensePlateManager:initDataStructures()` | 60 |  |

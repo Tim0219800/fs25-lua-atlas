@@ -1,12 +1,12 @@
 # debug/elements/DebugText.lua
 
-Source : `dataS/scripts/debug/elements/DebugText.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/elements/DebugText.lua` — FS25 1.25.1.0
 
-- **DebugText** hérite de `DebugElement` (l.12)
+- **DebugText** inherits from `DebugElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugText.new(customMt: table?) → DebugText` | 18 |  |
 | `DebugText:draw()` | 33 |  |

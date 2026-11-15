@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/ManureSensor.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ManureSensor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ManureSensor.lua` — FS25 1.25.1.0
 
 - **ManureSensor** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ManureSensor.prerequisitesPresent(specializations: table) → boolean` | 23 |  |
 | `ManureSensor.initSpecialization()` | 29 |  |

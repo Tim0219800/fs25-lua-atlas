@@ -1,12 +1,12 @@
 # vehicles/specializations/AIImplement.lua
 
-Source : `dataS/scripts/vehicles/specializations/AIImplement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AIImplement.lua` — FS25 1.25.1.0
 
 - **AIImplement** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIImplement.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `AIImplement.initSpecialization()` | 23 |  |
@@ -82,9 +82,9 @@ Source : `dataS/scripts/vehicles/specializations/AIImplement.lua` — FS25 1.25.
 | `AIImplement:aiImplementStartLine()` | 1237 |  |
 | `AIImplement:aiImplementEndLine()` | 1249 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onAIImplementStart` | 110 |
 | registerEvent | `onAIImplementActive` | 111 |

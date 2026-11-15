@@ -1,12 +1,12 @@
 # player/networking/PlayerPositionalInterpolator.lua
 
-Source : `dataS/scripts/player/networking/PlayerPositionalInterpolator.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/networking/PlayerPositionalInterpolator.lua` — FS25 1.25.1.0
 
 - **PlayerPositionalInterpolator** (l.22)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerPositionalInterpolator.new(player: Player, targetNodeType: integer) → PlayerPositionalInterpolator` | 38 |  |
 | `PlayerPositionalInterpolator:update(dt: number)` | 85 |  |

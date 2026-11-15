@@ -1,12 +1,12 @@
 # misc/SplitShapeManager.lua
 
-Source : `dataS/scripts/misc/SplitShapeManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/SplitShapeManager.lua` — FS25 1.25.1.0
 
-- **SplitShapeManager** hérite de `AbstractManager` (l.12)
+- **SplitShapeManager** inherits from `AbstractManager` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SplitShapeManager.new(customMt: table?) → SplitShapeManager` | 18 |  |
 | `SplitShapeManager:initDataStructures()` | 26 |  |

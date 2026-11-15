@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : forestry/ForestryRope.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : forestry/ForestryRope.lua (generated stub, FS25 Lua Atlas)
 
 ---@class ForestryRope
 ForestryRope = {}

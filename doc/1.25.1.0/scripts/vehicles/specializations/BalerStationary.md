@@ -1,18 +1,18 @@
 # vehicles/specializations/BalerStationary.lua
 
-Source : `dataS/scripts/vehicles/specializations/BalerStationary.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BalerStationary.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BalerStationary.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `BalerStationary.registerEventListeners(vehicleType: table)` | 29 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 30 |
 | registerEventListener | `onDelete` | 31 |

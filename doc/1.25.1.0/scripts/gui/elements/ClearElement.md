@@ -1,12 +1,12 @@
 # gui/elements/ClearElement.lua
 
-Source : `dataS/scripts/gui/elements/ClearElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/ClearElement.lua` — FS25 1.25.1.0
 
-- **ClearElement** hérite de `GuiElement` (l.17)
+- **ClearElement** inherits from `GuiElement` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ClearElement.new(target: any, custom_mt: any)` | 23 |  |
 | `ClearElement:delete()` | 34 |  |

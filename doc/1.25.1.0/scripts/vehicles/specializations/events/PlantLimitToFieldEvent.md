@@ -1,12 +1,12 @@
 # vehicles/specializations/events/PlantLimitToFieldEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/PlantLimitToFieldEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/PlantLimitToFieldEvent.lua` — FS25 1.25.1.0
 
-- **PlantLimitToFieldEvent** hérite de `Event` (l.7)
+- **PlantLimitToFieldEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlantLimitToFieldEvent.emptyNew() → table` | 14 |  |
 | `PlantLimitToFieldEvent.new(object: table, plantLimitToField: boolean)` | 23 |  |

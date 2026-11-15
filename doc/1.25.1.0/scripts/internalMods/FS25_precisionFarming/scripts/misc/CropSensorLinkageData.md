@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/misc/CropSensorLinkageData.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/CropSensorLinkageData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/CropSensorLinkageData.lua` — FS25 1.25.1.0
 
 - **CropSensorLinkageData** (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CropSensorLinkageData:delete()` | 37 |  |
 | `CropSensorLinkageData:loadFromXML(_: any, _: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 49 |  |

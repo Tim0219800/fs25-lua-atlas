@@ -1,12 +1,12 @@
 # vehicles/specializations/FertilizingCultivator.lua
 
-Source : `dataS/scripts/vehicles/specializations/FertilizingCultivator.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FertilizingCultivator.lua` — FS25 1.25.1.0
 
 - **FertilizingCultivator** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FertilizingCultivator.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `FertilizingCultivator.initSpecialization()` | 25 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/vehicles/specializations/FertilizingCultivator.lua` — 
 | `FertilizingCultivator:processCultivatorArea(superFunc: any, workArea: any, dt: any)` | 60 |  |
 | `FertilizingCultivator:setSprayerAITerrainDetailProhibitedRange(superFunc: any, fillType: any)` | 139 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `processCultivatorArea` | 37 |
 | registerOverwrittenFunction | `setSprayerAITerrainDetailProhibitedRange` | 38 |

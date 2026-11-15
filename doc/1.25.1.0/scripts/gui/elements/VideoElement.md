@@ -1,12 +1,12 @@
 # gui/elements/VideoElement.lua
 
-Source : `dataS/scripts/gui/elements/VideoElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/VideoElement.lua` — FS25 1.25.1.0
 
-- **VideoElement** hérite de `GuiElement` (l.20)
+- **VideoElement** inherits from `GuiElement` (l.20)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VideoElement.new(target: any, custom_mt: any)` | 26 |  |
 | `VideoElement:loadFromXML(xmlFile: any, key: any)` | 51 |  |

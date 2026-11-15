@@ -1,12 +1,12 @@
 # gui/base/TabbedMenuWithDetails.lua
 
-Source : `dataS/scripts/gui/base/TabbedMenuWithDetails.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/TabbedMenuWithDetails.lua` — FS25 1.25.1.0
 
-- **TabbedMenuWithDetails** hérite de `TabbedMenu` (l.22)
+- **TabbedMenuWithDetails** inherits from `TabbedMenu` (l.22)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TabbedMenuWithDetails.new(target: any, custom_mt: any)` | 26 |  |
 | `TabbedMenuWithDetails:reset()` | 36 |  |

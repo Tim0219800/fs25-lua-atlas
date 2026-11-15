@@ -1,15 +1,15 @@
 # gui/hud/extensions/CruiseControlHUDExtension.lua
 
-Source : `dataS/scripts/gui/hud/extensions/CruiseControlHUDExtension.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/extensions/CruiseControlHUDExtension.lua` — FS25 1.25.1.0
 
 - **CruiseControlHUDExtension** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CruiseControlHUDExtension.new(vehicle: table, customMt: any)` | 16 |  |
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.37)
+- subscribes `MessageType.SETTING_CHANGED` (l.37)

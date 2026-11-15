@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AttachableStartDetachEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AttachableStartDetachEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AttachableStartDetachEvent.lua` — FS25 1.25.1.0
 
-- **AttachableStartDetachEvent** hérite de `Event` (l.7)
+- **AttachableStartDetachEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AttachableStartDetachEvent.emptyNew() → table` | 14 |  |
 | `AttachableStartDetachEvent.new(vehicle: table, state: integer, segmentIndex: any, segmentIsLeft: any)` | 23 |  |

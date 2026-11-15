@@ -1,12 +1,12 @@
 # missions/field/PlowMission.lua
 
-Source : `dataS/scripts/missions/field/PlowMission.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/missions/field/PlowMission.lua` — FS25 1.25.1.0
 
-- **PlowMission** hérite de `AbstractFieldMission` (l.13)
+- **PlowMission** inherits from `AbstractFieldMission` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlowMission.new(isServer: any, isClient: any, customMt: any)` | 24 |  |
 | `PlowMission:createModifier()` | 39 |  |

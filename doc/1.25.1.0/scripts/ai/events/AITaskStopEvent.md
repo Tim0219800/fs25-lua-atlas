@@ -1,12 +1,12 @@
 # ai/events/AITaskStopEvent.lua
 
-Source : `dataS/scripts/ai/events/AITaskStopEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/events/AITaskStopEvent.lua` — FS25 1.25.1.0
 
-- **AITaskStopEvent** hérite de `Event` (l.11)
+- **AITaskStopEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AITaskStopEvent.emptyNew()` | 17 |  |
 | `AITaskStopEvent.new(job: any, task: any, wasJobStopped: any)` | 24 |  |

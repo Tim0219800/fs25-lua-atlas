@@ -1,12 +1,12 @@
 # vehicles/specializations/CrabSteering.lua
 
-Source : `dataS/scripts/vehicles/specializations/CrabSteering.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/CrabSteering.lua` — FS25 1.25.1.0
 
 - **CrabSteering** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CrabSteering.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `CrabSteering.initSpecialization()` | 28 |  |
@@ -38,9 +38,9 @@ Source : `dataS/scripts/vehicles/specializations/CrabSteering.lua` — FS25 1.25
 | `CrabSteering.actionEventToggleCrabSteeringModes(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 916 |  |
 | `CrabSteering.actionEventSetCrabSteeringMode(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 927 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadCrabSteeringModeFromXML` | 95 |
 | registerFunction | `getCanToggleCrabSteering` | 96 |

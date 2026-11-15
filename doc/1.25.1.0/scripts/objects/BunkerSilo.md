@@ -1,13 +1,13 @@
 # objects/BunkerSilo.lua
 
-Source : `dataS/scripts/objects/BunkerSilo.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/BunkerSilo.lua` — FS25 1.25.1.0
 
-- **BunkerSilo** hérite de `Object` (l.7)
+- **BunkerSilo** inherits from `Object` (l.7)
 - **BunkerSiloActivatable** (l.1005)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BunkerSilo:onCreate(id: integer)` | 24 |  |
 | `BunkerSilo.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 34 |  |
@@ -39,4 +39,4 @@ Source : `dataS/scripts/objects/BunkerSilo.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.HOUR_CHANGED` (l.75)
+- subscribes `MessageType.HOUR_CHANGED` (l.75)

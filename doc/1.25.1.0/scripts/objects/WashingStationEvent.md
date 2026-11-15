@@ -1,12 +1,12 @@
 # objects/WashingStationEvent.lua
 
-Source : `dataS/scripts/objects/WashingStationEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/WashingStationEvent.lua` — FS25 1.25.1.0
 
-- **WashingStationEvent** hérite de `Event` (l.6)
+- **WashingStationEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WashingStationEvent.emptyNew() → table` | 13 |  |
 | `WashingStationEvent.new(washingStation: table) → table` | 22 |  |

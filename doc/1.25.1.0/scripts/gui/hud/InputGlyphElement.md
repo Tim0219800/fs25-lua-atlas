@@ -1,12 +1,12 @@
 # gui/hud/InputGlyphElement.lua
 
-Source : `dataS/scripts/gui/hud/InputGlyphElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/InputGlyphElement.lua` — FS25 1.25.1.0
 
-- **InputGlyphElement** hérite de `HUDElement` (l.14)
+- **InputGlyphElement** inherits from `HUDElement` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InputGlyphElement.new(inputDisplayManager: table, baseWidth: number, baseHeight: number, customMt: any)` | 28 |  |
 | `InputGlyphElement:delete()` | 78 |  |
@@ -26,4 +26,4 @@ Source : `dataS/scripts/gui/hud/InputGlyphElement.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.INPUT_DEVICES_CHANGED` (l.71)
+- subscribes `MessageType.INPUT_DEVICES_CHANGED` (l.71)

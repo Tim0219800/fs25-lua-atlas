@@ -1,14 +1,14 @@
 # vehicles/specializations/ForageWagon.lua
 
-Source : `dataS/scripts/vehicles/specializations/ForageWagon.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ForageWagon.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation de la remorque autochargeuse (ramassage d'andains d'herbe/foin/ensilage dans la carte de hauteur, DensityMapHeightUtil). Prérequis : FillUnit, TurnOnVehicle, Pickup, WorkArea. EFFETS (client) : fillEffects (vehicle.forageWagon.fillEffect, flux de matière) et startFillEffect (vehicle.forageWagon.startFillEffect, effet de démarrage de remplissage avec retard et fondu) chargés par g_effectManager:loadEffect ; classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT : le serveur arme spec.fillTimer = 500 ms dès qu'un ramassage de litres a eu lieu dans la passe (onEndWorkAreaProcessing) ; onUpdateTick décompte ce temps avec dt et isFilling reste vrai tant qu'il est positif ; tout changement d'isFilling lève dirtyFlag et appelle setFillEffectActive. Le client reçoit isFilling et le type de remplissage (FillTypeManager.SEND_NUM_BITS bits) par les flux initial et de mise à jour et appelle lui-même setFillEffectActive. L'effet reçoit comme type spec.lastFillType (le dernier type de matière ramassée), pas de stade de croissance, pas de largeur ; la densité du startFillEffect est modulée par le niveau de remplissage (onFillUnitFillLevelChanged : 1 - niveau/fillStartFadeOff). CONDITIONS : zone active si l'outil est allumé et si Pickup autorise le ramassage (allowPickingUp, spécialisation Pickup non relue : le critère abaissé/contact sol y est donc NON VÉRIFIÉ ici). Les autres sources montrent seulement doCheckSpeedLimit lié à allumé ET abaissé. RAMASSAGE : processForageWagonArea tire, sur la ligne de la zone (rayon 0.5), les litres de chaque type supporté (tipToGroundAroundLine avec -infini = aspiration), mémorise le premier type trouvé (forcedFillType), traite les andains herbe/foin humide-sec comme interchangeables, applique côté serveur les additifs (+5 % pondéré du niveau d'additif disponible) et cumule les litres ; workArea.pickupParticlesActive est posé selon pickupLiters > 0 (champ lu probablement par Pickup : NON VÉRIFIÉ). La surface retournée = largeur de ligne * lastMovedDistance, seulement en marche avant. Ce script ne lit aucune donnée météo ni humidité, et ne modifie pas de carte de densité terrain autre que la hauteur (pas de carte de culture). Remarque : processForageWagonArea n'a pas de garde de distance client (contrairement aux outils de sol), mais seul le serveur remplit le véhicule. dt : fillTimer en ms de temps de jeu. POINTS D'EXTENSION : fonctions processForageWagonArea, setFillEffectActive, fillForageWagon ; surcharges loadSpeedRotatingPartFromXML, getIsSpeedRotatingPartActive, getFillVolumeUVScrollSpeed, getIsWorkAreaActive, doCheckSpeedLimit, getConsumingLoad ; événements de flux, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOff, onDeactivate, onFillUnitFillLevelChanged. Vitesse limite par défaut : 20.
 
 - **ForageWagon** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ForageWagon.initSpecialization()` | 15 | ✍ Déclare le type de zone forageWagon et le schéma XML : indices de zone/unité/load info, additifs (unité, usage, types), défilement UV du volume, maxPickupLitersPerSecond, fillEffect et startFillEffect. Non relu clé par clé. |
 | `ForageWagon.prerequisitesPresent(specializations: any)` | 46 | ✍ Exige FillUnit, TurnOnVehicle, Pickup et WorkArea. |
@@ -38,9 +38,9 @@ Source : `dataS/scripts/vehicles/specializations/ForageWagon.lua` — FS25 1.25.
 | `ForageWagon:onFillUnitFillLevelChanged(fillUnitIndex: any, fillLevelDelta: any, fillTypeIndex: any, toolType: any, fillPositionData: any, appliedDelta: any)` | 470 | ✍ Client : règle la densité du startFillEffect selon le niveau de remplissage (fondu). |
 | `ForageWagon.getDefaultSpeedLimit()` | 483 | ✍ Limite de vitesse par défaut : 20. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processForageWagonArea` | 56 |
 | registerFunction | `setFillEffectActive` | 57 |

@@ -1,12 +1,12 @@
 # ai/parameters/AIParameter.lua
 
-Source : `dataS/scripts/ai/parameters/AIParameter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/parameters/AIParameter.lua` — FS25 1.25.1.0
 
 - **AIParameter** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIParameter.new(customMt: any)` | 16 |  |
 | `AIParameter:readStream(streamId: any, connection: any)` | 27 |  |

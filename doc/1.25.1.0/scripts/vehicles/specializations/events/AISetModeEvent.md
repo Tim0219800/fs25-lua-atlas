@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AISetModeEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AISetModeEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AISetModeEvent.lua` — FS25 1.25.1.0
 
-- **AISetModeEvent** hérite de `Event` (l.7)
+- **AISetModeEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AISetModeEvent.emptyNew() → table` | 14 |  |
 | `AISetModeEvent.new(vehicle: table, aiMode: integer)` | 23 |  |

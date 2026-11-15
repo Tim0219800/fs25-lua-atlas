@@ -1,12 +1,12 @@
 # gui/base/GuiDataSource.lua
 
-Source : `dataS/scripts/gui/base/GuiDataSource.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/GuiDataSource.lua` — FS25 1.25.1.0
 
 - **GuiDataSource** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GuiDataSource.new(subclass_mt: any)` | 20 |  |
 | `GuiDataSource:setData(data: any)` | 31 |  |

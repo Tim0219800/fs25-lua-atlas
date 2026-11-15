@@ -1,12 +1,12 @@
 # gui/elements/PagingElement.lua
 
-Source : `dataS/scripts/gui/elements/PagingElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/PagingElement.lua` — FS25 1.25.1.0
 
-- **PagingElement** hérite de `GuiElement` (l.20)
+- **PagingElement** inherits from `GuiElement` (l.20)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PagingElement.new(target: any, custom_mt: any)` | 26 |  |
 | `PagingElement:loadFromXML(xmlFile: any, key: any)` | 48 |  |

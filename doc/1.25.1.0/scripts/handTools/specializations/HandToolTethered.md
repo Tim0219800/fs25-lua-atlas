@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolTethered.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolTethered.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolTethered.lua` — FS25 1.25.1.0
 
 - **HandToolTethered** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolTethered.registerXMLPaths(xmlSchema: any)` | 15 |  |
 | `HandToolTethered.registerFunctions(handToolType: any)` | 24 |  |
@@ -23,9 +23,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolTethered.lua` — FS25
 | `HandToolTethered:returnToHolder(noEventSend: any)` | 165 |  |
 | `HandToolTethered:showRangeWarning(holderPlayerDistance: any)` | 176 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `showRangeWarning` | 25 |
 | registerFunction | `returnToHolder` | 26 |

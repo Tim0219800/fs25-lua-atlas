@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/ExtendedCombine.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedCombine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedCombine.lua` — FS25 1.25.1.0
 
 - **ExtendedCombine** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedCombine.prerequisitesPresent(specializations: table) → boolean` | 27 |  |
 | `ExtendedCombine:onDelete()` | 63 |  |

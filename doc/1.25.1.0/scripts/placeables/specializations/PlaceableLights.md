@@ -1,13 +1,13 @@
 # placeables/specializations/PlaceableLights.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableLights.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableLights.lua` — FS25 1.25.1.0
 
 - **PlaceableLights** (l.11)
 - **PlaceableLightsActivatable** (l.535)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableLights.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `PlaceableLights.registerFunctions(placeableType: any)` | 28 |  |
@@ -30,9 +30,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableLights.lua` — FS25
 | `PlaceableLightsActivatable:updateActivateText()` | 566 |  |
 | `PlaceableLightsActivatable:getDistance(x: any, y: any, z: any)` | 579 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `lightSetupChanged` | 29 |
 | registerFunction | `getUseHighProfile` | 30 |
@@ -48,4 +48,4 @@ Source : `dataS/scripts/placeables/specializations/PlaceableLights.lua` — FS25
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.98)
+- subscribes `MessageType.SETTING_CHANGED` (l.98)

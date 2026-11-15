@@ -1,12 +1,12 @@
 # animals/events/AnimalNameEvent.lua
 
-Source : `dataS/scripts/animals/events/AnimalNameEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/events/AnimalNameEvent.lua` — FS25 1.25.1.0
 
-- **AnimalNameEvent** hérite de `Event` (l.6)
+- **AnimalNameEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimalNameEvent.emptyNew()` | 12 |  |
 | `AnimalNameEvent.new(husbandry: any, clusterId: any, name: any)` | 19 |  |

@@ -1,12 +1,12 @@
 # shop/StoreManager.lua
 
-Source : `dataS/scripts/shop/StoreManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/shop/StoreManager.lua` — FS25 1.25.1.0
 
-- **StoreManager** hérite de `AbstractManager` (l.12)
+- **StoreManager** inherits from `AbstractManager` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StoreManager.new(customMt: any) → table` | 26 |  |
 | `StoreManager:initDataStructures()` | 38 |  |
@@ -45,4 +45,4 @@ Source : `dataS/scripts/shop/StoreManager.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.STORE_ITEMS_RELOADED` (l.1385)
+- publishes `MessageType.STORE_ITEMS_RELOADED` (l.1385)

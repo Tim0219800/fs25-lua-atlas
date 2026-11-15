@@ -1,12 +1,12 @@
 # ai/parameters/AIParameterPositionAngle.lua
 
-Source : `dataS/scripts/ai/parameters/AIParameterPositionAngle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/parameters/AIParameterPositionAngle.lua` — FS25 1.25.1.0
 
-- **AIParameterPositionAngle** hérite de `AIParameterPosition` (l.12)
+- **AIParameterPositionAngle** inherits from `AIParameterPosition` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIParameterPositionAngle.new(snappingAngle: any, customMt: any)` | 16 |  |
 | `AIParameterPositionAngle:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 29 |  |

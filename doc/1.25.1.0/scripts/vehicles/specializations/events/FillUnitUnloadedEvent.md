@@ -1,12 +1,12 @@
 # vehicles/specializations/events/FillUnitUnloadedEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/FillUnitUnloadedEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/FillUnitUnloadedEvent.lua` — FS25 1.25.1.0
 
-- **FillUnitUnloadedEvent** hérite de `Event` (l.7)
+- **FillUnitUnloadedEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillUnitUnloadedEvent.emptyNew() → table` | 14 |  |
 | `FillUnitUnloadedEvent.new(object: table, pallet: any, showWarning: any, result: any)` | 22 |  |

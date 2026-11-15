@@ -1,12 +1,12 @@
 # utils/Utils.lua
 
-Source : `dataS/scripts/utils/Utils.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/Utils.lua` — FS25 1.25.1.0
 
 - **Utils** (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Utils.getNoNil(value: any, setTo: any) → any` | 13 |  |
 | `Utils.getNoNilRad(valueDeg: number, defaultRad: any) → number` | 25 |  |

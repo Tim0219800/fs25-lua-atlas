@@ -1,14 +1,14 @@
 # utils/FSDensityMapUtil.lua
 
-Source : `dataS/scripts/utils/FSDensityMapUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/FSDensityMapUtil.lua` — FS25 1.25.1.0
 
-> ⚠ Dans le dump du SDK ce fichier ne contient **que des signatures** (pas de corps).
+> ⚠ In the SDK dump this file only contains **signatures** (no bodies).
 
 - **FSDensityMapUtil** (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FSDensityMapUtil.clearCache()` | 56 |  |
 | `FSDensityMapUtil.getFieldDataAtWorldPosition(x: number, y: number, z: number) → boolean, number, number` | 68 |  |

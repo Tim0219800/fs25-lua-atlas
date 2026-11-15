@@ -1,12 +1,12 @@
 # ai/jobs/AIJobGoTo.lua
 
-Source : `dataS/scripts/ai/jobs/AIJobGoTo.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/jobs/AIJobGoTo.lua` — FS25 1.25.1.0
 
-- **AIJobGoTo** hérite de `AIJob` (l.18)
+- **AIJobGoTo** inherits from `AIJob` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobGoTo.new(isServer: any, customMt: any)` | 22 |  |
 | `AIJobGoTo:start(farmId: any)` | 48 |  |

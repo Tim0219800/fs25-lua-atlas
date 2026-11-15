@@ -1,14 +1,14 @@
 # vehicles/wheels/Wheel.lua
 
-Source : `dataS/scripts/vehicles/wheels/Wheel.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/Wheel.lua` — FS25 1.25.1.0
 
 ✍ Classe (pas une spécialisation) qui représente une roue complète : elle ne contient presque pas de logique propre et orchestre des sous-objets créés dans Wheel.new (Wheel.lua:53-58) : physics (WheelPhysics), steering (WheelSteering), destruction (WheelDestruction), effects (WheelEffects) et debug (WheelDebug), plus les roues visuelles (WheelVisual) et cales (WheelChock) chargées en XML. Appelée par la spécialisation Wheels : Wheels:onUpdate (Wheels.lua:844-846) lit une fois par frame g_currentMission.environment.weather:getGroundWetness() et le passe à Wheel:update(dt, currentUpdateIndex, groundWetness) ; Wheels:onUpdateTick (Wheels.lua:935) fait de même pour Wheel:updateTick. C'est le seul accès météo de ce fichier : une valeur groundWetness, dont l'origine (Weather) est absente du dump : NON VÉRIFIÉ. Serveur/client : sur le serveur, Wheel:update lance physics:serverUpdate (contact sol, friction, frein, direction) seulement si le véhicule est dans la physique ; sur le client, physics:clientUpdate (lecture du type de sol seulement). La partie visuelle (position de roue, rotation, suspension, direction, effets) n'est exécutée que si le véhicule est plus proche que Wheel.VISUAL_WHEEL_UPDATE_DISTANCE (valeur non définie dans ce fichier : NON VÉRIFIÉ) ou si force est vrai ; les seuils de mise à jour Wheel.STEERING_ANGLE_THRESHOLD et Wheel.SUSPENSION_THRESHOLD ne sont pas non plus définis ici. Le pas de temps dt (ms) est transmis tel quel ; Wheels.lua:633 (onLoadFinished) appelle update avec dt = 99999 et force pour initialiser les positions. Particularité de répartition de charge : chaque roue a un updateIndex de 1 à 4 ((index-1) mod 4 + 1) utilisé par WheelPhysics pour ne mesurer le contact qu'une frame sur quatre. Points d'extension pour un moddeur : aucune fonction enregistrée ; accès via vehicle.spec_wheels.wheels[i] (objet Wheel) et ses champs physics / effects / destruction ; surcharge directe de Wheel.* (partagé par toutes les roues) possible.
 
 - **Wheel** (l.28)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Wheel.new(vehicle: any, xmlFile: any, baseKey: any, wheelKey: any, wheelIndex: any, configIndex: any, indexToParentIndex: any, baseDirectory: any, customMt: any)` | 32 | ✍ Crée la roue : stocke véhicule, XML, objet XML de roue, indices ; initialise frein, état de synchronisation de contact (syncContactState = false) et les cinq sous-objets physics, steering, destruction, effects, debug. |
 | `Wheel:loadFromXML()` | 66 | ✍ Charge la roue : nœud repr obligatoire (sinon échec), nœuds drive/link (en crée un nouveau repr si le driveNode n'est pas fourni), ratio de translation de suspension, puis délègue à physics, steering, destruction et effects ; charge matériaux, cales de roue, roue visuelle principale et roues additionnelles (jumelées) en leur transmettant la masse supplémentaire. Renvoie false si la roue n'est pas dans un composant actif ou si un sous-chargement échoue. |

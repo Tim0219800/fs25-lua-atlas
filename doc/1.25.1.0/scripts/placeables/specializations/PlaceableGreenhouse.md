@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableGreenhouse.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableGreenhouse.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableGreenhouse.lua` — FS25 1.25.1.0
 
 - **PlaceableGreenhouse** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableGreenhouse.getRandomGrowthInterval()` | 23 |  |
 | `PlaceableGreenhouse.getRandomWateringInterval()` | 29 |  |
@@ -28,9 +28,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableGreenhouse.lua` — 
 | `PlaceableGreenhouse:setPlantAtPlace(fillType: any, plantPlace: any)` | 386 |  |
 | `PlaceableGreenhouse:updatePlantsStage()` | 418 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadPlantFromXml` | 59 |
 | registerFunction | `plantI3DLoadedCallback` | 60 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/AIModeSelection.lua
 
-Source : `dataS/scripts/vehicles/specializations/AIModeSelection.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AIModeSelection.lua` — FS25 1.25.1.0
 
 - **AIModeSelection** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIModeSelection.prerequisitesPresent(specializations: table) → boolean` | 35 |  |
 | `AIModeSelection.initSpecialization()` | 42 |  |
@@ -33,9 +33,9 @@ Source : `dataS/scripts/vehicles/specializations/AIModeSelection.lua` — FS25 1
 | `AIModeSelection:applyReadAIModeSettingsFromStream(data: any)` | 391 |  |
 | `AIModeSelection:writeAIModeSettingsToStream(streamId: any, connection: any)` | 403 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onAIModeChanged` | 51 |
 | registerEvent | `onAIModeSettingsChanged` | 52 |

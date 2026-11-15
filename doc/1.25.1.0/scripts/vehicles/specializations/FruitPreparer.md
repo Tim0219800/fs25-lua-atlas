@@ -1,12 +1,12 @@
 # vehicles/specializations/FruitPreparer.lua
 
-Source : `dataS/scripts/vehicles/specializations/FruitPreparer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FruitPreparer.lua` — FS25 1.25.1.0
 
 - **FruitPreparer** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FruitPreparer.initSpecialization()` | 17 |  |
 | `FruitPreparer.prerequisitesPresent(specializations: table) → boolean` | 42 |  |
@@ -32,9 +32,9 @@ Source : `dataS/scripts/vehicles/specializations/FruitPreparer.lua` — FS25 1.2
 | `FruitPreparer:onAIFieldCourseSettingsInitialized(fieldCourseSettings: any)` | 315 |  |
 | `FruitPreparer:processFruitPreparerArea(workArea: any)` | 322 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processFruitPreparerArea` | 49 |
 | registerOverwrittenFunction | `loadWorkAreaFromXML` | 55 |

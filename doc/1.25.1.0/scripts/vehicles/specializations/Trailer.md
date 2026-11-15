@@ -1,12 +1,12 @@
 # vehicles/specializations/Trailer.lua
 
-Source : `dataS/scripts/vehicles/specializations/Trailer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Trailer.lua` — FS25 1.25.1.0
 
 - **Trailer** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Trailer.prerequisitesPresent(specializations: any)` | 27 |  |
 | `Trailer.initSpecialization()` | 35 |  |
@@ -61,9 +61,9 @@ Source : `dataS/scripts/vehicles/specializations/Trailer.lua` — FS25 1.25.1.0
 | `Trailer.actionEventManualToggleTip(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1397 |  |
 | `Trailer.actionEventManualToggleDoor(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1410 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onStartTipping` | 115 |
 | registerEvent | `onOpenBackDoor` | 116 |

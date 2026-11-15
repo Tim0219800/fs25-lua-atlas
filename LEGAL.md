@@ -1,33 +1,35 @@
-# Statut juridique
+# Legal status
 
-> Analyse faite par l'auteur du dépôt le 2026-11-15. Ce n'est pas un avis juridique professionnel.
+*[Version française : LEGAL.fr.md](LEGAL.fr.md)*
 
-## Ce que disent les conditions de GIANTS Software
-Source : [Conditions générales GIANTS](https://www.farming-simulator.com/termsAndConditions.php) (version « Issued: October 2016 », consultée le 2026-11-15).
-- §3.2 : licence de base, non transférable, pour un usage privé.
-- §3.4 : la modification, la décompilation, le désassemblage et l'ingénierie inverse des jeux sont interdits, tout comme leur diffusion à des tiers.
-- §6.8 : il est interdit de prendre des parties des jeux.
+> Analysis by the repository author, 2026-11-15. This is not professional legal advice.
 
-Aucune FS25-EULA distincte n'a été trouvée en ligne. Les conditions du SDK ou du GDN (s'il y en a) n'ont pas été relues : NON VÉRIFIÉ.
+## What GIANTS Software's terms say
+Source: [GIANTS Terms and Conditions](https://www.farming-simulator.com/termsAndConditions.php) ("Issued: October 2016", read on 2026-11-15).
+- §3.2: basic, non-transferable license for private use.
+- §3.4: editing, decompiling, disassembling and reverse engineering the games are prohibited, as is passing them on to third parties.
+- §6.8: taking parts from the games is prohibited.
 
-## Pourquoi ce dépôt reste en dehors de ces interdictions
-- **Pas de décompilation.** Les sources Lua lues sont celles que GIANTS fournit en clair dans le SDK du jeu
-  (`sdk/debugger/gameSource.zip`, prévu pour déboguer les mods). Les archives `.gar` n'ont jamais été extraites
-  et aucun outil tiers de décompilation n'a été utilisé.
-- **Le relevé en jeu est un mod Lua ordinaire.** Il liste les noms des globales accessibles à n'importe quel mod,
-  avec les fonctions de script standard, sans toucher aux fichiers du jeu ni à sa mémoire.
-- **Aucune partie du jeu n'est publiée.** Le dépôt ne contient ni fichier source, ni corps de fonction, ni commentaire GIANTS,
-  ni texte de `scriptBinding.xml`, ni ressource graphique ou sonore. Il ne contient que :
-  - des noms, signatures, types et renvois `fichier:ligne`, c'est-à-dire des faits fonctionnels nécessaires
-    pour écrire des mods compatibles, du même ordre que ce que publie la documentation officielle LUADOC du GDN ;
-  - des textes rédigés pour l'atlas (descriptions ✍) et des outils originaux.
-- Les données brutes d'extraction (`donnees/`) sont exclues du dépôt et des releases (`.gitignore`).
+No separate FS25 EULA was found online. The SDK / GDN terms (if any) have not been reviewed: NOT VERIFIED.
 
-## Risque résiduel
-GIANTS marque ses sources « Confidential ». Une lecture stricte pourrait considérer la liste des noms internes,
-en particulier `stubs/*/releve/`, comme une information confidentielle. **Si GIANTS Software en fait la demande,
-le contenu concerné sera retiré immédiatement.** Contact : ouvrir une issue sur ce dépôt.
+## Why this repository stays outside those prohibitions
+- **No decompilation.** The Lua sources that were read are the ones GIANTS ships in plain text with the game's SDK
+  (`sdk/debugger/gameSource.zip`, meant for debugging mods). The `.gar` archives were never extracted
+  and no third-party decompiler was used.
+- **The in-game scan is an ordinary Lua mod.** It lists the names of the globals any mod can access,
+  using standard script functions, without touching game files or memory.
+- **No part of the game is published.** The repository contains no source file, no function body, no GIANTS comment,
+  no `scriptBinding.xml` text, no graphics or sound asset. It only contains:
+  - names, signatures, types and `file:line` references: functional facts needed to write compatible mods,
+    of the same kind as what the official GDN LUADOC publishes;
+  - texts written for the atlas (✍ descriptions) and original tools.
+- Raw extraction data (`donnees/`) is excluded from the repository and from releases (`.gitignore`).
 
-## Marques
-Farming Simulator, GIANTS et GIANTS Software sont des marques de GIANTS Software GmbH.
-Projet non officiel, sans lien avec GIANTS Software GmbH et sans son approbation.
+## Residual risk
+GIANTS marks its sources "Confidential". A strict reading could consider the list of internal names,
+especially `stubs/*/releve/`, as confidential information. **If GIANTS Software asks for it, the content
+concerned will be removed immediately.** Contact: open an issue on this repository.
+
+## Trademarks
+Farming Simulator, GIANTS and GIANTS Software are trademarks of GIANTS Software GmbH.
+Unofficial project, not affiliated with or endorsed by GIANTS Software GmbH.

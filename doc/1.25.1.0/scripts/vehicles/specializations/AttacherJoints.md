@@ -1,12 +1,12 @@
 # vehicles/specializations/AttacherJoints.lua
 
-Source : `dataS/scripts/vehicles/specializations/AttacherJoints.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AttacherJoints.lua` — FS25 1.25.1.0
 
 - **AttacherJoints** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AttacherJoints.getClosestLowerLinkCategoryIndex(width: any) → integer` | 40 |  |
 | `AttacherJoints.initSpecialization()` | 55 |  |
@@ -156,9 +156,9 @@ Source : `dataS/scripts/vehicles/specializations/AttacherJoints.lua` — FS25 1.
 | `AttacherJoints.updateRequiredTopLightsState(self: any)` | 5202 |  |
 | `AttacherJoints.consoleCommandBottomArmWidth(_: any, category: any, width: any)` | 5219 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onPreAttachImplement` | 304 |
 | registerEvent | `onPostAttachImplement` | 305 |
@@ -295,4 +295,4 @@ Source : `dataS/scripts/vehicles/specializations/AttacherJoints.lua` — FS25 1.
 
 ## Messages
 
-- écoute `MessageType.VEHICLE_LOADED` (l.723)
+- subscribes `MessageType.VEHICLE_LOADED` (l.723)

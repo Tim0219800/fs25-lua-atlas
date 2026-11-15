@@ -1,13 +1,13 @@
 # vehicles/specializations/WaterTrailer.lua
 
-Source : `dataS/scripts/vehicles/specializations/WaterTrailer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/WaterTrailer.lua` — FS25 1.25.1.0
 
 - **WaterTrailer** (l.10)
 - **WaterTrailerActivatable** (l.197)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WaterTrailer.prerequisitesPresent(specializations: table) → boolean` | 16 |  |
 | `WaterTrailer.initSpecialization()` | 22 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/vehicles/specializations/WaterTrailer.lua` — FS25 1.25
 | `WaterTrailerActivatable:run()` | 223 |  |
 | `WaterTrailerActivatable:updateActivateText()` | 230 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setIsWaterTrailerFilling` | 38 |
 | registerOverwrittenFunction | `getDrawFirstFillText` | 44 |

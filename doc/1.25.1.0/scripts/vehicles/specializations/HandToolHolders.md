@@ -1,12 +1,12 @@
 # vehicles/specializations/HandToolHolders.lua
 
-Source : `dataS/scripts/vehicles/specializations/HandToolHolders.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/HandToolHolders.lua` — FS25 1.25.1.0
 
 - **HandToolHolders** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolHolders.registerEvents(vehicleType: any)` | 35 |  |
 | `HandToolHolders.registerFunctions(vehicleType: any)` | 42 |  |
@@ -20,9 +20,9 @@ Source : `dataS/scripts/vehicles/specializations/HandToolHolders.lua` — FS25 1
 | `HandToolHolders:onReadStream(streamId: any, connection: any)` | 176 |  |
 | `HandToolHolders:setOwnerFarmId(superFunc: any, ownerFarmId: any, noEventSend: any)` | 191 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onHandToolStoredInHolder` | 36 |
 | registerEvent | `onHandToolTakenFromHolder` | 37 |

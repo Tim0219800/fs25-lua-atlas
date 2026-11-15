@@ -1,12 +1,12 @@
 # vehicles/specializations/events/BalerBaleTypeEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/BalerBaleTypeEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/BalerBaleTypeEvent.lua` — FS25 1.25.1.0
 
-- **BalerBaleTypeEvent** hérite de `Event` (l.10)
+- **BalerBaleTypeEvent** inherits from `Event` (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BalerBaleTypeEvent.emptyNew() → table` | 17 |  |
 | `BalerBaleTypeEvent.new(object: table, baleTypeIndex: integer, force: boolean)` | 26 |  |

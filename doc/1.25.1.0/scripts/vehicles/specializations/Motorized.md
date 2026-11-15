@@ -1,6 +1,6 @@
 # vehicles/specializations/Motorized.lua
 
-Source : `dataS/scripts/vehicles/specializations/Motorized.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Motorized.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des véhicules à moteur (table spec_motorized). Prérequis : FillUnit et VehicleSettings. Elle porte le moteur de simulation (objet VehicleMotor, hors périmètre), les différentiels, les boîtes de vitesses, les consommables (diesel, DEF, électricité, méthane, air), la température moteur, les sons, les tableaux de bord et les effets d'échappement.
 
@@ -16,9 +16,9 @@ LIMITE DU DUMP : les fonctions setMotorState et getMotorState sont enregistrées
 
 - **Motorized** (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Motorized.initSpecialization()` | 23 | ✍ Déclare les schémas XML de la spécialisation : chemins moteur, différentiels, consommables, sons, boîtes, configurations de moteur, effets d'échappement (exhaustParticleSystems, exhaustEffects, exhaustFlap, effects), tableaux de bord et valeurs de store. Réservé à l'initialisation des types de véhicules. |
 | `Motorized.registerMotorXMLPaths(schema: any, baseKey: any)` | 125 | ✍ Enregistre dans le schéma XML les clés d'une configuration de moteur (régimes, vitesses max, couple, freinage, courbes, etc.). Non relu ligne à ligne. |
@@ -131,9 +131,9 @@ LIMITE DU DUMP : les fonctions setMotorState et getMotorState sont enregistrées
 | `Motorized.loadSpecValueTransmission(xmlFile: any, customEnvironment: any, baseDir: any)` | 3832 | ✍ Lit les informations de transmission du store. Non relu en détail. |
 | `Motorized.getSpecValueTransmission(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 3848 | ✍ Calcule le texte de transmission pour le store. Non relu en détail. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onStartMotor` | 261 |
 | registerEvent | `onStopMotor` | 262 |

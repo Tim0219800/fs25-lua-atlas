@@ -1,12 +1,12 @@
 # vehicles/specializations/events/VariableWorkWidthStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/VariableWorkWidthStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/VariableWorkWidthStateEvent.lua` — FS25 1.25.1.0
 
-- **VariableWorkWidthStateEvent** hérite de `Event` (l.7)
+- **VariableWorkWidthStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VariableWorkWidthStateEvent.emptyNew() → table` | 14 |  |
 | `VariableWorkWidthStateEvent.new(vehicle: table, leftSide: integer, rightSide: integer)` | 24 |  |

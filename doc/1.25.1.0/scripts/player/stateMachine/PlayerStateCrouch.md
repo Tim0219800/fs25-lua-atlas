@@ -1,12 +1,12 @@
 # player/stateMachine/PlayerStateCrouch.lua
 
-Source : `dataS/scripts/player/stateMachine/PlayerStateCrouch.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/stateMachine/PlayerStateCrouch.lua` — FS25 1.25.1.0
 
-- **PlayerStateCrouch** hérite de `BaseStateMachineState` (l.12)
+- **PlayerStateCrouch** inherits from `BaseStateMachineState` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerStateCrouch.new(player: Player, stateMachine: StateMachine) → BaseStateMachineState` | 31 |  |
 | `PlayerStateCrouch:createTransitions()` | 52 |  |

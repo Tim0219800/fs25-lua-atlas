@@ -1,12 +1,12 @@
 # ai/events/AITaskStartEvent.lua
 
-Source : `dataS/scripts/ai/events/AITaskStartEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/events/AITaskStartEvent.lua` — FS25 1.25.1.0
 
-- **AITaskStartEvent** hérite de `Event` (l.11)
+- **AITaskStartEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AITaskStartEvent.emptyNew()` | 17 |  |
 | `AITaskStartEvent.new(job: any, task: any)` | 24 |  |

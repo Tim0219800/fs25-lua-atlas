@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableBeehive.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableBeehive.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableBeehive.lua` — FS25 1.25.1.0
 
 - **PlaceableBeehive** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableBeehive.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableBeehive.registerFunctions(placeableType: any)` | 24 |  |
@@ -22,9 +22,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableBeehive.lua` — FS2
 | `PlaceableBeehive:updateInfo(superFunc: any, infoTable: any)` | 166 |  |
 | `PlaceableBeehive:onBuy()` | 185 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getBeehiveInfluenceFactor` | 25 |
 | registerFunction | `updateBeehiveState` | 26 |

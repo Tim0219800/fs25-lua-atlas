@@ -1,12 +1,12 @@
 # vehicles/specializations/BunkerSiloCompacter.lua
 
-Source : `dataS/scripts/vehicles/specializations/BunkerSiloCompacter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BunkerSiloCompacter.lua` — FS25 1.25.1.0
 
 - **BunkerSiloCompacter** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BunkerSiloCompacter.prerequisitesPresent(specializations: any)` | 17 |  |
 | `BunkerSiloCompacter.initSpecialization()` | 23 |  |
@@ -21,9 +21,9 @@ Source : `dataS/scripts/vehicles/specializations/BunkerSiloCompacter.lua` — FS
 | `BunkerSiloCompacter:doCheckSpeedLimit(superFunc: any) → boolean` | 153 |  |
 | `BunkerSiloCompacter.getDefaultSpeedLimit() → number` | 165 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadBunkerSiloCompactorFromXML` | 39 |
 | registerFunction | `getBunkerSiloCompacterScale` | 40 |

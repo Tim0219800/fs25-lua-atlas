@@ -1,12 +1,12 @@
 # objects/InlineBaleSingle.lua
 
-Source : `dataS/scripts/objects/InlineBaleSingle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/InlineBaleSingle.lua` — FS25 1.25.1.0
 
-- **InlineBaleSingle** hérite de `Bale` (l.7)
+- **InlineBaleSingle** inherits from `Bale` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InlineBaleSingle.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 17 |  |
 | `InlineBaleSingle:getBaleSupportsBaleLoader()` | 28 |  |

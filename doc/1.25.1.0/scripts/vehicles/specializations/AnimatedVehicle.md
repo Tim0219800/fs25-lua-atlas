@@ -1,12 +1,12 @@
 # vehicles/specializations/AnimatedVehicle.lua
 
-Source : `dataS/scripts/vehicles/specializations/AnimatedVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AnimatedVehicle.lua` — FS25 1.25.1.0
 
 - **AnimatedVehicle** (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimatedVehicle.prerequisitesPresent(specializations: table) → boolean` | 25 |  |
 | `AnimatedVehicle.initSpecialization()` | 31 |  |
@@ -69,9 +69,9 @@ Source : `dataS/scripts/vehicles/specializations/AnimatedVehicle.lua` — FS25 1
 | `AnimatedVehicle:getNumOfActiveAnimations()` | 1605 |  |
 | `AnimatedVehicle:onRegisterAnimationValueTypes()` | 1611 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onRegisterAnimationValueTypes` | 177 |
 | registerEvent | `onPlayAnimation` | 178 |

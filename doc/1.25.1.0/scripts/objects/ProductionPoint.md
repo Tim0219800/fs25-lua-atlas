@@ -1,12 +1,12 @@
 # objects/ProductionPoint.lua
 
-Source : `dataS/scripts/objects/ProductionPoint.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/ProductionPoint.lua` — FS25 1.25.1.0
 
-- **ProductionPoint** hérite de `Object` (l.45)
+- **ProductionPoint** inherits from `Object` (l.45)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ProductionPoint.registerXMLPaths(schema: any, basePath: any)` | 49 |  |
 | `ProductionPoint.registerSavegameXMLPaths(schema: any, basePath: any)` | 88 |  |
@@ -25,4 +25,4 @@ Source : `dataS/scripts/objects/ProductionPoint.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.GUI_INGAME_OPEN_PRODUCTION_SCREEN` (l.1352)
+- publishes `MessageType.GUI_INGAME_OPEN_PRODUCTION_SCREEN` (l.1352)

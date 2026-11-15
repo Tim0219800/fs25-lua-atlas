@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolChainsaw.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolChainsaw.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolChainsaw.lua` — FS25 1.25.1.0
 
 - **HandToolChainsaw** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolChainsaw.registerXMLPaths(xmlSchema: any)` | 52 |  |
 | `HandToolChainsaw.registerFunctions(handToolType: any)` | 70 |  |
@@ -40,9 +40,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolChainsaw.lua` — FS25
 | `HandToolChainsaw:updateRingSelector(targetedTree: any, isCutPossible: any, cutMinimumY: any, cutMaximumY: any, cutMinimumZ: any, cutMaximumZ: any)` | 1076 |  |
 | `HandToolChainsaw:calculateCutPlane()` | 1113 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `calculateCutPlane` | 71 |
 | registerFunction | `getChainSpeedFactor` | 72 |

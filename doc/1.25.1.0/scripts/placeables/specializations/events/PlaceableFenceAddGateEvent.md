@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableFenceAddGateEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableFenceAddGateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableFenceAddGateEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableFenceAddGateEvent** hérite de `Event` (l.6)
+- **PlaceableFenceAddGateEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableFenceAddGateEvent.emptyNew() → table` | 13 |  |
 | `PlaceableFenceAddGateEvent.new(fence: table, segmentIndex: integer, animatedObject: boolean)` | 22 |  |

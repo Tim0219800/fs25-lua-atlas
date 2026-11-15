@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableBuyable.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableBuyable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableBuyable.lua` — FS25 1.25.1.0
 
 - **PlaceableBuyable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableBuyable.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `PlaceableBuyable.registerFunctions(placeableType: any)` | 25 |  |
@@ -19,9 +19,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableBuyable.lua` — FS2
 | `PlaceableBuyable:buyRequest(requestCallback: any, target: any)` | 133 |  |
 | `PlaceableBuyable:setOwnerFarmId(superFunc: any, farmId: any, noEventSend: any)` | 184 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onBuyingTriggerCallback` | 26 |
 | registerFunction | `setIsBuyingTriggerActive` | 27 |

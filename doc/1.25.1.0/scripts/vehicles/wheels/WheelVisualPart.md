@@ -1,12 +1,12 @@
 # vehicles/wheels/WheelVisualPart.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelVisualPart.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelVisualPart.lua` — FS25 1.25.1.0
 
 - **WheelVisualPart** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelVisualPart.new(name: any, visualWheel: any, linkNode: any, customMt: any)` | 16 |  |
 | `WheelVisualPart:delete()` | 28 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/LivestockTrailer.lua
 
-Source : `dataS/scripts/vehicles/specializations/LivestockTrailer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/LivestockTrailer.lua` — FS25 1.25.1.0
 
 - **LivestockTrailer** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LivestockTrailer.initSpecialization()` | 17 |  |
 | `LivestockTrailer.prerequisitesPresent(specializations: any)` | 42 |  |
@@ -56,9 +56,9 @@ Source : `dataS/scripts/vehicles/specializations/LivestockTrailer.lua` — FS25 
 | `LivestockTrailer.getSpecValueNumberAnimalsSheep(storeItem: any, realItem: any)` | 680 |  |
 | `LivestockTrailer.getSpecValueNumberAnimalsHorse(storeItem: any, realItem: any)` | 686 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getCurrentAnimalType` | 49 |
 | registerFunction | `getSupportsAnimalType` | 50 |

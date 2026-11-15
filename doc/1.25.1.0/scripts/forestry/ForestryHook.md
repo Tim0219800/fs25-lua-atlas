@@ -1,12 +1,12 @@
 # forestry/ForestryHook.lua
 
-Source : `dataS/scripts/forestry/ForestryHook.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/forestry/ForestryHook.lua` — FS25 1.25.1.0
 
 - **ForestryHook** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ForestryHook.new(vehicle: any, linkNode: any, customMt: any)` | 17 |  |
 | `ForestryHook.registerXMLPaths(schema: any, baseKey: any)` | 40 |  |

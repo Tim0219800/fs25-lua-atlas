@@ -1,12 +1,12 @@
 # vehicles/specializations/RandomlyMovingParts.lua
 
-Source : `dataS/scripts/vehicles/specializations/RandomlyMovingParts.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/RandomlyMovingParts.lua` — FS25 1.25.1.0
 
 - **RandomlyMovingParts** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RandomlyMovingParts.prerequisitesPresent(specializations: table) → boolean` | 34 |  |
 | `RandomlyMovingParts.initSpecialization()` | 40 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/vehicles/specializations/RandomlyMovingParts.lua` — FS
 | `RandomlyMovingParts:updateRandomlyMovingPart(part: table, dt: number) → boolean` | 328 |  |
 | `RandomlyMovingParts:getIsRandomlyMovingPartActive(part: table) → boolean` | 386 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadRandomlyMovingPartFromXML` | 98 |
 | registerFunction | `updateRandomlyMovingPart` | 99 |

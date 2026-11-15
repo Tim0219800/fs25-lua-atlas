@@ -1,11 +1,11 @@
 # gui/WardrobeScreen.lua
 
-Source : `dataS/scripts/gui/WardrobeScreen.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/WardrobeScreen.lua` — FS25 1.25.1.0
 
-- **WardrobeScreen** hérite de `TabbedMenuWithDetails` (l.11)
+- **WardrobeScreen** inherits from `TabbedMenuWithDetails` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WardrobeScreen:removeActionEvents()` | 702 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/WoodHarvesterCutLengthEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/WoodHarvesterCutLengthEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/WoodHarvesterCutLengthEvent.lua` — FS25 1.25.1.0
 
-- **WoodHarvesterCutLengthEvent** hérite de `Event` (l.7)
+- **WoodHarvesterCutLengthEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodHarvesterCutLengthEvent.emptyNew() → table` | 14 |  |
 | `WoodHarvesterCutLengthEvent.new(object: table, index: number)` | 23 |  |

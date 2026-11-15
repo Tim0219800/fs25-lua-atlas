@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AIAutomaticSteeringCourseEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AIAutomaticSteeringCourseEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AIAutomaticSteeringCourseEvent.lua` — FS25 1.25.1.0
 
-- **AIAutomaticSteeringCourseEvent** hérite de `Event` (l.7)
+- **AIAutomaticSteeringCourseEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIAutomaticSteeringCourseEvent.emptyNew() → table` | 14 |  |
 | `AIAutomaticSteeringCourseEvent.new(vehicle: table, steeringFieldCourse: integer)` | 23 |  |

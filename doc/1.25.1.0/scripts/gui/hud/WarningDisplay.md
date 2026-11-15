@@ -1,12 +1,12 @@
 # gui/hud/WarningDisplay.lua
 
-Source : `dataS/scripts/gui/hud/WarningDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/WarningDisplay.lua` — FS25 1.25.1.0
 
-- **WarningDisplay** hérite de `HUDDisplay` (l.25)
+- **WarningDisplay** inherits from `HUDDisplay` (l.25)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WarningDisplay.new(customMt: any?) → any` | 32 |  |
 | `WarningDisplay:storeScaledValues()` | 49 |  |

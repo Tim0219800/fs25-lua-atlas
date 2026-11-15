@@ -1,12 +1,12 @@
 # vehicles/specializations/events/PickupSetStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/PickupSetStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/PickupSetStateEvent.lua` — FS25 1.25.1.0
 
-- **PickupSetStateEvent** hérite de `Event` (l.7)
+- **PickupSetStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PickupSetStateEvent.emptyNew() → table` | 14 |  |
 | `PickupSetStateEvent.new(object: table, isPickupLowered: boolean)` | 23 |  |

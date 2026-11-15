@@ -1,12 +1,12 @@
 # gui/base/TweenSequence.lua
 
-Source : `dataS/scripts/gui/base/TweenSequence.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/TweenSequence.lua` — FS25 1.25.1.0
 
-- **TweenSequence** hérite de `Tween` (l.19)
+- **TweenSequence** inherits from `Tween` (l.19)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TweenSequence.new(functionTarget: any)` | 25 |  |
 | `TweenSequence:insertTween(tween: table, instant: number)` | 46 |  |

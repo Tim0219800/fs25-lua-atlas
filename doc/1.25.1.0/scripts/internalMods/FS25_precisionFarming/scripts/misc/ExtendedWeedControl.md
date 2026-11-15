@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/misc/ExtendedWeedControl.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/ExtendedWeedControl.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/ExtendedWeedControl.lua` — FS25 1.25.1.0
 
 - **ExtendedWeedControl** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedWeedControl:loadFromXML(_: any, _: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 36 |  |
 | `ExtendedWeedControl:unloadMapData()` | 53 |  |

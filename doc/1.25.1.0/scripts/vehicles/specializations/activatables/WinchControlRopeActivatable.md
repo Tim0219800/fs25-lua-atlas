@@ -1,12 +1,12 @@
 # vehicles/specializations/activatables/WinchControlRopeActivatable.lua
 
-Source : `dataS/scripts/vehicles/specializations/activatables/WinchControlRopeActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/activatables/WinchControlRopeActivatable.lua` — FS25 1.25.1.0
 
 - **WinchControlRopeActivatable** (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WinchControlRopeActivatable.new(vehicle: table, rope: any) → table` | 22 |  |
 | `WinchControlRopeActivatable:registerCustomInput(inputContext: any)` | 37 |  |

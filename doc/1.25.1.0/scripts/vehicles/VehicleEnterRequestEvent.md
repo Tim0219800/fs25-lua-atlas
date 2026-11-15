@@ -1,12 +1,12 @@
 # vehicles/VehicleEnterRequestEvent.lua
 
-Source : `dataS/scripts/vehicles/VehicleEnterRequestEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleEnterRequestEvent.lua` — FS25 1.25.1.0
 
-- **VehicleEnterRequestEvent** hérite de `Event` (l.7)
+- **VehicleEnterRequestEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleEnterRequestEvent.emptyNew() → table` | 14 |  |
 | `VehicleEnterRequestEvent.new(object: table, playerStyle: table, farmId: integer, force: boolean?) → VehicleEnterRequestEvent` | 26 |  |

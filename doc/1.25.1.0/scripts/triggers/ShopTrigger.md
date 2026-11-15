@@ -1,13 +1,13 @@
 # triggers/ShopTrigger.lua
 
-Source : `dataS/scripts/triggers/ShopTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/ShopTrigger.lua` — FS25 1.25.1.0
 
 - **ShopTrigger** (l.9)
 - **ShopTriggerActivatable** (l.134)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ShopTrigger:onCreate(id: integer)` | 14 |  |
 | `ShopTrigger.new(node: integer) → table` | 22 |  |
@@ -23,5 +23,5 @@ Source : `dataS/scripts/triggers/ShopTrigger.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.PLAYER_FARM_CHANGED` (l.39)
-- écoute `MessageType.SETTING_CHANGED` (l.40)
+- subscribes `MessageType.PLAYER_FARM_CHANGED` (l.39)
+- subscribes `MessageType.SETTING_CHANGED` (l.40)

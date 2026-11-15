@@ -1,12 +1,12 @@
 # vehicles/specializations/TurnOnVehicle.lua
 
-Source : `dataS/scripts/vehicles/specializations/TurnOnVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/TurnOnVehicle.lua` — FS25 1.25.1.0
 
 - **TurnOnVehicle** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TurnOnVehicle.prerequisitesPresent(specializations: any)` | 19 |  |
 | `TurnOnVehicle.initSpecialization()` | 25 |  |
@@ -72,9 +72,9 @@ Source : `dataS/scripts/vehicles/specializations/TurnOnVehicle.lua` — FS25 1.2
 | `TurnOnVehicle.dashboardRpmAttributes(self: any, xmlFile: any, key: any, dashboard: any, isActive: any)` | 1093 |  |
 | `TurnOnVehicle.dashboardRpmValue(self: any, dashboard: any)` | 1102 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onTurnedOn` | 94 |
 | registerEvent | `onTurnedOff` | 95 |

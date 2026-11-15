@@ -1,12 +1,12 @@
 # triggers/FillTrigger.lua
 
-Source : `dataS/scripts/triggers/FillTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/FillTrigger.lua` — FS25 1.25.1.0
 
 - **FillTrigger** (l.8)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillTrigger:onCreate(id: integer)` | 13 |  |
 | `FillTrigger.new(id: integer, sourceObject: table, fillUnitIndex: integer, fillLitersPerSecond: table?, defaultFillType: any, customMt: table?) → table` | 28 |  |

@@ -1,12 +1,12 @@
 # gui/elements/SliderElement.lua
 
-Source : `dataS/scripts/gui/elements/SliderElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/SliderElement.lua` — FS25 1.25.1.0
 
-- **SliderElement** hérite de `GuiElement` (l.36)
+- **SliderElement** inherits from `GuiElement` (l.36)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SliderElement.new(target: any, custom_mt: any)` | 46 |  |
 | `SliderElement:delete()` | 96 |  |

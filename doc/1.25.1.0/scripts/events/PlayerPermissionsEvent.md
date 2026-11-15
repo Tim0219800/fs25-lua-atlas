@@ -1,11 +1,11 @@
 # events/PlayerPermissionsEvent.lua
 
-Source : `dataS/scripts/events/PlayerPermissionsEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/events/PlayerPermissionsEvent.lua` — FS25 1.25.1.0
 
-- **PlayerPermissionsEvent** hérite de `Event` (l.4)
+- **PlayerPermissionsEvent** inherits from `Event` (l.4)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerPermissionsEvent.sendEvent(userId: integer, permissions: table, isFarmManager: boolean, noEventSend: boolean)` | 113 |  |

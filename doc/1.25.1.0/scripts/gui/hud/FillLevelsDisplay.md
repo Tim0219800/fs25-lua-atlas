@@ -1,11 +1,11 @@
 # gui/hud/FillLevelsDisplay.lua
 
-Source : `dataS/scripts/gui/hud/FillLevelsDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/FillLevelsDisplay.lua` — FS25 1.25.1.0
 
-- **FillLevelsDisplay** hérite de `HUDDisplay` (l.29)
+- **FillLevelsDisplay** inherits from `HUDDisplay` (l.29)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillLevelsDisplay.new()` | 33 |  |

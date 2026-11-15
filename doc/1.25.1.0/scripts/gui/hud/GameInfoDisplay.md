@@ -1,12 +1,12 @@
 # gui/hud/GameInfoDisplay.lua
 
-Source : `dataS/scripts/gui/hud/GameInfoDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/GameInfoDisplay.lua` — FS25 1.25.1.0
 
-- **GameInfoDisplay** hérite de `HUDDisplay` (l.28)
+- **GameInfoDisplay** inherits from `HUDDisplay` (l.28)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GameInfoDisplay.new()` | 32 |  |
 | `GameInfoDisplay:storeScaledValues()` | 102 |  |

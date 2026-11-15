@@ -1,12 +1,12 @@
 # vehicles/specializations/AIAutomaticSteering.lua
 
-Source : `dataS/scripts/vehicles/specializations/AIAutomaticSteering.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AIAutomaticSteering.lua` — FS25 1.25.1.0
 
 - **AIAutomaticSteering** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIAutomaticSteering.prerequisitesPresent(specializations: table) → boolean` | 43 |  |
 | `AIAutomaticSteering.initSpecialization()` | 49 |  |
@@ -47,9 +47,9 @@ Source : `dataS/scripts/vehicles/specializations/AIAutomaticSteering.lua` — FS
 | `AIAutomaticSteering.updateActionEvents(self: any)` | 911 |  |
 | `AIAutomaticSteering.actionEventSteeringLines(self: any)` | 922 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onAIAutomaticSteeringLineEnd` | 73 |
 | registerFunction | `getAttacherToolWorkingWidth` | 81 |

@@ -1,11 +1,11 @@
 # vehicles/specializations/CraneShovel.lua
 
-Source : `dataS/scripts/vehicles/specializations/CraneShovel.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/CraneShovel.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CraneShovel.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `CraneShovel.initSpecialization()` | 26 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/vehicles/specializations/CraneShovel.lua` — FS25 1.25.
 | `CraneShovel:getIsDischargeNodeActive(superFunc: any, dischargeNode: any)` | 243 |  |
 | `CraneShovel:getShovelNodeIsActive(superFunc: any, shovelNode: any)` | 256 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadCraneShovelFromXML` | 54 |
 | registerFunction | `setCraneShovelState` | 55 |

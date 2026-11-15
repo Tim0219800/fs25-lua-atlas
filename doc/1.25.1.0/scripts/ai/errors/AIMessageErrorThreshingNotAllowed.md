@@ -1,12 +1,12 @@
 # ai/errors/AIMessageErrorThreshingNotAllowed.lua
 
-Source : `dataS/scripts/ai/errors/AIMessageErrorThreshingNotAllowed.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/errors/AIMessageErrorThreshingNotAllowed.lua` — FS25 1.25.1.0
 
-- **AIMessageErrorThreshingNotAllowed** hérite de `AIMessage` (l.12)
+- **AIMessageErrorThreshingNotAllowed** inherits from `AIMessage` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIMessageErrorThreshingNotAllowed.new(customMt: any)` | 16 |  |
 | `AIMessageErrorThreshingNotAllowed:getI18NText()` | 23 |  |

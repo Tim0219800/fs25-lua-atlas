@@ -1,11 +1,11 @@
 # vehicles/specializations/events/BalerSetBaleTimeEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/BalerSetBaleTimeEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/BalerSetBaleTimeEvent.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BalerSetBaleTimeEvent.emptyNew() → table` | 15 |  |
 | `BalerSetBaleTimeEvent.new(object: table, bale: integer, baleTime: number)` | 25 |  |

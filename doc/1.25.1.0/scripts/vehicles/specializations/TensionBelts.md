@@ -1,13 +1,13 @@
 # vehicles/specializations/TensionBelts.lua
 
-Source : `dataS/scripts/vehicles/specializations/TensionBelts.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/TensionBelts.lua` — FS25 1.25.1.0
 
 - **TensionBelts** (l.14)
 - **TensionBeltsActivatable** (l.1585)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TensionBelts.prerequisitesPresent(specializations: any)` | 21 |  |
 | `TensionBelts.initSpecialization()` | 27 |  |
@@ -59,9 +59,9 @@ Source : `dataS/scripts/vehicles/specializations/TensionBelts.lua` — FS25 1.25
 | `TensionBelts.actionEventToggleTensionBelts(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1643 |  |
 | `TensionBelts.consoleCommandToggleTensionBeltDebugRendering(unusedSelf: any)` | 1652 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `createTensionBelt` | 86 |
 | registerFunction | `removeTensionBelt` | 87 |
@@ -102,5 +102,5 @@ Source : `dataS/scripts/vehicles/specializations/TensionBelts.lua` — FS25 1.25
 
 ## Messages
 
-- écoute `MessageType.TREE_SHAPE_CUT` (l.356)
-- publie `MessageType.TREE_SHAPE_MOUNTED` (l.840)
+- subscribes `MessageType.TREE_SHAPE_CUT` (l.356)
+- publishes `MessageType.TREE_SHAPE_MOUNTED` (l.840)

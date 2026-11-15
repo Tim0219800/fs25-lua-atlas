@@ -1,12 +1,12 @@
 # vehicles/specializations/events/TensionBeltsEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/TensionBeltsEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/TensionBeltsEvent.lua` — FS25 1.25.1.0
 
-- **TensionBeltsEvent** hérite de `Event` (l.7)
+- **TensionBeltsEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TensionBeltsEvent.emptyNew() → table` | 14 |  |
 | `TensionBeltsEvent.new(object: table, isActive: boolean, beltId: integer)` | 24 |  |

@@ -1,12 +1,12 @@
 # placeables/specializations/rollercoaster/RollercoasterPassengerEnterRequestEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/rollercoaster/RollercoasterPassengerEnterRequestEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/rollercoaster/RollercoasterPassengerEnterRequestEvent.lua` — FS25 1.25.1.0
 
-- **RollercoasterPassengerEnterRequestEvent** hérite de `Event` (l.12)
+- **RollercoasterPassengerEnterRequestEvent** inherits from `Event` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RollercoasterPassengerEnterRequestEvent.emptyNew() → table` | 19 |  |
 | `RollercoasterPassengerEnterRequestEvent.new(rollercoaster: table, player: table) → table` | 29 |  |

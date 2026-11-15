@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableBoatyard.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableBoatyard.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableBoatyard.lua` — FS25 1.25.1.0
 
 - **PlaceableBoatyard** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableBoatyard.prerequisitesPresent(specializations: table) → boolean` | 26 |  |
 | `PlaceableBoatyard.registerFunctions(placeableType: any)` | 32 |  |
@@ -22,9 +22,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableBoatyard.lua` — FS
 | `PlaceableBoatyard:onWriteStream(streamId: any, connection: any)` | 458 |  |
 | `PlaceableBoatyard:setOwnerFarmId(superFunc: any, farmId: any)` | 615 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onBoatI3DFileLoaded` | 33 |
 | registerFunction | `setMeshProgress` | 34 |

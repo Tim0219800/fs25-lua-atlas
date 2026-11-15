@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/WeedSpotSpray.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/WeedSpotSpray.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/WeedSpotSpray.lua` — FS25 1.25.1.0
 
 - **WeedSpotSpray** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WeedSpotSpray.prerequisitesPresent(specializations: table) → boolean` | 22 |  |
 | `WeedSpotSpray.initSpecialization()` | 28 |  |
@@ -23,9 +23,9 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializatio
 | `WeedSpotSpray:updateExtendedSprayerNozzleEffectState(superFunc: any, effectData: any, dt: any, isTurnedOn: any, lastSpeed: any)` | 179 |  |
 | `WeedSpotSpray:loadWorkAreaFromXML(superFunc: any, workArea: any, xmlFile: any, key: any)` | 241 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getIsSpotSprayEnabled` | 35 |
 | registerFunction | `addWeedSpotSpraySensorNodes` | 36 |

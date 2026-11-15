@@ -1,12 +1,12 @@
 # vehicles/specializations/Cylindered.lua
 
-Source : `dataS/scripts/vehicles/specializations/Cylindered.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Cylindered.lua` — FS25 1.25.1.0
 
 - **Cylindered** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Cylindered.prerequisitesPresent(specializations: table) → boolean` | 57 |  |
 | `Cylindered.initSpecialization()` | 63 |  |
@@ -119,9 +119,9 @@ Source : `dataS/scripts/vehicles/specializations/Cylindered.lua` — FS25 1.25.1
 | `Cylindered.getMovingToolDashboardState(self: any, dashboard: any)` | 4915 |  |
 | `Cylindered.movingToolDashboardAttributes(self: any, xmlFile: any, key: any, dashboard: any, components: any, i3dMappings: any)` | 4971 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onMovingToolChanged` | 392 |
 | registerFunction | `loadMovingPartsFromXML` | 398 |

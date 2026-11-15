@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSprayerEffects.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSprayerEffects.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSprayerEffects.lua` — FS25 1.25.1.0
 
 - **ExtendedSprayerEffects** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedSprayerEffects.prerequisitesPresent(specializations: table) → boolean` | 24 |  |
 | `ExtendedSprayerEffects.initSpecialization()` | 30 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializatio
 | `ExtendedSprayerEffects:getNumExtendedSprayerNozzleEffectsActive()` | 524 |  |
 | `ExtendedSprayerEffects:getAreEffectsVisible(superFunc: any)` | 542 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `addExtendedSprayerNozzleEffects` | 46 |
 | registerFunction | `addExtendedSprayerNozzleEffect` | 47 |

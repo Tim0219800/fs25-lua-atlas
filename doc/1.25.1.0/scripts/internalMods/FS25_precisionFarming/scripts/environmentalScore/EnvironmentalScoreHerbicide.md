@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreHerbicide.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreHerbicide.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreHerbicide.lua` — FS25 1.25.1.0
 
-- **EnvironmentalScoreHerbicide** hérite de `EnvironmentalScoreValue` (l.17)
+- **EnvironmentalScoreHerbicide** inherits from `EnvironmentalScoreValue` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `EnvironmentalScoreHerbicide:loadFromXML(xmlFile: any, key: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 29 |  |
 | `EnvironmentalScoreHerbicide:update(dt: any)` | 39 |  |

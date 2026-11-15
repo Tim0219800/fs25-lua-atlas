@@ -1,14 +1,14 @@
 # vehicles/wheels/WheelDestruction.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelDestruction.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelDestruction.lua` — FS25 1.25.1.0
 
 ✍ Classe (pas une spécialisation) instanciée une fois par roue (Wheel.lua:57, self.destruction) qui gère l'effet des roues sur le terrain : destruction des cultures, retrait de neige fraîche et lissage des tas de matière (density height). Appelée par frame depuis Wheels:onUpdate (Wheels.lua:865) uniquement si le véhicule est actif, avec un drapeau allowFoliageDestruction = option de sauvegarde fruitDestruction, et pas d'IA active, et pas de blocage par getBlockFoliageDestruction. Exécution : serveur toujours ; client seulement sous une distance de mise à jour (WheelDestruction.MAX_UPDATE_DISTANCE, valeur non définie dans ce fichier : NON VÉRIFIÉ), mais les effets sur densité (FSDensityMapUtil, snowSystem, smoothDensityMapHeightAtWorldPos) agissent sur des données de terrain : leur synchronisation réseau n'est pas dans ce fichier (NON VÉRIFIÉ). DONNÉES LUES : contact de la roue (physics.contact, physics.hasSnowContact), vitesse réelle du véhicule (lastSpeedReal > 0.0002, soit environ 0.7 km/h d'après le commentaire du code), propriété de la ferme sur la parcelle (g_farmlandManager), hauteur de neige du monde (snowSystem.height) et hauteur locale. AUCUNE donnée de pluie ni d'humidité n'est lue. Pas d'effet visuel produit ici. Les roues dites « care wheel » (#isCareWheel) ne détruisent pas les cultures. Points d'extension : aucune fonction enregistrée ; surcharger WheelDestruction.* (partagé par toutes les roues) ou Wheel:setIsCareWheel. Le calcul de dt n'est utilisé que pour le lissage (au moins 0.3 m/s de lissage).
 
 - **WheelDestruction** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelDestruction.new(wheel: any)` | 16 | ✍ Crée l'objet de destruction d'une roue : références à la roue et au véhicule, liste de nœuds de destruction et accumulateur de lissage à zéro. |
 | `WheelDestruction:loadFromXML(xmlObject: any)` | 30 | ✍ Lit #isCareWheel (défaut false) et physics#smoothGroundRadius (défaut : max(0.6, 0.75 x largeur de roue), en mètres). Gère l'ancienne clé tire#isCareWheel. |

@@ -1,12 +1,12 @@
 # misc/ConsumableManager.lua
 
-Source : `dataS/scripts/misc/ConsumableManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/ConsumableManager.lua` — FS25 1.25.1.0
 
-- **ConsumableManager** hérite de `AbstractManager` (l.19)
+- **ConsumableManager** inherits from `AbstractManager` (l.19)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConsumableManager.new(customMt: any) → table` | 24 |  |
 | `ConsumableManager:loadMapData(xmlFile: any, missionInfo: any, baseDirectory: any) → boolean` | 48 |  |

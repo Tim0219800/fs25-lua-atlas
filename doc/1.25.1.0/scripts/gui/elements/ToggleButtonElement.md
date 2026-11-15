@@ -1,12 +1,12 @@
 # gui/elements/ToggleButtonElement.lua
 
-Source : `dataS/scripts/gui/elements/ToggleButtonElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/ToggleButtonElement.lua` — FS25 1.25.1.0
 
-- **ToggleButtonElement** hérite de `BitmapElement` (l.17)
+- **ToggleButtonElement** inherits from `BitmapElement` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ToggleButtonElement.new(target: any, custom_mt: any)` | 23 |  |
 | `ToggleButtonElement:loadFromXML(xmlFile: any, key: any)` | 36 |  |

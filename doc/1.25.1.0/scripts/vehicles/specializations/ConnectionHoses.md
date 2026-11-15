@@ -1,12 +1,12 @@
 # vehicles/specializations/ConnectionHoses.lua
 
-Source : `dataS/scripts/vehicles/specializations/ConnectionHoses.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ConnectionHoses.lua` — FS25 1.25.1.0
 
 - **ConnectionHoses** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConnectionHoses.prerequisitesPresent(specializations: any)` | 19 |  |
 | `ConnectionHoses.initSpecialization()` | 25 |  |
@@ -62,9 +62,9 @@ Source : `dataS/scripts/vehicles/specializations/ConnectionHoses.lua` — FS25 1
 | `ConnectionHoses.consoleCommandTestSockets(vehicle: any, attacherJointIndex: any)` | 2279 |  |
 | `ConnectionHoses.consoleCommandTestToolConnection(vehicle: any, toolConnectionIndex: any)` | 2369 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getConnectionHoseConfigIndex` | 177 |
 | registerFunction | `updateAttachedConnectionHoses` | 178 |

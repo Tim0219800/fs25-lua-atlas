@@ -1,12 +1,12 @@
 # sounds/ServerSoundManager.lua
 
-Source : `dataS/scripts/sounds/ServerSoundManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/sounds/ServerSoundManager.lua` — FS25 1.25.1.0
 
-- **ServerSoundManager** hérite de `SoundManager` (l.13)
+- **ServerSoundManager** inherits from `SoundManager` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ServerSoundManager.new(customMt: any) → table` | 18 |  |
 | `SoundManager:cloneSample(sample: table, linkNode: integer, modifierTargetObject: any) → table` | 29 |  |

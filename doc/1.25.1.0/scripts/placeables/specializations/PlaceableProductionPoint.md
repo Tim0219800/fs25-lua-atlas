@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableProductionPoint.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableProductionPoint.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableProductionPoint.lua` — FS25 1.25.1.0
 
 - **PlaceableProductionPoint** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableProductionPoint.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableProductionPoint.registerEvents(placeableType: any)` | 24 |  |
@@ -31,9 +31,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableProductionPoint.lua`
 | `PlaceableProductionPoint:canBuy(superFunc: any)` | 265 |  |
 | `PlaceableProductionPoint:onBuy()` | 276 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onOutputFillTypesChanged` | 25 |
 | registerEvent | `onProductionStatusChanged` | 26 |

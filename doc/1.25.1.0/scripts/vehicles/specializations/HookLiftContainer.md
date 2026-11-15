@@ -1,12 +1,12 @@
 # vehicles/specializations/HookLiftContainer.lua
 
-Source : `dataS/scripts/vehicles/specializations/HookLiftContainer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/HookLiftContainer.lua` — FS25 1.25.1.0
 
 - **HookLiftContainer** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HookLiftContainer.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `HookLiftContainer.initSpecialization()` | 23 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/vehicles/specializations/HookLiftContainer.lua` — FS25
 | `HookLiftContainer:removeFromPhysics(superFunc: any) → boolean` | 176 |  |
 | `HookLiftContainer:getBrakeForce(superFunc: any)` | 191 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onHookLiftContainerLockChanged` | 40 |
 | registerOverwrittenFunction | `getCanDischargeToObject` | 46 |

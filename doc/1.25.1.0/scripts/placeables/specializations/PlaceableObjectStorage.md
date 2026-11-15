@@ -1,15 +1,15 @@
 # placeables/specializations/PlaceableObjectStorage.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableObjectStorage.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableObjectStorage.lua` — FS25 1.25.1.0
 
 - **PlaceableObjectStorage** (l.11)
 - **AbstractBaleObject** (l.1131)
 - **PlaceableObjectStorageActivatable** (l.1857)
 - **PlaceableObjectStorageManualStoreActivatable** (l.1919)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableObjectStorage.prerequisitesPresent(specializations: table) → boolean` | 30 |  |
 | `PlaceableObjectStorage.registerOverwrittenFunctions(placeableType: any)` | 36 |  |
@@ -63,9 +63,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableObjectStorage.lua` �
 | `PlaceableObjectStorageManualStoreActivatable:run()` | 1944 |  |
 | `PlaceableObjectStorageManualStoreActivatable:getDistance(x: any, y: any, z: any)` | 1950 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `canBeSold` | 37 |
 | registerOverwrittenFunction | `updateInfo` | 38 |

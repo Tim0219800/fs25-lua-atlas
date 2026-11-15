@@ -1,12 +1,12 @@
 # vehicles/specializations/ConnectedAttributes.lua
 
-Source : `dataS/scripts/vehicles/specializations/ConnectedAttributes.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ConnectedAttributes.lua` — FS25 1.25.1.0
 
 - **LocalOffset** (l.634)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConnectedAttributes.prerequisitesPresent(specializations: table) → boolean` | 26 |  |
 | `ConnectedAttributes.initSpecialization()` | 32 |  |
@@ -25,9 +25,9 @@ Source : `dataS/scripts/vehicles/specializations/ConnectedAttributes.lua` — FS
 | `ConnectedAttributes:updateExtraDependentParts(superFunc: any, part: any, dt: any)` | 559 |  |
 | `ConnectedAttributes:updateDebugValues(values: any)` | 575 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `loadExtraDependentParts` | 91 |
 | registerOverwrittenFunction | `updateExtraDependentParts` | 92 |

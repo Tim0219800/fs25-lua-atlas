@@ -1,10 +1,10 @@
 # objects/Nightlight2.lua
 
-Source : `dataS/scripts/objects/Nightlight2.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/Nightlight2.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Nightlight2:onCreate(id: integer)` | 13 |  |

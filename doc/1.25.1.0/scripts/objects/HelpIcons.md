@@ -1,12 +1,12 @@
 # objects/HelpIcons.lua
 
-Source : `dataS/scripts/objects/HelpIcons.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/HelpIcons.lua` — FS25 1.25.1.0
 
 - **HelpIcons** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HelpIcons:onCreate(id: integer)` | 16 |  |
 | `HelpIcons.new(name: integer) → table` | 26 |  |

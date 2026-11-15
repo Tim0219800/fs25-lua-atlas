@@ -1,12 +1,12 @@
 # vehicles/specializations/DynamicallyLoadedParts.lua
 
-Source : `dataS/scripts/vehicles/specializations/DynamicallyLoadedParts.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/DynamicallyLoadedParts.lua` — FS25 1.25.1.0
 
 - **DynamicallyLoadedParts** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DynamicallyLoadedParts.prerequisitesPresent(specializations: any)` | 15 |  |
 | `DynamicallyLoadedParts.initSpecialization()` | 21 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/vehicles/specializations/DynamicallyLoadedParts.lua` —
 | `DynamicallyLoadedParts:onDelete()` | 79 |  |
 | `DynamicallyLoadedParts:onDynamicallyPartI3DLoaded(i3dNode: any, failedReason: any, args: any)` | 92 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onDynamicallyPartI3DLoaded` | 41 |
 | registerEventListener | `onLoad` | 47 |

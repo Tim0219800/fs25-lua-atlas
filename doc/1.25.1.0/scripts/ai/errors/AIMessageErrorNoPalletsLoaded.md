@@ -1,12 +1,12 @@
 # ai/errors/AIMessageErrorNoPalletsLoaded.lua
 
-Source : `dataS/scripts/ai/errors/AIMessageErrorNoPalletsLoaded.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/errors/AIMessageErrorNoPalletsLoaded.lua` — FS25 1.25.1.0
 
-- **AIMessageErrorNoPalletsLoaded** hérite de `AIMessage` (l.12)
+- **AIMessageErrorNoPalletsLoaded** inherits from `AIMessage` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIMessageErrorNoPalletsLoaded.new(customMt: any)` | 16 |  |
 | `AIMessageErrorNoPalletsLoaded:getI18NText()` | 23 |  |

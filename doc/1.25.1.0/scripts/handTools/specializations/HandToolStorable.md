@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolStorable.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolStorable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolStorable.lua` — FS25 1.25.1.0
 
 - **HandToolStorable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolStorable.registerXMLPaths(xmlSchema: any)` | 15 |  |
 | `HandToolStorable.registerFunctions(handToolType: any)` | 26 |  |
@@ -15,9 +15,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolStorable.lua` — FS25
 | `HandToolStorable:onLoad(xmlFile: any)` | 44 |  |
 | `HandToolStorable:getHolsterNodeByType(typeName: any)` | 66 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getHolsterNodeByType` | 27 |
 | registerEventListener | `onLoad` | 33 |

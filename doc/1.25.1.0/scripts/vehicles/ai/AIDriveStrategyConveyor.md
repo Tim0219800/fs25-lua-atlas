@@ -1,12 +1,12 @@
 # vehicles/ai/AIDriveStrategyConveyor.lua
 
-Source : `dataS/scripts/vehicles/ai/AIDriveStrategyConveyor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/ai/AIDriveStrategyConveyor.lua` — FS25 1.25.1.0
 
-- **AIDriveStrategyConveyor** hérite de `AIDriveStrategy` (l.8)
+- **AIDriveStrategyConveyor** inherits from `AIDriveStrategy` (l.8)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIDriveStrategyConveyor.new(reconstructionData: any, customMt: any)` | 12 |  |
 | `AIDriveStrategyConveyor:setAIVehicle(vehicle: any)` | 20 |  |

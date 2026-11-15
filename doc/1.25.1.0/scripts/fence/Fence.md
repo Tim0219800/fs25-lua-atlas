@@ -1,12 +1,12 @@
 # fence/Fence.lua
 
-Source : `dataS/scripts/fence/Fence.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/fence/Fence.lua` — FS25 1.25.1.0
 
 - **Fence** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Fence.registerXMLPaths(schema: XMLSchema, basePath: string)` | 37 |  |
 | `Fence.registerSavegameXMLPaths(schema: XMLSchema, basePath: string)` | 54 |  |

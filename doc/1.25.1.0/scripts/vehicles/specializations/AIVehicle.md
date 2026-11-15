@@ -1,12 +1,12 @@
 # vehicles/specializations/AIVehicle.lua
 
-Source : `dataS/scripts/vehicles/specializations/AIVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AIVehicle.lua` — FS25 1.25.1.0
 
 - **AIVehicle** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIVehicle.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `AIVehicle.initSpecialization()` | 23 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/vehicles/specializations/AIVehicle.lua` — FS25 1.25.1.
 | `AIVehicle:getIsAIReadyToDrive()` | 369 |  |
 | `AIVehicle:getIsAIPreparingToDrive()` | 375 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onAIFieldCourseSettingsInitialized` | 59 |
 | registerEvent | `onPostAIFieldCourseSettingsInitialized` | 60 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/VineCutter.lua
 
-Source : `dataS/scripts/vehicles/specializations/VineCutter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/VineCutter.lua` — FS25 1.25.1.0
 
 - **VineCutter** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VineCutter.initSpecialization()` | 16 |  |
 | `VineCutter.prerequisitesPresent(specializations: any)` | 33 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/vehicles/specializations/VineCutter.lua` — FS25 1.25.1
 | `VineCutter:onLoad(savegame: any)` | 66 |  |
 | `VineCutter:onDraw(isActiveForInput: boolean, isActiveForInputIgnoreSelection: boolean, isSelected: boolean)` | 128 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getCombine` | 40 |
 | registerFunction | `harvestCallback` | 41 |

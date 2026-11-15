@@ -1,12 +1,12 @@
 # vehicles/specializations/events/MowerToggleWindrowDropEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/MowerToggleWindrowDropEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/MowerToggleWindrowDropEvent.lua` — FS25 1.25.1.0
 
-- **MowerToggleWindrowDropEvent** hérite de `Event` (l.7)
+- **MowerToggleWindrowDropEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MowerToggleWindrowDropEvent.emptyNew() → table` | 14 |  |
 | `MowerToggleWindrowDropEvent.new(object: table, useMowerWindrowDropAreas: boolean)` | 23 |  |

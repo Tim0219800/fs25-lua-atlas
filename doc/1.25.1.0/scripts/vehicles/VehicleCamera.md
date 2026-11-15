@@ -1,12 +1,12 @@
 # vehicles/VehicleCamera.lua
 
-Source : `dataS/scripts/vehicles/VehicleCamera.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleCamera.lua` — FS25 1.25.1.0
 
 - **VehicleCamera** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleCamera.new(vehicle: Vehicle, customMt: table?) → table` | 23 |  |
 | `VehicleCamera:loadFromXML(xmlFile: XMLFile, key: string, savegame: any, cameraIndex: any) → boolean` | 69 |  |
@@ -40,6 +40,6 @@ Source : `dataS/scripts/vehicles/VehicleCamera.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.55)
-- écoute `MessageType.SETTING_CHANGED` (l.58)
-- écoute `MessageType.SETTING_CHANGED` (l.59)
+- subscribes `MessageType.SETTING_CHANGED` (l.55)
+- subscribes `MessageType.SETTING_CHANGED` (l.58)
+- subscribes `MessageType.SETTING_CHANGED` (l.59)

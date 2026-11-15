@@ -1,12 +1,12 @@
 # vehicles/specializations/events/ConsumableRefillEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/ConsumableRefillEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/ConsumableRefillEvent.lua` — FS25 1.25.1.0
 
-- **ConsumableRefillEvent** hérite de `Event` (l.13)
+- **ConsumableRefillEvent** inherits from `Event` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConsumableRefillEvent.emptyNew() → table` | 20 |  |
 | `ConsumableRefillEvent.new(object: table, typeIndex: table, variationIndex: any) → table` | 30 |  |

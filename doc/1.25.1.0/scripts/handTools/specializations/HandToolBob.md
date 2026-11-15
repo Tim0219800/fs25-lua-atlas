@@ -1,12 +1,12 @@
 # handTools/specializations/HandToolBob.lua
 
-Source : `dataS/scripts/handTools/specializations/HandToolBob.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/specializations/HandToolBob.lua` — FS25 1.25.1.0
 
 - **HandToolBob** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolBob.registerXMLPaths(xmlSchema: table)` | 46 |  |
 | `HandToolBob.registerFunctions(handToolType: table)` | 62 |  |
@@ -19,9 +19,9 @@ Source : `dataS/scripts/handTools/specializations/HandToolBob.lua` — FS25 1.25
 | `HandToolBob:updateBobNode(bobNode: table, dt: number, isActive: boolean, speed: number)` | 184 |  |
 | `HandToolBob:resetBobNode(bobNode: table)` | 219 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getIsBobActive` | 63 |
 | registerFunction | `updateBobNode` | 64 |

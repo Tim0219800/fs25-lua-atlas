@@ -1,12 +1,12 @@
 # misc/BaleManager.lua
 
-Source : `dataS/scripts/misc/BaleManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/BaleManager.lua` — FS25 1.25.1.0
 
-- **BaleManager** hérite de `AbstractManager` (l.15)
+- **BaleManager** inherits from `AbstractManager` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleManager.new(customMt: any) → table` | 20 |  |
 | `BaleManager:initDataStructures()` | 34 |  |

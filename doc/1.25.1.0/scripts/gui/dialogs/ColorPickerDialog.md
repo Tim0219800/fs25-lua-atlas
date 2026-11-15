@@ -1,12 +1,12 @@
 # gui/dialogs/ColorPickerDialog.lua
 
-Source : `dataS/scripts/gui/dialogs/ColorPickerDialog.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/dialogs/ColorPickerDialog.lua` — FS25 1.25.1.0
 
-- **ColorPickerDialog** hérite de `MessageDialog` (l.15)
+- **ColorPickerDialog** inherits from `MessageDialog` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ColorPickerDialog.show(callback: function, target: table, args: table?, colors: table?, defaultColorIndex: integer?, defaultMaterial: string?, customColor: table?, customColorsEnabled: boolean?, disableOpenSound: boolean?, materialSelectionDisabled: boolean?)` | 47 |  |
 | `ColorPickerDialog:onHorizontalCursorInput(_: any, inputValue: any)` | 879 |  |

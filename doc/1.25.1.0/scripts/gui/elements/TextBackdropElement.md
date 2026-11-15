@@ -1,12 +1,12 @@
 # gui/elements/TextBackdropElement.lua
 
-Source : `dataS/scripts/gui/elements/TextBackdropElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/TextBackdropElement.lua` — FS25 1.25.1.0
 
-- **TextBackdropElement** hérite de `BitmapElement` (l.12)
+- **TextBackdropElement** inherits from `BitmapElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TextBackdropElement.new(target: any, custom_mt: any)` | 18 |  |
 | `TextBackdropElement:loadFromXML(xmlFile: any, key: any)` | 28 |  |

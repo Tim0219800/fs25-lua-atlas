@@ -1,14 +1,14 @@
 # vehicles/wheels/WheelEffects.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelEffects.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelEffects.lua` — FS25 1.25.1.0
 
 ✍ Classe (pas une spécialisation) instanciée une fois par roue : Wheel.lua:58 crée self.effects = WheelEffects.new(self), et Wheels.lua l'alimente via Wheel:update (par frame, Wheels.lua:844-848) et Wheel:updateTick (par tick, Wheels.lua:935-937) avec la valeur g_currentMission.environment.weather:getGroundWetness(). Trois familles d'effets, tous visuels et côté client pour l'essentiel : (1) traces de pneus (addTireTrackNode, si Platform.gameplay.wheelTireTracks) ; (2) particules de roue chargées depuis un I3D partagé (WheelEffects.PARTICLE_SYSTEM_PATH) en autant de systèmes qu'il y a d'états dans WheelEffects.PARTICLE_SYSTEM_STATES (neige, humide, sec, poussière d'après les noms WHEEL_SNOW / WHEEL_WET / WHEEL_DRY / WHEEL_DUST utilisés ici) ; (3) effets d'eau peu profonde (éclaboussures avant/arrière et écume, shader paramétré par « density » et « fadeProgress »), plus l'enregistrement de la roue comme obstacle de la simulation d'eau peu profonde. DONNÉES MÉTÉO/HUMIDITÉ : une seule, groundWetness (nombre ; seuil 0.2 codé en dur dans updateTick) qui choisit entre particules « humides » et « sèches » quand la roue touche un sol meuble, et qui coupe la poussière dès qu'il dépasse 0.2. L'origine et le calcul de getGroundWetness sont dans Weather, absent du dump : NON VÉRIFIÉ. Les autres données viennent de wheel.physics (contact, hasSoilContact, hasSnowContact, hasWaterContact, densityType, lastTerrainAttribute, groundColor, netInfo.slip, netInfo.lastSpeedSmoothed, netInfo.xDriveSpeed). Les constantes de classe (PARTICLE_SYSTEM_PATH, PARTICLE_SYSTEM_STATES, GROUND_PARTICLES, MAX_UPDATE_DISTANCE, WATER_EFFECTS, WATER_EFFECT_FADE_IN_TIME / OUT_TIME, MAX_MUD_AMOUNT) ne sont pas définies dans ce fichier du dump : valeurs NON VÉRIFIÉES. Les particules sont pilotées par ParticleUtil (fichier à signatures seules dans le dump) : comportement interne NON VÉRIFIÉ. Réglages XML par roue : #hasTireTracks, #hasParticles, #hasWaterParticles, #waterParticleDirection, #isShallowWaterObstacle, tire#tireTrackAtlasIndex et wheelParticleSystem#psOffset / minSpeed (3 km/h) / maxSpeed (20 km/h) / minScale (0.1) / maxScale (1) / direction / onlyActiveOnGroundContact (true). Points d'extension pour un moddeur : aucune fonction enregistrée (pas de registerFunction) ; on ne peut agir que par surcharge directe de WheelEffects.* (méthodes partagées par toutes les roues) ou en modifiant les champs de l'instance (wheel.effects.driveGroundParticleSystems, minScale, maxScale, waterEffects). À noter : le choix de l'état de particules est exclusif (un seul état émet par roue et par tick) ; la poussière n'est prévue que lorsque groundWetness <= 0.2 et sans contact « soil » ; la poussière dépend de la vitesse du véhicule, les autres états de la vitesse de la roue multipliée par (1 + glissement).
 
 - **WheelEffects** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelEffects.new(wheel: any)` | 54 | ✍ Constructeur : mémorise la roue et son véhicule, initialise les listes de requêtes I3D, de systèmes de particules de sol et d'effets d'eau, ainsi que les lissages de vitesse (non utilisés dans ce fichier). |
 | `WheelEffects:delete()` | 76 | ✍ Supprime les systèmes de particules de sol (ParticleUtil.deleteParticleSystem), libère les I3D partagés demandés et retire les effets d'eau. |

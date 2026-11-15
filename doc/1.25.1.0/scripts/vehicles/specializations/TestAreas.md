@@ -1,12 +1,12 @@
 # vehicles/specializations/TestAreas.lua
 
-Source : `dataS/scripts/vehicles/specializations/TestAreas.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/TestAreas.lua` — FS25 1.25.1.0
 
 - **TestAreas** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TestAreas.initSpecialization()` | 15 |  |
 | `TestAreas.prerequisitesPresent(specializations: any)` | 54 |  |
@@ -32,9 +32,9 @@ Source : `dataS/scripts/vehicles/specializations/TestAreas.lua` — FS25 1.25.1.
 | `TestAreas:getTestAreaWidthByWorkAreaIndex(workAreaIndex: any)` | 479 |  |
 | `TestAreas:getTestAreaChargeByWorkAreaIndex(workAreaIndex: any)` | 496 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `readTestAreasStream` | 61 |
 | registerFunction | `writeTestAreasStream` | 62 |

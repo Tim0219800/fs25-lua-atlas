@@ -1,12 +1,12 @@
 # triggers/BaleUnloadTrigger.lua
 
-Source : `dataS/scripts/triggers/BaleUnloadTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/BaleUnloadTrigger.lua` — FS25 1.25.1.0
 
-- **BaleUnloadTrigger** hérite de `UnloadTrigger` (l.14)
+- **BaleUnloadTrigger** inherits from `UnloadTrigger` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleUnloadTrigger.registerXMLPaths(schema: any, basePath: any)` | 22 |  |
 | `BaleUnloadTrigger.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 35 |  |

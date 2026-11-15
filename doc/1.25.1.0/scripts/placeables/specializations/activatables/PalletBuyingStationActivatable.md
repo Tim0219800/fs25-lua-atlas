@@ -1,12 +1,12 @@
 # placeables/specializations/activatables/PalletBuyingStationActivatable.lua
 
-Source : `dataS/scripts/placeables/specializations/activatables/PalletBuyingStationActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/activatables/PalletBuyingStationActivatable.lua` — FS25 1.25.1.0
 
 - **PalletBuyingStationActivatable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PalletBuyingStationActivatable.new(placeable: any, text: any)` | 15 |  |
 | `PalletBuyingStationActivatable:getIsActivatable()` | 26 |  |

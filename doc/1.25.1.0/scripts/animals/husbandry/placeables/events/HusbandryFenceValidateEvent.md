@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/events/HusbandryFenceValidateEvent.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/events/HusbandryFenceValidateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/events/HusbandryFenceValidateEvent.lua` — FS25 1.25.1.0
 
-- **HusbandryFenceValidateEvent** hérite de `Event` (l.11)
+- **HusbandryFenceValidateEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HusbandryFenceValidateEvent.emptyNew()` | 17 |  |
 | `HusbandryFenceValidateEvent.new(placeable: any)` | 24 |  |

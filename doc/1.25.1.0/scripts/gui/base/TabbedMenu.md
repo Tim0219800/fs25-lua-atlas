@@ -1,12 +1,12 @@
 # gui/base/TabbedMenu.lua
 
-Source : `dataS/scripts/gui/base/TabbedMenu.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/TabbedMenu.lua` — FS25 1.25.1.0
 
-- **TabbedMenu** hérite de `ScreenElement` (l.11)
+- **TabbedMenu** inherits from `ScreenElement` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TabbedMenu.new(target: any, custom_mt: any)` | 42 |  |
 | `TabbedMenu:delete()` | 78 |  |

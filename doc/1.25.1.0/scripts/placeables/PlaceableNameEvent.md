@@ -1,12 +1,12 @@
 # placeables/PlaceableNameEvent.lua
 
-Source : `dataS/scripts/placeables/PlaceableNameEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/PlaceableNameEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableNameEvent** hérite de `Event` (l.6)
+- **PlaceableNameEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableNameEvent.emptyNew()` | 12 |  |
 | `PlaceableNameEvent.new(placeable: any, name: any)` | 19 |  |

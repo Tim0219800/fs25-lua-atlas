@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : player/networking/PlayerServerNetworkComponent.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : player/networking/PlayerServerNetworkComponent.lua (generated stub, FS25 Lua Atlas)
 
 ---@class PlayerServerNetworkComponent : PlayerNetworkComponent
 PlayerServerNetworkComponent = {}

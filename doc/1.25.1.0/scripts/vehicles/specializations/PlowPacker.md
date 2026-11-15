@@ -1,12 +1,12 @@
 # vehicles/specializations/PlowPacker.lua
 
-Source : `dataS/scripts/vehicles/specializations/PlowPacker.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/PlowPacker.lua` — FS25 1.25.1.0
 
 - **PlowPacker** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlowPacker.initSpecialization()` | 24 |  |
 | `PlowPacker.prerequisitesPresent(specializations: any)` | 49 |  |
@@ -32,9 +32,9 @@ Source : `dataS/scripts/vehicles/specializations/PlowPacker.lua` — FS25 1.25.1
 | `PlowPacker.updateActionEventText(self: any)` | 436 |  |
 | `PlowPacker.actionEventPackerDeactivate(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any, isMouse: any)` | 453 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setPackerState` | 58 |
 | registerFunction | `getIsPackerAllowed` | 59 |

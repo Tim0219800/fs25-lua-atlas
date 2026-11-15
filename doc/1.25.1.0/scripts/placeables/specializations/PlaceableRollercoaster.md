@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableRollercoaster.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableRollercoaster.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableRollercoaster.lua` — FS25 1.25.1.0
 
 - **PlaceableRollercoaster** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableRollercoaster.prerequisitesPresent(specializations: table) → boolean` | 37 |  |
 | `PlaceableRollercoaster.registerFunctions(placeableType: any)` | 43 |  |
@@ -23,9 +23,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableRollercoaster.lua` �
 | `PlaceableRollercoaster:onReadStream(streamId: any, connection: any)` | 417 |  |
 | `PlaceableRollercoaster:onWriteStream(streamId: any, connection: any)` | 431 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onSharedAnimationFileLoaded` | 44 |
 | registerFunction | `getCanEnter` | 45 |
@@ -58,4 +58,4 @@ Source : `dataS/scripts/placeables/specializations/PlaceableRollercoaster.lua` �
 
 ## Messages
 
-- écoute `MessageType.USER_REMOVED` (l.271)
+- subscribes `MessageType.USER_REMOVED` (l.271)

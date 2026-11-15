@@ -1,12 +1,12 @@
 # ai/jobs/AIJobLoadAndDeliver.lua
 
-Source : `dataS/scripts/ai/jobs/AIJobLoadAndDeliver.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/jobs/AIJobLoadAndDeliver.lua` — FS25 1.25.1.0
 
-- **AIJobLoadAndDeliver** hérite de `AIJob` (l.18)
+- **AIJobLoadAndDeliver** inherits from `AIJob` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobLoadAndDeliver.new(isServer: any, customMt: any)` | 22 |  |
 | `AIJobLoadAndDeliver:setValues()` | 73 |  |

@@ -1,12 +1,12 @@
 # gui/elements/TextElement.lua
 
-Source : `dataS/scripts/gui/elements/TextElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/TextElement.lua` — FS25 1.25.1.0
 
-- **TextElement** hérite de `GuiElement` (l.57)
+- **TextElement** inherits from `GuiElement` (l.57)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TextElement.new(target: any, custom_mt: any)` | 96 |  |
 | `TextElement:loadFromXML(xmlFile: any, key: any)` | 164 |  |
@@ -55,5 +55,5 @@ Source : `dataS/scripts/gui/elements/TextElement.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.780)
-- écoute `MessageType.SETTING_CHANGED` (l.782)
+- subscribes `MessageType.SETTING_CHANGED` (l.780)
+- subscribes `MessageType.SETTING_CHANGED` (l.782)

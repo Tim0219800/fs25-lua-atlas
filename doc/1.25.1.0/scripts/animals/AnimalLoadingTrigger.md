@@ -1,13 +1,13 @@
 # animals/AnimalLoadingTrigger.lua
 
-Source : `dataS/scripts/animals/AnimalLoadingTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/AnimalLoadingTrigger.lua` — FS25 1.25.1.0
 
 - **AnimalLoadingTrigger** (l.13)
 - **AnimalLoadingTriggerActivatable** (l.251)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimalLoadingTrigger.registerXMLPaths(schema: any, basePath: any)` | 19 |  |
 | `AnimalLoadingTrigger:onCreate(id: integer)` | 29 |  |

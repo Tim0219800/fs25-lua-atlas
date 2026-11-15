@@ -1,14 +1,14 @@
 # utils/FillPlaneUtil.lua
 
-Source : `dataS/scripts/utils/FillPlaneUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/FillPlaneUtil.lua` — FS25 1.25.1.0
 
-> ⚠ Dans le dump du SDK ce fichier ne contient **que des signatures** (pas de corps).
+> ⚠ In the SDK dump this file only contains **signatures** (no bodies).
 
 - **FillPlaneUtil** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillPlaneUtil.registerFillPlaneXMLPaths(schema: XMLSchema, key: string)` | 17 |  |
 | `FillPlaneUtil.createFromXML(xmlFile: XMLFile, key: string, baseNode: integer, capacity: number) → integer?` | 37 |  |

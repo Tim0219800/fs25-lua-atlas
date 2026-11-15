@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/hud/ExtendedSowingMachineHUDExtension.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedSowingMachineHUDExtension.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedSowingMachineHUDExtension.lua` — FS25 1.25.1.0
 
 - **ExtendedSowingMachineHUDExtension** (l.22)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExtendedSowingMachineHUDExtension.new(vehicle: table, customMt: any)` | 27 |  |
 | `ExtendedSowingMachineHUDExtension:delete()` | 84 |  |
@@ -16,5 +16,5 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/hud/ExtendedS
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.74)
-- écoute `MessageType.SETTING_CHANGED` (l.75)
+- subscribes `MessageType.SETTING_CHANGED` (l.74)
+- subscribes `MessageType.SETTING_CHANGED` (l.75)

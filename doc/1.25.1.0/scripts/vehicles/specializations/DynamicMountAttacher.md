@@ -1,12 +1,12 @@
 # vehicles/specializations/DynamicMountAttacher.lua
 
-Source : `dataS/scripts/vehicles/specializations/DynamicMountAttacher.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/DynamicMountAttacher.lua` — FS25 1.25.1.0
 
 - **DynamicMountAttacher** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DynamicMountAttacher.prerequisitesPresent(specializations: any)` | 17 |  |
 | `DynamicMountAttacher.initSpecialization()` | 23 |  |
@@ -50,9 +50,9 @@ Source : `dataS/scripts/vehicles/specializations/DynamicMountAttacher.lua` — F
 | `DynamicMountAttacher:onPreAttachImplement(object: any, inputJointDescIndex: any, jointDescIndex: any, loadFromSavegame: any)` | 1028 |  |
 | `DynamicMountAttacher:updateDebugValues(values: any)` | 1046 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadDynamicLockPositionFromXML` | 82 |
 | registerFunction | `getIsDynamicLockPositionActive` | 83 |

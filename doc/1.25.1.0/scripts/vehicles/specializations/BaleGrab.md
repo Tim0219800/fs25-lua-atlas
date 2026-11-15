@@ -1,12 +1,12 @@
 # vehicles/specializations/BaleGrab.lua
 
-Source : `dataS/scripts/vehicles/specializations/BaleGrab.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BaleGrab.lua` — FS25 1.25.1.0
 
 - **BaleGrab** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleGrab.prerequisitesPresent(specializations: any)` | 17 |  |
 | `BaleGrab.initSpecialization()` | 23 |  |
@@ -34,9 +34,9 @@ Source : `dataS/scripts/vehicles/specializations/BaleGrab.lua` — FS25 1.25.1.0
 | `BaleGrab.getSpecValueMaxSizeRound(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 625 |  |
 | `BaleGrab.getSpecValueMaxSizeSquare(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 631 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `baleGrabTriggerCallback` | 59 |
 | registerFunction | `addDynamicMountedObject` | 60 |

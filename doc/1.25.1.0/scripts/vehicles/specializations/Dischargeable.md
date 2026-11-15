@@ -1,6 +1,6 @@
 # vehicles/specializations/Dischargeable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Dischargeable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Dischargeable.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation de déchargement (spec_dischargeable) : vidage d'une unité de remplissage du véhicule (benne, vis de déchargement de moissonneuse, remorque) soit vers un objet récepteur (autre véhicule, trémie, bâtiment), soit sur le sol via la carte de densité de hauteur. Le véhicule peut avoir plusieurs « discharge nodes » (dischargeNode) dont un seul est courant (setCurrentDischargeNodeIndex).
 
@@ -18,9 +18,9 @@ POINTS D'EXTENSION. Événements : onDischargeStateChanged, onDischargeTargetObj
 
 - **Dischargeable** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Dischargeable.prerequisitesPresent(specializations: any)` | 41 | ✍ Exige les spécialisations FillUnit et FillVolume. |
 | `Dischargeable.initSpecialization()` | 47 | ✍ Déclare le type de configuration « dischargeable », le schéma XML (clés d'un discharge node sous vehicle.dischargeable et sous chaque dischargeableConfiguration, tableaux de bord activeDischargeNode et dischargeState avec #dischargeNodeIndex) et la clé de sauvegarde #isAllowed. |
@@ -97,9 +97,9 @@ POINTS D'EXTENSION. Événements : onDischargeStateChanged, onDischargeTargetObj
 | `Dischargeable.updateActionEvents(self: any)` | 2070 | ✍ Met à jour le texte et la visibilité des actions de déchargement (démarrer le transfert, vider au sol, arrêter). |
 | `Dischargeable.dashboardDischargeAttributes(self: any, xmlFile: any, key: any, dashboard: any, isActive: any)` | 2113 | ✍ Lit l'attribut de tableau de bord #dischargeNodeIndex pour la valeur activeDischargeNode. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadDischargeNode` | 136 |
 | registerFunction | `setCurrentDischargeNodeIndex` | 137 |

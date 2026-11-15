@@ -1,12 +1,12 @@
 # gui/hud/ingameMap/IngameMap.lua
 
-Source : `dataS/scripts/gui/hud/ingameMap/IngameMap.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/ingameMap/IngameMap.lua` — FS25 1.25.1.0
 
-- **IngameMap** hérite de `HUDElement` (l.14)
+- **IngameMap** inherits from `HUDElement` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `IngameMap.new(customMt: table?) → table` | 43 |  |
 | `IngameMap:delete()` | 120 |  |

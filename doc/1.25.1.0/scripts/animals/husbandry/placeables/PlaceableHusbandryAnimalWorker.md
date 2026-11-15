@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryAnimalWorker.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryAnimalWorker.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryAnimalWorker.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryAnimalWorker** (l.19)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryAnimalWorker.registerXMLPaths(schema: XMLSchema, basePath: string)` | 31 |  |
 | `PlaceableHusbandryAnimalWorker.registerSavegameXMLPaths(schema: XMLSchema, basePath: string)` | 43 |  |
@@ -31,9 +31,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryAnimalWor
 | `PlaceableHusbandryAnimalWorker:getAnimalWorkerTaskCost(task: table?, numAnimals: integer) → integer` | 432 |  |
 | `PlaceableHusbandryAnimalWorker:getAnimalWorkerTaskIsDue(task: table, hour: integer) → boolean` | 446 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadAnimalWorkerPriceOverrides` | 55 |
 | registerFunction | `getAnimalWorkerTaskState` | 56 |

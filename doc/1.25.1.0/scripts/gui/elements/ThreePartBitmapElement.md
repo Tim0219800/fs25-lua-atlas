@@ -1,12 +1,12 @@
 # gui/elements/ThreePartBitmapElement.lua
 
-Source : `dataS/scripts/gui/elements/ThreePartBitmapElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/ThreePartBitmapElement.lua` — FS25 1.25.1.0
 
-- **ThreePartBitmapElement** hérite de `BitmapElement` (l.13)
+- **ThreePartBitmapElement** inherits from `BitmapElement` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ThreePartBitmapElement.new(target: any, custom_mt: any)` | 19 |  |
 | `ThreePartBitmapElement:delete()` | 34 |  |

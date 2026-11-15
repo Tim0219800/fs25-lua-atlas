@@ -1,11 +1,11 @@
 # gui/hud/ingameMap/IngameMapMobile.lua
 
-Source : `dataS/scripts/gui/hud/ingameMap/IngameMapMobile.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/ingameMap/IngameMapMobile.lua` — FS25 1.25.1.0
 
-- **IngameMapMobile** hérite de `IngameMap` (l.16)
+- **IngameMapMobile** inherits from `IngameMap` (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `IngameMapMobile:setScale(uiScale: any)` | 311 |  |

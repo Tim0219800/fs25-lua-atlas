@@ -1,12 +1,12 @@
 # vehicles/specializations/PowerTakeOffs.lua
 
-Source : `dataS/scripts/vehicles/specializations/PowerTakeOffs.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/PowerTakeOffs.lua` — FS25 1.25.1.0
 
 - **PowerTakeOffs** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PowerTakeOffs.prerequisitesPresent(specializations: any)` | 18 |  |
 | `PowerTakeOffs.initSpecialization()` | 25 |  |
@@ -59,9 +59,9 @@ Source : `dataS/scripts/vehicles/specializations/PowerTakeOffs.lua` — FS25 1.2
 | `PowerTakeOffs.consoleCommandTestConnection(vehicle: any, attacherJointIndex: any)` | 1242 |  |
 | `PowerTakeOffs.consoleCommandDebug(_: any)` | 1295 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getPowerTakeOffConfigIndex` | 154 |
 | registerFunction | `loadPowerTakeOffsFromXML` | 155 |

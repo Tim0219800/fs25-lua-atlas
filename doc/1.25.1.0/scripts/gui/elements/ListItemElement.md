@@ -1,12 +1,12 @@
 # gui/elements/ListItemElement.lua
 
-Source : `dataS/scripts/gui/elements/ListItemElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/ListItemElement.lua` — FS25 1.25.1.0
 
-- **ListItemElement** hérite de `BitmapElement` (l.21)
+- **ListItemElement** inherits from `BitmapElement` (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ListItemElement.new(target: any, custom_mt: any)` | 27 |  |
 | `ListItemElement:loadFromXML(xmlFile: any, key: any)` | 46 |  |

@@ -1,11 +1,11 @@
 # vehicles/specializations/WoodContainer.lua
 
-Source : `dataS/scripts/vehicles/specializations/WoodContainer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/WoodContainer.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodContainer.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `WoodContainer.initSpecialization()` | 26 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/vehicles/specializations/WoodContainer.lua` — FS25 1.2
 | `WoodContainer:onWoodContainerTriggerCallback(triggerId: integer, otherId: integer, onEnter: boolean, onLeave: boolean, onStay: boolean)` | 228 |  |
 | `WoodContainer.getSplitShapeInfo(objectId: any, targetLength: any)` | 257 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getPalletUnloadTriggerExtraSellPrice` | 62 |
 | registerFunction | `getIsWoodContainerFillingAllowed` | 63 |

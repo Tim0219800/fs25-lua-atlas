@@ -1,12 +1,12 @@
 # placeables/configurations/data/PlaceableConfigurationDataObjectChange.lua
 
-Source : `dataS/scripts/placeables/configurations/data/PlaceableConfigurationDataObjectChange.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/configurations/data/PlaceableConfigurationDataObjectChange.lua` — FS25 1.25.1.0
 
 - **PlaceableConfigurationDataObjectChange** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableConfigurationDataObjectChange.registerXMLPaths(schema: any, rootPath: any, configPath: any)` | 14 |  |
 | `PlaceableConfigurationDataObjectChange.loadConfigItem(configItem: any, xmlFile: any, baseKey: any, configKey: any, baseDirectory: any, customEnvironment: any)` | 21 |  |

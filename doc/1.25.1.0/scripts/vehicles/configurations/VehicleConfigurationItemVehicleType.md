@@ -1,12 +1,12 @@
 # vehicles/configurations/VehicleConfigurationItemVehicleType.lua
 
-Source : `dataS/scripts/vehicles/configurations/VehicleConfigurationItemVehicleType.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/configurations/VehicleConfigurationItemVehicleType.lua` — FS25 1.25.1.0
 
-- **VehicleConfigurationItemVehicleType** hérite de `VehicleConfigurationItem` (l.14)
+- **VehicleConfigurationItemVehicleType** inherits from `VehicleConfigurationItem` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleConfigurationItemVehicleType.new(configName: any, customMt: any)` | 18 |  |
 | `VehicleConfigurationItemVehicleType:loadFromXML(xmlFile: any, baseKey: any, configKey: any, baseDirectory: any, customEnvironment: any)` | 26 |  |

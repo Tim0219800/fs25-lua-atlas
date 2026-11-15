@@ -1,12 +1,12 @@
 # gui/InGameMenu.lua
 
-Source : `dataS/scripts/gui/InGameMenu.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/InGameMenu.lua` — FS25 1.25.1.0
 
-- **InGameMenu** hérite de `TabbedMenu` (l.30)
+- **InGameMenu** inherits from `TabbedMenu` (l.30)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InGameMenu:onPageNext()` | 973 |  |
 | `InGameMenu:onPagePrevious()` | 989 |  |

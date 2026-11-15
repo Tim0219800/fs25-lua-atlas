@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScore.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScore.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScore.lua` — FS25 1.25.1.0
 
 - **EnvironmentalScore** (l.30)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `EnvironmentalScore.new(pfModule: any, customMt: any)` | 34 |  |
 | `EnvironmentalScore:delete()` | 107 |  |
@@ -35,5 +35,5 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/environmental
 
 ## Messages
 
-- écoute `MessageType.PERIOD_CHANGED` (l.99)
-- écoute `MessageType.SETTING_CHANGED` (l.100)
+- subscribes `MessageType.PERIOD_CHANGED` (l.99)
+- subscribes `MessageType.SETTING_CHANGED` (l.100)

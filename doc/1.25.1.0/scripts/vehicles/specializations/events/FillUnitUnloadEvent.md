@@ -1,12 +1,12 @@
 # vehicles/specializations/events/FillUnitUnloadEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/FillUnitUnloadEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/FillUnitUnloadEvent.lua` — FS25 1.25.1.0
 
-- **FillUnitUnloadEvent** hérite de `Event` (l.7)
+- **FillUnitUnloadEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillUnitUnloadEvent.emptyNew() → table` | 14 |  |
 | `FillUnitUnloadEvent.new(object: table)` | 22 |  |

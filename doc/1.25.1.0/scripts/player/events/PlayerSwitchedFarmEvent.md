@@ -1,12 +1,12 @@
 # player/events/PlayerSwitchedFarmEvent.lua
 
-Source : `dataS/scripts/player/events/PlayerSwitchedFarmEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/events/PlayerSwitchedFarmEvent.lua` — FS25 1.25.1.0
 
-- **PlayerSwitchedFarmEvent** hérite de `Event` (l.6)
+- **PlayerSwitchedFarmEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerSwitchedFarmEvent.emptyNew() → table` | 15 |  |
 | `PlayerSwitchedFarmEvent:writeStream(streamId: integer, connection: table)` | 34 |  |
@@ -15,4 +15,4 @@ Source : `dataS/scripts/player/events/PlayerSwitchedFarmEvent.lua` — FS25 1.25
 
 ## Messages
 
-- publie `MessageType.PLAYER_FARM_CHANGED` (l.72)
+- publishes `MessageType.PLAYER_FARM_CHANGED` (l.72)

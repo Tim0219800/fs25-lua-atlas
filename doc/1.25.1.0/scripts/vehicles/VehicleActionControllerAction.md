@@ -1,12 +1,12 @@
 # vehicles/VehicleActionControllerAction.lua
 
-Source : `dataS/scripts/vehicles/VehicleActionControllerAction.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleActionControllerAction.lua` — FS25 1.25.1.0
 
 - **VehicleActionControllerAction** (l.8)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleActionControllerAction.new(parent: any, name: any, inputAction: any, priority: any, customMt: any)` | 12 |  |
 | `VehicleActionControllerAction:remove()` | 32 |  |

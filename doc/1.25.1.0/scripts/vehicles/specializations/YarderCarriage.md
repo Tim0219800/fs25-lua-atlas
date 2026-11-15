@@ -1,11 +1,11 @@
 # vehicles/specializations/YarderCarriage.lua
 
-Source : `dataS/scripts/vehicles/specializations/YarderCarriage.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/YarderCarriage.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `YarderCarriage.prerequisitesPresent(specializations: table) → boolean` | 28 |  |
 | `YarderCarriage.initSpecialization()` | 34 |  |
@@ -50,9 +50,9 @@ Source : `dataS/scripts/vehicles/specializations/YarderCarriage.lua` — FS25 1.
 | `YarderCarriage:getDirtMultiplier(superFunc: any) → number` | 1154 |  |
 | `YarderCarriage:getWearMultiplier(superFunc: any) → number` | 1168 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getCarriageDimensions` | 101 |
 | registerFunction | `getCarriagePullRopeTargetNode` | 102 |
@@ -92,6 +92,6 @@ Source : `dataS/scripts/vehicles/specializations/YarderCarriage.lua` — FS25 1.
 
 ## Messages
 
-- écoute `MessageType.TREE_SHAPE_CUT` (l.297)
-- écoute `MessageType.TREE_SHAPE_MOUNTED` (l.298)
-- publie `MessageType.TREE_SHAPE_MOUNTED` (l.836)
+- subscribes `MessageType.TREE_SHAPE_CUT` (l.297)
+- subscribes `MessageType.TREE_SHAPE_MOUNTED` (l.298)
+- publishes `MessageType.TREE_SHAPE_MOUNTED` (l.836)

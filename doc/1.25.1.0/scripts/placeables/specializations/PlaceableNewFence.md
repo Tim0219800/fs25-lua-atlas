@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableNewFence.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableNewFence.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableNewFence.lua` — FS25 1.25.1.0
 
 - **PlaceableNewFence** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableNewFence.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `PlaceableNewFence.registerEvents(placeableType: any)` | 23 |  |
@@ -48,9 +48,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableNewFence.lua` — FS
 | `PlaceableNewFence:getIsBuildLocked() → boolean` | 450 |  |
 | `PlaceableNewFence:setBuildLocked(isLocked: boolean)` | 460 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onCreateSegment` | 24 |
 | registerFunction | `getFence` | 30 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/EnterablePassengerEnterRequestEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/EnterablePassengerEnterRequestEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/EnterablePassengerEnterRequestEvent.lua` — FS25 1.25.1.0
 
-- **EnterablePassengerEnterRequestEvent** hérite de `Event` (l.13)
+- **EnterablePassengerEnterRequestEvent** inherits from `Event` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `EnterablePassengerEnterRequestEvent.emptyNew() → table` | 20 |  |
 | `EnterablePassengerEnterRequestEvent.new(object: table, seatIndex: table) → table` | 30 |  |

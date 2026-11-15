@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreNitrogen.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreNitrogen.lua (generated stub, FS25 Lua Atlas)
 
 ---@class EnvironmentalScoreNitrogen : EnvironmentalScoreValue
 EnvironmentalScoreNitrogen = {}

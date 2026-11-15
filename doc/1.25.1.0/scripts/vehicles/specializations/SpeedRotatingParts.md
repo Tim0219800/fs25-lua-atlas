@@ -1,12 +1,12 @@
 # vehicles/specializations/SpeedRotatingParts.lua
 
-Source : `dataS/scripts/vehicles/specializations/SpeedRotatingParts.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SpeedRotatingParts.lua` — FS25 1.25.1.0
 
 - **SpeedRotatingParts** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SpeedRotatingParts.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `SpeedRotatingParts.initSpecialization()` | 26 |  |
@@ -26,9 +26,9 @@ Source : `dataS/scripts/vehicles/specializations/SpeedRotatingParts.lua` — FS2
 | `SpeedRotatingParts:updateSpeedRotatingPart(speedRotatingPart: any, dt: any, isPartActive: any)` | 478 |  |
 | `SpeedRotatingParts:validateWashableNode(superFunc: any, node: any)` | 677 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadSpeedRotatingPartFromXML` | 80 |
 | registerFunction | `getIsSpeedRotatingPartActive` | 81 |

@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : vehicles/specializations/WorkParticles.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : vehicles/specializations/WorkParticles.lua (generated stub, FS25 Lua Atlas)
 
 --- Spécialisation véhicule qui gère trois familles d'effets de travail du sol, uniquement côté client (sur serveur pur, ses écouteurs onDelete/onUpdateTick/onDeactivate sont retirés dans onLoad) : (1) « particleAnimations », des maillages animés par shader (paramètre VertxoffsetVertexdeformMotionUVscale) dont la visibilité suit la profondeur de travail ; (2) « particles », de vrais systèmes de particules allumés ou éteints via ParticleUtil.setEmittingState ; (3) « effects », des effets EffectManager dont le type de remplissage vient de la zone de travail. La décision est prise à chaque onUpdateTick, pas à chaque frame. Conditions communes : getDoGroundManipulation() et véhicule sur un champ (sauf vehicle.workParticles#requireField=false). Aucune donnée météo ni humidité n'entre en jeu : seuls la vitesse, le sens de marche, le contact au sol et la profondeur comptent. Point d'extension : surcharger getDoGroundManipulation (fonction enregistrée) ou les écouteurs ; tout est purement visuel, sans synchronisation réseau.
 ---@class WorkParticles

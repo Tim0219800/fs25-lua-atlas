@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : vehicles/specializations/Dischargeable.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : vehicles/specializations/Dischargeable.lua (generated stub, FS25 Lua Atlas)
 
 --- Spécialisation de déchargement (spec_dischargeable) : vidage d'une unité de remplissage du véhicule (benne, vis de déchargement de moissonneuse, remorque) soit vers un objet récepteur (autre véhicule, trémie, bâtiment), soit sur le sol via la carte de densité de hauteur. Le véhicule peut avoir plusieurs « discharge nodes » (dischargeNode) dont un seul est courant (setCurrentDischargeNodeIndex).
 --- 

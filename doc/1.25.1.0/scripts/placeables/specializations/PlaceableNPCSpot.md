@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableNPCSpot.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableNPCSpot.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableNPCSpot.lua` — FS25 1.25.1.0
 
 - **PlaceableNPCSpot** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableNPCSpot.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableNPCSpot.registerEventListeners(placeableType: any)` | 24 |  |
@@ -15,9 +15,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableNPCSpot.lua` — FS2
 | `PlaceableNPCSpot:onFinalizePlacement()` | 64 |  |
 | `PlaceableNPCSpot:onDelete()` | 75 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 25 |
 | registerEventListener | `onDelete` | 26 |

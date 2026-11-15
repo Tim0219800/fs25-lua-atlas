@@ -1,12 +1,12 @@
 # vehicles/specializations/events/TreeDetachEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/TreeDetachEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/TreeDetachEvent.lua` — FS25 1.25.1.0
 
-- **TreeDetachEvent** hérite de `Event` (l.14)
+- **TreeDetachEvent** inherits from `Event` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TreeDetachEvent.emptyNew() → table` | 21 |  |
 | `TreeDetachEvent.new(object: table, ropeIndex: table) → table` | 31 |  |

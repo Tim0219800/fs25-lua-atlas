@@ -1,12 +1,12 @@
 # placement/PalletSpawner.lua
 
-Source : `dataS/scripts/placement/PalletSpawner.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placement/PalletSpawner.lua` — FS25 1.25.1.0
 
 - **PalletSpawner** (l.19)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PalletSpawner.new(baseDirectory: any, customMt: any)` | 23 |  |
 | `PalletSpawner:load(components: table, xmlFile: table, key: string, customEnv: string, i3dMappings: table) → boolean` | 42 |  |

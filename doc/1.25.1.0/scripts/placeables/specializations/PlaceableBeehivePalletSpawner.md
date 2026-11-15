@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableBeehivePalletSpawner.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableBeehivePalletSpawner.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableBeehivePalletSpawner.lua` — FS25 1.25.1.0
 
 - **PlaceableBeehivePalletSpawner** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableBeehivePalletSpawner.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `PlaceableBeehivePalletSpawner.registerFunctions(placeableType: any)` | 23 |  |
@@ -29,9 +29,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableBeehivePalletSpawner
 | `PlaceableBeehivePalletSpawner:updateInfo(superFunc: any, infoTable: any)` | 215 |  |
 | `PlaceableBeehivePalletSpawner:canBuy(superFunc: any)` | 225 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `addFillLevel` | 24 |
 | registerFunction | `updatePallets` | 25 |

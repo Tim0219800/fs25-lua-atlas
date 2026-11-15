@@ -1,12 +1,12 @@
 # gui/hud/HUDTextDisplay.lua
 
-Source : `dataS/scripts/gui/hud/HUDTextDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/HUDTextDisplay.lua` — FS25 1.25.1.0
 
-- **HUDTextDisplay** hérite de `HUDDisplayElement` (l.14)
+- **HUDTextDisplay** inherits from `HUDDisplayElement` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HUDTextDisplay.new(posX: number, posY: number, textSize: number, textAlignment: integer?, textColor: table?, textBold: boolean?) → table` | 28 |  |
 | `HUDTextDisplay:setText(text: string, textSize: number, textAlignment: integer, textColor: table, textBold: boolean)` | 55 |  |

@@ -1,12 +1,12 @@
 # player/stateMachine/PlayerStateJump.lua
 
-Source : `dataS/scripts/player/stateMachine/PlayerStateJump.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/stateMachine/PlayerStateJump.lua` — FS25 1.25.1.0
 
-- **PlayerStateJump** hérite de `BaseStateMachineState` (l.12)
+- **PlayerStateJump** inherits from `BaseStateMachineState` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerStateJump.new(player: Player, stateMachine: StateMachine) → BaseStateMachineState` | 37 |  |
 | `PlayerStateJump:createTransitions()` | 55 |  |

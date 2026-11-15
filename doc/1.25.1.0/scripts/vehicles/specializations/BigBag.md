@@ -1,12 +1,12 @@
 # vehicles/specializations/BigBag.lua
 
-Source : `dataS/scripts/vehicles/specializations/BigBag.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BigBag.lua` — FS25 1.25.1.0
 
 - **BigBag** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BigBag.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `BigBag.initSpecialization()` | 23 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/vehicles/specializations/BigBag.lua` — FS25 1.25.1.0
 | `BigBag:onFillUnitFillLevelChanged(fillUnitIndex: any, fillLevelDelta: any, fillType: any, toolType: any, fillPositionData: any, appliedDelta: any)` | 149 |  |
 | `BigBag:getInfoBoxTitle(superFunc: any)` | 172 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `getInfoBoxTitle` | 54 |
 | registerEventListener | `onLoad` | 60 |

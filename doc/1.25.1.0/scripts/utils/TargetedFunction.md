@@ -1,12 +1,12 @@
 # utils/TargetedFunction.lua
 
-Source : `dataS/scripts/utils/TargetedFunction.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/TargetedFunction.lua` — FS25 1.25.1.0
 
 - **TargetedFunction** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TargetedFunction.new(targetFunction: function, targetObject: table?, ...: any) → TargetedFunction` | 20 |  |
 | `TargetedFunction:delete()` | 43 |  |

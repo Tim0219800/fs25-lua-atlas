@@ -1,12 +1,12 @@
 # gui/base/RoundStatusBar.lua
 
-Source : `dataS/scripts/gui/base/RoundStatusBar.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/RoundStatusBar.lua` — FS25 1.25.1.0
 
 - **RoundStatusBar** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RoundStatusBar.new(frontSliceId: any, valueSliceId: any, markerSliceId: any, x: any, y: any, width: any, height: any, valueWidth: any, valueHeight: any, radius: any, color: any, bgColor: any, valueColor: any, markerSize: any, custom_mt: any)` | 17 |  |
 | `RoundStatusBar:delete()` | 61 |  |

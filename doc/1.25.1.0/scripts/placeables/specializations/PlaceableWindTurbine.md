@@ -1,14 +1,14 @@
 # placeables/specializations/PlaceableWindTurbine.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableWindTurbine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableWindTurbine.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation de placeable (prérequis : PlaceableIncomePerHour) qui fait tourner un rotor et orienter une tête d'éolienne selon le vent, et ajoute un revenu horaire proportionnel à la vitesse du rotor. DONNÉES VENT : la spécialisation ne lit pas le vent elle-même ; elle reçoit (windDirX, windDirZ, windVelocity, cirrusCloudSpeedFactor) via setWindValues, signature calquée sur un écouteur « wind changed ». L'unité de windVelocity est le m/s d'après le commentaire XML de #optimalWindSpeed (vitesse à laquelle le rotor atteint son régime max, défaut 15, borné à 1..200). Le seul accès à la source du vent est dans onDelete : g_currentMission.environment.weather.windUpdater:removeWindChangedListener(self) ; l'abonnement symétrique (addWindChangedListener) n'apparaît PAS dans ce fichier du dump : il devrait se trouver dans startWindTurbine, mais cette fonction est enregistrée (registerFunction) sans être définie dans ce fichier. À noter : finalizeConstruction est de même enregistrée comme surcharge sans définition ici (non vérifié en jeu : soit définition absente du dump, soit référence nil). WindUpdater et Weather sont absents du dump : NON VÉRIFIÉ pour tout ce qui concerne la fréquence d'appel et l'origine du vent. Aucune autre donnée météo (pluie, humidité, température) n'est lue. Effets : rotation du rotor pilotée par animationNodes (speedFunc renvoie rotSpeedFactor), son « idle » démarré dès que le facteur est > 0 (client uniquement) ; tête orientée à l'opposé du vent (rotation Y calculée sur -dirX, -dirZ) si #headAdjustToWind. Réseau : seule la rotation de tête (angle compressé) est écrite/lue dans le flux initial (onWriteStream/onReadStream) ; rotSpeedFactor n'est pas synchronisé, chaque machine le recalcule à partir du vent qu'elle reçoit (hypothèse non vérifiée : le vent est supposé identique sur les clients). Sauvegarde : #headRotation. Points d'extension pour un moddeur : fonctions registerFunction (updateHeadRotation, updateRotorRotSpeed, setWindValues, getWindTurbineLoad, startWindTurbine) surchargeables par type de placeable ; getIncomePerHour est une surcharge enregistrée ; getWindTurbineLoad est un bon point de lecture externe (facteur 0..1).
 
 - **PlaceableWindTurbine** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableWindTurbine.prerequisitesPresent(specializations: table) → boolean` | 18 | ✍ Exige la spécialisation PlaceableIncomePerHour dans le type de placeable. |
 | `PlaceableWindTurbine.registerFunctions(placeableType: any)` | 24 | ✍ Enregistre updateHeadRotation, updateRotorRotSpeed, setWindValues, getWindTurbineLoad et startWindTurbine (cette dernière n'est pas définie dans ce fichier : à noter, non vérifié en jeu). |
@@ -29,9 +29,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableWindTurbine.lua` —
 | `PlaceableWindTurbine:getWindTurbineLoad()` | 234 | ✍ Renvoie le facteur de charge du rotor (0..1), c'est-à-dire rotSpeedFactor. |
 | `PlaceableWindTurbine:getIncomePerHour(superFunc: any)` | 242 | ✍ Surcharge : ajoute au revenu horaire parent le revenu configuré multiplié par le facteur de rotor ; revenu nul sans vent. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateHeadRotation` | 25 |
 | registerFunction | `updateRotorRotSpeed` | 26 |

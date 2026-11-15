@@ -1,12 +1,12 @@
 # vehicles/specializations/Shovel.lua
 
-Source : `dataS/scripts/vehicles/specializations/Shovel.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Shovel.lua` — FS25 1.25.1.0
 
 - **Shovel** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Shovel.prerequisitesPresent(specializations: any)` | 17 |  |
 | `Shovel.initSpecialization()` | 23 |  |
@@ -37,9 +37,9 @@ Source : `dataS/scripts/vehicles/specializations/Shovel.lua` — FS25 1.25.1.0
 | `Shovel:getCanShovelAtPosition(shovelNode: any)` | 565 |  |
 | `Shovel:updateDebugValues(values: any)` | 593 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadShovelNode` | 62 |
 | registerFunction | `getShovelNodeIsActive` | 63 |

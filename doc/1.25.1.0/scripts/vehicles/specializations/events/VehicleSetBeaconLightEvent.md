@@ -1,12 +1,12 @@
 # vehicles/specializations/events/VehicleSetBeaconLightEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/VehicleSetBeaconLightEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/VehicleSetBeaconLightEvent.lua` — FS25 1.25.1.0
 
-- **VehicleSetBeaconLightEvent** hérite de `Event` (l.7)
+- **VehicleSetBeaconLightEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleSetBeaconLightEvent.emptyNew() → table` | 14 |  |
 | `VehicleSetBeaconLightEvent.new(object: table, active: boolean)` | 23 |  |

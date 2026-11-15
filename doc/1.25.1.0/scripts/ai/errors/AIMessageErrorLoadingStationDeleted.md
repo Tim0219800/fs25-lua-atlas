@@ -1,12 +1,12 @@
 # ai/errors/AIMessageErrorLoadingStationDeleted.lua
 
-Source : `dataS/scripts/ai/errors/AIMessageErrorLoadingStationDeleted.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/errors/AIMessageErrorLoadingStationDeleted.lua` — FS25 1.25.1.0
 
-- **AIMessageErrorLoadingStationDeleted** hérite de `AIMessage` (l.12)
+- **AIMessageErrorLoadingStationDeleted** inherits from `AIMessage` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIMessageErrorLoadingStationDeleted.new(customMt: any)` | 16 |  |
 | `AIMessageErrorLoadingStationDeleted:getI18NText()` | 23 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/TrailerToggleTipSideEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/TrailerToggleTipSideEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/TrailerToggleTipSideEvent.lua` — FS25 1.25.1.0
 
-- **TrailerToggleTipSideEvent** hérite de `Event` (l.7)
+- **TrailerToggleTipSideEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TrailerToggleTipSideEvent.emptyNew() → table` | 14 |  |
 | `TrailerToggleTipSideEvent.new(object: table, tipSideIndex: integer)` | 25 |  |

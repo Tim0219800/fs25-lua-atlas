@@ -1,11 +1,11 @@
 # vehicles/specializations/YarderTower.lua
 
-Source : `dataS/scripts/vehicles/specializations/YarderTower.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/YarderTower.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `YarderTower.prerequisitesPresent(specializations: table) → boolean` | 49 |  |
 | `YarderTower.initSpecialization()` | 55 |  |
@@ -75,9 +75,9 @@ Source : `dataS/scripts/vehicles/specializations/YarderTower.lua` — FS25 1.25.
 | `YarderTower.loadSpecValueMaxMass(xmlFile: any, customEnvironment: any, baseDir: any)` | 2168 |  |
 | `YarderTower.getSpecValueMaxMass(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 2174 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onYarderCarriageTreeAttached` | 177 |
 | registerFunction | `onHookI3DLoaded` | 183 |

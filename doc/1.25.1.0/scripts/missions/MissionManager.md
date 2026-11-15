@@ -1,12 +1,12 @@
 # missions/MissionManager.lua
 
-Source : `dataS/scripts/missions/MissionManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/missions/MissionManager.lua` — FS25 1.25.1.0
 
-- **MissionManager** hérite de `AbstractManager` (l.21)
+- **MissionManager** inherits from `AbstractManager` (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MissionManager.new(customMt: any) → table` | 77 |  |
 | `MissionManager:initDataStructures()` | 89 |  |
@@ -58,6 +58,6 @@ Source : `dataS/scripts/missions/MissionManager.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.MISSION_GENERATION_START` (l.343)
-- publie `MessageType.MISSION_GENERATION_END` (l.352)
-- publie `MessageType.MISSION_GENERATED` (l.398)
+- publishes `MessageType.MISSION_GENERATION_START` (l.343)
+- publishes `MessageType.MISSION_GENERATION_END` (l.352)
+- publishes `MessageType.MISSION_GENERATED` (l.398)

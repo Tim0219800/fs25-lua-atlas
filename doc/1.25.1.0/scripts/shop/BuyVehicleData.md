@@ -1,12 +1,12 @@
 # shop/BuyVehicleData.lua
 
-Source : `dataS/scripts/shop/BuyVehicleData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/shop/BuyVehicleData.lua` — FS25 1.25.1.0
 
 - **BuyVehicleData** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BuyVehicleData.new(customMt: table?) → BuyVehicleData` | 19 |  |
 | `BuyVehicleData:isValid() → boolean` | 39 |  |

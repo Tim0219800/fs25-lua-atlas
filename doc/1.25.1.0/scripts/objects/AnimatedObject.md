@@ -1,13 +1,13 @@
 # objects/AnimatedObject.lua
 
-Source : `dataS/scripts/objects/AnimatedObject.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/AnimatedObject.lua` — FS25 1.25.1.0
 
-- **AnimatedObject** hérite de `Object` (l.12)
+- **AnimatedObject** inherits from `Object` (l.12)
 - **AnimatedObjectBuilder** (l.807)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimatedObject.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 22 |  |
 | `AnimatedObject:load(rootNode: integer\|table, xmlFile: XMLFile, key: string, xmlFilename: string, i3dMappings: table?) → boolean` | 53 |  |
@@ -37,5 +37,5 @@ Source : `dataS/scripts/objects/AnimatedObject.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.HOUR_CHANGED` (l.228)
-- écoute `MessageType.HOUR_CHANGED` (l.851)
+- subscribes `MessageType.HOUR_CHANGED` (l.228)
+- subscribes `MessageType.HOUR_CHANGED` (l.851)

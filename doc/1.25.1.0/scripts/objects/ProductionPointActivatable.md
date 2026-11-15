@@ -1,12 +1,12 @@
 # objects/ProductionPointActivatable.lua
 
-Source : `dataS/scripts/objects/ProductionPointActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/ProductionPointActivatable.lua` — FS25 1.25.1.0
 
 - **ProductionPointActivatable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ProductionPointActivatable.new(productionPoint: any)` | 15 |  |
 | `ProductionPointActivatable:updateText()` | 28 |  |

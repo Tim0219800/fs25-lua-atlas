@@ -1,12 +1,12 @@
 # vehicles/specializations/AttacherJointControl.lua
 
-Source : `dataS/scripts/vehicles/specializations/AttacherJointControl.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AttacherJointControl.lua` — FS25 1.25.1.0
 
 - **AttacherJointControl** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AttacherJointControl.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `AttacherJointControl.initSpecialization()` | 26 |  |
@@ -35,9 +35,9 @@ Source : `dataS/scripts/vehicles/specializations/AttacherJointControl.lua` — F
 | `AttacherJointControl.actionEventAttacherJointControl(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 590 |  |
 | `AttacherJointControl.actionEventAttacherJointControlSetPoint(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 608 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `controlAttacherJoint` | 51 |
 | registerFunction | `controlAttacherJointHeight` | 52 |

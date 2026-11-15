@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryAnimals.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryAnimals.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryAnimals.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryAnimals** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryAnimals.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `PlaceableHusbandryAnimals.registerEvents(placeableType: any)` | 25 |  |
@@ -61,9 +61,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryAnimals.l
 | `PlaceableHusbandryAnimals:getAnimalDescription(superFunc: any, cluster: any)` | 1016 |  |
 | `PlaceableHusbandryAnimals.consoleCommandAddAnimals(_: any, numAnimals: any, subTypeIndex: any)` | 1099 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onHusbandryAnimalsCreated` | 26 |
 | registerEvent | `onHusbandryAnimalsUpdate` | 27 |
@@ -115,4 +115,4 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryAnimals.l
 
 ## Messages
 
-- publie `MessageType.HUSBANDRY_ANIMALS_CHANGED` (l.773)
+- publishes `MessageType.HUSBANDRY_ANIMALS_CHANGED` (l.773)

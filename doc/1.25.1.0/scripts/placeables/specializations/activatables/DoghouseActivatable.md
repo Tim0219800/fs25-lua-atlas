@@ -1,12 +1,12 @@
 # placeables/specializations/activatables/DoghouseActivatable.lua
 
-Source : `dataS/scripts/placeables/specializations/activatables/DoghouseActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/activatables/DoghouseActivatable.lua` — FS25 1.25.1.0
 
 - **DoghouseActivatable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DoghouseActivatable.new(doghousePlaceable: any)` | 15 |  |
 | `DoghouseActivatable:run()` | 26 |  |

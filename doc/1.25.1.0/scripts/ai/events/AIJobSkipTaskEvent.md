@@ -1,12 +1,12 @@
 # ai/events/AIJobSkipTaskEvent.lua
 
-Source : `dataS/scripts/ai/events/AIJobSkipTaskEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/events/AIJobSkipTaskEvent.lua` — FS25 1.25.1.0
 
-- **AIJobSkipTaskEvent** hérite de `Event` (l.11)
+- **AIJobSkipTaskEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobSkipTaskEvent.emptyNew()` | 17 |  |
 | `AIJobSkipTaskEvent.new(job: any)` | 24 |  |
@@ -16,4 +16,4 @@ Source : `dataS/scripts/ai/events/AIJobSkipTaskEvent.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.AI_TASK_SKIPPED` (l.55)
+- publishes `MessageType.AI_TASK_SKIPPED` (l.55)

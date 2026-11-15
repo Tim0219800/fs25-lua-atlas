@@ -1,12 +1,12 @@
 # gui/elements/ScrollingLayoutElement.lua
 
-Source : `dataS/scripts/gui/elements/ScrollingLayoutElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/ScrollingLayoutElement.lua` — FS25 1.25.1.0
 
-- **ScrollingLayoutElement** hérite de `BoxLayoutElement` (l.14)
+- **ScrollingLayoutElement** inherits from `BoxLayoutElement` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ScrollingLayoutElement.new(target: any, custom_mt: any)` | 20 |  |
 | `ScrollingLayoutElement:loadFromXML(xmlFile: any, key: any)` | 51 |  |

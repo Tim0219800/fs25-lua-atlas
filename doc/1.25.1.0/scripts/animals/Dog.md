@@ -1,12 +1,12 @@
 # animals/Dog.lua
 
-Source : `dataS/scripts/animals/Dog.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/Dog.lua` — FS25 1.25.1.0
 
-- **Dog** hérite de `Object` (l.16)
+- **Dog** inherits from `Object` (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Dog.new(isServer: any, isClient: any, customMt: any) → table` | 38 |  |
 | `Dog:load(spawner: any, xmlFilename: any, spawnX: any, spawnY: any, spawnZ: any)` | 72 |  |
@@ -47,5 +47,5 @@ Source : `dataS/scripts/animals/Dog.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.HOUR_CHANGED` (l.558)
-- écoute `MessageType.PLAYER_FARM_CHANGED` (l.559)
+- subscribes `MessageType.HOUR_CHANGED` (l.558)
+- subscribes `MessageType.PLAYER_FARM_CHANGED` (l.559)

@@ -1,13 +1,13 @@
 # objects/VehicleSellingPoint.lua
 
-Source : `dataS/scripts/objects/VehicleSellingPoint.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/VehicleSellingPoint.lua` — FS25 1.25.1.0
 
 - **VehicleSellingPoint** (l.9)
 - **VehicleSellingPointActivatable** (l.211)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleSellingPoint.registerXMLPaths(schema: any, basePath: any)` | 14 |  |
 | `VehicleSellingPoint.new() → table` | 26 |  |
@@ -28,5 +28,5 @@ Source : `dataS/scripts/objects/VehicleSellingPoint.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.PLAYER_FARM_CHANGED` (l.59)
-- écoute `MessageType.PLAYER_CREATED` (l.60)
+- subscribes `MessageType.PLAYER_FARM_CHANGED` (l.59)
+- subscribes `MessageType.PLAYER_CREATED` (l.60)

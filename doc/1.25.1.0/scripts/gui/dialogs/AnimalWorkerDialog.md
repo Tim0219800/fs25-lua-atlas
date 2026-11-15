@@ -1,12 +1,12 @@
 # gui/dialogs/AnimalWorkerDialog.lua
 
-Source : `dataS/scripts/gui/dialogs/AnimalWorkerDialog.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/dialogs/AnimalWorkerDialog.lua` — FS25 1.25.1.0
 
-- **AnimalWorkerDialog** hérite de `MessageDialog` (l.20)
+- **AnimalWorkerDialog** inherits from `MessageDialog` (l.20)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimalWorkerDialog:onGuiSetupFinished()` | 80 |  |
 | `AnimalWorkerDialog:delete()` | 93 |  |

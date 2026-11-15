@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryFence.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFence.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFence.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryFence** (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryFence.prerequisitesPresent(specializations: table) → boolean` | 26 |  |
 | `PlaceableHusbandryFence.registerFunctions(placeableType: any)` | 36 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryFence.lua
 | `PlaceableHusbandryFence:getFence()` | 724 |  |
 | `PlaceableHusbandryFence:getCanBePlacedAt(superFunc: any, x: any, y: any, z: any, farmId: any)` | 754 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getHasCustomizableFence` | 37 |
 | registerFunction | `getFence` | 38 |

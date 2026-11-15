@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryWater.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryWater.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryWater.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryWater** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryWater.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableHusbandryWater.registerFunctions(placeableType: any)` | 24 |  |
@@ -25,9 +25,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryWater.lua
 | `PlaceableHusbandryWater:getConditionInfos(superFunc: any)` | 211 |  |
 | `PlaceableHusbandryWater:updateInfo(superFunc: any, infoTable: any)` | 238 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateWaterPlane` | 25 |
 | registerOverwrittenFunction | `updateFeeding` | 31 |

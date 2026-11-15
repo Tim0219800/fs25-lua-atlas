@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableTrainSystemRentEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableTrainSystemRentEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableTrainSystemRentEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableTrainSystemRentEvent** hérite de `Event` (l.7)
+- **PlaceableTrainSystemRentEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableTrainSystemRentEvent.emptyNew() → table` | 14 |  |
 | `PlaceableTrainSystemRentEvent.new(object: table, isRented: integer, farmId: boolean, splinePosition: integer)` | 25 |  |

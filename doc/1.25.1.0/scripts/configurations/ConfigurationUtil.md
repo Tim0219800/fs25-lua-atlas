@@ -1,12 +1,12 @@
 # configurations/ConfigurationUtil.lua
 
-Source : `dataS/scripts/configurations/ConfigurationUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/configurations/ConfigurationUtil.lua` — FS25 1.25.1.0
 
 - **ConfigurationUtil** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConfigurationUtil.addBoughtConfiguration(manager: string, object: integer, name: string, id: integer)` | 22 |  |
 | `ConfigurationUtil.hasBoughtConfiguration(object: string, name: string, id: integer) → boolean` | 36 |  |

@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/maps/CoverMap.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/maps/CoverMap.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/maps/CoverMap.lua` — FS25 1.25.1.0
 
-- **CoverMap** hérite de `ValueMap` (l.14)
+- **CoverMap** inherits from `ValueMap` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CoverMap:getCoverUpdateDensityMapModifiers(fruitTypes: table, preUpdate: boolean, useMinForageState: boolean, strawChopperActive: boolean) → DensityMapMultiModifier, table, table` | 319 |  |
 | `CoverMap:preUpdateCoverArea(fruitTypes: table, densityMapShape: DensityMapPolygon, useMinForageState: boolean?, strawChopperActive: boolean) → integer?` | 472 |  |

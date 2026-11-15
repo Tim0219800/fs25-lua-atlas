@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : vehicles/configurations/VehicleConfigurationItemMotor.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : vehicles/configurations/VehicleConfigurationItemMotor.lua (generated stub, FS25 Lua Atlas)
 
 ---@class VehicleConfigurationItemMotor : VehicleConfigurationItem
 VehicleConfigurationItemMotor = {}

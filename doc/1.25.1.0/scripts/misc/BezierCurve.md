@@ -1,12 +1,12 @@
 # misc/BezierCurve.lua
 
-Source : `dataS/scripts/misc/BezierCurve.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/BezierCurve.lua` — FS25 1.25.1.0
 
 - **BezierCurve** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BezierCurve:recalculateCoefficients()` | 47 |  |
 | `BezierCurve:setPositionX1(newValue: number)` | 60 |  |

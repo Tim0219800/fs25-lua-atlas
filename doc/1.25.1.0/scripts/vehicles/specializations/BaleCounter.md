@@ -1,11 +1,11 @@
 # vehicles/specializations/BaleCounter.lua
 
-Source : `dataS/scripts/vehicles/specializations/BaleCounter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/BaleCounter.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleCounter.prerequisitesPresent(specializations: table) → boolean` | 23 |  |
 | `BaleCounter.initSpecialization()` | 29 |  |
@@ -25,9 +25,9 @@ Source : `dataS/scripts/vehicles/specializations/BaleCounter.lua` — FS25 1.25.
 | `BaleCounter:doBaleCounterReset(noEventSend: any)` | 189 |  |
 | `BaleCounter:dropBale(superFunc: any, baleIndex: any)` | 199 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `doBaleCounterReset` | 45 |
 | registerOverwrittenFunction | `dropBale` | 51 |

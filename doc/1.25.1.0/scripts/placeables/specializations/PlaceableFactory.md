@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableFactory.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableFactory.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableFactory.lua` — FS25 1.25.1.0
 
 - **PlaceableFactory** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableFactory.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `PlaceableFactory.registerFunctions(placeableType: any)` | 25 |  |
@@ -21,9 +21,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableFactory.lua` — FS2
 | `PlaceableFactory:onWriteStream(streamId: any, connection: any)` | 394 |  |
 | `PlaceableFactory:setOwnerFarmId(superFunc: any, farmId: any)` | 520 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onMeshI3DFileLoaded` | 26 |
 | registerFunction | `updateRemainingAmount` | 27 |

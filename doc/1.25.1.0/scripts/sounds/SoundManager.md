@@ -1,12 +1,12 @@
 # sounds/SoundManager.lua
 
-Source : `dataS/scripts/sounds/SoundManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/sounds/SoundManager.lua` — FS25 1.25.1.0
 
-- **SoundManager** hérite de `AbstractManager` (l.24)
+- **SoundManager** inherits from `AbstractManager` (l.24)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SoundManager.new(customMt: table?) → SoundManager` | 30 |  |
 | `SoundManager:initDataStructures()` | 40 |  |

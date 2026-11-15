@@ -1,12 +1,12 @@
 # vehicles/specializations/WoodHarvester.lua
 
-Source : `dataS/scripts/vehicles/specializations/WoodHarvester.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/WoodHarvester.lua` — FS25 1.25.1.0
 
 - **WoodHarvester** (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodHarvester.prerequisitesPresent(specializations: any)` | 26 |  |
 | `WoodHarvester.initSpecialization()` | 32 |  |
@@ -59,9 +59,9 @@ Source : `dataS/scripts/vehicles/specializations/WoodHarvester.lua` — FS25 1.2
 | `WoodHarvester.loadSpecValueMaxTreeSize(xmlFile: any, customEnvironment: any, baseDir: any)` | 1518 |  |
 | `WoodHarvester.getSpecValueMaxTreeSize(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 1524 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onCutTree` | 98 |
 | registerFunction | `woodHarvesterSplitShapeCallback` | 104 |
@@ -104,4 +104,4 @@ Source : `dataS/scripts/vehicles/specializations/WoodHarvester.lua` — FS25 1.2
 
 ## Messages
 
-- publie `MessageType.TREE_SHAPE_MOUNTED` (l.599)
+- publishes `MessageType.TREE_SHAPE_MOUNTED` (l.599)

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetSeedIndexEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetSeedIndexEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetSeedIndexEvent.lua` — FS25 1.25.1.0
 
-- **SetSeedIndexEvent** hérite de `Event` (l.7)
+- **SetSeedIndexEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetSeedIndexEvent.emptyNew() → table` | 14 |  |
 | `SetSeedIndexEvent.new(object: table, seedIndex: integer)` | 23 |  |

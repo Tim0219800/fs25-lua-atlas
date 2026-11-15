@@ -1,12 +1,12 @@
 # player/events/PlayerSetFarmAnswerEvent.lua
 
-Source : `dataS/scripts/player/events/PlayerSetFarmAnswerEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/events/PlayerSetFarmAnswerEvent.lua` — FS25 1.25.1.0
 
-- **PlayerSetFarmAnswerEvent** hérite de `Event` (l.13)
+- **PlayerSetFarmAnswerEvent** inherits from `Event` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerSetFarmAnswerEvent.emptyNew() → table` | 28 |  |
 | `PlayerSetFarmAnswerEvent.new(answerState: integer, farmId: integer, password: string?) → table` | 39 |  |

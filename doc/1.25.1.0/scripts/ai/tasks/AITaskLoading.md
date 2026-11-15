@@ -1,12 +1,12 @@
 # ai/tasks/AITaskLoading.lua
 
-Source : `dataS/scripts/ai/tasks/AITaskLoading.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/tasks/AITaskLoading.lua` — FS25 1.25.1.0
 
-- **AITaskLoading** hérite de `AITask` (l.15)
+- **AITaskLoading** inherits from `AITask` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AITaskLoading.new(isServer: any, job: any, customMt: any)` | 19 |  |
 | `AITaskLoading:reset()` | 35 |  |

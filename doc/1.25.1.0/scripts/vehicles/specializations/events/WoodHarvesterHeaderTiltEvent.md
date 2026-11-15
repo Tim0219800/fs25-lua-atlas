@@ -1,12 +1,12 @@
 # vehicles/specializations/events/WoodHarvesterHeaderTiltEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/WoodHarvesterHeaderTiltEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/WoodHarvesterHeaderTiltEvent.lua` — FS25 1.25.1.0
 
-- **WoodHarvesterHeaderTiltEvent** hérite de `Event` (l.7)
+- **WoodHarvesterHeaderTiltEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodHarvesterHeaderTiltEvent.emptyNew() → table` | 14 |  |
 | `WoodHarvesterHeaderTiltEvent.new(object: table, state: number)` | 23 |  |

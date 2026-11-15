@@ -1,12 +1,12 @@
 # player/PlayerCCT.lua
 
-Source : `dataS/scripts/player/PlayerCCT.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/PlayerCCT.lua` — FS25 1.25.1.0
 
 - **PlayerCCT** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerCCT.new() → PlayerCCT` | 45 |  |
 | `PlayerCCT:delete()` | 116 |  |

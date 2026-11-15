@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetCruiseControlStateEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetCruiseControlStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetCruiseControlStateEvent.lua` — FS25 1.25.1.0
 
-- **SetCruiseControlStateEvent** hérite de `Event` (l.7)
+- **SetCruiseControlStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetCruiseControlStateEvent.emptyNew() → table` | 14 |  |
 | `SetCruiseControlStateEvent.new(vehicle: table, state: integer)` | 23 |  |

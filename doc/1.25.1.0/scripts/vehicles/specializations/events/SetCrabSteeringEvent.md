@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetCrabSteeringEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetCrabSteeringEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetCrabSteeringEvent.lua` — FS25 1.25.1.0
 
-- **SetCrabSteeringEvent** hérite de `Event` (l.7)
+- **SetCrabSteeringEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetCrabSteeringEvent.emptyNew() → table` | 14 |  |
 | `SetCrabSteeringEvent.new(vehicle: table, state: integer)` | 23 |  |

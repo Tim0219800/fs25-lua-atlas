@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryPallets.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryPallets.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryPallets.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryPallets** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryPallets.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableHusbandryPallets.registerFunctions(placeableType: any)` | 24 |  |
@@ -36,9 +36,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryPallets.l
 | `PlaceableHusbandryPallets:getConditionInfos(superFunc: any)` | 520 |  |
 | `PlaceableHusbandryPallets:updateOutput(superFunc: any, foodFactor: any, productionFactor: any, globalProductionFactor: any)` | 551 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onPalletTriggerCallback` | 25 |
 | registerFunction | `getAllPalletsCallback` | 26 |

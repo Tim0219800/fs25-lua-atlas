@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableClearAreas.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableClearAreas.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableClearAreas.lua` — FS25 1.25.1.0
 
 - **PlaceableClearAreas** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableClearAreas.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableClearAreas.registerFunctions(placeableType: any)` | 24 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableClearAreas.lua` — 
 | `PlaceableClearAreas:loadClearArea(xmlFile: any, key: any, area: any)` | 66 |  |
 | `PlaceableClearAreas:onPostFinalizePlacement()` | 94 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadClearArea` | 25 |
 | registerEventListener | `onLoad` | 31 |

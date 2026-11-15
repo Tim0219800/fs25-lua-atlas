@@ -1,12 +1,12 @@
 # gui/base/SettingsModel.lua
 
-Source : `dataS/scripts/gui/base/SettingsModel.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/SettingsModel.lua` — FS25 1.25.1.0
 
 - **SettingsModel** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SettingsModel.new() → table` | 152 |  |
 | `SettingsModel:initialize()` | 276 |  |

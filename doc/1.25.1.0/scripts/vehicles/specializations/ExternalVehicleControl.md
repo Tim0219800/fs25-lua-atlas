@@ -1,12 +1,12 @@
 # vehicles/specializations/ExternalVehicleControl.lua
 
-Source : `dataS/scripts/vehicles/specializations/ExternalVehicleControl.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ExternalVehicleControl.lua` — FS25 1.25.1.0
 
 - **ExternalVehicleControlActivatable** (l.174)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ExternalVehicleControl.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `ExternalVehicleControl.initSpecialization()` | 26 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/vehicles/specializations/ExternalVehicleControl.lua` —
 | `ExternalVehicleControlActivatable:getDistance(x: any, y: any, z: any)` | 232 |  |
 | `ExternalVehicleControlActivatable:updateText()` | 239 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onRegisterExternalActionEvents` | 42 |
 | registerFunction | `registerExternalActionEvent` | 49 |

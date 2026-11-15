@@ -1,12 +1,12 @@
 # misc/ProductionChainManager.lua
 
-Source : `dataS/scripts/misc/ProductionChainManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/ProductionChainManager.lua` — FS25 1.25.1.0
 
-- **ProductionChainManager** hérite de `AbstractManager` (l.14)
+- **ProductionChainManager** inherits from `AbstractManager` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ProductionChainManager.new(isServer: any, customMt: any) → table` | 19 |  |
 | `ProductionChainManager:initDataStructures()` | 43 |  |
@@ -30,4 +30,4 @@ Source : `dataS/scripts/misc/ProductionChainManager.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.HOUR_CHANGED` (l.35)
+- subscribes `MessageType.HOUR_CHANGED` (l.35)

@@ -1,12 +1,12 @@
 # configurations/ConfigurationManager.lua
 
-Source : `dataS/scripts/configurations/ConfigurationManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/configurations/ConfigurationManager.lua` — FS25 1.25.1.0
 
-- **ConfigurationManager** hérite de `AbstractManager` (l.12)
+- **ConfigurationManager** inherits from `AbstractManager` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConfigurationManager.new(typeName: any, rootElementName: any, customMt: any) → table` | 17 |  |
 | `ConfigurationManager:initDataStructures()` | 29 |  |

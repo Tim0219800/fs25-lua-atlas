@@ -1,12 +1,12 @@
 # vehicles/specializations/GroundReference.lua
 
-Source : `dataS/scripts/vehicles/specializations/GroundReference.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/GroundReference.lua` — FS25 1.25.1.0
 
 - **GroundReference** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GroundReference.prerequisitesPresent(specializations: any)` | 16 |  |
 | `GroundReference.initSpecialization()` | 22 |  |
@@ -28,9 +28,9 @@ Source : `dataS/scripts/vehicles/specializations/GroundReference.lua` — FS25 1
 | `GroundReference:loadSpeedRotatingPartFromXML(superFunc: any, speedRotatingPart: any, xmlFile: any, key: any)` | 274 |  |
 | `GroundReference:getIsSpeedRotatingPartActive(superFunc: any, speedRotatingPart: any)` | 292 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadGroundReferenceNode` | 49 |
 | registerFunction | `updateGroundReferenceNode` | 50 |

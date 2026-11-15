@@ -1,12 +1,12 @@
 # player/events/PlayerRequestStyleEvent.lua
 
-Source : `dataS/scripts/player/events/PlayerRequestStyleEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/events/PlayerRequestStyleEvent.lua` — FS25 1.25.1.0
 
-- **PlayerRequestStyleEvent** hérite de `Event` (l.4)
+- **PlayerRequestStyleEvent** inherits from `Event` (l.4)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerRequestStyleEvent.emptyNew() → table` | 11 |  |
 | `PlayerRequestStyleEvent.new(playerObjectId: any)` | 18 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/TrailerToggleManualDoorEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/TrailerToggleManualDoorEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/TrailerToggleManualDoorEvent.lua` — FS25 1.25.1.0
 
-- **TrailerToggleManualDoorEvent** hérite de `Event` (l.7)
+- **TrailerToggleManualDoorEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TrailerToggleManualDoorEvent.emptyNew() → table` | 14 |  |
 | `TrailerToggleManualDoorEvent.new(object: table, tipSideIndex: boolean, state: boolean)` | 23 |  |

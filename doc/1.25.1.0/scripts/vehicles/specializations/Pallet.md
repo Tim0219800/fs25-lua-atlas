@@ -1,12 +1,12 @@
 # vehicles/specializations/Pallet.lua
 
-Source : `dataS/scripts/vehicles/specializations/Pallet.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Pallet.lua` — FS25 1.25.1.0
 
 - **Pallet** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Pallet.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `Pallet.initSpecialization()` | 23 |  |
@@ -31,9 +31,9 @@ Source : `dataS/scripts/vehicles/specializations/Pallet.lua` — FS25 1.25.1.0
 | `Pallet:getIsMapHotspotVisible(superFunc: any)` | 508 |  |
 | `Pallet:getFillUnitEmptyOnReset(superFunc: any)` | 514 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onPalletI3DFileLoaded` | 55 |
 | registerFunction | `getInfoBoxTitle` | 56 |

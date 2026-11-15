@@ -1,12 +1,12 @@
 # collections/ObjectPool.lua
 
-Source : `dataS/scripts/collections/ObjectPool.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/collections/ObjectPool.lua` — FS25 1.25.1.0
 
 - **ObjectPool** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ObjectPool.new(objectConstructor: function?, ...: any) → ObjectPool` | 27 |  |
 | `ObjectPool:getLength() → integer` | 52 |  |

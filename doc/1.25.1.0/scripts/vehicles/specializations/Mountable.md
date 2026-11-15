@@ -1,12 +1,12 @@
 # vehicles/specializations/Mountable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Mountable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Mountable.lua` — FS25 1.25.1.0
 
 - **Mountable** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Mountable.prerequisitesPresent(specializations: any)` | 20 |  |
 | `Mountable.initSpecialization()` | 26 |  |
@@ -51,9 +51,9 @@ Source : `dataS/scripts/vehicles/specializations/Mountable.lua` — FS25 1.25.1.
 | `Mountable:setWorldPositionQuaternion(superFunc: number, x: number, y: number, z: number, qx: number, qy: number, qz: number, qw: number, i: integer, changeInterp: boolean)` | 860 |  |
 | `Mountable:onPreAttach(attacherVehicle: table, inputJointDescIndex: integer, jointDescIndex: integer)` | 878 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onDynamicMountTypeChanged` | 57 |
 | registerFunction | `getSupportsMountDynamic` | 63 |

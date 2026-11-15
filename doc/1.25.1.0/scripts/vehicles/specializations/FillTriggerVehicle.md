@@ -1,12 +1,12 @@
 # vehicles/specializations/FillTriggerVehicle.lua
 
-Source : `dataS/scripts/vehicles/specializations/FillTriggerVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FillTriggerVehicle.lua` — FS25 1.25.1.0
 
 - **FillTriggerVehicle** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillTriggerVehicle.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `FillTriggerVehicle.initSpecialization()` | 23 |  |
@@ -17,9 +17,9 @@ Source : `dataS/scripts/vehicles/specializations/FillTriggerVehicle.lua` — FS2
 | `FillTriggerVehicle:onWriteStream(streamId: any, connection: any)` | 95 |  |
 | `FillTriggerVehicle:getDrawFirstFillText(superFunc: any)` | 106 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `getDrawFirstFillText` | 37 |
 | registerEventListener | `onLoad` | 43 |

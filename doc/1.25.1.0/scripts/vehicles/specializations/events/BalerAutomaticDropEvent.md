@@ -1,12 +1,12 @@
 # vehicles/specializations/events/BalerAutomaticDropEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/BalerAutomaticDropEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/BalerAutomaticDropEvent.lua` — FS25 1.25.1.0
 
-- **BalerAutomaticDropEvent** hérite de `Event` (l.7)
+- **BalerAutomaticDropEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BalerAutomaticDropEvent.emptyNew() → table` | 14 |  |
 | `BalerAutomaticDropEvent.new(object: table, automaticDrop: boolean)` | 22 |  |

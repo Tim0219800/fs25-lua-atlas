@@ -1,12 +1,12 @@
 # ai/AIJobTypeManager.lua
 
-Source : `dataS/scripts/ai/AIJobTypeManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/AIJobTypeManager.lua` — FS25 1.25.1.0
 
 - **AIJobTypeManager** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobTypeManager.new(isServer: any, customMt: any) → table` | 18 |  |
 | `AIJobTypeManager:loadMapData(xmlFile: any, missionInfo: any, baseDirectory: any) → boolean` | 29 |  |

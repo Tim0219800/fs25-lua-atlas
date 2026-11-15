@@ -1,6 +1,6 @@
-# Globales g_*
+# g_* globals
 
-| Globale | Affectée dans |
+| Global | Assigned in |
 |---|---|
 | `g_activeVehicleCamera` | vehicles/VehicleCamera.lua:778, vehicles/VehicleCamera.lua:874 |
 | `g_safeFrameOffsetX` | gui/ConstructionScreen.lua:141, gui/ConstructionScreen.lua:209 |

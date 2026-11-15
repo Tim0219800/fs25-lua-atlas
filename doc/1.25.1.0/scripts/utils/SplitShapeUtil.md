@@ -1,14 +1,14 @@
 # utils/SplitShapeUtil.lua
 
-Source : `dataS/scripts/utils/SplitShapeUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/SplitShapeUtil.lua` — FS25 1.25.1.0
 
-> ⚠ Dans le dump du SDK ce fichier ne contient **que des signatures** (pas de corps).
+> ⚠ In the SDK dump this file only contains **signatures** (no bodies).
 
 - **SplitShapeUtil** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SplitShapeUtil.onSplitShapeCallback(unused: any, shape: integer, isBelow: boolean, isAbove: boolean, minY: number, maxY: number, minZ: number, maxZ: number)` | 29 |  |
 | `SplitShapeUtil.splitShape(shape: integer, x: number, y: number, z: number, nx: number, ny: number, nz: number, yx: number, yy: number, yz: number, cutSizeY: number, callback: string, cutSizeZ: number, callback: string, target: table?)` | 64 |  |

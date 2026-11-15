@@ -1,12 +1,12 @@
 # gui/base/FocusManager.lua
 
-Source : `dataS/scripts/gui/base/FocusManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/FocusManager.lua` — FS25 1.25.1.0
 
 - **FocusManager** (l.22)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FocusManager:setGui(gui: gui)` | 76 |  |
 | `FocusManager:setSoundPlayer(guiSoundPlayer: any)` | 113 |  |

@@ -1,10 +1,10 @@
 # objects/NightIllumination.lua
 
-Source : `dataS/scripts/objects/NightIllumination.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/NightIllumination.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `NightIllumination:onCreate(id: integer)` | 19 |  |

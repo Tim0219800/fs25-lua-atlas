@@ -1,12 +1,12 @@
 # objects/MountableObject.lua
 
-Source : `dataS/scripts/objects/MountableObject.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/MountableObject.lua` — FS25 1.25.1.0
 
-- **MountableObject** hérite de `PhysicsObject` (l.15)
+- **MountableObject** inherits from `PhysicsObject` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MountableObject:updateDynamicMountJointForceLimit(dt: any)` | 331 |  |
 | `MountableObject:getAdditionalMountingMass()` | 350 |  |

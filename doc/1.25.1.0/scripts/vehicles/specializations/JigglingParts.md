@@ -1,12 +1,12 @@
 # vehicles/specializations/JigglingParts.lua
 
-Source : `dataS/scripts/vehicles/specializations/JigglingParts.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/JigglingParts.lua` — FS25 1.25.1.0
 
 - **JigglingParts** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `JigglingParts.prerequisitesPresent(specializations: any)` | 16 |  |
 | `JigglingParts.initSpecialization()` | 22 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/vehicles/specializations/JigglingParts.lua` — FS25 1.2
 | `JigglingParts:isJigglingPartActive(jigglingPart: any)` | 124 |  |
 | `JigglingParts:updateJigglingPart(jigglingPart: any, dt: any, groundContact: any)` | 152 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadJigglingPartsFromXML` | 43 |
 | registerFunction | `isJigglingPartActive` | 44 |

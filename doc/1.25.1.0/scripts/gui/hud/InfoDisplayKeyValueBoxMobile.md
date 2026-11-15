@@ -1,12 +1,12 @@
 # gui/hud/InfoDisplayKeyValueBoxMobile.lua
 
-Source : `dataS/scripts/gui/hud/InfoDisplayKeyValueBoxMobile.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/InfoDisplayKeyValueBoxMobile.lua` — FS25 1.25.1.0
 
-- **InfoDisplayKeyValueBoxMobile** hérite de `InfoDisplayBox` (l.12)
+- **InfoDisplayKeyValueBoxMobile** inherits from `InfoDisplayBox` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `InfoDisplayKeyValueBoxMobile.new(infoDisplay: any, uiScale: any)` | 16 |  |
 | `InfoDisplayKeyValueBoxMobile:canDraw()` | 35 |  |

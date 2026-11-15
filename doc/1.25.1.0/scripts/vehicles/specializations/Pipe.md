@@ -1,12 +1,12 @@
 # vehicles/specializations/Pipe.lua
 
-Source : `dataS/scripts/vehicles/specializations/Pipe.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Pipe.lua` — FS25 1.25.1.0
 
 - **Pipe** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Pipe.prerequisitesPresent(specializations: any)` | 18 |  |
 | `Pipe.initSpecialization()` | 24 |  |
@@ -63,9 +63,9 @@ Source : `dataS/scripts/vehicles/specializations/Pipe.lua` — FS25 1.25.1.0
 | `Pipe.actionEventTogglePipe(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1628 |  |
 | `Pipe.actionEventToggleDischargeToGround(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1644 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadUnloadingTriggers` | 112 |
 | registerFunction | `loadPipeNodes` | 113 |

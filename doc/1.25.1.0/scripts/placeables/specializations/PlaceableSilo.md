@@ -1,14 +1,14 @@
 # placeables/specializations/PlaceableSilo.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableSilo.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableSilo.lua` — FS25 1.25.1.0
 
 - **PlaceableSilo** (l.11)
 - **PlaceableSiloActivatable** (l.561)
-- **PlaceableSiloRefillEvent** hérite de `Event` (l.596)
+- **PlaceableSiloRefillEvent** inherits from `Event` (l.596)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableSilo.prerequisitesPresent(specializations: table) → boolean` | 21 |  |
 | `PlaceableSilo.registerOverwrittenFunctions(placeableType: any)` | 27 |  |
@@ -43,9 +43,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableSilo.lua` — FS25 1
 | `PlaceableSiloRefillEvent:readStream(streamId: any, connection: any)` | 631 |  |
 | `PlaceableSiloRefillEvent:run(connection: any)` | 642 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `collectPickObjects` | 28 |
 | registerOverwrittenFunction | `setOwnerFarmId` | 29 |

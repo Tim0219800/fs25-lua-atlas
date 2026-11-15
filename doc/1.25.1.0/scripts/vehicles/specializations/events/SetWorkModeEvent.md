@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetWorkModeEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetWorkModeEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetWorkModeEvent.lua` — FS25 1.25.1.0
 
-- **SetWorkModeEvent** hérite de `Event` (l.7)
+- **SetWorkModeEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetWorkModeEvent.emptyNew() → table` | 14 |  |
 | `SetWorkModeEvent.new(vehicle: table, state: integer)` | 23 |  |

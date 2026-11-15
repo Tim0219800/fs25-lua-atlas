@@ -1,12 +1,12 @@
 # vehicles/specializations/AutoLoader.lua
 
-Source : `dataS/scripts/vehicles/specializations/AutoLoader.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AutoLoader.lua` — FS25 1.25.1.0
 
 - **AutoLoader** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AutoLoader.prerequisitesPresent(specializations: any)` | 15 |  |
 | `AutoLoader.initSpecialization()` | 21 |  |
@@ -29,9 +29,9 @@ Source : `dataS/scripts/vehicles/specializations/AutoLoader.lua` — FS25 1.25.1
 | `AutoLoader.actionControllerEvent(self: any, direction: any)` | 535 |  |
 | `AutoLoader.onDeletePendingObject(self: any, object: any)` | 548 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `autoLoaderPickupTriggerCallback` | 48 |
 | registerFunction | `autoLoaderOverlapCallback` | 49 |

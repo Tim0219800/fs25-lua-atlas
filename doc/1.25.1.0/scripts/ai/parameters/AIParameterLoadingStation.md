@@ -1,12 +1,12 @@
 # ai/parameters/AIParameterLoadingStation.lua
 
-Source : `dataS/scripts/ai/parameters/AIParameterLoadingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/parameters/AIParameterLoadingStation.lua` — FS25 1.25.1.0
 
-- **AIParameterLoadingStation** hérite de `AIParameter` (l.12)
+- **AIParameterLoadingStation** inherits from `AIParameter` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIParameterLoadingStation.new(customMt: any)` | 16 |  |
 | `AIParameterLoadingStation:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 29 |  |

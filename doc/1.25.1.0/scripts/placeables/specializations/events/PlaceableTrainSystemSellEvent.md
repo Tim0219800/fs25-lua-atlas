@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableTrainSystemSellEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableTrainSystemSellEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableTrainSystemSellEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableTrainSystemSellEvent** hérite de `Event` (l.7)
+- **PlaceableTrainSystemSellEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableTrainSystemSellEvent.emptyNew() → table` | 14 |  |
 | `PlaceableTrainSystemSellEvent.new(object: table) → PlaceableTrainSystemSellEvent` | 22 |  |

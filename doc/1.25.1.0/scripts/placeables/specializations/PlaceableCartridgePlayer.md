@@ -1,13 +1,13 @@
 # placeables/specializations/PlaceableCartridgePlayer.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableCartridgePlayer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableCartridgePlayer.lua` — FS25 1.25.1.0
 
 - **PlaceableCartridgePlayer** (l.11)
 - **PlaceableCartridgePlayerActivatable** (l.173)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableCartridgePlayer.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `PlaceableCartridgePlayer.registerFunctions(placeableType: any)` | 23 |  |
@@ -20,9 +20,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableCartridgePlayer.lua`
 | `PlaceableCartridgePlayerActivatable.new(placeable: any)` | 177 |  |
 | `PlaceableCartridgePlayerActivatable:run()` | 188 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `cartridgePlayerTriggerCallback` | 24 |
 | registerFunction | `activatePlayer` | 25 |

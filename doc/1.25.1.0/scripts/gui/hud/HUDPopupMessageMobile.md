@@ -1,12 +1,12 @@
 # gui/hud/HUDPopupMessageMobile.lua
 
-Source : `dataS/scripts/gui/hud/HUDPopupMessageMobile.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/HUDPopupMessageMobile.lua` — FS25 1.25.1.0
 
-- **HUDPopupMessageMobile** hérite de `HUDDisplayElement` (l.15)
+- **HUDPopupMessageMobile** inherits from `HUDDisplayElement` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HUDPopupMessageMobile.new(hudAtlasPath: string, ingameMap: ingameMap) → table` | 39 |  |
 | `HUDPopupMessageMobile:showMessage(title: table?, text: function?, duration: table?, controls: table?, callback: function?, target: table?)` | 83 |  |

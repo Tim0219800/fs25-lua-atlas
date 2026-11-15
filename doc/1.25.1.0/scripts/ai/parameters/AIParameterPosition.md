@@ -1,12 +1,12 @@
 # ai/parameters/AIParameterPosition.lua
 
-Source : `dataS/scripts/ai/parameters/AIParameterPosition.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/parameters/AIParameterPosition.lua` — FS25 1.25.1.0
 
-- **AIParameterPosition** hérite de `AIParameter` (l.12)
+- **AIParameterPosition** inherits from `AIParameter` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIParameterPosition.new(customMt: any)` | 16 |  |
 | `AIParameterPosition:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 29 |  |

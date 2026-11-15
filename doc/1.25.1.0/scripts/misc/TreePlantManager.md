@@ -1,12 +1,12 @@
 # misc/TreePlantManager.lua
 
-Source : `dataS/scripts/misc/TreePlantManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/TreePlantManager.lua` — FS25 1.25.1.0
 
-- **TreePlantManager** hérite de `AbstractManager` (l.23)
+- **TreePlantManager** inherits from `AbstractManager` (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TreePlantManager.new(customMt: any)` | 33 |  |
 | `TreePlantManager:initDataStructures()` | 41 |  |
@@ -54,4 +54,4 @@ Source : `dataS/scripts/misc/TreePlantManager.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.TREE_SHAPE_CUT` (l.1194)
+- publishes `MessageType.TREE_SHAPE_CUT` (l.1194)

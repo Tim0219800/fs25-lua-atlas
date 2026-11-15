@@ -1,12 +1,12 @@
 # vehicles/wheels/WheelManager.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelManager.lua` — FS25 1.25.1.0
 
-- **WheelManager** hérite de `AbstractManager` (l.23)
+- **WheelManager** inherits from `AbstractManager` (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelManager.new(customMt: any) → table` | 28 |  |
 | `WheelManager:initDataStructures()` | 34 |  |

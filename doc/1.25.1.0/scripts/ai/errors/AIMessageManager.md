@@ -1,12 +1,12 @@
 # ai/errors/AIMessageManager.lua
 
-Source : `dataS/scripts/ai/errors/AIMessageManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/errors/AIMessageManager.lua` — FS25 1.25.1.0
 
 - **AIMessageManager** (l.48)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIMessageManager.new(customMt: any) → table` | 53 |  |
 | `AIMessageManager:loadMapData(xmlFile: any, missionInfo: any, baseDirectory: any) → boolean` | 61 |  |

@@ -1,12 +1,12 @@
 # vehicles/VehicleBrokenEvent.lua
 
-Source : `dataS/scripts/vehicles/VehicleBrokenEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleBrokenEvent.lua` — FS25 1.25.1.0
 
-- **VehicleBrokenEvent** hérite de `Event` (l.7)
+- **VehicleBrokenEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleBrokenEvent.emptyNew() → table` | 14 |  |
 | `VehicleBrokenEvent.new(object: table) → table` | 24 |  |

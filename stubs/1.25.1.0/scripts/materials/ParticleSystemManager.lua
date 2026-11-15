@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : materials/ParticleSystemManager.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : materials/ParticleSystemManager.lua (generated stub, FS25 Lua Atlas)
 
 --- Gestionnaire global des systèmes de particules « partagés » (g_particleSystemManager, dérive d'AbstractManager). Il conserve une liste de types de particules (noms) et, pour chaque type, une unique table particleSystem de référence, créée par MaterialUtil.onCreateParticleSystem à partir d'un nœud I3D d'un porte-particules (particle holder, absent du dump). Les effets copient ensuite ce système de référence (ParticleUtil.copyParticleSystem, dont le corps est absent du dump) ; l'usage exact de la copie est donc NON VÉRIFIÉ ici. Fonctionne sur chaque pair : rien n'est synchronisé en réseau.
 --- 

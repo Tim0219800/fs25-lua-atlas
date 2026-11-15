@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableFoliageAreas.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableFoliageAreas.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableFoliageAreas.lua` — FS25 1.25.1.0
 
 - **PlaceableFoliageAreas** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableFoliageAreas.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableFoliageAreas.registerFunctions(placeableType: any)` | 24 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableFoliageAreas.lua` �
 | `PlaceableFoliageAreas:loadFoliageArea(xmlFile: any, key: any, area: any)` | 66 |  |
 | `PlaceableFoliageAreas:onPostFinalizePlacement()` | 134 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadFoliageArea` | 25 |
 | registerEventListener | `onLoad` | 31 |

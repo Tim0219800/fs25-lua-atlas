@@ -1,12 +1,12 @@
 # specialization/SpecializationUtil.lua
 
-Source : `dataS/scripts/specialization/SpecializationUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/specialization/SpecializationUtil.lua` — FS25 1.25.1.0
 
 - **SpecializationUtil** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SpecializationUtil.raiseAsyncEvent(object: table, eventName: string, ...: any)` | 19 |  |
 | `SpecializationUtil.raiseEvent(object: table, eventName: string, ...: any)` | 45 |  |

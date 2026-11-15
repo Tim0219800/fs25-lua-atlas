@@ -1,12 +1,12 @@
 # placeables/BeehiveSystem.lua
 
-Source : `dataS/scripts/placeables/BeehiveSystem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/BeehiveSystem.lua` — FS25 1.25.1.0
 
 - **BeehiveSystem** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BeehiveSystem.new(mission: any, customMt: any)` | 18 |  |
 | `BeehiveSystem:delete()` | 45 |  |
@@ -28,5 +28,5 @@ Source : `dataS/scripts/placeables/BeehiveSystem.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.HOUR_CHANGED` (l.55)
-- écoute `MessageType.DAY_NIGHT_CHANGED` (l.56)
+- subscribes `MessageType.HOUR_CHANGED` (l.55)
+- subscribes `MessageType.DAY_NIGHT_CHANGED` (l.56)

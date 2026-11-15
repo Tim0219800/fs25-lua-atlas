@@ -1,12 +1,12 @@
 # vehicles/wheels/WheelDebug.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelDebug.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelDebug.lua` — FS25 1.25.1.0
 
 - **WheelDebug** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelDebug.new(wheel: any)` | 14 |  |
 | `WheelDebug:delete()` | 25 |  |

@@ -1,14 +1,14 @@
 # vehicles/specializations/Wheels.lua
 
-Source : `dataS/scripts/vehicles/specializations/Wheels.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Wheels.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation de véhicule (sans prérequis) qui possède la liste des roues (spec_wheels.wheels, objets Wheel), les moyeux, essieux, nœuds de direction (Ackermann), sons de surface et configurations de roues. C'est le point d'entrée de toute la chaîne roue : Wheels -> Wheel -> WheelPhysics / WheelEffects / WheelDestruction. DONNÉES MÉTÉO : lit weather:getGroundWetness() à chaque frame (onUpdate, Wheels.lua:844) et à chaque tick (onUpdateTick, Wheels.lua:935) puis la distribue aux roues ; une valeur numérique unique, dont l'implémentation (Weather) est absente du dump : NON VÉRIFIÉ (plage et unité non confirmées ici). La neige : abonnement au message MessageType.SNOW_HEIGHT_CHANGED (onWheelSnowHeightChanged). La pluie, le vent et la température ne sont pas lus ici ; ils arrivent aux fonctions de saleté (updateWheelDirtAmount, updateWheelMudAmount) comme paramètres rainScale / timeSinceLastRain / temperature fournis par Washable.lua (voir cette spécialisation). CONTACT PNEU/SOL : voir WheelPhysics (contact, densityType, hasSnowContact, hasWaterContact), utilisés ici pour les sons de surface (getCurrentSurfaceSound), la saleté des roues et la pente du véhicule (getVehicleWorldXRot, getVehicleWorldDirection, basés sur hasGroundContact). SALETÉ / BOUE : validateWashableNode détecte, par paramètres de shader dans les enfants de la roue, les nœuds « scratches_dirt_snow_wetness » (saleté + neige + humidité) et « mudAmount » (boue 3D) et leur associe des fonctions de mise à jour de saleté spécifiques aux roues. EFFET SUR LE MONDE : destruction des cultures et neige par les roues (WheelDestruction.update appelé ici, Wheels.lua:865, seulement si le véhicule est actif, option de sauvegarde fruitDestruction active, sans IA, et sans blocage par le véhicule) ; déformation du terrain désactivée pendant le travail d'une IA (onAIFieldWorkerStart/End, onAIImplementStart/End). CADENCE : le compteur currentUpdateIndex cycle de 1 à 4 à chaque frame pour répartir la mesure de contact entre les roues ; dt est en ms. RÉSEAU : seules les roues avec physics.isSynchronized sont envoyées (flux initial et flux de mise à jour, drapeau sale levé en continu côté serveur dès qu'il y a des roues) ; le client interpole (networkTimeInterpolator) et n'exécute pas la physique. Événements déclarés : onBrake, onFinishedWheelLoading, onWheelConfigurationChanged. Points d'extension pour un moddeur : fonctions enregistrées surchargeables par type de véhicule (updateWheelDirtAmount et updateWheelMudAmount sont des registerFunction, donc remplaçables pour changer la logique de boue/saleté de roue ; getCurrentSurfaceSound, getBrakeForce, brake, getWheels), surcharges déclarées (validateWashableNode, addToPhysics, getVehicleWorldXRot...), événements ci-dessus et listeners onUpdate/onUpdateTick. À noter : setCustomBrakeForce est enregistré par registerFunction mais aucune définition de Wheels.setCustomBrakeForce n'existe dans ce fichier (non vérifié en jeu : fonction nil ou définie ailleurs) ; Wheels:getBrakeForce renvoie spec.customBrakeForce (0 par défaut). Le fichier fait 2489 lignes : le chargement XML des roues, des essieux, des moyeux et des valeurs de magasin n'a pas été relu en détail.
 
 - **Wheels** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Wheels.prerequisitesPresent(specializations: any)` | 29 | ✍ Aucun prérequis (renvoie toujours vrai). |
 | `Wheels.registerEvents(vehicleType: any)` | 35 | ✍ Déclare les événements onBrake, onFinishedWheelLoading et onWheelConfigurationChanged. |
@@ -85,9 +85,9 @@ Source : `dataS/scripts/vehicles/specializations/Wheels.lua` — FS25 1.25.1.0
 | `Wheels.getSpecValueWheels(storeItem: any, realItem: any)` | 2415 | ✍ Valeur de fiche magasin : noms de pneus de l'objet réel, séparés par « / »; nil sans objet réel. |
 | `Wheels.createConfigToParentConfigMapping(xmlFile: table) → table, table` | 2465 | ✍ Construit la correspondance entre configurations de roues et configuration de base (#baseConfig) ; signale une auto-référence comme erreur XML. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onBrake` | 36 |
 | registerEvent | `onFinishedWheelLoading` | 37 |
@@ -153,4 +153,4 @@ Source : `dataS/scripts/vehicles/specializations/Wheels.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.SNOW_HEIGHT_CHANGED` (l.542)
+- subscribes `MessageType.SNOW_HEIGHT_CHANGED` (l.542)

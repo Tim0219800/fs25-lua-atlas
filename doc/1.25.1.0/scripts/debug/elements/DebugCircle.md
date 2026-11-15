@@ -1,11 +1,11 @@
 # debug/elements/DebugCircle.lua
 
-Source : `dataS/scripts/debug/elements/DebugCircle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/elements/DebugCircle.lua` — FS25 1.25.1.0
 
-- **DebugCircle** hérite de `DebugElement` (l.12)
+- **DebugCircle** inherits from `DebugElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugCircle:draw()` | 32 |  |

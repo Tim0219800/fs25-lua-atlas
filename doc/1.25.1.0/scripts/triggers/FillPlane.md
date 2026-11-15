@@ -1,12 +1,12 @@
 # triggers/FillPlane.lua
 
-Source : `dataS/scripts/triggers/FillPlane.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/FillPlane.lua` — FS25 1.25.1.0
 
 - **FillPlane** (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillPlane.new(customMt: table?) → table` | 23 |  |
 | `FillPlane:delete()` | 38 |  |

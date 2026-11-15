@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableVehicleBuyingStation.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableVehicleBuyingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableVehicleBuyingStation.lua` — FS25 1.25.1.0
 
 - **PlaceableVehicleBuyingStation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableVehicleBuyingStation.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `PlaceableVehicleBuyingStation:onLoad(savegame: table)` | 55 |  |

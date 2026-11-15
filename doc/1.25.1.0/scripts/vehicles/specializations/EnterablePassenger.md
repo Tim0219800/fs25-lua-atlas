@@ -1,11 +1,11 @@
 # vehicles/specializations/EnterablePassenger.lua
 
-Source : `dataS/scripts/vehicles/specializations/EnterablePassenger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/EnterablePassenger.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `EnterablePassenger.prerequisitesPresent(specializations: table) → boolean` | 26 |  |
 | `EnterablePassenger.initSpecialization()` | 32 |  |
@@ -56,9 +56,9 @@ Source : `dataS/scripts/vehicles/specializations/EnterablePassenger.lua` — FS2
 | `EnterablePassenger.vehiclePassengerCharacterLoaded(self: any, loadingState: any, arguments: any)` | 1014 |  |
 | `EnterablePassenger.consoleCommandDebugPassengerSeat()` | 1030 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getClosestSeatIndex` | 65 |
 | registerFunction | `getIsPassengerSeatAvailable` | 66 |
@@ -100,5 +100,5 @@ Source : `dataS/scripts/vehicles/specializations/EnterablePassenger.lua` — FS2
 
 ## Messages
 
-- écoute `MessageType.PLAYER_STYLE_CHANGED` (l.191)
-- écoute `MessageType.INPUT_BINDINGS_CHANGED` (l.742)
+- subscribes `MessageType.PLAYER_STYLE_CHANGED` (l.191)
+- subscribes `MessageType.INPUT_BINDINGS_CHANGED` (l.742)

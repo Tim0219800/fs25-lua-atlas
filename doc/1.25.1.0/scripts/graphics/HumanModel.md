@@ -1,12 +1,12 @@
 # graphics/HumanModel.lua
 
-Source : `dataS/scripts/graphics/HumanModel.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/graphics/HumanModel.lua` — FS25 1.25.1.0
 
 - **HumanModel** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HumanModel.registerXMLPaths(xmlSchema: XMLSchema, baseKey: string)` | 18 |  |
 | `HumanModel.new(customMt: any) → table` | 43 |  |

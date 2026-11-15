@@ -1,12 +1,12 @@
 # player/networking/PlayerLocalNetworkComponent.lua
 
-Source : `dataS/scripts/player/networking/PlayerLocalNetworkComponent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/networking/PlayerLocalNetworkComponent.lua` — FS25 1.25.1.0
 
-- **PlayerLocalNetworkComponent** hérite de `PlayerNetworkComponent` (l.13)
+- **PlayerLocalNetworkComponent** inherits from `PlayerNetworkComponent` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerLocalNetworkComponent.new(player: Player) → PlayerLocalNetworkComponent` | 21 |  |
 | `PlayerLocalNetworkComponent:update(dt: number)` | 46 |  |

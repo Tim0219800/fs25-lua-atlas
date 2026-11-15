@@ -1,11 +1,11 @@
 # vehicles/specializations/FoldableSteps.lua
 
-Source : `dataS/scripts/vehicles/specializations/FoldableSteps.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FoldableSteps.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FoldableSteps.prerequisitesPresent(specializations: table) → boolean` | 24 |  |
 | `FoldableSteps.initSpecialization()` | 30 |  |
@@ -42,9 +42,9 @@ Source : `dataS/scripts/vehicles/specializations/FoldableSteps.lua` — FS25 1.2
 | `FoldableSteps:loadDynamicLockPositionFromXML(superFunc: any, xmlFile: any, key: any, lockPosition: any)` | 646 |  |
 | `FoldableSteps:getIsDynamicLockPositionActive(superFunc: any, lockPosition: any)` | 664 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setFoldableStepsFoldState` | 80 |
 | registerOverwrittenFunction | `getCanBeTurnedOn` | 87 |

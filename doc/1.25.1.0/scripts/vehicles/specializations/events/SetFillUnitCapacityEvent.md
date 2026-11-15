@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetFillUnitCapacityEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetFillUnitCapacityEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetFillUnitCapacityEvent.lua` — FS25 1.25.1.0
 
-- **SetFillUnitCapacityEvent** hérite de `Event` (l.7)
+- **SetFillUnitCapacityEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetFillUnitCapacityEvent.emptyNew() → table` | 14 |  |
 | `SetFillUnitCapacityEvent.new(vehicle: table, fillUnitIndex: boolean, capacity: boolean)` | 23 |  |

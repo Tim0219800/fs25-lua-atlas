@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/misc/ManureSensorLinkageData.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/ManureSensorLinkageData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/misc/ManureSensorLinkageData.lua` — FS25 1.25.1.0
 
 - **ManureSensorLinkageData** (l.16)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ManureSensorLinkageData:delete()` | 37 |  |
 | `ManureSensorLinkageData:loadFromXML(_: any, _: any, baseDirectory: any, configFileName: any, mapFilename: any)` | 49 |  |

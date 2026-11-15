@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : vehicles/specializations/events/BalerAutomaticDropEvent.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : vehicles/specializations/events/BalerAutomaticDropEvent.lua (generated stub, FS25 Lua Atlas)
 
 ---@class BalerAutomaticDropEvent : Event
 BalerAutomaticDropEvent = {}

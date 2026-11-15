@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : debug/elements/DebugSphere.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : debug/elements/DebugSphere.lua (generated stub, FS25 Lua Atlas)
 
 ---@class DebugSphere : DebugElement
 DebugSphere = {}

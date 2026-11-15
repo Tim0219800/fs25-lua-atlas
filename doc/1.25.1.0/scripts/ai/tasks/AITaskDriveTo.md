@@ -1,12 +1,12 @@
 # ai/tasks/AITaskDriveTo.lua
 
-Source : `dataS/scripts/ai/tasks/AITaskDriveTo.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/tasks/AITaskDriveTo.lua` — FS25 1.25.1.0
 
-- **AITaskDriveTo** hérite de `AITask` (l.18)
+- **AITaskDriveTo** inherits from `AITask` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AITaskDriveTo.new(isServer: any, job: any, customMt: any)` | 22 |  |
 | `AITaskDriveTo:reset()` | 41 |  |

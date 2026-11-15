@@ -1,12 +1,12 @@
 # vehicles/specializations/TensionBeltObject.lua
 
-Source : `dataS/scripts/vehicles/specializations/TensionBeltObject.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/TensionBeltObject.lua` — FS25 1.25.1.0
 
 - **TensionBeltObject** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TensionBeltObject.prerequisitesPresent(specializations: any)` | 15 |  |
 | `TensionBeltObject.initSpecialization()` | 21 |  |
@@ -17,9 +17,9 @@ Source : `dataS/scripts/vehicles/specializations/TensionBeltObject.lua` — FS25
 | `TensionBeltObject:getMeshNodes()` | 82 |  |
 | `TensionBeltObject:getTensionBeltNodeId()` | 88 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getSupportsTensionBelts` | 34 |
 | registerFunction | `getMeshNodes` | 35 |

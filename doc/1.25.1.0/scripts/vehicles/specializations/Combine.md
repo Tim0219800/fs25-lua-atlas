@@ -1,14 +1,14 @@
 # vehicles/specializations/Combine.lua
 
-Source : `dataS/scripts/vehicles/specializations/Combine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Combine.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des moissonneuses-batteuses (et ensileuses à tampon) : reçoit les récoltes calculées par les Cutter attachés (addCutterArea), les stocke dans la fill unit, gère un tampon d'entrée (processing.inputBuffer, en créneaux temporisés) qui alimente la paille/le déchiquetage, et pilote les effets visuels côté client. EFFETS (tous via g_effectManager:loadEffect, EffectManager absent du dump : rendu interne NON VÉRIFIÉ) : « chopperEffect » (déchiquetage, clé vehicle.combine.chopperEffect), « strawEffect » (dépôt d'andain), « fillEffect » (remplissage/éjection) et « effect » (effets généraux allumés à l'allumage), plus animationNodes, chopperAnimationNodes, strawDropAnimationNodes et fillingAnimationNodes. Conditions : chopper et paille sont activés par des minuteries serveur (isChopperEffectEnabled / isStrawEffectEnabled, mises à 500 ms quand processCombineChopperArea ou processCombineSwathArea travaille réellement, puis décrémentées dans onUpdateTick) ; le fillEffect suit isFilling (délai spec.processing.toggleTime après les dernières surfaces coupées, fillTimeThreshold sans coupe). Le type de remplissage (setEffectTypeInfo) est getCombineLastValidFillType ; la densité d'effet (g_effectManager:setDensity) vaut cutterLoad x strawRatio x 0.8 + 0.2 (calculée dans addCutterArea, valeur par défaut 0.2). Aucun vent, aucune poussière dédiée n'est piloté ici : la poussière de coupe visible vient des effets XML (cutter.effect et effets ci-dessus) et reste un effet binaire + densité. DONNÉES MÉTÉO : une seule lecture, getIsThreshingDuringRain, qui interroge weather:getRainFallScale() et weather:getTimeSinceLastRain() (seuils : pluie >= 0.1, ou >= 0.02 en mode « alerte précoce », et temps depuis la dernière pluie < 20 ; unités de Weather NON VÉRIFIÉES). Si vrai (et hors mission sur la position, et allowThreshingDuringRain faux), le rendement ajouté dans addCutterArea est multiplié par (1 - Combine.RAIN_YIELD_REDUCTION) (constante non définie dans le dump : NON VÉRIFIÉE) et onDraw affiche l'avertissement « la pluie réduit le rendement ». Pas d'effet visuel lié à la pluie ici. RÉSEAU : le serveur calcule ; les états isFilling, chopperPSenabled, strawPSenabled, effectDensity (5 bits), type de remplissage et fruit sont envoyés via effectDirtyFlag dans onWriteUpdateStream et appliqués côté client par setChopperPSEnabled / setStrawPSEnabled / setCombineIsFilling ; le dirtyFlag sépare le fruit et les hectares travaillés ; onWriteStream/onReadStream envoient l'état complet à la connexion (densité fixée à 1) ; setIsSwathActive passe par CombineStrawEnableEvent. Sur un client, processCombineChopperArea et processCombineSwathArea ne travaillent que si currentUpdateDistance <= Combine.CLIENT_DM_UPDATE_RADIUS (valeur NON VÉRIFIÉE). Points d'extension : événements enregistrés onStartThreshing et onStopThreshing (registerEvents) ; fonctions enregistrées setChopperPSEnabled, setStrawPSEnabled, setCombineIsFilling, setIsSwathActive, getIsThreshingDuringRain, getCombineLastValidFillType, getCombineLoadPercentage, addCutterArea, verifyCombine, processCombineChopperArea/SwathArea, loadCombineEffects ; surcharges (getCanBeTurnedOn, getIsFoldAllowed, getDirtMultiplier, getWearMultiplier, getIsTurnedOnAnimationActive...). Les setters d'effets sont les points d'accroche les plus propres pour observer ou compléter les émissions sans toucher à la logique de récolte. Sauvegarde : isSwathActive, workedHectars, numAttachedCutters.
 
 - **Combine** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Combine.initSpecialization()` | 20 | ✍ Enregistre dans le schéma XML toutes les clés de vehicle.combine (avertissements, tampon, andain/swath, déchiquetage, échelle, échelle d'échelle repliable, additifs, inclinaison automatique, repli, effets chopperEffect / strawEffect / fillEffect / effect, animationNodes, sons, tableaux de bord) et les attributs de sauvegarde isSwathActive, workedHectars et numAttachedCutters. Non relu clé par clé. |
 | `Combine.prerequisitesPresent(specializations: any)` | 128 | ✍ Exige WorkArea, FillUnit, AnimatedVehicle, TurnOnVehicle et (Drivable ou Attachable). |
@@ -81,9 +81,9 @@ Source : `dataS/scripts/vehicles/specializations/Combine.lua` — FS25 1.25.1.0
 | `Combine.actionEventToggleChopper(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 2167 | ✍ Rappel de l'action TOGGLE_CHOPPER : bascule l'andain si le fruit a un andain, sinon affiche l'avertissement « impossible de basculer ». |
 | `Combine.updateToggleStrawText(self: any)` | 2188 | ✍ Met à jour le texte de l'action selon que l'andain est actif ou non. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onStartThreshing` | 139 |
 | registerEvent | `onStopThreshing` | 140 |

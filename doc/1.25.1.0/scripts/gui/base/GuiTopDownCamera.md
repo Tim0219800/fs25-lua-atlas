@@ -1,12 +1,12 @@
 # gui/base/GuiTopDownCamera.lua
 
-Source : `dataS/scripts/gui/base/GuiTopDownCamera.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/GuiTopDownCamera.lua` — FS25 1.25.1.0
 
 - **GuiTopDownCamera** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GuiTopDownCamera:createCameraNodes() → integer, integer` | 114 |  |
 | `GuiTopDownCamera:delete()` | 130 |  |
@@ -38,4 +38,4 @@ Source : `dataS/scripts/gui/base/GuiTopDownCamera.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.INPUT_MODE_CHANGED` (l.172)
+- subscribes `MessageType.INPUT_MODE_CHANGED` (l.172)

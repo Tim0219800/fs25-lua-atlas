@@ -1,12 +1,12 @@
 # vehicles/specializations/events/EnterablePassengerEnterResponseEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/EnterablePassengerEnterResponseEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/EnterablePassengerEnterResponseEvent.lua` — FS25 1.25.1.0
 
-- **EnterablePassengerEnterResponseEvent** hérite de `Event` (l.13)
+- **EnterablePassengerEnterResponseEvent** inherits from `Event` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `EnterablePassengerEnterResponseEvent.emptyNew() → table` | 20 |  |
 | `EnterablePassengerEnterResponseEvent.new(id: table, isOwner: boolean, seatIndex: table, userId: any) → table` | 31 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/IKChains.lua
 
-Source : `dataS/scripts/vehicles/specializations/IKChains.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/IKChains.lua` — FS25 1.25.1.0
 
 - **IKChains** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `IKChains.prerequisitesPresent(specializations: any)` | 15 |  |
 | `IKChains.initSpecialization()` | 21 |  |
@@ -14,9 +14,9 @@ Source : `dataS/scripts/vehicles/specializations/IKChains.lua` — FS25 1.25.1.0
 | `IKChains:onLoad(savegame: any)` | 37 |  |
 | `IKChains:onUpdate(dt: any, isActiveForInput: any, isActiveForInputIgnoreSelection: any, isSelected: any)` | 58 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 31 |
 | registerEventListener | `onUpdate` | 32 |

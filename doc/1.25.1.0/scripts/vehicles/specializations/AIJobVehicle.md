@@ -1,12 +1,12 @@
 # vehicles/specializations/AIJobVehicle.lua
 
-Source : `dataS/scripts/vehicles/specializations/AIJobVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AIJobVehicle.lua` — FS25 1.25.1.0
 
 - **AIJobVehicle** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobVehicle.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `AIJobVehicle.initSpecialization()` | 25 |  |
@@ -28,9 +28,9 @@ Source : `dataS/scripts/vehicles/specializations/AIJobVehicle.lua` — FS25 1.25
 | `AIJobVehicle:getIsAIJobSupported(aiJobName: any) → boolean` | 528 |  |
 | `AIJobVehicle:getDeactivateLightsOnLeave(superFunc: any) → boolean` | 570 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onAIJobStarted` | 45 |
 | registerEvent | `onAIJobFinished` | 46 |
@@ -84,5 +84,5 @@ Source : `dataS/scripts/vehicles/specializations/AIJobVehicle.lua` — FS25 1.25
 
 ## Messages
 
-- publie `MessageType.GUI_INGAME_OPEN_AI_SCREEN` (l.446)
-- publie `MessageType.GUI_INGAME_OPEN_AI_SCREEN` (l.461)
+- publishes `MessageType.GUI_INGAME_OPEN_AI_SCREEN` (l.446)
+- publishes `MessageType.GUI_INGAME_OPEN_AI_SCREEN` (l.461)

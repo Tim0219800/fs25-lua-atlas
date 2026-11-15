@@ -1,12 +1,12 @@
 # vehicles/specializations/AIDrivable.lua
 
-Source : `dataS/scripts/vehicles/specializations/AIDrivable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AIDrivable.lua` — FS25 1.25.1.0
 
 - **AIDrivable** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIDrivable.prerequisitesPresent(specializations: table) → boolean` | 25 |  |
 | `AIDrivable.initSpecialization()` | 33 |  |
@@ -51,9 +51,9 @@ Source : `dataS/scripts/vehicles/specializations/AIDrivable.lua` — FS25 1.25.1
 | `AIDrivable:consoleCommandSetTurnRadius(turnRadius: any)` | 1081 |  |
 | `AIDrivable:consoleCommandMove(distance: any)` | 1100 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onAIDrivablePrepare` | 72 |
 | registerEvent | `onAIDriveableStart` | 73 |

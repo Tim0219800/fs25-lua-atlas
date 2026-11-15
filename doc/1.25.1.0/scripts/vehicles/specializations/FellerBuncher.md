@@ -1,11 +1,11 @@
 # vehicles/specializations/FellerBuncher.lua
 
-Source : `dataS/scripts/vehicles/specializations/FellerBuncher.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FellerBuncher.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FellerBuncher.prerequisitesPresent(specializations: table) → boolean` | 21 |  |
 | `FellerBuncher.initSpecialization()` | 27 |  |
@@ -47,9 +47,9 @@ Source : `dataS/scripts/vehicles/specializations/FellerBuncher.lua` — FS25 1.2
 | `FellerBuncher.loadSpecValueMaxTreeSize(xmlFile: any, customEnvironment: any, baseDir: any)` | 1029 |  |
 | `FellerBuncher.getSpecValueMaxTreeSize(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 1035 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setFellerBuncherGrabState` | 84 |
 | registerFunction | `getIsFellerBuncherReadyForCut` | 85 |
@@ -83,6 +83,6 @@ Source : `dataS/scripts/vehicles/specializations/FellerBuncher.lua` — FS25 1.2
 
 ## Messages
 
-- écoute `MessageType.TREE_SHAPE_CUT` (l.218)
-- écoute `MessageType.TREE_SHAPE_MOUNTED` (l.219)
-- publie `MessageType.TREE_SHAPE_MOUNTED` (l.757)
+- subscribes `MessageType.TREE_SHAPE_CUT` (l.218)
+- subscribes `MessageType.TREE_SHAPE_MOUNTED` (l.219)
+- publishes `MessageType.TREE_SHAPE_MOUNTED` (l.757)

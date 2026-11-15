@@ -1,12 +1,12 @@
 # fence/FenceSegment.lua
 
-Source : `dataS/scripts/fence/FenceSegment.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/fence/FenceSegment.lua` — FS25 1.25.1.0
 
 - **FenceSegment** (l.33)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FenceSegment.registerXMLPaths(schema: any, basePath: any)` | 37 |  |
 | `FenceSegment:saveToXMLFile(xmlFile: any, key: any)` | 370 |  |

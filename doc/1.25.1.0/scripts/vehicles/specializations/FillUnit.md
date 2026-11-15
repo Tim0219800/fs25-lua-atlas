@@ -1,13 +1,13 @@
 # vehicles/specializations/FillUnit.lua
 
-Source : `dataS/scripts/vehicles/specializations/FillUnit.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FillUnit.lua` — FS25 1.25.1.0
 
 - **FillUnit** (l.16)
 - **FillActivatable** (l.3302)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FillUnit.initSpecialization()` | 33 |  |
 | `FillUnit.registerUnitDisplaySchema(schema: any, key: any)` | 181 |  |
@@ -135,9 +135,9 @@ Source : `dataS/scripts/vehicles/specializations/FillUnit.lua` — FS25 1.25.1.0
 | `FillActivatable:updateActivateText(isFilling: any)` | 3372 |  |
 | `FillActivatable:setFillType(fillTypeIndex: any)` | 3383 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onFillUnitFillLevelChanged` | 195 |
 | registerEvent | `onChangedFillType` | 196 |

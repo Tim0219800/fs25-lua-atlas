@@ -1,11 +1,11 @@
 # vehicles/specializations/AutomaticArmControlHarvester.lua
 
-Source : `dataS/scripts/vehicles/specializations/AutomaticArmControlHarvester.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AutomaticArmControlHarvester.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AutomaticArmControlHarvester.prerequisitesPresent(specializations: table) → boolean` | 43 |  |
 | `AutomaticArmControlHarvester.initSpecialization()` | 49 |  |
@@ -40,9 +40,9 @@ Source : `dataS/scripts/vehicles/specializations/AutomaticArmControlHarvester.lu
 | `AutomaticArmControlHarvester:getTreeAutomaticOverwrites()` | 894 |  |
 | `AutomaticArmControlHarvester.drawDebugCircleRange(node: any, radius: any, steps: any, minRot: any, maxRot: any)` | 901 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getSupportsAutoTreeAlignment` | 107 |
 | registerFunction | `getIsAutoTreeAlignmentAllowed` | 108 |

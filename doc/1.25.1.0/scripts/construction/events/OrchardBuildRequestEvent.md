@@ -1,12 +1,12 @@
 # construction/events/OrchardBuildRequestEvent.lua
 
-Source : `dataS/scripts/construction/events/OrchardBuildRequestEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/construction/events/OrchardBuildRequestEvent.lua` — FS25 1.25.1.0
 
-- **OrchardBuildRequestEvent** hérite de `Event` (l.18)
+- **OrchardBuildRequestEvent** inherits from `Event` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `OrchardBuildRequestEvent.emptyNew() → OrchardBuildRequestEvent` | 38 |  |
 | `OrchardBuildRequestEvent.new(requestId: table, fencePlaceable: table, templateId: table?, courseSegments: table, boundaryLine: table, optionStates: table?) → OrchardBuildRequestEvent` | 54 |  |

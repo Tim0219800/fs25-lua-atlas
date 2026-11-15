@@ -1,12 +1,12 @@
 # handTools/HandToolSystem.lua
 
-Source : `dataS/scripts/handTools/HandToolSystem.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/HandToolSystem.lua` — FS25 1.25.1.0
 
-- **HandToolSystem** hérite de `AbstractManager` (l.21)
+- **HandToolSystem** inherits from `AbstractManager` (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolSystem.new() → HandToolSystem` | 50 |  |
 | `HandToolSystem:addHandTool(handTool: any)` | 127 |  |
@@ -26,5 +26,5 @@ Source : `dataS/scripts/handTools/HandToolSystem.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- publie `MessageType.HANDTOOL_ADDED` (l.147)
-- publie `MessageType.HANDTOOL_REMOVED` (l.168)
+- publishes `MessageType.HANDTOOL_ADDED` (l.147)
+- publishes `MessageType.HANDTOOL_REMOVED` (l.168)

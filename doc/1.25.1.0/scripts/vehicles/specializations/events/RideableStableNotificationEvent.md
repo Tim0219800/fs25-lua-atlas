@@ -1,12 +1,12 @@
 # vehicles/specializations/events/RideableStableNotificationEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/RideableStableNotificationEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/RideableStableNotificationEvent.lua` — FS25 1.25.1.0
 
-- **RideableStableNotificationEvent** hérite de `Event` (l.6)
+- **RideableStableNotificationEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RideableStableNotificationEvent.emptyNew() → table` | 13 |  |
 | `RideableStableNotificationEvent.new(isInStable: table, name: integer)` | 22 |  |

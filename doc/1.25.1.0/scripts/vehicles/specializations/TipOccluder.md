@@ -1,12 +1,12 @@
 # vehicles/specializations/TipOccluder.lua
 
-Source : `dataS/scripts/vehicles/specializations/TipOccluder.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/TipOccluder.lua` — FS25 1.25.1.0
 
 - **TipOccluder** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TipOccluder.prerequisitesPresent(specializations: any)` | 16 |  |
 | `TipOccluder.initSpecialization()` | 22 |  |
@@ -19,9 +19,9 @@ Source : `dataS/scripts/vehicles/specializations/TipOccluder.lua` — FS25 1.25.
 | `TipOccluder:getWheelsWithTipOcclisionAreaGroupId(wheels: any, groupId: any)` | 164 |  |
 | `TipOccluder:getRequiresTipOcclusionArea()` | 176 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getTipOcclusionAreas` | 36 |
 | registerFunction | `getWheelsWithTipOcclisionAreaGroupId` | 37 |

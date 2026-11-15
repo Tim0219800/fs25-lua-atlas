@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : vehicles/specializations/Lights.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : vehicles/specializations/Lights.lua (generated stub, FS25 Lua Atlas)
 
 --- Spécialisation d'éclairage des véhicules (spec_lights) : feux de croisement/route, feux de travail, de stop, de recul, clignotants, gyrophares, feux d'intérieur, feux de jour, feux hauts/bas. Elle pilote deux familles de feux décrites dans le XML du véhicule : les feux statiques (StaticLight : matériaux/shaders émissifs, sans source lumineuse) et les feux réels (RealLight : sources de lumière du moteur). Les classes StaticLight, SharedLight, StaticLightCompound et BeaconLight sont dans d'autres fichiers ; seul RealLight.lua est présent dans le dump (vehicles/specializations/components/RealLight.lua).
 --- 

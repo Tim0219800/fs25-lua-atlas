@@ -1,12 +1,12 @@
 # vehicles/specializations/events/TreePlanterCreateTreeEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/TreePlanterCreateTreeEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/TreePlanterCreateTreeEvent.lua` — FS25 1.25.1.0
 
-- **TreePlanterCreateTreeEvent** hérite de `Event` (l.7)
+- **TreePlanterCreateTreeEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TreePlanterCreateTreeEvent.emptyNew() → table` | 14 |  |
 | `TreePlanterCreateTreeEvent.new(object: table, treeTypeIndex: integer, treeVariationIndex: any)` | 23 |  |

@@ -1,12 +1,12 @@
 # vehicles/specializations/CCTDrivable.lua
 
-Source : `dataS/scripts/vehicles/specializations/CCTDrivable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/CCTDrivable.lua` — FS25 1.25.1.0
 
 - **CCTDrivable** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CCTDrivable.prerequisitesPresent(specializations: table) → boolean` | 20 |  |
 | `CCTDrivable.initSpecialization()` | 26 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/vehicles/specializations/CCTDrivable.lua` — FS25 1.25.
 | `CCTDrivable:setWorldPositionQuaternion(superFunc: number, x: number, y: number, z: number, qx: number, qy: number, qz: number, qw: number, i: integer, changeInterp: boolean)` | 232 |  |
 | `CCTDrivable:removeFromPhysics(superFunc: function) → boolean` | 265 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getTouchingNode` | 42 |
 | registerFunction | `moveCCTExternal` | 43 |

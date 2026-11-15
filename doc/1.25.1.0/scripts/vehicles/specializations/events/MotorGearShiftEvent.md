@@ -1,12 +1,12 @@
 # vehicles/specializations/events/MotorGearShiftEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/MotorGearShiftEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/MotorGearShiftEvent.lua` — FS25 1.25.1.0
 
-- **MotorGearShiftEvent** hérite de `Event` (l.21)
+- **MotorGearShiftEvent** inherits from `Event` (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MotorGearShiftEvent.emptyNew() → table` | 28 |  |
 | `MotorGearShiftEvent.new(vehicle: table, shiftType: boolean, shiftValue: any)` | 37 |  |

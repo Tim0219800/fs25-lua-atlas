@@ -1,12 +1,12 @@
 # objects/AnimatedObjectActivatable.lua
 
-Source : `dataS/scripts/objects/AnimatedObjectActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/AnimatedObjectActivatable.lua` — FS25 1.25.1.0
 
 - **AnimatedObjectActivatable** (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimatedObjectActivatable.new(animatedObject: table) → table` | 13 |  |
 | `AnimatedObjectActivatable:registerCustomInput(inputContext: any)` | 24 |  |

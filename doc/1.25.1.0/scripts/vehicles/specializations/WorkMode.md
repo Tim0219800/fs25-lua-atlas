@@ -1,12 +1,12 @@
 # vehicles/specializations/WorkMode.lua
 
-Source : `dataS/scripts/vehicles/specializations/WorkMode.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/WorkMode.lua` — FS25 1.25.1.0
 
 - **WorkMode** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WorkMode.prerequisitesPresent(specializations: table) → boolean` | 23 |  |
 | `WorkMode.initSpecialization()` | 30 |  |
@@ -47,9 +47,9 @@ Source : `dataS/scripts/vehicles/specializations/WorkMode.lua` — FS25 1.25.1.0
 | `WorkMode.actionEventWorkModeChange(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 998 |  |
 | `WorkMode.actionEventWorkModeChangeDirect(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1012 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onWorkModeChanged` | 99 |
 | registerFunction | `loadWorkModeFromXML` | 105 |

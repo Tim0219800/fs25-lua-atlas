@@ -1,12 +1,12 @@
 # gui/elements/IndexStateElement.lua
 
-Source : `dataS/scripts/gui/elements/IndexStateElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/IndexStateElement.lua` — FS25 1.25.1.0
 
-- **IndexStateElement** hérite de `BoxLayoutElement` (l.21)
+- **IndexStateElement** inherits from `BoxLayoutElement` (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `IndexStateElement.new(target: any, custom_mt: any)` | 27 |  |
 | `IndexStateElement:loadFromXML(xmlFile: any, key: any)` | 55 |  |

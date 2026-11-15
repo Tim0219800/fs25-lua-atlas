@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableChargingStation.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableChargingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableChargingStation.lua` — FS25 1.25.1.0
 
 - **PlaceableChargingStation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableChargingStation.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableChargingStation.registerFunctions(placeableType: any)` | 24 |  |
@@ -15,9 +15,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableChargingStation.lua`
 | `PlaceableChargingStation:getChargeState()` | 113 |  |
 | `PlaceableChargingStation:onUpdate(dt: number)` | 134 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getIsCharging` | 25 |
 | registerFunction | `getChargeState` | 26 |

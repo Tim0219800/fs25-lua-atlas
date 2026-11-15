@@ -1,14 +1,14 @@
 # vehicles/specializations/WorkParticles.lua
 
-Source : `dataS/scripts/vehicles/specializations/WorkParticles.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/WorkParticles.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation véhicule qui gère trois familles d'effets de travail du sol, uniquement côté client (sur serveur pur, ses écouteurs onDelete/onUpdateTick/onDeactivate sont retirés dans onLoad) : (1) « particleAnimations », des maillages animés par shader (paramètre VertxoffsetVertexdeformMotionUVscale) dont la visibilité suit la profondeur de travail ; (2) « particles », de vrais systèmes de particules allumés ou éteints via ParticleUtil.setEmittingState ; (3) « effects », des effets EffectManager dont le type de remplissage vient de la zone de travail. La décision est prise à chaque onUpdateTick, pas à chaque frame. Conditions communes : getDoGroundManipulation() et véhicule sur un champ (sauf vehicle.workParticles#requireField=false). Aucune donnée météo ni humidité n'entre en jeu : seuls la vitesse, le sens de marche, le contact au sol et la profondeur comptent. Point d'extension : surcharger getDoGroundManipulation (fonction enregistrée) ou les écouteurs ; tout est purement visuel, sans synchronisation réseau.
 
 - **WorkParticles** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WorkParticles.prerequisitesPresent(specializations: any)` | 17 | ✍ Aucun prérequis : renvoie toujours true. |
 | `WorkParticles.initSpecialization()` | 23 | ✍ Enregistre dans Vehicle.xmlSchema les clés vehicle.workParticles.particleAnimation(?), .particle(?) et .effect(?) (avec speedThreshold, activeDirection, workAreaIndex, groundReferenceNodeIndex, needsSetIsTurnedOn), #requireField (par défaut true) et l'attribut #depthNode des groundReferenceNode. |
@@ -33,9 +33,9 @@ Source : `dataS/scripts/vehicles/specializations/WorkParticles.lua` — FS25 1.2
 | `WorkParticles:updateGroundReferenceNode(superFunc: any, groundReferenceNode: any, x: any, y: any, z: any, terrainHeight: any, densityHeight: any)` | 597 | ✍ Côté client, avec un depthNode : calcule le déplacement local depuis la dernière position, le sens de marche (seuil 0.0001 sur z local), la distance parcourue et la profondeur, soit la hauteur du nœud moins getTerrainHeightAtWorldPos (en mètres, négative quand le nœud est enfoncé). |
 | `WorkParticles:onDeactivate()` | 621 | ✍ Coupe toutes les émissions de particules et masque les animations quand le véhicule est désactivé. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getDoGroundManipulation` | 80 |
 | registerFunction | `loadGroundAnimations` | 81 |

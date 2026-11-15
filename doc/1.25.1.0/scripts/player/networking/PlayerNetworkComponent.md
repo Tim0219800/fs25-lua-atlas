@@ -1,12 +1,12 @@
 # player/networking/PlayerNetworkComponent.lua
 
-Source : `dataS/scripts/player/networking/PlayerNetworkComponent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/networking/PlayerNetworkComponent.lua` — FS25 1.25.1.0
 
 - **PlayerNetworkComponent** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerNetworkComponent.new(player: Player, custom_mt: table) → PlayerNetworkComponent` | 18 |  |
 | `PlayerNetworkComponent:update(dt: number)` | 39 |  |

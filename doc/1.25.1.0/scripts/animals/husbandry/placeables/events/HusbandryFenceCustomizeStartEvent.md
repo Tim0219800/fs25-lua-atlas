@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/events/HusbandryFenceCustomizeStartEvent.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/events/HusbandryFenceCustomizeStartEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/events/HusbandryFenceCustomizeStartEvent.lua` — FS25 1.25.1.0
 
-- **HusbandryFenceCustomizeStartEvent** hérite de `Event` (l.11)
+- **HusbandryFenceCustomizeStartEvent** inherits from `Event` (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HusbandryFenceCustomizeStartEvent.emptyNew()` | 17 |  |
 | `HusbandryFenceCustomizeStartEvent.new(placeable: any)` | 24 |  |

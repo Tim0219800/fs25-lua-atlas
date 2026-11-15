@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableHeapSpawner.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableHeapSpawner.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableHeapSpawner.lua` — FS25 1.25.1.0
 
 - **PlaceableHeapSpawner** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHeapSpawner.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableHeapSpawner.registerEventListeners(placeableType: any)` | 24 |  |
@@ -14,9 +14,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableHeapSpawner.lua` —
 | `PlaceableHeapSpawner:onLoad(savegame: table)` | 51 |  |
 | `PlaceableHeapSpawner:onFinalizePlacement(savegame: any)` | 123 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 25 |
 | registerEventListener | `onFinalizePlacement` | 26 |

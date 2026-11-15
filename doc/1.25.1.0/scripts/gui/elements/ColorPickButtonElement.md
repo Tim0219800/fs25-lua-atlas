@@ -1,12 +1,12 @@
 # gui/elements/ColorPickButtonElement.lua
 
-Source : `dataS/scripts/gui/elements/ColorPickButtonElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/ColorPickButtonElement.lua` — FS25 1.25.1.0
 
-- **ColorPickButtonElement** hérite de `ButtonElement` (l.13)
+- **ColorPickButtonElement** inherits from `ButtonElement` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ColorPickButtonElement.new(target: any, custom_mt: any)` | 22 |  |
 | `ColorPickButtonElement:loadFromXML(xmlFile: any, key: any)` | 44 |  |

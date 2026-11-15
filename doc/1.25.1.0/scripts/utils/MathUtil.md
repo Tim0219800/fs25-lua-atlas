@@ -1,12 +1,12 @@
 # utils/MathUtil.lua
 
-Source : `dataS/scripts/utils/MathUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/MathUtil.lua` — FS25 1.25.1.0
 
 - **MathUtil** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MathUtil.isNan(value: number) → boolean` | 16 |  |
 | `MathUtil.isInt(number: number) → boolean` | 24 |  |

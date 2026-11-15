@@ -1,12 +1,12 @@
 # vehicles/ai/AIDriveStrategyStonePicker.lua
 
-Source : `dataS/scripts/vehicles/ai/AIDriveStrategyStonePicker.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/ai/AIDriveStrategyStonePicker.lua` — FS25 1.25.1.0
 
-- **AIDriveStrategyStonePicker** hérite de `AIDriveStrategy` (l.9)
+- **AIDriveStrategyStonePicker** inherits from `AIDriveStrategy` (l.9)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIDriveStrategyStonePicker.new(reconstructionData: any, customMt: any)` | 13 |  |
 | `AIDriveStrategyStonePicker:setAIVehicle(vehicle: any)` | 25 |  |

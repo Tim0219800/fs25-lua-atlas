@@ -1,12 +1,12 @@
 # gui/hud/SteeringSliderDisplay.lua
 
-Source : `dataS/scripts/gui/hud/SteeringSliderDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/SteeringSliderDisplay.lua` — FS25 1.25.1.0
 
-- **SteeringSliderDisplay** hérite de `HUDDisplayElement` (l.31)
+- **SteeringSliderDisplay** inherits from `HUDDisplayElement` (l.31)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SteeringSliderDisplay.new(hud: string, hudAtlasPath: string)` | 36 |  |
 | `SteeringSliderDisplay:delete()` | 63 |  |
@@ -29,4 +29,4 @@ Source : `dataS/scripts/gui/hud/SteeringSliderDisplay.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.SETTING_CHANGED` (l.56)
+- subscribes `MessageType.SETTING_CHANGED` (l.56)

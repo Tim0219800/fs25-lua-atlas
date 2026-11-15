@@ -1,5 +1,7 @@
-# Atlas Lua FS25
+# FS25 Lua Atlas
 
-Référence non officielle de l'API Lua de Farming Simulator 25.
+Unofficial Farming Simulator 25 Lua API reference. Written descriptions (✍) are in French.
 
-- [Version 1.25.1.0](1.25.1.0/index.md)
+*Référence non officielle de l'API Lua de Farming Simulator 25. Les descriptions (✍) sont en français.*
+
+- [Game version 1.25.1.0](1.25.1.0/index.md)

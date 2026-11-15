@@ -1,5 +1,7 @@
 # Passer l'atlas à une nouvelle version du jeu
 
+*[English version: NEW_VERSION.md](NEW_VERSION.md)*
+
 1. **Version exacte** : lire le fichier `VERSION` à la racine de l'installation de FS25 (par exemple `1.26.0.0`).
 2. **Sources** : extraire `sdk/debugger/gameSource.zip` dans un **nouveau** dossier hors du dépôt, sans écraser l'ancien.
 3. **Extraction statique** :

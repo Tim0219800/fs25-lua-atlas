@@ -1,12 +1,12 @@
 # vehicles/VehicleCharacter.lua
 
-Source : `dataS/scripts/vehicles/VehicleCharacter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleCharacter.lua` — FS25 1.25.1.0
 
 - **VehicleCharacter** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleCharacter.new(vehicle: any, customMt: any)` | 17 |  |
 | `VehicleCharacter:load(xmlFile: any, xmlNode: any)` | 34 |  |

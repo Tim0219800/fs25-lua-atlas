@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/specializations/RTKStation.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/RTKStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializations/RTKStation.lua` — FS25 1.25.1.0
 
 - **RTKStation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RTKStation.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `RTKStation.registerFunctions(placeableType: any)` | 23 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/specializatio
 | `RTKStation:onFinalizePlacement(savegame: any)` | 45 |  |
 | `RTKStation:onDelete()` | 53 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onFinalizePlacement` | 34 |
 | registerEventListener | `onDelete` | 35 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/MultipleItemPurchase.lua
 
-Source : `dataS/scripts/vehicles/specializations/MultipleItemPurchase.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/MultipleItemPurchase.lua` — FS25 1.25.1.0
 
 - **MultipleItemPurchase** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MultipleItemPurchase.initSpecialization()` | 15 |  |
 | `MultipleItemPurchase.prerequisitesPresent(specializations: any)` | 38 |  |
@@ -25,9 +25,9 @@ Source : `dataS/scripts/vehicles/specializations/MultipleItemPurchase.lua` — F
 | `MultipleItemPurchase:addToPhysics(superFunc: any)` | 323 |  |
 | `MultipleItemPurchase:removeFromPhysics(superFunc: any)` | 341 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadItemAtPosition` | 45 |
 | registerFunction | `onFinishLoadingVehicle` | 46 |

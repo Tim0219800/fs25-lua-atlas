@@ -1,12 +1,12 @@
 # objects/UnloadingStation.lua
 
-Source : `dataS/scripts/objects/UnloadingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/UnloadingStation.lua` — FS25 1.25.1.0
 
-- **UnloadingStation** hérite de `Object` (l.15)
+- **UnloadingStation** inherits from `Object` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `UnloadingStation:readStream(streamId: integer, connection: table)` | 164 |  |
 | `UnloadingStation:writeStream(streamId: integer, connection: table)` | 179 |  |

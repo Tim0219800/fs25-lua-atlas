@@ -1,12 +1,12 @@
 # vehicles/specializations/ProtectedBundleVehicle.lua
 
-Source : `dataS/scripts/vehicles/specializations/ProtectedBundleVehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/ProtectedBundleVehicle.lua` — FS25 1.25.1.0
 
 - **ProtectedBundleVehicle** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ProtectedBundleVehicle.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `ProtectedBundleVehicle.initSpecialization()` | 23 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/vehicles/specializations/ProtectedBundleVehicle.lua` —
 | `ProtectedBundleVehicle:onPostDetach()` | 75 |  |
 | `ProtectedBundleVehicle:getReloadXML(superFunc: any) → string` | 84 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `getReloadXML` | 37 |
 | registerEventListener | `onLoad` | 43 |

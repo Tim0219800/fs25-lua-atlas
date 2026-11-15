@@ -1,12 +1,12 @@
 # gui/hud/HUDElement.lua
 
-Source : `dataS/scripts/gui/hud/HUDElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/HUDElement.lua` — FS25 1.25.1.0
 
 - **HUDElement** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HUDElement.new(overlay: table, parentHudElement: table?, customMt: table?) → table` | 22 |  |
 | `HUDElement:delete()` | 47 |  |

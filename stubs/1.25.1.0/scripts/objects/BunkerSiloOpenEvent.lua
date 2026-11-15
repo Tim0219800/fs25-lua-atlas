@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : objects/BunkerSiloOpenEvent.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : objects/BunkerSiloOpenEvent.lua (generated stub, FS25 Lua Atlas)
 
 ---@class BunkerSiloOpenEvent : Event
 BunkerSiloOpenEvent = {}

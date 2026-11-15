@@ -1,12 +1,12 @@
 # player/stateMachine/PlayerStateIdle.lua
 
-Source : `dataS/scripts/player/stateMachine/PlayerStateIdle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/player/stateMachine/PlayerStateIdle.lua` — FS25 1.25.1.0
 
-- **PlayerStateIdle** hérite de `BaseStateMachineState` (l.12)
+- **PlayerStateIdle** inherits from `BaseStateMachineState` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlayerStateIdle.new(player: Player, stateMachine: StateMachine) → BaseStateMachineState` | 19 |  |
 | `PlayerStateIdle:createTransitions()` | 29 |  |

@@ -1,12 +1,12 @@
 # misc/ConnectionHoseManager.lua
 
-Source : `dataS/scripts/misc/ConnectionHoseManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/ConnectionHoseManager.lua` — FS25 1.25.1.0
 
-- **ConnectionHoseManager** hérite de `AbstractManager` (l.17)
+- **ConnectionHoseManager** inherits from `AbstractManager` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ConnectionHoseManager.new(customMt: any) → table` | 22 |  |
 | `ConnectionHoseManager:initDataStructures()` | 35 |  |

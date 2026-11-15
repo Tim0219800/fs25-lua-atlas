@@ -1,12 +1,12 @@
 # vehicles/specializations/StrawBlower.lua
 
-Source : `dataS/scripts/vehicles/specializations/StrawBlower.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/StrawBlower.lua` — FS25 1.25.1.0
 
 - **StrawBlower** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `StrawBlower.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `StrawBlower.initSpecialization()` | 24 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/vehicles/specializations/StrawBlower.lua` — FS25 1.25.
 | `StrawBlower:onFillUnitFillLevelChanged(fillUnitIndex: integer, fillLevelDelta: number, fillTypeIndex: integer, toolType: boolean, fillPositionData: table, appliedDelta: any)` | 256 |  |
 | `StrawBlower:onDischargeStateChanged(state: any)` | 291 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `strawBlowerBaleTriggerCallback` | 44 |
 | registerFunction | `onDeleteStrawBlowerObject` | 45 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/Drivable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Drivable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Drivable.lua` — FS25 1.25.1.0
 
 - **Drivable** (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Drivable.prerequisitesPresent(specializations: table) → boolean` | 28 |  |
 | `Drivable.initSpecialization()` | 34 |  |
@@ -67,9 +67,9 @@ Source : `dataS/scripts/vehicles/specializations/Drivable.lua` — FS25 1.25.1.0
 | `Drivable.actionEventCruiseControlState(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1483 |  |
 | `Drivable.actionEventCruiseControlValue(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 1495 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateSteeringWheel` | 77 |
 | registerFunction | `setCruiseControlState` | 78 |

@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableDynamicallyLoadedParts.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableDynamicallyLoadedParts.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableDynamicallyLoadedParts.lua` — FS25 1.25.1.0
 
 - **PlaceableDynamicallyLoadedParts** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableDynamicallyLoadedParts.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableDynamicallyLoadedParts.registerFunctions(placeableType: any)` | 24 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableDynamicallyLoadedPar
 | `PlaceableDynamicallyLoadedParts:onDynamicallyPartI3DLoaded(i3dNode: any, failedReason: any, args: any)` | 88 |  |
 | `PlaceableDynamicallyLoadedParts:onDelete()` | 237 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `onDynamicallyPartI3DLoaded` | 25 |
 | registerEventListener | `onLoad` | 31 |

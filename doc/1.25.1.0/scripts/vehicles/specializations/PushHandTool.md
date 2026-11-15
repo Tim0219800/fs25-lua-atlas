@@ -1,11 +1,11 @@
 # vehicles/specializations/PushHandTool.lua
 
-Source : `dataS/scripts/vehicles/specializations/PushHandTool.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/PushHandTool.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PushHandTool.initSpecialization()` | 19 |  |
 | `PushHandTool.prerequisitesPresent(specializations: table) → boolean` | 82 |  |
@@ -38,9 +38,9 @@ Source : `dataS/scripts/vehicles/specializations/PushHandTool.lua` — FS25 1.25
 | `PushHandTool:getRaycastPosition(node: any)` | 1006 |  |
 | `PushHandTool:playerRaycastCallback(hitObjectId: any, x: any, y: any, z: any, distance: any)` | 1023 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getRaycastPosition` | 89 |
 | registerFunction | `playerRaycastCallback` | 90 |

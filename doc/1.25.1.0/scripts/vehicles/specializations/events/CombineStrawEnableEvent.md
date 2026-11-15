@@ -1,12 +1,12 @@
 # vehicles/specializations/events/CombineStrawEnableEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/CombineStrawEnableEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/CombineStrawEnableEvent.lua` — FS25 1.25.1.0
 
-- **CombineStrawEnableEvent** hérite de `Event` (l.7)
+- **CombineStrawEnableEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CombineStrawEnableEvent.emptyNew() → table` | 14 |  |
 | `CombineStrawEnableEvent.new(vehicle: table, isSwathActive: boolean)` | 23 |  |

@@ -1,12 +1,12 @@
 # gui/base/IndexChangeSubjectMixin.lua
 
-Source : `dataS/scripts/gui/base/IndexChangeSubjectMixin.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/IndexChangeSubjectMixin.lua` — FS25 1.25.1.0
 
-- **IndexChangeSubjectMixin** hérite de `GuiMixin` (l.21)
+- **IndexChangeSubjectMixin** inherits from `GuiMixin` (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `IndexChangeSubjectMixin.new()` | 25 |  |
 | `IndexChangeSubjectMixin:addTo(guiElement: any)` | 34 |  |

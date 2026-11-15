@@ -1,12 +1,12 @@
 # vehicles/VehicleMaterialManager.lua
 
-Source : `dataS/scripts/vehicles/VehicleMaterialManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/VehicleMaterialManager.lua` — FS25 1.25.1.0
 
-- **VehicleMaterialManager** hérite de `AbstractManager` (l.21)
+- **VehicleMaterialManager** inherits from `AbstractManager` (l.21)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VehicleMaterialManager:initDataStructures()` | 36 |  |
 | `VehicleMaterialManager:loadMapData(mapXMLFile: integer, missionInfo: table, baseDirectory: string) → boolean` | 48 |  |

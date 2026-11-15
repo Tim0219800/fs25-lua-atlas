@@ -1,12 +1,12 @@
 # handTools/HandToolLoadingData.lua
 
-Source : `dataS/scripts/handTools/HandToolLoadingData.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/HandToolLoadingData.lua` — FS25 1.25.1.0
 
 - **HandToolLoadingData** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandToolLoadingData.new(customMt: any) → table` | 17 |  |
 | `HandToolLoadingData:setFilename(filename: string)` | 39 |  |

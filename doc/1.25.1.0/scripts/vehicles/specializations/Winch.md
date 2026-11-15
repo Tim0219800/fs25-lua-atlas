@@ -1,11 +1,11 @@
 # vehicles/specializations/Winch.lua
 
-Source : `dataS/scripts/vehicles/specializations/Winch.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Winch.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Winch.prerequisitesPresent(specializations: table) → boolean` | 30 |  |
 | `Winch.initSpecialization()` | 36 |  |
@@ -52,9 +52,9 @@ Source : `dataS/scripts/vehicles/specializations/Winch.lua` — FS25 1.25.1.0
 | `Winch.loadSpecValueMaxMass(xmlFile: any, customEnvironment: any, baseDir: any)` | 1282 |  |
 | `Winch.getSpecValueMaxMass(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 1302 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadWinchRopeFromXML` | 115 |
 | registerFunction | `setWinchTreeAttachMode` | 116 |
@@ -91,7 +91,7 @@ Source : `dataS/scripts/vehicles/specializations/Winch.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.TREE_SHAPE_CUT` (l.215)
-- écoute `MessageType.TREE_SHAPE_MOUNTED` (l.216)
-- écoute `MessageType.PLAYER_PRE_TELEPORT` (l.217)
-- publie `MessageType.TREE_SHAPE_MOUNTED` (l.910)
+- subscribes `MessageType.TREE_SHAPE_CUT` (l.215)
+- subscribes `MessageType.TREE_SHAPE_MOUNTED` (l.216)
+- subscribes `MessageType.PLAYER_PRE_TELEPORT` (l.217)
+- publishes `MessageType.TREE_SHAPE_MOUNTED` (l.910)

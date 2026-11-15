@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableFence.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableFence.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableFence.lua` — FS25 1.25.1.0
 
 - **PlaceableFence** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableFence.prerequisitesPresent(specializations: table) → boolean` | 24 |  |
 | `PlaceableFence.registerEvents(placeableType: any)` | 30 |  |
@@ -72,9 +72,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableFence.lua` — FS25 
 | `PlaceableFence:performNodeDestruction(superFunc: any, node: any)` | 1644 |  |
 | `PlaceableFence:collectPickObjects(superFunc: any, node: any)` | 1652 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onCreateSegmentPanel` | 31 |
 | registerFunction | `addSegment` | 37 |

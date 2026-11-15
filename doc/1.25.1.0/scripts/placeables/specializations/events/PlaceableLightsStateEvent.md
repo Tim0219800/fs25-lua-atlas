@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableLightsStateEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableLightsStateEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableLightsStateEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableLightsStateEvent** hérite de `Event` (l.7)
+- **PlaceableLightsStateEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableLightsStateEvent.emptyNew() → table` | 14 |  |
 | `PlaceableLightsStateEvent.new(placeable: table, groupIndex: integer, isActive: boolean)` | 23 |  |

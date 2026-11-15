@@ -1,12 +1,12 @@
 # vehicles/specializations/events/BaleWrapperAutomaticDropEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/BaleWrapperAutomaticDropEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/BaleWrapperAutomaticDropEvent.lua` — FS25 1.25.1.0
 
-- **BaleWrapperAutomaticDropEvent** hérite de `Event` (l.7)
+- **BaleWrapperAutomaticDropEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BaleWrapperAutomaticDropEvent.emptyNew() → table` | 14 |  |
 | `BaleWrapperAutomaticDropEvent.new(object: table, automaticDrop: boolean)` | 22 |  |

@@ -1,12 +1,12 @@
 # handTools/events/HandsPickUpObjectEvent.lua
 
-Source : `dataS/scripts/handTools/events/HandsPickUpObjectEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/handTools/events/HandsPickUpObjectEvent.lua` — FS25 1.25.1.0
 
-- **HandsPickUpObjectEvent** hérite de `Event` (l.4)
+- **HandsPickUpObjectEvent** inherits from `Event` (l.4)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HandsPickUpObjectEvent.emptyNew() → table` | 11 |  |
 | `HandsPickUpObjectEvent.new(hands: HandTool, target: table) → table` | 21 |  |

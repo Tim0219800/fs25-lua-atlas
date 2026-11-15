@@ -1,13 +1,13 @@
 # objects/Bale.lua
 
-Source : `dataS/scripts/objects/Bale.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/Bale.lua` — FS25 1.25.1.0
 
-- **Bale** hérite de `MountableObject` (l.11)
+- **Bale** inherits from `MountableObject` (l.11)
 - **BaleActivatable** (l.1636)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Bale.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 49 |  |
 | `Bale:delete()` | 101 |  |

@@ -1,6 +1,6 @@
 # materials/ParticleSystemManager.lua
 
-Source : `dataS/scripts/materials/ParticleSystemManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/materials/ParticleSystemManager.lua` — FS25 1.25.1.0
 
 ✍ Gestionnaire global des systèmes de particules « partagés » (g_particleSystemManager, dérive d'AbstractManager). Il conserve une liste de types de particules (noms) et, pour chaque type, une unique table particleSystem de référence, créée par MaterialUtil.onCreateParticleSystem à partir d'un nœud I3D d'un porte-particules (particle holder, absent du dump). Les effets copient ensuite ce système de référence (ParticleUtil.copyParticleSystem, dont le corps est absent du dump) ; l'usage exact de la copie est donc NON VÉRIFIÉ ici. Fonctionne sur chaque pair : rien n'est synchronisé en réseau.
 
@@ -10,11 +10,11 @@ LIMITE : un seul système par type (pas de variante par type de remplissage dans
 
 POINTS D'EXTENSION : addParticleType pour de nouveaux types (avant le chargement du porte-particules), addParticleSystem, getParticleSystem. Le moment exact du chargement des porte-particules est NON VÉRIFIÉ (hors dump).
 
-- **ParticleSystemManager** hérite de `AbstractManager` (l.15)
+- **ParticleSystemManager** inherits from `AbstractManager` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ParticleSystemManager.new(customMt: any) → table` | 20 | ✍ Crée le gestionnaire. |
 | `ParticleSystemManager:initDataStructures()` | 28 | ✍ Réinitialise les tables de noms, de types et de systèmes de particules. |

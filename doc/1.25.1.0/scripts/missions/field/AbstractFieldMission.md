@@ -1,12 +1,12 @@
 # missions/field/AbstractFieldMission.lua
 
-Source : `dataS/scripts/missions/field/AbstractFieldMission.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/missions/field/AbstractFieldMission.lua` — FS25 1.25.1.0
 
-- **AbstractFieldMission** hérite de `AbstractMission` (l.13)
+- **AbstractFieldMission** inherits from `AbstractMission` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AbstractFieldMission.new(isServer: any, isClient: any, title: any, description: any, customMt: any)` | 31 |  |
 | `AbstractFieldMission:init(field: any)` | 50 |  |

@@ -1,12 +1,12 @@
 # objects/Storage.lua
 
-Source : `dataS/scripts/objects/Storage.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/Storage.lua` — FS25 1.25.1.0
 
-- **Storage** hérite de `Object` (l.13)
+- **Storage** inherits from `Object` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Storage.registerXMLPaths(schema: any, basePath: any)` | 19 |  |
 | `Storage.registerSavegameXMLPaths(schema: any, basePath: any)` | 42 |  |
@@ -40,4 +40,4 @@ Source : `dataS/scripts/objects/Storage.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.FARM_DELETED` (l.207)
+- subscribes `MessageType.FARM_DELETED` (l.207)

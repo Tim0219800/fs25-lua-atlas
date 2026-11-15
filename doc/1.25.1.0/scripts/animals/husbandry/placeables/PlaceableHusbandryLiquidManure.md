@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryLiquidManure.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryLiquidManure.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryLiquidManure.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryLiquidManure** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryLiquidManure.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableHusbandryLiquidManure.registerOverwrittenFunctions(placeableType: any)` | 24 |  |
@@ -20,9 +20,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryLiquidMan
 | `PlaceableHusbandryLiquidManure:getConditionInfos(superFunc: any)` | 122 |  |
 | `PlaceableHusbandryLiquidManure:updateInfo(superFunc: any, infoTable: any)` | 150 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `updateOutput` | 25 |
 | registerOverwrittenFunction | `updateProduction` | 26 |

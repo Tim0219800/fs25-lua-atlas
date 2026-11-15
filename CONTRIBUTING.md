@@ -1,32 +1,35 @@
-# Contribuer
+# Contributing
 
-Les contributions les plus utiles sont les **descriptions** (`descriptions/<version>/<chemin>.json`) et les corrections de faits vérifiés en jeu.
+*[Version française : CONTRIBUTING.fr.md](CONTRIBUTING.fr.md)*
 
-## Format d'une description
+The most useful contributions are **descriptions** (`descriptions/<version>/<path>.json`) and corrections of facts verified in game.
+
+## Description format
 ```json
 {
   "fichier": "vehicles/specializations/WorkParticles.lua",
-  "module": "Rôle du fichier, côté client/serveur, données lues, conditions des effets, points d'extension.",
+  "module": "Role of the file, client/server side, data read, effect conditions, extension points.",
   "fonctions": {
-    "WorkParticles:onUpdateTick": "Ce que fait la fonction, paramètres, valeurs de retour, pièges."
+    "WorkParticles:onUpdateTick": "What the function does, parameters, return values, pitfalls."
   }
 }
 ```
-- Les clés de `fonctions` doivent être **exactement** les noms du code : `Classe.fn` (point) ou `Classe:fn` (méthode).
-- Langue : français. Ton sobre et factuel.
+- Keys in `fonctions` must match the code **exactly**: `Class.fn` (dot) or `Class:fn` (method).
+- Language: descriptions are written in **French** for consistency. Plain, factual tone.
+  (English contributions are welcome as issues; they will be translated.)
 
-## Règles (non négociables)
-1. **Ne jamais recopier** de code, de corps de fonction ni de commentaire GIANTS. Reformuler avec ses propres mots.
-   Citer un nom de variable, une clé XML, une valeur par défaut ou une unité est permis.
-2. **Ne rien inventer.** Indiquer le niveau de confiance :
-   - **NON VÉRIFIÉ** : le comportement dépend de code absent du dump (par exemple `Weather`, `Environment`, `EffectManager`) ;
-   - « non relu » : partie survolée ;
-   - « non vérifié en jeu » : lu dans le code mais pas testé.
-3. Signaler les bugs apparents du jeu avec « à noter : … ».
-4. Renvoyer au code par `fichier:ligne` plutôt que d'en citer.
+## Rules (non-negotiable)
+1. **Never copy** GIANTS code, function bodies or comments. Rephrase in your own words.
+   Quoting a variable name, an XML key, a default value or a unit is fine.
+2. **Invent nothing.** State the confidence level:
+   - **NON VÉRIFIÉ** (not verified): behaviour depends on code missing from the dump (e.g. `Weather`, `Environment`, `EffectManager`);
+   - « non relu » (skimmed): part not read in detail;
+   - « non vérifié en jeu » (not tested in game): read in the code, not tested.
+3. Flag apparent game bugs with « à noter : … ».
+4. Point to the code with `file:line` instead of quoting it.
 
-## Vérifier avant d'envoyer
+## Check before submitting
 ```
 python -I outils/generer.py 1.25.1.0
 ```
-La CI vérifie la validité des JSON, l'absence de texte GIANTS et la syntaxe des stubs (`luajit -bl`).
+CI checks that the JSON files are valid, that no GIANTS text is present, and that the stubs are valid Lua (`luajit -bl`).

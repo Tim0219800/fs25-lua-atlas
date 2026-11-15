@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceablePointOfInterest.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceablePointOfInterest.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceablePointOfInterest.lua` — FS25 1.25.1.0
 
 - **PlaceablePointOfInterest** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceablePointOfInterest.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceablePointOfInterest.registerXMLPaths(schema: any, basePath: any)` | 25 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceablePointOfInterest.lua`
 | `PlaceablePointOfInterest:onDelete()` | 71 |  |
 | `PlaceablePointOfInterest:setOwnerFarmId(superFunc: any, farmId: any, noEventSend: any)` | 83 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `setOwnerFarmId` | 35 |
 | registerEventListener | `onLoad` | 41 |

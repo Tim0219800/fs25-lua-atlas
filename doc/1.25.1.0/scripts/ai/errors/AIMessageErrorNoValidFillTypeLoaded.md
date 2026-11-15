@@ -1,12 +1,12 @@
 # ai/errors/AIMessageErrorNoValidFillTypeLoaded.lua
 
-Source : `dataS/scripts/ai/errors/AIMessageErrorNoValidFillTypeLoaded.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/errors/AIMessageErrorNoValidFillTypeLoaded.lua` — FS25 1.25.1.0
 
-- **AIMessageErrorNoValidFillTypeLoaded** hérite de `AIMessage` (l.12)
+- **AIMessageErrorNoValidFillTypeLoaded** inherits from `AIMessage` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIMessageErrorNoValidFillTypeLoaded.new(customMt: any)` | 16 |  |
 | `AIMessageErrorNoValidFillTypeLoaded:getI18NText()` | 23 |  |

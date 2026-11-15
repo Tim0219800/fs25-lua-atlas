@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : triggers/WoodUnloadTrigger.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : triggers/WoodUnloadTrigger.lua (generated stub, FS25 Lua Atlas)
 
 ---@class WoodUnloadTrigger : UnloadTrigger
 WoodUnloadTrigger = {}

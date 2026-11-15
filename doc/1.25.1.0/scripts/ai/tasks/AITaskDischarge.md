@@ -1,12 +1,12 @@
 # ai/tasks/AITaskDischarge.lua
 
-Source : `dataS/scripts/ai/tasks/AITaskDischarge.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/tasks/AITaskDischarge.lua` — FS25 1.25.1.0
 
-- **AITaskDischarge** hérite de `AITask` (l.15)
+- **AITaskDischarge** inherits from `AITask` (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AITaskDischarge.new(isServer: any, job: any, customMt: any)` | 19 |  |
 | `AITaskDischarge:reset()` | 35 |  |

@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandry.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandry.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandry.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandry** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandry.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableHusbandry.registerEvents(placeableType: any)` | 24 |  |
@@ -50,9 +50,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandry.lua` —
 | `PlaceableHusbandry:onAddedStorageToUnloadingStation(storage: any, unloadingStation: any)` | 645 |  |
 | `PlaceableHusbandry:onRemovedStorageFromUnloadingStation(storage: any, unloadingStation: any)` | 654 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onHusbandryFillLevelChanged` | 25 |
 | registerEvent | `onFinishedFeeding` | 26 |
@@ -92,7 +92,7 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandry.lua` —
 
 ## Messages
 
-- écoute `MessageType.STORAGE_ADDED_TO_LOADING_STATION` (l.209)
-- écoute `MessageType.STORAGE_REMOVED_FROM_LOADING_STATION` (l.210)
-- écoute `MessageType.STORAGE_ADDED_TO_UNLOADING_STATION` (l.211)
-- écoute `MessageType.STORAGE_REMOVED_FROM_UNLOADING_STATION` (l.212)
+- subscribes `MessageType.STORAGE_ADDED_TO_LOADING_STATION` (l.209)
+- subscribes `MessageType.STORAGE_REMOVED_FROM_LOADING_STATION` (l.210)
+- subscribes `MessageType.STORAGE_ADDED_TO_UNLOADING_STATION` (l.211)
+- subscribes `MessageType.STORAGE_REMOVED_FROM_UNLOADING_STATION` (l.212)

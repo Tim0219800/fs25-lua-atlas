@@ -1,12 +1,12 @@
 # animals/husbandry/placeables/PlaceableHusbandryStraw.lua
 
-Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryStraw.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryStraw.lua` — FS25 1.25.1.0
 
 - **PlaceableHusbandryStraw** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableHusbandryStraw.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableHusbandryStraw.registerFunctions(placeableType: any)` | 24 |  |
@@ -26,9 +26,9 @@ Source : `dataS/scripts/animals/husbandry/placeables/PlaceableHusbandryStraw.lua
 | `PlaceableHusbandryStraw:getConditionInfos(superFunc: any)` | 218 |  |
 | `PlaceableHusbandryStraw:updateInfo(superFunc: any, infoTable: any)` | 262 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateStrawPlane` | 25 |
 | registerOverwrittenFunction | `updateOutput` | 31 |

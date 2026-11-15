@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableAI.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableAI.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableAI.lua` — FS25 1.25.1.0
 
 - **PlaceableAI** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableAI.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableAI.registerFunctions(placeableType: any)` | 24 |  |
@@ -22,9 +22,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableAI.lua` — FS25 1.2
 | `PlaceableAI:setObstacleActive(obstacle: any, active: any)` | 312 |  |
 | `PlaceableAI:updateAIUpdateAreas()` | 328 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `setObstacleActive` | 25 |
 | registerFunction | `loadAIUpdateArea` | 26 |

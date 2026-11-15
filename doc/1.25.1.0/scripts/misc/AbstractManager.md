@@ -1,12 +1,12 @@
 # misc/AbstractManager.lua
 
-Source : `dataS/scripts/misc/AbstractManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/AbstractManager.lua` — FS25 1.25.1.0
 
 - **AbstractManager** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AbstractManager.new(customMt: any) → table` | 17 |  |
 | `AbstractManager:initDataStructures()` | 31 |  |

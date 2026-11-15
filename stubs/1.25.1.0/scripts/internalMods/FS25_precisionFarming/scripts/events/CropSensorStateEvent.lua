@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : internalMods/FS25_precisionFarming/scripts/events/CropSensorStateEvent.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : internalMods/FS25_precisionFarming/scripts/events/CropSensorStateEvent.lua (generated stub, FS25 Lua Atlas)
 
 ---@class CropSensorStateEvent : Event
 CropSensorStateEvent = {}

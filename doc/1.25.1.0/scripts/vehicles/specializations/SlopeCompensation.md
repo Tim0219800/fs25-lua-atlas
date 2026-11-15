@@ -1,12 +1,12 @@
 # vehicles/specializations/SlopeCompensation.lua
 
-Source : `dataS/scripts/vehicles/specializations/SlopeCompensation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SlopeCompensation.lua` — FS25 1.25.1.0
 
 - **SlopeCompensation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SlopeCompensation.prerequisitesPresent(specializations: any)` | 19 |  |
 | `SlopeCompensation.initSpecialization()` | 25 |  |
@@ -26,9 +26,9 @@ Source : `dataS/scripts/vehicles/specializations/SlopeCompensation.lua` — FS25
 | `SlopeCompensation:setSlopeCompensationNodeAngle(compensationNode: any, angle: any)` | 484 |  |
 | `SlopeCompensation:updateDebugValues(values: any)` | 542 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadSlopeCompensationWheels` | 89 |
 | registerFunction | `loadSlopeCompensationNodeFromXML` | 90 |

@@ -1,12 +1,12 @@
 # vehicles/specializations/events/FellerBuncherReleaseEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/FellerBuncherReleaseEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/FellerBuncherReleaseEvent.lua` — FS25 1.25.1.0
 
-- **FellerBuncherReleaseEvent** hérite de `Event` (l.12)
+- **FellerBuncherReleaseEvent** inherits from `Event` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FellerBuncherReleaseEvent.emptyNew() → table` | 19 |  |
 | `FellerBuncherReleaseEvent.new(object: table) → table` | 29 |  |

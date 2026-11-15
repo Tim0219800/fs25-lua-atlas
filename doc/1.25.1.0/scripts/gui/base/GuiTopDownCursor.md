@@ -1,12 +1,12 @@
 # gui/base/GuiTopDownCursor.lua
 
-Source : `dataS/scripts/gui/base/GuiTopDownCursor.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/base/GuiTopDownCursor.lua` — FS25 1.25.1.0
 
 - **GuiTopDownCursor** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `GuiTopDownCursor:delete()` | 86 |  |
 | `GuiTopDownCursor:activate()` | 150 |  |
@@ -18,4 +18,4 @@ Source : `dataS/scripts/gui/base/GuiTopDownCursor.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.INPUT_MODE_CHANGED` (l.163)
+- subscribes `MessageType.INPUT_MODE_CHANGED` (l.163)

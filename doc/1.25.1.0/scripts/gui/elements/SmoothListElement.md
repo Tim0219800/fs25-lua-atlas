@@ -1,12 +1,12 @@
 # gui/elements/SmoothListElement.lua
 
-Source : `dataS/scripts/gui/elements/SmoothListElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/SmoothListElement.lua` — FS25 1.25.1.0
 
-- **SmoothListElement** hérite de `GuiElement` (l.33)
+- **SmoothListElement** inherits from `GuiElement` (l.33)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SmoothListElement.new(target: table?, custom_mt: table?) → table` | 50 |  |
 | `SmoothListElement:loadFromXML(xmlFile: integer, key: string)` | 134 |  |

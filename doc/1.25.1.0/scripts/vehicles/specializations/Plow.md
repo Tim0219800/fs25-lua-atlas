@@ -1,14 +1,14 @@
 # vehicles/specializations/Plow.lua
 
-Source : `dataS/scripts/vehicles/specializations/Plow.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Plow.lua` — FS25 1.25.1.0
 
 ✍ Spécialisation des charrues (réversibles ou non, repliables). AUCUN effet, particule ni animationNode d'effet : la seule animation gérée est la rotation de la charrue (turnAnimation) et les pièces tournantes (speedRotatingParts) ; le son de travail et de retournement est géré côté client. La terre soulevée par une charrue vient de WorkParticles (WorkParticles.lua:238 : actif si getDoGroundManipulation() et sur champ ; Plow ne surcharge pas getDoGroundManipulation, donc valeur par défaut vrai, WorkParticles.lua:311, indépendante de l'état de travail de ce script). TRAVAIL : processPlowArea (zone PLOW) efface les traces de pneus (aussi sur client lointain), puis, sauf client plus loin que Plow.CLIENT_DM_UPDATE_RADIUS (constante non définie ici : NON VÉRIFIÉ), appelle FSDensityMapUtil.updatePlowArea (avec angle, limitToField, limitFruitDestructionToField) et updateVineCultivatorArea, mais seulement si self.tailwaterDepth < 0.1 (pas de labour sous plus de 0.1 de profondeur d'eau, unité non précisée dans ce fichier) ; isWorking = vitesse > 0.5, même si rien n'est labouré. Les corps FSDensityMapUtil sont absents du dump : effet exact sur le terrain NON VÉRIFIÉ. CONDITIONS de zone : inactive pendant 2000 ms après l'attelage, et, par défaut, si l'outil n'est pas abaissé (onlyActiveWhenLowered). L'allumage n'existe pas pour une charrue. LIMITE AU CHAMP : l'option limitToField (basculable par action IMPLEMENT_EXTRA3, synchronisée par PlowLimitToFieldEvent) est forcée à vrai sans la permission createFields ou sur les plateformes qui interdisent la création de champs ; remise à vrai au dételage. ROTATION : setRotationMax/setRotationCenter pilotent l'animation et envoient PlowRotationEvent / PlowRotationCenterEvent ; l'état (rotationMax, temps d'animation) est sauvegardé (saveToXMLFile) et envoyé au flux initial. La rotation est refusée si le pliage, la hauteur, l'alimentation (getIsPowered) ou l'état de levage ne le permettent pas ; les tournages IA se font en bout de ligne (onAIImplement*). MÉTÉO/HUMIDITÉ : aucune lecture. RÉSEAU : seulement flux initial (rotation) et événements de rotation/limite ; aucun effet synchronisé. dt : non utilisé hors signature (statistiques de temps : dt/60000 min, plowedTime). Statistiques serveur : plowedHectares, plowedTime. POINTS D'EXTENSION : fonctions setRotationMax, setRotationCenter, setPlowLimitToField, getIsPlowRotationAllowed, getCanTogglePlowRotation, getPlowLimitToField, getPlowForceLimitToField, setPlowAIRequirements, processPlowArea ; nombreuses surcharges (pliage, détachement, abaissement, IA, pièces tournantes, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML type PLOW, getIsWorkAreaActive). Vitesse limite par défaut : 15. Initialisation et enregistrement XML (initSpecialization, registerXMLPaths) non relus clé par clé.
 
 - **Plow** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Plow.initSpecialization()` | 38 | ✍ Déclare le type de zone plow, la configuration de charrue et le schéma XML. Non relu clé par clé. |
 | `Plow.registerXMLPaths(schema: any, basePath: any)` | 63 | ✍ Enregistre les clés XML de vehicle.plow : rotationPart (animation, limites de pliage/détachement), directionNode, onlyActiveWhenLowered, paramètres IA, sons. Non relu clé par clé. |
@@ -71,9 +71,9 @@ Source : `dataS/scripts/vehicles/specializations/Plow.lua` — FS25 1.25.1.0
 | `Plow.actionControllerRotateBackEvent(self: any, direction: any, isAIEvent: any)` | 1073 | ✍ Callback d'actionController : ramène la charrue à l'état non retourné sur événement IA. |
 | `Plow.actionControllerRotateEvent(self: any, direction: any, isAIEvent: any)` | 1092 | ✍ Callback d'actionController : retourne la charrue ou termine l'animation interrompue. |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `processPlowArea` | 102 |
 | registerFunction | `processPlowShareArea` | 103 |

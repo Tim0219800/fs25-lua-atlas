@@ -1,12 +1,12 @@
 # vehicles/specializations/Crawlers.lua
 
-Source : `dataS/scripts/vehicles/specializations/Crawlers.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Crawlers.lua` — FS25 1.25.1.0
 
 - **Crawlers** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Crawlers.prerequisitesPresent(specializations: table) → boolean` | 23 |  |
 | `Crawlers.initSpecialization()` | 29 |  |
@@ -26,9 +26,9 @@ Source : `dataS/scripts/vehicles/specializations/Crawlers.lua` — FS25 1.25.1.0
 | `Crawlers:validateWashableNode(superFunc: any, node: any)` | 708 |  |
 | `Crawlers.getShallowWaterParameters(crawler: any)` | 807 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateCrawler` | 90 |
 | registerFunction | `loadCrawlerFromXML` | 91 |

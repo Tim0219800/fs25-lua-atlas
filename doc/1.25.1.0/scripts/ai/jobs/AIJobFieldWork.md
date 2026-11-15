@@ -1,12 +1,12 @@
 # ai/jobs/AIJobFieldWork.lua
 
-Source : `dataS/scripts/ai/jobs/AIJobFieldWork.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/jobs/AIJobFieldWork.lua` — FS25 1.25.1.0
 
-- **AIJobFieldWork** hérite de `AIJob` (l.18)
+- **AIJobFieldWork** inherits from `AIJob` (l.18)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIJobFieldWork.new(isServer: any, customMt: any)` | 22 |  |
 | `AIJobFieldWork:readStream(streamId: any, connection: any)` | 53 |  |

@@ -46,7 +46,7 @@ def ptypes(f):
 
 
 def stub_file(fi, desc):
-    L = ['---@meta', f'-- FS25 {V} : {fi["file"]} (stub généré, atlas Lua FS25)', '']
+    L = ['---@meta', f'-- FS25 {V} : {fi["file"]} (generated stub, FS25 Lua Atlas)', '']
     desc = desc or {}
     fd = desc.get('fonctions', {})
     for cname, c in fi['classes'].items():
@@ -70,17 +70,17 @@ def stub_file(fi, desc):
 
 def md_file(fi, desc):
     desc = desc or {}
-    L = [f'# {fi["file"]}', '', f'Source : `dataS/scripts/{fi["file"]}` — FS25 {V}', '']
+    L = [f'# {fi["file"]}', '', f'Source: `dataS/scripts/{fi["file"]}` — FS25 {V}', '']
     if fi['bodyless']:
-        L += ['> ⚠ Dans le dump du SDK ce fichier ne contient **que des signatures** (pas de corps).', '']
+        L += ['> ⚠ In the SDK dump this file only contains **signatures** (no bodies).', '']
     if desc.get('module'):
         L += ['✍ ' + desc['module'], '']
     for cname, c in fi['classes'].items():
-        L.append(f'- **{cname}**' + (f' hérite de `{c["parent"]}`' if c.get('parent') else '') + f' (l.{c["line"]})')
+        L.append(f'- **{cname}**' + (f' inherits from `{c["parent"]}`' if c.get('parent') else '') + f' (l.{c["line"]})')
     fd = desc.get('fonctions', {})
     pub = [f for f in fi['functions'] if not f['local']]
     if pub:
-        L += ['', '## Fonctions', '', '| Fonction | Ligne | Description |', '|---|---|---|']
+        L += ['', '## Functions', '', '| Function | Line | Description (FR) |', '|---|---|---|']
         for f in pub:
             sig = f'{f["name"]}({", ".join(a + ": " + lt(t) for a, t in ptypes(f))})'
             ret = ', '.join(lt(r['type']) for r in f['returns'])
@@ -90,12 +90,12 @@ def md_file(fi, desc):
             d = fd.get(f['name'], '').replace('\n', ' ').replace('|', r'\|')
             L.append(f'| `{sig}` | {f["line"]} | {("✍ " + d) if d else ""} |')
     if fi['spec']:
-        L += ['', '## Spécialisation', '', '| Type | Nom | Ligne |', '|---|---|---|']
+        L += ['', '## Specialization', '', '| Type | Name | Line |', '|---|---|---|']
         L += [f'| {s["kind"]} | `{s["name"]}` | {s["line"]} |' for s in fi['spec']]
     if fi['msgSub'] or fi['msgPub']:
         L += ['', '## Messages', '']
-        L += [f'- écoute `{m["msg"]}` (l.{m["line"]})' for m in fi['msgSub']]
-        L += [f'- publie `{m["msg"]}` (l.{m["line"]})' for m in fi['msgPub']]
+        L += [f'- subscribes `{m["msg"]}` (l.{m["line"]})' for m in fi['msgSub']]
+        L += [f'- publishes `{m["msg"]}` (l.{m["line"]})' for m in fi['msgPub']]
     return '\n'.join(L) + '\n'
 
 
@@ -126,11 +126,11 @@ def main():
 
     nf = sum(len(f['functions']) for f in data['files'])
     nd = sum(len(d.get('fonctions', {})) for d in desc.values())
-    L = [f'# Atlas Lua FS25 — version du jeu {V}', '',
-         f'{len(data["files"])} fichiers, {nf} fonctions, {len(data["engine"])} fonctions moteur. '
-         f'Descriptions rédigées (✍) : {len(desc)} fichiers, {nd} fonctions.', '',
-         '- [Événements de spécialisation](evenements.md) · [Messages](messages.md) · '
-         '[Globales g_*](globales.md) · [Fonctions moteur](moteur.md)', '']
+    L = [f'# FS25 Lua Atlas — game version {V}', '',
+         f'{len(data["files"])} files, {nf} functions, {len(data["engine"])} engine functions. '
+         f'Written descriptions (✍, French): {len(desc)} files, {nd} functions.', '',
+         '- [Specialization events](evenements.md) · [Messages](messages.md) · '
+         '[g_* globals](globales.md) · [Engine functions](moteur.md) · [In-game scan](releve.md)', '']
     for g in sorted(groups):
         L += [f'## {g}', '']
         for fi, dsc in sorted(groups[g], key=lambda x: x[0]['file']):
@@ -139,13 +139,13 @@ def main():
         L.append('')
     (doc / 'index.md').write_text('\n'.join(L), encoding='utf-8')
 
-    L = ['# Événements de spécialisation', '', '| Événement | Déclaré par | Écouté par |', '|---|---|---|']
+    L = ['# Specialization events', '', '| Event | Declared by | Listened by |', '|---|---|---|']
     for e in sorted(events):
         dec = ', '.join(sorted(set(events[e]['registerEvent']))) or '—'
-        L.append(f'| `{e}` | {dec} | {len(set(events[e]["registerEventListener"]))} fichier(s) |')
+        L.append(f'| `{e}` | {dec} | {len(set(events[e]["registerEventListener"]))} file(s) |')
     (doc / 'evenements.md').write_text('\n'.join(L) + '\n', encoding='utf-8')
 
-    L = ['# MessageType', '', '| Message | Publié par | Écouté par |', '|---|---|---|']
+    L = ['# MessageType', '', '| Message | Published by | Subscribers |', '|---|---|---|']
     for m in sorted(msgs):
         L.append(f'| `{m}` | {", ".join(sorted(set(msgs[m]["publie"]))) or "—"} | {len(set(msgs[m]["écoute"]))} |')
     (doc / 'messages.md').write_text('\n'.join(L) + '\n', encoding='utf-8')
@@ -153,15 +153,15 @@ def main():
     agg = defaultdict(list)
     for n, f, l in globs:
         agg[n].append(f'{f}:{l}')
-    L = ['# Globales g_*', '', '| Globale | Affectée dans |', '|---|---|']
+    L = ['# g_* globals', '', '| Global | Assigned in |', '|---|---|']
     L += [f'| `{n}` | {", ".join(agg[n][:3])}{" …" if len(agg[n]) > 3 else ""} |' for n in sorted(agg)]
     (doc / 'globales.md').write_text('\n'.join(L) + '\n', encoding='utf-8')
 
     # moteur : signatures seulement (les 'desc' GIANTS ne sont pas recopiées)
     S = ['---@meta', f'-- FS25 {V} : fonctions moteur (signatures depuis scriptBinding.xml)', '',
          '---@alias entityId integer', '---@alias float number', '']
-    L = ['# Fonctions moteur', '', 'Signatures issues de `sdk/debugger/scriptBinding.xml` (incomplet : '
-         'certaines fonctions appelées par le jeu ou des mods n\'y figurent pas).', '']
+    L = ['# Engine functions', '', 'Signatures from `sdk/debugger/scriptBinding.xml` (incomplete: '
+         'some functions called by the game or by mods are not listed).', '']
     bycat = defaultdict(list)
     for e in data['engine']:
         bycat[e['category'] or '?'].append(e)

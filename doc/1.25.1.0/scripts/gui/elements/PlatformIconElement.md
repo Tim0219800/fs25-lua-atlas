@@ -1,12 +1,12 @@
 # gui/elements/PlatformIconElement.lua
 
-Source : `dataS/scripts/gui/elements/PlatformIconElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/PlatformIconElement.lua` — FS25 1.25.1.0
 
-- **PlatformIconElement** hérite de `BitmapElement` (l.14)
+- **PlatformIconElement** inherits from `BitmapElement` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlatformIconElement.new(target: any, custom_mt: any)` | 20 |  |
 | `PlatformIconElement:delete()` | 28 |  |

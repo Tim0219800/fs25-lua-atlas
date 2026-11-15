@@ -1,12 +1,12 @@
 # gui/elements/BoxLayoutElement.lua
 
-Source : `dataS/scripts/gui/elements/BoxLayoutElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/BoxLayoutElement.lua` — FS25 1.25.1.0
 
-- **BoxLayoutElement** hérite de `BitmapElement` (l.29)
+- **BoxLayoutElement** inherits from `BitmapElement` (l.29)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BoxLayoutElement.new(target: any, custom_mt: any)` | 84 |  |
 | `BoxLayoutElement:loadFromXML(xmlFile: any, key: any)` | 119 |  |

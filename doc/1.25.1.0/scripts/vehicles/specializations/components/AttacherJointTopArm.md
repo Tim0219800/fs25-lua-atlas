@@ -1,12 +1,12 @@
 # vehicles/specializations/components/AttacherJointTopArm.lua
 
-Source : `dataS/scripts/vehicles/specializations/components/AttacherJointTopArm.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/components/AttacherJointTopArm.lua` — FS25 1.25.1.0
 
 - **AttacherJointTopArm** (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AttacherJointTopArm.new(vehicle: any, customMt: any)` | 27 |  |
 | `AttacherJointTopArm:delete()` | 45 |  |

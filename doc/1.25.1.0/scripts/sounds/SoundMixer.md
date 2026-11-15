@@ -1,12 +1,12 @@
 # sounds/SoundMixer.lua
 
-Source : `dataS/scripts/sounds/SoundMixer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/sounds/SoundMixer.lua` — FS25 1.25.1.0
 
 - **SoundMixer** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SoundMixer.new(customMt: any) → table, integer` | 18 |  |
 | `SoundMixer:loadFromXML(xmlFilepath: string)` | 43 |  |
@@ -19,4 +19,4 @@ Source : `dataS/scripts/sounds/SoundMixer.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.GAME_STATE_CHANGED` (l.21)
+- subscribes `MessageType.GAME_STATE_CHANGED` (l.21)

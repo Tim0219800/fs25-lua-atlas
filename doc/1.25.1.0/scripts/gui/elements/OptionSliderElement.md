@@ -1,12 +1,12 @@
 # gui/elements/OptionSliderElement.lua
 
-Source : `dataS/scripts/gui/elements/OptionSliderElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/OptionSliderElement.lua` — FS25 1.25.1.0
 
-- **OptionSliderElement** hérite de `MultiTextOptionElement` (l.12)
+- **OptionSliderElement** inherits from `MultiTextOptionElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `OptionSliderElement.new(target: any, custom_mt: any)` | 19 |  |
 | `OptionSliderElement:loadFromXML(xmlFile: any, key: any)` | 39 |  |

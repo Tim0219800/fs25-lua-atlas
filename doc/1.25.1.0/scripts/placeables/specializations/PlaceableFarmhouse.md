@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableFarmhouse.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableFarmhouse.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableFarmhouse.lua` — FS25 1.25.1.0
 
 - **PlaceableFarmhouse** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableFarmhouse.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `PlaceableFarmhouse.registerFunctions(placeableType: table)` | 26 |  |
@@ -24,9 +24,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableFarmhouse.lua` — F
 | `PlaceableFarmhouse:getSleepCamera() → integer?` | 202 |  |
 | `PlaceableFarmhouse:farmhouseSleepingTriggerCallback(triggerId: integer, otherActorId: integer, onEnter: boolean, onLeave: boolean, onStay: boolean, otherShapeId: integer)` | 233 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `farmhouseSleepingTriggerCallback` | 27 |
 | registerFunction | `getSleepCamera` | 28 |

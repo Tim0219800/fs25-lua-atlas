@@ -1,12 +1,12 @@
 # vehicles/specializations/events/WoodHarvesterOnDelimbTreeEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/WoodHarvesterOnDelimbTreeEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/WoodHarvesterOnDelimbTreeEvent.lua` — FS25 1.25.1.0
 
-- **WoodHarvesterOnDelimbTreeEvent** hérite de `Event` (l.7)
+- **WoodHarvesterOnDelimbTreeEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodHarvesterOnDelimbTreeEvent.emptyNew() → table` | 14 |  |
 | `WoodHarvesterOnDelimbTreeEvent.new(object: table, state: boolean)` | 22 |  |

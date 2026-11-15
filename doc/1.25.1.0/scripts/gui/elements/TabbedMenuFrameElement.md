@@ -1,12 +1,12 @@
 # gui/elements/TabbedMenuFrameElement.lua
 
-Source : `dataS/scripts/gui/elements/TabbedMenuFrameElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/TabbedMenuFrameElement.lua` — FS25 1.25.1.0
 
-- **TabbedMenuFrameElement** hérite de `FrameElement` (l.12)
+- **TabbedMenuFrameElement** inherits from `FrameElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TabbedMenuFrameElement.new(target: any, customMt: any)` | 18 |  |
 | `TabbedMenuFrameElement:initialize(...: any)` | 39 |  |

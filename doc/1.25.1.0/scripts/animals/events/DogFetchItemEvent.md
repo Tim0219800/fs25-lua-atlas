@@ -1,12 +1,12 @@
 # animals/events/DogFetchItemEvent.lua
 
-Source : `dataS/scripts/animals/events/DogFetchItemEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/animals/events/DogFetchItemEvent.lua` — FS25 1.25.1.0
 
-- **DogFetchItemEvent** hérite de `Event` (l.6)
+- **DogFetchItemEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DogFetchItemEvent.emptyNew()` | 12 |  |
 | `DogFetchItemEvent.new(dog: any, player: any, item: any)` | 19 |  |

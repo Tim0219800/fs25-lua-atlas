@@ -1,12 +1,12 @@
 # vehicles/AnimationValueBool.lua
 
-Source : `dataS/scripts/vehicles/AnimationValueBool.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/AnimationValueBool.lua` — FS25 1.25.1.0
 
-- **AnimationValueBool** hérite de `AnimationValueFloat` (l.12)
+- **AnimationValueBool** inherits from `AnimationValueFloat` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimationValueBool.new(vehicle: any, animation: any, part: any, startName: any, endName: any, name: any, initialUpdate: any, get: any, set: any, extraLoad: any, customMt: any)` | 16 |  |
 | `AnimationValueBool:load(xmlFile: any, key: any)` | 22 |  |

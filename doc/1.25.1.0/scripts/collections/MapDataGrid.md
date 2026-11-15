@@ -1,12 +1,12 @@
 # collections/MapDataGrid.lua
 
-Source : `dataS/scripts/collections/MapDataGrid.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/collections/MapDataGrid.lua` — FS25 1.25.1.0
 
-- **MapDataGrid** hérite de `DataGrid` (l.13)
+- **MapDataGrid** inherits from `DataGrid` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MapDataGrid.new(mapSize: integer, blocksPerRowColumn: integer, customMt: table?) → table` | 21 |  |
 | `MapDataGrid.createFromBlockSize(mapSize: integer, blockSize: integer, customMt: table?) → MapDataGrid` | 37 |  |

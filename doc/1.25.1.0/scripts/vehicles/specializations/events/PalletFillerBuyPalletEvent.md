@@ -1,12 +1,12 @@
 # vehicles/specializations/events/PalletFillerBuyPalletEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/PalletFillerBuyPalletEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/PalletFillerBuyPalletEvent.lua` — FS25 1.25.1.0
 
-- **PalletFillerBuyPalletEvent** hérite de `Event` (l.12)
+- **PalletFillerBuyPalletEvent** inherits from `Event` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PalletFillerBuyPalletEvent.emptyNew() → table` | 19 |  |
 | `PalletFillerBuyPalletEvent.new(object: table) → table` | 29 |  |

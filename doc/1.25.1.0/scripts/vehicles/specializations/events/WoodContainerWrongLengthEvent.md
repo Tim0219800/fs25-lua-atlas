@@ -1,12 +1,12 @@
 # vehicles/specializations/events/WoodContainerWrongLengthEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/WoodContainerWrongLengthEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/WoodContainerWrongLengthEvent.lua` — FS25 1.25.1.0
 
-- **WoodContainerWrongLengthEvent** hérite de `Event` (l.12)
+- **WoodContainerWrongLengthEvent** inherits from `Event` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodContainerWrongLengthEvent.emptyNew() → table` | 19 |  |
 | `WoodContainerWrongLengthEvent.new(object: table, state: table, x: any, y: any, z: any) → table` | 29 |  |

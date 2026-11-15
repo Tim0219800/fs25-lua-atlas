@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceablePlacement.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceablePlacement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceablePlacement.lua` — FS25 1.25.1.0
 
 - **PlaceablePlacement** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceablePlacement.prerequisitesPresent(specializations: table) → boolean` | 23 |  |
 | `PlaceablePlacement.registerFunctions(placeableType: any)` | 29 |  |
@@ -30,9 +30,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceablePlacement.lua` — F
 | `PlaceablePlacement:playPlaceSound()` | 531 |  |
 | `PlaceablePlacement:playDestroySound(onlyIfNotPlaying: any)` | 541 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadTestArea` | 30 |
 | registerFunction | `getIsAreaOwnedByFarm` | 31 |

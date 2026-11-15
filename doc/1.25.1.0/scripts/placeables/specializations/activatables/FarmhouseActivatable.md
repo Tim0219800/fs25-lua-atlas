@@ -1,12 +1,12 @@
 # placeables/specializations/activatables/FarmhouseActivatable.lua
 
-Source : `dataS/scripts/placeables/specializations/activatables/FarmhouseActivatable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/activatables/FarmhouseActivatable.lua` — FS25 1.25.1.0
 
 - **FarmhouseActivatable** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FarmhouseActivatable.new(placeable: any)` | 16 |  |
 | `FarmhouseActivatable:getIsActivatable()` | 27 |  |

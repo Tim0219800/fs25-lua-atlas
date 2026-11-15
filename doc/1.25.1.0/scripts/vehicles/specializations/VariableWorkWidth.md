@@ -1,12 +1,12 @@
 # vehicles/specializations/VariableWorkWidth.lua
 
-Source : `dataS/scripts/vehicles/specializations/VariableWorkWidth.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/VariableWorkWidth.lua` — FS25 1.25.1.0
 
 - **VariableWorkWidth** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `VariableWorkWidth.prerequisitesPresent(specializations: any)` | 22 |  |
 | `VariableWorkWidth.initSpecialization()` | 28 |  |
@@ -36,9 +36,9 @@ Source : `dataS/scripts/vehicles/specializations/VariableWorkWidth.lua` — FS25
 | `VariableWorkWidth:loadWorkAreaFromXML(superFunc: any, workArea: any, xmlFile: any, key: any)` | 539 |  |
 | `VariableWorkWidth:getIsWorkAreaActive(superFunc: any, workArea: any)` | 547 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onVariableWorkWidthSectionChanged` | 78 |
 | registerFunction | `setVariableWorkWidthActive` | 84 |

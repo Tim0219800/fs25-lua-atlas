@@ -1,12 +1,12 @@
 # gui/hud/POIInfoDisplay.lua
 
-Source : `dataS/scripts/gui/hud/POIInfoDisplay.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/POIInfoDisplay.lua` — FS25 1.25.1.0
 
-- **POIInfoDisplay** hérite de `HUDDisplayElement` (l.22)
+- **POIInfoDisplay** inherits from `HUDDisplayElement` (l.22)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `POIInfoDisplay:draw()` | 47 |  |
 | `POIInfoDisplay:setScale(uiScale: number)` | 76 |  |

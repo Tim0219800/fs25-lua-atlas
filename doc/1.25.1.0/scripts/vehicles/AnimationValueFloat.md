@@ -1,12 +1,12 @@
 # vehicles/AnimationValueFloat.lua
 
-Source : `dataS/scripts/vehicles/AnimationValueFloat.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/AnimationValueFloat.lua` — FS25 1.25.1.0
 
 - **AnimationValueFloat** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AnimationValueFloat.new(vehicle: any, animation: any, part: any, startName: any, endName: any, name: any, initialUpdate: any, get: any, set: any, extraLoad: any, customMt: any)` | 25 |  |
 | `AnimationValueFloat:load(xmlFile: any, key: any)` | 56 |  |

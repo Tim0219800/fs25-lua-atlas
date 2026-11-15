@@ -1,12 +1,12 @@
 # debug/elements/DebugElement.lua
 
-Source : `dataS/scripts/debug/elements/DebugElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/elements/DebugElement.lua` — FS25 1.25.1.0
 
 - **DebugElement** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugElement.new(customMt: table?) → table` | 18 |  |
 | `DebugElement:getShouldBeDrawn() → boolean` | 55 |  |

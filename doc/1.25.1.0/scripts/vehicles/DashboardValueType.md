@@ -1,12 +1,12 @@
 # vehicles/DashboardValueType.lua
 
-Source : `dataS/scripts/vehicles/DashboardValueType.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/DashboardValueType.lua` — FS25 1.25.1.0
 
 - **DashboardValueType** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DashboardValueType.new(specName: any, name: any, customMt: any)` | 16 |  |
 | `DashboardValueType:setXMLKey(xmlKey: any)` | 45 |  |

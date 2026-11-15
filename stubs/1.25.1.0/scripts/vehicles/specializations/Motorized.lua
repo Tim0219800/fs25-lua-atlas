@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : vehicles/specializations/Motorized.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : vehicles/specializations/Motorized.lua (generated stub, FS25 Lua Atlas)
 
 --- Spécialisation des véhicules à moteur (table spec_motorized). Prérequis : FillUnit et VehicleSettings. Elle porte le moteur de simulation (objet VehicleMotor, hors périmètre), les différentiels, les boîtes de vitesses, les consommables (diesel, DEF, électricité, méthane, air), la température moteur, les sons, les tableaux de bord et les effets d'échappement.
 --- 

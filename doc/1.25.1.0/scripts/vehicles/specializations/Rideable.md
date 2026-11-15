@@ -1,12 +1,12 @@
 # vehicles/specializations/Rideable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Rideable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Rideable.lua` — FS25 1.25.1.0
 
 - **Rideable** (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Rideable.prerequisitesPresent(specializations: table) → boolean` | 55 |  |
 | `Rideable.initSpecialization()` | 62 |  |
@@ -78,9 +78,9 @@ Source : `dataS/scripts/vehicles/specializations/Rideable.lua` — FS25 1.25.1.0
 | `Rideable:updateDebugValues(values: any)` | 1763 |  |
 | `Rideable:updateInputText()` | 1773 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `getIsRideableJumpAllowed` | 144 |
 | registerFunction | `jump` | 145 |

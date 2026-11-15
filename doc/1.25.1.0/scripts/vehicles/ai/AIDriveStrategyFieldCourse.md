@@ -1,12 +1,12 @@
 # vehicles/ai/AIDriveStrategyFieldCourse.lua
 
-Source : `dataS/scripts/vehicles/ai/AIDriveStrategyFieldCourse.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/ai/AIDriveStrategyFieldCourse.lua` — FS25 1.25.1.0
 
-- **AIDriveStrategyFieldCourse** hérite de `AIDriveStrategy` (l.10)
+- **AIDriveStrategyFieldCourse** inherits from `AIDriveStrategy` (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIDriveStrategyFieldCourse.new(reconstructionData: any, customMt: any)` | 14 |  |
 | `AIDriveStrategyFieldCourse:delete()` | 34 |  |

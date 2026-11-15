@@ -1,12 +1,12 @@
 # vehicles/specializations/RidgeMarker.lua
 
-Source : `dataS/scripts/vehicles/specializations/RidgeMarker.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/RidgeMarker.lua` — FS25 1.25.1.0
 
 - **RidgeMarker** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `RidgeMarker.initSpecialization()` | 21 |  |
 | `RidgeMarker.registerRidgeMarkerXMLPaths(schema: any, baseKey: any)` | 47 |  |
@@ -37,9 +37,9 @@ Source : `dataS/scripts/vehicles/specializations/RidgeMarker.lua` — FS25 1.25.
 | `RidgeMarker.actionEventToggleRidgeMarkers(self: any, actionName: any, inputValue: any, callbackState: any, isAnalog: any)` | 521 |  |
 | `RidgeMarker.updateActionEvents(self: any)` | 532 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadRidgeMarker` | 82 |
 | registerFunction | `setRidgeMarkerState` | 83 |

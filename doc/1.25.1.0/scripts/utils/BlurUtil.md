@@ -1,12 +1,12 @@
 # utils/BlurUtil.lua
 
-Source : `dataS/scripts/utils/BlurUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/utils/BlurUtil.lua` — FS25 1.25.1.0
 
 - **BlurUtil** (l.15)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BlurUtil.stackBlurAsync(dataGetter: function, dataSetter: function, width: integer, height: integer, radius: integer, asyncManager: AsyncTaskManager?, callback: function)` | 39 |  |
 | `BlurUtil.stackBlurHorizontal(dataGetter: function, dataSetter: function, width: integer, height: integer, radius: integer)` | 74 |  |

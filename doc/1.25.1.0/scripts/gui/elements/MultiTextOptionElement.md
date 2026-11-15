@@ -1,12 +1,12 @@
 # gui/elements/MultiTextOptionElement.lua
 
-Source : `dataS/scripts/gui/elements/MultiTextOptionElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/MultiTextOptionElement.lua` — FS25 1.25.1.0
 
-- **MultiTextOptionElement** hérite de `GuiElement` (l.37)
+- **MultiTextOptionElement** inherits from `GuiElement` (l.37)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MultiTextOptionElement.new(target: any, custom_mt: any)` | 44 |  |
 | `MultiTextOptionElement:loadFromXML(xmlFile: any, key: any)` | 97 |  |

@@ -1,12 +1,12 @@
 # vehicles/ai/AIVehicleUtil.lua
 
-Source : `dataS/scripts/vehicles/ai/AIVehicleUtil.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/ai/AIVehicleUtil.lua` — FS25 1.25.1.0
 
 - **AIVehicleUtil** (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIVehicleUtil.driveToPoint(self: table, dt: number, acceleration: number, allowedToDrive: boolean, moveForwards: boolean, tX: number, tZ: number, maxSpeed: number, doNotSteer: boolean?)` | 26 |  |
 | `AIVehicleUtil.driveAlongCurvature(self: any, dt: any, curvature: any, maxSpeed: any, acceleration: any)` | 101 |  |

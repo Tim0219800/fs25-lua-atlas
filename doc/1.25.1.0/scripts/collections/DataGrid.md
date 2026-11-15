@@ -1,12 +1,12 @@
 # collections/DataGrid.lua
 
-Source : `dataS/scripts/collections/DataGrid.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/collections/DataGrid.lua` — FS25 1.25.1.0
 
 - **DataGrid** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DataGrid.new(numRows: integer, numColumns: integer, customMt: table?) → table` | 20 |  |
 | `DataGrid:delete()` | 35 |  |

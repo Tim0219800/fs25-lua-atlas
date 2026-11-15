@@ -1,12 +1,12 @@
 # placement/PlacementGrid2D.lua
 
-Source : `dataS/scripts/placement/PlacementGrid2D.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placement/PlacementGrid2D.lua` — FS25 1.25.1.0
 
 - **PlacementGrid2D** (l.54)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlacementGrid2D.new(node: any, width: any, length: any, spacing: any, mode: any)` | 58 |  |
 | `PlacementGrid2D:delete()` | 78 |  |

@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableSolarPanels.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableSolarPanels.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableSolarPanels.lua` — FS25 1.25.1.0
 
 - **PlaceableSolarPanels** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableSolarPanels.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableSolarPanels.initSpecialization()` | 24 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableSolarPanels.lua` —
 | `PlaceableSolarPanels:getIncomePerHour(superFunc: any)` | 206 |  |
 | `PlaceableSolarPanels:getNeedHourChanged(superFunc: any)` | 234 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `getIncomePerHour` | 31 |
 | registerOverwrittenFunction | `getNeedHourChanged` | 32 |

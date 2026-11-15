@@ -1,12 +1,12 @@
 # objects/DogBall.lua
 
-Source : `dataS/scripts/objects/DogBall.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/DogBall.lua` — FS25 1.25.1.0
 
-- **DogBall** hérite de `PhysicsObject` (l.14)
+- **DogBall** inherits from `PhysicsObject` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DogBall.new(isServer: boolean, isClient: boolean, customMt: table?) → table` | 24 |  |
 | `DogBall:delete()` | 36 |  |

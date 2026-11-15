@@ -1,12 +1,12 @@
 # vehicles/specializations/events/BalerDropFromPlatformEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/BalerDropFromPlatformEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/BalerDropFromPlatformEvent.lua` — FS25 1.25.1.0
 
-- **BalerDropFromPlatformEvent** hérite de `Event` (l.7)
+- **BalerDropFromPlatformEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BalerDropFromPlatformEvent.emptyNew() → table` | 14 |  |
 | `BalerDropFromPlatformEvent.new(object: table, waitForNextBale: boolean)` | 23 |  |

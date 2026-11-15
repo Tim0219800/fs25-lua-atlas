@@ -1,12 +1,12 @@
 # vehicles/specializations/FoliageBending.lua
 
-Source : `dataS/scripts/vehicles/specializations/FoliageBending.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/FoliageBending.lua` — FS25 1.25.1.0
 
 - **FoliageBending** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FoliageBending.prerequisitesPresent(specializations: any)` | 17 |  |
 | `FoliageBending.initSpecialization()` | 23 |  |
@@ -23,9 +23,9 @@ Source : `dataS/scripts/vehicles/specializations/FoliageBending.lua` — FS25 1.
 | `FoliageBending:onActivate()` | 238 |  |
 | `FoliageBending:onDeactivate()` | 244 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadBendingNodeFromXML` | 66 |
 | registerFunction | `loadBendingNodeModifierFromXML` | 67 |

@@ -1,12 +1,12 @@
 # materials/CharacterLine.lua
 
-Source : `dataS/scripts/materials/CharacterLine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/materials/CharacterLine.lua` — FS25 1.25.1.0
 
 - **CharacterLine** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CharacterLine.new(linkNode: any, fontMaterial: any, numCharacters: any, customMt: any)` | 16 |  |
 | `CharacterLine:setSizeAndScale(textSize: any, scaleX: any, scaleY: any)` | 53 |  |

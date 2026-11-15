@@ -1,12 +1,12 @@
 # collections/ValueInterpolator.lua
 
-Source : `dataS/scripts/collections/ValueInterpolator.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/collections/ValueInterpolator.lua` — FS25 1.25.1.0
 
 - **ValueInterpolator** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ValueInterpolator.new(customKey: any, get: function, set: function, target: array, duration: number?, speed: number?, customMt: table?) → ValueInterpolator?` | 24 |  |
 | `ValueInterpolator:setUpdateFunc(updateFunc: any, updateTarget: any, ...: any)` | 66 |  |

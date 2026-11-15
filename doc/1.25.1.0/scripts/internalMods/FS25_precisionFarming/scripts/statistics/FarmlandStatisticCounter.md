@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatisticCounter.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatisticCounter.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatisticCounter.lua` — FS25 1.25.1.0
 
 - **FarmlandStatisticCounter** (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `FarmlandStatisticCounter.new(customMt: any)` | 16 |  |
 | `FarmlandStatisticCounter:loadFromItemsXML(xmlFile: any, key: any)` | 26 |  |

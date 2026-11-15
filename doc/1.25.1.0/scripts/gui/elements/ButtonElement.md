@@ -1,12 +1,12 @@
 # gui/elements/ButtonElement.lua
 
-Source : `dataS/scripts/gui/elements/ButtonElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/ButtonElement.lua` — FS25 1.25.1.0
 
-- **ButtonElement** hérite de `TextElement` (l.32)
+- **ButtonElement** inherits from `TextElement` (l.32)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `ButtonElement.new(target: any, custom_mt: any)` | 39 |  |
 | `ButtonElement:delete()` | 86 |  |

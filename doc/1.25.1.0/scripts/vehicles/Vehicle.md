@@ -1,12 +1,12 @@
 # vehicles/Vehicle.lua
 
-Source : `dataS/scripts/vehicles/Vehicle.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/Vehicle.lua` — FS25 1.25.1.0
 
-- **Vehicle** hérite de `Object` (l.14)
+- **Vehicle** inherits from `Object` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Vehicle.registerInteractionFlag(name: string)` | 66 |  |
 | `Vehicle.registerEvents(vehicleType: any)` | 80 |  |
@@ -206,9 +206,9 @@ Source : `dataS/scripts/vehicles/Vehicle.lua` — FS25 1.25.1.0
 | `Vehicle.getSpecValueCombinations(storeItem: any, realItem: any)` | 4867 |  |
 | `Vehicle.getSpecValueSlots(storeItem: any, realItem: any, configurations: any, saleItem: any, returnValues: any, returnRange: any)` | 4873 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onPreLoad` | 81 |
 | registerEvent | `onLoad` | 82 |
@@ -390,6 +390,6 @@ Source : `dataS/scripts/vehicles/Vehicle.lua` — FS25 1.25.1.0
 
 ## Messages
 
-- écoute `MessageType.DAY_CHANGED` (l.1028)
-- écoute `MessageType.PERIOD_CHANGED` (l.1029)
-- publie `MessageType.VEHICLE_RESET` (l.1481)
+- subscribes `MessageType.DAY_CHANGED` (l.1028)
+- subscribes `MessageType.PERIOD_CHANGED` (l.1029)
+- publishes `MessageType.VEHICLE_RESET` (l.1481)

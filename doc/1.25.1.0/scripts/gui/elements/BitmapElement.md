@@ -1,12 +1,12 @@
 # gui/elements/BitmapElement.lua
 
-Source : `dataS/scripts/gui/elements/BitmapElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/elements/BitmapElement.lua` — FS25 1.25.1.0
 
-- **BitmapElement** hérite de `GuiElement` (l.17)
+- **BitmapElement** inherits from `GuiElement` (l.17)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BitmapElement.new(target: any, custom_mt: any)` | 23 |  |
 | `BitmapElement:delete()` | 38 |  |

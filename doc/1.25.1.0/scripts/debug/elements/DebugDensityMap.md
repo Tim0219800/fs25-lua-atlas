@@ -1,11 +1,11 @@
 # debug/elements/DebugDensityMap.lua
 
-Source : `dataS/scripts/debug/elements/DebugDensityMap.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/elements/DebugDensityMap.lua` — FS25 1.25.1.0
 
-- **DebugDensityMap** hérite de `DebugElement` (l.12)
+- **DebugDensityMap** inherits from `DebugElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugDensityMap:draw()` | 65 |  |

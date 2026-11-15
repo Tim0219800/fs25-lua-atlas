@@ -1,12 +1,12 @@
 # ai/errors/AIMessageSuccessFinishedJob.lua
 
-Source : `dataS/scripts/ai/errors/AIMessageSuccessFinishedJob.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/ai/errors/AIMessageSuccessFinishedJob.lua` — FS25 1.25.1.0
 
-- **AIMessageSuccessFinishedJob** hérite de `AIMessage` (l.12)
+- **AIMessageSuccessFinishedJob** inherits from `AIMessage` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIMessageSuccessFinishedJob.new(customMt: any)` | 16 |  |
 | `AIMessageSuccessFinishedJob:getI18NText()` | 23 |  |

@@ -1,12 +1,12 @@
 # internalMods/FS25_precisionFarming/scripts/events/TramlineMapSetEvent.lua
 
-Source : `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/TramlineMapSetEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/internalMods/FS25_precisionFarming/scripts/events/TramlineMapSetEvent.lua` — FS25 1.25.1.0
 
-- **TramlineMapSetEvent** hérite de `Event` (l.7)
+- **TramlineMapSetEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TramlineMapSetEvent.emptyNew() → table` | 14 |  |
 | `TramlineMapSetEvent.new(farmlandId: table, workingWidth: any, workDirection: any, spacing: any, enabled: any, clearFruit: any)` | 22 |  |

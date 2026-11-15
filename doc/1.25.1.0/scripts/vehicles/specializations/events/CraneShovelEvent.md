@@ -1,12 +1,12 @@
 # vehicles/specializations/events/CraneShovelEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/CraneShovelEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/CraneShovelEvent.lua` — FS25 1.25.1.0
 
-- **CraneShovelEvent** hérite de `Event` (l.7)
+- **CraneShovelEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CraneShovelEvent.emptyNew() → table` | 14 |  |
 | `CraneShovelEvent.new(object: table, state: any)` | 22 |  |

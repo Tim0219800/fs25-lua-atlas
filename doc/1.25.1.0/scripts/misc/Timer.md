@@ -1,12 +1,12 @@
 # misc/Timer.lua
 
-Source : `dataS/scripts/misc/Timer.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/misc/Timer.lua` — FS25 1.25.1.0
 
 - **Timer** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Timer.new(duration: any)` | 15 |  |
 | `Timer:delete()` | 28 |  |

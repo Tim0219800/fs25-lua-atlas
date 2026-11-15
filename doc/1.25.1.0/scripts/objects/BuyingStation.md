@@ -1,12 +1,12 @@
 # objects/BuyingStation.lua
 
-Source : `dataS/scripts/objects/BuyingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/BuyingStation.lua` — FS25 1.25.1.0
 
-- **BuyingStation** hérite de `LoadingStation` (l.13)
+- **BuyingStation** inherits from `LoadingStation` (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `BuyingStation.registerXMLPaths(schema: any, basePath: any)` | 185 |  |
 | `BuyingStation.loadSpecValueFillTypes(xmlFile: any, customEnvironment: any, baseDir: any)` | 195 |  |

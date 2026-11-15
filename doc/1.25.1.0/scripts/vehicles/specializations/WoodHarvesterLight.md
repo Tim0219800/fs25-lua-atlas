@@ -1,11 +1,11 @@
 # vehicles/specializations/WoodHarvesterLight.lua
 
-Source : `dataS/scripts/vehicles/specializations/WoodHarvesterLight.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/WoodHarvesterLight.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WoodHarvesterLight.prerequisitesPresent(specializations: table) → boolean` | 25 |  |
 | `WoodHarvesterLight.initSpecialization()` | 31 |  |
@@ -26,9 +26,9 @@ Source : `dataS/scripts/vehicles/specializations/WoodHarvesterLight.lua` — FS2
 | `WoodHarvesterLight.spawnLogs(filename: any, numTrees: any, bx: any, by: any, bz: any, bry: any, lDiameter: any, lLength: any, farmId: any)` | 411 |  |
 | `WoodHarvesterLight:spawnTreeStump(x: any, y: any, z: any)` | 481 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateLogSpawner` | 62 |
 | registerFunction | `onWoodHarversterLogSpawnerCallback` | 63 |

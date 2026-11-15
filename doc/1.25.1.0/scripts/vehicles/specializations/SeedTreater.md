@@ -1,12 +1,12 @@
 # vehicles/specializations/SeedTreater.lua
 
-Source : `dataS/scripts/vehicles/specializations/SeedTreater.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/SeedTreater.lua` — FS25 1.25.1.0
 
 - **SeedTreater** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SeedTreater.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `SeedTreater.initSpecialization()` | 23 |  |
@@ -19,9 +19,9 @@ Source : `dataS/scripts/vehicles/specializations/SeedTreater.lua` — FS25 1.25.
 | `SeedTreater:getDischargeFillType(superFunc: any, dischargeNode: any)` | 117 |  |
 | `SeedTreater:getDischargeNodeEmptyFactor(superFunc: any, dischargeNode: any)` | 128 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `discharge` | 44 |
 | registerOverwrittenFunction | `getDischargeFillType` | 45 |

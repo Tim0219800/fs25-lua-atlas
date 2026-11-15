@@ -1,12 +1,12 @@
 # vehicles/specializations/events/TreeAttachEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/TreeAttachEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/TreeAttachEvent.lua` — FS25 1.25.1.0
 
-- **TreeAttachEvent** hérite de `Event` (l.14)
+- **TreeAttachEvent** inherits from `Event` (l.14)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `TreeAttachEvent.emptyNew() → table` | 21 |  |
 | `TreeAttachEvent.new(object: table, splitShapeId: table, x: any, y: any, z: any, ropeIndex: any) → table` | 31 |  |

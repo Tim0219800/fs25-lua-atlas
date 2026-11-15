@@ -1,12 +1,12 @@
 # triggers/LadderTrigger.lua
 
-Source : `dataS/scripts/triggers/LadderTrigger.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/triggers/LadderTrigger.lua` — FS25 1.25.1.0
 
 - **LadderTrigger** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `LadderTrigger:onCreate(id: integer)` | 16 |  |
 | `LadderTrigger.new(node: integer) → table` | 24 |  |

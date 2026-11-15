@@ -1,12 +1,12 @@
 # vehicles/wheels/WheelVisual.lua
 
-Source : `dataS/scripts/vehicles/wheels/WheelVisual.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/wheels/WheelVisual.lua` — FS25 1.25.1.0
 
 - **WheelVisual** (l.24)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `WheelVisual.new(vehicle: any, wheel: any, linkNode: any, isLeft: any, rimOffset: any, baseDirectory: any, customMt: any)` | 28 |  |
 | `WheelVisual:delete()` | 52 |  |

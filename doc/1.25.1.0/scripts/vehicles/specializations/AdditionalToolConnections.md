@@ -1,11 +1,11 @@
 # vehicles/specializations/AdditionalToolConnections.lua
 
-Source : `dataS/scripts/vehicles/specializations/AdditionalToolConnections.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AdditionalToolConnections.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AdditionalToolConnections.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `AdditionalToolConnections.initSpecialization()` | 24 |  |
@@ -17,9 +17,9 @@ Source : `dataS/scripts/vehicles/specializations/AdditionalToolConnections.lua` 
 | `AdditionalToolConnections:onPostAttach(attacherVehicle: table, inputJointDescIndex: integer, jointDescIndex: integer, loadFromSavegame: boolean)` | 120 |  |
 | `AdditionalToolConnections:onPreDetach(attacherVehicle: table, implement: table)` | 141 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerOverwrittenFunction | `loadAttacherJointFromXML` | 48 |
 | registerEventListener | `onPostLoad` | 54 |

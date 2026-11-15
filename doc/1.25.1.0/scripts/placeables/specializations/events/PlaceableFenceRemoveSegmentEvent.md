@@ -1,12 +1,12 @@
 # placeables/specializations/events/PlaceableFenceRemoveSegmentEvent.lua
 
-Source : `dataS/scripts/placeables/specializations/events/PlaceableFenceRemoveSegmentEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/events/PlaceableFenceRemoveSegmentEvent.lua` — FS25 1.25.1.0
 
-- **PlaceableFenceRemoveSegmentEvent** hérite de `Event` (l.6)
+- **PlaceableFenceRemoveSegmentEvent** inherits from `Event` (l.6)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableFenceRemoveSegmentEvent.emptyNew() → table` | 13 |  |
 | `PlaceableFenceRemoveSegmentEvent.new(fence: table, segmentIndex: integer, poleIndex: boolean)` | 22 |  |

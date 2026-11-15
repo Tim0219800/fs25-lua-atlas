@@ -1,12 +1,12 @@
 # vehicles/specializations/CropRowAdjustedNodes.lua
 
-Source : `dataS/scripts/vehicles/specializations/CropRowAdjustedNodes.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/CropRowAdjustedNodes.lua` — FS25 1.25.1.0
 
 - **CropRowAdjustedNodes** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `CropRowAdjustedNodes.prerequisitesPresent(specializations: any)` | 15 |  |
 | `CropRowAdjustedNodes.initSpecialization()` | 21 |  |
@@ -18,9 +18,9 @@ Source : `dataS/scripts/vehicles/specializations/CropRowAdjustedNodes.lua` — F
 | `CropRowAdjustedNodes:updateCropRowAdjustedNode(adjustedNode: any, dt: any)` | 153 |  |
 | `CropRowAdjustedNodes:getIsCropRowAdjustedNodeActive(adjustedNode: any)` | 231 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `loadCropRowAdjustedNodeFromXML` | 47 |
 | registerFunction | `updateCropRowAdjustedNode` | 48 |

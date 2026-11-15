@@ -1,12 +1,12 @@
 # vehicles/ai/AIDriveStrategyCombine.lua
 
-Source : `dataS/scripts/vehicles/ai/AIDriveStrategyCombine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/ai/AIDriveStrategyCombine.lua` — FS25 1.25.1.0
 
-- **AIDriveStrategyCombine** hérite de `AIDriveStrategy` (l.10)
+- **AIDriveStrategyCombine** inherits from `AIDriveStrategy` (l.10)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIDriveStrategyCombine.new(reconstructionData: any, customMt: any)` | 14 |  |
 | `AIDriveStrategyCombine:setAIVehicle(vehicle: any)` | 40 |  |

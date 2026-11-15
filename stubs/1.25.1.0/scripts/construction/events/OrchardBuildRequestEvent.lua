@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : construction/events/OrchardBuildRequestEvent.lua (stub généré, atlas Lua FS25)
+-- FS25 1.25.1.0 : construction/events/OrchardBuildRequestEvent.lua (generated stub, FS25 Lua Atlas)
 
 ---@class OrchardBuildRequestEvent : Event
 OrchardBuildRequestEvent = {}

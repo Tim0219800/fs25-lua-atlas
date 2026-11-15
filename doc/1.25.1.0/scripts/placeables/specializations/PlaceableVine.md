@@ -1,12 +1,12 @@
 # placeables/specializations/PlaceableVine.lua
 
-Source : `dataS/scripts/placeables/specializations/PlaceableVine.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/placeables/specializations/PlaceableVine.lua` — FS25 1.25.1.0
 
 - **PlaceableVine** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `PlaceableVine.prerequisitesPresent(specializations: table) → boolean` | 18 |  |
 | `PlaceableVine.registerFunctions(placeableType: any)` | 24 |  |
@@ -34,9 +34,9 @@ Source : `dataS/scripts/placeables/specializations/PlaceableVine.lua` — FS25 1
 | `PlaceableVine:getHasSegmentTargetGrowthState(segment: any, fruitTypeIndex: any, useHarvestStates: any, usePrepareStates: any)` | 693 |  |
 | `PlaceableVine:getSegmentSideArea(segment: any, segmentSide: any)` | 734 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerFunction | `updateVineNode` | 25 |
 | registerFunction | `updateVineVisuals` | 26 |

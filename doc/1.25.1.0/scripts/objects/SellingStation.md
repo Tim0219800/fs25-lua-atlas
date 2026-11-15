@@ -1,12 +1,12 @@
 # objects/SellingStation.lua
 
-Source : `dataS/scripts/objects/SellingStation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/objects/SellingStation.lua` — FS25 1.25.1.0
 
-- **SellingStation** hérite de `UnloadingStation` (l.20)
+- **SellingStation** inherits from `UnloadingStation` (l.20)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SellingStation:loadFromXMLFile(xmlFile: XMLFile, key: string) → boolean` | 383 |  |
 | `SellingStation.registerXMLPaths(schema: any, basePath: any)` | 717 |  |

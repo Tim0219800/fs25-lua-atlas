@@ -1,6 +1,6 @@
 # materials/MaterialManager.lua
 
-Source : `dataS/scripts/materials/MaterialManager.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/materials/MaterialManager.lua` — FS25 1.25.1.0
 
 ✍ Gestionnaire global des matériaux (g_materialManager, dérive d'AbstractManager). Il tient cinq registres : (1) types de matériau (liste de noms), (2) matériaux de base par nom, (3) matériaux par type de remplissage (self.materials), (4) matériaux de particules par type de remplissage (self.particleMaterials), (5) polices (FontMaterial). Les matériaux ne sont pas créés ici : ils sont enregistrés par des rappels « onCreate » de MaterialUtil lors du chargement des I3D « porte-matériaux » (material holders) ; ces I3D et le fichier XML des polices (MaterialManager.DEFAULT_FONT_MATERIAL_XML, constante absente du dump) ne sont pas dans le dump.
 
@@ -12,11 +12,11 @@ PARTAGE ET CHARGEMENT. Les porte-matériaux de mods sont mis en file par addModM
 
 POINTS D'EXTENSION. Pas de registerFunction ni d'événement : un mod peut appeler g_materialManager:addMaterialType, addParticleMaterial, addBaseMaterial, addModMaterialHolder ou lire les tables. Ces appels doivent précéder la fin du chargement de la carte ; ce moment exact (loadModMaterialHolders) est NON VÉRIFIÉ ici.
 
-- **MaterialManager** hérite de `AbstractManager` (l.23)
+- **MaterialManager** inherits from `AbstractManager` (l.23)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `MaterialManager.new(customMt: any) → MaterialManager` | 28 | ✍ Crée le gestionnaire et prépare le schéma XML des polices (FontMaterial.registerXMLPaths). |
 | `MaterialManager:initDataStructures()` | 39 | ✍ Réinitialise tous les registres : noms, types, matériaux, matériaux de particules, polices, matériaux de base, porte-matériaux de mods et nœuds chargés. |

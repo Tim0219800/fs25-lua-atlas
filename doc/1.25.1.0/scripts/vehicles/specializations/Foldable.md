@@ -1,12 +1,12 @@
 # vehicles/specializations/Foldable.lua
 
-Source : `dataS/scripts/vehicles/specializations/Foldable.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/Foldable.lua` — FS25 1.25.1.0
 
 - **Foldable** (l.13)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `Foldable.prerequisitesPresent(specializations: any)` | 17 |  |
 | `Foldable.initSpecialization()` | 23 |  |
@@ -132,9 +132,9 @@ Source : `dataS/scripts/vehicles/specializations/Foldable.lua` — FS25 1.25.1.0
 | `Foldable.externalActionEventRegister(data: any, vehicle: any)` | 2700 |  |
 | `Foldable.externalActionEventUpdate(data: any, vehicle: any)` | 2727 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onFoldStateChanged` | 228 |
 | registerEvent | `onFoldTimeChanged` | 229 |

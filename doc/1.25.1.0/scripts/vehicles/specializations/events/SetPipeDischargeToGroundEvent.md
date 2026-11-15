@@ -1,12 +1,12 @@
 # vehicles/specializations/events/SetPipeDischargeToGroundEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/SetPipeDischargeToGroundEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/SetPipeDischargeToGroundEvent.lua` — FS25 1.25.1.0
 
-- **SetPipeDischargeToGroundEvent** hérite de `Event` (l.7)
+- **SetPipeDischargeToGroundEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `SetPipeDischargeToGroundEvent.emptyNew() → table` | 14 |  |
 | `SetPipeDischargeToGroundEvent.new(object: table, dischargeState: boolean)` | 23 |  |

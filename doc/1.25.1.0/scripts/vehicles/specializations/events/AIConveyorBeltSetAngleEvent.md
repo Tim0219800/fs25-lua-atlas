@@ -1,12 +1,12 @@
 # vehicles/specializations/events/AIConveyorBeltSetAngleEvent.lua
 
-Source : `dataS/scripts/vehicles/specializations/events/AIConveyorBeltSetAngleEvent.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/events/AIConveyorBeltSetAngleEvent.lua` — FS25 1.25.1.0
 
-- **AIConveyorBeltSetAngleEvent** hérite de `Event` (l.7)
+- **AIConveyorBeltSetAngleEvent** inherits from `Event` (l.7)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIConveyorBeltSetAngleEvent.emptyNew() → table` | 14 |  |
 | `AIConveyorBeltSetAngleEvent.new(vehicle: table, currentAngle: integer)` | 23 |  |

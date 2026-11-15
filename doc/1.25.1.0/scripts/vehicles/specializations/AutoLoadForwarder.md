@@ -1,11 +1,11 @@
 # vehicles/specializations/AutoLoadForwarder.lua
 
-Source : `dataS/scripts/vehicles/specializations/AutoLoadForwarder.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AutoLoadForwarder.lua` — FS25 1.25.1.0
 
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AutoLoadForwarder.prerequisitesPresent(specializations: table) → boolean` | 19 |  |
 | `AutoLoadForwarder.initSpecialization()` | 25 |  |
@@ -27,9 +27,9 @@ Source : `dataS/scripts/vehicles/specializations/AutoLoadForwarder.lua` — FS25
 | `AutoLoadForwarder:removeMountedObject(object: integer, isDeleting: boolean)` | 412 |  |
 | `AutoLoadForwarder:sortLoadedTreeObjects()` | 428 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEvent | `onAutoLoadForwaderMountedTree` | 49 |
 | registerFunction | `mountTreeToCrane` | 55 |

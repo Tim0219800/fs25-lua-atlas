@@ -1,12 +1,12 @@
 # vehicles/specializations/AIFieldWorker.lua
 
-Source : `dataS/scripts/vehicles/specializations/AIFieldWorker.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/AIFieldWorker.lua` — FS25 1.25.1.0
 
 - **AIFieldWorker** (l.20)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `AIFieldWorker.prerequisitesPresent(specializations: table) → boolean` | 43 |  |
 | `AIFieldWorker:saveToXMLFile(xmlFile: any, key: any, usedModNames: any)` | 202 |  |

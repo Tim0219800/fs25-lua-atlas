@@ -1,11 +1,11 @@
 # debug/elements/DebugCylinder.lua
 
-Source : `dataS/scripts/debug/elements/DebugCylinder.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/debug/elements/DebugCylinder.lua` — FS25 1.25.1.0
 
-- **DebugCylinder** hérite de `DebugElement` (l.12)
+- **DebugCylinder** inherits from `DebugElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `DebugCylinder:draw()` | 37 |  |

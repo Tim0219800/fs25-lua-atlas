@@ -1,12 +1,12 @@
 # vehicles/specializations/HeadlandAnimation.lua
 
-Source : `dataS/scripts/vehicles/specializations/HeadlandAnimation.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/vehicles/specializations/HeadlandAnimation.lua` — FS25 1.25.1.0
 
 - **HeadlandAnimation** (l.11)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HeadlandAnimation.prerequisitesPresent(specializations: table) → boolean` | 17 |  |
 | `HeadlandAnimation.initSpecialization()` | 23 |  |
@@ -16,9 +16,9 @@ Source : `dataS/scripts/vehicles/specializations/HeadlandAnimation.lua` — FS25
 | `HeadlandAnimation:onLoad(savegame: table)` | 59 |  |
 | `HeadlandAnimation:onUpdate(dt: number, isActiveForInput: boolean, isActiveForInputIgnoreSelection: boolean, isSelected: boolean)` | 117 |  |
 
-## Spécialisation
+## Specialization
 
-| Type | Nom | Ligne |
+| Type | Name | Line |
 |---|---|---|
 | registerEventListener | `onLoad` | 52 |
 | registerEventListener | `onUpdate` | 53 |

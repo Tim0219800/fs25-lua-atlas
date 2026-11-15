@@ -1,12 +1,12 @@
 # gui/hud/HUDDisplayElement.lua
 
-Source : `dataS/scripts/gui/hud/HUDDisplayElement.lua` — FS25 1.25.1.0
+Source: `dataS/scripts/gui/hud/HUDDisplayElement.lua` — FS25 1.25.1.0
 
-- **HUDDisplayElement** hérite de `HUDElement` (l.12)
+- **HUDDisplayElement** inherits from `HUDElement` (l.12)
 
-## Fonctions
+## Functions
 
-| Fonction | Ligne | Description |
+| Function | Line | Description (FR) |
 |---|---|---|
 | `HUDDisplayElement.new(overlay: table, parentHudElement: table?, customMt: table?) → table` | 23 |  |
 | `HUDDisplayElement:setVisible(isVisible: boolean, animate: boolean)` | 36 |  |
