@@ -111,10 +111,12 @@ def main():
         dsc = desc.get(fi['file'])
         p = stubs / 'scripts' / fi['file']
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(stub_file(fi, dsc), encoding='utf-8')
+        p.write_text(stub_file(fi, dsc), encoding='utf-8', newline='
+')
         m = doc / 'scripts' / (fi['file'][:-4] + '.md')
         m.parent.mkdir(parents=True, exist_ok=True)
-        m.write_text(md_file(fi, dsc), encoding='utf-8')
+        m.write_text(md_file(fi, dsc), encoding='utf-8', newline='
+')
         groups[fi['file'].split('/')[0] if '/' in fi['file'] else '(racine)'].append((fi, dsc))
         for s in fi['spec']:
             if s['kind'] in ('registerEvent', 'registerEventListener'):
@@ -137,25 +139,29 @@ def main():
             mark = ' ✍' if dsc else ''
             L.append(f'- [{fi["file"]}](scripts/{fi["file"][:-4]}.md) — {len(fi["functions"])} fn{mark}')
         L.append('')
-    (doc / 'index.md').write_text('\n'.join(L), encoding='utf-8')
+    (doc / 'index.md').write_text('\n'.join(L), encoding='utf-8', newline='
+')
 
     L = ['# Specialization events', '', '| Event | Declared by | Listened by |', '|---|---|---|']
     for e in sorted(events):
         dec = ', '.join(sorted(set(events[e]['registerEvent']))) or '—'
         L.append(f'| `{e}` | {dec} | {len(set(events[e]["registerEventListener"]))} file(s) |')
-    (doc / 'evenements.md').write_text('\n'.join(L) + '\n', encoding='utf-8')
+    (doc / 'evenements.md').write_text('\n'.join(L) + '\n', encoding='utf-8', newline='
+')
 
     L = ['# MessageType', '', '| Message | Published by | Subscribers |', '|---|---|---|']
     for m in sorted(msgs):
         L.append(f'| `{m}` | {", ".join(sorted(set(msgs[m]["publie"]))) or "—"} | {len(set(msgs[m]["écoute"]))} |')
-    (doc / 'messages.md').write_text('\n'.join(L) + '\n', encoding='utf-8')
+    (doc / 'messages.md').write_text('\n'.join(L) + '\n', encoding='utf-8', newline='
+')
 
     agg = defaultdict(list)
     for n, f, l in globs:
         agg[n].append(f'{f}:{l}')
     L = ['# g_* globals', '', '| Global | Assigned in |', '|---|---|']
     L += [f'| `{n}` | {", ".join(agg[n][:3])}{" …" if len(agg[n]) > 3 else ""} |' for n in sorted(agg)]
-    (doc / 'globales.md').write_text('\n'.join(L) + '\n', encoding='utf-8')
+    (doc / 'globales.md').write_text('\n'.join(L) + '\n', encoding='utf-8', newline='
+')
 
     # moteur : signatures seulement (les 'desc' GIANTS ne sont pas recopiées)
     S = ['---@meta', f'-- FS25 {V} : fonctions moteur (signatures depuis scriptBinding.xml)', '',
@@ -178,8 +184,10 @@ def main():
             outs = ', '.join(lt(p['type']) for p in e['outputs'])
             L.append(f'- `{e["name"]}({ins})`' + (f' → `{outs}`' if outs else ''))
         L.append('')
-    (stubs / 'moteur.lua').write_text('\n'.join(S), encoding='utf-8')
-    (doc / 'moteur.md').write_text('\n'.join(L), encoding='utf-8')
+    (stubs / 'moteur.lua').write_text('\n'.join(S), encoding='utf-8', newline='
+')
+    (doc / 'moteur.md').write_text('\n'.join(L), encoding='utf-8', newline='
+')
     print(f'stubs et doc générés dans stubs/{V} et doc/{V}')
 
 
