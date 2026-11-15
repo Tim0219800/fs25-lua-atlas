@@ -1,0 +1,15 @@
+# vehicles/specializations/events/SetCruiseControlSpeedEvent.lua
+
+Source : `dataS/scripts/vehicles/specializations/events/SetCruiseControlSpeedEvent.lua` — FS25 1.25.1.0
+
+- **SetCruiseControlSpeedEvent** hérite de `Event` (l.7)
+
+## Fonctions
+
+| Fonction | Ligne | Description |
+|---|---|---|
+| `SetCruiseControlSpeedEvent.emptyNew() → table` | 14 |  |
+| `SetCruiseControlSpeedEvent.new(vehicle: table, speed: number, speedReverse: number)` | 24 |  |
+| `SetCruiseControlSpeedEvent:readStream(streamId: integer, connection: Connection)` | 36 |  |
+| `SetCruiseControlSpeedEvent:writeStream(streamId: integer, connection: Connection)` | 47 |  |
+| `SetCruiseControlSpeedEvent:run(connection: Connection)` | 56 |  |

@@ -1,0 +1,63 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class XMLFile
+XMLFile = {}
+
+function XMLFile.addComment(...) end
+function XMLFile.class(...) end
+function XMLFile.copy(...) end
+function XMLFile.copyTree(...) end
+function XMLFile.create(...) end
+function XMLFile.delete(...) end
+function XMLFile.getAngle(...) end
+function XMLFile.getAsString(...) end
+function XMLFile.getBool(...) end
+function XMLFile.getElementName(...) end
+function XMLFile.getFilename(...) end
+function XMLFile.getFloat(...) end
+function XMLFile.getHandle(...) end
+function XMLFile.getI18NValue(...) end
+function XMLFile.getInt(...) end
+function XMLFile.getLineNumber(...) end
+function XMLFile.getNode(...) end
+function XMLFile.getNumOfChildren(...) end
+function XMLFile.getNumOfElements(...) end
+function XMLFile.getRadiansVector(...) end
+function XMLFile.getRootName(...) end
+function XMLFile.getRotation(...) end
+function XMLFile.getScale(...) end
+function XMLFile.getString(...) end
+function XMLFile.getStringList(...) end
+function XMLFile.getTranslation(...) end
+function XMLFile.getUInt(...) end
+function XMLFile.getValue(...) end
+function XMLFile.getValueType(...) end
+function XMLFile.getVector(...) end
+function XMLFile.hasProperty(...) end
+function XMLFile.initInheritance(...) end
+function XMLFile.isa(...) end
+function XMLFile.iterate(...) end
+function XMLFile.iterateRecursively(...) end
+function XMLFile.iterator(...) end
+function XMLFile.iteratorChildren(...) end
+function XMLFile.iterator_reverse(...) end
+function XMLFile.load(...) end
+function XMLFile.loadIfExists(...) end
+function XMLFile.new(...) end
+function XMLFile.removeProperty(...) end
+function XMLFile.save(...) end
+function XMLFile.saveTo(...) end
+function XMLFile.setBool(...) end
+function XMLFile.setFloat(...) end
+function XMLFile.setInt(...) end
+function XMLFile.setRotation(...) end
+function XMLFile.setSortedTable(...) end
+function XMLFile.setString(...) end
+function XMLFile.setTable(...) end
+function XMLFile.setTranslation(...) end
+function XMLFile.setUInt(...) end
+function XMLFile.setValue(...) end
+function XMLFile.setVector(...) end
+function XMLFile.superClass(...) end
+function XMLFile.wrap(...) end

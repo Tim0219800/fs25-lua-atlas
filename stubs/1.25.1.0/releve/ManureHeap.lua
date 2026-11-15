@@ -1,0 +1,62 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class ManureHeap
+ManureHeap = {}
+
+function ManureHeap:addDeleteListener(...) end
+function ManureHeap.addFillLevelChangedListeners(...) end
+function ManureHeap.addLoadingStation(...) end
+function ManureHeap.addUnloadingStation(...) end
+function ManureHeap.class(...) end
+function ManureHeap:clearDirtyFlags(...) end
+function ManureHeap:clearDirtyMask(...) end
+function ManureHeap.copy(...) end
+function ManureHeap.delete(...) end
+function ManureHeap:draw(...) end
+function ManureHeap.finalize(...) end
+function ManureHeap.getCapacity(...) end
+function ManureHeap.getFillLevel(...) end
+function ManureHeap.getFillLevels(...) end
+function ManureHeap.getFreeCapacity(...) end
+function ManureHeap:getIsDelayedLoaded(...) end
+function ManureHeap.getIsFillTypeSupported(...) end
+function ManureHeap:getNextDirtyFlag(...) end
+function ManureHeap:getOwnerConnection(...) end
+function ManureHeap:getOwnerFarmId(...) end
+function ManureHeap.getSupportedFillTypes(...) end
+function ManureHeap:getUpdatePriority(...) end
+function ManureHeap.isa(...) end
+function ManureHeap.load(...) end
+function ManureHeap.loadFromXMLFile(...) end
+function ManureHeap.new(...) end
+function ManureHeap.onFillLevelChanged(...) end
+function ManureHeap:onGhostAdd(...) end
+function ManureHeap:onGhostRemove(...) end
+function ManureHeap:onMissionStarted(...) end
+function ManureHeap.onVehicleCallback(...) end
+function ManureHeap:raiseActive(...) end
+function ManureHeap:raiseDirtyFlags(...) end
+function ManureHeap.readStream(...) end
+function ManureHeap.readUpdateStream(...) end
+function ManureHeap:register(...) end
+function ManureHeap.registerSavegameXMLPaths(...) end
+function ManureHeap.registerXMLPaths(...) end
+function ManureHeap:removeDeleteListener(...) end
+function ManureHeap.removeFillLevelChangedListeners(...) end
+function ManureHeap.removeLoadingStation(...) end
+function ManureHeap.removeManure(...) end
+function ManureHeap.removeUnloadingStation(...) end
+function ManureHeap:resetObjectIds(...) end
+function ManureHeap.saveToXMLFile(...) end
+function ManureHeap.setFillLevel(...) end
+function ManureHeap:setOwnerConnection(...) end
+function ManureHeap:setOwnerFarmId(...) end
+function ManureHeap.superClass(...) end
+function ManureHeap:unregister(...) end
+function ManureHeap.update(...) end
+function ManureHeap:updateEnd(...) end
+function ManureHeap:updateTick(...) end
+function ManureHeap.updateTotalFillLevel(...) end
+function ManureHeap.writeStream(...) end
+function ManureHeap.writeUpdateStream(...) end

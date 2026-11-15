@@ -1,0 +1,9 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class EnumUtil
+EnumUtil = {}
+
+function EnumUtil.getKeys(...) end
+function EnumUtil.getName(...) end
+function EnumUtil.getNumEntries(...) end

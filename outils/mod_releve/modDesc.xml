@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<!-- descVersion 99 : valeur la plus haute vue dans des mods installés qui chargent ; à confirmer dans log.txt (NON VÉRIFIÉ). -->
+<modDesc descVersion="99">
+    <author>tim19Atlas</author>
+    <version>0.1.0.0</version>
+    <title><en>Atlas Lua FS25 - releve</en><fr>Atlas Lua FS25 - relevé</fr></title>
+    <description><en><![CDATA[Development tool: writes the Lua globals available in game to atlas_releve.tsv in the user profile folder. Changes nothing in the game. Remove after use.]]></en></description>
+    <multiplayer supported="false"/>
+    <extraSourceFiles>
+        <sourceFile filename="AtlasReleve.lua"/>
+    </extraSourceFiles>
+</modDesc>

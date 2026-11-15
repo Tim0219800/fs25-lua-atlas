@@ -1,0 +1,59 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class ConstructionBrushHusbandry
+ConstructionBrushHusbandry = {}
+
+function ConstructionBrushHusbandry:activate(...) end
+function ConstructionBrushHusbandry:canCancel(...) end
+function ConstructionBrushHusbandry:cancel(...) end
+function ConstructionBrushHusbandry.class(...) end
+function ConstructionBrushHusbandry.copy(...) end
+function ConstructionBrushHusbandry:copyState(...) end
+function ConstructionBrushHusbandry.deactivate(...) end
+function ConstructionBrushHusbandry:delete(...) end
+function ConstructionBrushHusbandry:draw(...) end
+function ConstructionBrushHusbandry:getAxisPrimaryText(...) end
+function ConstructionBrushHusbandry:getAxisSecondaryText(...) end
+function ConstructionBrushHusbandry:getButtonPrimaryText(...) end
+function ConstructionBrushHusbandry:getButtonSecondaryText(...) end
+function ConstructionBrushHusbandry:getButtonSnappingText(...) end
+function ConstructionBrushHusbandry:getButtonTertiaryText(...) end
+function ConstructionBrushHusbandry:getDisplacementCost(...) end
+function ConstructionBrushHusbandry:getIsLineClearOfRiceFields(...) end
+function ConstructionBrushHusbandry:getIsPositionClearOfRiceFields(...) end
+function ConstructionBrushHusbandry:getPrice(...) end
+function ConstructionBrushHusbandry:getSnappedPosition(...) end
+function ConstructionBrushHusbandry:getSnappedRotation(...) end
+function ConstructionBrushHusbandry:hasPlayerPermission(...) end
+function ConstructionBrushHusbandry.isa(...) end
+function ConstructionBrushHusbandry:loadPlaceable(...) end
+function ConstructionBrushHusbandry:loadedPlaceable(...) end
+function ConstructionBrushHusbandry.new(...) end
+function ConstructionBrushHusbandry:onAxisPrimary(...) end
+function ConstructionBrushHusbandry:onAxisSecondary(...) end
+function ConstructionBrushHusbandry:onButtonFourth(...) end
+function ConstructionBrushHusbandry:onButtonPrimary(...) end
+function ConstructionBrushHusbandry:onButtonSecondary(...) end
+function ConstructionBrushHusbandry:onButtonSnapping(...) end
+function ConstructionBrushHusbandry:onButtonTertiary(...) end
+function ConstructionBrushHusbandry.onCreatedPlaceableFound(...) end
+function ConstructionBrushHusbandry.onCustomizableFenceFinished(...) end
+function ConstructionBrushHusbandry.onCustomizeFenceStart(...) end
+function ConstructionBrushHusbandry.onFinishedCustomFence(...) end
+function ConstructionBrushHusbandry.onPlaceableCreated(...) end
+function ConstructionBrushHusbandry:onTerrainValidationFinished(...) end
+function ConstructionBrushHusbandry:playSound(...) end
+function ConstructionBrushHusbandry:setActiveSound(...) end
+function ConstructionBrushHusbandry:setInputTextDirty(...) end
+function ConstructionBrushHusbandry:setParameters(...) end
+function ConstructionBrushHusbandry:setPlaceableFilename(...) end
+function ConstructionBrushHusbandry:setStoreItem(...) end
+function ConstructionBrushHusbandry.superClass(...) end
+function ConstructionBrushHusbandry:unloadPlaceable(...) end
+function ConstructionBrushHusbandry.update(...) end
+function ConstructionBrushHusbandry:updateHeightFromInput(...) end
+function ConstructionBrushHusbandry:updatePlaceablePosition(...) end
+function ConstructionBrushHusbandry.validateFence(...) end
+function ConstructionBrushHusbandry:verifyAccess(...) end
+function ConstructionBrushHusbandry:verifyPlacement(...) end

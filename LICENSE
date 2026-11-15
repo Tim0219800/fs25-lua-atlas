@@ -1,0 +1,17 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Tim0219800
+
+This license applies to everything in this repository except the `outils/` folder
+(see LICENSE-tools): the written descriptions (`descriptions/`), the generated
+documentation (`doc/`) and the LuaLS stubs (`stubs/`).
+
+Function names, signatures and types describe the interface of Farming Simulator 25
+(GIANTS Software GmbH) and are reproduced as facts for interoperability; no rights
+over them are claimed. No GIANTS Software source code or text is included (see LEGAL.md).
+
+You are free to share and adapt this material for any purpose, even commercially,
+provided you give appropriate credit, provide a link to the license, and indicate
+if changes were made.
+
+Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode

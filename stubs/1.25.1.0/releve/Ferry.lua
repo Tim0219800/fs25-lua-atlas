@@ -1,0 +1,66 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class Ferry
+Ferry = {}
+
+function Ferry:addDeleteListener(...) end
+function Ferry.addDynamicMountedObject(...) end
+function Ferry.addSplineTimeDelta(...) end
+function Ferry.class(...) end
+function Ferry:clearDirtyFlags(...) end
+function Ferry:clearDirtyMask(...) end
+function Ferry.copy(...) end
+function Ferry.delete(...) end
+function Ferry:draw(...) end
+function Ferry.getCanActivateDriving(...) end
+function Ferry.getIsAllowedToDrive(...) end
+function Ferry:getIsDelayedLoaded(...) end
+function Ferry.getIsNodeSupported(...) end
+function Ferry:getNextDirtyFlag(...) end
+function Ferry:getOwnerConnection(...) end
+function Ferry:getOwnerFarmId(...) end
+function Ferry.getSplineTime(...) end
+function Ferry.getSplineTimeDeltaPerMs(...) end
+function Ferry.getState(...) end
+function Ferry:getUpdatePriority(...) end
+function Ferry.getWorldPosition(...) end
+function Ferry.getWorldRotation(...) end
+function Ferry.isa(...) end
+function Ferry.load(...) end
+function Ferry.loadFromXMLFile(...) end
+function Ferry.mountObjects(...) end
+function Ferry.new(...) end
+function Ferry.onActivationTriggerCallback(...) end
+function Ferry.onBarrierTriggerCallback(...) end
+function Ferry.onCreate(...) end
+function Ferry:onGhostAdd(...) end
+function Ferry:onGhostRemove(...) end
+function Ferry:onMissionStarted(...) end
+function Ferry.onObjectCallback(...) end
+function Ferry.onStartFailed(...) end
+function Ferry.onStarted(...) end
+function Ferry:raiseActive(...) end
+function Ferry:raiseDirtyFlags(...) end
+function Ferry.readStream(...) end
+function Ferry.readUpdateStream(...) end
+function Ferry:register(...) end
+function Ferry:removeDeleteListener(...) end
+function Ferry.removeDynamicMountedObject(...) end
+function Ferry:resetObjectIds(...) end
+function Ferry.saveToXMLFile(...) end
+function Ferry:setOwnerConnection(...) end
+function Ferry.setOwnerFarmId(...) end
+function Ferry.setState(...) end
+function Ferry.start(...) end
+function Ferry.startMotor(...) end
+function Ferry.stopMotor(...) end
+function Ferry.superClass(...) end
+function Ferry.unmountObjects(...) end
+function Ferry:unregister(...) end
+function Ferry.update(...) end
+function Ferry:updateEnd(...) end
+function Ferry.updatePosition(...) end
+function Ferry:updateTick(...) end
+function Ferry.writeStream(...) end
+function Ferry.writeUpdateStream(...) end

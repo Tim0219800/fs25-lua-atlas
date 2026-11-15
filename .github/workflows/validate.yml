@@ -1,0 +1,49 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Tools compile
+        run: python -m py_compile outils/*.py
+
+      - name: Descriptions are valid JSON with a source file
+        run: |
+          python -I -c "
+          import json, glob, sys
+          bad = []
+          files = glob.glob('descriptions/**/*.json', recursive=True)
+          for p in files:
+              try:
+                  d = json.load(open(p, encoding='utf-8'))
+                  if not str(d.get('fichier', '')).endswith('.lua'):
+                      bad.append(p + ': champ fichier manquant')
+              except Exception as e:
+                  bad.append(p + ': ' + str(e))
+          print(len(files), 'fichiers,', len(bad), 'erreurs')
+          [print('ERREUR', b) for b in bad]
+          sys.exit(1 if bad else 0)
+          "
+
+      - name: No GIANTS source text
+        run: |
+          if grep -rlE "Copyright \(C\) GIANTS|Confidential, All Rights Reserved" descriptions doc stubs; then
+            echo "Texte GIANTS trouvé"; exit 1
+          fi
+
+      - name: Stubs are valid Lua
+        run: |
+          sudo apt-get install -y -qq luajit > /dev/null
+          ko=0
+          while IFS= read -r f; do luajit -bl "$f" > /dev/null || { echo "KO $f"; ko=1; }; done < <(find stubs -name '*.lua')
+          exit $ko

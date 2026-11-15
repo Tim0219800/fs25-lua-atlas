@@ -1,0 +1,14 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class ConversationPrerequisiteGameMode
+ConversationPrerequisiteGameMode = {}
+
+function ConversationPrerequisiteGameMode.class(...) end
+function ConversationPrerequisiteGameMode.copy(...) end
+function ConversationPrerequisiteGameMode.createFromXML(...) end
+function ConversationPrerequisiteGameMode.getIsValid(...) end
+function ConversationPrerequisiteGameMode.isa(...) end
+function ConversationPrerequisiteGameMode.new(...) end
+function ConversationPrerequisiteGameMode.registerXMLPaths(...) end
+function ConversationPrerequisiteGameMode.superClass(...) end

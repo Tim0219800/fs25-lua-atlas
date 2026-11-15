@@ -1,0 +1,64 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class Weather
+Weather = {}
+
+function Weather.addStartWeather(...) end
+function Weather.addWeatherForecast(...) end
+function Weather.class(...) end
+function Weather.consoleCommandWeatherAdd(...) end
+function Weather.consoleCommandWeatherReloadData(...) end
+function Weather.consoleCommandWeatherSet(...) end
+function Weather.consoleCommandWeatherSetClouds(...) end
+function Weather.consoleCommandWeatherSetDebugWind(...) end
+function Weather.consoleCommandWeatherToggleDebug(...) end
+function Weather.consoleCommandWeatherToggleRandomWindWaving(...) end
+function Weather.consoleCommandWeatherTwisterSpawn(...) end
+function Weather.copy(...) end
+function Weather.createRandomWeatherInstance(...) end
+function Weather.delete(...) end
+function Weather.draw(...) end
+function Weather.fillWeatherForecast(...) end
+function Weather.getCloudEnvMapInfo(...) end
+function Weather.getCurrentMinMaxTemperatures(...) end
+function Weather.getCurrentTemperature(...) end
+function Weather.getCurrentTemperatureTrend(...) end
+function Weather.getCurrentWeatherType(...) end
+function Weather.getForecast(...) end
+function Weather.getForecastInstanceVariation(...) end
+function Weather.getGroundWetness(...) end
+function Weather.getHailFallScale(...) end
+function Weather.getIsHailing(...) end
+function Weather.getIsRaining(...) end
+function Weather.getIsReady(...) end
+function Weather.getIsSnowing(...) end
+function Weather.getNextWeatherType(...) end
+function Weather.getRainFallScale(...) end
+function Weather.getRandomWeatherObjectVariation(...) end
+function Weather.getSnowFallScale(...) end
+function Weather.getTimeSinceLastRain(...) end
+function Weather.getTimeUntilRain(...) end
+function Weather.getWeatherObjectByIndex(...) end
+function Weather.getWeatherObjectBySeasonAndType(...) end
+function Weather.getWeatherTypeAtTime(...) end
+function Weather.init(...) end
+function Weather.isa(...) end
+function Weather.load(...) end
+function Weather.loadFromXMLFile(...) end
+function Weather.loadWeatherObjects(...) end
+function Weather.new(...) end
+function Weather.onDayChanged(...) end
+function Weather.onGameStateChanged(...) end
+function Weather.onPeriodLengthChanged(...) end
+function Weather.onTimeScaleChanged(...) end
+function Weather.onWeatherChanged(...) end
+function Weather.randomizeFog(...) end
+function Weather.rebuild(...) end
+function Weather.saveToXMLFile(...) end
+function Weather.sendInitialState(...) end
+function Weather.setInitialState(...) end
+function Weather.setIsRainAllowed(...) end
+function Weather.superClass(...) end
+function Weather.update(...) end
+function Weather.updateAvailableWeatherObjects(...) end

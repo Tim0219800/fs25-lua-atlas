@@ -1,0 +1,39 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class Object
+Object = {}
+
+function Object.addDeleteListener(...) end
+function Object.class(...) end
+function Object.clearDirtyFlags(...) end
+function Object.clearDirtyMask(...) end
+function Object.copy(...) end
+function Object.delete(...) end
+function Object.draw(...) end
+function Object.getIsDelayedLoaded(...) end
+function Object.getNextDirtyFlag(...) end
+function Object.getOwnerConnection(...) end
+function Object.getOwnerFarmId(...) end
+function Object.getUpdatePriority(...) end
+function Object.isa(...) end
+function Object.new(...) end
+function Object.onGhostAdd(...) end
+function Object.onGhostRemove(...) end
+function Object.onMissionStarted(...) end
+function Object.raiseActive(...) end
+function Object.raiseDirtyFlags(...) end
+function Object.readStream(...) end
+function Object.readUpdateStream(...) end
+function Object.register(...) end
+function Object.removeDeleteListener(...) end
+function Object.resetObjectIds(...) end
+function Object.setOwnerConnection(...) end
+function Object.setOwnerFarmId(...) end
+function Object.superClass(...) end
+function Object.unregister(...) end
+function Object.update(...) end
+function Object.updateEnd(...) end
+function Object.updateTick(...) end
+function Object.writeStream(...) end
+function Object.writeUpdateStream(...) end

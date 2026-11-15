@@ -1,0 +1,16 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class FerryStateEvent
+FerryStateEvent = {}
+
+function FerryStateEvent.class(...) end
+function FerryStateEvent.copy(...) end
+function FerryStateEvent:delete(...) end
+function FerryStateEvent.emptyNew(...) end
+function FerryStateEvent.isa(...) end
+function FerryStateEvent.new(...) end
+function FerryStateEvent.readStream(...) end
+function FerryStateEvent.run(...) end
+function FerryStateEvent.superClass(...) end
+function FerryStateEvent.writeStream(...) end

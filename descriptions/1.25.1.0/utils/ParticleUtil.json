@@ -1,0 +1,12 @@
+{
+ "fichier": "utils/ParticleUtil.lua",
+ "module": "Utilitaires de systèmes de particules : chargement depuis le XML ou un nœud I3D, émission, vitesses, échelles, durée de vie, matériau et copie. ⚠ Le dump du SDK ne contient que les signatures : le comportement interne n'est pas lisible. Les descriptions ci-dessous viennent de l'usage observé dans le code vanilla (WorkParticles notamment) ; le reste est NON VÉRIFIÉ. Les fonctions qui portent sur « particleSystem » prennent la table renvoyée par les fonctions de chargement, pas un id de nœud.",
+ "fonctions": {
+  "ParticleUtil.loadParticleSystemFromNode": "Initialise la table particleSystem à partir d'un nœud I3D déjà chargé. Usage vanilla (WorkParticles) : émission initiale désactivée et worldSpace=true, de sorte que les particules restent en coordonnées monde après leur émission.",
+  "ParticleUtil.deleteParticleSystem": "Supprime un système de particules chargé ; appelé dans les onDelete (WorkParticles:onDelete).",
+  "ParticleUtil.setEmittingState": "Active ou coupe l'émission d'un système. WorkParticles l'appelle à chaque tick avec l'état calculé ; les paramètres resetStartTimer/resetStopTimer ne sont pas utilisés dans ce cas.",
+  "ParticleUtil.setMaterial": "Applique un matériau à un système. Usage vanilla : matériau de particule propre au type de remplissage (g_materialManager:getParticleMaterial).",
+  "ParticleUtil.copyParticleSystem": "Duplique un système de référence (venant de g_particleSystemManager) et l'attache à emitterShape, avec des surcharges lues sous la clé XML ; renvoie la table du nouveau système (usage : WorkParticles:loadGroundParticleMapping).",
+  "ParticleUtil.registerParticleCopyXMLPaths": "Enregistre dans un schéma XML les attributs acceptés par copyParticleSystem (appelé depuis WorkParticles.registerGroundParticleMappingXMLPaths)."
+ }
+}

@@ -1,0 +1,63 @@
+---@meta
+-- FS25 1.25.1.0 : relevé en jeu, absent des sources du SDK (types inconnus)
+
+---@class ConstructionBrushVineOrchard
+ConstructionBrushVineOrchard = {}
+
+function ConstructionBrushVineOrchard:acquirePlaceable(...) end
+function ConstructionBrushVineOrchard.activate(...) end
+function ConstructionBrushVineOrchard:boxOverlapCallback(...) end
+function ConstructionBrushVineOrchard.canCancel(...) end
+function ConstructionBrushVineOrchard.cancel(...) end
+function ConstructionBrushVineOrchard.class(...) end
+function ConstructionBrushVineOrchard.copy(...) end
+function ConstructionBrushVineOrchard:copyState(...) end
+function ConstructionBrushVineOrchard.deactivate(...) end
+function ConstructionBrushVineOrchard.delete(...) end
+function ConstructionBrushVineOrchard:draw(...) end
+function ConstructionBrushVineOrchard:findPlaceable(...) end
+function ConstructionBrushVineOrchard:getAxisPrimaryText(...) end
+function ConstructionBrushVineOrchard:getAxisSecondaryText(...) end
+function ConstructionBrushVineOrchard.getButtonFourthText(...) end
+function ConstructionBrushVineOrchard.getButtonPrimaryText(...) end
+function ConstructionBrushVineOrchard.getButtonSecondaryText(...) end
+function ConstructionBrushVineOrchard:getButtonSnappingText(...) end
+function ConstructionBrushVineOrchard.getButtonTertiaryText(...) end
+function ConstructionBrushVineOrchard:getIsLineClearOfRiceFields(...) end
+function ConstructionBrushVineOrchard:getIsPositionClearOfRiceFields(...) end
+function ConstructionBrushVineOrchard:getLimitedSnappedCursorPosition(...) end
+function ConstructionBrushVineOrchard.getOrchardBuildPlaceable(...) end
+function ConstructionBrushVineOrchard.getOrchardBuildTemplateId(...) end
+function ConstructionBrushVineOrchard.getOrchardPanelLength(...) end
+function ConstructionBrushVineOrchard.getOrchardPricePerMeter(...) end
+function ConstructionBrushVineOrchard.getOrchardRowSpacing(...) end
+function ConstructionBrushVineOrchard:getPreviewAngle(...) end
+function ConstructionBrushVineOrchard:getPrice(...) end
+function ConstructionBrushVineOrchard:getSnappedCursorPosition(...) end
+function ConstructionBrushVineOrchard:hasPlayerPermission(...) end
+function ConstructionBrushVineOrchard.isa(...) end
+function ConstructionBrushVineOrchard.new(...) end
+function ConstructionBrushVineOrchard:onAxisPrimary(...) end
+function ConstructionBrushVineOrchard:onAxisSecondary(...) end
+function ConstructionBrushVineOrchard.onButtonFourth(...) end
+function ConstructionBrushVineOrchard.onButtonPrimary(...) end
+function ConstructionBrushVineOrchard.onButtonSecondary(...) end
+function ConstructionBrushVineOrchard:onButtonSnapping(...) end
+function ConstructionBrushVineOrchard.onButtonTertiary(...) end
+function ConstructionBrushVineOrchard:onFenceSegmentCreated(...) end
+function ConstructionBrushVineOrchard:onPlaceableCreated(...) end
+function ConstructionBrushVineOrchard:playSound(...) end
+function ConstructionBrushVineOrchard.releasePlaceable(...) end
+function ConstructionBrushVineOrchard.removePreview(...) end
+function ConstructionBrushVineOrchard:resetErrorOverlays(...) end
+function ConstructionBrushVineOrchard:setActiveSound(...) end
+function ConstructionBrushVineOrchard:setFilename(...) end
+function ConstructionBrushVineOrchard:setInputTextDirty(...) end
+function ConstructionBrushVineOrchard:setIsGate(...) end
+function ConstructionBrushVineOrchard:setParameters(...) end
+function ConstructionBrushVineOrchard:setStoreItem(...) end
+function ConstructionBrushVineOrchard.superClass(...) end
+function ConstructionBrushVineOrchard.toggleFenceMode(...) end
+function ConstructionBrushVineOrchard.update(...) end
+function ConstructionBrushVineOrchard:verifyAccess(...) end
+function ConstructionBrushVineOrchard:verifyPreview(...) end
