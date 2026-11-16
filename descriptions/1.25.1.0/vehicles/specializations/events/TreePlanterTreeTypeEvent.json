@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/TreePlanterTreeTypeEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the selected tree type and variation of a tree planter. The variation defaults to 1 when writing if nil. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise le type d'arbre et la variation sélectionnés d'une planteuse d'arbres. La variation vaut 1 à l'écriture si elle est nil. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "TreePlanterTreeTypeEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "TreePlanterTreeTypeEvent.new": {
+      "en": "Builds the event with the data to send (a node object, a 32-bit tree type index and a variation index (TreePlantManager.VARIATION_NUM_BITS bits)); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud, un indice de type d'arbre sur 32 bits et un indice de variation (TreePlantManager.VARIATION_NUM_BITS bits)) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "TreePlanterTreeTypeEvent:readStream": {
+      "en": "Reads a node object, a 32-bit tree type index and a variation index (TreePlantManager.VARIATION_NUM_BITS bits) from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud, un indice de type d'arbre sur 32 bits et un indice de variation (TreePlantManager.VARIATION_NUM_BITS bits) depuis le flux, puis appelle `run(connection)`."
+    },
+    "TreePlanterTreeTypeEvent:writeStream": {
+      "en": "Writes a node object, a 32-bit tree type index and a variation index (TreePlantManager.VARIATION_NUM_BITS bits) to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud, un indice de type d'arbre sur 32 bits et un indice de variation (TreePlantManager.VARIATION_NUM_BITS bits) dans le flux (même ordre que `readStream`)."
+    },
+    "TreePlanterTreeTypeEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself, then calls `setTreePlanterTreeTypeIndex(type, variation, true)` on the object if synchronized.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet, puis appelle `setTreePlanterTreeTypeIndex(type, variation, true)` sur l'objet s'il est synchronisé."
+    },
+    "TreePlanterTreeTypeEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

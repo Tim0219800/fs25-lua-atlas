@@ -1,0 +1,33 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableLightsStateEvent.lua",
+ "module": {
+  "en": "Network event (subclass of Event) that switches a light group of a placeable on or off. A client sends it to the server, which rebroadcasts it to the other clients and applies it locally.",
+  "fr": "Événement réseau (sous-classe d'Event) qui allume ou éteint un groupe de lumières d'un placeable. Un client l'envoie au serveur, qui le rediffuse aux autres clients et l'applique localement."
+ },
+ "fonctions": {
+  "PlaceableLightsStateEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture de flux."
+  },
+  "PlaceableLightsStateEvent.new": {
+   "en": "Creates the event with the placeable, the light group index and the target active state.",
+   "fr": "Crée l'événement avec le placeable, l'indice du groupe de lumières et l'état actif visé."
+  },
+  "PlaceableLightsStateEvent:readStream": {
+   "en": "Reads the placeable, the group index (`PlaceableLights.MAX_NUM_BITS` bits) and the active flag, then calls `run`.",
+   "fr": "Lit le placeable, l'indice du groupe (`PlaceableLights.MAX_NUM_BITS` bits) et le drapeau actif, puis appelle `run`."
+  },
+  "PlaceableLightsStateEvent:writeStream": {
+   "en": "Writes the placeable, the group index (`PlaceableLights.MAX_NUM_BITS` bits) and the active flag.",
+   "fr": "Écrit le placeable, l'indice du groupe (`PlaceableLights.MAX_NUM_BITS` bits) et le drapeau actif."
+  },
+  "PlaceableLightsStateEvent:run": {
+   "en": "On the server, rebroadcasts to other connections (not the sender); then, if the placeable is synchronized and has `setGroupIsActive`, applies the state locally without resending.",
+   "fr": "Sur le serveur, rediffuse aux autres connexions (pas à l'émetteur) ; puis, si le placeable est synchronisé et possède `setGroupIsActive`, applique l'état localement sans renvoi."
+  },
+  "PlaceableLightsStateEvent.sendEvent": {
+   "en": "Unless `noEventSend` is true, broadcasts the event from the server, or sends it to the server from a client.",
+   "fr": "Sauf si `noEventSend` vaut true, diffuse l'événement depuis le serveur, ou l'envoie au serveur depuis un client."
+  }
+ }
+}

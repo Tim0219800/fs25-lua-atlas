@@ -1,0 +1,65 @@
+{
+ "fichier": "vehicles/specializations/FruitExtraObjects.lua",
+ "module": {
+  "en": "Specialization for cutters and mowers that show extra objects or play an animation depending on the fruit or fill type being harvested (for example a header kit for a given crop). Objects are defined under vehicle.cutter or vehicle.mower, one may be the default, and visibility can depend on attachment or mounting on a header trailer. Visual, client side only. The type is supplied by getFruitExtraObjectTypeData, which returns nothing here and must be provided elsewhere.",
+  "fr": "Spécialisation pour les barres de coupe et faucheuses qui affichent des objets supplémentaires ou jouent une animation selon le type de fruit ou de remplissage récolté (par exemple un kit de coupe pour une culture). Les objets sont définis sous vehicle.cutter ou vehicle.mower, l'un peut être par défaut, et la visibilité peut dépendre de l'attelage ou du montage sur une remorque de coupe. Purement visuel, côté client. Le type est fourni par getFruitExtraObjectTypeData, qui ne renvoie rien ici et doit être fourni ailleurs."
+ },
+ "fonctions": {
+  "FruitExtraObjects.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "FruitExtraObjects.initSpecialization": {
+   "en": "Declares the fruitExtraObjects XML nodes under vehicle.cutter and vehicle.mower, and the savegame keys lastFruitType and lastFillType.",
+   "fr": "Déclare les nœuds XML fruitExtraObjects sous vehicle.cutter et vehicle.mower, ainsi que les clés de sauvegarde lastFruitType et lastFillType."
+  },
+  "FruitExtraObjects.registerXMLPaths": {
+   "en": "Registers the attributes of a fruitExtraObjects block under the given base path: per-object node, animation, speed, isDefault, fruitType, fillType, plus hideOnDetach and hideOnMount.",
+   "fr": "Déclare les attributs d'un bloc fruitExtraObjects sous le chemin de base donné : par objet nœud, animation, vitesse, isDefault, fruitType, fillType, ainsi que hideOnDetach et hideOnMount."
+  },
+  "FruitExtraObjects.registerFunctions": {
+   "en": "Registers loadFruitExtraObjectFromXML, getFruitExtraObjectTypeData and updateFruitExtraObjects on the vehicle type.",
+   "fr": "Enregistre loadFruitExtraObjectFromXML, getFruitExtraObjectTypeData et updateFruitExtraObjects sur le type de véhicule."
+  },
+  "FruitExtraObjects.registerOverwrittenFunctions": {
+   "en": "Empty: this specialization overrides no function.",
+   "fr": "Vide : cette spécialisation ne surcharge aucune fonction."
+  },
+  "FruitExtraObjects.registerEventListeners": {
+   "en": "Subscribes to post load, dynamic mount type change, pre attach and post detach events.",
+   "fr": "Abonne aux événements de post-chargement, changement de type de montage dynamique, pré-attelage et post-dételage."
+  },
+  "FruitExtraObjects:onPostLoad": {
+   "en": "Client only: loads the extra objects from the cutter and mower XML blocks (one default object allowed), reads hideOnDetach/hideOnMount, restores the last fruit and fill type from the savegame and refreshes. Removes its listeners on servers or when no object exists (it names onLoadFinished, which is not registered here).",
+   "fr": "Client uniquement : charge les objets supplémentaires des blocs XML cutter et mower (un objet par défaut possible), lit hideOnDetach/hideOnMount, restaure les derniers types de fruit et de remplissage depuis la sauvegarde et rafraîchit. Retire ses écouteurs sur serveur ou sans objet (il cite onLoadFinished, non enregistré ici)."
+  },
+  "FruitExtraObjects:saveToXMLFile": {
+   "en": "Writes the last fruit type and last fill type names to the savegame when set.",
+   "fr": "Écrit dans la sauvegarde les noms du dernier type de fruit et du dernier type de remplissage lorsqu'ils sont définis."
+  },
+  "FruitExtraObjects:onDynamicMountTypeChanged": {
+   "en": "Calls updateFruitExtraObjects when the dynamic mount state changes.",
+   "fr": "Appelle updateFruitExtraObjects quand l'état de montage dynamique change."
+  },
+  "FruitExtraObjects:onPreAttach": {
+   "en": "Calls updateFruitExtraObjects just before the vehicle is attached.",
+   "fr": "Appelle updateFruitExtraObjects juste avant l'attelage du véhicule."
+  },
+  "FruitExtraObjects:onPostDetach": {
+   "en": "Calls updateFruitExtraObjects after the vehicle has been detached.",
+   "fr": "Appelle updateFruitExtraObjects après le dételage du véhicule."
+  },
+  "FruitExtraObjects:loadFruitExtraObjectFromXML": {
+   "en": "Loads one extra object (node hidden at load, animation, speed, isDefault, fruit type, fill type). Returns false with a warning if it has neither a type nor isDefault, or both.",
+   "fr": "Charge un objet supplémentaire (nœud masqué au chargement, animation, vitesse, isDefault, type de fruit, type de remplissage). Renvoie false avec avertissement s'il n'a ni type ni isDefault, ou les deux."
+  },
+  "FruitExtraObjects:getFruitExtraObjectTypeData": {
+   "en": "Default hook returning nil, nil (fruit type, fill type); meant to be overridden by the specialization that knows the current crop, such as a cutter or mower.",
+   "fr": "Point d'extension par défaut renvoyant nil, nil (type de fruit, type de remplissage) ; destiné à être surchargé par la spécialisation qui connaît la culture courante, comme une barre de coupe ou une faucheuse."
+  },
+  "FruitExtraObjects:updateFruitExtraObjects": {
+   "en": "Picks the extra object matching the current (or last known) fruit or fill type, falling back to the default one, hides it when detached or mounted if configured, and swaps visibility and animations accordingly.",
+   "fr": "Choisit l'objet supplémentaire correspondant au type de fruit ou de remplissage courant (ou dernier connu), avec repli sur l'objet par défaut, le masque si détaché ou monté selon la configuration, et échange visibilité et animations en conséquence."
+  }
+ }
+}

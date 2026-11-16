@@ -1,0 +1,41 @@
+{
+ "fichier": "ai/parameters/AIParameter.lua",
+ "module": {
+  "en": "Base class of the values a player edits when setting up an AI job. It holds a type (`AIParameterType`, default TEXT) and a validity flag, and offers empty hooks for network serialization; subclasses add storage, validation and UI value cycling.",
+  "fr": "Classe de base des valeurs qu'un joueur règle lors de la préparation d'un job IA. Elle porte un type (`AIParameterType`, TEXT par défaut) et un drapeau de validité, et fournit des points d'extension vides pour la sérialisation réseau ; les sous-classes ajoutent stockage, validation et défilement des valeurs dans l'interface."
+ },
+ "fonctions": {
+  "AIParameter.new": {
+   "en": "Creates a parameter of type TEXT that starts valid.",
+   "fr": "Crée un paramètre de type TEXT, valide au départ."
+  },
+  "AIParameter:readStream": {
+   "en": "Empty hook for reading the value from a network stream.",
+   "fr": "Point d'extension vide pour lire la valeur depuis un flux réseau."
+  },
+  "AIParameter:writeStream": {
+   "en": "Empty hook for writing the value to a network stream.",
+   "fr": "Point d'extension vide pour écrire la valeur dans un flux réseau."
+  },
+  "AIParameter:getType": {
+   "en": "Returns the `AIParameterType` of the parameter.",
+   "fr": "Renvoie l'`AIParameterType` du paramètre."
+  },
+  "AIParameter:getIsValid": {
+   "en": "Returns the validity flag, which the UI can use to highlight an invalid parameter.",
+   "fr": "Renvoie le drapeau de validité, que l'interface peut utiliser pour signaler un paramètre invalide."
+  },
+  "AIParameter:setIsValid": {
+   "en": "Sets the validity flag.",
+   "fr": "Fixe le drapeau de validité."
+  },
+  "AIParameter:getCanBeChanged": {
+   "en": "Returns true; read-only parameters such as the vehicle override it.",
+   "fr": "Renvoie true ; les paramètres en lecture seule comme le véhicule le redéfinissent."
+  },
+  "AIParameter:getString": {
+   "en": "Returns an empty string; subclasses return the text shown in the UI.",
+   "fr": "Renvoie une chaîne vide ; les sous-classes renvoient le texte affiché dans l'interface."
+  }
+ }
+}

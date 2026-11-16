@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/AIConveyorBeltSetAngleEvent.lua",
+ "module": {
+  "en": "Network event that synchronises the AI conveyor belt angle of a vehicle (signed 8-bit). A client sends it to the server, which applies it and relays it to the other clients.",
+  "fr": "Événement réseau qui synchronise l'angle du tapis convoyeur IA d'un véhicule (8 bits signé). Un client l'envoie au serveur, qui l'applique et le relaie aux autres clients."
+ },
+ "fonctions": {
+  "AIConveyorBeltSetAngleEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable; used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe ; utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "AIConveyorBeltSetAngleEvent.new": {
+   "en": "Creates the event for a vehicle with the conveyor belt angle value to set.",
+   "fr": "Crée l'événement pour un véhicule avec la valeur d'angle du tapis convoyeur à appliquer."
+  },
+  "AIConveyorBeltSetAngleEvent:readStream": {
+   "en": "Reads the vehicle and the angle as a signed 8-bit integer, then calls `run`.",
+   "fr": "Lit le véhicule et l'angle sous forme d'entier signé 8 bits, puis appelle `run`."
+  },
+  "AIConveyorBeltSetAngleEvent:writeStream": {
+   "en": "Writes the vehicle and the angle as a signed 8-bit integer (so the value must fit -128..127).",
+   "fr": "Écrit le véhicule et l'angle sous forme d'entier signé 8 bits (la valeur doit tenir dans -128..127)."
+  },
+  "AIConveyorBeltSetAngleEvent:run": {
+   "en": "Calls `setAIConveyorBeltAngle(angle, true)` on a synchronized vehicle; on the server it rebroadcasts to the other clients, excluding the sender connection. No `sendEvent` helper exists.",
+   "fr": "Appelle `setAIConveyorBeltAngle(angle, true)` sur un véhicule synchronisé ; sur le serveur il le rediffuse aux autres clients, en excluant la connexion émettrice. Il n'existe pas d'aide `sendEvent`."
+  }
+ }
+}

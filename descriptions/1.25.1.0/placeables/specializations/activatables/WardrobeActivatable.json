@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/activatables/WardrobeActivatable.lua",
+ "module": {
+  "en": "Activatable object for a wardrobe placeable that opens the character customization screen. It is available if the wardrobe is free for all or belongs to the local farm, and is blocked during a guided tour.",
+  "fr": "Objet activable pour un placeable de garde-robe qui ouvre l'écran de personnalisation du personnage. Il est disponible si la garde-robe est libre d'accès ou appartient à la ferme locale, et il est bloqué pendant une visite guidée."
+ },
+ "fonctions": {
+  "WardrobeActivatable.new": {
+   "en": "Creates the activatable for a wardrobe placeable and sets the prompt text `action_openWardrobe`.",
+   "fr": "Crée l'activable pour un placeable de garde-robe et fixe le texte `action_openWardrobe`."
+  },
+  "WardrobeActivatable:getIsActivatable": {
+   "en": "Returns true if the wardrobe is free for all or the local farm owns the placeable.",
+   "fr": "Renvoie true si la garde-robe est libre d'accès ou si la ferme locale possède le placeable."
+  },
+  "WardrobeActivatable:run": {
+   "en": "Shows an info dialog during a guided tour; otherwise switches the GUI to the WardrobeScreen.",
+   "fr": "Affiche une boîte d'information pendant une visite guidée ; sinon fait passer l'interface à WardrobeScreen."
+  }
+ }
+}

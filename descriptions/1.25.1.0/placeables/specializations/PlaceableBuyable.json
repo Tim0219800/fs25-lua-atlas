@@ -1,0 +1,49 @@
+{
+ "fichier": "placeables/specializations/PlaceableBuyable.lua",
+ "module": {
+  "en": "Placeable specialization for existing buildings the player can buy from the world. It adds an optional buy trigger and marker node, shows a `BuyBuildingActivatable` when the local player enters the trigger, asks for confirmation and sends a `BuyExistingPlaceableEvent` to the server. The trigger is active only while the owner is `AccessHandler.EVERYONE`.",
+  "fr": "Spécialisation de placeable pour les bâtiments existants que le joueur peut acheter sur la carte. Elle ajoute un déclencheur d'achat et un marqueur optionnels, affiche un `BuyBuildingActivatable` quand le joueur local entre dans le déclencheur, demande confirmation et envoie un `BuyExistingPlaceableEvent` au serveur. Le déclencheur n'est actif que tant que le propriétaire est `AccessHandler.EVERYONE`."
+ },
+ "fonctions": {
+  "PlaceableBuyable.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableBuyable.registerFunctions": {
+   "en": "Registers `onBuyingTriggerCallback`, `setIsBuyingTriggerActive`, `buyRequest` and `getHasBuyingTrigger`. The bodies of `setIsBuyingTriggerActive` and `getHasBuyingTrigger` are not in the dump: UNVERIFIED.",
+   "fr": "Enregistre `onBuyingTriggerCallback`, `setIsBuyingTriggerActive`, `buyRequest` et `getHasBuyingTrigger`. Les corps de `setIsBuyingTriggerActive` et `getHasBuyingTrigger` ne sont pas dans le dump : NON VÉRIFIÉ."
+  },
+  "PlaceableBuyable.registerOverwrittenFunctions": {
+   "en": "Overrides `setOwnerFarmId`.",
+   "fr": "Surcharge `setOwnerFarmId`."
+  },
+  "PlaceableBuyable.registerEventListeners": {
+   "en": "Subscribes to `onLoad` and `onDelete`.",
+   "fr": "S'abonne à `onLoad` et `onDelete`."
+  },
+  "PlaceableBuyable.registerXMLPaths": {
+   "en": "Declares the optional XML keys `buyable.trigger#node` and `buyable.marker#node`.",
+   "fr": "Déclare les clés XML optionnelles `buyable.trigger#node` et `buyable.marker#node`."
+  },
+  "PlaceableBuyable:onLoad": {
+   "en": "Creates the `BuyBuildingActivatable`, loads the optional trigger and marker nodes, registers the trigger callback and marks the trigger as active.",
+   "fr": "Crée le `BuyBuildingActivatable`, charge les nœuds de déclencheur et de marqueur optionnels, enregistre le rappel du déclencheur et marque le déclencheur comme actif."
+  },
+  "PlaceableBuyable:onDelete": {
+   "en": "Removes the activatable, the trigger marker (if any) and the trigger node.",
+   "fr": "Retire l'activable, le marqueur de déclencheur (s'il existe) et le nœud de déclencheur."
+  },
+  "PlaceableBuyable:onBuyingTriggerCallback": {
+   "en": "Trigger callback for the local player: on enter adds the activatable (or runs it directly when the platform auto-activates triggers), on leave removes it. Does nothing when the trigger is inactive.",
+   "fr": "Rappel du déclencheur pour le joueur local : à l'entrée, ajoute l'activable (ou l'exécute directement si la plateforme active automatiquement les déclencheurs), à la sortie le retire. Sans effet si le déclencheur est inactif."
+  },
+  "PlaceableBuyable:buyRequest": {
+   "en": "Client side: refused during a guided tour. Computes the price (plus the unowned farmland price when the placeable buys farmland), asks yes/no, then sends `BuyExistingPlaceableEvent` to the server and calls `onBuy` when the answer event arrives.",
+   "fr": "Côté client : refusé pendant une visite guidée. Calcule le prix (plus celui du terrain non possédé si le placeable achète des terres), demande confirmation, puis envoie `BuyExistingPlaceableEvent` au serveur et appelle `onBuy` à l'arrivée de la réponse."
+  },
+  "PlaceableBuyable:setOwnerFarmId": {
+   "en": "Calls the parent, then activates the buying trigger only when the new owner is `AccessHandler.EVERYONE`.",
+   "fr": "Appelle le parent puis n'active le déclencheur d'achat que si le nouveau propriétaire est `AccessHandler.EVERYONE`."
+  }
+ }
+}

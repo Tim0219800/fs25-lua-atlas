@@ -1,0 +1,33 @@
+{
+ "fichier": "ai/tasks/AITaskFieldWork.lua",
+ "module": {
+  "en": "AI task that runs the vehicle's field worker for the duration of the task. It calls startFieldWorker when started and stopFieldWorker when stopped, and expects the vehicle to provide both. The actual work (steering, tool control) is implemented in the vehicle, not here.",
+  "fr": "Tâche IA qui fait tourner le field worker du véhicule pendant la durée de la tâche. Elle appelle startFieldWorker au démarrage et stopFieldWorker à l'arrêt, et suppose que le véhicule fournit les deux. Le travail réel (direction, outils) est implémenté dans le véhicule, pas ici."
+ },
+ "fonctions": {
+  "AITaskFieldWork.new": {
+   "en": "Creates the task with no vehicle assigned.",
+   "fr": "Crée la tâche sans véhicule assigné."
+  },
+  "AITaskFieldWork:reset": {
+   "en": "Clears the vehicle reference, then runs the parent reset.",
+   "fr": "Efface la référence au véhicule, puis exécute le reset du parent."
+  },
+  "AITaskFieldWork:update": {
+   "en": "Empty per-frame override; nothing happens here.",
+   "fr": "Surcharge vide appelée à chaque image ; rien n'est fait ici."
+  },
+  "AITaskFieldWork:setVehicle": {
+   "en": "Sets the vehicle whose field worker is started and stopped.",
+   "fr": "Définit le véhicule dont le field worker est démarré et arrêté."
+  },
+  "AITaskFieldWork:start": {
+   "en": "Calls startFieldWorker on the vehicle, or logs a developer error if no vehicle is set, then runs the parent start.",
+   "fr": "Appelle startFieldWorker sur le véhicule, ou journalise une erreur développeur si aucun véhicule n'est défini, puis exécute le start du parent."
+  },
+  "AITaskFieldWork:stop": {
+   "en": "Runs the parent stop, then calls stopFieldWorker on the vehicle, or logs a developer error if no vehicle is set.",
+   "fr": "Exécute le stop du parent, puis appelle stopFieldWorker sur le véhicule, ou journalise une erreur développeur si aucun véhicule n'est défini."
+  }
+ }
+}

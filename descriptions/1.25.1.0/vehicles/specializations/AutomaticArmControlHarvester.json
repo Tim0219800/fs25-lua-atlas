@@ -1,0 +1,137 @@
+{
+ "fichier": "vehicles/specializations/AutomaticArmControlHarvester.lua",
+ "module": {
+  "en": "Specialization that lets the crane of a wood harvester align automatically on a standing tree for cutting. It requires Cylindered and moves its moving tools through a sequence of states (move back, X, Z, Y alignment, finished). Trees are found with an asynchronous sphere overlap, then scored by angle and distance. A tree marker shows the target, coloured by validity. The server runs the alignment and clients send input over the update stream. Child vehicles (the harvester head) can add support and overrides. The STATE_* and INVALID_REASON_* constants and NEXT_STATE table are defined outside the dumped code: UNVERIFIED.",
+  "fr": "Spécialisation qui permet à la grue d'une abatteuse de s'aligner automatiquement sur un arbre sur pied pour l'abattre. Elle exige Cylindered et déplace ses outils mobiles par une suite d'états (recul, alignement X, Z, Y, terminé). Les arbres sont trouvés par un recouvrement sphérique asynchrone, puis notés selon l'angle et la distance. Un marqueur d'arbre montre la cible, colorée selon sa validité. Le serveur exécute l'alignement et les clients envoient l'entrée via le flux de mise à jour. Les véhicules enfants (la tête d'abattage) peuvent ajouter le support et des surcharges. Les constantes STATE_* et INVALID_REASON_* et la table NEXT_STATE sont définies hors du code présent dans le dump : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "AutomaticArmControlHarvester.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the Cylindered specialization.",
+   "fr": "Renvoie true seulement si le type de véhicule possède la spécialisation Cylindered."
+  },
+  "AutomaticArmControlHarvester.initSpecialization": {
+   "en": "Adds the `automaticArmControlHarvester` shop configuration type and registers the XML paths directly and inside each configuration entry.",
+   "fr": "Ajoute le type de configuration de boutique `automaticArmControlHarvester` et enregistre les chemins XML directement et dans chaque entrée de configuration."
+  },
+  "AutomaticArmControlHarvester.registerXMLPaths": {
+   "en": "Registers one set of XML keys: easy-arm requirement, fold limits, return node, tree detection node (radii, angle, cut height), X, Y, Z alignment, extra alignment nodes and the tree marker colours and offset.",
+   "fr": "Enregistre un jeu de clés XML : exigence du contrôle de bras facile, limites de pliage, noeud de retour, noeud de détection d'arbre (rayons, angle, hauteur de coupe), alignements X, Y, Z, noeuds d'alignement supplémentaires et couleurs et décalage du marqueur d'arbre."
+  },
+  "AutomaticArmControlHarvester.registerFunctions": {
+   "en": "Registers the alignment API: support and allowed checks, tree validity and marker state, input, `doTreeArmAlignment`, active and target queries, invalid-tree reason, best-tree search, overlap callback and `getTreeAutomaticOverwrites`.",
+   "fr": "Enregistre l'API d'alignement : tests de support et d'autorisation, validité de l'arbre et état du marqueur, entrée, `doTreeArmAlignment`, requêtes d'activité et de cible, raison d'arbre invalide, recherche du meilleur arbre, callback de recouvrement et `getTreeAutomaticOverwrites`."
+  },
+  "AutomaticArmControlHarvester.registerOverwrittenFunctions": {
+   "en": "Empty: no vehicle function is overridden.",
+   "fr": "Vide : aucune fonction de véhicule n'est surchargée."
+  },
+  "AutomaticArmControlHarvester.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, onReadUpdateStream, onWriteUpdateStream, onUpdate, onRegisterActionEvents and onRootVehicleChanged.",
+   "fr": "S'abonne à onLoad, onPostLoad, onDelete, onReadUpdateStream, onWriteUpdateStream, onUpdate, onRegisterActionEvents et onRootVehicleChanged."
+  },
+  "AutomaticArmControlHarvester:onLoad": {
+   "en": "Picks the configuration, reads extra alignment nodes and, if a tree detection node exists, all detection, alignment, marker and fold settings. Without it, it keeps only the offsets and reference nodes (for use by a parent vehicle) and removes its update and action listeners.",
+   "fr": "Choisit la configuration, lit les noeuds d'alignement supplémentaires et, si un noeud de détection d'arbre existe, tous les réglages de détection, d'alignement, de marqueur et de pliage. Sans lui, ne garde que les décalages et noeuds de référence (pour un véhicule parent) et retire ses écouteurs de mise à jour et d'actions."
+  },
+  "AutomaticArmControlHarvester:onPostLoad": {
+   "en": "Resolves the moving tool objects for X, Z, Y and each alignment node, dropping alignment nodes whose tool is not found.",
+   "fr": "Résout les objets d'outils mobiles pour X, Z, Y et chaque noeud d'alignement, en supprimant les noeuds dont l'outil est introuvable."
+  },
+  "AutomaticArmControlHarvester:onDelete": {
+   "en": "Deletes the tree marker if one was created.",
+   "fr": "Supprime le marqueur d'arbre s'il a été créé."
+  },
+  "AutomaticArmControlHarvester:onReadUpdateStream": {
+   "en": "Network read. The server reads the client's control input and holds it for 250 ms; a client reads whether the server found a valid target.",
+   "fr": "Lecture réseau. Le serveur lit l'entrée de contrôle du client et la conserve 250 ms ; un client lit si le serveur a trouvé une cible valide."
+  },
+  "AutomaticArmControlHarvester:onWriteUpdateStream": {
+   "en": "Network write, mirror of the read, sent only when the dirty flag is set: control input from client to server, valid-target flag from server to client.",
+   "fr": "Écriture réseau, miroir de la lecture, envoyée seulement si l'indicateur dirty est levé : entrée de contrôle du client vers le serveur, indicateur de cible valide du serveur vers le client."
+  },
+  "AutomaticArmControlHarvester:onUpdate": {
+   "en": "Each update picks the best tree, places and colours the marker (cut, target or too thick, with a reason when invalid), and starts an async sphere overlap to refresh the tree list. The server then drives the alignment automatically or by held input, and handles the return to the idle position.",
+   "fr": "À chaque mise à jour, choisit le meilleur arbre, place et colore le marqueur (coupe, cible ou trop épais, avec une raison si invalide), et lance un recouvrement sphérique asynchrone pour rafraîchir la liste d'arbres. Le serveur pilote ensuite l'alignement, automatiquement ou par entrée maintenue, et gère le retour à la position de repos."
+  },
+  "AutomaticArmControlHarvester:onRegisterActionEvents": {
+   "en": "On clients, registers the TREE_AUTOMATIC_ALIGN powered action with very high text priority, initially inactive. Only registered when automatic vehicle control is not available.",
+   "fr": "Sur les clients, enregistre l'action alimentée TREE_AUTOMATIC_ALIGN avec une priorité de texte très haute, initialement inactive. N'est enregistrée que si le contrôle automatique du véhicule n'est pas disponible."
+  },
+  "AutomaticArmControlHarvester.actionEvent": {
+   "en": "Input callback: forwards the input value to `setTreeArmAlignmentInput`.",
+   "fr": "Callback d'entrée : transmet la valeur d'entrée à `setTreeArmAlignmentInput`."
+  },
+  "AutomaticArmControlHarvester.updateActionEvents": {
+   "en": "Enables or disables the TREE_AUTOMATIC_ALIGN action event according to the given state.",
+   "fr": "Active ou désactive l'événement d'action TREE_AUTOMATIC_ALIGN selon l'état donné."
+  },
+  "AutomaticArmControlHarvester:onRootVehicleChanged": {
+   "en": "Registers or moves the `automaticArmControlHarvester` action in the root vehicle's action controller, finished once no arm return is pending, or removes it when there is no controller.",
+   "fr": "Enregistre ou déplace l'action `automaticArmControlHarvester` dans l'action controller du véhicule racine, terminée quand plus aucun retour de bras n'est en attente, ou la supprime s'il n'y a pas de contrôleur."
+  },
+  "AutomaticArmControlHarvester.actionControllerEvent": {
+   "en": "Action controller callback: a negative direction schedules the return of the arm to its return node; in all cases the alignment state is reset. Always returns true.",
+   "fr": "Callback de l'action controller : une direction négative programme le retour du bras vers son noeud de retour ; dans tous les cas l'état d'alignement est réinitialisé. Renvoie toujours true."
+  },
+  "AutomaticArmControlHarvester:getSupportsAutoTreeAlignment": {
+   "en": "Returns false by default; a harvester head child vehicle is expected to override it to enable automatic alignment on the parent crane.",
+   "fr": "Renvoie false par défaut ; une tête d'abattage enfant est censée la surcharger pour activer l'alignement automatique sur la grue parente."
+  },
+  "AutomaticArmControlHarvester:getIsAutoTreeAlignmentAllowed": {
+   "en": "Returns true only if the vehicle is controlled, easy arm control is on when required, the vehicle or a child supports auto alignment, and the fold time is within limits.",
+   "fr": "Renvoie true seulement si le véhicule est contrôlé, si le contrôle de bras facile est actif quand il est requis, si le véhicule ou un enfant gère l'alignement automatique, et si le temps de pliage est dans les limites."
+  },
+  "AutomaticArmControlHarvester:getAutoAlignHasValidTree": {
+   "en": "Default stub returning false, false (no split shape, radius not valid). Child vehicles override it to judge a tree radius.",
+   "fr": "Stub par défaut renvoyant false, false (pas de forme découpable, rayon non valide). Les véhicules enfants la surchargent pour juger le rayon d'un arbre."
+  },
+  "AutomaticArmControlHarvester:getAutoAlignTreeMarkerState": {
+   "en": "Asks this vehicle, then its child vehicles, whether a tree of the given radius can be cut. Returns a split-shape found flag and a valid-radius flag, merged across children.",
+   "fr": "Demande à ce véhicule, puis à ses véhicules enfants, si un arbre du rayon donné peut être coupé. Renvoie un indicateur de forme découpable trouvée et un indicateur de rayon valide, fusionnés sur les enfants."
+  },
+  "AutomaticArmControlHarvester:setTreeArmAlignmentInput": {
+   "en": "Server: while input is positive, not finished and a target exists, runs the alignment; input 0 resets the state. Client: stores the input and flags the vehicle dirty to send it to the server.",
+   "fr": "Serveur : tant que l'entrée est positive, que ce n'est pas terminé et qu'une cible existe, lance l'alignement ; une entrée 0 réinitialise l'état. Client : mémorise l'entrée et marque le véhicule dirty pour l'envoyer au serveur."
+  },
+  "AutomaticArmControlHarvester:doTreeArmAlignment": {
+   "en": "Steps the alignment towards a target point (`direction` 1 to the tree, -1 to return): prepares the alignment nodes, then drives the X rotation, Z reach and Y height tools via `externalMove` and advances the state. Child overrides can replace reference nodes and add to the X offset.",
+   "fr": "Fait avancer l'alignement vers un point cible (`direction` 1 vers l'arbre, -1 pour le retour) : prépare les noeuds d'alignement, puis pilote la rotation X, la portée Z et la hauteur Y via `externalMove` et fait avancer l'état. Les surcharges des enfants peuvent remplacer les noeuds de référence et ajouter au décalage X."
+  },
+  "AutomaticArmControlHarvester.calculateMovingToolTargetMove": {
+   "en": "Predicts where a rotating moving tool would stop and returns -1, 0 or 1 (times the speed sign) so it reaches the target rotation without overshooting.",
+   "fr": "Prédit où s'arrêterait un outil mobile en rotation et renvoie -1, 0 ou 1 (selon le signe de la vitesse) pour atteindre la rotation cible sans la dépasser."
+  },
+  "AutomaticArmControlHarvester.prepareAlignment": {
+   "en": "Before aligning towards a tree, turns the vehicle on if possible and untilts the wood harvester head. Then moves the configured alignment nodes to their target rotation; returns false while a prerequisite node is still moving.",
+   "fr": "Avant d'aligner vers un arbre, allume le véhicule si possible et remet à plat la tête d'abattage. Puis amène les noeuds d'alignement configurés à leur rotation cible ; renvoie false tant qu'un noeud prérequis bouge encore."
+  },
+  "AutomaticArmControlHarvester:getIsAutomaticAlignmentActive": {
+   "en": "Returns true while the alignment is neither idle nor finished.",
+   "fr": "Renvoie true tant que l'alignement n'est ni au repos ni terminé."
+  },
+  "AutomaticArmControlHarvester:getAutomaticAlignmentCurrentTarget": {
+   "en": "Returns the target x, y, z and tree radius when a valid target exists, otherwise four nil values.",
+   "fr": "Renvoie x, y, z de la cible et le rayon de l'arbre quand une cible valide existe, sinon quatre valeurs nil."
+  },
+  "AutomaticArmControlHarvester:getAutomaticAlignmentInvalidTreeReason": {
+   "en": "Returns the reason code the nearest tree was refused this update (no access or wrong type), or the 'none' code.",
+   "fr": "Renvoie le code de la raison pour laquelle l'arbre le plus proche a été refusé à cette mise à jour (pas d'accès ou mauvais type), ou le code « aucune »."
+  },
+  "AutomaticArmControlHarvester:getBestTreeToAutoAlign": {
+   "en": "From a list of tree ids, keeps static, unsplit mesh split shapes within the max angle, then returns the best by angle plus twice the distance among those the harvester may cut and reach. Also returns the last refused tree and why.",
+   "fr": "Parmi une liste d'identifiants d'arbres, garde les formes découpables statiques et non coupées dans l'angle maximal, puis renvoie le meilleur selon l'angle plus deux fois la distance parmi ceux que l'abatteuse peut couper et atteindre. Renvoie aussi le dernier arbre refusé et pourquoi."
+  },
+  "AutomaticArmControlHarvester:onTreeAutoOverlapCallback": {
+   "en": "Async overlap callback: collects shapes with a split type, excluding tree stumps, whose horizontal distance to the detection node is between the min and max radius.",
+   "fr": "Callback du recouvrement asynchrone : collecte les formes ayant un type de découpe, hors souches, dont la distance horizontale au noeud de détection est comprise entre les rayons minimal et maximal."
+  },
+  "AutomaticArmControlHarvester:getTreeAutomaticOverwrites": {
+   "en": "Returns the Z and Y reference nodes and X offset so a parent crane can reuse them.",
+   "fr": "Renvoie les noeuds de référence Z et Y et le décalage X pour qu'une grue parente puisse les réutiliser."
+  },
+  "AutomaticArmControlHarvester.drawDebugCircleRange": {
+   "en": "Debug helper: draws a red arc of line segments around a node between two angles. Only referenced by commented debug lines.",
+   "fr": "Outil de debug : dessine un arc rouge de segments de ligne autour d'un noeud entre deux angles. Référencé seulement par des lignes de debug commentées."
+  }
+ }
+}

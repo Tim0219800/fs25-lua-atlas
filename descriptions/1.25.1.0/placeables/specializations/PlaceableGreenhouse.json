@@ -1,0 +1,85 @@
+{
+ "fichier": "placeables/specializations/PlaceableGreenhouse.lua",
+ "module": {
+  "en": "Placeable specialization for a greenhouse that shows plant models on planting places and animates their growth while the production is running. Plants are loaded from small XML files per fill type, cloned onto place nodes, and advanced through growth stages by a timer scaled to game time; without water (production missing inputs) they wither. It also runs periodic watering effects and sound on clients. It is driven by production events, so it is meant to be combined with a production point.",
+  "fr": "Spécialisation de placeable pour une serre qui affiche des modèles de plantes sur des emplacements et anime leur croissance tant que la production tourne. Les plantes sont chargées depuis de petits fichiers XML par type de remplissage, clonées sur les noeuds d'emplacement et avancent par stades via un minuteur lié au temps de jeu ; sans eau (production sans entrées) elles se fanent. Elle déclenche aussi périodiquement effets et son d'arrosage côté client. Elle réagit aux événements de production et se combine donc avec un point de production."
+ },
+ "fonctions": {
+  "PlaceableGreenhouse.getRandomGrowthInterval": {
+   "en": "Returns a random integer between PlaceableGreenhouse.GROWTH_INTERVAL_MIN and GROWTH_INTERVAL_MAX, used as the next growth step duration (units defined elsewhere: UNVERIFIED).",
+   "fr": "Renvoie un entier aléatoire entre GROWTH_INTERVAL_MIN et GROWTH_INTERVAL_MAX de PlaceableGreenhouse, utilisé comme durée du prochain stade de croissance (unités définies ailleurs : NON VÉRIFIÉ)."
+  },
+  "PlaceableGreenhouse.getRandomWateringInterval": {
+   "en": "Returns a random integer between WATERING_INTERVAL_MIN and WATERING_INTERVAL_MAX, used as the delay before the next watering (units defined elsewhere: UNVERIFIED).",
+   "fr": "Renvoie un entier aléatoire entre WATERING_INTERVAL_MIN et WATERING_INTERVAL_MAX, utilisé comme délai avant le prochain arrosage (unités définies ailleurs : NON VÉRIFIÉ)."
+  },
+  "PlaceableGreenhouse.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableGreenhouse.initSpecialization": {
+   "en": "Builds the XML schema for greenhouse plant files: i3d filename, growing stage nodes, withered node and i3d mappings.",
+   "fr": "Construit le schéma XML des fichiers de plantes de serre : nom du fichier i3d, noeuds des stades de croissance, noeud flétri et correspondances i3d."
+  },
+  "PlaceableGreenhouse.registerFunctions": {
+   "en": "Registers the plant loading, placement and growth stage methods on the placeable type.",
+   "fr": "Enregistre sur le type de placeable les méthodes de chargement des plantes, de placement et de stades de croissance."
+  },
+  "PlaceableGreenhouse.registerEventListeners": {
+   "en": "Subscribes to load, delete, finalize-placement, output fill types changed, production status changed and update events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, suppression, finalisation du placement, changement des types de sortie, changement d'état de production et mise à jour."
+  },
+  "PlaceableGreenhouse.registerXMLPaths": {
+   "en": "Declares plants per fill type (xmlFilename), plant spaces and parent nodes with the useRandomYRot flag, the watering sound and the effect nodes.",
+   "fr": "Déclare les plantes par type de remplissage (xmlFilename), les emplacements et noeuds parents avec l'indicateur useRandomYRot, le son d'arrosage et les noeuds d'effet."
+  },
+  "PlaceableGreenhouse:onLoad": {
+   "en": "Loads plant definitions per known fill type, registers planting places from nodes and from the children of parent nodes, and on clients the watering sound and effects. Creates a growth timer and a watering timer, both scaled by the effective game time scale; the watering effect runs for WATERING_DURATION and the timer restarts only while water is available.",
+   "fr": "Charge les définitions de plantes par type de remplissage connu, enregistre les emplacements depuis des noeuds et depuis les enfants de noeuds parents, et côté client le son et les effets d'arrosage. Crée un minuteur de croissance et un d'arrosage, tous deux mis à l'échelle du temps de jeu effectif ; l'effet dure WATERING_DURATION et le minuteur ne redémarre que s'il y a de l'eau."
+  },
+  "PlaceableGreenhouse:addPlantPlace": {
+   "en": "Adds a planting place node (random Y rotation by default) to the list, with no fill type and no stage yet.",
+   "fr": "Ajoute un noeud d'emplacement de plante (rotation Y aléatoire par défaut) à la liste, sans type de remplissage ni stade pour l'instant."
+  },
+  "PlaceableGreenhouse:loadPlantFromXml": {
+   "en": "Loads a plant XML file and starts an asynchronous shared i3d load. Returns the plant table immediately; its stage indices are filled later by plantI3DLoadedCallback. Always returns a table, even if the XML failed to load.",
+   "fr": "Charge un fichier XML de plante et lance le chargement asynchrone d'un i3d partagé. Renvoie tout de suite la table de la plante ; ses indices de stades sont remplis plus tard par plantI3DLoadedCallback. Renvoie toujours une table, même si le XML a échoué."
+  },
+  "PlaceableGreenhouse:plantI3DLoadedCallback": {
+   "en": "Loading callback: on success stores the i3d node and records growing stages and the withered stage as child indices. Then deletes the plant XML file and finishes the loading task.",
+   "fr": "Callback de chargement : en cas de succès, stocke le noeud i3d et enregistre les stades de croissance et le stade flétri sous forme d'indices d'enfants. Supprime ensuite le fichier XML de la plante et termine la tâche de chargement."
+  },
+  "PlaceableGreenhouse:onDelete": {
+   "en": "Releases everything: unfinished plant XML files, both timers, shared i3d requests, plant nodes, effects and sound samples.",
+   "fr": "Libère tout : fichiers XML de plantes non terminés, les deux minuteurs, requêtes i3d partagées, noeuds de plantes, effets et échantillons sonores."
+  },
+  "PlaceableGreenhouse:onFinalizePlacement": {
+   "en": "Flags the plant distribution as dirty and starts the watering timer.",
+   "fr": "Marque la répartition des plantes comme à refaire et démarre le minuteur d'arrosage."
+  },
+  "PlaceableGreenhouse:onUpdate": {
+   "en": "Recomputes the plant distribution when it is flagged dirty.",
+   "fr": "Recalcule la répartition des plantes lorsqu'elle est marquée à refaire."
+  },
+  "PlaceableGreenhouse:onOutputFillTypesChanged": {
+   "en": "Production event: adds or removes the changed output fill types in the active set when a plant exists for them, marks the distribution dirty once synchronized and wakes the update loop.",
+   "fr": "Événement de production : ajoute ou retire dans l'ensemble actif les types de sortie modifiés lorsqu'une plante existe pour eux, marque la répartition à refaire une fois synchronisé et réveille la boucle de mise à jour."
+  },
+  "PlaceableGreenhouse:onProductionStatusChanged": {
+   "en": "Production event: the greenhouse has water unless the status is MISSING_INPUTS. When this changes it refreshes plant stages; the watering timer runs only with water and at least one active fill type.",
+   "fr": "Événement de production : la serre a de l'eau sauf si l'état est MISSING_INPUTS. Un changement rafraîchit les stades des plantes ; le minuteur d'arrosage ne tourne qu'avec de l'eau et au moins un type actif."
+  },
+  "PlaceableGreenhouse:updatePlantDistribution": {
+   "en": "Assigns an active fill type to each planting place in round-robin order and refreshes stages. Note: the index (i % count) + 1 means the first place receives the second type when several types are active.",
+   "fr": "Attribue un type actif à chaque emplacement en rotation puis rafraîchit les stades. À noter : l'indice (i % nombre) + 1 fait que le premier emplacement reçoit le deuxième type quand plusieurs types sont actifs."
+  },
+  "PlaceableGreenhouse:setPlantAtPlace": {
+   "en": "If the place holds a different fill type, deletes its current stage nodes and clones the new plant's stage meshes onto the place node (all stages, visibility set later).",
+   "fr": "Si l'emplacement contient un autre type, supprime ses noeuds de stade actuels et clone sur le noeud d'emplacement les meshes de stades de la nouvelle plante (tous les stades, visibilité réglée plus tard)."
+  },
+  "PlaceableGreenhouse:updatePlantsStage": {
+   "en": "Does nothing without active fill types. Starts or stops the growth timer depending on water, then moves every place to the next growing stage (wrapping to the first after the last), or to the withered stage without water, and toggles stage visibility.",
+   "fr": "Sans effet sans type actif. Démarre ou arrête le minuteur de croissance selon l'eau, puis fait passer chaque emplacement au stade suivant (retour au premier après le dernier), ou au stade flétri sans eau, et bascule la visibilité des stades."
+  }
+ }
+}

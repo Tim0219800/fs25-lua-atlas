@@ -1,0 +1,21 @@
+{
+ "fichier": "vehicles/configurations/VehicleConfigurationItemVehicleType.lua",
+ "module": {
+  "en": "Configuration item (subclass of VehicleConfigurationItem) that selects which vehicle type a configuration uses. It only stores the vehicleType name read from XML.",
+  "fr": "Entrée de configuration (sous-classe de VehicleConfigurationItem) qui choisit le type de véhicule utilisé par une configuration. Elle mémorise simplement le nom vehicleType lu dans le XML."
+ },
+ "fonctions": {
+  "VehicleConfigurationItemVehicleType.new": {
+   "en": "Constructor, calls the parent constructor. Note: the customMt argument is ignored, the class metatable is always passed to the parent constructor.",
+   "fr": "Constructeur, appelle le constructeur parent. À noter : l'argument customMt est ignoré, la métatable de la classe est toujours transmise au constructeur parent."
+  },
+  "VehicleConfigurationItemVehicleType:loadFromXML": {
+   "en": "Loads the parent data, then #vehicleType. Returns false if the parent load fails.",
+   "fr": "Charge les données parentes, puis #vehicleType. Renvoie false si le chargement parent échoue."
+  },
+  "VehicleConfigurationItemVehicleType.registerXMLPaths": {
+   "en": "Static. Registers the parent XML paths plus #vehicleType.",
+   "fr": "Statique. Enregistre les chemins XML parents ainsi que #vehicleType."
+  }
+ }
+}

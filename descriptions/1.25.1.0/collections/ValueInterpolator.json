@@ -1,0 +1,53 @@
+{
+ "fichier": "collections/ValueInterpolator.lua",
+ "module": {
+  "en": "Helper that moves a list of numeric values toward targets over time. It reads current values through a getter, writes them back through a setter every update and registers itself as an updateable on g_currentMission under a custom key. It removes itself when every value reaches its target and can run update and finished callbacks. The updateable mechanism is part of the mission class, which is not in this dump (UNVERIFIED).",
+  "fr": "Assistant qui déplace une liste de valeurs numériques vers des cibles au fil du temps. Il lit les valeurs courantes via un getter, les réécrit via un setter à chaque mise à jour et s'enregistre comme updateable sur g_currentMission sous une clé personnalisée. Il se retire lui-même quand toutes les valeurs atteignent leur cible et peut exécuter des callbacks de mise à jour et de fin. Le mécanisme d'updateable appartient à la classe de mission, absente de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "ValueInterpolator.new": {
+   "en": "Starts an interpolation: current values come from get(), and speeds are derived from duration (ms) or from speed per second (default 1). Returns nil if all speeds are near zero; otherwise registers as an updateable with customKey and returns itself.",
+   "fr": "Démarre une interpolation : les valeurs courantes viennent de get(), et les vitesses sont déduites de duration (ms) ou de speed par seconde (1 par défaut). Retourne nil si toutes les vitesses sont proches de zéro ; sinon s'enregistre comme updateable avec customKey et se retourne."
+  },
+  "ValueInterpolator:setUpdateFunc": {
+   "en": "Sets a callback run after each update step, called as func(target, ...) with the extra arguments given here.",
+   "fr": "Définit un callback exécuté après chaque pas de mise à jour, appelé comme func(target, ...) avec les arguments supplémentaires fournis ici."
+  },
+  "ValueInterpolator:setFinishedFunc": {
+   "en": "Sets a callback run once when all values have reached their targets, called as func(target, ...) with the extra arguments given here.",
+   "fr": "Définit un callback exécuté une fois quand toutes les valeurs ont atteint leur cible, appelé comme func(target, ...) avec les arguments supplémentaires fournis ici."
+  },
+  "ValueInterpolator:setDeleteListenerObject": {
+   "en": "If the object derives from Object, registers a delete listener so the interpolator stops (onDeleteParent) when that object is deleted. Other values are ignored.",
+   "fr": "Si l'objet dérive de Object, enregistre un écouteur de suppression pour que l'interpolateur s'arrête (onDeleteParent) quand cet objet est supprimé. Les autres valeurs sont ignorées."
+  },
+  "ValueInterpolator:delete": {
+   "en": "Empty function that exists to satisfy the updateable interface.",
+   "fr": "Fonction vide qui existe pour satisfaire l'interface d'updateable."
+  },
+  "ValueInterpolator:getTarget": {
+   "en": "Returns the table of target values.",
+   "fr": "Retourne la table des valeurs cibles."
+  },
+  "ValueInterpolator:updateSpeed": {
+   "en": "Recomputes per-value speeds as remaining distance divided by remaining duration, when duration is a number; otherwise uses the duration value itself as the speed table.",
+   "fr": "Recalcule les vitesses par valeur comme distance restante divisée par durée restante, quand duration est un nombre ; sinon utilise la valeur de duration elle-même comme table de vitesses."
+  },
+  "ValueInterpolator:update": {
+   "en": "Advances every value toward its target by speed times dt (ms) without overshooting, calls the setter and update callback, and shortens the remaining duration (minimum 1). When all values arrive it removes the updateable and calls the finished callback.",
+   "fr": "Fait avancer chaque valeur vers sa cible de vitesse fois dt (ms) sans la dépasser, appelle le setter et le callback de mise à jour, et réduit la durée restante (minimum 1). Quand toutes les valeurs sont arrivées, retire l'updateable et appelle le callback de fin."
+  },
+  "ValueInterpolator.removeInterpolator": {
+   "en": "Removes the updateable registered under the given key from the current mission, if there is one.",
+   "fr": "Retire de la mission courante l'updateable enregistré sous la clé donnée, s'il existe."
+  },
+  "ValueInterpolator.hasInterpolator": {
+   "en": "Returns whether the current mission still has an updateable registered under the given key.",
+   "fr": "Retourne si la mission courante possède encore un updateable enregistré sous la clé donnée."
+  },
+  "ValueInterpolator:onDeleteParent": {
+   "en": "Delete-listener callback that removes this interpolator's updateable from the mission when the watched parent object is deleted.",
+   "fr": "Callback d'écouteur de suppression qui retire l'updateable de cet interpolateur de la mission quand l'objet parent surveillé est supprimé."
+  }
+ }
+}

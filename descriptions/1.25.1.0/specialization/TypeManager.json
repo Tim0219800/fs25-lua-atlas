@@ -1,0 +1,57 @@
+{
+ "fichier": "specialization/TypeManager.lua",
+ "module": {
+  "en": "Generic registry of entity types (vehicle types, placeable types and similar), each type being a class plus an ordered list of specializations. It reads type definitions from an XML file, supports inheritance through a parent type, and builds the per-type tables of functions and events. It works together with a specialization manager that is passed in at construction; that manager class is not in this file (UNVERIFIED).",
+  "fr": "Registre générique de types d'entités (types de véhicules, de placeables, etc.), chaque type étant une classe plus une liste ordonnée de spécialisations. Il lit les définitions depuis un fichier XML, gère l'héritage via un type parent et construit les tables de fonctions et d'événements par type. Il s'appuie sur un gestionnaire de spécialisations fourni à la construction ; cette classe n'est pas dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "TypeManager.new": {
+   "en": "Creates a manager with an empty type table, storing the display type name, XML root element name, XML file path and the specialization manager to use.",
+   "fr": "Crée un gestionnaire avec une table de types vide, en mémorisant le nom de type affiché, le nom de l'élément racine XML, le chemin du fichier XML et le gestionnaire de spécialisations à utiliser."
+  },
+  "TypeManager:loadMapData": {
+   "en": "Opens the types XML and queues one async subtask per `type` entry to load it with loadTypeFromXML, then queues closing the file and a log line. Always returns true; actual loading happens later in the task manager.",
+   "fr": "Ouvre le XML des types et met en file une sous-tâche asynchrone par entrée `type` pour la charger via loadTypeFromXML, puis la fermeture du fichier et une ligne de log. Retourne toujours true ; le chargement réel se fait plus tard dans le gestionnaire de tâches."
+  },
+  "TypeManager:unloadMapData": {
+   "en": "Clears the type table by replacing it with an empty one.",
+   "fr": "Vide la table des types en la remplaçant par une table vide."
+  },
+  "TypeManager:addType": {
+   "en": "Registers a new type entry after checking the name is unused and a class name and file are given; it also runs `source` on the file with the given mod environment. Returns false with an error log on failure, true otherwise.",
+   "fr": "Enregistre une nouvelle entrée de type après avoir vérifié que le nom est libre et que classe et fichier sont fournis ; exécute aussi `source` sur le fichier avec l'environnement de mod donné. Retourne false avec un log d'erreur en cas d'échec, sinon true."
+  },
+  "TypeManager:loadTypeFromXML": {
+   "en": "Reads one type from XML: resolves an optional parent (also trying the mod-prefixed name), inherits class, file and specializations, prefixes mod types with the mod name, then adds listed specializations. Returns false if invalid or if script mods are not allowed on the platform.",
+   "fr": "Lit un type depuis le XML : résout un parent optionnel (en essayant aussi le nom préfixé par le mod), hérite classe, fichier et spécialisations, préfixe les types de mod avec le nom du mod, puis ajoute les spécialisations listées. Retourne false si invalide ou si les scripts de mods sont interdits sur la plateforme."
+  },
+  "TypeManager:addSpecialization": {
+   "en": "Appends a specialization to an existing type, looked up through the specialization manager. Fails with an error log if the type is unknown, the specialization is unknown, or it is already present; returns true on success.",
+   "fr": "Ajoute une spécialisation à un type existant, obtenue via le gestionnaire de spécialisations. Échoue avec un log d'erreur si le type ou la spécialisation est inconnu, ou si elle est déjà présente ; retourne true en cas de succès."
+  },
+  "TypeManager:validateTypes": {
+   "en": "Queues, for each type, a check that every specialization defines prerequisitesPresent and that it returns true for the type's specializations. A type failing either check is removed from the registry with an error log.",
+   "fr": "Met en file, pour chaque type, une vérification que chaque spécialisation définit prerequisitesPresent et que celle-ci retourne true pour les spécialisations du type. Un type en échec est retiré du registre avec un log d'erreur."
+  },
+  "TypeManager:finalizeTypes": {
+   "en": "Queues async subtasks per type that call, when defined, registerEvents and registerFunctions on the type's class, then registerEvents, registerFunctions, registerOverwrittenFunctions and registerEventListeners on each specialization, in that order. Returns true.",
+   "fr": "Met en file, par type, des sous-tâches asynchrones qui appellent, si elles existent, registerEvents et registerFunctions sur la classe du type, puis registerEvents, registerFunctions, registerOverwrittenFunctions et registerEventListeners sur chaque spécialisation, dans cet ordre. Retourne true."
+  },
+  "TypeManager:getTypes": {
+   "en": "Returns the table of all registered types, keyed by type name.",
+   "fr": "Retourne la table de tous les types enregistrés, indexée par nom de type."
+  },
+  "TypeManager:removeType": {
+   "en": "Removes the type with the given name from the registry.",
+   "fr": "Retire du registre le type portant le nom donné."
+  },
+  "TypeManager:getTypeByName": {
+   "en": "Returns the type entry for a name, falling back to the mod-prefixed name when a mod name is given. If the entry is missing and the mod is not loaded (g_modIsLoaded), logs an error and returns nil.",
+   "fr": "Retourne l'entrée de type pour un nom, avec repli sur le nom préfixé par le mod si un nom de mod est fourni. Si l'entrée manque et que le mod n'est pas chargé (g_modIsLoaded), logue une erreur et retourne nil."
+  },
+  "TypeManager:getObjectTypeFromXML": {
+   "en": "Opens an object's XML, reads its root `#type` attribute, finds the matching type entry (using the mod name derived from the path) and its class. Returns the type entry and class object, or nil, nil with an error log.",
+   "fr": "Ouvre le XML d'un objet, lit l'attribut racine `#type`, trouve l'entrée de type correspondante (avec le nom de mod déduit du chemin) et sa classe. Retourne l'entrée de type et l'objet classe, ou nil, nil avec un log d'erreur."
+  }
+ }
+}

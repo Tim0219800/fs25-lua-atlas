@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/hud/ExtendedSowingMachineHUDExtension.lua",
+  "module": {
+    "en": "HUD box shown in the vehicle input help for sowing machines with the Precision Farming ExtendedSowingMachine specialization. It displays the current seed rate with three dots (colored from the seed rate map), the auto mode label or the recommendation markers in manual mode, and the tramline working width. Created per vehicle with normal priority (GS_PRIO_NORMAL).",
+    "fr": "Boîte de HUD affichée dans l'aide à la saisie du véhicule pour les semoirs ayant la spécialisation Precision Farming ExtendedSowingMachine. Elle affiche la dose de semis actuelle avec trois points (colorés d'après la carte de dose de semis), l'étiquette du mode auto ou les repères de recommandation en mode manuel, et la largeur de travail des traces de jalonnement. Créée par véhicule avec une priorité normale (GS_PRIO_NORMAL)."
+  },
+  "fonctions": {
+    "ExtendedSowingMachineHUDExtension.new": {
+      "en": "Constructor taking the vehicle: grabs the ExtendedSowingMachine spec and g_precisionFarming.seedRateMap, creates overlays (backgrounds, three dot sets, seeds icon, recommendation bar), loads the texts, and subscribes to colorblind and UI scale changes. Note: it subscribes self.storeScaledValues to the UI_SCALE setting and calls it, but that method is not defined in this file (UNVERIFIED where it comes from).",
+      "fr": "Constructeur prenant le véhicule : récupère la spec ExtendedSowingMachine et g_precisionFarming.seedRateMap, crée les overlays (fonds, trois jeux de points, icône de graines, barre de recommandation), charge les textes et s'abonne aux changements de mode daltonien et d'échelle d'interface. À noter : il abonne self.storeScaledValues au réglage UI_SCALE et l'appelle, mais cette méthode n'est pas définie dans ce fichier (origine NON VÉRIFIÉE)."
+    },
+    "ExtendedSowingMachineHUDExtension:delete": {
+      "en": "Deletes all dot, background, separator, seeds and recommendation overlays, unsubscribes from the message center and clears the references.",
+      "fr": "Supprime tous les overlays de points, de fond, de séparateur, de graines et de recommandation, se désabonne du message center et efface les références."
+    },
+    "ExtendedSowingMachineHUDExtension:setColorBlindMode": {
+      "en": "Stores the new colorblind flag when it changes; it selects which dot colors are used when drawing. Note: the source doc comment says it determines whether the extension is drawn, which does not match what the code does.",
+      "fr": "Mémorise le nouvel indicateur daltonien quand il change ; il sélectionne les couleurs des points lors du dessin. À noter : le commentaire du source dit qu'il détermine si l'extension est dessinée, ce qui ne correspond pas à ce que fait le code."
+    },
+    "ExtendedSowingMachineHUDExtension:getHeight": {
+      "en": "Returns the height of this HUD box in screen space (0 until it has been computed).",
+      "fr": "Retourne la hauteur de cette boîte de HUD en espace écran (0 tant qu'elle n'est pas calculée)."
+    },
+    "ExtendedSowingMachineHUDExtension:draw": {
+      "en": "Draws the seed rate section (rate text, three dots, auto label or manual recommendation markers, seeds icon; \"not available\" for unsupported fruit types) and the tramline width line. Returns the Y below the box, or posY unchanged without the spec. Note: the source doc comment mentions a mixing wagon, which looks like a copy-paste leftover.",
+      "fr": "Dessine la section dose de semis (texte de dose, trois points, étiquette auto ou repères de recommandation manuelle, icône de graines ; \"non disponible\" pour les cultures non gérées) et la ligne de largeur de jalonnement. Retourne le Y sous la boîte, ou posY inchangé sans la spec. À noter : le commentaire du source parle d'une mélangeuse, ce qui semble être un reste de copier-coller."
+    }
+  }
+}

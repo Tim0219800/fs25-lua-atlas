@@ -1,0 +1,29 @@
+{
+ "fichier": "events/BaleUnpackEvent.lua",
+ "module": {
+  "en": "Network event asking the server to unpack a bale (client to server). Unlike similar events it is not guarded in `run`, so the unpack call happens wherever the event is run; the behaviour of `Bale:unpack` is UNVERIFIED (class not in this file).",
+  "fr": "Événement réseau demandant au serveur de déballer une balle (client vers serveur). Contrairement à des événements similaires, `run` n'est pas protégé : l'appel de déballage a lieu partout où l'événement s'exécute ; le comportement de `Bale:unpack` est NON VÉRIFIÉ (classe absente de ce fichier)."
+ },
+ "fonctions": {
+  "BaleUnpackEvent.emptyNew": {
+   "en": "Creates an empty event, used when reading from a stream.",
+   "fr": "Crée un événement vide, utilisé lors de la lecture d'un flux."
+  },
+  "BaleUnpackEvent.new": {
+   "en": "Creates the event for the given bale.",
+   "fr": "Crée l'événement pour la balle donnée."
+  },
+  "BaleUnpackEvent:readStream": {
+   "en": "Server side: reads the bale node object, then calls `run`. On a client connection nothing is read but `run` is still called.",
+   "fr": "Côté serveur : lit l'objet node de la balle puis appelle `run`. Sur une connexion client rien n'est lu mais `run` est tout de même appelé."
+  },
+  "BaleUnpackEvent:writeStream": {
+   "en": "Client side: writes the bale node object; writes nothing when sent by the server.",
+   "fr": "Côté client : écrit l'objet node de la balle ; n'écrit rien quand l'envoi vient du serveur."
+  },
+  "BaleUnpackEvent:run": {
+   "en": "Calls `unpack()` on the bale, with no server/client check. Would fail on a nil bale.",
+   "fr": "Appelle `unpack()` sur la balle, sans test serveur/client. Échouerait sur une balle nil."
+  }
+ }
+}

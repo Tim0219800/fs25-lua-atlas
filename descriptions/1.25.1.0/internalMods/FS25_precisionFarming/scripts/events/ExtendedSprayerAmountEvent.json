@@ -1,0 +1,33 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/ExtendedSprayerAmountEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that synchronises the application amount of an extended sprayer: automatic mode on or off and, in manual mode, a value whose width is NitrogenMap.NUM_BITS.",
+    "fr": "Événement réseau (sous-classe de Event) qui synchronise la quantité appliquée d'un pulvérisateur étendu : mode automatique actif ou non et, en mode manuel, une valeur dont la largeur est NitrogenMap.NUM_BITS."
+  },
+  "fonctions": {
+    "ExtendedSprayerAmountEvent.emptyNew": {
+      "en": "Creates an empty ExtendedSprayerAmountEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de ExtendedSprayerAmountEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "ExtendedSprayerAmountEvent.new": {
+      "en": "Creates the event for a sprayer object, an automatic mode flag and a manual amount value.",
+      "fr": "Crée l'événement pour un objet pulvérisateur, un indicateur de mode automatique et une valeur de quantité manuelle."
+    },
+    "ExtendedSprayerAmountEvent:readStream": {
+      "en": "Reads the object, the automatic flag and, only if automatic is off, the manual value (NitrogenMap.NUM_BITS bits); then calls run.",
+      "fr": "Lit l'objet, l'indicateur automatique et, seulement si l'automatique est désactivé, la valeur manuelle (NitrogenMap.NUM_BITS bits) ; puis appelle run."
+    },
+    "ExtendedSprayerAmountEvent:writeStream": {
+      "en": "Writes the object and the automatic flag, then the manual value only when automatic mode is off.",
+      "fr": "Écrit l'objet et l'indicateur automatique, puis la valeur manuelle seulement si le mode automatique est désactivé."
+    },
+    "ExtendedSprayerAmountEvent:run": {
+      "en": "Receiving side. On the server it first re-broadcasts the event to the other clients (not the sender); then, if the target object exists and is synchronized, it applies the change locally without sending a new event. It calls object:setSprayAmountAutoMode and, in manual mode, object:setSprayAmountManualValue.",
+      "fr": "Côté réception. Sur le serveur, il rediffuse d'abord l'événement aux autres clients (pas à l'expéditeur) ; puis, si l'objet cible existe et est synchronisé, il applique le changement localement sans renvoyer d'événement. Il appelle object:setSprayAmountAutoMode et, en mode manuel, object:setSprayAmountManualValue."
+    },
+    "ExtendedSprayerAmountEvent.sendEvent": {
+      "en": "Entry point to sync the spray amount. Server: broadcasts a new ExtendedSprayerAmountEvent to the clients (bound to the object); client: sends it to the server. Does nothing when noEventSend is true.",
+      "fr": "Point d'entrée pour synchroniser la quantité pulvérisée. Serveur : diffuse un nouvel ExtendedSprayerAmountEvent aux clients (lié à l'objet) ; client : l'envoie au serveur. Ne fait rien si noEventSend vaut true."
+    }
+  }
+}

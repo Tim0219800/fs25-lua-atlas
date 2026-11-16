@@ -1,0 +1,33 @@
+{
+ "fichier": "guidedTour/GuidedTourManager.lua",
+ "module": {
+  "en": "Manager for guided tours, subclass of `AbstractManager`. It loads tour definitions listed in the map XML (`map.guidedTours.guidedTour` with `#filename` and `#name`), builds them with `GuidedTourUtil.createFromXML`, and saves/restores the active tour in the savegame. `GuidedTourUtil`, `GuidedTourHelp` and `onMissionStarted` are not in this file (UNVERIFIED).",
+  "fr": "Manager des visites guidées, sous-classe de `AbstractManager`. Il charge les définitions de visites listées dans le XML de la map (`map.guidedTours.guidedTour` avec `#filename` et `#name`), les construit via `GuidedTourUtil.createFromXML` et sauvegarde/restaure la visite active dans la sauvegarde. `GuidedTourUtil`, `GuidedTourHelp` et `onMissionStarted` ne sont pas dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "GuidedTourManager.new": {
+   "en": "Creates the manager through `AbstractManager.new` with the given or default metatable.",
+   "fr": "Crée le manager via `AbstractManager.new` avec la métatable donnée ou par défaut."
+  },
+  "GuidedTourManager:initDataStructures": {
+   "en": "Resets the tour list, name lookup tables for tours, vehicles and placeables, and the goal, action and progress class registries.",
+   "fr": "Réinitialise la liste des visites, les tables de recherche par nom pour visites, véhicules et placeables, ainsi que les registres de classes de buts, d'actions et de progression."
+  },
+  "GuidedTourManager:loadMapData": {
+   "en": "Loads the map's `guidedTours` section through `XMLUtil.loadDataFromMapXML`; on success calls `GuidedTourHelp.init()`. Returns whether loading succeeded.",
+   "fr": "Charge la section `guidedTours` de la map via `XMLUtil.loadDataFromMapXML` ; en cas de succès appelle `GuidedTourHelp.init()`. Retourne le succès du chargement."
+  },
+  "GuidedTourManager:loadGuidedTours": {
+   "en": "Iterates the guided tour entries, skipping those without filename or name or with a duplicate name (case-insensitive, stored uppercase). Each tour gets its name and index. Subscribes once to `CURRENT_MISSION_START` and always returns true.",
+   "fr": "Parcourt les entrées de visites guidées en ignorant celles sans fichier ni nom ou avec un nom en double (insensible à la casse, stocké en majuscules). Chaque visite reçoit son nom et son index. S'abonne une fois à `CURRENT_MISSION_START` et retourne toujours true."
+  },
+  "GuidedTourManager:saveToXMLFile": {
+   "en": "Writes the active tour's name and its own saved state to the given XML file. Returns false if the file cannot be created, otherwise true (also when no tour is active).",
+   "fr": "Écrit le nom de la visite active et son état sauvegardé dans le fichier XML donné. Retourne false si le fichier ne peut pas être créé, sinon true (même sans visite active)."
+  },
+  "GuidedTourManager:loadFromXMLFile": {
+   "en": "Reads the saved tour name and, if the tour exists and loads its state, stores it as `pendingStartTour`; otherwise a warning is logged. Returns false only when the file is missing or unreadable.",
+   "fr": "Lit le nom de visite sauvegardé et, si la visite existe et charge son état, la stocke dans `pendingStartTour` ; sinon un avertissement est journalisé. Retourne false seulement si le fichier est absent ou illisible."
+  }
+ }
+}

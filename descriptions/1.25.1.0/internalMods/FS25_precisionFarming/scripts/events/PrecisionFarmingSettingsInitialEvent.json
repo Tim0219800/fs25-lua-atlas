@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/PrecisionFarmingSettingsInitialEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that sends the current values of all server-side Precision Farming settings to a client, typically when it joins. Settings flagged isServerSetting are written as one boolean each, in list order.",
+    "fr": "Événement réseau (sous-classe de Event) qui envoie à un client les valeurs actuelles de tous les réglages Precision Farming côté serveur, typiquement à sa connexion. Les réglages marqués isServerSetting sont écrits comme un booléen chacun, dans l'ordre de la liste."
+  },
+  "fonctions": {
+    "PrecisionFarmingSettingsInitialEvent.emptyNew": {
+      "en": "Creates an empty PrecisionFarmingSettingsInitialEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de PrecisionFarmingSettingsInitialEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "PrecisionFarmingSettingsInitialEvent.new": {
+      "en": "Creates the event with the settings list to send.",
+      "fr": "Crée l'événement avec la liste de réglages à envoyer."
+    },
+    "PrecisionFarmingSettingsInitialEvent:readStream": {
+      "en": "Client side: reads one boolean per server setting into setting.state, in order, then calls run.",
+      "fr": "Côté client : lit un booléen par réglage serveur dans setting.state, dans l'ordre, puis appelle run."
+    },
+    "PrecisionFarmingSettingsInitialEvent:writeStream": {
+      "en": "Server side: writes one boolean per server setting, in list order. The order must match readStream.",
+      "fr": "Côté serveur : écrit un booléen par réglage serveur, dans l'ordre de la liste. L'ordre doit correspondre à readStream."
+    },
+    "PrecisionFarmingSettingsInitialEvent:run": {
+      "en": "Calls onSettingChanged(setting, true) on the settings object for every server setting so the client applies the received values.",
+      "fr": "Appelle onSettingChanged(setting, true) sur l'objet de réglages pour chaque réglage serveur afin que le client applique les valeurs reçues."
+    }
+  }
+}

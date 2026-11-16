@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/configurations/data/VehicleConfigurationDataMaterial.lua",
+ "module": {
+  "en": "Configuration data module that adds material changes to every configuration: either applying a VehicleMaterial (base, design, rim color or XML-defined) to a target material slot, or replacing one slot material by another over the vehicle components.",
+  "fr": "Module de données de configuration qui ajoute des changements de matériau à chaque configuration : soit l'application d'un VehicleMaterial (couleur de base, de design, de jante ou définie en XML) à un emplacement de matériau cible, soit le remplacement d'un matériau d'emplacement par un autre sur les composants du véhicule."
+ },
+ "fonctions": {
+  "VehicleConfigurationDataMaterial.registerXMLPaths": {
+   "en": "Static. Registers (shared registration) the .material entries: VehicleMaterial paths, ignoreWarning, node, source and target slot names, useBaseColor, useDesignColorIndex (1 to 16) and useRimColor.",
+   "fr": "Statique. Enregistre (enregistrement partagé) les entrées .material : chemins de VehicleMaterial, ignoreWarning, node, noms d'emplacement source et cible, useBaseColor, useDesignColorIndex (1 à 16) et useRimColor."
+  },
+  "VehicleConfigurationDataMaterial.onLoadFinished": {
+   "en": "For each .material entry: with a materialSlotName, applies the material from the base, design or rim color configuration or a new one from XML, with a warning if the slot is missing; otherwise swaps the source slot material for the target one on the vehicle or a given node, with warnings for missing or unpaired names.",
+   "fr": "Pour chaque entrée .material : avec materialSlotName, applique le matériau de la configuration de couleur de base, de design ou de jante, ou un nouveau issu du XML, avec avertissement si l'emplacement manque ; sinon remplace le matériau de l'emplacement cible par celui de la source sur le véhicule ou un noeud donné, avec avertissements pour les noms manquants ou non appariés."
+  }
+ }
+}

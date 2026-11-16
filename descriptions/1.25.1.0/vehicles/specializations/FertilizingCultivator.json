@@ -1,0 +1,37 @@
+{
+ "fichier": "vehicles/specializations/FertilizingCultivator.lua",
+ "module": {
+  "en": "Vehicle specialization for cultivators that also spread fertilizer in the same pass. It requires both the Cultivator and Sprayer specializations and overrides the cultivator work-area processing so that cultivation and spray density-map updates happen together. It also adjusts the AI prohibited ranges for already-fertilized ground.",
+  "fr": "Spécialisation de véhicule pour les cultivateurs qui épandent aussi de l'engrais pendant le même passage. Elle exige les spécialisations Cultivator et Sprayer et surcharge le traitement de la zone de travail du cultivateur afin que la culture et la mise à jour de la carte de densité de pulvérisation se fassent ensemble. Elle ajuste aussi les plages interdites de l'IA pour les sols déjà fertilisés."
+ },
+ "fonctions": {
+  "FertilizingCultivator.prerequisitesPresent": {
+   "en": "Returns true only if both the Cultivator and Sprayer specializations are present on the vehicle type.",
+   "fr": "Renvoie true seulement si les spécialisations Cultivator et Sprayer sont toutes deux présentes sur le type de véhicule."
+  },
+  "FertilizingCultivator.initSpecialization": {
+   "en": "Registers the XML key vehicle.fertilizingCultivator#needsSetIsTurnedOn (default false).",
+   "fr": "Enregistre la clé XML vehicle.fertilizingCultivator#needsSetIsTurnedOn (false par défaut)."
+  },
+  "FertilizingCultivator.registerOverwrittenFunctions": {
+   "en": "Overrides processCultivatorArea and setSprayerAITerrainDetailProhibitedRange on the vehicle type.",
+   "fr": "Surcharge processCultivatorArea et setSprayerAITerrainDetailProhibitedRange sur le type de véhicule."
+  },
+  "FertilizingCultivator.registerEventListeners": {
+   "en": "Subscribes the specialization to the onLoad vehicle event.",
+   "fr": "Abonne la spécialisation à l'événement de véhicule onLoad."
+  },
+  "FertilizingCultivator:onLoad": {
+   "en": "Reads needsSetIsTurnedOn, disables the sprayer speed limit, clears the AI terrain-detail required range and refreshes the cultivator AI requirements.",
+   "fr": "Lit needsSetIsTurnedOn, désactive la limite de vitesse du pulvérisateur, efface la plage de détail de terrain requise par l'IA et rafraîchit les exigences IA du cultivateur."
+  },
+  "FertilizingCultivator:processCultivatorArea": {
+   "en": "Per work area: stops the AI job when its fertilizer source runs out (depending on helper settings), erases tire tracks, cultivates (deep or disc harrow, plus vine and subsoiler) and sprays using the FERTILIZER spray type. Remote clients beyond the update radius return 0, 0. Returns changed and total cultivated area.",
+   "fr": "Par zone de travail : arrête le travail de l'IA quand sa source d'engrais est épuisée (selon les réglages d'aide), efface les traces de pneus, cultive (mode profond ou déchaumeur à disques, plus vigne et sous-soleuse) et pulvérise avec le type FERTILIZER. Les clients éloignés au-delà du rayon de mise à jour renvoient 0, 0. Renvoie la surface modifiée et la surface totale cultivée."
+  },
+  "FertilizingCultivator:setSprayerAITerrainDetailProhibitedRange": {
+   "en": "Replaces the sprayer version: clears prohibited ranges, then, for the given fill type's spray type, forbids AI work on ground already holding that spray type and on ground at maximum spray level. Does nothing if the vehicle has no AI prohibition support.",
+   "fr": "Remplace la version du pulvérisateur : efface les plages interdites puis, pour le type de pulvérisation du type de remplissage donné, interdit à l'IA de travailler sur un sol qui a déjà ce type et sur un sol au niveau maximal de pulvérisation. Sans effet si le véhicule ne gère pas les interdictions IA."
+  }
+ }
+}

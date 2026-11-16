@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/IKChains.lua",
+ "module": {
+  "en": "Vehicle specialization that loads inverse kinematics chains from vehicle.ikChains and updates them every frame through the IKUtil helper. Used to pose articulated parts such as arms or hoses between targets. The solving itself is in IKUtil, which is not covered here (UNVERIFIED).",
+  "fr": "Spécialisation de véhicule qui charge des chaînes de cinématique inverse depuis vehicle.ikChains et les met à jour à chaque frame via l'utilitaire IKUtil. Sert à positionner des pièces articulées comme des bras ou des flexibles entre des cibles. Le calcul lui-même est dans IKUtil, non couvert ici (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "IKChains.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite on other specializations.",
+   "fr": "Renvoie toujours true : aucun prérequis envers d'autres spécialisations."
+  },
+  "IKChains.initSpecialization": {
+   "en": "Registers the XML paths of an IK chain under vehicle.ikChains.ikChain through IKUtil.",
+   "fr": "Enregistre via IKUtil les chemins XML d'une chaîne IK sous vehicle.ikChains.ikChain."
+  },
+  "IKChains.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad and onUpdate.",
+   "fr": "Abonne la spécialisation à onLoad et onUpdate."
+  },
+  "IKChains:onLoad": {
+   "en": "Loads every ikChain entry with IKUtil into the specialization's chain list. If none was loaded, removes the onUpdate listener.",
+   "fr": "Charge chaque entrée ikChain avec IKUtil dans la liste de chaînes de la spécialisation. Si aucune n'est chargée, retire l'écouteur onUpdate."
+  },
+  "IKChains:onUpdate": {
+   "en": "Each frame, asks IKUtil to update all loaded IK chains of the vehicle.",
+   "fr": "À chaque frame, demande à IKUtil de mettre à jour toutes les chaînes IK chargées du véhicule."
+  }
+ }
+}

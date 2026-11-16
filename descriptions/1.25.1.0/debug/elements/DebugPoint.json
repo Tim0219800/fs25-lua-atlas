@@ -1,0 +1,17 @@
+{
+ "fichier": "debug/elements/DebugPoint.lua",
+ "module": {
+  "en": "DebugPoint is a debug element drawing a single point with optional text at a world position, derived from DebugElement. `DebugPoint.renderAtPosition` is absent from this dump (UNVERIFIED).",
+  "fr": "DebugPoint est un élément de débogage qui dessine un point unique avec texte optionnel à une position monde, dérivé de DebugElement. `DebugPoint.renderAtPosition` est absent de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugPoint.new": {
+   "en": "Creates a point element, not solid, not ground-aligned and without text.",
+   "fr": "Crée un élément point, non solide, non aligné au sol et sans texte."
+  },
+  "DebugPoint:draw": {
+   "en": "Calls `DebugPoint.renderAtPosition` with position, colour, solid flag, text, text size and clip distances.",
+   "fr": "Appelle `DebugPoint.renderAtPosition` avec la position, la couleur, l'option solide, le texte, sa taille et les distances de clip."
+  }
+ }
+}

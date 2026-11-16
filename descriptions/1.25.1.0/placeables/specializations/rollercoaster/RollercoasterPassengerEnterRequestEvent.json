@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/rollercoaster/RollercoasterPassengerEnterRequestEvent.lua",
+ "module": {
+  "en": "Client-to-server event asking to board a rollercoaster, carrying the rollercoaster and the requesting player. The server handles it with `tryEnterRide`; the answer is a RollercoasterPassengerEnterResponseEvent (sent by code outside this file).",
+  "fr": "Événement client vers serveur demandant à monter dans une montagne russe, avec la montagne russe et le joueur demandeur. Le serveur le traite avec `tryEnterRide` ; la réponse est un RollercoasterPassengerEnterResponseEvent (envoyé par du code hors de ce fichier)."
+ },
+ "fonctions": {
+  "RollercoasterPassengerEnterRequestEvent.emptyNew": {
+   "en": "Creates an empty event with the class metatable and default channel.",
+   "fr": "Crée un événement vide avec la métatable de la classe et le canal par défaut."
+  },
+  "RollercoasterPassengerEnterRequestEvent.new": {
+   "en": "Builds the request from the rollercoaster object and the player making it.",
+   "fr": "Construit la requête à partir de l'objet montagne russe et du joueur qui la fait."
+  },
+  "RollercoasterPassengerEnterRequestEvent:readStream": {
+   "en": "Reads the rollercoaster and the player as network objects, then runs the event.",
+   "fr": "Lit la montagne russe et le joueur comme objets réseau, puis exécute l'événement."
+  },
+  "RollercoasterPassengerEnterRequestEvent:writeStream": {
+   "en": "Writes the rollercoaster and the player as network objects.",
+   "fr": "Écrit la montagne russe et le joueur comme objets réseau."
+  },
+  "RollercoasterPassengerEnterRequestEvent:run": {
+   "en": "If the rollercoaster is synchronized, calls `tryEnterRide` with the connection and the player. The player is not nil-checked here.",
+   "fr": "Si la montagne russe est synchronisée, appelle `tryEnterRide` avec la connexion et le joueur. Le joueur n'est pas testé contre nil ici."
+  }
+ }
+}

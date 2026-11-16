@@ -1,0 +1,81 @@
+{
+ "fichier": "vehicles/specializations/WoodHarvesterLight.lua",
+ "module": {
+  "en": "Simplified (automatic) wood harvester specialization. It requires TurnOnVehicle and AutomaticArmControlHarvester, which supply the arm alignment and the target tree. When the head is on and a non-stump tree is inside the cut node, it plays a cut animation, then deletes the whole tree, spawns a heap of pine logs on a free spot near it and plants a pine stump. A `woodHarvesterLight` configuration type is added. The class table declaration is absent from the dump lines.",
+  "fr": "Spécialisation d'abatteuse simplifiée (automatique). Elle exige TurnOnVehicle et AutomaticArmControlHarvester, qui fournissent l'alignement du bras et l'arbre cible. Quand la tête est allumée et qu'un arbre (hors souche) se trouve dans le nœud de coupe, elle joue une animation de coupe, supprime l'arbre entier, fait apparaître un tas de grumes de pin sur un emplacement libre voisin et plante une souche de pin. Un type de configuration `woodHarvesterLight` est ajouté. La déclaration de la table de classe est absente des lignes du dump."
+ },
+ "fonctions": {
+  "WoodHarvesterLight.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both TurnOnVehicle and AutomaticArmControlHarvester.",
+   "fr": "Renvoie true seulement si le type de véhicule possède TurnOnVehicle et AutomaticArmControlHarvester."
+  },
+  "WoodHarvesterLight.initSpecialization": {
+   "en": "Adds the `woodHarvesterLight` configuration type and registers XML paths: cut node, cut and grab animations, log spawner settings, cut effects and sound.",
+   "fr": "Ajoute le type de configuration `woodHarvesterLight` et enregistre les chemins XML : nœud de coupe, animations de coupe et de saisie, réglages du générateur de grumes, effets et son de coupe."
+  },
+  "WoodHarvesterLight.registerFunctions": {
+   "en": "Registers `updateLogSpawner`, `onWoodHarversterLogSpawnerCallback`, `spawnLogHeap` and `spawnTreeStump` on the vehicle type.",
+   "fr": "Enregistre `updateLogSpawner`, `onWoodHarversterLogSpawnerCallback`, `spawnLogHeap` et `spawnTreeStump` sur le type de véhicule."
+  },
+  "WoodHarvesterLight.registerOverwrittenFunctions": {
+   "en": "Overrides `getSupportsAutoTreeAlignment`, `getAutoAlignHasValidTree` and `getAreControlledActionsAllowed`.",
+   "fr": "Surcharge `getSupportsAutoTreeAlignment`, `getAutoAlignHasValidTree` et `getAreControlledActionsAllowed`."
+  },
+  "WoodHarvesterLight.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdate, onTurnedOn and onTurnedOff.",
+   "fr": "S'abonne à onLoad, onDelete, onUpdate, onTurnedOn et onTurnedOff."
+  },
+  "WoodHarvesterLight:onLoad": {
+   "en": "Reads cut node, animations and log spawner settings; the log model is fixed to `data/maps/trees/logs/pineLog.i3d` (size 0.4 x 5, volume 0.66). Loads effects and sound on clients. Removes update and turn on/off listeners if no cut node exists.",
+   "fr": "Lit le nœud de coupe, les animations et le générateur de grumes ; le modèle de grume est fixé à `data/maps/trees/logs/pineLog.i3d` (taille 0,4 x 5, volume 0,66). Charge effets et son côté client. Retire les écouteurs de mise à jour et d'allumage si aucun nœud de coupe n'existe."
+  },
+  "WoodHarvesterLight:onDelete": {
+   "en": "Client: deletes the cut effects and sound samples.",
+   "fr": "Client : supprime les effets et échantillons sonores de coupe."
+  },
+  "WoodHarvesterLight:onUpdate": {
+   "en": "While on, finds a non-stump tree in the cut node and, unless arm alignment is running, plays the cut animation; at half progress it deletes the tree, spawns the log heap and stump (if volume is nonzero), updates cut-count stats, achievements and hints, and replays controlled actions when available. Always feeds the log spawner with the current alignment target. Note: there is no server check in the cut branch (UNVERIFIED whether the vehicle update only runs where expected).",
+   "fr": "Allumée, trouve un arbre non-souche dans le nœud de coupe et, sauf alignement du bras en cours, joue l'animation de coupe ; à mi-course elle supprime l'arbre, crée le tas de grumes et la souche (si le volume est non nul), met à jour statistiques, succès et conseils, et rejoue les actions contrôlées si disponibles. Alimente toujours le générateur de grumes avec la cible d'alignement courante. À noter : aucune vérification serveur dans la branche de coupe (NON VÉRIFIÉ : où la mise à jour s'exécute exactement)."
+  },
+  "WoodHarvesterLight:onTurnedOn": {
+   "en": "Plays the grab animation forward.",
+   "fr": "Joue l'animation de saisie vers l'avant."
+  },
+  "WoodHarvesterLight:onTurnedOff": {
+   "en": "Plays the grab animation backward and, on clients, stops effects and sounds.",
+   "fr": "Joue l'animation de saisie à l'envers et, côté client, arrête effets et sons."
+  },
+  "WoodHarvesterLight:getSupportsAutoTreeAlignment": {
+   "en": "Always returns true.",
+   "fr": "Renvoie toujours true."
+  },
+  "WoodHarvesterLight:getAutoAlignHasValidTree": {
+   "en": "Returns two booleans: whether a tree is currently in the cut node, and whether the radius fits the configured maximum.",
+   "fr": "Renvoie deux booléens : si un arbre se trouve actuellement dans le nœud de coupe, et si le rayon respecte le maximum configuré."
+  },
+  "WoodHarvesterLight:getAreControlledActionsAllowed": {
+   "en": "When starting the action sequence, returns false with a warning if the tree is invalid (no access, wrong type, too thick), out of range, or no free spawn box exists. Turning off is always allowed; otherwise defers to the parent.",
+   "fr": "Au démarrage de la séquence d'actions, renvoie false avec un avertissement si l'arbre est invalide (accès refusé, mauvais type, trop épais), hors de portée, ou s'il n'y a pas de zone libre pour les grumes. L'arrêt reste toujours permis ; sinon s'en remet au parent."
+  },
+  "WoodHarvesterLight:updateLogSpawner": {
+   "en": "Each call, resolves the previous async overlap test and searches for a free box next to the tree (sides, then behind, widening in steps of 2 up to `maxSpawnWidth`). Starts the next `overlapBoxAsync` test and keeps the last valid box and its heading.",
+   "fr": "À chaque appel, exploite le résultat du test de recouvrement asynchrone précédent et cherche une zone libre près de l'arbre (côtés, puis derrière, par pas de 2 jusqu'à `maxSpawnWidth`). Lance le test `overlapBoxAsync` suivant et conserve la dernière zone valide et son orientation."
+  },
+  "WoodHarvesterLight:onWoodHarversterLogSpawnerCallback": {
+   "en": "Overlap callback: any hit that is not a terrain transform group marks the tested box as blocked and advances to the next candidate. Always clears the pending flag.",
+   "fr": "Callback de recouvrement : tout contact avec autre chose qu'un groupe de terrain marque la zone testée comme bloquée et passe au candidat suivant. Efface toujours l'indicateur d'attente."
+  },
+  "WoodHarvesterLight:spawnLogHeap": {
+   "en": "If a valid box exists, spawns logs for a tree: count is tree volume divided by the log volume (at least 1), owned by the vehicle's farm. `splitTypeIndex` is not used.",
+   "fr": "Si une zone valide existe, crée des grumes pour un arbre : nombre égal au volume de l'arbre divisé par le volume d'une grume (au moins 1), appartenant à la ferme du véhicule. `splitTypeIndex` n'est pas utilisé."
+  },
+  "WoodHarvesterLight.spawnLogs": {
+   "en": "Computes positions for a stack of logs in a box (a base row on the terrain plus a top row nested between them) and creates a `ForestryLog` per position from the given file with the given farm as owner.",
+   "fr": "Calcule les positions d'une pile de grumes dans une zone (une rangée de base sur le terrain plus une rangée haute posée entre elles) et crée un `ForestryLog` par position à partir du fichier donné, avec la ferme indiquée comme propriétaire."
+  },
+  "WoodHarvesterLight:spawnTreeStump": {
+   "en": "Plants a `pineStump` tree at the given position through `g_treePlantManager` if that tree type exists.",
+   "fr": "Plante un arbre `pineStump` à la position donnée via `g_treePlantManager` si ce type d'arbre existe."
+  }
+ }
+}

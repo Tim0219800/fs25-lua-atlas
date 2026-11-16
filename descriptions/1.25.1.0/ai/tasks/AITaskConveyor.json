@@ -1,0 +1,29 @@
+{
+ "fichier": "ai/tasks/AITaskConveyor.lua",
+ "module": {
+  "en": "AI task that switches a vehicle's field worker on while the task runs and off when it stops. It is used for conveyor-style work and is the same start and stop pattern as AITaskFieldWork. It extends AITask and relies on the vehicle providing startFieldWorker and stopFieldWorker.",
+  "fr": "Tâche IA qui active le field worker d'un véhicule pendant son exécution et le coupe à l'arrêt. Elle sert au travail de type convoyeur et suit le même schéma start/stop que AITaskFieldWork. Elle étend AITask et suppose que le véhicule fournit startFieldWorker et stopFieldWorker."
+ },
+ "fonctions": {
+  "AITaskConveyor.new": {
+   "en": "Creates the task with no vehicle assigned.",
+   "fr": "Crée la tâche sans véhicule assigné."
+  },
+  "AITaskConveyor:reset": {
+   "en": "Clears the vehicle reference, then runs the parent reset.",
+   "fr": "Efface la référence au véhicule, puis exécute le reset du parent."
+  },
+  "AITaskConveyor:setVehicle": {
+   "en": "Sets the vehicle on which the field worker is started and stopped.",
+   "fr": "Définit le véhicule sur lequel le field worker est démarré et arrêté."
+  },
+  "AITaskConveyor:start": {
+   "en": "Calls startFieldWorker on the vehicle, or logs a developer error if no vehicle is set, then runs the parent start.",
+   "fr": "Appelle startFieldWorker sur le véhicule, ou journalise une erreur développeur si aucun véhicule n'est défini, puis exécute le start du parent."
+  },
+  "AITaskConveyor:stop": {
+   "en": "Runs the parent stop, then calls stopFieldWorker on the vehicle, or logs a developer error if no vehicle is set.",
+   "fr": "Exécute le stop du parent, puis appelle stopFieldWorker sur le véhicule, ou journalise une erreur développeur si aucun véhicule n'est défini."
+  }
+ }
+}

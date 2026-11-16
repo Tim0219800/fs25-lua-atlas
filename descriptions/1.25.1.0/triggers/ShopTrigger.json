@@ -1,0 +1,53 @@
+{
+ "fichier": "triggers/ShopTrigger.lua",
+ "module": {
+  "en": "Map trigger (a shop spot) that lets the local player open the shop menu. Its first child node is the symbol and its second child is the spawn point where the player is placed when opening. Only enabled in career missions, and the symbol is shown only for farm members and when the trigger-marker setting is on. Includes ShopTriggerActivatable. Client side.",
+  "fr": "Trigger de carte (un point de vente) qui permet au joueur local d'ouvrir le menu de la boutique. Son premier noeud enfant est le symbole et son second enfant est le point d'apparition où le joueur est placé à l'ouverture. Actif seulement en mode carrière, et le symbole n'est affiché que pour les membres d'une ferme et si le réglage de marqueurs de trigger est activé. Inclut ShopTriggerActivatable. Côté client."
+ },
+ "fonctions": {
+  "ShopTrigger:onCreate": {
+   "en": "Map-load entry point for a shop trigger node: builds a ShopTrigger and adds it to the mission's non-updateable objects.",
+   "fr": "Point d'entrée au chargement de la carte pour un noeud de boutique : construit un ShopTrigger et l'ajoute aux objets non mis à jour de la mission."
+  },
+  "ShopTrigger.new": {
+   "en": "Creates the trigger: on a client checks the PLAYER collision mask bit (warning if missing) and registers the physics callback. Takes child 0 as symbol and child 1 as player spawn, subscribes to farm change and SHOW_TRIGGER_MARKER setting messages, sets icon visibility and creates the activatable.",
+   "fr": "Crée le trigger : sur un client vérifie le bit de masque PLAYER (avertissement s'il manque) et enregistre le callback physique. Prend l'enfant 0 comme symbole et l'enfant 1 comme point d'apparition, s'abonne aux messages de changement de ferme et du réglage SHOW_TRIGGER_MARKER, règle la visibilité de l'icône et crée l'activable."
+  },
+  "ShopTrigger:delete": {
+   "en": "Unsubscribes from messages, removes the physics trigger if any, clears the symbol reference and removes the activatable.",
+   "fr": "Se désabonne des messages, retire le trigger physique le cas échéant, efface la référence du symbole et retire l'activable."
+  },
+  "ShopTrigger:openShop": {
+   "en": "Opens the ShopMenu screen, then teleports the local player to the spawn node and sets their yaw from its local -Z direction. If the guided tour is running it shows an info dialog and does nothing else.",
+   "fr": "Ouvre l'écran ShopMenu, puis téléporte le joueur local au noeud d'apparition et règle son lacet d'après sa direction locale -Z. Si la visite guidée est en cours, affiche un dialogue d'information et ne fait rien d'autre."
+  },
+  "ShopTrigger:triggerCallback": {
+   "en": "On enter or leave of the local player's root node, adds or removes the activatable (career missions, enabled trigger only). On enter, if the platform auto-activates triggers and the action is available, it opens the shop directly.",
+   "fr": "À l'entrée ou la sortie du noeud racine du joueur local, ajoute ou retire l'activable (carrière et trigger actif uniquement). À l'entrée, si la plateforme active automatiquement les triggers et que l'action est disponible, il ouvre directement la boutique."
+  },
+  "ShopTrigger:updateIconVisibility": {
+   "en": "Shows the symbol only if the trigger is enabled, the mission is a career, the local farm is not the spectator farm and the SHOW_TRIGGER_MARKER setting is on.",
+   "fr": "Affiche le symbole seulement si le trigger est actif, que la mission est une carrière, que la ferme locale n'est pas la ferme spectateur et que le réglage SHOW_TRIGGER_MARKER est activé."
+  },
+  "ShopTrigger:playerFarmChanged": {
+   "en": "Message handler: refreshes the icon visibility when the local player's farm changed; other players are ignored.",
+   "fr": "Gestionnaire de message : rafraîchit la visibilité de l'icône quand la ferme du joueur local a changé ; les autres joueurs sont ignorés."
+  },
+  "ShopTrigger:onTriggerVisibilityChanged": {
+   "en": "Message handler for the trigger-marker setting: refreshes the icon visibility.",
+   "fr": "Gestionnaire de message du réglage des marqueurs de trigger : rafraîchit la visibilité de l'icône."
+  },
+  "ShopTriggerActivatable.new": {
+   "en": "Creates the activatable bound to a shop trigger, with the localized text of action_activateShop.",
+   "fr": "Crée l'activable lié à un trigger de boutique, avec le texte localisé de action_activateShop."
+  },
+  "ShopTriggerActivatable:getIsActivatable": {
+   "en": "Returns true when the trigger is enabled, the local player is not in a vehicle and the local farm is not the spectator farm.",
+   "fr": "Retourne true quand le trigger est actif, que le joueur local n'est pas dans un véhicule et que la ferme locale n'est pas la ferme spectateur."
+  },
+  "ShopTriggerActivatable:run": {
+   "en": "Runs the action by opening the shop through the owning trigger.",
+   "fr": "Exécute l'action en ouvrant la boutique via le trigger propriétaire."
+  }
+ }
+}

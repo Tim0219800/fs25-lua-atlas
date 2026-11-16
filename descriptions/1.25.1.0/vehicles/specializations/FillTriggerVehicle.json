@@ -1,0 +1,41 @@
+{
+ "fichier": "vehicles/specializations/FillTriggerVehicle.lua",
+ "module": {
+  "en": "Vehicle specialization that turns a vehicle with a fill unit (fuel, milk, water or slurry trailers, for example) into a fill source: it creates a FillTrigger on a node of the vehicle so other vehicles can be filled from it. Requires the FillUnit specialization. Configured under vehicle.fillTriggerVehicle in the XML.",
+  "fr": "Spécialisation de véhicule qui transforme un véhicule doté d'une unité de remplissage (remorques de carburant, lait, eau ou lisier par exemple) en source de remplissage : elle crée un FillTrigger sur un nœud du véhicule afin que d'autres véhicules puissent s'y remplir. Exige la spécialisation FillUnit. Configurée sous vehicle.fillTriggerVehicle dans le XML."
+ },
+ "fonctions": {
+  "FillTriggerVehicle.prerequisitesPresent": {
+   "en": "Returns true only if the FillUnit specialization is present.",
+   "fr": "Renvoie true seulement si la spécialisation FillUnit est présente."
+  },
+  "FillTriggerVehicle.initSpecialization": {
+   "en": "Registers the XML keys triggerNode, fillUnitIndex (default 1) and litersPerSecond (default 200) under vehicle.fillTriggerVehicle.",
+   "fr": "Enregistre les clés XML triggerNode, fillUnitIndex (1 par défaut) et litersPerSecond (200 par défaut) sous vehicle.fillTriggerVehicle."
+  },
+  "FillTriggerVehicle.registerOverwrittenFunctions": {
+   "en": "Overrides getDrawFirstFillText on the vehicle type.",
+   "fr": "Surcharge getDrawFirstFillText sur le type de véhicule."
+  },
+  "FillTriggerVehicle.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onReadStream and onWriteStream. Note: no onReadStream function is defined in this file, so that listener points to nothing here.",
+   "fr": "S'abonne à onLoad, onDelete, onReadStream et onWriteStream. À noter : aucune fonction onReadStream n'est définie dans ce fichier, ce rappel ne pointe donc sur rien ici."
+  },
+  "FillTriggerVehicle:onLoad": {
+   "en": "If a triggerNode is configured, creates the FillTrigger with the fill unit index and flow rate. Outside the shop configuration, the server also registers a finance money type (finance_purchaseFuel) on the trigger.",
+   "fr": "Si un triggerNode est configuré, crée le FillTrigger avec l'indice d'unité de remplissage et le débit. Hors configuration en boutique, le serveur enregistre aussi un type d'argent (finance_purchaseFuel) sur le trigger."
+  },
+  "FillTriggerVehicle:onDelete": {
+   "en": "Deletes the fill trigger if one exists.",
+   "fr": "Supprime le fill trigger s'il existe."
+  },
+  "FillTriggerVehicle:onWriteStream": {
+   "en": "Server to client: writes the id of the trigger's money change type as a 16-bit integer when a trigger exists. No matching read function exists in this file, so the client side is UNVERIFIED.",
+   "fr": "Serveur vers client : écrit l'identifiant du type de changement d'argent du trigger sur 16 bits s'il existe. Aucune fonction de lecture correspondante n'est dans ce fichier, le côté client est donc NON VÉRIFIÉ."
+  },
+  "FillTriggerVehicle:getDrawFirstFillText": {
+   "en": "On clients, returns true when the configured fill unit is empty but has a non-zero capacity; otherwise defers to the parent implementation.",
+   "fr": "Sur les clients, renvoie true quand l'unité de remplissage configurée est vide mais de capacité non nulle ; sinon délègue à l'implémentation parente."
+  }
+ }
+}

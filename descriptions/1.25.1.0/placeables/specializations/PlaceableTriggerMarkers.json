@@ -1,0 +1,41 @@
+{
+ "fichier": "placeables/specializations/PlaceableTriggerMarkers.lua",
+ "module": {
+  "en": "Placeable specialization that attaches visual trigger markers (loaded i3d files, optionally snapped to terrain) to nodes of a building and shows them only to players allowed to access it. It listens to farm and player-created messages to refresh visibility. Markers are declared under `placeable.triggerMarkers.triggerMarker(?)`.",
+  "fr": "Spécialisation de placeable qui attache des marqueurs visuels de déclencheur (fichiers i3d chargés, éventuellement collés au terrain) à des nœuds d'un bâtiment et ne les montre qu'aux joueurs qui y ont accès. Elle écoute les messages de changement de ferme et de création de joueur pour actualiser la visibilité. Les marqueurs sont déclarés sous `placeable.triggerMarkers.triggerMarker(?)`."
+ },
+ "fonctions": {
+  "PlaceableTriggerMarkers.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableTriggerMarkers.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onFinalizePlacement and onOwnerChanged.",
+   "fr": "S'abonne à onLoad, onDelete, onFinalizePlacement et onOwnerChanged."
+  },
+  "PlaceableTriggerMarkers.registerFunctions": {
+   "en": "Registers `onPlayerFarmChanged`, `onMarkerFileLoaded`, `getTriggerMarkerPosition` and `setShowMarkers`. Note: only `onMarkerFileLoaded` is defined in this file; the other three are referenced but not defined here (UNVERIFIED, may live elsewhere).",
+   "fr": "Enregistre `onPlayerFarmChanged`, `onMarkerFileLoaded`, `getTriggerMarkerPosition` et `setShowMarkers`. À noter : seule `onMarkerFileLoaded` est définie dans ce fichier ; les trois autres sont référencées sans définition ici (NON VÉRIFIÉ, peut-être ailleurs)."
+  },
+  "PlaceableTriggerMarkers.registerXMLPaths": {
+   "en": "Declares marker XML keys: `#node`, `#filename`, `#adjustToGround`, `#groundOffset` (default 0.03), `#showAllPlayers` and `#showOnlyIfOwned` (both default false).",
+   "fr": "Déclare les clés XML des marqueurs : `#node`, `#filename`, `#adjustToGround`, `#groundOffset` (0,03 par défaut), `#showAllPlayers` et `#showOnlyIfOwned` (false par défaut)."
+  },
+  "PlaceableTriggerMarkers:onLoad": {
+   "en": "Iterates the marker entries, skipping those with no node, and stores each marker's settings (ground offset defaults to 3 cm). If a filename is set it starts an asynchronous shared i3d load tied to a loading task.",
+   "fr": "Parcourt les marqueurs, ignore ceux sans nœud, et mémorise leurs réglages (décalage au sol de 3 cm par défaut). Si un nom de fichier est donné, lance un chargement i3d partagé asynchrone lié à une tâche de chargement."
+  },
+  "PlaceableTriggerMarkers:onMarkerFileLoaded": {
+   "en": "Async load callback: links the loaded i3d under the marker node (when loading succeeded), makes it the marker's node, then completes the loading task.",
+   "fr": "Callback de chargement asynchrone : lie l'i3d chargé sous le nœud du marqueur (si le chargement a réussi), en fait le nœud du marqueur, puis termine la tâche de chargement."
+  },
+  "PlaceableTriggerMarkers:onDelete": {
+   "en": "Releases the shared i3d load requests, removes each marker from the mission via `removeTriggerMarker`, and unsubscribes from the player-farm-changed and player-created messages.",
+   "fr": "Libère les requêtes de chargement i3d partagées, retire chaque marqueur de la mission via `removeTriggerMarker`, et se désabonne des messages de changement de ferme et de création de joueur."
+  },
+  "PlaceableTriggerMarkers:onFinalizePlacement": {
+   "en": "Snaps markers with `adjustToGround` to the terrain height plus offset, shows or hides markers according to player access, and subscribes to the farm-changed and player-created messages.",
+   "fr": "Colle au terrain les marqueurs `adjustToGround` (hauteur du terrain plus décalage), affiche ou masque les marqueurs selon l'accès du joueur, et s'abonne aux messages de changement de ferme et de création de joueur."
+  }
+ }
+}

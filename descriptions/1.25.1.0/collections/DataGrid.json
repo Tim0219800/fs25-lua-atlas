@@ -1,0 +1,25 @@
+{
+ "fichier": "collections/DataGrid.lua",
+ "module": {
+  "en": "Simple fixed-size two-dimensional grid stored as a table of rows, with one-based, bounds-checked access by row and column. Out-of-range access logs an error and a callstack instead of raising.",
+  "fr": "Grille bidimensionnelle simple de taille fixe, stockée sous forme de table de lignes, avec accès base un contrôlé par ligne et colonne. Un accès hors limites logue une erreur et une pile d'appels au lieu de lever une exception."
+ },
+ "fonctions": {
+  "DataGrid.new": {
+   "en": "Creates a grid with the given number of rows and columns, with one empty table per row. Cells start as nil.",
+   "fr": "Crée une grille avec le nombre de lignes et de colonnes donné, avec une table vide par ligne. Les cellules commencent à nil."
+  },
+  "DataGrid:delete": {
+   "en": "Releases the grid by dropping the reference to its row tables. The stored values are not deleted individually.",
+   "fr": "Libère la grille en abandonnant la référence à ses tables de lignes. Les valeurs stockées ne sont pas supprimées individuellement."
+  },
+  "DataGrid:getValue": {
+   "en": "Returns the value at a row and column (one-based). Out-of-range indices log an error with a callstack and return nil.",
+   "fr": "Retourne la valeur à une ligne et colonne (base un). Des indices hors limites logent une erreur avec pile d'appels et retournent nil."
+  },
+  "DataGrid:setValue": {
+   "en": "Stores a value at a row and column (one-based). Returns true on success, or false after logging an error and callstack if an index is out of range.",
+   "fr": "Stocke une valeur à une ligne et colonne (base un). Retourne true en cas de succès, ou false après avoir logué une erreur et une pile d'appels si un indice est hors limites."
+  }
+ }
+}

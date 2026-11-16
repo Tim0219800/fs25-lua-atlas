@@ -1,0 +1,65 @@
+{
+  "fichier": "vehicles/wheels/WheelVisual.lua",
+  "module": {
+    "en": "One visual wheel (tire plus rims and extras) of a vehicle wheel, made of visual parts loaded from XML under a transform group linked to the wheel. It supports a connected twin wheel, reports width, offset, tire node and added mass, forwards per-frame updates to its parts, and can register a shallow-water obstacle with the mission simulation.",
+    "fr": "Une roue visuelle (pneu, jantes et extras) d'une roue de véhicule, composée de parties visuelles chargées depuis le XML sous un groupe de transformation lié à la roue. Elle gère une roue jumelée connectée, indique largeur, décalage, nœud de pneu et masse ajoutée, transmet les mises à jour à ses parties et peut enregistrer un obstacle d'eau peu profonde dans la simulation de la mission."
+  },
+  "fonctions": {
+    "WheelVisual.new": {
+      "en": "Creates the visual wheel, linking a new transform group named visualWheel to the given node. Defaults to width 0.5 and radius 0.5.",
+      "fr": "Crée la roue visuelle en liant un nouveau groupe de transformation nommé visualWheel au nœud donné. Largeur et rayon valent 0,5 par défaut."
+    },
+    "WheelVisual:delete": {
+      "en": "Deletes all visual parts, removes the shallow-water obstacle and deletes the root node.",
+      "fr": "Supprime toutes les parties visuelles, retire l'obstacle d'eau peu profonde et supprime le nœud racine."
+    },
+    "WheelVisual:loadFromXML": {
+      "en": "Loads physics width/radius, rim diameter, an optional rim material template and every visual part type from WheelVisual.PARTS, adding the rim offset to parts other than innerRim and additional. Returns true if at least one part loaded.",
+      "fr": "Charge largeur/rayon physiques, diamètre de jante, un gabarit de matériau de jante optionnel et chaque type de partie visuelle de WheelVisual.PARTS, en ajoutant le décalage de jante aux parties autres que innerRim et additional. Retourne true si au moins une partie est chargée."
+    },
+    "WheelVisual:postLoad": {
+      "en": "Applies the rim material to inner and outer rim parts, then calls `postLoad` on every part.",
+      "fr": "Applique le matériau de jante aux parties jante intérieure et extérieure, puis appelle `postLoad` sur chaque partie."
+    },
+    "WheelVisual:setConnectedWheel": {
+      "en": "Links this wheel to a twin wheel with a signed offset and positions its node along X beside it, taking both widths and the left/right side into account.",
+      "fr": "Lie cette roue à une roue jumelée avec un décalage signé et positionne son nœud selon X à côté d'elle, en tenant compte des deux largeurs et du côté gauche/droit."
+    },
+    "WheelVisual:getWidthAndOffset": {
+      "en": "Returns the wheel width and its X offset; when a tire part exists the offset includes the tire part offset (sign depends on left/right).",
+      "fr": "Retourne la largeur de la roue et son décalage en X ; si une partie pneu existe, le décalage inclut celui du pneu (signe selon gauche/droite)."
+    },
+    "WheelVisual:getIsTireInverted": {
+      "en": "Returns the inverted flag if the wheel has a tire part, otherwise false.",
+      "fr": "Retourne l'indicateur d'inversion si la roue a une partie pneu, sinon false."
+    },
+    "WheelVisual:getTireNode": {
+      "en": "Returns the node of the first tire part, or nil if none.",
+      "fr": "Retourne le nœud de la première partie pneu, ou nil s'il n'y en a pas."
+    },
+    "WheelVisual:getAdditionalMass": {
+      "en": "Returns the summed mass of all visual parts.",
+      "fr": "Retourne la masse cumulée de toutes les parties visuelles."
+    },
+    "WheelVisual:update": {
+      "en": "Calls `update` on each part that has one, threading the changed flag and suspension length through them; returns both values.",
+      "fr": "Appelle `update` sur chaque partie qui en a une, en faisant circuler l'indicateur de changement et la longueur de suspension ; retourne les deux valeurs."
+    },
+    "WheelVisual:addShallowWaterObstacle": {
+      "en": "Registers this wheel as an obstacle in `g_currentMission.shallowWaterSimulation` if it exists, sized from width and radius. Skipped in the shop configuration; the simulation class is not in the dump (UNVERIFIED).",
+      "fr": "Enregistre cette roue comme obstacle dans `g_currentMission.shallowWaterSimulation` s'il existe, dimensionné d'après largeur et rayon. Ignoré dans la configuration de boutique ; la classe de simulation est absente du dump (NON VÉRIFIÉ)."
+    },
+    "WheelVisual:removeShallowWaterObstacle": {
+      "en": "Removes the shallow-water obstacle if one was registered.",
+      "fr": "Retire l'obstacle d'eau peu profonde s'il a été enregistré."
+    },
+    "WheelVisual:getShallowWaterParameters": {
+      "en": "Callback returning the X/Z push vector and Y rotation for the water simulation, from vehicle speed plus random jitter when the wheel slips or moves. Note: `math.random() * 2 - 1 * slip` has an operator precedence quirk, so slip only scales the constant 1.",
+      "fr": "Callback retournant le vecteur de poussée X/Z et la rotation Y pour la simulation d'eau, d'après la vitesse du véhicule plus un bruit aléatoire quand la roue patine ou avance. À noter : `math.random() * 2 - 1 * slip` a une précédence d'opérateurs particulière, donc le glissement ne multiplie que la constante 1."
+    },
+    "WheelVisual.registerXMLPaths": {
+      "en": "Registers the XML schema paths of every visual part type defined in WheelVisual.PARTS under the given key.",
+      "fr": "Enregistre les chemins du schéma XML de chaque type de partie visuelle défini dans WheelVisual.PARTS sous la clé donnée."
+    }
+  }
+}

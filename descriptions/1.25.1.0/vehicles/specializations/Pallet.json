@@ -1,0 +1,97 @@
+{
+ "fichier": "vehicles/specializations/Pallet.lua",
+ "module": {
+  "en": "Specialization for pallets and big bags whose visible content follows a fill unit. It has no prerequisites. It flags the vehicle as a pallet without player input, shows or hides content objects according to fill percentage, supplies mesh nodes for tension belts, can age-blend pallet textures, and counts toward the pallet slot limit. It is also loaded as an auto-loadable cargo item.",
+  "fr": "Spécialisation des palettes et big bags dont le contenu visible suit une unité de remplissage. Aucun prérequis. Elle marque le véhicule comme palette sans saisie du joueur, affiche ou masque des objets de contenu selon le pourcentage de remplissage, fournit les nœuds de maillage pour les sangles, peut mélanger des textures selon l'âge et compte dans la limite d'emplacements de palettes. Elle sert aussi de cargaison chargeable automatiquement."
+ },
+ "fonctions": {
+  "Pallet.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Retourne toujours true : aucune autre spécialisation n'est requise."
+  },
+  "Pallet.initSpecialization": {
+   "en": "Registers the XML paths under vehicle.pallet (fill unit, shape node, link nodes, i3d file, textures, content objects, straps, unload sound) and the savegame pallet age.",
+   "fr": "Enregistre les chemins XML sous vehicle.pallet (unité de remplissage, nœud de forme, nœuds de lien, fichier i3d, textures, objets de contenu, sangles, son de déchargement) et l'âge de palette sauvegardé."
+  },
+  "Pallet.registerFunctions": {
+   "en": "Registers five vehicle functions. Note: onPalletI3DFileLoaded and updatePalletStraps are registered from Pallet but no such functions are defined in this file, so those entries are nil.",
+   "fr": "Enregistre cinq fonctions de véhicule. À noter : onPalletI3DFileLoaded et updatePalletStraps sont enregistrées depuis Pallet mais aucune fonction de ce nom n'est définie dans ce fichier, donc ces entrées sont nil."
+  },
+  "Pallet.registerOverwrittenFunctions": {
+   "en": "Overrides getMeshNodes, loadComponentFromXML, auto-load size and auto-load, vehicle overview and reset flags, map hotspot visibility and empty-on-reset.",
+   "fr": "Surcharge getMeshNodes, loadComponentFromXML, la taille et le chargement automatique, les indicateurs d'aperçu et de réinitialisation, la visibilité du hotspot de carte et le vidage à la réinitialisation."
+  },
+  "Pallet.registerEventListeners": {
+   "en": "Subscribes to pre-load, load, post-load, delete and fill unit fill level changed events.",
+   "fr": "S'abonne aux événements de pré-chargement, chargement, post-chargement, suppression et changement de niveau de remplissage."
+  },
+  "Pallet:onPreLoad": {
+   "en": "Sets isPallet to true and disables player input on the vehicle.",
+   "fr": "Met isPallet à true et désactive la saisie du joueur sur le véhicule."
+  },
+  "Pallet:onLoad": {
+   "en": "Reads the XML: validates the shape node, optionally loads a shared visual pallet i3d into the link nodes, collects textures, the pallet age (random unless in shop config), content objects (hidden at start), straps and the unload sound. Registers with the pallet slot limit and sets fork joint limits.",
+   "fr": "Lit le XML : valide le nœud de forme, charge éventuellement un i3d de palette partagé dans les nœuds de lien, collecte textures, âge de palette (aléatoire hors config boutique), objets de contenu (masqués au départ), sangles et son de déchargement. S'enregistre dans la limite d'emplacements de palettes et fixe les limites de joint de fourche."
+  },
+  "Pallet:onPostLoad": {
+   "en": "If textures are defined, applies one diffuse map to the pallet node, or blends two textures by the pallet age through a custom map and a blendScale parameter.",
+   "fr": "Si des textures sont définies, applique une texture diffuse au nœud de la palette, ou mélange deux textures selon l'âge via une carte personnalisée et un paramètre blendScale."
+  },
+  "Pallet:onDelete": {
+   "en": "Deletes the sound samples on the client, releases the shared i3d request and removes the pallet from the slot limit.",
+   "fr": "Supprime les échantillons sonores côté client, libère la requête i3d partagée et retire la palette de la limite d'emplacements."
+  },
+  "Pallet:saveToXMLFile": {
+   "en": "Saves the pallet age to the savegame.",
+   "fr": "Sauvegarde l'âge de la palette."
+  },
+  "Pallet:loadComponentFromXML": {
+   "en": "If the platform has no dynamic pallets, turns a dynamic component into a kinematic rigid body, then calls the parent.",
+   "fr": "Si la plateforme n'a pas de palettes dynamiques, transforme un composant dynamique en corps rigide cinématique, puis appelle le parent."
+  },
+  "Pallet:onFillUnitFillLevelChanged": {
+   "en": "Shows content objects in proportion to the fill percentage (at least one when non-empty), plays the unload sound when an object disappears and flags the tension belt nodes as dirty.",
+   "fr": "Affiche les objets de contenu proportionnellement au pourcentage de remplissage (au moins un si non vide), joue le son de déchargement quand un objet disparaît et marque les nœuds de sangle comme à recalculer."
+  },
+  "Pallet:getMeshNodes": {
+   "en": "Rebuilds the cached tension belt mesh list when dirty and returns it if not empty; otherwise defers to the parent.",
+   "fr": "Reconstruit la liste en cache des maillages de sangle si elle est périmée et la retourne si elle n'est pas vide ; sinon délègue au parent."
+  },
+  "Pallet:collectPalletTensionBeltNodes": {
+   "en": "Appends to the given table the base tension belt nodes, the visible content objects usable as belt meshes, and extra mesh nodes of the tension belt object spec if present.",
+   "fr": "Ajoute à la table fournie les nœuds de sangle de base, les objets de contenu visibles utilisables comme maillage de sangle, et les nœuds supplémentaires de la spec d'objet à sangle s'il y en a."
+  },
+  "Pallet:setPalletTensionBeltNodesDirty": {
+   "en": "Marks the cached tension belt mesh list as outdated.",
+   "fr": "Marque la liste en cache des maillages de sangle comme périmée."
+  },
+  "Pallet:getInfoBoxTitle": {
+   "en": "Returns the localized pallet title for the info box.",
+   "fr": "Retourne le titre localisé de palette pour la boîte d'information."
+  },
+  "Pallet:getAutoLoadSize": {
+   "en": "Returns the vehicle's length, height and width as x, y, z, swapping length and width because pallets are loaded rotated by 90 degrees.",
+   "fr": "Retourne longueur, hauteur et largeur du véhicule en x, y, z, en échangeant longueur et largeur car les palettes sont chargées tournées de 90 degrés."
+  },
+  "Pallet:autoLoad": {
+   "en": "Mounts the pallet kinematically on the auto loader node at the cell centre, rotated 90 degrees about Y, and always returns true.",
+   "fr": "Monte la palette de façon cinématique sur le nœud du chargeur automatique, au centre de la cellule et tournée de 90 degrés autour de Y, et retourne toujours true."
+  },
+  "Pallet:getShowInVehiclesOverview": {
+   "en": "Always false: pallets are not listed in the vehicles overview.",
+   "fr": "Toujours false : les palettes ne figurent pas dans l'aperçu des véhicules."
+  },
+  "Pallet:getCanBeReset": {
+   "en": "Always false: pallets cannot be reset.",
+   "fr": "Toujours false : les palettes ne peuvent pas être réinitialisées."
+  },
+  "Pallet:getIsMapHotspotVisible": {
+   "en": "Always false: pallets have no visible map hotspot.",
+   "fr": "Toujours false : les palettes n'ont pas de hotspot de carte visible."
+  },
+  "Pallet:getFillUnitEmptyOnReset": {
+   "en": "Always false: the fill unit is not emptied on reset.",
+   "fr": "Toujours false : l'unité de remplissage n'est pas vidée à la réinitialisation."
+  }
+ }
+}

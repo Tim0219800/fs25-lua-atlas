@@ -1,0 +1,45 @@
+{
+ "fichier": "ai/tasks/AITask.lua",
+ "module": {
+  "en": "Base class of all AI job tasks. A task knows whether it runs on the server, which job owns it, and keeps running, finished and mark-as-finished flags; subclasses override start, stop, update and validate. Jobs run their tasks in sequence and read getIsFinished to advance.",
+  "fr": "Classe de base de toutes les tâches de job IA. Une tâche sait si elle tourne sur le serveur, quel job la possède, et gère les indicateurs en cours, terminée et marquée comme terminée ; les sous-classes surchargent start, stop, update et validate. Les jobs enchaînent leurs tâches et lisent getIsFinished pour passer à la suivante."
+ },
+ "fonctions": {
+  "AITask.new": {
+   "en": "Creates a task bound to the isServer flag and its owning job, initially not running and not finished.",
+   "fr": "Crée une tâche liée au drapeau isServer et au job propriétaire, initialement ni en cours ni terminée."
+  },
+  "AITask:delete": {
+   "en": "Empty hook for subclasses to release resources.",
+   "fr": "Point d'entrée vide que les sous-classes peuvent surcharger pour libérer des ressources."
+  },
+  "AITask:update": {
+   "en": "Empty per-frame hook; the dt argument is the frame time step. Subclasses implement their logic here.",
+   "fr": "Point d'entrée vide appelé à chaque image ; dt est le pas de temps. Les sous-classes y placent leur logique."
+  },
+  "AITask:start": {
+   "en": "Marks the task as running and not finished. If skip was requested earlier (markAsFinished), the task is immediately flagged finished and the request is cleared.",
+   "fr": "Marque la tâche comme en cours et non terminée. Si un skip avait été demandé plus tôt (markAsFinished), la tâche est aussitôt marquée terminée et la demande est effacée."
+  },
+  "AITask:skip": {
+   "en": "Finishes the task right away if it is running; otherwise remembers the request so the task completes as soon as it starts.",
+   "fr": "Termine la tâche immédiatement si elle est en cours ; sinon mémorise la demande pour qu'elle se termine dès son démarrage."
+  },
+  "AITask:stop": {
+   "en": "Marks the task as no longer running and clears any pending skip request. The wasJobStopped argument is unused here.",
+   "fr": "Marque la tâche comme n'étant plus en cours et efface toute demande de skip en attente. L'argument wasJobStopped n'est pas utilisé ici."
+  },
+  "AITask:reset": {
+   "en": "Clears the finished flag so the task can be run again. Subclasses extend it to clear their own references.",
+   "fr": "Efface l'indicateur de fin pour que la tâche puisse être rejouée. Les sous-classes l'étendent pour vider leurs propres références."
+  },
+  "AITask:validate": {
+   "en": "Base check that always succeeds, returning true and no error. Subclasses can return false with a message; ignoreUnsetParameters is unused here.",
+   "fr": "Contrôle de base qui réussit toujours, retournant true et aucune erreur. Les sous-classes peuvent retourner false avec un message ; ignoreUnsetParameters n'est pas utilisé ici."
+  },
+  "AITask:getIsFinished": {
+   "en": "Returns whether the task has finished.",
+   "fr": "Retourne si la tâche est terminée."
+  }
+ }
+}

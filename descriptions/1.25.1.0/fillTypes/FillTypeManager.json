@@ -1,0 +1,137 @@
+{
+ "fichier": "fillTypes/FillTypeManager.lua",
+ "module": {
+  "en": "Manager (parent AbstractManager) owning all fill types, fill type categories, converters and fill type sound samples. It loads fill types from the base maps_fillTypes.xml, the map XML and mod XMLs, hands out lookups by index and name, builds the terrain fill layer and distance texture arrays from height types, and creates the globals FillType and FillTypeCategory (name to index). The method getFillTypesByCategoryNamesList and FillTypeDesc finalize, delete and addTerrainFillLayer are used but not in this file (UNVERIFIED).",
+  "fr": "Gestionnaire (parent AbstractManager) qui possède tous les types de remplissage, catégories, convertisseurs et échantillons sonores de types de remplissage. Il charge les types depuis maps_fillTypes.xml de base, le XML de la carte et les XML de mods, fournit des recherches par index et nom, construit les tableaux de couches de remplissage du terrain et de textures de distance à partir des types de hauteur, et crée les globales FillType et FillTypeCategory (nom vers index). La méthode getFillTypesByCategoryNamesList et les méthodes finalize, delete et addTerrainFillLayer de FillTypeDesc sont utilisées mais absentes de ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "FillTypeManager.new": {
+   "en": "Constructor. Creates the manager through AbstractManager.new with this class's metatable.",
+   "fr": "Constructeur. Crée le gestionnaire via AbstractManager.new avec la métatable de cette classe."
+  },
+  "FillTypeManager:initDataStructures": {
+   "en": "Resets all tables (fill types by index and name, converters, categories, sound samples, mods to load) and sets the globals FillType and FillTypeCategory to the name-to-index and category tables.",
+   "fr": "Réinitialise toutes les tables (types de remplissage par index et nom, convertisseurs, catégories, échantillons sonores, mods à charger) et définit les globales FillType et FillTypeCategory sur les tables nom vers index et catégories."
+  },
+  "FillTypeManager:loadDefaultTypes": {
+   "en": "Loads the base game fill types from data/maps/maps_fillTypes.xml as base types, without finalizing them.",
+   "fr": "Charge les types de remplissage du jeu de base depuis data/maps/maps_fillTypes.xml comme types de base, sans les finaliser."
+  },
+  "FillTypeManager:loadMapData": {
+   "en": "Map load entry. Loads the default types, then the map's fill types through XMLUtil, then finalizes every fill type. Returns true if the map data loaded, else false.",
+   "fr": "Point d'entrée du chargement de carte. Charge les types par défaut, puis les types de remplissage de la carte via XMLUtil, puis finalise chaque type. Retourne true si les données de la carte ont été chargées, sinon false."
+  },
+  "FillTypeManager:loadModFillTypes": {
+   "en": "Loads the queued mod fill type XML files (modsToLoad), logs how many each added, then finalizes all fill types. Does nothing if no mod entries are queued. The code that queues them is not in this file.",
+   "fr": "Charge les fichiers XML de types de remplissage de mods en file (modsToLoad), journalise combien chacun en a ajouté, puis finalise tous les types. Ne fait rien si aucune entrée de mod n'est en file. Le code qui les met en file n'est pas dans ce fichier."
+  },
+  "FillTypeManager:unloadMapData": {
+   "en": "Deletes all fill type sound samples and calls delete on every fill type, then runs the parent unload.",
+   "fr": "Supprime tous les échantillons sonores de types de remplissage et appelle delete sur chaque type, puis exécute le déchargement du parent."
+  },
+  "FillTypeManager:loadFillTypes": {
+   "en": "Reads fill types, categories, converters and fill type sounds from an XML file or handle. For base types it first adds the UNKNOWN type and skips names that already exist; otherwise existing types are updated. Optionally finalizes each type. Returns false for a nil or 0 handle, else true.",
+   "fr": "Lit types de remplissage, catégories, convertisseurs et sons de types de remplissage depuis un fichier ou handle XML. Pour les types de base, ajoute d'abord le type UNKNOWN et ignore les noms déjà existants ; sinon les types existants sont mis à jour. Finalise éventuellement chaque type. Retourne false pour un handle nil ou 0, sinon true."
+  },
+  "FillTypeManager:addFillType": {
+   "en": "Registers a fill type description, assigns it the next index and fills the name, index and title lookups. Returns false and logs an error if the network limit on the number of fill types is reached.",
+   "fr": "Enregistre une description de type de remplissage, lui attribue l'index suivant et remplit les recherches par nom, index et titre. Retourne false et journalise une erreur si la limite réseau du nombre de types est atteinte."
+  },
+  "FillTypeManager:assignFillTypeTextureArraysFromTerrain": {
+   "en": "Takes the first material of a node, lets the engine set the terrain fill plane textures (diffuse, normal, height) on it and assigns the resulting material back to the node.",
+   "fr": "Prend le premier matériau d'un nœud, laisse le moteur y définir les textures des plans de remplissage du terrain (diffuse, normale, hauteur) et réaffecte le matériau obtenu au nœud."
+  },
+  "FillTypeManager:assignCustomFillTypeTextureArraysFromTerrain": {
+   "en": "Same as assignFillTypeTextureArraysFromTerrain but uses custom texture names for diffuse, normal and height (empty string to skip).",
+   "fr": "Comme assignFillTypeTextureArraysFromTerrain mais utilise des noms de textures personnalisés pour diffuse, normale et hauteur (chaîne vide pour ignorer)."
+  },
+  "FillTypeManager:constructTerrainFillLayers": {
+   "en": "Rebuilds the terrain fill layers: clears them, adds each height type's fill type as a layer, applies its visual height mappings to the terrain detail height, then finalizes the layers. Returns true.",
+   "fr": "Reconstruit les couches de remplissage du terrain : les efface, ajoute le type de remplissage de chaque type de hauteur comme couche, applique ses correspondances de hauteur visuelle à la hauteur de détail du terrain, puis finalise les couches. Retourne true."
+  },
+  "FillTypeManager:constructFillTypeDistanceTextureArray": {
+   "en": "Builds the distance texture array for the terrain detail height from the fill types of the given height types, and returns the result of finalizing the constructor.",
+   "fr": "Construit le tableau de textures de distance pour la hauteur de détail du terrain à partir des types de remplissage des types de hauteur donnés, et retourne le résultat de la finalisation du constructeur."
+  },
+  "FillTypeManager:getTextureArrayIndexByFillTypeIndex": {
+   "en": "Returns the texture array index of a fill type, or nil if it is unknown or not in the array.",
+   "fr": "Retourne l'index dans le tableau de textures d'un type de remplissage, ou nil s'il est inconnu ou absent du tableau."
+  },
+  "FillTypeManager:getPrioritizedEffectTypeByFillTypeIndex": {
+   "en": "Returns the prioritized effect class name of a fill type (default \"ShaderPlaneEffect\"), or nil if the index is unknown.",
+   "fr": "Retourne le nom de classe d'effet prioritaire d'un type de remplissage (\"ShaderPlaneEffect\" par défaut), ou nil si l'index est inconnu."
+  },
+  "FillTypeManager:getSmokeColorByFillTypeIndex": {
+   "en": "Returns the smoke color of a fill type. With fruitColor true it prefers the fruit smoke color and falls back to the fill color. Returns nil if the fill type is unknown.",
+   "fr": "Retourne la couleur de fumée d'un type de remplissage. Avec fruitColor à true, privilégie la couleur de fumée de fruit et se rabat sur la couleur de remplissage. Retourne nil si le type est inconnu."
+  },
+  "FillTypeManager:getFillTypeByIndex": {
+   "en": "Returns the fill type object for an index, or nil.",
+   "fr": "Retourne l'objet type de remplissage pour un index, ou nil."
+  },
+  "FillTypeManager:getFillTypeNameByIndex": {
+   "en": "Returns the upper-case name of a fill type index, or nil.",
+   "fr": "Retourne le nom en majuscules d'un index de type de remplissage, ou nil."
+  },
+  "FillTypeManager:getFillTypeTitleByIndex": {
+   "en": "Returns the localized title of a fill type index, as stored when the type was added, or nil.",
+   "fr": "Retourne le titre localisé d'un index de type de remplissage, tel que mémorisé à l'ajout du type, ou nil."
+  },
+  "FillTypeManager:getFillTypeNamesByIndices": {
+   "en": "Takes a set whose keys are fill type indices and returns a list of their names (order not guaranteed, since it iterates with pairs).",
+   "fr": "Prend un ensemble dont les clés sont des index de types de remplissage et retourne une liste de leurs noms (ordre non garanti, car l'itération utilise pairs)."
+  },
+  "FillTypeManager:getFillTypeIndexByName": {
+   "en": "Returns the fill type index for a name (case-insensitive), or nil if the name is nil or unknown.",
+   "fr": "Retourne l'index du type de remplissage pour un nom (insensible à la casse), ou nil si le nom est nil ou inconnu."
+  },
+  "FillTypeManager:getFillTypeByName": {
+   "en": "Returns the fill type object for a name (case-insensitive), or nil if the name is not a valid index name or unknown.",
+   "fr": "Retourne l'objet type de remplissage pour un nom (insensible à la casse), ou nil si le nom n'est pas un nom d'index valide ou est inconnu."
+  },
+  "FillTypeManager:getFillTypes": {
+   "en": "Returns the list of all fill type objects. This is the internal table; do not modify it.",
+   "fr": "Retourne la liste de tous les objets types de remplissage. C'est la table interne ; ne pas la modifier."
+  },
+  "FillTypeManager:addFillTypeCategory": {
+   "en": "Registers a fill type category by name (validated, upper-cased) and returns its index. Returns nil with a warning for an invalid name, or for an existing name when isBaseType is true; otherwise reuses the existing index.",
+   "fr": "Enregistre une catégorie de types de remplissage par nom (validé, en majuscules) et retourne son index. Retourne nil avec un avertissement pour un nom invalide, ou pour un nom existant quand isBaseType vaut true ; sinon réutilise l'index existant."
+  },
+  "FillTypeManager:addFillTypeToCategory": {
+   "en": "Adds a fill type to a category in both directions (category to fill types, fill type to categories). Returns true on success, false if an argument is nil or the category does not exist.",
+   "fr": "Ajoute un type de remplissage à une catégorie dans les deux sens (catégorie vers types, type vers catégories). Retourne true en cas de succès, false si un argument est nil ou si la catégorie n'existe pas."
+  },
+  "FillTypeManager:getFillTypesByCategoryNames": {
+   "en": "Splits space-separated category names and delegates to getFillTypesByCategoryNamesList, which is not in this dump (UNVERIFIED). Returns the (optionally supplied) result table, empty if names is nil.",
+   "fr": "Découpe des noms de catégories séparés par des espaces et délègue à getFillTypesByCategoryNamesList, absente de ce dump (NON VÉRIFIÉ). Retourne la table de résultat (éventuellement fournie), vide si names est nil."
+  },
+  "FillTypeManager:getIsFillTypeInCategory": {
+   "en": "Returns true if the fill type index belongs to the category with the given name, false if either is unknown.",
+   "fr": "Retourne true si l'index de type de remplissage appartient à la catégorie du nom donné, false si l'un des deux est inconnu."
+  },
+  "FillTypeManager:getFillTypesByNames": {
+   "en": "Splits space-separated fill type names and returns a list of fill type indices (despite the name), skipping UNKNOWN and duplicates. Unknown names optionally log the warning format. Appends to a supplied table if given.",
+   "fr": "Découpe des noms de types de remplissage séparés par des espaces et retourne une liste d'index de types de remplissage (malgré le nom), en ignorant UNKNOWN et les doublons. Les noms inconnus journalisent éventuellement le format d'avertissement. Ajoute à une table fournie le cas échéant."
+  },
+  "FillTypeManager:getFillTypesFromXML": {
+   "en": "Reads either a category list or a name list from two XML keys and returns the matching fill types. Setting both logs a warning and returns an empty list; setting neither warns only if requiresFillTypes is true.",
+   "fr": "Lit soit une liste de catégories, soit une liste de noms depuis deux clés XML et retourne les types de remplissage correspondants. Définir les deux journalise un avertissement et retourne une liste vide ; ne définir aucun n'avertit que si requiresFillTypes vaut true."
+  },
+  "FillTypeManager:addFillTypeConverter": {
+   "en": "Registers a converter by name (validated, upper-cased) and returns its index. Returns nil with a warning for an invalid name or, when isBaseType is true, an existing name; otherwise reuses the existing index.",
+   "fr": "Enregistre un convertisseur par nom (validé, en majuscules) et retourne son index. Retourne nil avec un avertissement pour un nom invalide ou, quand isBaseType vaut true, un nom existant ; sinon réutilise l'index existant."
+  },
+  "FillTypeManager:addFillTypeConversion": {
+   "en": "Stores a conversion from a source fill type to a target fill type with a factor in the given converter. Ignored if the converter or an index is nil or unknown.",
+   "fr": "Mémorise une conversion d'un type de remplissage source vers un type cible avec un facteur dans le convertisseur donné. Ignorée si le convertisseur ou un index est nil ou inconnu."
+  },
+  "FillTypeManager:getConverterDataByName": {
+   "en": "Returns the converter data table for a converter name (case-insensitive), or nil.",
+   "fr": "Retourne la table de données du convertisseur pour un nom de convertisseur (insensible à la casse), ou nil."
+  },
+  "FillTypeManager:getSampleByFillType": {
+   "en": "Returns the sound sample assigned to a fill type index (explicitly or through a default sample), or nil.",
+   "fr": "Retourne l'échantillon sonore attribué à un index de type de remplissage (explicitement ou via un échantillon par défaut), ou nil."
+  }
+ }
+}

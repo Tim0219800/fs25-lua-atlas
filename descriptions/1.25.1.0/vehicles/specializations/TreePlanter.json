@@ -1,0 +1,241 @@
+{
+ "fichier": "vehicles/specializations/TreePlanter.lua",
+ "module": {
+  "en": "Specialization for tree planting machines. It mounts a sapling pallet (found through a pallet trigger) and uses it as the fill unit content, then plants trees from the chosen tree type either automatically when driving (spacing from `minDistance`) or on a manual input action. Non-tree fill types fall back to a sowing/cultivating routine on the density maps. It requires TurnOnVehicle, FillUnit and GroundReference; the server does the planting while clients get sound, animations and warnings. The file also defines the helper class TreePlanterActivatable.",
+  "fr": "Spécialisation des machines de plantation d'arbres. Elle monte une palette de plants (détectée par un trigger de palettes) et l'utilise comme contenu du fill unit, puis plante des arbres du type choisi, soit automatiquement en roulant (espacement `minDistance`), soit par une action d'entrée manuelle. Pour les types de remplissage qui ne sont pas des plants, elle retombe sur une routine de semis/travail du sol sur les density maps. Elle exige TurnOnVehicle, FillUnit et GroundReference ; le serveur plante, les clients gèrent son, animations et avertissements. Le fichier définit aussi la classe auxiliaire TreePlanterActivatable."
+ },
+ "fonctions": {
+  "TreePlanter.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the TurnOnVehicle, FillUnit and GroundReference specializations.",
+   "fr": "Renvoie true seulement si le type de véhicule possède les spécialisations TurnOnVehicle, FillUnit et GroundReference."
+  },
+  "TreePlanter.initSpecialization": {
+   "en": "Registers the `vehicle.treePlanter` XML schema (input action, node, min distance, pallet trigger, ground reference, grab/mount nodes, fill unit, sapling nodes, plant and magazine animations, sounds, animation nodes) and the savegame keys for last tree position, mounted pallet and tree type.",
+   "fr": "Enregistre le schéma XML `vehicle.treePlanter` (action d'entrée, nœud, distance minimale, trigger de palettes, référence au sol, nœuds de saisie/montage, fill unit, nœuds de plants, animations de plantation et de magasin, sons, nœuds d'animation) et les clés de sauvegarde (dernière position d'arbre, palette montée, type d'arbre)."
+  },
+  "TreePlanter.registerFunctions": {
+   "en": "Registers the specialization's vehicle functions (mounted object removal, field limit, tree creation, pallet loading and trigger callback, tree type selection, sapling visuals, fill level update).",
+   "fr": "Enregistre les fonctions véhicule de la spécialisation (retrait de l'objet monté, limite au champ, création d'arbre, chargement de palette et callback du trigger, choix du type d'arbre, visuels des plants, mise à jour du remplissage)."
+  },
+  "TreePlanter.registerOverwrittenFunctions": {
+   "en": "Registers overrides of dirt/wear multipliers, rotating parts, work area, speed limit, selection, field check, the fill unit getters (redirected to the mounted pallet), mounted-object and unload-pallet queries, and automatic steering.",
+   "fr": "Enregistre des surcharges des multiplicateurs de salissure/usure, des pièces rotatives, de la zone de travail, de la limite de vitesse, de la sélection, du test de champ, des accesseurs de fill unit (redirigés vers la palette montée), des requêtes d'objet monté et de palette à décharger, et de la direction automatique."
+  },
+  "TreePlanter.registerEventListeners": {
+   "en": "Subscribes the specialization to load/delete, stream and update-stream, update, update tick, draw, action events, turn on/off, and the fill unit filling, fill level and unload pallet events.",
+   "fr": "Abonne la spécialisation au chargement/suppression, aux flux et flux de mise à jour, à update, update tick, draw, aux événements d'action, à la mise en marche/arrêt et aux événements du fill unit (remplissage, niveau, décharge de palette)."
+  },
+  "TreePlanter:onLoad": {
+   "en": "Loads the `treePlanter` XML (nodes, pallet trigger, ground reference, sapling nodes, animations, mount range, fill unit), creates the activatable, registers AI ground requirements and restores last tree position, mounted-pallet flag and tree type from the savegame.",
+   "fr": "Charge le XML `treePlanter` (nœuds, trigger de palettes, référence au sol, nœuds de plants, animations, portée de montage, fill unit), crée l'activatable, enregistre les exigences de sol de l'IA et restaure depuis la sauvegarde la dernière position d'arbre, le drapeau de palette montée et le type d'arbre."
+  },
+  "TreePlanter:onDelete": {
+   "en": "Releases sounds and animation nodes, removes the activatable and pallet trigger, unmounts the pallet and frees the shared sapling I3D file.",
+   "fr": "Libère les sons et nœuds d'animation, retire l'activatable et le trigger de palettes, démonte la palette et libère le fichier I3D partagé des plants."
+  },
+  "TreePlanter:saveToXMLFile": {
+   "en": "Saves the last tree position, whether a pallet is mounted, and the current tree type and variation names.",
+   "fr": "Sauvegarde la dernière position d'arbre, la présence d'une palette montée, ainsi que les noms du type d'arbre et de la variation courants."
+  },
+  "TreePlanter:removeMountedObject": {
+   "en": "Unmounts and forgets the sapling pallet if it is the given object.",
+   "fr": "Démonte et oublie la palette de plants si c'est l'objet indiqué."
+  },
+  "TreePlanter:onReadStream": {
+   "en": "Client side on join: reads the mounted pallet object id, the current tree type and variation, and the last tree position.",
+   "fr": "Côté client à la connexion : lit l'identifiant de la palette montée, le type d'arbre et la variation courants, et la dernière position d'arbre."
+  },
+  "TreePlanter:onWriteStream": {
+   "en": "Server side on join: writes the mounted pallet id, tree type and variation, and the compressed last tree position.",
+   "fr": "Côté serveur à la connexion : écrit l'identifiant de la palette montée, le type et la variation d'arbre, et la dernière position d'arbre compressée."
+  },
+  "TreePlanter:onReadUpdateStream": {
+   "en": "Client only: reads ground contact and the field-not-owned and restricted-zone warning flags when the dirty bit is set.",
+   "fr": "Client uniquement : lit le contact au sol et les indicateurs d'avertissement (terrain non possédé, zone interdite) quand le bit dirty est activé."
+  },
+  "TreePlanter:onWriteUpdateStream": {
+   "en": "Server only: writes ground contact and the two warning flags when the specialization dirty flag is set.",
+   "fr": "Serveur uniquement : écrit le contact au sol et les deux indicateurs d'avertissement quand le drapeau dirty de la spécialisation est activé."
+  },
+  "TreePlanter:onUpdate": {
+   "en": "Mounts a pallet once synchronised (from a received id or a saved flag), adopts its tree type on the server, manages the refill activatable on the client according to the nearest valid pallet, and keeps the mounted pallet active or forgets it if deleted.",
+   "fr": "Monte une palette une fois synchronisée (depuis un identifiant reçu ou un drapeau sauvegardé), adopte son type d'arbre côté serveur, gère l'activatable de rechargement côté client selon la palette valide la plus proche, et garde la palette montée active ou l'oublie si elle est supprimée."
+  },
+  "TreePlanter:onUpdateTick": {
+   "en": "Core work loop. Server: updates ground contact, stops AI without a pallet, plants trees by distance when sapling fill type, otherwise cultivates and sows the area with seed usage, stats and cost. Checks farm access, restricted zones and planting period. Client: work sound, field-limit and manual plant action state.",
+   "fr": "Boucle de travail principale. Serveur : met à jour le contact au sol, arrête l'IA sans palette, plante des arbres selon la distance pour le type plants, sinon travaille et sème la zone avec consommation de semences, statistiques et coût. Vérifie l'accès à la ferme, les zones interdites et la période de plantation. Client : son de travail et état des actions de limite au champ et de plantation manuelle."
+  },
+  "TreePlanter:onDraw": {
+   "en": "Shows extra print texts (fill the tool first, tree type) and blinking warnings for no access to the land, restricted zone, too many trees, or a fruit type that cannot be planted in the current period.",
+   "fr": "Affiche des textes d'aide (remplir d'abord l'outil, type d'arbre) et des avertissements clignotants : pas d'accès au terrain, zone interdite, trop d'arbres, ou type de culture non plantable à la période courante."
+  },
+  "TreePlanter:onTurnedOn": {
+   "en": "Client only: starts the animation nodes.",
+   "fr": "Client uniquement : démarre les nœuds d'animation."
+  },
+  "TreePlanter:onTurnedOff": {
+   "en": "Client only: stops the animation nodes and work sounds.",
+   "fr": "Client uniquement : arrête les nœuds d'animation et les sons de travail."
+  },
+  "TreePlanter:onFillUnitIsFillingStateChanged": {
+   "en": "Server only: when filling starts from a source object that exposes a sapling pallet type, adopts that tree type and variation.",
+   "fr": "Serveur uniquement : au début d'un remplissage depuis une source exposant un type de palette de plants, adopte ce type d'arbre et cette variation."
+  },
+  "TreePlanter:onFillUnitFillLevelChanged": {
+   "en": "Refreshes sapling visuals and the magazine animation when the planter's own fill unit changes.",
+   "fr": "Rafraîchit les visuels de plants et l'animation du magasin quand le fill unit de la planteuse change."
+  },
+  "TreePlanter:onFillUnitUnloadPallet": {
+   "en": "Copies the current tree type onto the unloaded pallet if it supports it, and forgets the mounted pallet if it is that pallet.",
+   "fr": "Recopie le type d'arbre courant sur la palette déchargée si elle le supporte, et oublie la palette montée si c'est celle-ci."
+  },
+  "TreePlanter:addFillUnitFillLevel": {
+   "en": "Override: with a pallet mounted, the change is applied to the pallet's fill unit instead. Note: the type test calls the pallet with the planter's `fillUnitIndex` instead of the pallet's own index, which looks like a bug.",
+   "fr": "Surcharge : avec une palette montée, la variation est appliquée au fill unit de la palette. À noter : le test de type interroge la palette avec le `fillUnitIndex` de la planteuse et non son propre index, ce qui ressemble à un bug."
+  },
+  "TreePlanter:getFillUnitFillLevel": {
+   "en": "Override: with a pallet mounted, returns the sum of its fill unit levels instead of the planter's own level.",
+   "fr": "Surcharge : avec une palette montée, renvoie la somme des niveaux de ses fill units au lieu du niveau propre de la planteuse."
+  },
+  "TreePlanter:getFillUnitFillLevelPercentage": {
+   "en": "Override: with a pallet mounted, returns mounted fill level divided by combined capacity.",
+   "fr": "Surcharge : avec une palette montée, renvoie le niveau divisé par la capacité cumulée."
+  },
+  "TreePlanter:getFillUnitFillType": {
+   "en": "Override: with a pallet mounted, returns the fill type of its first non-empty fill unit.",
+   "fr": "Surcharge : avec une palette montée, renvoie le type de remplissage de son premier fill unit non vide."
+  },
+  "TreePlanter:getFillUnitCapacity": {
+   "en": "Override: with a pallet mounted, returns the summed capacity of the pallet's fill units.",
+   "fr": "Surcharge : avec une palette montée, renvoie la capacité cumulée des fill units de la palette."
+  },
+  "TreePlanter:getFillUnitAllowsFillType": {
+   "en": "Override: refuses any fill type for the planter's fill unit while a pallet is mounted.",
+   "fr": "Surcharge : refuse tout type de remplissage pour le fill unit de la planteuse tant qu'une palette est montée."
+  },
+  "TreePlanter:getFillUnitFreeCapacity": {
+   "en": "Override: returns 0 free capacity while a pallet is mounted.",
+   "fr": "Surcharge : renvoie une capacité libre de 0 tant qu'une palette est montée."
+  },
+  "TreePlanter:getFillLevelInformation": {
+   "en": "Override: when a pallet is mounted, adds its fill type, level and capacity to the HUD display before calling the parent.",
+   "fr": "Surcharge : si une palette est montée, ajoute son type, son niveau et sa capacité à l'affichage HUD avant d'appeler le parent."
+  },
+  "TreePlanter:getHasObjectMounted": {
+   "en": "Override: also returns true if the object is the mounted pallet or is mounted on it.",
+   "fr": "Surcharge : renvoie aussi true si l'objet est la palette montée ou est monté sur elle."
+  },
+  "TreePlanter:getFillUnitUnloadPalletFilename": {
+   "en": "Override: with no pallet mounted and a known tree type, returns the store item file of the matching sapling pallet; otherwise returns nothing.",
+   "fr": "Surcharge : sans palette montée et avec un type d'arbre connu, renvoie le fichier d'objet de boutique de la palette de plants correspondante ; sinon ne renvoie rien."
+  },
+  "TreePlanter:getFillUnitHasMountedPalletsToUnload": {
+   "en": "Override: returns true when a sapling pallet is mounted.",
+   "fr": "Surcharge : renvoie true quand une palette de plants est montée."
+  },
+  "TreePlanter:getFillUnitMountedPalletsToUnload": {
+   "en": "Override: returns a table containing the mounted pallet (nil entry if none).",
+   "fr": "Surcharge : renvoie une table contenant la palette montée (entrée nil s'il n'y en a pas)."
+  },
+  "TreePlanter:getImplementAllowAutomaticSteering": {
+   "en": "Override that always returns true, so automatic steering is allowed.",
+   "fr": "Surcharge qui renvoie toujours true : la direction automatique est autorisée."
+  },
+  "TreePlanter:getCanPlantOutsideSeason": {
+   "en": "Returns false by default: planting outside the planting period is not allowed (a hook other code may override).",
+   "fr": "Renvoie false par défaut : planter hors période de plantation n'est pas permis (point d'extension que d'autres codes peuvent surcharger)."
+  },
+  "TreePlanter:setTreePlanterTreeTypeIndex": {
+   "en": "Sets the current tree type and variation, updates the info text, reloads the sapling I3D shown on the sapling nodes and sends TreePlanterTreeTypeEvent unless `noEventSend`.",
+   "fr": "Définit le type d'arbre et la variation courants, met à jour le texte d'info, recharge l'I3D de plant affiché sur les nœuds et envoie TreePlanterTreeTypeEvent sauf si `noEventSend`."
+  },
+  "TreePlanter:onTreePlanterSaplingLoaded": {
+   "en": "Async callback: clones the loaded sapling onto each sapling node, refreshes the fill level visuals and deletes the loaded I3D root.",
+   "fr": "Callback asynchrone : clone le plant chargé sur chaque nœud de plants, rafraîchit les visuels de remplissage et supprime la racine I3D chargée."
+  },
+  "TreePlanter:updateTreePlanterFillLevel": {
+   "en": "Shows as many sapling nodes as the rounded fill level, sets the `hideByIndex` shader parameter, moves the magazine animation to the matching row and toggles the unload action. `onLoad` jumps the animation instantly.",
+   "fr": "Affiche autant de nœuds de plants que le niveau arrondi, règle le paramètre de shader `hideByIndex`, déplace l'animation du magasin vers la rangée correspondante et active/désactive l'action de déchargement. `onLoad` saute l'animation instantanément."
+  },
+  "TreePlanter:setPlantLimitToField": {
+   "en": "Sets whether sowing is limited to fields and sends PlantLimitToFieldEvent when the value changes.",
+   "fr": "Définit si le semis est limité aux champs et envoie PlantLimitToFieldEvent quand la valeur change."
+  },
+  "TreePlanter:createTree": {
+   "en": "Plants one tree at the node position. Aborts with a warning when the tree limit is reached. Server: plants with random rotation via the tree plant manager, consumes one sapling (or charges money for helpers), updates stats. Client: plays the plant animation. Sends TreePlanterCreateTreeEvent.",
+   "fr": "Plante un arbre à la position du nœud. Abandonne avec un avertissement si la limite d'arbres est atteinte. Serveur : plante avec rotation aléatoire via le gestionnaire de plantation, consomme un plant (ou facture l'aide), met à jour les statistiques. Client : joue l'animation de plantation. Envoie TreePlanterCreateTreeEvent."
+  },
+  "TreePlanter:loadPallet": {
+   "en": "Sends TreePlanterLoadPalletEvent and stores the pallet object id so that `onUpdate` mounts it.",
+   "fr": "Envoie TreePlanterLoadPalletEvent et mémorise l'identifiant de la palette pour que `onUpdate` la monte."
+  },
+  "TreePlanter:getDirtMultiplier": {
+   "en": "Override: adds a work dirt term scaled by speed over speed limit while the planter has ground contact.",
+   "fr": "Surcharge : ajoute un terme de salissure de travail proportionnel à la vitesse sur la limite de vitesse tant que la planteuse touche le sol."
+  },
+  "TreePlanter:getWearMultiplier": {
+   "en": "Override: adds a work wear term scaled by speed over speed limit while the planter has ground contact.",
+   "fr": "Surcharge : ajoute un terme d'usure de travail proportionnel à la vitesse sur la limite de vitesse tant que la planteuse touche le sol."
+  },
+  "TreePlanter:getIsSpeedRotatingPartActive": {
+   "en": "Override: rotating parts are inactive without ground contact, otherwise the parent decides.",
+   "fr": "Surcharge : les pièces rotatives sont inactives sans contact au sol, sinon le parent décide."
+  },
+  "TreePlanter:getIsWorkAreaActive": {
+   "en": "Override: the work area tied to the planter's ground reference node is inactive while the machine is not turned on.",
+   "fr": "Surcharge : la zone de travail liée au nœud de référence au sol de la planteuse est inactive tant que la machine n'est pas allumée."
+  },
+  "TreePlanter:doCheckSpeedLimit": {
+   "en": "Override: also checks the speed limit when turned on and the implement chain is lowered.",
+   "fr": "Surcharge : vérifie aussi la limite de vitesse quand la machine est allumée et la chaîne d'outils abaissée."
+  },
+  "TreePlanter:getCanBeSelected": {
+   "en": "Override that always returns true, so the planter can be selected.",
+   "fr": "Surcharge qui renvoie toujours true : la planteuse peut être sélectionnée."
+  },
+  "TreePlanter:onDeleteTreePlanterObject": {
+   "en": "Delete listener: forgets a pallet that was mounted or in the trigger when it is deleted.",
+   "fr": "Écouteur de suppression : oublie une palette montée ou présente dans le trigger quand elle est supprimée."
+  },
+  "TreePlanter:getIsOnField": {
+   "en": "Override: also counts as on field when the planter has ground contact, since it needs no field to work.",
+   "fr": "Surcharge : compte aussi comme sur un champ quand la planteuse touche le sol, car elle n'a pas besoin d'un champ pour travailler."
+  },
+  "TreePlanter:palletTriggerCallback": {
+   "en": "Trigger callback keeping a counted list of accessible pallet vehicles inside the trigger; registers a delete listener on first entry.",
+   "fr": "Callback du trigger tenant une liste comptée des véhicules palettes accessibles dans le trigger ; enregistre un écouteur de suppression à la première entrée."
+  },
+  "TreePlanter:onRegisterActionEvents": {
+   "en": "Client only: registers the field-limit toggle (IMPLEMENT_EXTRA3, unless forced) and, if configured, the manual plant action.",
+   "fr": "Client uniquement : enregistre la bascule de limite au champ (IMPLEMENT_EXTRA3, sauf si forcée) et, si configurée, l'action de plantation manuelle."
+  },
+  "TreePlanter.actionEventToggleTreePlanterFieldLimitation": {
+   "en": "Input callback: toggles the limit-to-field setting.",
+   "fr": "Callback d'entrée : bascule le réglage de limite au champ."
+  },
+  "TreePlanter.actionEventPlant": {
+   "en": "Input callback for manual planting: checks ground contact, tree limit, land access and restricted zones, shows a blinking warning on failure, otherwise calls `createTree`.",
+   "fr": "Callback d'entrée de plantation manuelle : vérifie le contact au sol, la limite d'arbres, l'accès au terrain et les zones interdites, affiche un avertissement clignotant en cas d'échec, sinon appelle `createTree`."
+  },
+  "TreePlanter.getDefaultSpeedLimit": {
+   "en": "Returns the default speed limit for this specialization, 5 (km/h presumed, UNVERIFIED).",
+   "fr": "Renvoie la limite de vitesse par défaut de la spécialisation, 5 (km/h supposé, NON VÉRIFIÉ)."
+  },
+  "TreePlanter.getSaplingPalletInRange": {
+   "en": "Returns the nearest pallet from the trigger list, within the mounting range of a reference node, that holds a non-empty fill unit whose fill type the planter supports; nil if none.",
+   "fr": "Renvoie la palette la plus proche de la liste du trigger, dans la portée de montage d'un nœud de référence, ayant un fill unit non vide d'un type pris en charge par la planteuse ; nil sinon."
+  },
+  "TreePlanterActivatable.new": {
+   "en": "Creates the activatable for a planter and builds its 'refill' prompt text from the vehicle's type description.",
+   "fr": "Crée l'activatable d'une planteuse et construit son texte d'invite de recharge à partir de la description de type du véhicule."
+  },
+  "TreePlanterActivatable:getIsActivatable": {
+   "en": "True when the local player's current vehicle is this planter's root vehicle, no pallet is mounted yet and a pallet is nearby.",
+   "fr": "Vrai quand le véhicule courant du joueur local est le véhicule racine de cette planteuse, qu'aucune palette n'est montée et qu'une palette est proche."
+  },
+  "TreePlanterActivatable:run": {
+   "en": "Activation callback: asks the planter to load the nearest sapling pallet via `loadPallet`.",
+   "fr": "Callback d'activation : demande à la planteuse de charger la palette de plants la plus proche via `loadPallet`."
+  }
+ }
+}

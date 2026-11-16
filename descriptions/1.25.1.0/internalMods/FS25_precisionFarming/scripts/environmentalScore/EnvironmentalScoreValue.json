@@ -1,0 +1,69 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreValue.lua",
+  "module": {
+    "en": "Base class for one criterion of the environmental score. It keeps a table of per-farmland data (farmlandDatas), handles generic loading and saving under the criterion's xmlKey, and the network stream layout (count, then farmland id plus data). Subclasses override getScore (0 to 1), initFarmlandData, the load/save/stream hooks and overwriteGameFunctions.",
+    "fr": "Classe de base d'un critère du score environnemental. Elle garde une table de données par parcelle (farmlandDatas), gère le chargement et la sauvegarde génériques sous le xmlKey du critère, et le format du flux réseau (nombre, puis id de parcelle et données). Les sous-classes redéfinissent getScore (0 à 1), initFarmlandData, les hooks de chargement/sauvegarde/flux et overwriteGameFunctions."
+  },
+  "fonctions": {
+    "EnvironmentalScoreValue.new": {
+      "en": "Constructor: stores pfModule and sets the default xmlKey to \"default\". Subclasses pass their own metatable and xmlKey.",
+      "fr": "Constructeur : mémorise pfModule et fixe le xmlKey par défaut à \"default\". Les sous-classes passent leur propre métatable et leur xmlKey."
+    },
+    "EnvironmentalScoreValue:initFarmlandData": {
+      "en": "Returns a fresh per-farmland data table; the base version returns an empty table and is meant to be overridden.",
+      "fr": "Retourne une nouvelle table de données par parcelle ; la version de base renvoie une table vide et est faite pour être redéfinie."
+    },
+    "EnvironmentalScoreValue:getFarmlandData": {
+      "en": "Returns the data table of a farmland, creating it through initFarmlandData (and storing the farmlandId in it) on first access. Returns nil for a nil id.",
+      "fr": "Retourne la table de données d'une parcelle, en la créant via initFarmlandData (avec le farmlandId) au premier accès. Retourne nil si l'id est nil."
+    },
+    "EnvironmentalScoreValue:loadFromXML": {
+      "en": "Initialises an empty farmlandDatas table and returns true. Subclasses call it first when loading their map XML configuration.",
+      "fr": "Initialise une table farmlandDatas vide et retourne true. Les sous-classes l'appellent en premier lors du chargement de leur configuration XML de carte."
+    },
+    "EnvironmentalScoreValue:loadFromItemsXML": {
+      "en": "Savegame loading: iterates the <xmlKey>.farmland entries and passes each to loadFarmlandData for the matching farmland id.",
+      "fr": "Chargement de sauvegarde : parcourt les entrées <xmlKey>.farmland et transmet chacune à loadFarmlandData pour la parcelle correspondante."
+    },
+    "EnvironmentalScoreValue:saveToXMLFile": {
+      "en": "Savegame writing: writes one <xmlKey>.farmland entry per stored farmland and lets saveFarmlandData add the details.",
+      "fr": "Écriture de sauvegarde : écrit une entrée <xmlKey>.farmland par parcelle stockée et laisse saveFarmlandData ajouter les détails."
+    },
+    "EnvironmentalScoreValue:loadFarmlandData": {
+      "en": "Empty hook to read one farmland's saved values; overridden by subclasses.",
+      "fr": "Hook vide pour lire les valeurs sauvegardées d'une parcelle ; redéfini par les sous-classes."
+    },
+    "EnvironmentalScoreValue:saveFarmlandData": {
+      "en": "Empty hook to write one farmland's values; overridden by subclasses.",
+      "fr": "Hook vide pour écrire les valeurs d'une parcelle ; redéfini par les sous-classes."
+    },
+    "EnvironmentalScoreValue:readStream": {
+      "en": "Client side read: reads a farmland count, then for each entry a farmland id and the data via readFarmlandDataFromStream. Bit width comes from g_farmlandManager.numberOfBits.",
+      "fr": "Lecture côté client : lit un nombre de parcelles, puis pour chaque entrée un id de parcelle et les données via readFarmlandDataFromStream. La largeur en bits vient de g_farmlandManager.numberOfBits."
+    },
+    "EnvironmentalScoreValue:writeStream": {
+      "en": "Server side write: counts the farmlands owned by the given farm, then writes each farmland id followed by its data via writeFarmlandDataToStream.",
+      "fr": "Écriture côté serveur : compte les parcelles appartenant à la ferme donnée, puis écrit chaque id de parcelle suivi de ses données via writeFarmlandDataToStream."
+    },
+    "EnvironmentalScoreValue:readFarmlandDataFromStream": {
+      "en": "Empty hook for reading one farmland's data from a stream; overridden by subclasses.",
+      "fr": "Hook vide pour lire les données d'une parcelle depuis un flux ; redéfini par les sous-classes."
+    },
+    "EnvironmentalScoreValue:writeFarmlandDataToStream": {
+      "en": "Empty hook for writing one farmland's data to a stream; overridden by subclasses.",
+      "fr": "Hook vide pour écrire les données d'une parcelle dans un flux ; redéfini par les sous-classes."
+    },
+    "EnvironmentalScoreValue:update": {
+      "en": "Empty per-frame update hook for subclasses.",
+      "fr": "Hook de mise à jour vide, par frame, pour les sous-classes."
+    },
+    "EnvironmentalScoreValue:getScore": {
+      "en": "Returns a neutral score of 0.5; subclasses return a 0 to 1 value for a given farmland id.",
+      "fr": "Retourne un score neutre de 0.5 ; les sous-classes retournent une valeur de 0 à 1 pour un id de parcelle donné."
+    },
+    "EnvironmentalScoreValue:overwriteGameFunctions": {
+      "en": "Hooks FertilizingSowingMachine.processSowingMachineArea to count direct-planting area through addWorkedArea. Note: the base class has no addWorkedArea, and every subclass overrides this method, so this body appears to be unused leftover code.",
+      "fr": "Accroche FertilizingSowingMachine.processSowingMachineArea pour comptabiliser la surface en semis direct via addWorkedArea. À noter : la classe de base n'a pas d'addWorkedArea et chaque sous-classe redéfinit cette méthode, ce corps semble donc être un reste inutilisé."
+    }
+  }
+}

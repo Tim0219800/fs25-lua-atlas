@@ -1,0 +1,37 @@
+{
+ "fichier": "objects/DogBall.lua",
+ "module": {
+  "en": "Physics object for the ball a dog can fetch. It extends PhysicsObject, loads its model from an i3d file through the shared i3d manager, and remembers spawn position, throw position and start rotation on the server so it can be reset. The Doghouse uses the isDeleted flag to track it (the Doghouse code is not in this file).",
+  "fr": "Objet physique de la balle que le chien peut rapporter. Il étend PhysicsObject, charge son modèle depuis un fichier i3d via le gestionnaire i3d partagé et mémorise sur le serveur la position d'apparition, de lancer et la rotation initiale pour pouvoir se réinitialiser. La niche (Doghouse) utilise le drapeau isDeleted pour le suivre (code absent de ce fichier)."
+ },
+ "fonctions": {
+  "DogBall.new": {
+   "en": "Constructor. Calls the PhysicsObject constructor, sets a forced clip distance of 150 and registers the class name DogBall. Returns the instance.",
+   "fr": "Constructeur. Appelle celui de PhysicsObject, fixe une distance de clipping forcée de 150 et enregistre le nom de classe DogBall. Retourne l'instance."
+  },
+  "DogBall:delete": {
+   "en": "Sets isDeleted to true, releases the shared i3d request, unregisters the class name and calls the parent delete. Note: sharedLoadRequestId is not reset to nil afterwards.",
+   "fr": "Met isDeleted à true, libère la requête i3d partagée, désenregistre le nom de classe et appelle le delete du parent. À noter : sharedLoadRequestId n'est pas remis à nil ensuite."
+  },
+  "DogBall:readStream": {
+   "en": "On a connection to a server, reads the i3d filename and, if the ball has none yet, loads it at the origin (PhysicsObject sets the real pose). Always calls the parent readStream afterwards.",
+   "fr": "Sur une connexion vers un serveur, lit le nom du fichier i3d et, si la balle n'en a pas encore, la charge à l'origine (PhysicsObject fixe la vraie pose). Appelle toujours ensuite le readStream du parent."
+  },
+  "DogBall:writeStream": {
+   "en": "When the connection is not to a server, writes the i3d filename in network form. Always calls the parent writeStream afterwards.",
+   "fr": "Quand la connexion n'est pas vers un serveur, écrit le nom du fichier i3d au format réseau. Appelle toujours ensuite le writeStream du parent."
+  },
+  "DogBall:createNode": {
+   "en": "Stores the filename and mod environment, loads the i3d through the shared manager, links its first child to the root node, deletes the loaded root and sets the child as node.",
+   "fr": "Mémorise le nom du fichier et l'environnement du mod, charge l'i3d via le gestionnaire partagé, rattache son premier enfant au nœud racine, supprime la racine chargée et définit l'enfant comme nœud."
+  },
+  "DogBall:load": {
+   "en": "Creates the node, applies the given world position and rotation, and on the server stores spawnPos, throwPos and startRot. Always returns true.",
+   "fr": "Crée le nœud, applique la position et la rotation monde données et, sur le serveur, mémorise spawnPos, throwPos et startRot. Retourne toujours true."
+  },
+  "DogBall:reset": {
+   "en": "Server only: removes the node from physics, puts it back at spawnPos and startRot, then adds it to physics again.",
+   "fr": "Serveur uniquement : retire le nœud de la physique, le replace à spawnPos et startRot, puis le réintègre à la physique."
+  }
+ }
+}

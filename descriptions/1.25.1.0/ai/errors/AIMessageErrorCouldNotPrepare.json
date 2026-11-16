@@ -1,0 +1,25 @@
+{
+ "fichier": "ai/errors/AIMessageErrorCouldNotPrepare.lua",
+ "module": {
+  "en": "AI error message for a vehicle that could not be prepared before the job. Unlike most messages it carries a vehicle reference, formats the text with both the helper name and the vehicle name, and serializes the vehicle over the network.",
+  "fr": "Message d'erreur IA pour un véhicule qui n'a pas pu être préparé avant le travail. Contrairement à la plupart, il porte une référence de véhicule, formate le texte avec le nom de l'assistant et celui du véhicule, et sérialise le véhicule sur le réseau."
+ },
+ "fonctions": {
+  "AIMessageErrorCouldNotPrepare.new": {
+   "en": "Constructor taking the vehicle that could not be prepared and storing it in `self.vehicle`.",
+   "fr": "Constructeur qui reçoit le véhicule non préparable et le stocke dans `self.vehicle`."
+  },
+  "AIMessageErrorCouldNotPrepare:getMessage": {
+   "en": "Builds the message text from `getI18NText` (not defined in this file, UNVERIFIED), the helper name of the job (\"Unknown\" if missing) and the vehicle name (empty if none).",
+   "fr": "Construit le texte à partir de `getI18NText` (non défini dans ce fichier, NON VÉRIFIÉ), du nom d'assistant du job (\"Unknown\" si absent) et du nom du véhicule (vide si aucun)."
+  },
+  "AIMessageErrorCouldNotPrepare:readStream": {
+   "en": "Reads the vehicle as a network node object from the stream, so that the client resolves the same vehicle.",
+   "fr": "Lit le véhicule comme objet réseau depuis le flux, pour que le client retrouve le même véhicule."
+  },
+  "AIMessageErrorCouldNotPrepare:writeStream": {
+   "en": "Writes the vehicle as a network node object to the stream (counterpart of `readStream`).",
+   "fr": "Écrit le véhicule comme objet réseau dans le flux (pendant de `readStream`)."
+  }
+ }
+}

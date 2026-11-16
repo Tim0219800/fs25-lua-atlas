@@ -1,0 +1,53 @@
+{
+ "fichier": "placeables/specializations/PlaceableInfoTrigger.lua",
+ "module": {
+  "en": "Placeable specialization that shows an info box on the HUD while the local player stands in a trigger. It raises the onInfoTriggerEnter and onInfoTriggerLeave events, and calls updateInfo each frame so other specializations can append lines. The box is shown to the owner farm, or to everyone if showAllPlayers is set, and only on platforms enabling placeable info.",
+  "fr": "Spécialisation de placeable qui affiche une boîte d'informations dans le HUD tant que le joueur local se trouve dans un déclencheur. Elle lève les événements onInfoTriggerEnter et onInfoTriggerLeave et appelle updateInfo à chaque image pour que d'autres spécialisations ajoutent des lignes. La boîte est montrée à la ferme propriétaire, ou à tous si showAllPlayers est défini, et seulement sur les plateformes qui activent l'info de placeable."
+ },
+ "fonctions": {
+  "PlaceableInfoTrigger.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableInfoTrigger.registerEvents": {
+   "en": "Declares the onInfoTriggerEnter and onInfoTriggerLeave events.",
+   "fr": "Déclare les événements onInfoTriggerEnter et onInfoTriggerLeave."
+  },
+  "PlaceableInfoTrigger.registerEventListeners": {
+   "en": "Subscribes to load, delete, finalize-placement and draw events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, suppression, finalisation du placement et dessin."
+  },
+  "PlaceableInfoTrigger.registerFunctions": {
+   "en": "Registers updateInfo and onInfoTriggerCallback on the placeable type.",
+   "fr": "Enregistre updateInfo et onInfoTriggerCallback sur le type de placeable."
+  },
+  "PlaceableInfoTrigger.registerXMLPaths": {
+   "en": "Declares infoTrigger#triggerNode and infoTrigger#showAllPlayers.",
+   "fr": "Déclare infoTrigger#triggerNode et infoTrigger#showAllPlayers."
+  },
+  "PlaceableInfoTrigger:onLoad": {
+   "en": "Reads the trigger node (warns if its collision mask lacks the player bit) and showAllPlayers, and creates the HUD key-value box when the platform shows placeable info.",
+   "fr": "Lit le noeud déclencheur (avertit si son masque de collision n'a pas le bit joueur) et showAllPlayers, et crée la boîte clé-valeur du HUD si la plateforme affiche l'info de placeable."
+  },
+  "PlaceableInfoTrigger:onDelete": {
+   "en": "Removes the trigger, stops showing info, removes the drawable and destroys the HUD box.",
+   "fr": "Retire le déclencheur, arrête l'affichage, retire l'élément dessinable et détruit la boîte du HUD."
+  },
+  "PlaceableInfoTrigger:onFinalizePlacement": {
+   "en": "Registers the trigger callback on the trigger node once the placeable is placed.",
+   "fr": "Enregistre le callback du déclencheur sur le noeud une fois le placeable posé."
+  },
+  "PlaceableInfoTrigger:onDraw": {
+   "en": "While the player is inside and allowed to see it, collects lines via updateInfo and fills the HUD box (title is the placeable name, lines can be accentuated), then shows it for the next frame. The info list is emptied each frame.",
+   "fr": "Tant que le joueur est dedans et autorisé à voir, collecte les lignes via updateInfo et remplit la boîte du HUD (titre = nom du placeable, lignes pouvant être accentuées), puis l'affiche pour l'image suivante. La liste est vidée à chaque image."
+  },
+  "PlaceableInfoTrigger:onInfoTriggerCallback": {
+   "en": "Trigger callback reacting only to the local player root node: on enter sets showInfo, registers drawing and raises onInfoTriggerEnter; on leave undoes this and raises onInfoTriggerLeave. Ignored on a dedicated server.",
+   "fr": "Callback du déclencheur ne réagissant qu'au noeud racine du joueur local : à l'entrée, active showInfo, enregistre le dessin et lève onInfoTriggerEnter ; à la sortie, annule et lève onInfoTriggerLeave. Ignoré sur un serveur dédié."
+  },
+  "PlaceableInfoTrigger:updateInfo": {
+   "en": "Empty hook: other specializations override it to add entries (title, text, accentuate) to the info table.",
+   "fr": "Point d'extension vide : d'autres spécialisations le surchargent pour ajouter des entrées (title, text, accentuate) à la table d'infos."
+  }
+ }
+}

@@ -1,0 +1,137 @@
+{
+ "fichier": "gui/base/FocusManager.lua",
+ "module": {
+  "en": "Singleton-style manager that decides which GuiElement of the current screen has keyboard/gamepad focus and how focus moves between elements. Focus data is kept per screen; neighbours come from XML attributes (focusId, focusChange*, focusInit, focusChangeOverride), from custom code, or are found automatically by proximity. Navigation uses the MENU_AXIS_* actions with repeat delays, and focus or highlight changes play GUI hover sounds through a GuiSoundPlayer. Constants such as TOP/BOTTOM/LEFT/RIGHT, delays and EPSILON are defined outside the visible bodies (UNVERIFIED).",
+  "fr": "Gestionnaire de type singleton qui décide quel GuiElement de l'écran courant a le focus clavier/manette et comment le focus passe d'un élément à l'autre. Les données de focus sont conservées par écran ; les voisins viennent des attributs XML (focusId, focusChange*, focusInit, focusChangeOverride), du code, ou sont trouvés automatiquement par proximité. La navigation utilise les actions MENU_AXIS_* avec des délais de répétition, et les changements de focus ou de surbrillance jouent des sons de survol via un GuiSoundPlayer. Les constantes comme TOP/BOTTOM/LEFT/RIGHT, les délais et EPSILON sont définies hors des corps visibles (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "FocusManager:setGui": {
+   "en": "Switches the active screen: removes focus and highlight from the previous one, creates or restores the focus data of the new one, re-focuses its initial or last element with sound muted, and clears input delay locks.",
+   "fr": "Change l'écran actif : retire focus et surbrillance de l'ancien, crée ou restaure les données de focus du nouveau, redonne le focus à son élément initial ou précédent sans son, et efface les verrous de délai d'entrée."
+  },
+  "FocusManager:setSoundPlayer": {
+   "en": "Stores the GuiSoundPlayer used for hover sounds on focus and highlight changes. It must be set before sounds are triggered, otherwise those calls fail.",
+   "fr": "Enregistre le GuiSoundPlayer utilisé pour les sons de survol lors des changements de focus et de surbrillance. Il doit être défini avant tout déclenchement de son, sinon ces appels échouent."
+  },
+  "FocusManager:getElementById": {
+   "en": "Returns the focusable element registered under the given focus id in the current screen, or nil.",
+   "fr": "Retourne l'élément focalisable enregistré sous l'identifiant de focus donné dans l'écran courant, ou nil."
+  },
+  "FocusManager:getFocusedElement": {
+   "en": "Returns the element that currently holds focus in the active screen, or nil.",
+   "fr": "Retourne l'élément qui détient actuellement le focus dans l'écran actif, ou nil."
+  },
+  "FocusManager.serveAutoFocusId": {
+   "en": "Returns a new unique id of the form focusAuto_N from a global counter, then increments the counter.",
+   "fr": "Retourne un nouvel identifiant unique de la forme focusAuto_N issu d'un compteur global, puis incrémente ce compteur."
+  },
+  "FocusManager:loadElementFromXML": {
+   "en": "Reads focusId, the four focusChange* links, focusInit (onOpen marks the initial focus) and focusChangeOverride from XML, then registers the element in the current screen. An onOpen element is focused immediately, silently. Note: in the non-target branch the override is stored on the manager (self), not on the element.",
+   "fr": "Lit depuis le XML focusId, les quatre liens focusChange*, focusInit (onOpen marque le focus initial) et focusChangeOverride, puis enregistre l'élément dans l'écran courant. Un élément onOpen reçoit le focus tout de suite, sans son. À noter : dans la branche sans cible, la surcharge est stockée sur le gestionnaire (self) et non sur l'élément."
+  },
+  "FocusManager:loadElementFromCustomValues": {
+   "en": "Registers an element and, recursively, its children with code-supplied focus data. Returns false if the given focus id is already used (the element is then skipped), otherwise true if the element and all children were added.",
+   "fr": "Enregistre un élément et, récursivement, ses enfants avec des données de focus fournies par le code. Retourne false si l'identifiant de focus est déjà pris (l'élément est alors ignoré), sinon true si l'élément et tous ses enfants ont été ajoutés."
+  },
+  "FocusManager:removeElement": {
+   "en": "Removes an element and its children from focus handling: leaves focus if needed, clears its id from every screen it was added to, and resets its focusId and link data.",
+   "fr": "Retire un élément et ses enfants de la gestion du focus : quitte le focus si nécessaire, efface son identifiant de tous les écrans où il était ajouté et réinitialise son focusId et ses liens."
+  },
+  "FocusManager:linkElements": {
+   "en": "Sets a one-way focus link from the source element to the target for a direction; passing nil as target stores \"nil\", which blocks that direction. Call twice with swapped arguments for a two-way link.",
+   "fr": "Définit un lien de focus à sens unique de l'élément source vers la cible pour une direction ; une cible nil enregistre \"nil\", ce qui bloque cette direction. Appeler deux fois en inversant les arguments pour un lien bidirectionnel."
+  },
+  "FocusManager:inputEvent": {
+   "en": "Handles a menu input: converts axis actions beyond the analog tolerance into a direction and updates focus, and triggers onFocusActivate on the focused, visible element for MENU_ACCEPT unless input is locked. Returns true if the event counts as consumed.",
+   "fr": "Traite une entrée de menu : convertit les actions d'axe au-delà de la tolérance analogique en direction et met à jour le focus, et déclenche onFocusActivate sur l'élément focalisé et visible pour MENU_ACCEPT sauf si l'entrée est verrouillée. Retourne true si l'événement est considéré comme consommé."
+  },
+  "FocusManager.getDirectionForAxisValue": {
+   "en": "Maps an up/down or left/right axis action and the sign of its value to BOTTOM/TOP/LEFT/RIGHT; returns nil for a nil or zero value or any other action.",
+   "fr": "Associe une action d'axe haut/bas ou gauche/droite et le signe de sa valeur à BOTTOM/TOP/LEFT/RIGHT ; retourne nil pour une valeur nil ou nulle ou pour toute autre action."
+  },
+  "FocusManager:isFocusInputLocked": {
+   "en": "Returns true while an input (a direction, or a plain action such as accept) is still within its lock delay measured against g_time.",
+   "fr": "Retourne true tant qu'une entrée (une direction, ou une action simple comme valider) est encore dans son délai de verrouillage mesuré avec g_time."
+  },
+  "FocusManager:lockFocusInput": {
+   "en": "Records the current time and blocks that input for the given delay in milliseconds. The value is only used to tell the direction of an axis.",
+   "fr": "Enregistre l'heure courante et bloque cette entrée pendant le délai donné en millisecondes. La valeur ne sert qu'à déterminer le sens d'un axe."
+  },
+  "FocusManager:releaseMovementFocusInput": {
+   "en": "Clears the lock records for both directions of a left/right or up/down axis, called when the input is released. Ignores other actions.",
+   "fr": "Efface les verrous des deux directions d'un axe gauche/droite ou haut/bas, appelée au relâchement de l'entrée. Ignore les autres actions."
+  },
+  "FocusManager:resetFocusInputLocks": {
+   "en": "Clears all recorded input times and sets every lock deadline to zero.",
+   "fr": "Efface tous les instants d'entrée enregistrés et remet à zéro toutes les échéances de verrouillage."
+  },
+  "FocusManager.getClosestPointOnBoundingBox": {
+   "en": "Clamps a point to a rectangle and returns the clamped x, y; a point already inside is returned unchanged.",
+   "fr": "Ramène un point dans un rectangle et retourne x, y bornés ; un point déjà à l'intérieur est retourné inchangé."
+  },
+  "FocusManager.getShortestBoundingBoxVector": {
+   "en": "Returns the x, y vector of the shortest link between two rectangles, using the other element's center to pick the point on the first. Overlapping boxes give reversed directions.",
+   "fr": "Retourne le vecteur x, y du lien le plus court entre deux rectangles, en utilisant le centre de l'autre élément pour choisir le point sur le premier. Des boîtes qui se chevauchent donnent des directions inversées."
+  },
+  "FocusManager.checkElementDistance": {
+   "en": "Compares one candidate with the current best neighbour in a scan direction, skipping disabled, hidden, non-focusable, parent or child elements. Ties are broken by position so paths stay symmetric. Returns the best element and its squared distance.",
+   "fr": "Compare un candidat au meilleur voisin actuel dans une direction de balayage, en ignorant les éléments désactivés, cachés, non focalisables, parents ou enfants. Les égalités sont départagées par la position pour garder des trajets symétriques. Retourne le meilleur élément et sa distance au carré."
+  },
+  "FocusManager:getNextFocusElement": {
+   "en": "Finds the neighbour in a direction: the configured link if present, otherwise the nearest focusable element by geometry. With no result, LEFT retries as TOP, RIGHT as BOTTOM, and TOP/BOTTOM wrap around the screen or parent. Returns the element and the direction actually used.",
+   "fr": "Trouve le voisin dans une direction : le lien configuré s'il existe, sinon l'élément focalisable le plus proche géométriquement. Sans résultat, GAUCHE est réessayé comme HAUT, DROITE comme BAS, et HAUT/BAS bouclent sur l'écran ou le parent. Retourne l'élément et la direction réellement utilisée."
+  },
+  "FocusManager.getNestedFocusTarget": {
+   "en": "Repeatedly asks each element for its focus target in the opposing direction until the target no longer changes, and returns that deepest element. getFocusTarget is implemented by GuiElement classes outside this file (UNVERIFIED).",
+   "fr": "Demande de façon répétée à chaque élément sa cible de focus dans la direction opposée jusqu'à ce que la cible ne change plus, et retourne cet élément le plus profond. getFocusTarget est implémentée par les classes GuiElement hors de ce fichier (NON VÉRIFIÉ)."
+  },
+  "FocusManager:updateFocus": {
+   "en": "Applies the repeat-delay logic for a direction and, when allowed, moves focus from the focused element: uses its focusChangeOverride if any, else getNextFocusElement, and tries up to 30 steps past non-focusable neighbours. With updateOnly it only updates the lock timing.",
+   "fr": "Applique la logique de délai de répétition pour une direction et, si autorisé, déplace le focus depuis l'élément focalisé : utilise sa focusChangeOverride s'il en a une, sinon getNextFocusElement, et tente jusqu'à 30 pas au-delà des voisins non focalisables. Avec updateOnly, seul le calcul des délais est mis à jour."
+  },
+  "FocusManager:setHighlight": {
+   "en": "Highlights one element (usually the mouse hover target), removing the previous highlight and calling onHighlight; plays the hover sound unless suppressed. Does nothing if the element has no handleFocus or is already highlighted.",
+   "fr": "Met un élément en surbrillance (en général la cible du survol souris), retire la précédente et appelle onHighlight ; joue le son de survol sauf s'il est supprimé. Ne fait rien si l'élément n'a pas de handleFocus ou est déjà en surbrillance."
+  },
+  "FocusManager:unsetHighlight": {
+   "en": "Clears the highlight if the given element is the highlighted one and calls its onHighlightRemove.",
+   "fr": "Retire la surbrillance si l'élément donné est celui en surbrillance et appelle son onHighlightRemove."
+  },
+  "FocusManager:setFocus": {
+   "en": "Gives focus to the element's nested focus target and calls onFocusEnter with the extra arguments; unfocuses the previous element. Returns false if input is globally locked, the element cannot take focus, the target belongs to another screen, or it is already focused. Plays the hover or custom focus sound.",
+   "fr": "Donne le focus à la cible de focus imbriquée de l'élément et appelle onFocusEnter avec les arguments supplémentaires ; retire le focus à l'élément précédent. Retourne false si l'entrée est verrouillée globalement, si l'élément ne peut pas recevoir le focus, si la cible appartient à un autre écran ou si elle l'a déjà. Joue le son de survol ou un son de focus personnalisé."
+  },
+  "FocusManager:unsetFocus": {
+   "en": "Calls onFocusLeave on the element only if it is the currently focused one and still reports itself focused; otherwise does nothing.",
+   "fr": "Appelle onFocusLeave sur l'élément seulement s'il est l'élément actuellement focalisé et se déclare encore focalisé ; sinon ne fait rien."
+  },
+  "FocusManager:requireLock": {
+   "en": "Sets the global flag that makes setFocus refuse every focus change, for all screens.",
+   "fr": "Active l'indicateur global qui fait refuser tout changement de focus par setFocus, pour tous les écrans."
+  },
+  "FocusManager:releaseLock": {
+   "en": "Clears the global focus lock set by requireLock.",
+   "fr": "Efface le verrou global de focus posé par requireLock."
+  },
+  "FocusManager:isLocked": {
+   "en": "Returns the global focus lock flag.",
+   "fr": "Retourne l'indicateur de verrou global du focus."
+  },
+  "FocusManager:isDirectionLocked": {
+   "en": "Returns true if a recorded input time exists for the direction, meaning that direction is currently held or in its repeat window.",
+   "fr": "Retourne true s'il existe un instant d'entrée enregistré pour la direction, c'est-à-dire qu'elle est maintenue ou dans sa fenêtre de répétition."
+  },
+  "FocusManager:hasFocus": {
+   "en": "Returns true if the element is the registered focus element of the current screen and reports itself focused.",
+   "fr": "Retourne true si l'élément est l'élément de focus enregistré de l'écran courant et se déclare focalisé."
+  },
+  "FocusManager:getFocusOverrideFunction": {
+   "en": "Builds a function usable as a focus override: for the listed directions it returns (true, substitute), or the substitute's own next neighbour when useSubstituteForFocus is set. For other directions, or an empty list, it returns (false, nil).",
+   "fr": "Construit une fonction utilisable comme surcharge de focus : pour les directions listées elle retourne (true, substitut), ou le voisin suivant du substitut si useSubstituteForFocus est vrai. Pour les autres directions, ou une liste vide, elle retourne (false, nil)."
+  },
+  "FocusManager:deleteGuiFocusData": {
+   "en": "Discards all stored focus data of the named screen.",
+   "fr": "Supprime toutes les données de focus enregistrées de l'écran nommé."
+  }
+ }
+}

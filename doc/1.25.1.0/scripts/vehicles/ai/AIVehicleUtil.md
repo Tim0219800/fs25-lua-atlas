@@ -1,27 +1,31 @@
 # vehicles/ai/AIVehicleUtil.lua
 
+*[Version française](../../../fr/scripts/vehicles/ai/AIVehicleUtil.md)*
+
 Source: `dataS/scripts/vehicles/ai/AIVehicleUtil.lua` — FS25 1.25.1.0
+
+✍ Static helper table with the low-level routines the AI uses to steer vehicles and to query the land around implements: driving toward a point, along a curvature or in a direction, turn radius and reverse permissions of attached tools, marker inversion, turn-side validity checks, and field-crop or density-height area queries. Some functions draw debug lines when VehicleDebug is in AI mode.
 
 - **AIVehicleUtil** (l.10)
 
 ## Functions
 
-| Function | Line | Description (FR) |
+| Function | Line | Description |
 |---|---|---|
-| `AIVehicleUtil.driveToPoint(self: table, dt: number, acceleration: number, allowedToDrive: boolean, moveForwards: boolean, tX: number, tZ: number, maxSpeed: number, doNotSteer: boolean?)` | 26 |  |
-| `AIVehicleUtil.driveAlongCurvature(self: any, dt: any, curvature: any, maxSpeed: any, acceleration: any)` | 101 |  |
-| `AIVehicleUtil.driveInDirection(self: table, dt: number, steeringAngleLimit: number, acceleration: number, slowAcceleration: number, slowAngleLimit: number, allowedToDrive: boolean, moveForwards: boolean, lx: number, lz: number, maxSpeed: number, slowDownFactor: number)` | 144 |  |
-| `AIVehicleUtil.getDriveDirection(refNode: integer, x: number, y: number, z: number) → number, number` | 210 |  |
-| `AIVehicleUtil.getAverageDriveDirection(refNode: integer, x: number, y: number, z: number, x2: number, y2: number, z2: number) → number, number` | 233 |  |
-| `AIVehicleUtil.getAttachedImplementsAllowTurnBackward(vehicle: table) → boolean` | 248 |  |
-| `AIVehicleUtil.getAttachedImplementsBlockTurnBackward(vehicle: table) → boolean` | 279 |  |
-| `AIVehicleUtil.getAttachedImplementsMaxTurnRadius(vehicle: any)` | 308 |  |
-| `AIVehicleUtil.getAIToolReverserDirectionNode(vehicle: table) → integer?` | 336 |  |
-| `AIVehicleUtil.getMaxToolRadius(implement: table) → number` | 357 |  |
-| `AIVehicleUtil.updateInvertLeftRightMarkers(rootAttacherVehicle: table, vehicle: table)` | 442 |  |
-| `AIVehicleUtil.getValidityOfTurnDirections(vehicle: table, turnData: table) → number, number` | 463 |  |
-| `AIVehicleUtil.getAreaDimensions(directionX: any, directionZ: any, leftNode: any, rightNode: any, xOffset: any, zOffset: any, areaSize: any, invertXOffset: any)` | 600 |  |
-| `AIVehicleUtil.getIsAreaOwned(vehicle: any, sX: any, sZ: any, wX: any, wZ: any, hX: any, hZ: any)` | 620 |  |
-| `AIVehicleUtil.getAIAreaOfVehicle(vehicle: table, startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number) → number, number` | 646 |  |
-| `AIVehicleUtil.getAIFruitArea(startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number, query: table) → number, number` | 673 |  |
-| `AIVehicleUtil.getAIDensityHeightArea(startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number, densityHeightTypeRequirements: boolean) → number, number` | 690 |  |
+| `AIVehicleUtil.driveToPoint(self: table, dt: number, acceleration: number, allowedToDrive: boolean, moveForwards: boolean, tX: number, tZ: number, maxSpeed: number, doNotSteer: boolean?)` | 26 | ✍ Steers the vehicle toward a local target (tX, tZ): computes steering from the circle through the target, smooths rotatedTime, lowers speed with steering error, sets the motor speed limit, enables cruise control and applies wheel physics. Does nothing before the first update. |
+| `AIVehicleUtil.driveAlongCurvature(self: any, dt: any, curvature: any, maxSpeed: any, acceleration: any)` | 101 | ✍ Sets the steering directly from a curvature value, applies the speed limit and cruise control and updates wheel physics; acceleration is cut when maxSpeed is not positive. Wheel part only after the first update. |
+| `AIVehicleUtil.driveInDirection(self: table, dt: number, steeringAngleLimit: number, acceleration: number, slowAcceleration: number, slowAngleLimit: number, allowedToDrive: boolean, moveForwards: boolean, lx: number, lz: number, maxSpeed: number, slowDownFactor: number)` | 144 | ✍ Steers toward a normalised local direction (lx, lz): steering is proportional to the angle up to steeringAngleLimit, speed or acceleration is reduced above slowAngleLimit, cruise control is enabled when a speed limit is given, then wheel physics run. |
+| `AIVehicleUtil.getDriveDirection(refNode: integer, x: number, y: number, z: number) → number, number` | 210 | ✍ Converts a world position into the local space of refNode and returns the normalised x and z direction (lx, lz) toward it. |
+| `AIVehicleUtil.getAverageDriveDirection(refNode: integer, x: number, y: number, z: number, x2: number, y2: number, z2: number) → number, number` | 233 | ✍ Same as getDriveDirection but toward the midpoint of two world positions. Returns the normalised lx, lz and the distance to that midpoint in local x-z. |
+| `AIVehicleUtil.getAttachedImplementsAllowTurnBackward(vehicle: table) → boolean` | 248 | ✍ Recursively checks the vehicle and its attached implements; returns false if any getAIAllowTurnBackward reports false, true otherwise. |
+| `AIVehicleUtil.getAttachedImplementsBlockTurnBackward(vehicle: table) → boolean` | 279 | ✍ Recursively checks the vehicle and its attached implements; returns true as soon as one getAIBlockTurnBackward reports true, false otherwise. |
+| `AIVehicleUtil.getAttachedImplementsMaxTurnRadius(vehicle: any)` | 308 | ✍ Recursively takes the largest turn radius limitation (getAITurnRadiusLimitation) among attached implements. Returns -1 when none defines one. |
+| `AIVehicleUtil.getAIToolReverserDirectionNode(vehicle: table) → integer?` | 336 | ✍ Searches attached implements, recursively, for the first AI tool reverser direction node and returns it, or nil if none exists. |
+| `AIVehicleUtil.getMaxToolRadius(implement: table) → number` | 357 | ✍ Estimates the maximum turn radius of an implement from its wheel positions, rotation limits of the attacher or component joint and steering axle, merged with the manual radius of the root vehicle tree. Logs a warning if the rotation node matches no joint. |
+| `AIVehicleUtil.updateInvertLeftRightMarkers(rootAttacherVehicle: table, vehicle: table)` | 442 | ✍ Compares the x positions of the left and right AI markers of a vehicle in the AI direction node space of the root attacher vehicle, and calls setAIMarkersInverted if the right marker has the larger x. |
+| `AIVehicleUtil.getValidityOfTurnDirections(vehicle: table, turnData: table) → number, number` | 463 | ✍ Samples work area to the left and right ahead of the implements (using getAIAreaOfVehicle) and returns the average left and right area ratios used to pick a turn side. Draws debug lines in AI debug mode. Note: turnData is optional (marker width is used without it) and the average divides by the implement count. |
+| `AIVehicleUtil.getAreaDimensions(directionX: any, directionZ: any, leftNode: any, rightNode: any, xOffset: any, zOffset: any, areaSize: any, invertXOffset: any)` | 600 | ✍ Builds the six values (start, width, height corners) of a parallelogram from left and right nodes, offsets and a direction vector, shifted back by half a meter at the start. Returns sX, sZ, wX, wZ, hX, hZ. |
+| `AIVehicleUtil.getIsAreaOwned(vehicle: any, sX: any, sZ: any, wX: any, wZ: any, hX: any, hZ: any)` | 620 | ✍ Returns true if the area center is on land owned by the vehicle's AI job farm, or if a mission allows work there for that farm; false otherwise. |
+| `AIVehicleUtil.getAIAreaOfVehicle(vehicle: table, startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number) → number, number` | 646 | ✍ Returns (area, totalArea) of workable ground for the vehicle in a parallelogram: uses density height requirements if the vehicle defines any, else its field crops query (0, 0 if invalid). |
+| `AIVehicleUtil.getAIFruitArea(startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number, query: table) → number, number` | 673 | ✍ Converts the corner points to x, z, width, height form and returns the result of the crops query's getParallelogram (area, total area). |
+| `AIVehicleUtil.getAIDensityHeightArea(startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number, densityHeightTypeRequirements: boolean) → number, number` | 690 | ✍ Returns (area, totalArea) of the required fill types on the density height map in the parallelogram; returns 0, 0 when the zone is not a field. Sums areas over requirements with a known fill type. |

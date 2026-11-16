@@ -1,0 +1,45 @@
+{
+ "fichier": "gui/base/Tween.lua",
+ "module": {
+  "en": "Linear interpolation of one number from a start to an end value over a duration in milliseconds, pushed to a setter callback on every update. The easing can be swapped through a curve function (default Tween.CURVE.LINEAR, defined elsewhere). Base class of TweenSequence.",
+  "fr": "Interpolation d'un nombre entre une valeur de départ et une valeur d'arrivée sur une durée en millisecondes, envoyée à un callback setter à chaque mise à jour. L'accélération peut être changée via une fonction de courbe (par défaut Tween.CURVE.LINEAR, définie ailleurs). Classe de base de TweenSequence."
+ },
+ "fonctions": {
+  "Tween.new": {
+   "en": "Creates a tween calling setterFunction with the interpolated value. A duration of 0 makes it finished immediately; customMt lets subclasses reuse it.",
+   "fr": "Crée un tween qui appelle setterFunction avec la valeur interpolée. Une durée de 0 le rend terminé immédiatement ; customMt permet la réutilisation par des sous-classes."
+  },
+  "Tween:getDuration": {
+   "en": "Returns the duration in milliseconds.",
+   "fr": "Renvoie la durée en millisecondes."
+  },
+  "Tween:getFinished": {
+   "en": "Returns true once the tween has reached its end.",
+   "fr": "Renvoie true quand le tween a atteint sa fin."
+  },
+  "Tween:reset": {
+   "en": "Rewinds elapsed time to 0 so the tween can play again; it is finished at once only if the duration is 0.",
+   "fr": "Remet le temps écoulé à 0 pour rejouer le tween ; il n'est terminé d'emblée que si la durée vaut 0."
+  },
+  "Tween:setTarget": {
+   "en": "Sets a table passed as first argument to the setter; the setter must then accept (target, value).",
+   "fr": "Définit une table passée en premier argument au setter ; le setter doit alors accepter (target, value)."
+  },
+  "Tween:update": {
+   "en": "Advances by dt milliseconds, computes the value and calls the setter; on reaching the duration it applies the exact end value and marks the tween finished. Does nothing once finished.",
+   "fr": "Avance de dt millisecondes, calcule la valeur et appelle le setter ; en atteignant la durée, applique exactement la valeur finale et marque le tween terminé. Sans effet une fois terminé."
+  },
+  "Tween:tweenValue": {
+   "en": "Returns the value at normalised time t (0..1): a lerp between start and end after passing t through the curve function.",
+   "fr": "Renvoie la valeur au temps normalisé t (0..1) : un lerp entre départ et arrivée après passage de t dans la fonction de courbe."
+  },
+  "Tween:applyValue": {
+   "en": "Calls the setter with the value, prefixed by the target if one was set.",
+   "fr": "Appelle le setter avec la valeur, précédée de la cible si elle est définie."
+  },
+  "Tween:setCurve": {
+   "en": "Sets the easing function applied to normalised time; nil restores the linear curve.",
+   "fr": "Définit la fonction d'accélération appliquée au temps normalisé ; nil rétablit la courbe linéaire."
+  }
+ }
+}

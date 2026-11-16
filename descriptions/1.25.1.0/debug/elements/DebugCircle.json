@@ -1,0 +1,13 @@
+{
+ "fichier": "debug/elements/DebugCircle.lua",
+ "module": {
+  "en": "DebugCircle is a debug element for a horizontal circle, derived from DebugElement. Only `draw` is present; the static renderer `DebugCircle.renderAtPosition` is absent from this dump (UNVERIFIED).",
+  "fr": "DebugCircle est un élément de débogage pour un cercle horizontal, dérivé de DebugElement. Seul `draw` est présent ; le rendu statique `DebugCircle.renderAtPosition` est absent de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugCircle:draw": {
+   "en": "Forwards position, radius, colour, segment count, solid, filled, sector and text settings to `DebugCircle.renderAtPosition`; Y is passed as nil (ground alignment) when `alignToGround` is set.",
+   "fr": "Transmet position, rayon, couleur, nombre de segments, options solide, rempli, secteurs et texte à `DebugCircle.renderAtPosition` ; Y est passé à nil (alignement au sol) si `alignToGround` est actif."
+  }
+ }
+}

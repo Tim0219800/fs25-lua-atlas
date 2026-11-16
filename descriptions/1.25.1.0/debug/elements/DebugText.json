@@ -1,0 +1,29 @@
+{
+ "fichier": "debug/elements/DebugText.lua",
+ "module": {
+  "en": "DebugText is a debug element drawing 2D screen text at the projected position of a world point or node, with a black drop shadow, centred by default. Static helpers can be used without creating an element.",
+  "fr": "DebugText est un élément de débogage qui dessine du texte 2D à l'écran à la position projetée d'un point monde ou d'un noeud, avec une ombre noire, centré par défaut. Les aides statiques s'utilisent sans créer d'élément."
+ },
+ "fonctions": {
+  "DebugText.new": {
+   "en": "Creates a text element with centre alignment, middle vertical alignment, size 0.1, no screen offset and no node.",
+   "fr": "Crée un élément texte avec alignement centré, alignement vertical médian, taille 0,1, sans décalage écran ni noeud."
+  },
+  "DebugText:draw": {
+   "en": "If a node is set and exists, updates the position from it, then renders the text at that projected world position.",
+   "fr": "Si un noeud est défini et existe, met à jour la position depuis lui, puis affiche le texte à cette position monde projetée."
+  },
+  "DebugText.renderAtPosition": {
+   "en": "Projects a world position to the screen and draws text there; a nil Y places it 0.01 m above the terrain, and nothing is drawn if the point is behind the far plane (z > 1) or no terrain exists.",
+   "fr": "Projette une position monde à l'écran et y dessine du texte ; un Y nil le place 0,01 m au-dessus du terrain, et rien n'est dessiné si le point est au-delà du plan lointain (z > 1) ou s'il n'y a pas de terrain."
+  },
+  "DebugText.renderAtScreenPosition": {
+   "en": "Draws text at normalised screen coordinates (default size 0.02) with a black shadow, after bounds checks, then resets text alignment and colour. Returns the Y for a following line, or nothing if clipped.",
+   "fr": "Dessine du texte aux coordonnées écran normalisées (taille 0,02 par défaut) avec une ombre noire, après des tests de limites, puis réinitialise alignement et couleur du texte. Renvoie le Y pour une ligne suivante, ou rien si le texte est hors écran."
+  },
+  "DebugText.renderAtNode": {
+   "en": "Draws text at the screen projection of a node's world position, with zero extra Y offset.",
+   "fr": "Dessine du texte à la projection écran de la position monde d'un noeud, sans décalage Y supplémentaire."
+  }
+ }
+}

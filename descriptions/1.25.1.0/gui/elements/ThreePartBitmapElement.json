@@ -1,0 +1,37 @@
+{
+ "fichier": "gui/elements/ThreePartBitmapElement.lua",
+ "module": {
+  "en": "Bitmap element drawn in three parts: a start image, a stretched middle image (the element's normal overlay) and an end image. Derived from BitmapElement; it can run horizontally or vertically (isHorizontal). XML keys include startImage*, endImage*, startImageSize, endImageSize and isHorizontal.",
+  "fr": "Élément bitmap dessiné en trois parties : une image de début, une image centrale étirée (l'overlay normal de l'élément) et une image de fin. Dérivé de BitmapElement ; il peut être horizontal ou vertical (isHorizontal). Clés XML : startImage*, endImage*, startImageSize, endImageSize et isHorizontal."
+ },
+ "fonctions": {
+  "ThreePartBitmapElement.new": {
+   "en": "Constructor. Creates the element on BitmapElement with empty start/end overlays, zero part sizes and horizontal layout.",
+   "fr": "Constructeur. Crée l'élément sur BitmapElement avec des overlays début/fin vides, des tailles de parties nulles et une disposition horizontale."
+  },
+  "ThreePartBitmapElement:delete": {
+   "en": "Deletes the start and end overlays, then calls the parent delete.",
+   "fr": "Supprime les overlays de début et de fin, puis appelle le delete du parent."
+  },
+  "ThreePartBitmapElement:loadFromXML": {
+   "en": "Loads the start/end overlays, their sizes and isHorizontal from XML, creates the overlays and applies the normal-state colour of the main overlay to both ends.",
+   "fr": "Charge depuis le XML les overlays de début/fin, leurs tailles et isHorizontal, crée les overlays et applique la couleur de l'état normal de l'overlay principal aux deux extrémités."
+  },
+  "ThreePartBitmapElement:loadProfile": {
+   "en": "Applies profile values for the start/end images, their sizes and isHorizontal; recreates an overlay only if its image file changed.",
+   "fr": "Applique les valeurs de profil pour les images de début/fin, leurs tailles et isHorizontal ; ne recrée un overlay que si son fichier image a changé."
+  },
+  "ThreePartBitmapElement:copyAttributes": {
+   "en": "Copies part sizes, orientation and both end overlays from a source element.",
+   "fr": "Copie les tailles des parties, l'orientation et les deux overlays d'extrémité depuis un élément source."
+  },
+  "ThreePartBitmapElement:setImageColor": {
+   "en": "Sets the colour for a GuiOverlay state on the main overlay and on both end overlays; nil channels keep their previous value, nil state means the default.",
+   "fr": "Définit la couleur d'un état GuiOverlay sur l'overlay principal et sur les deux overlays d'extrémité ; les canaux nil gardent leur valeur, un état nil désigne la valeur par défaut."
+  },
+  "ThreePartBitmapElement:draw": {
+   "en": "Renders start, middle and end overlays side by side (or stacked vertically; start at the top) using the current overlay state and clip area. Skips BitmapElement's own draw and calls GuiElement's.",
+   "fr": "Affiche les overlays début, milieu et fin côte à côte (ou empilés verticalement, début en haut) avec l'état d'overlay courant et la zone de découpe. Saute le draw propre à BitmapElement et appelle celui de GuiElement."
+  }
+ }
+}

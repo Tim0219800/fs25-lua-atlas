@@ -1,0 +1,73 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatistics.lua",
+ "module": {
+  "en": "Manager of all FarmlandStatistic objects of Precision Farming, created by the precision farming module. It saves/loads them, syncs a farmland's statistics to clients on request, opens the economic analysis dialog from the map, and converts quantities to weight or price. It hooks FarmlandManager.loadFarmlandData to create one statistic per farmland.",
+  "fr": "Gestionnaire de tous les objets FarmlandStatistic de Precision Farming, créé par le module precision farming. Il les sauvegarde/charge, synchronise les statistiques d'une parcelle vers les clients sur demande, ouvre la boîte d'analyse économique depuis la carte et convertit des quantités en poids ou en prix. Il se branche sur FarmlandManager.loadFarmlandData pour créer une statistique par parcelle."
+ },
+ "fonctions": {
+  "FarmlandStatistics.new": {
+   "en": "Constructor. Keeps a reference to the precision farming module and creates empty lists of statistics (ordered and indexed by farmland id).",
+   "fr": "Constructeur. Garde une référence au module precision farming et crée des listes vides de statistiques (ordonnée et indexée par id de parcelle)."
+  },
+  "FarmlandStatistics:loadFromXML": {
+   "en": "Subscribes to the FARMLAND_OWNER_CHANGED message (handler onFarmlandStateChanged, not in this file, UNVERIFIED) and returns true. Ignores the XML arguments.",
+   "fr": "S'abonne au message FARMLAND_OWNER_CHANGED (gestionnaire onFarmlandStateChanged, absent de ce fichier, NON VÉRIFIÉ) et renvoie true. Ignore les arguments XML."
+  },
+  "FarmlandStatistics:loadFromItemsXML": {
+   "en": "Loads each statistic from '<key>.farmlandStatistics.farmlandStatistic(i)' in list order, stopping at the first missing entry.",
+   "fr": "Charge chaque statistique depuis '<key>.farmlandStatistics.farmlandStatistic(i)' dans l'ordre de la liste, en s'arrêtant à la première entrée manquante."
+  },
+  "FarmlandStatistics:saveToXMLFile": {
+   "en": "Saves every statistic as an indexed farmlandStatistic entry under '<key>.farmlandStatistics'.",
+   "fr": "Sauvegarde chaque statistique comme entrée farmlandStatistic indexée sous '<key>.farmlandStatistics'."
+  },
+  "FarmlandStatistics:delete": {
+   "en": "Unsubscribes from all messages and clears the statistics lists.",
+   "fr": "Se désabonne de tous les messages et vide les listes de statistiques."
+  },
+  "FarmlandStatistics:readStatisticFromStream": {
+   "en": "Client side: reads an optional total field area (stored on the farmland) and the farmland's statistic, then opens the statistics dialog without sending a request back.",
+   "fr": "Côté client : lit une surface de champ totale optionnelle (stockée sur la parcelle) et la statistique de la parcelle, puis ouvre le dialogue sans renvoyer de requête."
+  },
+  "FarmlandStatistics:writeStatisticToStream": {
+   "en": "Server side: writes a flag and the farmland's total field area when the farmland exists, then the farmland's statistic. Counterpart of readStatisticFromStream.",
+   "fr": "Côté serveur : écrit un indicateur et la surface de champ totale si la parcelle existe, puis la statistique de la parcelle. Pendant de readStatisticFromStream."
+  },
+  "FarmlandStatistics:setMapFrame": {
+   "en": "Stores the map frame used later to clear the map selection when opening statistics.",
+   "fr": "Mémorise le cadre de carte utilisé plus tard pour effacer la sélection quand les statistiques s'ouvrent."
+  },
+  "FarmlandStatistics:collectFarmlandHotspotActions": {
+   "en": "Appends an 'economic analysis' action to the farmland hotspot action list, bound to openStatistics.",
+   "fr": "Ajoute une action « analyse économique » à la liste d'actions du point d'intérêt de parcelle, liée à openStatistics."
+  },
+  "FarmlandStatistics:openStatistics": {
+   "en": "Clears the map selection and shows FarmlandStatsDialog when the farmland has a statistic and a field area of at least 0.01. A client without server sends RequestFarmlandStatisticsEvent unless noEventSend is set.",
+   "fr": "Efface la sélection de carte et affiche FarmlandStatsDialog si la parcelle a une statistique et une surface de champ d'au moins 0,01. Un client distant envoie RequestFarmlandStatisticsEvent sauf si noEventSend est défini."
+  },
+  "FarmlandStatistics:getFarmlandFieldInfo": {
+   "en": "Delegates to the precision farming module's getFarmlandFieldInfo and returns field number and area (implementation not in this file, UNVERIFIED).",
+   "fr": "Délègue à getFarmlandFieldInfo du module precision farming et renvoie numéro et surface du champ (implémentation absente de ce fichier, NON VÉRIFIÉ)."
+  },
+  "FarmlandStatistics:updateStatistic": {
+   "en": "Adds a value to the named counter of the given farmland's statistic, if that farmland has one.",
+   "fr": "Ajoute une valeur au compteur nommé de la statistique de la parcelle donnée, si elle en a une."
+  },
+  "FarmlandStatistics:resetStatistic": {
+   "en": "Resets the period counter of a farmland's statistic, and the total too when clearTotal is true.",
+   "fr": "Remet à zéro le compteur de période de la statistique d'une parcelle, et le total si clearTotal est vrai."
+  },
+  "FarmlandStatistics:getFillLevelWeight": {
+   "en": "Converts a fill level into weight using the fill type's massPerLiter divided by FillTypeManager.MASS_SCALE; returns the level unchanged for an unknown type.",
+   "fr": "Convertit un niveau de remplissage en poids avec massPerLiter du type divisé par FillTypeManager.MASS_SCALE ; renvoie le niveau inchangé pour un type inconnu."
+  },
+  "FarmlandStatistics:getFillLevelPrice": {
+   "en": "Returns fillLevel times price per liter. The special id 'soilSamples' uses the soil map's price per sample for the current economic difficulty. Unknown types return the level unchanged.",
+   "fr": "Renvoie fillLevel fois le prix par litre. L'id spécial 'soilSamples' utilise le prix par échantillon de la carte des sols selon la difficulté économique. Un type inconnu renvoie le niveau inchangé."
+  },
+  "FarmlandStatistics:overwriteGameFunctions": {
+   "en": "Registers FarmlandStatsDialog and overrides FarmlandManager.loadFarmlandData: after the original succeeds, it creates one FarmlandStatistic per farmland. Returns false if the original fails.",
+   "fr": "Enregistre FarmlandStatsDialog et surcharge FarmlandManager.loadFarmlandData : après le succès de l'original, crée une FarmlandStatistic par parcelle. Renvoie false si l'original échoue."
+  }
+ }
+}

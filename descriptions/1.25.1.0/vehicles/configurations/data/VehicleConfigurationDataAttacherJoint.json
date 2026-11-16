@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/configurations/data/VehicleConfigurationDataAttacherJoint.lua",
+ "module": {
+  "en": "Configuration data module that lets any configuration add attacher joints to a vehicle with the AttacherJoints specialization.",
+  "fr": "Module de données de configuration permettant à n'importe quelle configuration d'ajouter des attaches à un véhicule possédant la spécialisation AttacherJoints."
+ },
+ "fonctions": {
+  "VehicleConfigurationDataAttacherJoint.registerXMLPaths": {
+   "en": "Static. Registers the attacher joint XML paths under the configuration path through AttacherJoints.registerAttacherJointXMLPaths.",
+   "fr": "Statique. Enregistre les chemins XML des attaches sous le chemin de configuration via AttacherJoints.registerAttacherJointXMLPaths."
+  },
+  "VehicleConfigurationDataAttacherJoint.onPrePostLoad": {
+   "en": "Before post-load, loads each .attacherJoint of the configuration and appends it to the vehicle's attacher joint list; skipped without a config key or without the specialization.",
+   "fr": "Avant le post-chargement, charge chaque .attacherJoint de la configuration et l'ajoute à la liste des attaches du véhicule ; ignoré sans clé de configuration ou sans la spécialisation."
+  }
+ }
+}

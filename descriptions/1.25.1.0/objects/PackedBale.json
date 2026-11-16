@@ -1,0 +1,45 @@
+{
+ "fichier": "objects/PackedBale.lua",
+ "module": {
+  "en": "Subclass of Bale for a bale made of several smaller bales (a packed/stacked bale). It reads the single-bale config and the child nodes from the bale XML (bale.packedBale#singleBale and singleBale#node), and lets a player on foot cut it open through PackedBaleActivatable. Unpacking spawns normal Bale objects at those nodes on the server; clients send a BaleUnpackEvent (defined elsewhere).",
+  "fr": "Sous-classe de Bale pour une balle composée de plusieurs balles plus petites (balle packée/empilée). Elle lit la config de la balle simple et les noeuds enfants dans le XML de la balle (bale.packedBale#singleBale et singleBale#node) et permet à un joueur à pied de l'ouvrir via PackedBaleActivatable. Le dépaquetage crée des objets Bale normaux à ces noeuds sur le serveur ; les clients envoient un BaleUnpackEvent (défini ailleurs)."
+ },
+ "fonctions": {
+  "PackedBale.new": {
+   "en": "Creates the packed bale: registers the class name, prepares the list of single-bale nodes, creates the activatable and sets the maximum unpack distance from PackedBale.MAX_UNPACK_DISTANCE (defined outside this file).",
+   "fr": "Crée la balle packée : enregistre le nom de classe, prépare la liste des noeuds de balles simples, crée l'activatable et fixe la distance maximale de dépaquetage depuis PackedBale.MAX_UNPACK_DISTANCE (défini hors de ce fichier)."
+  },
+  "PackedBale:delete": {
+   "en": "Removes the activatable from the activatable system, then calls the parent delete.",
+   "fr": "Retire l'activatable du système d'activatables puis appelle le delete parent."
+  },
+  "PackedBale:loadBaleAttributesFromXML": {
+   "en": "Loads parent attributes, then the single-bale file (must exist, otherwise logs an XML error and returns false) and the list of single-bale nodes. Registers the activatable and returns true on success.",
+   "fr": "Charge les attributs du parent, puis le fichier de balle simple (doit exister, sinon erreur XML et retour false) et la liste des noeuds de balles simples. Enregistre l'activatable et retourne true en cas de succès."
+  },
+  "PackedBale:unpack": {
+   "en": "Server: for each single-bale node, spawns a normal Bale with the same fill type and as much fill level as it can hold, owned by the same farm, then deletes the packed bale. Client: sends a BaleUnpackEvent to the server. Removes the activatable first.",
+   "fr": "Serveur : pour chaque noeud de balle simple, crée une Bale normale du même type de remplissage avec autant de niveau qu'elle peut contenir, au même propriétaire de ferme, puis supprime la balle packée. Client : envoie un BaleUnpackEvent au serveur. Retire d'abord l'activatable."
+  },
+  "PackedBale:getCanInteract": {
+   "en": "True if the player's interaction position exists and is closer than the maximum unpack distance.",
+   "fr": "True si la position d'interaction du joueur existe et est plus proche que la distance maximale de dépaquetage."
+  },
+  "PackedBale:getInteractionPosition": {
+   "en": "Returns the local player's position, or nothing if the player is in a vehicle or has no access to this bale.",
+   "fr": "Retourne la position du joueur local, ou rien s'il est dans un véhicule ou n'a pas accès à cette balle."
+  },
+  "PackedBaleActivatable.new": {
+   "en": "Creates the activatable for a packed bale and loads the 'action_cutBale' text.",
+   "fr": "Crée l'activatable d'une balle packée et charge le texte 'action_cutBale'."
+  },
+  "PackedBaleActivatable:getIsActivatable": {
+   "en": "Active when the player can interact with the packed bale.",
+   "fr": "Actif lorsque le joueur peut interagir avec la balle packée."
+  },
+  "PackedBaleActivatable:run": {
+   "en": "Calls unpack on the packed bale.",
+   "fr": "Appelle unpack sur la balle packée."
+  }
+ }
+}

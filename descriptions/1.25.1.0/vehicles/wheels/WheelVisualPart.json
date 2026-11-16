@@ -1,0 +1,53 @@
+{
+  "fichier": "vehicles/wheels/WheelVisualPart.lua",
+  "module": {
+    "en": "Base class of a visual wheel part (rim, tire, connector, additional): loads an i3d, optionally through an intermediate xml that names the file and left/right node paths, then links, offsets, scales and applies materials. Subclasses WheelVisualPartTire and WheelVisualPartConnector extend it.",
+    "fr": "Classe de base d'une partie visuelle de roue (jante, pneu, connecteur, extra) : charge un i3d, éventuellement via un xml intermédiaire qui nomme le fichier et les chemins de nœud gauche/droite, puis lie, décale, met à l'échelle et applique les matériaux. WheelVisualPartTire et WheelVisualPartConnector l'étendent."
+  },
+  "fonctions": {
+    "WheelVisualPart.new": {
+      "en": "Creates a part with its name, owning visual wheel and link node.",
+      "fr": "Crée une partie avec son nom, sa roue visuelle propriétaire et son nœud de liaison."
+    },
+    "WheelVisualPart:delete": {
+      "en": "Releases the shared i3d load request.",
+      "fr": "Libère la requête de chargement i3d partagée."
+    },
+    "WheelVisualPart:loadFromXML": {
+      "en": "Reads filename (i3d or xml wrapper), node path for left/right, widthAndDiam, offset, scale, holeScale, mass, inversion and materials, then starts the shared i3d load. Returns false if there is no filename or the wrapper xml is invalid.",
+      "fr": "Lit le fichier (i3d ou xml enveloppe), le chemin de nœud gauche/droite, widthAndDiam, décalage, échelle, holeScale, masse, inversion et matériaux, puis lance le chargement i3d partagé. Retourne false s'il n'y a pas de fichier ou si le xml enveloppe est invalide."
+    },
+    "WheelVisualPart:postLoad": {
+      "en": "Applies every loaded material to the part node.",
+      "fr": "Applique chaque matériau chargé au nœud de la partie."
+    },
+    "WheelVisualPart:getDefaultMaterialSlotName": {
+      "en": "Returns the default material slot name for this part kind (inner rim, outer rim, additional, connector), or nil for other kinds.",
+      "fr": "Retourne le nom d'emplacement de matériau par défaut selon le type de partie (jante intérieure, extérieure, extra, connecteur), ou nil pour les autres."
+    },
+    "WheelVisualPart:onPartI3DLoaded": {
+      "en": "Callback after the i3d load: finds the node by index path, passes it to `setNode` and deletes the loaded root.",
+      "fr": "Callback après chargement du i3d : trouve le nœud par son chemin d'indice, le passe à `setNode` et supprime la racine chargée."
+    },
+    "WheelVisualPart:setNode": {
+      "en": "Links the node under the link node, positions it by offset (mirrored for the right side), then applies scale, the widthAndDiam shader parameter (or an inch-based scale if no shader parameter), hole scale and inversion.",
+      "fr": "Lie le nœud sous le nœud de liaison, le positionne selon le décalage (inversé côté droit), puis applique l'échelle, le paramètre shader widthAndDiam (ou une échelle en pouces sans paramètre shader), l'échelle des trous et l'inversion."
+    },
+    "WheelVisualPart:setShaderParameterRec": {
+      "en": "Recursively sets a shader parameter on this node and all its children that are shapes.",
+      "fr": "Définit récursivement un paramètre shader sur ce nœud et tous ses enfants qui sont des shapes."
+    },
+    "WheelVisualPart:getHasShaderParameterRec": {
+      "en": "Recursively checks whether a shape in the hierarchy has a shader parameter. Note: the check is hardcoded to the name `widthAndDiam`, ignoring the name argument.",
+      "fr": "Vérifie récursivement si une shape de la hiérarchie possède un paramètre shader. À noter : la vérification est codée en dur sur le nom `widthAndDiam`, l'argument de nom est ignoré."
+    },
+    "WheelVisualPart:getMass": {
+      "en": "Returns the part mass from XML, or 0 if none.",
+      "fr": "Retourne la masse de la partie issue du XML, ou 0 s'il n'y en a pas."
+    },
+    "WheelVisualPart.registerXMLPaths": {
+      "en": "Registers the material and short material XML paths of a visual part under the given key.",
+      "fr": "Enregistre les chemins XML de matériau et de matériau court d'une partie visuelle sous la clé donnée."
+    }
+  }
+}

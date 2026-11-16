@@ -1,0 +1,29 @@
+{
+ "fichier": "ai/events/AITaskStopEvent.lua",
+ "module": {
+  "en": "Event synchronizing the stop of one task of an AI job: it carries the job id, the task index (uint8) and a flag telling whether the whole job was stopped, and calls `job:stopTask(task, wasJobStopped)` on the receiver.",
+  "fr": "Événement qui synchronise le arrêt d'une tâche d'un job IA : il transporte l'id du job, l'index de la tâche (uint8) et un drapeau indiquant si tout le job a été arrêté, et appelle `job:stopTask(task, wasJobStopped)` chez le récepteur."
+ },
+ "fonctions": {
+  "AITaskStopEvent.emptyNew": {
+   "en": "Creates an empty event for stream reconstruction.",
+   "fr": "Crée un événement vide pour la reconstruction depuis un flux."
+  },
+  "AITaskStopEvent.new": {
+   "en": "Creates the event for a job and task, plus the stop flag.",
+   "fr": "Crée l'événement pour un job et une tâche, plus le drapeau d'arrêt."
+  },
+  "AITaskStopEvent:readStream": {
+   "en": "Reads job id and task index, resolves the job with `aiSystem:getJobById` and the task with `job:getTaskByIndex`, reads the stop flag, then runs the event.",
+   "fr": "Lit l'id du job et l'index de tâche, retrouve le job via `aiSystem:getJobById` et la tâche via `job:getTaskByIndex`, lit le drapeau d'arrêt, puis exécute l'événement."
+  },
+  "AITaskStopEvent:writeStream": {
+   "en": "Writes the job id (int32) and the task index (uint8) and the stop flag.",
+   "fr": "Écrit l'id du job (int32) et l'index de la tâche (uint8) et le drapeau d'arrêt."
+  },
+  "AITaskStopEvent:run": {
+   "en": "Logs a dev warning and returns if the job is unknown; otherwise calls `job:stopTask(task, wasJobStopped)`.",
+   "fr": "Journalise un avertissement de développement et sort si le job est inconnu ; sinon appelle `job:stopTask(task, wasJobStopped)`."
+  }
+ }
+}

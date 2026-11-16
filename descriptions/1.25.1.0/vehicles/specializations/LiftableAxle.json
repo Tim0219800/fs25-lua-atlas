@@ -1,0 +1,97 @@
+{
+ "fichier": "vehicles/specializations/LiftableAxle.lua",
+ "module": {
+  "en": "Specialization for trailers with a lift axle driven by an animation. The axle can be toggled manually (input action), automatically from a fill unit's fill level, or set to a fixed fraction so attacher joints match the height of the tractor hitch. It supports a `liftableAxle` vehicle configuration, saves its state and height, and syncs through `LiftableAxleEvent`. No prerequisites; the class table is created outside this file (UNVERIFIED where).",
+  "fr": "Spécialisation pour les remorques à essieu relevable piloté par une animation. L'essieu se bascule manuellement (action d'entrée), automatiquement selon le niveau d'une fill unit, ou se règle sur une fraction fixe pour que les attaches s'alignent sur la hauteur de l'attelage du tracteur. Gère une configuration de véhicule `liftableAxle`, sauvegarde état et hauteur, et se synchronise via `LiftableAxleEvent`. Aucun prérequis ; la table de classe est créée hors de ce fichier (NON VÉRIFIÉ où)."
+ },
+ "fonctions": {
+  "LiftableAxle.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours vrai : aucune autre spécialisation n'est requise."
+  },
+  "LiftableAxle.initSpecialization": {
+   "en": "Registers the `liftableAxle` configuration type, the XML paths (base and per configuration) and the savegame attributes `state` and `height`.",
+   "fr": "Enregistre le type de configuration `liftableAxle`, les chemins XML (de base et par configuration) et les attributs de sauvegarde `state` et `height`."
+  },
+  "LiftableAxle.registerXMLPaths": {
+   "en": "Registers the XML paths of one liftable axle block: input action, animation name and speed, default state, fill unit and threshold, dependent (input) attacher joints with min/max joint heights, and lift/lower texts.",
+   "fr": "Enregistre les chemins XML d'un bloc d'essieu relevable : action d'entrée, nom et vitesse d'animation, état par défaut, fill unit et seuil, attaches dépendantes (entrée) avec hauteurs min/max, et textes lever/baisser."
+  },
+  "LiftableAxle.registerFunctions": {
+   "en": "Registers `setLiftableAxleState` and `getLiftableAxleAttacherJointHeight` on the vehicle type.",
+   "fr": "Enregistre `setLiftableAxleState` et `getLiftableAxleAttacherJointHeight` sur le type de véhicule."
+  },
+  "LiftableAxle.registerOverwrittenFunctions": {
+   "en": "Overrides `getIsSmoothAttachUpdateAllowed`.",
+   "fr": "Surcharge `getIsSmoothAttachUpdateAllowed`."
+  },
+  "LiftableAxle.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onReadStream, onWriteStream, onFillUnitFillLevelChanged, onPreAttachImplement, onPreDetachImplement, onPreAttach, onPreDetach and onRegisterActionEvents.",
+   "fr": "S'abonne aux événements onLoad, onPostLoad, onReadStream, onWriteStream, onFillUnitFillLevelChanged, onPreAttachImplement, onPreDetachImplement, onPreAttach, onPreDetach et onRegisterActionEvents."
+  },
+  "LiftableAxle:onLoad": {
+   "en": "Picks the configuration block and loads animation, fill unit trigger, dependent joint data and texts. A numeric `defaultState` other than 0/1 becomes a fixed height. Removes every listener that is not needed (no animation, client/server role, missing data).",
+   "fr": "Choisit le bloc de configuration et charge animation, déclencheur de fill unit, données des attaches dépendantes et textes. Un `defaultState` numérique autre que 0/1 devient une hauteur fixe. Retire tous les écouteurs inutiles (pas d'animation, rôle client/serveur, données absentes)."
+  },
+  "LiftableAxle:onPostLoad": {
+   "en": "Restores the saved state and height (unless vehicles are reset) and applies them immediately without animation and without sending an event.",
+   "fr": "Restaure l'état et la hauteur sauvegardés (sauf réinitialisation des véhicules) et les applique immédiatement sans animation ni envoi d'événement."
+  },
+  "LiftableAxle:saveToXMLFile": {
+   "en": "Saves the axle state and, if set, the fixed height; does nothing when no animation is configured.",
+   "fr": "Sauvegarde l'état de l'essieu et, s'il est défini, la hauteur fixe ; ne fait rien si aucune animation n'est configurée."
+  },
+  "LiftableAxle:onReadStream": {
+   "en": "Client join: reads the state and optional fixed height and applies them instantly.",
+   "fr": "Connexion client : lit l'état et la hauteur fixe optionnelle et les applique instantanément."
+  },
+  "LiftableAxle:onWriteStream": {
+   "en": "Server join: writes the state and the optional fixed height.",
+   "fr": "Connexion côté serveur : écrit l'état et la hauteur fixe optionnelle."
+  },
+  "LiftableAxle:onFillUnitFillLevelChanged": {
+   "en": "Server only, once the vehicle is synchronised: when the watched fill unit changes, lifts the axle if its fill percentage exceeds the threshold, lowers it otherwise.",
+   "fr": "Serveur uniquement, une fois le véhicule synchronisé : quand la fill unit surveillée change, relève l'essieu si son pourcentage de remplissage dépasse le seuil, le baisse sinon."
+  },
+  "LiftableAxle:onPreAttachImplement": {
+   "en": "When an implement is attached to a listed joint, computes the axle fraction that matches the implement's attacher height and sets it as a fixed height.",
+   "fr": "Quand un outil est attelé à une attache listée, calcule la fraction d'essieu correspondant à la hauteur d'attache de l'outil et la définit comme hauteur fixe."
+  },
+  "LiftableAxle:onPreDetachImplement": {
+   "en": "When an implement leaves a listed joint, deactivates it; if no listed joint remains active, returns to the default state or default fixed height.",
+   "fr": "Quand un outil quitte une attache listée, la désactive ; si plus aucune attache listée n'est active, revient à l'état ou à la hauteur fixe par défaut."
+  },
+  "LiftableAxle:onPreAttach": {
+   "en": "When this vehicle is attached via a listed input joint, reads the parent's hitch height (via `getLiftableAxleAttacherJointHeight` or the mean of its upper and lower distance) and sets the matching fixed height.",
+   "fr": "Quand ce véhicule est attelé via une attache d'entrée listée, lit la hauteur d'attelage du parent (via `getLiftableAxleAttacherJointHeight` ou la moyenne de ses distances haute et basse) et règle la hauteur fixe correspondante."
+  },
+  "LiftableAxle:onPreDetach": {
+   "en": "When detached from the parent through a listed input joint, deactivates it and restores the default state or height if no such joint remains active.",
+   "fr": "Quand le véhicule est dételé du parent via une attache d'entrée listée, la désactive et restaure l'état ou la hauteur par défaut si aucune n'est encore active."
+  },
+  "LiftableAxle:onRegisterActionEvents": {
+   "en": "Client: registers the configured input action (high text priority) while the vehicle is active for input, and refreshes its label.",
+   "fr": "Client : enregistre l'action d'entrée configurée (priorité de texte élevée) tant que le véhicule est actif pour l'entrée, et met à jour son libellé."
+  },
+  "LiftableAxle.actionEvent": {
+   "en": "Input callback: toggles the axle state.",
+   "fr": "Callback d'entrée : bascule l'état de l'essieu."
+  },
+  "LiftableAxle.updateActionEvents": {
+   "en": "Sets the input hint to the lift or lower text depending on the current state.",
+   "fr": "Règle l'aide d'entrée sur le texte lever ou baisser selon l'état actuel."
+  },
+  "LiftableAxle:setLiftableAxleState": {
+   "en": "Sets the lift state, optionally a fixed height (0 to 1, which also forces state to height >= 0.5), and plays the animation, or skips it. Always calls `LiftableAxleEvent.sendEvent` for multiplayer sync unless `noEventSend` is set.",
+   "fr": "Définit l'état de levage, éventuellement une hauteur fixe (0 à 1, qui force aussi l'état à hauteur >= 0,5), et joue l'animation ou la saute. Appelle toujours `LiftableAxleEvent.sendEvent` pour la synchro multijoueur sauf si `noEventSend` est vrai."
+  },
+  "LiftableAxle:getLiftableAxleAttacherJointHeight": {
+   "en": "Returns the current hitch height for an attacher joint covered by an active dependent joint entry, or nil otherwise.",
+   "fr": "Renvoie la hauteur d'attelage actuelle pour une attache couverte par une entrée d'attache dépendante active, sinon nil."
+  },
+  "LiftableAxle:getIsSmoothAttachUpdateAllowed": {
+   "en": "Override: smooth attach updating is refused while the axle animation is playing.",
+   "fr": "Surcharge : la mise à jour d'attelage progressive est refusée pendant que l'animation de l'essieu joue."
+  }
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "fichier": "gui/hud/ingameMap/IngameMap.lua",
+ "module": {
+  "en": "HUDElement that displays the map and its hotspots, both in the HUD mini-map and in the in-game menu. It holds several layouts (none, circle, square, large square, fullscreen), a hotspot list with category filters initialised from the INGAME_MAP_FILTER game setting, and converts world coordinates to map space. Client-side only. Layout classes and hotspot rendering are defined elsewhere (UNVERIFIED).",
+  "fr": "HUDElement affichant la carte et ses points d'intérêt, à la fois dans la mini-carte du HUD et dans le menu du jeu. Il gère plusieurs dispositions (aucune, cercle, carré, grand carré, plein écran), une liste de hotspots avec filtres par catégorie initialisés depuis le réglage INGAME_MAP_FILTER, et convertit les coordonnées monde en espace carte. Côté client uniquement. Les classes de disposition et le rendu des hotspots sont définis ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "IngameMap.new": {
+   "en": "Creates the map element: background, the five layouts, category filters from the game setting, a default 2048x2048 world size and empty hotspot lists. Starts in the first layout state with toggling allowed.",
+   "fr": "Crée l'élément carte : fond, les cinq dispositions, filtres de catégories depuis le réglage, taille de monde par défaut 2048x2048 et listes de hotspots vides. Démarre au premier état de disposition avec le basculement autorisé."
+  },
+  "IngameMap:delete": {
+   "en": "Removes input action events bound to this element, deletes the map element and layouts, clears the selected hotspot and deletes the parent.",
+   "fr": "Retire les événements d'action d'entrée liés à cet élément, supprime l'élément carte et les dispositions, efface le hotspot sélectionné et supprime le parent."
+  },
+  "IngameMap:setFullscreen": {
+   "en": "Switches to the fullscreen layout or back to the layout of the current toggle state, without changing that state. No-op if unchanged.",
+   "fr": "Passe à la disposition plein écran ou revient à celle de l'état de basculement courant, sans changer cet état. Sans effet si rien ne change."
+  },
+  "IngameMap:toggleSize": {
+   "en": "Sets the map size state (clamped to 1..4) or advances to the next one cyclically when state is nil, saves it in the ingameMapState game setting and applies the matching layout. The force argument is unused.",
+   "fr": "Définit l'état de taille de la carte (borné entre 1 et 4) ou passe au suivant de façon cyclique si state est nil, l'enregistre dans le réglage ingameMapState et applique la disposition correspondante. L'argument force est inutilisé."
+  },
+  "IngameMap:resetSettings": {
+   "en": "Ignored if the instance was already deleted; otherwise only clears the selected hotspot (the scale/position reset lines are commented out in the source).",
+   "fr": "Ignorée si l'instance est déjà supprimée ; sinon efface seulement le hotspot sélectionné (les lignes de remise à zéro échelle/position sont commentées dans la source)."
+  },
+  "IngameMap:setAllowToggle": {
+   "en": "Sets whether the user may toggle the map size.",
+   "fr": "Définit si l'utilisateur peut changer la taille de la carte."
+  },
+  "IngameMap:loadMap": {
+   "en": "Replaces the map texture with the given file, sets the world size and reapplies the UI scale. The fieldColor and grassFieldColor arguments are not used here.",
+   "fr": "Remplace la texture de la carte par le fichier donné, définit la taille du monde et réapplique l'échelle d'interface. Les arguments fieldColor et grassFieldColor ne sont pas utilisés ici."
+  },
+  "IngameMap:setWorldSize": {
+   "en": "Stores the world size in X and Z, derives the centre offsets and forwards the size to every layout.",
+   "fr": "Mémorise la taille du monde en X et Z, en déduit les décalages de centre et transmet la taille à chaque disposition."
+  },
+  "IngameMap:addMapHotspot": {
+   "en": "Adds a hotspot to the list, re-sorts and resets the sorting caches, registers the map as render-state listener and returns the hotspot.",
+   "fr": "Ajoute un hotspot à la liste, retrie et réinitialise les caches de tri, enregistre la carte comme écouteur d'état de rendu et renvoie le hotspot."
+  },
+  "IngameMap:removeMapHotspot": {
+   "en": "Removes a hotspot (nil is ignored): deselects it, clears the mission map target if it was this one, unregisters the listener and resets sorting.",
+   "fr": "Retire un hotspot (nil ignoré) : le désélectionne, efface la cible de carte de la mission si c'était lui, retire l'écouteur et réinitialise le tri."
+  },
+  "IngameMap:setSelectedHotspot": {
+   "en": "Deselects the previous hotspot and marks the new one as selected (either may be nil).",
+   "fr": "Désélectionne le hotspot précédent et marque le nouveau comme sélectionné (l'un ou l'autre peut être nil)."
+  },
+  "IngameMap:drawPlayersCoordinates": {
+   "en": "Formats the player heading in degrees and map X/Z world coordinates as text and draws it through the current layout.",
+   "fr": "Formate le cap du joueur en degrés et les coordonnées monde X/Z sous forme de texte et le dessine via la disposition courante."
+  },
+  "IngameMap:drawLatencyToServer": {
+   "en": "In multiplayer client sessions, draws the latency to the server in ms, coloured good up to 50, medium below 100, bad otherwise (minimum shown 10 ms). Draws nothing otherwise.",
+   "fr": "Dans les sessions client multijoueur, dessine la latence vers le serveur en ms, colorée bonne jusqu'à 50, moyenne sous 100, mauvaise au-delà (minimum affiché 10 ms). Ne dessine rien sinon."
+  },
+  "IngameMap:drawHotspot": {
+   "en": "Draws one hotspot: converts its world position to map space, asks the layout for the screen position and visibility, applies the optional clip rectangle, stores last screen position/rotation/layout on the hotspot and renders it. The doDebug argument is unused.",
+   "fr": "Dessine un hotspot : convertit sa position monde en espace carte, demande à la disposition la position écran et la visibilité, applique le rectangle de découpe optionnel, mémorise sur le hotspot la dernière position/rotation/disposition écran et le rend. L'argument doDebug est inutilisé."
+  },
+  "IngameMap:setScale": {
+   "en": "Applies the UI scale through the parent implementation, stores it and recomputes the scaled values.",
+   "fr": "Applique l'échelle d'interface via l'implémentation parente, la mémorise et recalcule les valeurs mises à l'échelle."
+  },
+  "IngameMap:storeScaledValues": {
+   "en": "Asks every layout to store its scaled values for the given scale and stores the scaled help anchor offset.",
+   "fr": "Demande à chaque disposition de mémoriser ses valeurs mises à l'échelle et mémorise le décalage d'ancrage de l'aide."
+  },
+  "IngameMap:getBackgroundPosition": {
+   "en": "Returns the base position of the element, the safe-frame offsets in X and Y.",
+   "fr": "Renvoie la position de base de l'élément, soit les décalages de la zone de sécurité en X et Y."
+  },
+  "IngameMap:createBackground": {
+   "en": "Creates the rounded background overlay (black, 75% opaque) at the base position with the configured size.",
+   "fr": "Crée l'overlay de fond arrondi (noir, 75 % opaque) à la position de base avec la taille configurée."
+  },
+  "IngameMap:createComponents": {
+   "en": "Creates the display components of the element; currently only the input glyph used to toggle the map size.",
+   "fr": "Crée les composants d'affichage de l'élément ; actuellement seulement le glyphe d'entrée servant à changer la taille de la carte."
+  },
+  "IngameMap:createToggleMapSizeGlyph": {
+   "en": "Creates the input glyph bound to InputAction.TOGGLE_MAP_SIZE, positions it relative to the element and adds it as a child.",
+   "fr": "Crée le glyphe d'entrée lié à InputAction.TOGGLE_MAP_SIZE, le positionne relativement à l'élément et l'ajoute comme enfant."
+  }
+ }
+}

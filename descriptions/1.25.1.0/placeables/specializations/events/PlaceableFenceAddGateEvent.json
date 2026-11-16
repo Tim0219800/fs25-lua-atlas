@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableFenceAddGateEvent.lua",
+ "module": {
+  "en": "Network event (subclass of Event) used when a client joins: it carries a fence placeable, a segment index and the animated gate object of that segment so the gate can be registered as a network object. Its `run` is empty.",
+  "fr": "Événement réseau (sous-classe d'Event) utilisé quand un client rejoint la partie : il transporte un placeable de clôture, un indice de segment et l'objet animé de portail de ce segment pour l'enregistrer comme objet réseau. Sa fonction `run` est vide."
+ },
+ "fonctions": {
+  "PlaceableFenceAddGateEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture de flux."
+  },
+  "PlaceableFenceAddGateEvent.new": {
+   "en": "Creates the event with the fence, segment index and animated gate object.",
+   "fr": "Crée l'événement avec la clôture, l'indice du segment et l'objet animé du portail."
+  },
+  "PlaceableFenceAddGateEvent:readStream": {
+   "en": "Client side on join: reads the fence and segment index, fetches the segment animated object, reads its id and state, finishes its registration, then calls `run`.",
+   "fr": "Côté client à la connexion : lit la clôture et l'indice du segment, récupère l'objet animé du segment, lit son identifiant et son état, termine son enregistrement, puis appelle `run`."
+  },
+  "PlaceableFenceAddGateEvent:writeStream": {
+   "en": "Server side on join: writes the fence, segment index, animated object id and state, and registers the object in the connection stream.",
+   "fr": "Côté serveur à la connexion : écrit la clôture, l'indice du segment, l'identifiant et l'état de l'objet animé, et l'enregistre dans le flux de la connexion."
+  },
+  "PlaceableFenceAddGateEvent:run": {
+   "en": "Does nothing; all the work happens while reading the stream.",
+   "fr": "Ne fait rien ; tout le travail est fait pendant la lecture du flux."
+  }
+ }
+}

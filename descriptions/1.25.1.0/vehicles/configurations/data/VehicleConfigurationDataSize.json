@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/configurations/data/VehicleConfigurationDataSize.lua",
+ "module": {
+  "en": "Configuration data module that lets every configuration override or extend the occupied size of the vehicle (width, length, height, minimum sizes and offsets) used for example by the shop.",
+  "fr": "Module de données de configuration permettant à chaque configuration de remplacer ou d'étendre la taille occupée du véhicule (largeur, longueur, hauteur, tailles minimales et décalages), utilisée par exemple par la boutique."
+ },
+ "fonctions": {
+  "VehicleConfigurationDataSize.registerXMLPaths": {
+   "en": "Static. Registers (shared registration) the .size attributes width, length, height, minWidth, minLength, minHeight and the three offsets.",
+   "fr": "Statique. Enregistre (enregistrement partagé) les attributs .size width, length, height, minWidth, minLength, minHeight et les trois décalages."
+  },
+  "VehicleConfigurationDataSize.onSizeLoad": {
+   "en": "Writes configured width, length, height and offsets into sizeData (replacing the values), and raises the minimum sizes to the larger of old and new. Skipped without a config key.",
+   "fr": "Écrit largeur, longueur, hauteur et décalages configurés dans sizeData (en remplaçant les valeurs) et relève les tailles minimales au plus grand de l'ancien et du nouveau. Ignoré sans clé de configuration."
+  }
+ }
+}

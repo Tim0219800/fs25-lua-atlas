@@ -1,0 +1,53 @@
+{
+ "fichier": "ai/jobs/AIJobConveyor.lua",
+ "module": {
+  "en": "Job that runs a conveyor belt vehicle (`spec_aiConveyorBelt`) with a single `AITaskConveyor` task and one vehicle parameter. The vehicle itself notifies clients of start and stop; the cost per ms is much lower than for driving jobs.",
+  "fr": "Job qui fait fonctionner un véhicule convoyeur (`spec_aiConveyorBelt`) avec une seule tâche `AITaskConveyor` et un paramètre véhicule. Le véhicule lui-même notifie les clients du démarrage et de l'arrêt ; le coût par ms est bien plus faible que pour les jobs de conduite."
+ },
+ "fonctions": {
+  "AIJobConveyor.new": {
+   "en": "Creates the job with one `AITaskConveyor`, a vehicle parameter named \"vehicle\" and its parameter group.",
+   "fr": "Crée le job avec une `AITaskConveyor`, un paramètre véhicule nommé \"vehicle\" et son groupe de paramètres."
+  },
+  "AIJobConveyor:getPricePerMs": {
+   "en": "Returns 0.00005 per millisecond.",
+   "fr": "Renvoie 0.00005 par milliseconde."
+  },
+  "AIJobConveyor:start": {
+   "en": "Calls the base start and, on the server, calls `vehicle:aiJobStarted` for the job's vehicle, which notifies clients. No agent is created.",
+   "fr": "Appelle le démarrage de base et, sur le serveur, appelle `vehicle:aiJobStarted` pour le véhicule du job, ce qui notifie les clients. Aucun agent n'est créé."
+  },
+  "AIJobConveyor:stop": {
+   "en": "On the server calls `vehicle:aiJobFinished()` before running the base stop.",
+   "fr": "Sur le serveur appelle `vehicle:aiJobFinished()` avant l'arrêt de base."
+  },
+  "AIJobConveyor:applyCurrentState": {
+   "en": "Stores the given vehicle in the vehicle parameter after the base initialization.",
+   "fr": "Mémorise le véhicule donné dans le paramètre véhicule après l'initialisation de base."
+  },
+  "AIJobConveyor:getIsAvailableForVehicle": {
+   "en": "True when the vehicle has `spec_aiConveyorBelt`, can start AI and lists this job class as supported through `getIsAIJobSupported`.",
+   "fr": "Vrai si le véhicule possède `spec_aiConveyorBelt`, peut démarrer l'IA et déclare cette classe de job comme prise en charge via `getIsAIJobSupported`."
+  },
+  "AIJobConveyor:getTitle": {
+   "en": "Returns the vehicle name from the vehicle parameter, or an empty string when there is no vehicle.",
+   "fr": "Renvoie le nom du véhicule du paramètre véhicule, ou une chaîne vide s'il n'y en a pas."
+  },
+  "AIJobConveyor:setValues": {
+   "en": "Resets the tasks and passes the parameter's vehicle to the conveyor task.",
+   "fr": "Réinitialise les tâches et transmet le véhicule du paramètre à la tâche de convoyeur."
+  },
+  "AIJobConveyor:validate": {
+   "en": "Marks all parameters valid, then validates the vehicle parameter without requiring an AI target, flagging it invalid on failure. Returns the result and error text.",
+   "fr": "Marque tous les paramètres comme valides, puis valide le paramètre véhicule sans exiger de cible IA, et le marque invalide en cas d'échec. Renvoie le résultat et le texte d'erreur."
+  },
+  "AIJobConveyor:getIsStartable": {
+   "en": "Server-side check before starting: refuses if the AI limit is reached, the vehicle is gone, the player lacks the `hireAssistant` permission, or the vehicle is in use. Returns true plus `AIJob.START_SUCCESS`, else false plus a `AIJobConveyor.START_ERROR_*` state.",
+   "fr": "Contrôle côté serveur avant démarrage : refuse si la limite d'IA est atteinte, si le véhicule a disparu, si le joueur n'a pas la permission `hireAssistant` ou si le véhicule est utilisé. Renvoie true plus `AIJob.START_SUCCESS`, sinon false plus un état `AIJobConveyor.START_ERROR_*`."
+  },
+  "AIJobConveyor.getIsStartErrorText": {
+   "en": "Maps a start state returned by `getIsStartable` to a localized text: limit reached, vehicle deleted, no permission, vehicle in use, otherwise the success text. The `AIJobConveyor.START_ERROR_*` constants are not defined in this file (UNVERIFIED).",
+   "fr": "Convertit un état de démarrage renvoyé par `getIsStartable` en texte localisé : limite atteinte, véhicule supprimé, pas de permission, véhicule utilisé, sinon le texte de succès. Les constantes `AIJobConveyor.START_ERROR_*` ne sont pas définies dans ce fichier (NON VÉRIFIÉ)."
+  }
+ }
+}

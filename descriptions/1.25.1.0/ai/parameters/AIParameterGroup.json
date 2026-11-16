@@ -1,0 +1,25 @@
+{
+ "fichier": "ai/parameters/AIParameterGroup.lua",
+ "module": {
+  "en": "Plain container that groups several AI parameters under one localized title for the job setup screen. It is not an `AIParameter` itself.",
+  "fr": "Simple conteneur qui regroupe plusieurs paramètres IA sous un titre localisé pour l'écran de préparation du job. Ce n'est pas lui-même un `AIParameter`."
+ },
+ "fonctions": {
+  "AIParameterGroup.new": {
+   "en": "Creates a group with the given title and an empty parameter list.",
+   "fr": "Crée un groupe avec le titre donné et une liste de paramètres vide."
+  },
+  "AIParameterGroup:getTitle": {
+   "en": "Returns the group title.",
+   "fr": "Renvoie le titre du groupe."
+  },
+  "AIParameterGroup:addParameter": {
+   "en": "Appends a parameter to the group.",
+   "fr": "Ajoute un paramètre au groupe."
+  },
+  "AIParameterGroup:getParameters": {
+   "en": "Returns the list of parameters of the group.",
+   "fr": "Renvoie la liste des paramètres du groupe."
+  }
+ }
+}

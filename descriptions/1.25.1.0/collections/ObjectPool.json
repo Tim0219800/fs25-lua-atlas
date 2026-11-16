@@ -1,0 +1,29 @@
+{
+ "fichier": "collections/ObjectPool.lua",
+ "module": {
+  "en": "Reusable object pool that hands out pooled tables and builds new ones with a constructor when empty. A set prevents the same instance being pooled twice. ObjectPool.EMPTY_TABLE_CONSTRUCTOR is used here but not defined in this file (UNVERIFIED).",
+  "fr": "Réserve d'objets réutilisables qui distribue des tables du pool et en construit de nouvelles avec un constructeur quand elle est vide. Un ensemble empêche de remettre deux fois la même instance. ObjectPool.EMPTY_TABLE_CONSTRUCTOR est utilisé ici mais non défini dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "ObjectPool.new": {
+   "en": "Creates a pool. The optional constructor and its extra arguments are kept for creating objects when the pool is empty; without one, a default empty-table constructor is used.",
+   "fr": "Crée un pool. Le constructeur optionnel et ses arguments supplémentaires sont conservés pour créer des objets quand le pool est vide ; sans constructeur, un constructeur de table vide par défaut est utilisé."
+  },
+  "ObjectPool:getLength": {
+   "en": "Returns how many objects are currently waiting in the pool.",
+   "fr": "Retourne le nombre d'objets actuellement disponibles dans le pool."
+  },
+  "ObjectPool:clear": {
+   "en": "Empties the pool and its duplicate-check set. Pooled objects are simply forgotten, not deleted.",
+   "fr": "Vide le pool et son ensemble de détection de doublons. Les objets du pool sont simplement oubliés, pas supprimés."
+  },
+  "ObjectPool:getOrCreateNext": {
+   "en": "Removes and returns the last pooled object, or creates a new one with the constructor and its saved arguments if the pool is empty.",
+   "fr": "Retire et retourne le dernier objet du pool, ou en crée un nouveau avec le constructeur et ses arguments mémorisés si le pool est vide."
+  },
+  "ObjectPool:returnToPool": {
+   "en": "Puts an instance back in the pool. Default empty tables are cleared, other objects get their reset method called if present. Returns false for nil or an already pooled instance, else true.",
+   "fr": "Remet une instance dans le pool. Les tables vides par défaut sont vidées, les autres objets voient leur méthode reset appelée si elle existe. Retourne false pour nil ou une instance déjà dans le pool, sinon true."
+  }
+ }
+}

@@ -1,0 +1,93 @@
+{
+ "fichier": "gui/base/GuiOverlay.lua",
+ "module": {
+  "en": "Static helper table (no instances) that builds and renders GUI overlays held as plain tables. It reads filenames, UVs, slices, colors, rotation and mask data per state (normal, focused, pressed, etc.) from XML attributes or from a GuiProfile, creates the engine overlay handles, and draws them with clipping and masking. State constants and suffix tables (OVERLAY_STATE_SUFFIXES, STATE_*) are defined outside the visible bodies (UNVERIFIED).",
+  "fr": "Table d'aides statiques (sans instances) qui construit et affiche des overlays d'interface stockés sous forme de tables simples. Elle lit noms de fichiers, UV, slices, couleurs, rotation et masques par état (normal, focus, pressé, etc.) depuis des attributs XML ou un GuiProfile, crée les handles d'overlay du moteur et les dessine avec découpe et masque. Les constantes d'état et tables de suffixes (OVERLAY_STATE_SUFFIXES, STATE_*) sont définies hors des corps visibles (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "GuiOverlay.loadOverlay": {
+   "en": "Fills an overlay table from an XML file/key or, if none, from a profile: filenames, UVs, colors and SDF width for the given overlay name. Sets default UVs, white color and a black preview image; returns nil if no filename results.",
+   "fr": "Remplit une table d'overlay depuis un fichier XML/clé ou, à défaut, depuis un profil : fichiers, UV, couleurs et largeur SDF pour le nom d'overlay donné. Applique des UV par défaut, une couleur blanche et une image d'aperçu noire ; retourne nil si aucun fichier n'en résulte."
+  },
+  "GuiOverlay.loadXMLUVs": {
+   "en": "Reads per-state UVs from XML attributes, either from a slice id resolved by g_overlayManager (with optional rotation and X inversion) or from a UV string converted with the image size.",
+   "fr": "Lit les UV de chaque état depuis les attributs XML, soit via un identifiant de slice résolu par g_overlayManager (avec rotation et inversion X optionnelles), soit depuis une chaîne d'UV convertie avec la taille de l'image."
+  },
+  "GuiOverlay.loadProfileUVs": {
+   "en": "Same as loadXMLUVs but reads from a profile, and also supports Y inversion. Warns when a profile from the base UI file still uses raw UV strings instead of slices.",
+   "fr": "Comme loadXMLUVs mais lit depuis un profil, et gère aussi l'inversion Y. Avertit quand un profil du fichier UI de base utilise encore des chaînes d'UV brutes au lieu de slices."
+  },
+  "GuiOverlay.loadXMLColors": {
+   "en": "Reads per-state colors (gradient arrays allowed), plus rotation in degrees (stored in radians) and the web-overlay flag, from XML attributes.",
+   "fr": "Lit depuis les attributs XML les couleurs par état (tableaux en dégradé permis), ainsi que la rotation en degrés (stockée en radians) et l'indicateur d'overlay web."
+  },
+  "GuiOverlay.loadProfileColors": {
+   "en": "Reads per-state colors, rotation (degrees, stored as radians) and the web-overlay flag from a profile.",
+   "fr": "Lit depuis un profil les couleurs par état, la rotation (en degrés, stockée en radians) et l'indicateur d'overlay web."
+  },
+  "GuiOverlay.loadXMLFilenames": {
+   "en": "Reads per-state image, preview and mask filenames from XML attributes and resolves each through resolveFilename.",
+   "fr": "Lit depuis les attributs XML les fichiers d'image, d'aperçu et de masque de chaque état et les résout via resolveFilename."
+  },
+  "GuiOverlay.loadProfileFilenames": {
+   "en": "Reads per-state image, preview and mask filenames from a profile and resolves each through resolveFilename.",
+   "fr": "Lit depuis un profil les fichiers d'image, d'aperçu et de masque de chaque état et les résout via resolveFilename."
+  },
+  "GuiOverlay.resolveFilename": {
+   "en": "Maps the names g_baseUIFilename, g_baseHUDFilename and g_iconsUIFilename to their real global values and replaces $l10nSuffix with g_languageSuffix.",
+   "fr": "Convertit les noms g_baseUIFilename, g_baseHUDFilename et g_iconsUIFilename en leurs valeurs globales réelles et remplace $l10nSuffix par g_languageSuffix."
+  },
+  "GuiOverlay.createOverlay": {
+   "en": "Creates the engine overlay for the table's filename (web overlay when flagged and the path starts with http), plus state overlays and SDF width. Returns early if already created for that file; otherwise deletes old handles first and defaults rotation 0 and alpha 1.",
+   "fr": "Crée l'overlay moteur pour le fichier de la table (overlay web si indiqué et chemin commençant par http), ainsi que les overlays d'état et la largeur SDF. Retourne tôt s'il existe déjà pour ce fichier ; sinon supprime d'abord les anciens handles et fixe rotation 0 et alpha 1."
+  },
+  "GuiOverlay.createStateOverlays": {
+   "en": "Creates image overlays for non-normal states that have their own filename, and mask textures for any state with a mask filename. Note: a state without a filename leaves imageOverlay nil, which is then compared with 0 and stored as nil.",
+   "fr": "Crée des overlays d'image pour les états non normaux ayant leur propre fichier, et des textures de masque pour tout état ayant un fichier de masque. À noter : un état sans fichier laisse imageOverlay à nil, comparé ensuite à 0 puis stocké comme nil."
+  },
+  "GuiOverlay.copyOverlay": {
+   "en": "Copies the parameters (filenames, UVs, colors, alpha, SDF width, slice id) from a source table into another and creates a fresh engine overlay; handles are not shared. An optional filename overrides the target's.",
+   "fr": "Copie les paramètres (fichiers, UV, couleurs, alpha, largeur SDF, slice) d'une table source vers une autre et crée un nouvel overlay moteur ; les handles ne sont pas partagés. Un nom de fichier optionnel remplace celui de la cible."
+  },
+  "GuiOverlay.deleteOverlay": {
+   "en": "Deletes the state overlays and mask textures and clears their fields, releasing the image handles. Does nothing for nil.",
+   "fr": "Supprime les overlays d'état et textures de masque et vide leurs champs, libérant les handles d'image. Ne fait rien pour nil."
+  },
+  "GuiOverlay.getOverlayColor": {
+   "en": "Returns the color table for a state, falling back to the base color (pressed falls back to focused first).",
+   "fr": "Retourne la table de couleur d'un état, avec repli sur la couleur de base (l'état pressé se replie d'abord sur focus)."
+  },
+  "GuiOverlay.getOverlayUVs": {
+   "en": "Returns the UV table for a state, falling back to the base UVs when that state has none.",
+   "fr": "Retourne la table d'UV d'un état, avec repli sur les UV de base si l'état n'en a pas."
+  },
+  "GuiOverlay.getOverlay": {
+   "en": "Returns the engine overlay handle for a state; pressed falls back to the focused one, and anything missing falls back to the base overlay.",
+   "fr": "Retourne le handle d'overlay moteur d'un état ; pressé se replie sur focus, et tout élément manquant se replie sur l'overlay de base."
+  },
+  "GuiOverlay.getMaskOverlay": {
+   "en": "Returns the mask texture handle for a state, with the same pressed-to-focused fallback, then the base mask. Despite the doc wording it returns a mask, not the image overlay.",
+   "fr": "Retourne le handle de texture de masque d'un état, avec le même repli pressé vers focus, puis le masque de base. Il retourne bien un masque, pas l'overlay d'image."
+  },
+  "GuiOverlay.renderOverlay": {
+   "en": "Draws the overlay for a state at the given position and size, applying rotation, optional clip rectangle (UVs are cropped to match), optional 2D mask and per-corner or single color multiplied by overlay.alpha. Skips fully transparent colors and empty clips.",
+   "fr": "Dessine l'overlay d'un état à la position et taille données, en appliquant la rotation, un rectangle de découpe optionnel (les UV sont recadrées en conséquence), un masque 2D optionnel et une couleur par coin ou unique multipliée par overlay.alpha. Ignore les couleurs totalement transparentes et les découpes vides."
+  },
+  "GuiOverlay.copyColors": {
+   "en": "Copies the color table references of every state from a source overlay (shared, not cloned).",
+   "fr": "Copie les références des tables de couleur de chaque état d'un overlay source (partagées, non clonées)."
+  },
+  "GuiOverlay.setRotation": {
+   "en": "Sets the engine overlay rotation around a pivot and marks the overlay as having a custom rotation, so renderOverlay stops resetting it. Only works once the engine overlay exists.",
+   "fr": "Fixe la rotation de l'overlay moteur autour d'un pivot et marque l'overlay comme ayant une rotation personnalisée, ce qui empêche renderOverlay de la réinitialiser. Ne fonctionne que si l'overlay moteur existe."
+  },
+  "GuiOverlay.setColor": {
+   "en": "Replaces the base color with a new RGBA table.",
+   "fr": "Remplace la couleur de base par une nouvelle table RGBA."
+  },
+  "GuiOverlay.setSelectedColor": {
+   "en": "Replaces the selected-state color with a new RGBA table.",
+   "fr": "Remplace la couleur de l'état sélectionné par une nouvelle table RGBA."
+  }
+ }
+}

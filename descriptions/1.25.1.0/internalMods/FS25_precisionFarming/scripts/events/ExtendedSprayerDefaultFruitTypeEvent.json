@@ -1,0 +1,33 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/ExtendedSprayerDefaultFruitTypeEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that synchronises which default fruit requirement index an extended sprayer uses to compute its application amount.",
+    "fr": "Événement réseau (sous-classe de Event) qui synchronise l'indice d'exigence de culture par défaut qu'un pulvérisateur étendu utilise pour calculer sa quantité appliquée."
+  },
+  "fonctions": {
+    "ExtendedSprayerDefaultFruitTypeEvent.emptyNew": {
+      "en": "Creates an empty ExtendedSprayerDefaultFruitTypeEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de ExtendedSprayerDefaultFruitTypeEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "ExtendedSprayerDefaultFruitTypeEvent.new": {
+      "en": "Creates the event for a sprayer object and a fruit requirement index.",
+      "fr": "Crée l'événement pour un objet pulvérisateur et un indice d'exigence de culture."
+    },
+    "ExtendedSprayerDefaultFruitTypeEvent:readStream": {
+      "en": "Reads the object and the index (FruitTypeManager.SEND_NUM_BITS bits), then calls run.",
+      "fr": "Lit l'objet et l'indice (FruitTypeManager.SEND_NUM_BITS bits), puis appelle run."
+    },
+    "ExtendedSprayerDefaultFruitTypeEvent:writeStream": {
+      "en": "Writes the object and the fruit requirement index using FruitTypeManager.SEND_NUM_BITS bits.",
+      "fr": "Écrit l'objet et l'indice d'exigence de culture sur FruitTypeManager.SEND_NUM_BITS bits."
+    },
+    "ExtendedSprayerDefaultFruitTypeEvent:run": {
+      "en": "Receiving side. On the server it first re-broadcasts the event to the other clients (not the sender); then, if the target object exists and is synchronized, it applies the change locally without sending a new event. It calls object:setSprayAmountDefaultFruitRequirementIndex(index, true).",
+      "fr": "Côté réception. Sur le serveur, il rediffuse d'abord l'événement aux autres clients (pas à l'expéditeur) ; puis, si l'objet cible existe et est synchronisé, il applique le changement localement sans renvoyer d'événement. Il appelle object:setSprayAmountDefaultFruitRequirementIndex(index, true)."
+    },
+    "ExtendedSprayerDefaultFruitTypeEvent.sendEvent": {
+      "en": "Entry point to sync the default fruit requirement index. Server: broadcasts a new ExtendedSprayerDefaultFruitTypeEvent to the clients (bound to the object); client: sends it to the server. Does nothing when noEventSend is true.",
+      "fr": "Point d'entrée pour synchroniser l'indice d'exigence de culture par défaut. Serveur : diffuse un nouvel ExtendedSprayerDefaultFruitTypeEvent aux clients (lié à l'objet) ; client : l'envoie au serveur. Ne fait rien si noEventSend vaut true."
+    }
+  }
+}

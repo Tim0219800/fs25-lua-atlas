@@ -1,0 +1,97 @@
+{
+ "fichier": "placeables/specializations/PlaceableProductionPoint.lua",
+ "module": {
+  "en": "Placeable specialization that wraps a ProductionPoint object (production chains with input/output storage, loading and unloading stations). It requires PlaceableInfoTrigger, supports a configuration per XML (productionPointConfigurations), a not-yet-finalized state for constructible buildings, network streaming of the production point, savegame forwarding, and a limit on production points via g_currentMission.productionChainManager. It raises onOutputFillTypesChanged and onProductionStatusChanged.",
+  "fr": "Spécialisation de placeable qui encapsule un objet ProductionPoint (chaînes de production avec stockage d'entrée/sortie, stations de chargement et de déchargement). Elle exige PlaceableInfoTrigger, gère une configuration par XML (productionPointConfigurations), un état non finalisé pour les bâtiments constructibles, la synchronisation réseau du point de production, la sauvegarde et une limite du nombre de points via g_currentMission.productionChainManager. Elle déclenche onOutputFillTypesChanged et onProductionStatusChanged."
+ },
+ "fonctions": {
+  "PlaceableProductionPoint.prerequisitesPresent": {
+   "en": "Requires the PlaceableInfoTrigger specialization to be present.",
+   "fr": "Exige la présence de la spécialisation PlaceableInfoTrigger."
+  },
+  "PlaceableProductionPoint.registerEvents": {
+   "en": "Registers the events onOutputFillTypesChanged and onProductionStatusChanged on the placeable type.",
+   "fr": "Enregistre les événements onOutputFillTypesChanged et onProductionStatusChanged sur le type de placeable."
+  },
+  "PlaceableProductionPoint.registerFunctions": {
+   "en": "Registers outputsChanged and productionStatusChanged, which the ProductionPoint calls to notify its placeable.",
+   "fr": "Enregistre outputsChanged et productionStatusChanged, que le ProductionPoint appelle pour notifier son placeable."
+  },
+  "PlaceableProductionPoint.registerOverwrittenFunctions": {
+   "en": "Overrides setOwnerFarmId, collectPickObjects, canBuy, updateInfo and finalizeConstruction (the last is registered here but not defined in this file's dump, UNVERIFIED).",
+   "fr": "Surcharge setOwnerFarmId, collectPickObjects, canBuy, updateInfo et finalizeConstruction (cette dernière est enregistrée ici mais non définie dans ce fichier du dump, NON VÉRIFIÉ)."
+  },
+  "PlaceableProductionPoint.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onFinalizePlacement, onWriteStream, onReadStream and onBuy.",
+   "fr": "Abonne aux événements onLoad, onDelete, onFinalizePlacement, onWriteStream, onReadStream et onBuy."
+  },
+  "PlaceableProductionPoint.registerXMLPaths": {
+   "en": "Declares the production point XML at placeable.productionPoint and inside each productionPointConfiguration, adding an isFinalized flag for constructible buildings.",
+   "fr": "Déclare le XML du point de production sous placeable.productionPoint et dans chaque productionPointConfiguration, avec un indicateur isFinalized pour les bâtiments constructibles."
+  },
+  "PlaceableProductionPoint.registerSavegameXMLPaths": {
+   "en": "Registers the savegame XML paths by delegating to ProductionPoint.registerSavegameXMLPaths.",
+   "fr": "Enregistre les chemins XML de sauvegarde en déléguant à ProductionPoint.registerSavegameXMLPaths."
+  },
+  "PlaceableProductionPoint.initSpecialization": {
+   "en": "Adds the shop spec types prodPointInputFillTypes and prodPointOutputFillTypes for placeables and registers the productionPoint configuration type with g_placeableConfigurationManager.",
+   "fr": "Ajoute les types de spécifications de boutique prodPointInputFillTypes et prodPointOutputFillTypes pour les placeables et enregistre le type de configuration productionPoint auprès de g_placeableConfigurationManager."
+  },
+  "PlaceableProductionPoint:onLoad": {
+   "en": "Picks the XML node of the selected configuration (falling back to placeable.productionPoint), creates and loads the ProductionPoint. If isFinalized is false, it hides the station from the prices menu and disables missions; on load failure it sets the loading state to ERROR.",
+   "fr": "Choisit le nœud XML de la configuration sélectionnée (repli sur placeable.productionPoint), crée et charge le ProductionPoint. Si isFinalized est faux, masque la station du menu des prix et désactive les missions ; en cas d'échec, passe l'état de chargement à ERROR."
+  },
+  "PlaceableProductionPoint:onDelete": {
+   "en": "Deletes the production point and clears the reference.",
+   "fr": "Supprime le point de production et efface la référence."
+  },
+  "PlaceableProductionPoint:onFinalizePlacement": {
+   "en": "Registers the production point, sets its owner (AccessHandler.EVERYONE if not finalized), finds storage extensions and updates effects. Disables the interaction trigger for buying if the placeable has a buying trigger.",
+   "fr": "Enregistre le point de production, définit son propriétaire (AccessHandler.EVERYONE si non finalisé), cherche les extensions de stockage et met à jour les effets. Désactive le déclencheur d'achat par interaction si le placeable a un déclencheur d'achat."
+  },
+  "PlaceableProductionPoint:updateInfo": {
+   "en": "Calls the parent updateInfo, then lets the production point add its own lines to the info table.",
+   "fr": "Appelle l'updateInfo parent, puis laisse le point de production ajouter ses propres lignes au tableau d'infos."
+  },
+  "PlaceableProductionPoint:outputsChanged": {
+   "en": "Raises the placeable event onOutputFillTypesChanged with the outputs and the state.",
+   "fr": "Déclenche l'événement de placeable onOutputFillTypesChanged avec les sorties et l'état."
+  },
+  "PlaceableProductionPoint:productionStatusChanged": {
+   "en": "Raises the placeable event onProductionStatusChanged with the production and its status.",
+   "fr": "Déclenche l'événement de placeable onProductionStatusChanged avec la production et son statut."
+  },
+  "PlaceableProductionPoint:onReadStream": {
+   "en": "Client side of the initial sync: reads the production point's object id, its stream data, then completes the object registration with g_client.",
+   "fr": "Côté client de la synchronisation initiale : lit l'identifiant d'objet du point de production et ses données, puis termine l'enregistrement de l'objet auprès de g_client."
+  },
+  "PlaceableProductionPoint:onWriteStream": {
+   "en": "Server side of the initial sync: writes the production point's object id and data, and registers the object in the stream for that connection.",
+   "fr": "Côté serveur de la synchronisation initiale : écrit l'identifiant d'objet et les données du point de production, et enregistre l'objet dans le flux de cette connexion."
+  },
+  "PlaceableProductionPoint:loadFromXMLFile": {
+   "en": "Forwards savegame loading to the production point.",
+   "fr": "Transmet le chargement de la sauvegarde au point de production."
+  },
+  "PlaceableProductionPoint:saveToXMLFile": {
+   "en": "Forwards savegame saving to the production point.",
+   "fr": "Transmet l'écriture de la sauvegarde au point de production."
+  },
+  "PlaceableProductionPoint:setOwnerFarmId": {
+   "en": "Calls the parent, then gives the production point the owner (EVERYONE while not finalized). If not finalized, also removes it from the productionChainManager.",
+   "fr": "Appelle le parent, puis donne le propriétaire au point de production (EVERYONE tant que non finalisé). Si non finalisé, le retire aussi du productionChainManager."
+  },
+  "PlaceableProductionPoint:collectPickObjects": {
+   "en": "Skips adding the node to pick objects when it is a load trigger node or an unloading trigger's exact fill root node; otherwise defers to the parent.",
+   "fr": "N'ajoute pas le nœud aux objets pickables s'il s'agit d'un nœud de déclencheur de chargement ou du nœud racine de remplissage exact d'un déclencheur de déchargement ; sinon délègue au parent."
+  },
+  "PlaceableProductionPoint:canBuy": {
+   "en": "Returns false with a warning text when productionChainManager has no free slot; otherwise returns the parent result.",
+   "fr": "Retourne false avec un texte d'avertissement si productionChainManager n'a plus d'emplacement libre ; sinon retourne le résultat du parent."
+  },
+  "PlaceableProductionPoint:onBuy": {
+   "en": "Counts production points owned by the current farm and passes the count to g_achievementManager under NumProductionPoints. Note: it counts every owned placeable with this specialization, finalized or not.",
+   "fr": "Compte les points de production appartenant à la ferme courante et transmet le total à g_achievementManager sous NumProductionPoints. À noter : tous les placeables possédés avec cette spécialisation sont comptés, finalisés ou non."
+  }
+ }
+}

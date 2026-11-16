@@ -1,0 +1,101 @@
+{
+ "fichier": "vehicles/specializations/FruitPreparer.lua",
+ "module": {
+  "en": "Specialization for tools that prepare crops before harvest, such as potato haulm toppers and beet defoliators. It adds a fruitPreparer work area type that calls FSDensityMapUtil.updateFruitPreparerArea for the configured fruit types, tracks a server-side isWorking flag synced to clients, and drives sounds and animations. Also adjusts dirt/wear, speed limit checks and AI settings. Requires WorkArea and TurnOnVehicle.",
+  "fr": "Spécialisation pour les outils qui préparent les cultures avant la récolte, comme les broyeurs de fanes de pommes de terre et les effeuilleuses de betteraves. Elle ajoute un type de zone de travail fruitPreparer qui appelle FSDensityMapUtil.updateFruitPreparerArea pour les types de fruits configurés, suit un indicateur isWorking côté serveur synchronisé aux clients, et pilote sons et animations. Elle ajuste aussi salissure/usure, contrôle de limite de vitesse et réglages IA. Exige WorkArea et TurnOnVehicle."
+ },
+ "fonctions": {
+  "FruitPreparer.initSpecialization": {
+   "en": "Registers the \"fruitPreparer\" work area type and the XML keys: fruit type(s), aiUsePreparedState, drop work area index, animation nodes, work sounds and the moveOnlyIfPreparerCut option of randomly moving parts.",
+   "fr": "Enregistre le type de zone de travail « fruitPreparer » et les clés XML : type(s) de fruit, aiUsePreparedState, indice de zone de dépôt, nœuds d'animation, sons de travail et l'option moveOnlyIfPreparerCut des pièces à mouvement aléatoire."
+  },
+  "FruitPreparer.prerequisitesPresent": {
+   "en": "Requires the WorkArea and TurnOnVehicle specializations.",
+   "fr": "Exige les spécialisations WorkArea et TurnOnVehicle."
+  },
+  "FruitPreparer.registerFunctions": {
+   "en": "Registers processFruitPreparerArea on the vehicle type.",
+   "fr": "Enregistre processFruitPreparerArea sur le type de véhicule."
+  },
+  "FruitPreparer.registerOverwrittenFunctions": {
+   "en": "Registers overrides for work area loading, ground manipulation, speed limit check, AI fruit requirements, dirt and wear multipliers and randomly moving part loading/activity.",
+   "fr": "Enregistre des surcharges pour le chargement des zones de travail, la manipulation du sol, le contrôle de limite de vitesse, les exigences de fruits de l'IA, les multiplicateurs de salissure et d'usure et le chargement/activité des pièces à mouvement aléatoire."
+  },
+  "FruitPreparer.registerEventListeners": {
+   "en": "Subscribes to load, delete, update stream, turn on/off, end of work area processing and AI field course settings events.",
+   "fr": "Abonne aux événements de chargement, suppression, flux de mise à jour, allumage/extinction, fin de traitement des zones de travail et réglages de parcours IA."
+  },
+  "FruitPreparer:onLoad": {
+   "en": "Loads sounds and animation nodes on the client and the list of fruit types to prepare (fruitType and fruitTypes). For each, registers AI fruit requirements from the fruit type's preparing growth states, or its harvesting states when it has none. Warns on unknown or missing fruit types.",
+   "fr": "Charge les sons et nœuds d'animation côté client ainsi que la liste des types de fruits à préparer (fruitType et fruitTypes). Pour chacun, enregistre les exigences de fruits de l'IA depuis les stades de préparation du fruit, ou ses stades de récolte s'il n'en a pas. Avertit pour les types inconnus ou absents."
+  },
+  "FruitPreparer:onDelete": {
+   "en": "Deletes the work sound samples and the animation nodes.",
+   "fr": "Supprime les échantillons sonores de travail et les nœuds d'animation."
+  },
+  "FruitPreparer:onReadUpdateStream": {
+   "en": "Client: reads the isWorking flag sent by the server.",
+   "fr": "Client : lit l'indicateur isWorking envoyé par le serveur."
+  },
+  "FruitPreparer:onWriteUpdateStream": {
+   "en": "Server: writes the isWorking flag to clients.",
+   "fr": "Serveur : écrit l'indicateur isWorking pour les clients."
+  },
+  "FruitPreparer:onTurnedOn": {
+   "en": "Client: starts the work sound and the animation nodes.",
+   "fr": "Client : démarre le son de travail et les nœuds d'animation."
+  },
+  "FruitPreparer:onTurnedOff": {
+   "en": "Client: stops the sounds and the animation nodes.",
+   "fr": "Client : arrête les sons et les nœuds d'animation."
+  },
+  "FruitPreparer:loadWorkAreaFromXML": {
+   "en": "Override that calls the parent and, for work areas of type FRUITPREPARER, reads fruitPreparer#dropWorkAreaIndex (with deprecation checks of older attributes). Returns the parent's result.",
+   "fr": "Surcharge qui appelle le parent et, pour les zones de travail de type FRUITPREPARER, lit fruitPreparer#dropWorkAreaIndex (avec vérification des anciens attributs). Renvoie le résultat du parent."
+  },
+  "FruitPreparer:getDoGroundManipulation": {
+   "en": "Override returning the parent result only while the preparer is actually working (isWorking).",
+   "fr": "Surcharge ne renvoyant le résultat du parent que lorsque le préparateur travaille réellement (isWorking)."
+  },
+  "FruitPreparer:doCheckSpeedLimit": {
+   "en": "Override that also enforces the speed limit when the tool is turned on and lowered (implement chain lowered or tool lowered); otherwise uses the parent result.",
+   "fr": "Surcharge qui impose aussi la limite de vitesse quand l'outil est allumé et abaissé (chaîne d'outils abaissée ou outil abaissé) ; sinon utilise le résultat du parent."
+  },
+  "FruitPreparer:getAllowCutterAIFruitRequirements": {
+   "en": "Override always returning false: cutter AI fruit requirements are not used for this tool.",
+   "fr": "Surcharge renvoyant toujours false : les exigences de fruits de l'IA propres aux barres de coupe ne sont pas utilisées pour cet outil."
+  },
+  "FruitPreparer:getDirtMultiplier": {
+   "en": "Override that adds the work dirt multiplier scaled by speed over the speed limit while the preparer is working.",
+   "fr": "Surcharge qui ajoute le multiplicateur de salissure de travail, proportionnel à la vitesse rapportée à la limite, pendant que le préparateur travaille."
+  },
+  "FruitPreparer:getWearMultiplier": {
+   "en": "Override that adds the work wear multiplier scaled by speed over the speed limit while the preparer is working.",
+   "fr": "Surcharge qui ajoute le multiplicateur d'usure de travail, proportionnel à la vitesse rapportée à la limite, pendant que le préparateur travaille."
+  },
+  "FruitPreparer:loadRandomlyMovingPartFromXML": {
+   "en": "Override that reads the moveOnlyIfPreparerCut flag of a randomly moving part after the parent loader.",
+   "fr": "Surcharge qui lit l'indicateur moveOnlyIfPreparerCut d'une pièce à mouvement aléatoire après le chargeur parent."
+  },
+  "FruitPreparer:getIsRandomlyMovingPartActive": {
+   "en": "Override that, for parts flagged moveOnlyIfPreparerCut, requires the preparer to be working in addition to the parent's condition.",
+   "fr": "Surcharge qui, pour les pièces marquées moveOnlyIfPreparerCut, exige que le préparateur travaille en plus de la condition du parent."
+  },
+  "FruitPreparer.getDefaultSpeedLimit": {
+   "en": "Returns the default speed limit of this tool type, 15 (unit not stated here, presumably km/h: UNVERIFIED).",
+   "fr": "Renvoie la limite de vitesse par défaut de ce type d'outil, 15 (unité non précisée ici, probablement km/h : NON VÉRIFIÉ)."
+  },
+  "FruitPreparer:onEndWorkAreaProcessing": {
+   "en": "Server: sets isWorking to true if the tool prepared something in the last 500 ms and raises the dirty flag when this changes, so clients get the update.",
+   "fr": "Serveur : met isWorking à true si l'outil a préparé quelque chose dans les 500 dernières ms et lève le drapeau de modification quand cela change, pour informer les clients."
+  },
+  "FruitPreparer:onAIFieldCourseSettingsInitialized": {
+   "en": "Sets the AI field course so headlands are worked first and the initial segment is worked.",
+   "fr": "Configure le parcours de champ de l'IA pour traiter d'abord les fourrières et travailler le segment initial."
+  },
+  "FruitPreparer:processFruitPreparerArea": {
+   "en": "Applies FSDensityMapUtil.updateFruitPreparerArea for each configured fruit type on the work area (optionally over a separate drop area), records the last work time and returns 0 and the worked area. Clients beyond CLIENT_DM_UPDATE_RADIUS return 0, 0. Note: the worked area is overwritten per fruit type, not summed.",
+   "fr": "Applique FSDensityMapUtil.updateFruitPreparerArea pour chaque type de fruit configuré sur la zone de travail (éventuellement sur une zone de dépôt séparée), enregistre l'heure du dernier travail et renvoie 0 et la surface travaillée. Les clients au-delà de CLIENT_DM_UPDATE_RADIUS renvoient 0, 0. À noter : la surface travaillée est écrasée à chaque type de fruit, pas additionnée."
+  }
+ }
+}

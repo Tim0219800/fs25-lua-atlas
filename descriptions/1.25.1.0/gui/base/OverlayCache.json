@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/base/OverlayCache.lua",
+ "module": {
+  "en": "Minimal class holding an empty `cache` table. No further methods exist in this file, so its use is UNVERIFIED here.",
+  "fr": "Classe minimale contenant une table `cache` vide. Aucune autre méthode n'existe dans ce fichier, son usage est donc NON VÉRIFIÉ ici."
+ },
+ "fonctions": {
+  "OverlayCache.new": {
+   "en": "Creates an instance with an empty `cache` table, optionally with a custom metatable.",
+   "fr": "Crée une instance avec une table `cache` vide, éventuellement avec une métatable personnalisée."
+  }
+ }
+}

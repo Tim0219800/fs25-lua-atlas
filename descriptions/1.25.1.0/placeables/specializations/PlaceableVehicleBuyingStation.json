@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/PlaceableVehicleBuyingStation.lua",
+ "module": {
+  "en": "Placeable specialization for a vehicle shop point. It reads a player trigger, a list of store items with price and transport cost, spawn places and result messages, then opens a vehicle shop dialog through a VehicleBuyingStationActivatable when the player has the buy-vehicle permission. Configured under `placeable.vehicleBuyingStation`.",
+  "fr": "Spécialisation de placeable pour un point de vente de véhicules. Elle lit un déclencheur joueur, une liste d'articles de boutique avec prix et frais de transport, des places d'apparition et des messages de résultat, puis ouvre une boîte de dialogue de boutique via un VehicleBuyingStationActivatable si le joueur a la permission d'acheter des véhicules. Configurée sous `placeable.vehicleBuyingStation`."
+ },
+ "fonctions": {
+  "PlaceableVehicleBuyingStation.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableVehicleBuyingStation:onLoad": {
+   "en": "Loads the trigger node, store items (price defaults to the store price, transport costs to 15000), spawn places, messages, title and texts, then creates the activatable. Returns false without spawn places. `vehicleShopCallback` and the trigger callback are not defined in this file (UNVERIFIED).",
+   "fr": "Charge le nœud de déclencheur, les articles (prix par défaut celui de la boutique, frais de transport 15000), les places d'apparition, les messages, le titre et les textes, puis crée l'activable. Renvoie false sans place d'apparition. `vehicleShopCallback` et le callback du déclencheur ne sont pas définis dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "PlaceableVehicleBuyingStation:onDelete": {
+   "en": "Removes the trigger node if it was created.",
+   "fr": "Retire le nœud de déclencheur s'il a été créé."
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/YarderTowerFollowModeEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the carriage follow mode of a yarder tower (2-bit value). Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise le mode de suivi du chariot d'une tour de débardage par câble (valeur sur 2 bits). Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "YarderTowerFollowModeEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "YarderTowerFollowModeEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a 2-bit follow mode); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un mode de suivi sur 2 bits) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "YarderTowerFollowModeEvent:readStream": {
+      "en": "Reads a node object and a 2-bit follow mode from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un mode de suivi sur 2 bits depuis le flux, puis appelle `run(connection)`."
+    },
+    "YarderTowerFollowModeEvent:writeStream": {
+      "en": "Writes a node object and a 2-bit follow mode to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un mode de suivi sur 2 bits dans le flux (même ordre que `readStream`)."
+    },
+    "YarderTowerFollowModeEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself, then calls `setYarderCarriageFollowMode(state, connection, true)` on the object if synchronized.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet, puis appelle `setYarderCarriageFollowMode(état, connexion, true)` sur l'objet s'il est synchronisé."
+    },
+    "YarderTowerFollowModeEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

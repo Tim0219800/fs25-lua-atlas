@@ -1,85 +1,85 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Washable.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation de véhicule (sans prérequis) qui gère la SALETÉ (boue/poussière accumulée) et l'HUMIDITÉ de surface des véhicules, via des paramètres de shader sur leurs nœuds. C'est la référence vanilla pour tout mod d'humidité/boue. MODÈLE : chaque « washable node » (nodeData) regroupe des nœuds I3D et porte dirtAmount (0..1), wetness (0..1), une couleur de saleté et une fonction de mise à jour updateFunc. Le nœud global (index 1) couvre tous les nœuds portant le paramètre de shader « scratches_dirt_snow_wetness » (composantes : y = saleté, w = humidité, d'après les setShaderParameter) ; les nœuds sans ce paramètre sont traités comme « mudNodes » (shader avec « mudAmount », « wetness », « dirtColor »). D'autres spécialisations (par ex. Wheels via validateWashableNode) créent des nœuds locaux avec leur propre fonction. SERVEUR / CLIENT : la simulation se fait uniquement sur le serveur (onUpdateTick) ; les valeurs sont envoyées aux clients (saleté et humidité quantifiées, couleur si changée) et appliquées aux shaders sur chaque machine par setNodeDirtAmount / setNodeWetness avec seuils d'envoi (Washable.SEND_THRESHOLD et SEND_THRESHOLD_WETNESS, définies hors de ce fichier : NON VÉRIFIÉ). DONNÉES MÉTÉO LUES : (1) onUpdateTick lit weather:getRainFallScale(), getTimeSinceLastRain() et getCurrentTemperature() (Washable.lua:~290-295 ; seulement si le véhicule autorise le lavage par la pluie, type WASHTYPE_RAIN non bloqué) et les passe à updateFunc ; (2) getDirtMultiplier lit weather:getGroundWetness() (Washable.lua:685) pour accélérer l'encrassement sur champ : x(1 + wetness x wetMultiplier). Unités et plages de ces valeurs : implémentation de Weather absente du dump, NON VÉRIFIÉ ; les seuils codés ici (pluie > 0.1, temps depuis la dernière pluie < 30, température > 0) suggèrent respectivement une échelle 0..1, des minutes de jeu et des degrés Celsius (hypothèse non vérifiée). L'HUMIDITÉ (wetness) n'est PAS calculée ici par la météo : updateWetness est appelée de l'extérieur par VehicleSystem:update (VehicleSystem.lua:~155-175) avec dt multiplié par l'échelle de temps effective. PAS DE TEMPS : onUpdateTick utilise le dt reçu directement (ms) ; l'accélération du temps n'y apparaît pas explicitement (NON VÉRIFIÉ si dt déjà mis à l'échelle ailleurs), alors que updateWetness reçoit dt x timeScale. Constantes XML par véhicule (vehicle.washable#...) : dirtDuration (défaut 90 min), washDuration (1), rainWashDuration (10 min), wetDuration (10), dryDuration (120 min), workMultiplier (4), fieldMultiplier (2), wetMultiplier (5), blockedWashTypes. Option de partie : missionInfo.dirtInterval règle la vitesse de salissure (1 = aucune, 2 = x0.25, 3 = x0.5, 4 et autres = x1). Points d'extension pour un moddeur : toutes les fonctions de la spécialisation sont des registerFunction (remplaçables par type de véhicule) ; validateWashableNode est le crochet prévu pour attribuer une logique à un nœud (renvoie global/fonction/index/paramètres) ; addWashableNode / addWashableNodes pour ajouter des nœuds a posteriori ; getDirtMultiplier et getWorkDirtMultiplier pour changer la vitesse d'encrassement ; setNodeDirtAmount, setNodeWetness et setNodeDirtColor pour agir sur l'apparence synchronisée. Ce que le vanilla ne fait PAS ici : aucune lecture du vent, et aucune évaporation liée à la température ou à l'ensoleillement (le séchage est un taux fixe modulé par la saleté et la vitesse).
+--- Vehicle specialization (no prerequisites) that manages DIRT (accumulated mud/dust) and surface WETNESS of vehicles, through shader parameters on their nodes. It is the vanilla reference for any moisture/mud mod. MODEL: each "washable node" (nodeData) groups I3D nodes and carries dirtAmount (0..1), wetness (0..1), a dirt color and an update function updateFunc. The global node (index 1) covers all nodes carrying the shader parameter "scratches_dirt_snow_wetness" (components: y = dirt, w = wetness, judging by the setShaderParameter calls); nodes without this parameter are treated as "mudNodes" (shader with "mudAmount", "wetness", "dirtColor"). Other specializations (e.g. Wheels via validateWashableNode) create local nodes with their own function. SERVER / CLIENT: the simulation runs on the server only (onUpdateTick); values are sent to clients (dirt and wetness quantized, color if changed) and applied to the shaders on each machine by setNodeDirtAmount / setNodeWetness with send thresholds (Washable.SEND_THRESHOLD and SEND_THRESHOLD_WETNESS, defined outside this file: UNVERIFIED). WEATHER DATA READ: (1) onUpdateTick reads weather:getRainFallScale(), getTimeSinceLastRain() and getCurrentTemperature() (Washable.lua:~290-295; only if the vehicle allows rain washing, WASHTYPE_RAIN not blocked) and passes them to updateFunc; (2) getDirtMultiplier reads weather:getGroundWetness() (Washable.lua:685) to speed up fouling on fields: x(1 + wetness x wetMultiplier). Units and ranges of these values: Weather implementation absent from the dump, UNVERIFIED; the thresholds hard-coded here (rain > 0.1, time since last rain < 30, temperature > 0) suggest respectively a 0..1 scale, game minutes and degrees Celsius (unverified hypothesis). WETNESS is NOT computed here from the weather: updateWetness is called from outside by VehicleSystem:update (VehicleSystem.lua:~155-175) with dt multiplied by the effective time scale. TIME STEP: onUpdateTick uses the received dt directly (ms); time acceleration does not appear explicitly there (UNVERIFIED whether dt is already scaled elsewhere), whereas updateWetness receives dt x timeScale. Per-vehicle XML constants (vehicle.washable#...): dirtDuration (default 90 min), washDuration (1), rainWashDuration (10 min), wetDuration (10), dryDuration (120 min), workMultiplier (4), fieldMultiplier (2), wetMultiplier (5), blockedWashTypes. Game option: missionInfo.dirtInterval sets the soiling speed (1 = none, 2 = x0.25, 3 = x0.5, 4 and others = x1). Extension points for a modder: all the specialization's functions are registerFunction (replaceable per vehicle type); validateWashableNode is the intended hook to assign logic to a node (returns global/function/index/parameters); addWashableNode / addWashableNodes to add nodes afterwards; getDirtMultiplier and getWorkDirtMultiplier to change the fouling speed; setNodeDirtAmount, setNodeWetness and setNodeDirtColor to act on the synchronized look. What vanilla does NOT do here: no reading of wind, and no evaporation tied to temperature or sunshine (drying is a fixed rate modulated by dirt and speed).
 ---@class Washable
 Washable = {}
 
---- Aucun prérequis.
+--- No prerequisites.
 ---@param specializations any
 function Washable.prerequisitesPresent(specializations) end
 
---- Déclare les clés de sauvegarde dirtNode (#amount, #snowScale, #wetness) et le schéma XML de la spécialisation.
+--- Declares the dirtNode save keys (#amount, #snowScale, #wetness) and the specialization's XML schema.
 function Washable.initSpecialization() end
 
---- Enregistre l'ensemble des fonctions publiques (saleté, humidité, gestion des nœuds, durées) comme fonctions de véhicule ; toutes sont remplaçables par un mod.
+--- Registers all the public functions (dirt, wetness, node management, durations) as vehicle functions; all are replaceable by a mod.
 ---@param vehicleType any
 function Washable.registerFunctions(vehicleType) end
 
---- Abonne la spécialisation à onLoad, onLoadFinished, flux réseau (lecture/écriture initiaux et de mise à jour) et onUpdateTick.
+--- Subscribes the specialization to onLoad, onLoadFinished, the network stream (initial and update read/write) and onUpdateTick.
 ---@param vehicleType any
 function Washable.registerEventListeners(vehicleType) end
 
---- Lit les paramètres XML (durées, multiplicateurs, types de lavage bloqués, wetnessIgnoreNode : nœuds ignorés pour l'humidité) et crée le nœud global avec Washable.updateDirtAmount comme fonction. Retire l'écouteur onUpdateTick en configuration de magasin (SHOP_CONFIG).
+--- Reads the XML parameters (durations, multipliers, blocked wash types, wetnessIgnoreNode: nodes ignored for wetness) and creates the global node with Washable.updateDirtAmount as its function. Removes the onUpdateTick listener in store configuration (SHOP_CONFIG).
 ---@param savegame any
 function Washable:onLoad(savegame) end
 
---- Ajoute tous les nœuds lavables des composants, puis restaure saleté, humidité et données propres aux nœuds depuis la sauvegarde ; remet tout à zéro sans sauvegarde ou si l'option de saleté est désactivée (intervalle 1).
+--- Adds all the washable nodes of the components, then restores dirt, wetness and node-specific data from the savegame; resets everything to zero without a savegame or if the dirt option is disabled (interval 1).
 ---@param savegame any
 function Washable:onLoadFinished(savegame) end
 
---- Sauvegarde, par nœud, saleté, humidité et données propres (par ex. snowScale des roues).
+--- Saves, per node, dirt, wetness and specific data (e.g. snowScale of wheels).
 ---@param xmlFile any
 ---@param key any
 ---@param usedModNames any
 function Washable:saveToXMLFile(xmlFile, key, usedModNames) end
 
---- Client : lit saleté, humidité et couleur de tous les nœuds (état initial).
+--- Client: reads dirt, wetness and color of all nodes (initial state).
 ---@param streamId any
 ---@param connection any
 function Washable:onReadStream(streamId, connection) end
 
---- Serveur : écrit saleté, humidité et couleur de tous les nœuds (état initial).
+--- Server: writes dirt, wetness and color of all nodes (initial state).
 ---@param streamId any
 ---@param connection any
 function Washable:onWriteStream(streamId, connection) end
 
---- Client : lit les valeurs des nœuds si le drapeau de mise à jour est présent.
+--- Client: reads the node values if the update flag is present.
 ---@param streamId any
 ---@param timestamp any
 ---@param connection any
 function Washable:onReadUpdateStream(streamId, timestamp, connection) end
 
---- Serveur : écrit les valeurs des nœuds si le drapeau sale de la spécialisation est levé.
+--- Server: writes the node values if the specialization's dirty flag is raised.
 ---@param streamId any
 ---@param connection any
 ---@param dirtyMask any
 function Washable:onWriteUpdateStream(streamId, connection, dirtyMask) end
 
---- Décode, pour chaque nœud, saleté et humidité (quantifiées avec SEND_NUM_BITS / SEND_NUM_BITS_WETNESS, valeurs définies hors fichier : NON VÉRIFIÉ) et couleur optionnelle, puis applique aux shaders.
+--- Decodes, for each node, dirt and wetness (quantized with SEND_NUM_BITS / SEND_NUM_BITS_WETNESS, values defined outside the file: UNVERIFIED) and an optional color, then applies them to the shaders.
 ---@param self any
 ---@param streamId any
 ---@param connection any
 function Washable.readWashableNodeData(self, streamId, connection) end
 
---- Encode les mêmes valeurs ; l'indicateur colorChanged n'est remis à faux qu'après l'écriture de la couleur.
+--- Encodes the same values; the colorChanged flag is only reset to false after the color has been written.
 ---@param self any
 ---@param streamId any
 ---@param connection any
 function Washable.writeWashableNodeData(self, streamId, connection) end
 
---- Serveur seulement, par tick. Calcule lastDirtMultiplier = getDirtMultiplier x intervalle de saleté de la partie x Platform.gameplay.dirtDurationScale. Si le lavage par la pluie est autorisé, lit rainFallScale, temps depuis la dernière pluie et température courante. Appelle la fonction de chaque nœud avec (dt, allowsWashingByRain, rainScale, timeSinceLastRain, temperature) et applique les variations de saleté et d'humidité renvoyées.
+--- Server only, per tick. Computes lastDirtMultiplier = getDirtMultiplier x the game's dirt interval x Platform.gameplay.dirtDurationScale. If rain washing is allowed, reads rainFallScale, time since last rain and current temperature. Calls each node's function with (dt, allowsWashingByRain, rainScale, timeSinceLastRain, temperature) and applies the returned dirt and wetness changes.
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function Washable:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Nettoie le véhicule (lavage) : retire la quantité demandée (multipliée par cleaningMultiplier du nœud, 4 pour la boue de roue) et ajoute 5 fois cette quantité d'humidité, de façon forcée (synchronisée).
+--- Cleans the vehicle (washing): removes the requested amount (multiplied by the node's cleaningMultiplier, 4 for wheel mud) and adds 5 times that amount of wetness, in a forced (synchronized) way.
 ---@param amount any
 function Washable:cleanVehicle(amount) end
 
---- Fonction par défaut du nœud global. Sous pluie (rainScale > 0.1, temps depuis la dernière pluie < 30, température > 0) et si la saleté dépasse 0.5 et que le véhicule n'est pas sur un champ ou roule à moins de 1 km/h (d'après le seuil codé), la pluie lave : variation -(dt / rainWashDuration). Le multiplicateur de salissure est multiplié par 2.5 sous cette pluie (la boue éclabousse davantage). À noter : comme la salissure est ensuite affectée sans addition (affectation et non cumul) lorsque dirtMultiplier n'est pas nul, le lavage par la pluie calculé juste avant est écrasé dès que le véhicule se salit (non vérifié en jeu).
+--- Default function of the global node. Under rain (rainScale > 0.1, time since last rain < 30, temperature > 0), if dirt exceeds 0.5 and the vehicle is not on a field or drives slower than 1 km/h (per the hard-coded threshold), rain washes: change -(dt / rainWashDuration). The soiling multiplier is multiplied by 2.5 under this rain (mud splashes more). Note: since the soiling is then assigned without adding (assignment, not accumulation) when dirtMultiplier is non-zero, the rain washing computed just before is overwritten as soon as the vehicle gets dirty (not verified in game).
 ---@param nodeData any
 ---@param dt any
 ---@param allowsWashingByRain any
@@ -88,29 +88,29 @@ function Washable:cleanVehicle(amount) end
 ---@param temperature any
 function Washable:updateDirtAmount(nodeData, dt, allowsWashingByRain, rainScale, timeSinceLastRain, temperature) end
 
---- Ajoute une quantité de saleté à tous les nœuds (borne 0..1), avec option force pour synchroniser.
+--- Adds an amount of dirt to all nodes (clamped 0..1), with a force option to synchronize.
 ---@param dirtAmount any
 ---@param force any
 function Washable:addDirtAmount(dirtAmount, force) end
 
---- Fixe la saleté de tous les nœuds ; pour les nœuds de roue (wheelDirtNode non nul) convertit la valeur avec (x - 0.75) / 0.25 car la boue de roue est gérée à part.
+--- Sets the dirt of all nodes; for wheel nodes (non-nil wheelDirtNode) converts the value with (x - 0.75) / 0.25 because wheel mud is handled separately.
 ---@param dirtAmount any
 function Washable:setDirtAmount(dirtAmount) end
 
---- Renvoie la saleté du nœud global (index 1), 0 sans nœud.
+--- Returns the dirt of the global node (index 1), 0 without a node.
 function Washable:getDirtAmount() end
 
---- Borne la saleté (0..1) et, au-delà du seuil d'envoi ou si forcé, l'applique au paramètre de shader « scratches_dirt_snow_wetness » (composante y) des nœuds et au paramètre « mudAmount » des mudNodes (fondu à partir de 75 % de saleté pour les maillages de boue du véhicule ; direct pour les roues). Lève le drapeau réseau côté serveur.
+--- Clamps the dirt (0..1) and, beyond the send threshold or if forced, applies it to the shader parameter "scratches_dirt_snow_wetness" (y component) of the nodes and to the "mudAmount" parameter of the mudNodes (fade from 75% dirt for the vehicle's mud meshes; direct for wheels). Raises the network flag server side.
 ---@param nodeData any
 ---@param dirtAmount any
 ---@param force any
 function Washable:setNodeDirtAmount(nodeData, dirtAmount, force) end
 
---- Renvoie la saleté d'un nœud.
+--- Returns the dirt of a node.
 ---@param nodeData any
 function Washable:getNodeDirtAmount(nodeData) end
 
---- Change la couleur de saleté (paramètre de shader « dirtColor ») des nœuds et mudNodes si l'écart dépasse le seuil ou si forcé ; marque la couleur à envoyer et lève le drapeau réseau côté serveur.
+--- Changes the dirt color (shader parameter "dirtColor") of the nodes and mudNodes if the difference exceeds the threshold or if forced; flags the color to be sent and raises the network flag server side.
 ---@param nodeData any
 ---@param r any
 ---@param g any
@@ -118,79 +118,79 @@ function Washable:getNodeDirtAmount(nodeData) end
 ---@param force any
 function Washable:setNodeDirtColor(nodeData, r, g, b, force) end
 
---- Appelée de l'extérieur (VehicleSystem:update). Sous pluie : humidité + dt x wetDuration x (1 + min(vitesse km/h / 10, 1)). Sans pluie : sèche de dt x dryDuration x facteur (0.5 à 1, plus lent si le véhicule est très sale) x (1 + min(vitesse km/h / 10, 1)). Le séchage ne dépend d'aucune donnée de soleil, température ou vent.
+--- Called from outside (VehicleSystem:update). Under rain: wetness + dt x wetDuration x (1 + min(speed km/h / 10, 1)). Without rain: dries by dt x dryDuration x factor (0.5 to 1, slower if the vehicle is very dirty) x (1 + min(speed km/h / 10, 1)). Drying does not depend on any sun, temperature or wind data.
 ---@param isRaining any
 ---@param dt any
 function Washable:updateWetness(isRaining, dt) end
 
---- Vrai si au moins un nœud a une humidité positive.
+--- True if at least one node has positive wetness.
 function Washable:getIsWet() end
 
---- Ajoute de l'humidité à tous les nœuds (utilisé aussi par la commande console gsVehicleAddWetness).
+--- Adds wetness to all nodes (also used by the console command gsVehicleAddWetness).
 ---@param amount any
 function Washable:addWetnessAmount(amount) end
 
---- Borne l'humidité (0..1) et l'applique à la composante humidité du shader « scratches_dirt_snow_wetness » et au paramètre « wetness » des mudNodes, hors nœuds exclus via wetnessIgnoreNode ; seuil d'envoi propre ; lève le drapeau réseau côté serveur.
+--- Clamps the wetness (0..1) and applies it to the wetness component of the shader "scratches_dirt_snow_wetness" and to the "wetness" parameter of the mudNodes, excluding nodes excluded via wetnessIgnoreNode; own send threshold; raises the network flag server side.
 ---@param nodeData any
 ---@param wetness any
 ---@param force any
 function Washable:setNodeWetness(nodeData, wetness, force) end
 
---- Parcourt récursivement un nœud racine pour y trouver ceux qui portent un des paramètres de shader Washable.SHADER_PARAMETERS (définis hors de ce fichier) et les ajoute, puis réapplique la saleté courante à tous les nœuds.
+--- Recursively walks a root node to find those carrying one of the Washable.SHADER_PARAMETERS (defined outside this file) and adds them, then reapplies the current dirt to all nodes.
 ---@param rootNode any
 function Washable:addAllSubWashableNodes(rootNode) end
 
---- Ajoute une liste de nœuds lavables.
+--- Adds a list of washable nodes.
 ---@param nodes any
 function Washable:addWashableNodes(nodes) end
 
---- Interroge validateWashableNode et range le nœud dans le nœud global ou dans un nœud local selon la réponse.
+--- Queries validateWashableNode and files the node in the global node or in a local node depending on the answer.
 ---@param node any
 function Washable:addWashableNode(node) end
 
---- Par défaut, tous les nœuds sont globaux (renvoie vrai, nil). Surchargée par Wheels et par d'autres spécialisations (non relues) pour attribuer une logique propre.
+--- By default, all nodes are global (returns true, nil). Overridden by Wheels and by other specializations (not read) to assign their own logic.
 ---@param node any
 function Washable:validateWashableNode(node) end
 
---- Ajoute un nœud au nœud global, avec indicateur d'utilisation de l'humidité faux si un parent est déclaré dans wetnessIgnoreNode ; distingue nœuds à saleté « classique » et nœuds de boue d'après le paramètre de shader présent.
+--- Adds a node to the global node, with the wetness-use flag set to false if a parent is declared in wetnessIgnoreNode; distinguishes "classic" dirt nodes from mud nodes according to the shader parameter present.
 ---@param node any
 function Washable:addToGlobalWashableNode(node) end
 
---- Renvoie le nœud lavable local associé à un index personnalisé (par ex. un objet roue).
+--- Returns the local washable node associated with a custom index (e.g. a wheel object).
 ---@param customIndex any
 function Washable:getWashableNodeByCustomIndex(customIndex) end
 
---- Crée (ou complète, si l'index personnalisé existe déjà) un nœud lavable local : tables nodes/mudNodes, saleté et humidité à zéro, couleur par défaut = environment:getDirtColors (NON VÉRIFIÉ, Environment absent du dump), fonction de mise à jour et paramètres supplémentaires copiés dans le nœud.
+--- Creates (or completes, if the custom index already exists) a local washable node: nodes/mudNodes tables, dirt and wetness at zero, default color = environment:getDirtColors (UNVERIFIED, Environment absent from the dump), update function and extra parameters copied into the node.
 ---@param node any
 ---@param updateFunc any
 ---@param customIndex any
 ---@param extraParams any
 function Washable:addToLocalWashableNode(node, updateFunc, customIndex, extraParams) end
 
---- Retire récursivement les nœuds lavables d'un nœud racine.
+--- Recursively removes the washable nodes of a root node.
 ---@param rootNode any
 function Washable:removeAllSubWashableNodes(rootNode) end
 
---- Retire un nœud de tous les nœuds lavables.
+--- Removes a node from all washable nodes.
 ---@param node any
 function Washable:removeWashableNode(node) end
 
---- Multiplicateur de salissure : 0 sous 1 km/h (d'après le seuil codé sur getLastSpeed), x fieldMultiplier sur champ (self.isOnField), et sur champ avec sol humide x(1 + groundWetness x wetMultiplier) d'après weather:getGroundWetness().
+--- Soiling multiplier: 0 below 1 km/h (per the hard-coded threshold on getLastSpeed), x fieldMultiplier on a field (self.isOnField), and on a field with wet ground x(1 + groundWetness x wetMultiplier) based on weather:getGroundWetness().
 function Washable:getDirtMultiplier() end
 
---- Renvoie workMultiplier (défaut 4), utilisé par les outils de travail pour salir plus vite.
+--- Returns workMultiplier (default 4), used by working tools to get dirty faster.
 function Washable:getWorkDirtMultiplier() end
 
---- Renvoie la durée de lavage en ms.
+--- Returns the washing duration in ms.
 function Washable:getWashDuration() end
 
---- Convertit l'option de partie dirtInterval en facteur : 1 -> 0, 2 -> 0.25, 3 -> 0.5, 4 -> 1 (autre -> 1).
+--- Converts the game option dirtInterval into a factor: 1 -> 0, 2 -> 0.25, 3 -> 0.5, 4 -> 1 (other -> 1).
 function Washable.getIntervalMultiplier() end
 
---- Vrai si le type de lavage (par ex. WASHTYPE_RAIN) n'est pas bloqué dans le XML du véhicule.
+--- True if the wash type (e.g. WASHTYPE_RAIN) is not blocked in the vehicle's XML.
 ---@param type any
 function Washable:getAllowsWashingByType(type) end
 
---- Débogage : ajoute à une liste de valeurs le multiplicateur de saleté et, par nœud, les variations horaires de saleté et d'humidité estimées avec les données météo courantes.
+--- Debug: adds to a value list the dirt multiplier and, per node, the hourly dirt and wetness changes estimated with the current weather data.
 ---@param values any
 function Washable:updateDebugValues(values) end

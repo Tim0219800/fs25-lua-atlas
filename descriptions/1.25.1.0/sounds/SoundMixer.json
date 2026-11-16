@@ -1,0 +1,41 @@
+{
+ "fichier": "sounds/SoundMixer.lua",
+ "module": {
+  "en": "Client-side mixer that sets the volume of each audio group according to the current game state, with fade in and fade out. Per-state volumes come from a sound mixer XML; extra per-group factors and a master volume can be applied on top. It listens to GAME_STATE_CHANGED on the message center and exposes a console command for debug mode.",
+  "fr": "Mixeur côté client qui règle le volume de chaque groupe audio selon l'état de jeu courant, avec fondu d'entrée et de sortie. Les volumes par état viennent d'un XML de mixage ; des facteurs par groupe et un volume maître s'y ajoutent. Il écoute GAME_STATE_CHANGED sur le centre de messages et expose une commande console de débogage."
+ },
+ "fonctions": {
+  "SoundMixer.new": {
+   "en": "Creates the mixer, subscribes to game state changes, sets every audio group's factor to 1 and registers the console command gsSoundMixerDebug.",
+   "fr": "Crée le mixeur, s'abonne aux changements d'état de jeu, met le facteur de chaque groupe audio à 1 et enregistre la commande console gsSoundMixerDebug."
+  },
+  "SoundMixer:loadFromXML": {
+   "en": "Reads game state entries with audioGroup volume and fade settings from the XML. Then sets every group volume to 0 (engine call setAudioGroupVolume); update() fades them up once the state is dirty. Unknown states or groups log a warning. Note: fadeInDuration is read from the #fadeOutDuration attribute, so fade-in equals fade-out.",
+   "fr": "Lit depuis le XML les états de jeu avec volume et fondus par groupe audio. Met ensuite tous les volumes de groupe à 0 (appel moteur setAudioGroupVolume) ; update() les monte quand l'état est marqué modifié. États ou groupes inconnus : avertissement. À noter : fadeInDuration est lu depuis l'attribut #fadeOutDuration, donc fondu d'entrée = fondu de sortie."
+  },
+  "SoundMixer:delete": {
+   "en": "Unsubscribes from all messages and removes the debug console command.",
+   "fr": "Se désabonne de tous les messages et retire la commande console de débogage."
+  },
+  "SoundMixer:update": {
+   "en": "When flagged dirty, moves each group volume of the current game state toward its target (state volume times group factor) at a rate based on dt and the fade duration. Notifies the volume listeners and clears the flag once all targets are reached.",
+   "fr": "Si le mixeur est marqué modifié, rapproche le volume de chaque groupe de l'état courant de sa cible (volume de l'état fois facteur du groupe), à un rythme fondé sur dt et la durée de fondu. Prévient les écouteurs et efface le drapeau quand toutes les cibles sont atteintes."
+  },
+  "SoundMixer:setAudioGroupVolumeFactor": {
+   "en": "Sets a multiplier for one audio group and marks the mixer dirty so the volume fades toward the new target. Ignored for nil or unknown groups.",
+   "fr": "Définit un multiplicateur pour un groupe audio et marque le mixeur modifié pour que le volume glisse vers la nouvelle cible. Ignoré pour un groupe nil ou inconnu."
+  },
+  "SoundMixer:setMasterVolume": {
+   "en": "Stores the master volume and forwards it to the engine function setMasterVolume.",
+   "fr": "Mémorise le volume maître et le transmet à la fonction moteur setMasterVolume."
+  },
+  "SoundMixer:onGameStateChanged": {
+   "en": "Message handler: marks the mixer dirty if the new game state has mixing settings, so update() starts fading.",
+   "fr": "Gestionnaire de message : marque le mixeur modifié si le nouvel état de jeu possède des réglages de mixage, ce qui lance les fondus dans update()."
+  },
+  "SoundMixer:addVolumeChangedListener": {
+   "en": "Registers a callback (func, target) called as func(target, audioGroupIndex, volume) whenever that group's volume changes. Duplicates are not prevented.",
+   "fr": "Enregistre un rappel (func, target) appelé sous la forme func(target, audioGroupIndex, volume) à chaque changement de volume du groupe. Les doublons ne sont pas évités."
+  }
+ }
+}

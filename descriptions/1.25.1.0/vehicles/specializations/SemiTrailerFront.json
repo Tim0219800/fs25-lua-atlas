@@ -1,0 +1,49 @@
+{
+ "fichier": "vehicles/specializations/SemiTrailerFront.lua",
+ "module": {
+  "en": "Specialization for the detachable front part of a separable semi trailer. It needs AttacherJoints and works on the first input attacher joint of Attachable: when no rear semi trailer is attached, the joint rotation limits are faded down to zero over about one second so the front part can be handled, and they are restored when a rear part is attached. Detaching from the tractor is only allowed while a rear semi trailer is attached. Joint changes happen on the server.",
+  "fr": "Spécialisation pour la partie avant détachable d'une semi-remorque séparable. Elle exige AttacherJoints et agit sur le premier input attacher joint d'Attachable : sans semi-remorque arrière attachée, les limites de rotation du joint sont ramenées à zéro en environ une seconde, et rétablies à l'attelage d'une partie arrière. Le dételage du tracteur n'est permis que si une semi-remorque arrière est attachée. Les changements de joint se font côté serveur."
+ },
+ "fonctions": {
+  "SemiTrailerFront.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has AttacherJoints.",
+   "fr": "Retourne vrai uniquement si le type de véhicule possède AttacherJoints."
+  },
+  "SemiTrailerFront.registerOverwrittenFunctions": {
+   "en": "Overrides `isDetachAllowed`.",
+   "fr": "Surcharge `isDetachAllowed`."
+  },
+  "SemiTrailerFront.registerEventListeners": {
+   "en": "Subscribes to onLoad, onUpdate, onPostAttachImplement, onPreDetachImplement, onPreDetach and onPostAttach.",
+   "fr": "S'abonne à onLoad, onUpdate, onPostAttachImplement, onPreDetachImplement, onPreDetach et onPostAttach."
+  },
+  "SemiTrailerFront:onLoad": {
+   "en": "Initialises the fade state (value 1, direction 1, duration 1000 ms), grabs the first Attachable input attacher joint and backs up its `lowerRotLimitScale`. It will error if the vehicle has no input attacher joint.",
+   "fr": "Initialise l'état de fondu (valeur 1, direction 1, durée 1000 ms), récupère le premier input attacher joint d'Attachable et sauvegarde son `lowerRotLimitScale`. Provoque une erreur si le véhicule n'a aucun input attacher joint."
+  },
+  "SemiTrailerFront:onUpdate": {
+   "en": "On the first update, if no rear trailer is attached, sets the fade direction to closing. On the server, while attached to a tractor and the fade is not finished, moves the fade value with dt, scales the joint rotation limits and applies them on the physics joint with `setJointRotationLimit`.",
+   "fr": "À la première mise à jour, sans semi-remorque arrière attachée, passe la direction du fondu à la fermeture. Côté serveur, tant qu'il est attelé à un tracteur et que le fondu n'est pas terminé, fait évoluer la valeur avec dt, met à l'échelle les limites de rotation du joint et les applique sur le joint physique avec `setJointRotationLimit`."
+  },
+  "SemiTrailerFront:isDetachAllowed": {
+   "en": "Returns false (with the parent's warning) if the parent forbids detaching; otherwise returns true only when a rear semi trailer is attached, with no warning.",
+   "fr": "Retourne false (avec l'avertissement du parent) si le parent interdit le dételage ; sinon retourne true seulement si une semi-remorque arrière est attachée, sans avertissement."
+  },
+  "SemiTrailerFront:onPostAttachImplement": {
+   "en": "Remembers the attached rear trailer and sets the fade direction to 1000 so the rotation limits are restored.",
+   "fr": "Mémorise la remorque arrière attachée et met la direction de fondu à 1000 pour rétablir les limites de rotation."
+  },
+  "SemiTrailerFront:onPreDetachImplement": {
+   "en": "Forgets the rear trailer and sets the fade direction to -1 so the rotation limits fade out.",
+   "fr": "Oublie la remorque arrière et met la direction de fondu à -1 pour faire disparaître progressivement les limites de rotation."
+  },
+  "SemiTrailerFront:onPreDetach": {
+   "en": "Clears the stored tractor implement reference when this front part is detached.",
+   "fr": "Efface la référence d'implement du tracteur lorsque cette partie avant est dételée."
+  },
+  "SemiTrailerFront:onPostAttach": {
+   "en": "After being attached to a tractor, stores the matching implement entry from the attacher vehicle.",
+   "fr": "Après l'attelage à un tracteur, mémorise l'entrée d'implement correspondante du véhicule porteur."
+  }
+ }
+}

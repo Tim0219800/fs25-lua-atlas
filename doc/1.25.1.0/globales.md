@@ -1,5 +1,7 @@
 # g_* globals
 
+*[Version française](fr/globales.md)*
+
 | Global | Assigned in |
 |---|---|
 | `g_activeVehicleCamera` | vehicles/VehicleCamera.lua:778, vehicles/VehicleCamera.lua:874 |

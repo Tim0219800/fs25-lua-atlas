@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/elements/TextBackdropElement.lua",
+ "module": {
+  "en": "Bitmap element (derived from BitmapElement) meant to size itself around a child text element, with a four-value padding (left, top, right, bottom) read from the XML attribute or profile key padding. This file only handles loading and copying the padding; the resizing logic is not in it (UNVERIFIED).",
+  "fr": "Élément bitmap (dérivé de BitmapElement) destiné à se dimensionner autour d'un élément texte enfant, avec un padding à quatre valeurs (gauche, haut, droite, bas) lu depuis l'attribut XML ou la clé de profil padding. Ce fichier ne gère que le chargement et la copie du padding ; la logique de redimensionnement n'y figure pas (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "TextBackdropElement.new": {
+   "en": "Constructor. Sets the padding to zero on all four sides.",
+   "fr": "Constructeur. Met le padding à zéro sur les quatre côtés."
+  },
+  "TextBackdropElement:loadFromXML": {
+   "en": "Loads the padding attribute from the XML node as normalised screen values after the parent class, keeping the current padding as default.",
+   "fr": "Charge l'attribut padding du nœud XML en valeurs d'écran normalisées après la classe parente, avec le padding actuel par défaut."
+  },
+  "TextBackdropElement:loadProfile": {
+   "en": "Loads the padding value from the GUI profile as normalised screen values, keeping the current padding as default.",
+   "fr": "Charge la valeur padding du profil GUI en valeurs d'écran normalisées, avec le padding actuel par défaut."
+  },
+  "TextBackdropElement:copyAttributes": {
+   "en": "Copies parent attributes and clones the padding table from the source.",
+   "fr": "Copie les attributs parents et clone la table de padding de la source."
+  }
+ }
+}

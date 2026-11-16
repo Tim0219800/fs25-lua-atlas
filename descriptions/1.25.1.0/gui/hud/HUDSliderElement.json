@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/HUDSliderElement.lua",
+ "module": {
+  "en": "HUD slider for touch devices (mobile UI). It registers three touch areas (down, always, up) on a background overlay through g_touchHandler and moves the wrapped overlay along one axis between minimum and maximum translations, with optional center and lock positions. Extends HUDElement. Only the constructor is in this file; callbacks such as onSliderDown, setCallback, setAxisPosition or resetSlider are referenced by other code but not defined here (UNVERIFIED where they come from).",
+  "fr": "Curseur HUD pour appareils tactiles (interface mobile). Il enregistre trois zones tactiles (appui, maintien, relâchement) sur un overlay d'arrière-plan via g_touchHandler et déplace l'overlay enveloppé le long d'un axe entre des translations minimale et maximale, avec positions centrale et de verrouillage optionnelles. Étend HUDElement. Seul le constructeur figure dans ce fichier ; onSliderDown, setCallback, setAxisPosition ou resetSlider sont utilisés ailleurs mais non définis ici (NON VÉRIFIÉ pour leur origine)."
+ },
+ "fonctions": {
+  "HUDSliderElement.new": {
+   "en": "Builds the slider around an overlay and a background overlay, storing axis, min/center/max/lock translations and default speed 0.0002, then registers three touch areas on the background and sets their pressed-size gain. Note: its doc comment describes FrameElement parameters, not these.",
+   "fr": "Construit le curseur autour d'un overlay et d'un overlay d'arrière-plan, mémorise l'axe, les translations min/centre/max/verrou et une vitesse par défaut de 0.0002, puis enregistre trois zones tactiles sur l'arrière-plan et règle leur gain de taille à l'appui. À noter : son commentaire décrit des paramètres de FrameElement, pas ceux-ci."
+  }
+ }
+}

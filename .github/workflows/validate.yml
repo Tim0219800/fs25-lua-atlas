@@ -17,21 +17,26 @@ jobs:
       - name: Tools compile
         run: python -m py_compile outils/*.py
 
-      - name: Descriptions are valid JSON with a source file
+      - name: Descriptions are valid, bilingual JSON
         run: |
           python -I -c "
           import json, glob, sys
           bad = []
           files = glob.glob('descriptions/**/*.json', recursive=True)
+          def ok(v):
+              return isinstance(v, dict) and all(str(v.get(k, '')).strip() for k in ('en', 'fr'))
           for p in files:
               try:
                   d = json.load(open(p, encoding='utf-8'))
-                  if not str(d.get('fichier', '')).endswith('.lua'):
-                      bad.append(p + ': champ fichier manquant')
               except Exception as e:
-                  bad.append(p + ': ' + str(e))
-          print(len(files), 'fichiers,', len(bad), 'erreurs')
-          [print('ERREUR', b) for b in bad]
+                  bad.append(p + ': ' + str(e)); continue
+              if not str(d.get('fichier', '')).endswith('.lua'):
+                  bad.append(p + ': missing fichier')
+              if not ok(d.get('module')):
+                  bad.append(p + ': module needs en + fr')
+              bad += [p + ': ' + k + ' needs en + fr' for k, v in d.get('fonctions', {}).items() if not ok(v)]
+          print(len(files), 'files,', len(bad), 'errors')
+          [print('ERROR', b) for b in bad[:50]]
           sys.exit(1 if bad else 0)
           "
 

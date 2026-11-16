@@ -1,0 +1,25 @@
+{
+ "fichier": "triggers/TransportMissionTrigger.lua",
+ "module": {
+  "en": "Map trigger node used by transport missions: it registers itself with the mission manager and forwards object enter and leave events to the mission currently assigned to it. The assignment method setMission is called in the constructor but not defined in this file (UNVERIFIED, probably in a gap of the dump). It reads a user attribute named index from the node.",
+  "fr": "Noeud trigger de carte utilisé par les missions de transport : il s'enregistre auprès du gestionnaire de missions et transmet les événements d'entrée et de sortie d'objets à la mission qui lui est actuellement assignée. La méthode d'assignation setMission est appelée dans le constructeur mais n'est pas définie dans ce fichier (NON VÉRIFIÉ, probablement dans un trou du dump). Il lit un attribut utilisateur nommé index sur le noeud."
+ },
+ "fonctions": {
+  "TransportMissionTrigger:onCreate": {
+   "en": "Map-load entry point for a transport mission trigger node: builds a TransportMissionTrigger and adds it to the mission's non-updateable objects.",
+   "fr": "Point d'entrée au chargement de la carte pour un noeud de mission de transport : construit un TransportMissionTrigger et l'ajoute aux objets non mis à jour de la mission."
+  },
+  "TransportMissionTrigger.new": {
+   "en": "Creates the trigger: reads the `index` user attribute, registers the physics callback, enables it, registers with g_missionManager and calls setMission(nil) to hide it until a mission is assigned.",
+   "fr": "Crée le trigger : lit l'attribut utilisateur `index`, enregistre le callback physique, l'active, s'enregistre auprès de g_missionManager et appelle setMission(nil) pour le masquer jusqu'à l'assignation d'une mission."
+  },
+  "TransportMissionTrigger:delete": {
+   "en": "Removes the physics trigger and unregisters itself from the mission manager.",
+   "fr": "Retire le trigger physique et se désenregistre du gestionnaire de missions."
+  },
+  "TransportMissionTrigger:triggerCallback": {
+   "en": "If enabled and a mission is assigned, forwards enter events to mission:objectEnteredTrigger and leave events to mission:objectLeftTrigger with the trigger and the other node id.",
+   "fr": "Si le trigger est actif et qu'une mission est assignée, transmet les entrées à mission:objectEnteredTrigger et les sorties à mission:objectLeftTrigger avec le trigger et l'identifiant du noeud concerné."
+  }
+ }
+}

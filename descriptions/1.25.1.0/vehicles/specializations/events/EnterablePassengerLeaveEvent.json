@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/EnterablePassengerLeaveEvent.lua",
+ "module": {
+  "en": "Network event class `EnterablePassengerLeaveEvent` (extends `Event`) that replicates a user leaving a passenger seat. It carries the vehicle and the user id. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `EnterablePassengerLeaveEvent` (hérite de `Event`) qui réplique le départ d'un utilisateur d'une place passager. Elle transporte le véhicule et l'id utilisateur. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "EnterablePassengerLeaveEvent.emptyNew": {
+   "en": "Creates an empty `EnterablePassengerLeaveEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `EnterablePassengerLeaveEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "EnterablePassengerLeaveEvent.new": {
+   "en": "Creates the event with its data: the vehicle and the user id.",
+   "fr": "Crée l'événement avec ses données : le véhicule et l'id utilisateur."
+  },
+  "EnterablePassengerLeaveEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle and the user id), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule et l'id utilisateur), puis appelle `run`."
+  },
+  "EnterablePassengerLeaveEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle and the user id).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule et l'id utilisateur)."
+  },
+  "EnterablePassengerLeaveEvent:run": {
+   "en": "Executes the event on the receiving side: if the vehicle is synchronized, finds the player by user id and calls `player:leaveVehicle(vehicle, true)`, otherwise logs a dev message. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : si le véhicule est synchronisé, retrouve le joueur par id utilisateur et appelle `player:leaveVehicle(vehicle, true)`, sinon journalise un message dev. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  },
+  "EnterablePassengerLeaveEvent.sendEvent": {
+   "en": "Helper that sends the event: the server broadcasts it to clients, a client sends it to the server. Skipped when `noEventSend` is set.",
+   "fr": "Fonction utilitaire d'envoi : le serveur diffuse l'événement aux clients, un client l'envoie au serveur. Ignorée si `noEventSend` est activé."
+  }
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "fichier": "gui/ConstructionScreen.lua",
+ "module": {
+  "en": "Client-side construction (build mode) screen, derived from ScreenElement. It owns a top-down camera, a cursor, construction sounds, the active brush, and caches of menu cells for the item list and attribute details. It gets brush classes from g_constructionBrushTypeManager and handles input contexts and action events. Much of the file is outside the described entries.",
+  "fr": "Écran de construction côté client, dérivé de ScreenElement. Il possède une caméra vue de dessus, un curseur, les sons de construction, le pinceau actif et des caches de cellules de menu pour la liste d'objets et les détails d'attributs. Il obtient les classes de pinceaux via g_constructionBrushTypeManager et gère contextes d'entrée et événements d'action. L'essentiel du fichier est hors des entrées décrites."
+ },
+ "fonctions": {
+  "ConstructionScreen.new": {
+   "en": "Creates the screen with a GuiTopDownCamera, GuiTopDownCursor and ConstructionSound, no brush, and empty tables for items, events, marquee boxes, cloned elements and cell caches. Mouse mode is on by default.",
+   "fr": "Crée l'écran avec une GuiTopDownCamera, un GuiTopDownCursor et un ConstructionSound, sans pinceau, avec des tables vides pour objets, événements, cadres de sélection, éléments clonés et caches de cellules. Le mode souris est actif par défaut."
+  },
+  "ConstructionScreen:onOpen": {
+   "en": "Activates the construction input context, camera and cursor, shifts the safe frame by the menu width, and creates the select and destruct brushes on first use. It then selects the selector brush, rebuilds data, shows the input help and subscribes to messages. In first person on foot, it shows the player model.",
+   "fr": "Active le contexte d'entrée de construction, la caméra et le curseur, décale la zone de sécurité de la largeur du menu et crée les pinceaux de sélection et de destruction à la première utilisation. Il sélectionne ensuite le pinceau de sélection, reconstruit les données, affiche l'aide de saisie et s'abonne aux messages. À pied en vue subjective, il affiche le modèle du joueur."
+  },
+  "ConstructionScreen:onClose": {
+   "en": "Reverses onOpen: hides the player model again if shown, unsubscribes from messages, restores input help and safe frame, and clears the open time. It removes the brush, deactivates cursor and camera, removes menu action events and reverts the input context.",
+   "fr": "Inverse onOpen : recache le modèle du joueur s'il était affiché, se désabonne des messages, restaure l'aide de saisie et la zone de sécurité et efface l'heure d'ouverture. Il retire le pinceau, désactive curseur et caméra, retire les événements d'action du menu et rétablit le contexte d'entrée."
+  },
+  "ConstructionScreen:registerBrushActionEvents": {
+   "en": "Registers input action events for the current brush (primary, secondary, tertiary, and others) according to the brush flags such as dragging support. Stores event ids in brushEvents and sets high text priority on the main buttons. Does nothing without a brush.",
+   "fr": "Enregistre les événements d'action d'entrée du pinceau courant (primaire, secondaire, tertiaire, etc.) selon les drapeaux du pinceau, comme la prise en charge du glisser. Stocke les identifiants dans brushEvents et donne une priorité de texte élevée aux boutons principaux. Ne fait rien sans pinceau."
+  },
+  "ConstructionScreen:removeBrushActionEvents": {
+   "en": "Removes every action event listed in brushEvents and clears the stored references to the primary, secondary, tertiary, fourth, axis, snapping and show-configs events.",
+   "fr": "Retire tous les événements d'action listés dans brushEvents et efface les références stockées vers les événements primaire, secondaire, tertiaire, quatrième, axes, magnétisme et affichage des configurations."
+  },
+  "ConstructionScreen:buildCellDatabase": {
+   "en": "Builds the template table for the attribute layout: clones each element of attributesLayout by name and creates an empty cache for it. Prepares the reuse done by dequeueDetailsCell and queueDetailsCell.",
+   "fr": "Construit la table de modèles du layout d'attributs : clone chaque élément de attributesLayout par son nom et crée un cache vide pour chacun. Prépare la réutilisation faite par dequeueDetailsCell et queueDetailsCell."
+  },
+  "ConstructionScreen:dequeueDetailsCell": {
+   "en": "Returns a details cell of the given name, taken from the cache or cloned from its template, and adds it to the attributes layout. Returns nil if no template exists for that name.",
+   "fr": "Retourne une cellule de détails du nom donné, prise dans le cache ou clonée depuis son modèle, et l'ajoute au layout d'attributs. Retourne nil si aucun modèle n'existe pour ce nom."
+  },
+  "ConstructionScreen:queueDetailsCell": {
+   "en": "Returns a cell to the cache of its name, removes it from the attributes layout and unlinks it. Note: no reset of the cell happens here, despite what one would expect from a cache release.",
+   "fr": "Remet une cellule dans le cache de son nom, la retire du layout d'attributs et la détache. À noter : la cellule n'est pas réinitialisée ici, contrairement à ce qu'on attendrait d'une libération de cache."
+  }
+ }
+}

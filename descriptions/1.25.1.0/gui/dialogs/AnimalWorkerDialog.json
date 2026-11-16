@@ -1,0 +1,29 @@
+{
+ "fichier": "gui/dialogs/AnimalWorkerDialog.lua",
+ "module": {
+  "en": "MessageDialog subclass for managing the hireable worker tasks of an animal husbandry: one row per task with schedule, cost, number of animals needing work, an on/off toggle and a run-now button. Toggles change a working copy only; the calling code must apply it, send it over the network and handle the immediate run. Unsubscribes from PlaceableHusbandryAnimalWorkerPerformAnswerEvent on close. Row building and info refreshing live in assignTaskRows and refreshInfo, not in this file (UNVERIFIED).",
+  "fr": "Sous-classe de MessageDialog pour gérer les tâches d'ouvriers engageables d'un élevage : une ligne par tâche avec planning, coût, nombre d'animaux concernés, un interrupteur et un bouton d'exécution immédiate. Elle ne modifie qu'une copie locale de l'état ; l'appelant l'applique, le diffuse en réseau et gère l'exécution immédiate. Se désabonne de PlaceableHusbandryAnimalWorkerPerformAnswerEvent à la fermeture. La construction des lignes et le rafraîchissement sont dans assignTaskRows et refreshInfo, absents de ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AnimalWorkerDialog:onGuiSetupFinished": {
+   "en": "After GUI setup, detaches the task row template from the layout and the focus manager, and records the authored maximum box height and the remaining frame height for later shrinking.",
+   "fr": "Après la mise en place du GUI, détache le modèle de ligne de tâche de la mise en page et du gestionnaire de focus, et mémorise la hauteur maximale de la boîte et la hauteur restante du cadre pour le redimensionnement."
+  },
+  "AnimalWorkerDialog:delete": {
+   "en": "Deletes the unlinked row template, then the dialog itself, since the template is no longer owned by the layout.",
+   "fr": "Supprime le modèle de ligne détaché, puis le dialogue lui-même, car le modèle n'appartient plus à la mise en page."
+  },
+  "AnimalWorkerDialog:onOpen": {
+   "en": "If a husbandry is set, builds the task rows with assignTaskRows, restarts the refresh timer and refreshes the info at once. Does nothing more when husbandry is nil.",
+   "fr": "Si un élevage est défini, construit les lignes de tâches avec assignTaskRows, relance le minuteur et rafraîchit aussitôt les infos. Rien de plus si husbandry est nil."
+  },
+  "AnimalWorkerDialog:onClose": {
+   "en": "Clears the pending row and unsubscribes from the perform-answer event. Husbandry and callbacks are cleared too, except during a GUI reload (g_gui.currentlyReloading) so the state survives.",
+   "fr": "Efface la ligne en attente et se désabonne de l'événement de réponse d'exécution. L'élevage et les callbacks sont aussi effacés, sauf pendant un rechargement du GUI (g_gui.currentlyReloading) afin de conserver l'état."
+  },
+  "AnimalWorkerDialog:update": {
+   "en": "While open with a husbandry, counts down the refresh timer by dt (ms) and calls refreshInfo each time it elapses (AnimalWorkerDialog.INFO_REFRESH_INTERVAL, defined elsewhere).",
+   "fr": "Tant qu'il est ouvert avec un élevage, décompte le minuteur de dt (ms) et appelle refreshInfo à chaque échéance (AnimalWorkerDialog.INFO_REFRESH_INTERVAL, défini ailleurs)."
+  }
+ }
+}

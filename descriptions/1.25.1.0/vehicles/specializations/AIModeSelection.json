@@ -1,0 +1,105 @@
+{
+ "fichier": "vehicles/specializations/AIModeSelection.lua",
+ "module": {
+  "en": "Specialization that lets the player switch a vehicle between the regular AI helper (WORKER) mode and the steering assist mode (STEERING_ASSIST). It requires AIDrivable and AIAutomaticSteering. It keeps the current mode, the field course settings and the user settings, saves them in the savegame, syncs them on join, and handles the TOGGLE_AI input (short press starts, long press opens the AI settings dialog). The MODE constants and NUM_BITS are defined outside this dump (UNVERIFIED).",
+  "fr": "Spécialisation qui permet au joueur de faire passer un véhicule entre le mode assistant IA classique (WORKER) et le mode d'aide à la conduite (STEERING_ASSIST). Elle exige AIDrivable et AIAutomaticSteering. Elle conserve le mode courant, les réglages de parcours de champ et les réglages utilisateur, les sauvegarde, les synchronise à la connexion et gère l'entrée TOGGLE_AI (appui court : démarrer, appui long : ouvrir le dialogue de réglages IA). Les constantes MODE et NUM_BITS sont définies hors de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AIModeSelection.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type also has the AIDrivable and AIAutomaticSteering specializations.",
+   "fr": "Renvoie vrai seulement si le type de véhicule possède aussi les spécialisations AIDrivable et AIAutomaticSteering."
+  },
+  "AIModeSelection.initSpecialization": {
+   "en": "Registers the savegame keys for the current AI mode and for the AI user settings under vehicles.vehicle(?).aiModeSelection.",
+   "fr": "Déclare les clés de sauvegarde du mode IA courant et des réglages utilisateur IA sous vehicles.vehicle(?).aiModeSelection."
+  },
+  "AIModeSelection.registerEvents": {
+   "en": "Registers the vehicle events onAIModeChanged and onAIModeSettingsChanged.",
+   "fr": "Enregistre les événements de véhicule onAIModeChanged et onAIModeSettingsChanged."
+  },
+  "AIModeSelection.registerFunctions": {
+   "en": "Registers the mode getter/setter, the settings-changed handler, the field course settings accessors and the stream apply/write helpers on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule l'accesseur et le mutateur du mode, le gestionnaire de changement de réglages, les accesseurs des réglages de parcours de champ et les aides de lecture/écriture de flux."
+  },
+  "AIModeSelection.registerOverwrittenFunctions": {
+   "en": "Empty: this specialization overrides no base vehicle function.",
+   "fr": "Vide : cette spécialisation ne surcharge aucune fonction de base du véhicule."
+  },
+  "AIModeSelection.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onReadStream, onWriteStream, onUpdateTick, onDraw, onStateChange and onRegisterActionEvents.",
+   "fr": "Abonne la spécialisation à onLoad, onDelete, onReadStream, onWriteStream, onUpdateTick, onDraw, onStateChange et onRegisterActionEvents."
+  },
+  "AIModeSelection:onLoad": {
+   "en": "Defaults the mode to WORKER, creates the HUD extension and loads the saved mode name and user settings from the savegame (skipped when vehicles are reset).",
+   "fr": "Met le mode par défaut à WORKER, crée l'extension de HUD et charge depuis la sauvegarde le nom du mode et les réglages utilisateur (ignoré en cas de réinitialisation des véhicules)."
+  },
+  "AIModeSelection:saveToXMLFile": {
+   "en": "Writes the current mode name and, if present, the user settings into the savegame XML.",
+   "fr": "Écrit dans le XML de sauvegarde le nom du mode courant et, s'ils existent, les réglages utilisateur."
+  },
+  "AIModeSelection:onReadStream": {
+   "en": "Client side on join: reads the current mode (stored zero-based, so +1) and optionally the field course attributes, kept for later application in onUpdateTick.",
+   "fr": "Côté client à la connexion : lit le mode courant (stocké à partir de zéro, donc +1) et éventuellement les attributs du parcours de champ, conservés pour être appliqués plus tard dans onUpdateTick."
+  },
+  "AIModeSelection:onWriteStream": {
+   "en": "Server side on join: writes the current mode and, if they exist, the field course settings. Mirror of onReadStream.",
+   "fr": "Côté serveur à la connexion : écrit le mode courant et, s'ils existent, les réglages de parcours de champ. Symétrique de onReadStream."
+  },
+  "AIModeSelection:onUpdateTick": {
+   "en": "On clients refreshes the action events. Unless a vehicle reload is running, it finalises loaded user settings and builds settings from field course attributes received from the server.",
+   "fr": "Sur les clients, rafraîchit les événements d'action. Sauf rechargement de véhicule en cours, finalise les réglages utilisateur chargés et construit les réglages à partir des attributs de parcours reçus du serveur."
+  },
+  "AIModeSelection:onDraw": {
+   "en": "Adds this vehicle's AI mode HUD extension to the HUD help panel every frame it is drawn.",
+   "fr": "Ajoute à chaque image dessinée l'extension de HUD du mode IA de ce véhicule au panneau d'aide du HUD."
+  },
+  "AIModeSelection:onStateChange": {
+   "en": "On attach or detach (outside a vehicle reload), clears the cached field course and user settings so they are regenerated for the new vehicle combination.",
+   "fr": "Lors d'un attachement ou détachement (hors rechargement de véhicule), efface les réglages de parcours et utilisateur en cache afin de les régénérer pour la nouvelle combinaison de véhicules."
+  },
+  "AIModeSelection:onRegisterActionEvents": {
+   "en": "Client only: when the vehicle is active for input, registers the TOGGLE_AI action with high text priority and updates the action event state.",
+   "fr": "Client uniquement : quand le véhicule est actif pour la saisie, enregistre l'action TOGGLE_AI avec une priorité de texte élevée et met à jour l'état de l'événement d'action."
+  },
+  "AIModeSelection.actionEventToggleAIState": {
+   "en": "Handles TOGGLE_AI. Holding past MODE_CHANGE_DURATION opens the AI settings dialog. A short press in WORKER mode toggles the helper (permission hireAssistant needed), in STEERING_ASSIST mode it enables steering assist if allowed, else shows a warning.",
+   "fr": "Gère TOGGLE_AI. Un appui maintenu au-delà de MODE_CHANGE_DURATION ouvre le dialogue de réglages IA. Un appui court en mode WORKER bascule l'assistant (permission hireAssistant requise), en STEERING_ASSIST active l'aide à la conduite si permise, sinon affiche un avertissement."
+  },
+  "AIModeSelection:setAIModeSelection": {
+   "en": "Sets the AI mode, or cycles to the next one when aiMode is nil. On a change it raises onAIModeChanged, refreshes the action events and sends an AISetModeEvent (unless noEventSend).",
+   "fr": "Définit le mode IA, ou passe au suivant si aiMode vaut nil. En cas de changement, déclenche onAIModeChanged, rafraîchit les événements d'action et envoie un AISetModeEvent (sauf noEventSend)."
+  },
+  "AIModeSelection:getAIModeSelection": {
+   "en": "Returns the current AI mode value.",
+   "fr": "Renvoie la valeur du mode IA courant."
+  },
+  "AIModeSelection:aiModeSettingsChanged": {
+   "en": "Callback of the settings dialog: stores the new field course settings, sends AIModeSelectionSettingsEvent, applies the chosen mode and raises onAIModeSettingsChanged.",
+   "fr": "Rappel du dialogue de réglages : mémorise les nouveaux réglages de parcours, envoie un AIModeSelectionSettingsEvent, applique le mode choisi et déclenche onAIModeSettingsChanged."
+  },
+  "AIModeSelection:initializeLoadedAIModeUserSettings": {
+   "en": "Turns settings loaded from the savegame into active user settings: generates field course settings from the root vehicle if missing, reinitialises and applies them for the current mode.",
+   "fr": "Transforme les réglages chargés depuis la sauvegarde en réglages utilisateur actifs : génère les réglages de parcours depuis le véhicule racine s'ils manquent, puis les réinitialise et les applique pour le mode courant."
+  },
+  "AIModeSelection:getAIModeFieldCourseSettings": {
+   "en": "Returns the stored field course settings object, or nil if none has been generated yet.",
+   "fr": "Renvoie l'objet de réglages de parcours de champ stocké, ou nil s'il n'a pas encore été généré."
+  },
+  "AIModeSelection:setAIModeFieldCourseSettings": {
+   "en": "Replaces the field course settings, creates default user settings if needed, reapplies them for the current mode and raises onAIModeSettingsChanged. Sends no network event itself.",
+   "fr": "Remplace les réglages de parcours de champ, crée des réglages utilisateur par défaut si besoin, les réapplique pour le mode courant et déclenche onAIModeSettingsChanged. N'envoie aucun événement réseau lui-même."
+  },
+  "AIModeSelection.readAIModeSettingsFromStream": {
+   "en": "Static helper: reads a flag and, if set, the field course attributes from the stream; returns a table with attributes or nil.",
+   "fr": "Aide statique : lit un indicateur puis, s'il est vrai, les attributs de parcours de champ du flux ; renvoie une table d'attributs ou nil."
+  },
+  "AIModeSelection:applyReadAIModeSettingsFromStream": {
+   "en": "Applies data from readAIModeSettingsFromStream: generates field course settings for this vehicle, applies the attributes and discards pending loaded user settings. Does nothing for nil.",
+   "fr": "Applique les données issues de readAIModeSettingsFromStream : génère les réglages de parcours pour ce véhicule, applique les attributs et écarte les réglages utilisateur chargés en attente. Sans effet pour nil."
+  },
+  "AIModeSelection:writeAIModeSettingsToStream": {
+   "en": "Finalises any loaded user settings, then writes a flag and the field course settings to the stream if they exist.",
+   "fr": "Finalise d'abord les réglages utilisateur chargés, puis écrit dans le flux un indicateur et les réglages de parcours s'ils existent."
+  }
+ }
+}

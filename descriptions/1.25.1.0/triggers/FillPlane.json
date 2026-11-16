@@ -1,0 +1,37 @@
+{
+ "fichier": "triggers/FillPlane.lua",
+ "module": {
+  "en": "Small helper class that drives a visual fill plane node (the surface showing a load inside a container). It moves the node vertically and optionally tilts it according to a 0..1 fill state, and can change its fill-type material and color shader. Configuration comes from an XML block (node, minY/maxY, minRotX/maxRotX, changeVisibility, colorChange) declared through registerXMLPaths.",
+  "fr": "Petite classe utilitaire qui pilote un noeud de plan de remplissage visuel (la surface montrant une charge dans un conteneur). Elle déplace le noeud verticalement et peut l'incliner selon un état de remplissage de 0 à 1, et peut changer son matériau de type de remplissage et son shader de couleur. La configuration vient d'un bloc XML (node, minY/maxY, minRotX/maxRotX, changeVisibility, colorChange) déclaré via registerXMLPaths."
+ },
+ "fonctions": {
+  "FillPlane.new": {
+   "en": "Creates a fill plane instance with no node, zero range and nothing loaded; call load afterwards. Accepts an optional custom metatable for subclassing.",
+   "fr": "Crée une instance de plan de remplissage sans noeud, avec une plage nulle et rien de chargé ; appeler load ensuite. Accepte une métatable personnalisée optionnelle pour l'héritage."
+  },
+  "FillPlane:delete": {
+   "en": "Destructor; empty body, it releases nothing.",
+   "fr": "Destructeur ; corps vide, il ne libère rien."
+  },
+  "FillPlane:load": {
+   "en": "Reads the node and settings from the XML key, resolving the node through components and i3dMappings. Returns false if no node is found. Swaps inverted minY/maxY with a warning, disables colorChange if the node lacks a `colorScale` shader parameter, then places the node at minY and hides it when changeVisibility is set.",
+   "fr": "Lit le noeud et les réglages depuis la clé XML, en résolvant le noeud via components et i3dMappings. Retourne false si aucun noeud n'est trouvé. Inverse minY/maxY avec un avertissement s'ils sont inversés, désactive colorChange si le noeud n'a pas le paramètre de shader `colorScale`, puis place le noeud à minY et le masque si changeVisibility est actif."
+  },
+  "FillPlane:setState": {
+   "en": "Interpolates the node height between minY and maxY and its X rotation between minRotX and maxRotX using the 0..1 state. With changeVisibility the node is visible only when state is above 0. Returns true if the height changed; does nothing if not loaded.",
+   "fr": "Interpole la hauteur du noeud entre minY et maxY et sa rotation X entre minRotX et maxRotX selon l'état 0 à 1. Avec changeVisibility, le noeud n'est visible que si l'état est supérieur à 0. Retourne true si la hauteur a changé ; sans effet si rien n'est chargé."
+  },
+  "FillPlane:setFillType": {
+   "en": "Applies the material for the given fill type index to the node, using default materials taken from the terrain node, and sets the `isCustomShape` shader parameter. The actual material logic lives in FillPlaneUtil, which is not in the dump (UNVERIFIED).",
+   "fr": "Applique au noeud le matériau du type de remplissage donné, à partir des matériaux par défaut du noeud de terrain, et fixe le paramètre de shader `isCustomShape`. La logique des matériaux est dans FillPlaneUtil, absent du dump (NON VÉRIFIÉ)."
+  },
+  "FillPlane:setColorScale": {
+   "en": "Sets the `colorScale` shader parameter of the node from an array of three components (r, g, b). Does nothing if the plane is not loaded.",
+   "fr": "Fixe le paramètre de shader `colorScale` du noeud à partir d'un tableau de trois composantes (r, g, b). Sans effet si le plan n'est pas chargé."
+  },
+  "FillPlane.registerXMLPaths": {
+   "en": "Registers the XML attributes the class reads under the given base path: node, minY, maxY, minRotX, maxRotX, changeVisibility and colorChange.",
+   "fr": "Enregistre dans le schéma les attributs XML lus par la classe sous le chemin de base donné : node, minY, maxY, minRotX, maxRotX, changeVisibility et colorChange."
+  }
+ }
+}

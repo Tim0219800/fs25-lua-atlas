@@ -1,0 +1,17 @@
+{
+ "fichier": "debug/elements/DebugLine.lua",
+ "module": {
+  "en": "DebugLine is a debug element drawing a line between two world positions or between two nodes that are followed each frame, with optional start/end colours, text and terrain alignment. The static renderer `DebugLine.renderBetweenPositions` is absent from this dump (UNVERIFIED).",
+  "fr": "DebugLine est un élément de débogage qui dessine une ligne entre deux positions monde ou entre deux noeuds suivis à chaque image, avec couleurs de départ/fin, texte et alignement terrain optionnels. Le rendu statique `DebugLine.renderBetweenPositions` est absent de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugLine.new": {
+   "en": "Creates a line element with default settings: not solid, no start/end colours, no ground alignment and no nodes.",
+   "fr": "Crée un élément ligne avec les réglages par défaut : non solide, sans couleurs de départ/fin, sans alignement au sol et sans noeuds."
+  },
+  "DebugLine:draw": {
+   "en": "If both nodes are set and still exist, refreshes the endpoints from their world positions, then calls `DebugLine.renderBetweenPositions` with the line settings.",
+   "fr": "Si les deux noeuds sont définis et existent encore, met à jour les extrémités depuis leurs positions monde, puis appelle `DebugLine.renderBetweenPositions` avec les réglages de la ligne."
+  }
+ }
+}

@@ -1,0 +1,101 @@
+{
+ "fichier": "placeables/specializations/PlaceableBunkerSilo.lua",
+ "module": {
+  "en": "Placeable specialization that wraps a `BunkerSilo` object (loaded from `placeable.bunkerSilo`) and syncs it to joining clients. It also supports extendable silos that snap next to an existing silo of the same config and hide the shared walls, warns on sale when the silo is not empty, and clears the silo area when sold.",
+  "fr": "Spécialisation de placeable qui encapsule un objet `BunkerSilo` (chargé depuis `placeable.bunkerSilo`) et le synchronise vers les clients qui rejoignent. Elle gère aussi les silos extensibles qui s'alignent à côté d'un silo de même configuration en masquant les murs communs, avertit à la vente si le silo n'est pas vide et nettoie la zone du silo à la vente."
+ },
+ "fonctions": {
+  "PlaceableBunkerSilo.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableBunkerSilo.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete`, `onFinalizePlacement`, `onReadStream`, `onWriteStream` and `onSell`.",
+   "fr": "S'abonne à `onLoad`, `onDelete`, `onFinalizePlacement`, `onReadStream`, `onWriteStream` et `onSell`."
+  },
+  "PlaceableBunkerSilo.registerFunctions": {
+   "en": "Registers `updateBunkerSiloWalls`, `setWallVisibility` and `getIsBunkerSiloExtendable`.",
+   "fr": "Enregistre `updateBunkerSiloWalls`, `setWallVisibility` et `getIsBunkerSiloExtendable`."
+  },
+  "PlaceableBunkerSilo.registerOverwrittenFunctions": {
+   "en": "Overrides the placement functions `getPlacementPosition`, `getPlacementRotation`, `getHasOverlap`, `startPlacementCheck`, plus `canBeSold` and `setOwnerFarmId`.",
+   "fr": "Surcharge les fonctions de placement `getPlacementPosition`, `getPlacementRotation`, `getHasOverlap`, `startPlacementCheck`, ainsi que `canBeSold` et `setOwnerFarmId`."
+  },
+  "PlaceableBunkerSilo.registerXMLPaths": {
+   "en": "Declares the `bunkerSilo` XML keys (delegating to `BunkerSilo`) and `isExtendable`, `siloToSiloDistance`, `snapDistance` (default 1.1 times the silo distance) and `sellWarningText`.",
+   "fr": "Déclare les clés XML `bunkerSilo` (en déléguant à `BunkerSilo`) ainsi que `isExtendable`, `siloToSiloDistance`, `snapDistance` (1,1 fois la distance entre silos par défaut) et `sellWarningText`."
+  },
+  "PlaceableBunkerSilo.registerSavegameXMLPaths": {
+   "en": "Declares the savegame XML keys by delegating to `BunkerSilo.registerSavegameXMLPaths`.",
+   "fr": "Déclare les clés XML de sauvegarde en déléguant à `BunkerSilo.registerSavegameXMLPaths`."
+  },
+  "PlaceableBunkerSilo:onLoad": {
+   "en": "Creates and loads the `BunkerSilo` (deleting it on failure) and reads the extendable settings. If the silo is extendable but `siloToSiloDistance` is missing, logs an XML error and sets the loading state to ERROR.",
+   "fr": "Crée et charge le `BunkerSilo` (le supprime en cas d'échec) et lit les réglages d'extension. Si le silo est extensible mais que `siloToSiloDistance` manque, journalise une erreur XML et passe l'état de chargement en ERROR."
+  },
+  "PlaceableBunkerSilo:onDelete": {
+   "en": "Restores the neighbour silos' walls, deletes the `BunkerSilo` and removes this placeable from the placeable system's bunker silo list.",
+   "fr": "Rétablit les murs des silos voisins, supprime le `BunkerSilo` et retire ce placeable de la liste des silos du système de placeables."
+  },
+  "PlaceableBunkerSilo:onFinalizePlacement": {
+   "en": "Hides the walls shared with neighbouring silos, registers the `BunkerSilo` network object with the owner farm id and adds the placeable to the system's bunker silo list.",
+   "fr": "Masque les murs partagés avec les silos voisins, enregistre l'objet réseau `BunkerSilo` avec l'id de la ferme propriétaire et ajoute le placeable à la liste des silos du système."
+  },
+  "PlaceableBunkerSilo:onReadStream": {
+   "en": "Client side join: reads the bunker silo object id, reads its stream and finishes its registration.",
+   "fr": "Connexion côté client : lit l'id d'objet du silo, lit son flux et termine son enregistrement."
+  },
+  "PlaceableBunkerSilo:onWriteStream": {
+   "en": "Server side join: writes the bunker silo object id, its stream, and registers it in the connection's stream.",
+   "fr": "Connexion côté serveur : écrit l'id d'objet du silo et son flux, et l'enregistre dans le flux de la connexion."
+  },
+  "PlaceableBunkerSilo:loadFromXMLFile": {
+   "en": "Loads the savegame data through the `BunkerSilo` and returns its result.",
+   "fr": "Charge les données de sauvegarde via le `BunkerSilo` et renvoie son résultat."
+  },
+  "PlaceableBunkerSilo:saveToXMLFile": {
+   "en": "Saves the `BunkerSilo` data to the savegame.",
+   "fr": "Sauvegarde les données du `BunkerSilo`."
+  },
+  "PlaceableBunkerSilo:setWallVisibility": {
+   "en": "Forwards the left and right wall visibility flags to the `BunkerSilo`. Passing nil for a side leaves it unchanged (UNVERIFIED: depends on `BunkerSilo`).",
+   "fr": "Transmet au `BunkerSilo` les indicateurs de visibilité des murs gauche et droit. Passer nil pour un côté le laisse inchangé (NON VÉRIFIÉ : dépend de `BunkerSilo`)."
+  },
+  "PlaceableBunkerSilo:getIsBunkerSiloExtendable": {
+   "en": "Returns whether this silo is marked extendable in the XML.",
+   "fr": "Renvoie si ce silo est marqué extensible dans le XML."
+  },
+  "PlaceableBunkerSilo:updateBunkerSiloWalls": {
+   "en": "Finds extendable silos of the same config and farm within the silo spacing plus 0.5 m, and hides (or, when deleting, shows) their wall on the side facing this silo.",
+   "fr": "Trouve les silos extensibles de même configuration et de même ferme à moins de l'espacement des silos plus 0,5 m, et masque (ou affiche, en cas de suppression) leur mur du côté tourné vers ce silo."
+  },
+  "PlaceableBunkerSilo:setOwnerFarmId": {
+   "en": "Calls the parent, then propagates the new owner farm id to the `BunkerSilo` without sending an event.",
+   "fr": "Appelle le parent puis propage le nouvel id de ferme au `BunkerSilo` sans envoyer d'événement."
+  },
+  "PlaceableBunkerSilo:onSell": {
+   "en": "Calls `clearSiloArea` on the `BunkerSilo` when the placeable is sold.",
+   "fr": "Appelle `clearSiloArea` sur le `BunkerSilo` lorsque le placeable est vendu."
+  },
+  "PlaceableBunkerSilo:canBeSold": {
+   "en": "Always allows the sale; returns the sell warning text as second value when the silo fill level is above zero, otherwise nil.",
+   "fr": "Autorise toujours la vente ; renvoie le texte d'avertissement en second résultat quand le niveau du silo est supérieur à zéro, sinon nil."
+  },
+  "PlaceableBunkerSilo:startPlacementCheck": {
+   "en": "Runs the parent check, then for extendable silos finds the nearest owned silo of the same config within snap distance and stores it, with the side, as the snapping target.",
+   "fr": "Exécute la vérification parent puis, pour les silos extensibles, cherche le silo possédé de même configuration le plus proche dans la distance d'accroche et le mémorise, avec son côté, comme cible d'alignement."
+  },
+  "PlaceableBunkerSilo:getHasOverlap": {
+   "en": "When a snapping silo is found, wraps the overlap check so that the snapping silo itself does not count as an obstruction, then calls the parent.",
+   "fr": "Quand un silo d'accroche est trouvé, enveloppe le test de chevauchement pour que ce silo ne compte pas comme obstacle, puis appelle le parent."
+  },
+  "PlaceableBunkerSilo:getPlacementRotation": {
+   "en": "Returns the parent rotation, replaced by the snapping silo's Y orientation when snapping is active.",
+   "fr": "Renvoie la rotation du parent, remplacée par l'orientation Y du silo d'accroche quand l'accroche est active."
+  },
+  "PlaceableBunkerSilo:getPlacementPosition": {
+   "en": "Returns the parent position, replaced by a point offset by the silo spacing to the left or right of the snapping silo when snapping is active.",
+   "fr": "Renvoie la position du parent, remplacée par un point décalé de l'espacement des silos à gauche ou à droite du silo d'accroche quand l'accroche est active."
+  }
+ }
+}

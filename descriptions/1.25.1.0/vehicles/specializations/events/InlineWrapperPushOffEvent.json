@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/InlineWrapperPushOffEvent.lua",
+ "module": {
+  "en": "Network event class `InlineWrapperPushOffEvent` (extends `Event`) that is a client request to push the bale off an inline wrapper. It carries the wrapper vehicle, written only when the stream goes to the server. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `InlineWrapperPushOffEvent` (hérite de `Event`) qui est une demande client de pousser la balle hors d'une enrubanneuse en ligne. Elle transporte le véhicule enrubanneur, écrit seulement quand le flux part vers le serveur. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "InlineWrapperPushOffEvent.emptyNew": {
+   "en": "Creates an empty `InlineWrapperPushOffEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `InlineWrapperPushOffEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "InlineWrapperPushOffEvent.new": {
+   "en": "Creates the event with its data: the wrapper vehicle, written only when the stream goes to the server.",
+   "fr": "Crée l'événement avec ses données : le véhicule enrubanneur, écrit seulement quand le flux part vers le serveur."
+  },
+  "InlineWrapperPushOffEvent:readStream": {
+   "en": "Reads the event data from the network stream (the wrapper vehicle, written only when the stream goes to the server), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule enrubanneur, écrit seulement quand le flux part vers le serveur), puis appelle `run`."
+  },
+  "InlineWrapperPushOffEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the wrapper vehicle, written only when the stream goes to the server).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule enrubanneur, écrit seulement quand le flux part vers le serveur)."
+  },
+  "InlineWrapperPushOffEvent:run": {
+   "en": "Executes the event on the receiving side: on the server only, calls `pushOffInlineBale()` on the wrapper.",
+   "fr": "Exécute l'événement côté réception : uniquement sur le serveur, appelle `pushOffInlineBale()` sur l'enrubanneuse."
+  }
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "fichier": "gui/base/TabbedMenuWithDetails.lua",
+ "module": {
+  "en": "TabbedMenu extension where each tab keeps a stack of frames: a root page plus detail pages pushed on top, with back navigation popping them. Detail pages are regular pages in the paging element that get enabled and disabled as they are pushed and popped. A developer note in the source describes a known bug with the page index and mapping index when invisible pages sit between tabs.",
+  "fr": "Extension de TabbedMenu où chaque onglet garde une pile de cadres : une page racine plus des pages de détail empilées, que le retour dépile. Les pages de détail sont des pages normales de la pagination, activées et désactivées à l'empilement et au dépilement. Une note du développeur dans la source décrit un bug connu sur l'index de page et l'index de mapping quand des pages invisibles se trouvent entre les onglets."
+ },
+ "fonctions": {
+  "TabbedMenuWithDetails.new": {
+   "en": "Creates the menu through TabbedMenu.new and adds an empty table of stacks, keyed by page index.",
+   "fr": "Crée le menu via TabbedMenu.new et ajoute une table vide de piles, indexée par index de page."
+  },
+  "TabbedMenuWithDetails:reset": {
+   "en": "Resets the base menu state and discards all detail stacks.",
+   "fr": "Réinitialise l'état du menu de base et supprime toutes les piles de détails."
+  },
+  "TabbedMenuWithDetails:getIsDetailMode": {
+   "en": "Returns true when the current tab shows a detail page instead of its root.",
+   "fr": "Renvoie true quand l'onglet courant affiche une page de détail et non sa racine."
+  },
+  "TabbedMenuWithDetails:exitMenu": {
+   "en": "Pops all details back to the root, then exits the menu through the parent class.",
+   "fr": "Dépile tous les détails jusqu'à la racine, puis quitte le menu via la classe parente."
+  },
+  "TabbedMenuWithDetails:onOpen": {
+   "en": "Replaces TabbedMenu:onOpen on purpose, skipping its code to avoid a doubled blur and extra sounds. At root it refreshes pages and restores the saved page; otherwise it reopens the top detail frame and its buttons.",
+   "fr": "Remplace volontairement TabbedMenu:onOpen en sautant son code pour éviter un double flou et des sons en trop. À la racine, il rafraîchit les pages et restaure la page mémorisée ; sinon il rouvre le cadre de détail du dessus et ses boutons."
+  },
+  "TabbedMenuWithDetails:onPageClicked": {
+   "en": "When a tab is clicked, pops the whole detail stack back to the root.",
+   "fr": "Au clic sur un onglet, dépile toute la pile de détails jusqu'à la racine."
+  },
+  "TabbedMenuWithDetails:onDetailClosed": {
+   "en": "Empty hook called after a detail page is closed; subclasses override it.",
+   "fr": "Point d'extension vide appelé après la fermeture d'une page de détail ; à surcharger."
+  },
+  "TabbedMenuWithDetails:onDetailOpened": {
+   "en": "Empty hook called after a detail page is opened; subclasses override it.",
+   "fr": "Point d'extension vide appelé après l'ouverture d'une page de détail ; à surcharger."
+  },
+  "TabbedMenuWithDetails:onButtonBack": {
+   "en": "Back button: exits the menu when at root, otherwise closes the top detail.",
+   "fr": "Bouton retour : quitte le menu à la racine, sinon ferme le détail du dessus."
+  },
+  "TabbedMenuWithDetails:onPageChange": {
+   "en": "Paging callback. During a detail push or pop it skips the tab visual update; for a normal page change it first pops the stack to root. Then calls the base implementation.",
+   "fr": "Callback de pagination. Pendant un empilement ou dépilement de détail, il saute la mise à jour visuelle de l'onglet ; pour un changement de page normal il dépile d'abord jusqu'à la racine. Appelle ensuite l'implémentation de base."
+  },
+  "TabbedMenuWithDetails:getStack": {
+   "en": "Returns the frame stack of the given page, or of the current tab, creating it with a root entry if absent. Entries hold the page, plus pageId and isRoot for the root.",
+   "fr": "Renvoie la pile de cadres de la page donnée, ou de l'onglet courant, en la créant avec une entrée racine si absente. Les entrées contiennent la page, et pageId et isRoot pour la racine."
+  },
+  "TabbedMenuWithDetails:isAtRoot": {
+   "en": "Returns true when the current tab's stack holds only the root page.",
+   "fr": "Renvoie true quand la pile de l'onglet courant ne contient que la page racine."
+  },
+  "TabbedMenuWithDetails:getTopFrame": {
+   "en": "Returns the page at the top of the current tab's stack.",
+   "fr": "Renvoie la page au sommet de la pile de l'onglet courant."
+  },
+  "TabbedMenuWithDetails:setPageDisabled": {
+   "en": "Sets the disabled flag of a page in the paging element, looked up by its element.",
+   "fr": "Définit l'indicateur désactivé d'une page dans la pagination, retrouvée par son élément."
+  },
+  "TabbedMenuWithDetails:pushDetail": {
+   "en": "Pushes a detail page on the current stack and shows it. A detail already on top is hidden, closed and disabled first (onDetailClosed). The new page is enabled, selected with sounds suppressed, and onDetailOpened is called.",
+   "fr": "Empile une page de détail sur la pile courante et l'affiche. Un détail déjà au sommet est d'abord masqué, fermé et désactivé (onDetailClosed). La nouvelle page est activée, sélectionnée sons supprimés, puis onDetailOpened est appelé."
+  },
+  "TabbedMenuWithDetails:popDetail": {
+   "en": "Removes the top detail, closes and disables it (onDetailClosed), then reopens the detail below or selects the root page. Note: at root it logs an error and returns without resetting isChangingDetail, which stays true.",
+   "fr": "Retire le détail du sommet, le ferme et le désactive (onDetailClosed), puis rouvre le détail en dessous ou sélectionne la page racine. À noter : à la racine, il journalise une erreur et retourne sans remettre isChangingDetail à false, qui reste true."
+  },
+  "TabbedMenuWithDetails:popToRoot": {
+   "en": "Pops details one by one until only the root remains; does nothing if already there.",
+   "fr": "Dépile les détails un par un jusqu'à ce qu'il ne reste que la racine ; sans effet si déjà à la racine."
+  },
+  "TabbedMenuWithDetails:replaceDetail": {
+   "en": "Pops the current detail then pushes the given one, keeping the stack depth and so the back behaviour. Fails like popDetail when called at root.",
+   "fr": "Dépile le détail courant puis empile celui donné, ce qui conserve la profondeur de pile et donc le comportement du retour. Échoue comme popDetail s'il est appelé à la racine."
+  },
+  "TabbedMenuWithDetails:getBreadcrumbs": {
+   "en": "Returns an array of page titles (empty string when none) for the stack of the given or current page, from root to top.",
+   "fr": "Renvoie un tableau des titres de pages (chaîne vide si absent) pour la pile de la page donnée ou courante, de la racine au sommet."
+  }
+ }
+}

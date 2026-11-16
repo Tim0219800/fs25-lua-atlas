@@ -1,107 +1,111 @@
 # utils/MathUtil.lua
 
+*[Version française](../../fr/scripts/utils/MathUtil.md)*
+
 Source: `dataS/scripts/utils/MathUtil.lua` — FS25 1.25.1.0
+
+✍ Collection of static math helpers in the global MathUtil table: number checks, rounding, interpolation, 2D and 3D vectors, quaternions, angles, segment and circle intersections, unit conversions (time, speed, length, area) and bit helpers. In this SDK dump almost every function is a signature without body, so most descriptions are inferred from names and annotations; only eulerToDirection and directionToPitchYaw have visible code.
 
 - **MathUtil** (l.11)
 
 ## Functions
 
-| Function | Line | Description (FR) |
+| Function | Line | Description |
 |---|---|---|
-| `MathUtil.isNan(value: number) → boolean` | 16 |  |
-| `MathUtil.isInt(number: number) → boolean` | 24 |  |
-| `MathUtil.isInf(number: number) → boolean` | 32 |  |
-| `MathUtil.isFinite(number: number) → boolean` | 40 |  |
-| `MathUtil.getIsValidTransformationValue(...: any) → boolean` | 48 |  |
-| `MathUtil.randomFloat(lowerValue: number, upperValue: number) → number` | 77 |  |
-| `MathUtil.round(value: number, precision: number?) → number` | 86 |  |
-| `MathUtil.roundToStep(value: number, step: number) → number` | 104 |  |
-| `MathUtil.degToRad(degValue: number) → number` | 122 |  |
-| `MathUtil.lerp(v1: number, v2: number, alpha: number) → number` | 136 |  |
-| `MathUtil.inverseLerp(v1: number, v2: number, cv: number) → number` | 146 |  |
-| `MathUtil.getIsOutOfBounds(value: number, limit1: number, limit2: number) → boolean` | 178 |  |
-| `MathUtil.getFlooredPercent(value: number, maxValue: number) → number` | 191 |  |
-| `MathUtil.getFlooredBounded(value: number, minValue: number, maxValue: number) → number` | 212 |  |
-| `MathUtil.getValidLimit(limit: number) → number` | 226 |  |
-| `MathUtil.getAngleDifference(alpha: number, beta: number) → number` | 243 |  |
-| `MathUtil.eulerToDirection(yaw: number, pitch: number) → number, number, number` | 256 |  |
-| `MathUtil.directionToPitchYaw(directionX: number, directionY: number, directionZ: number) → number, number` | 272 |  |
-| `MathUtil.vector2Length(x: number, y: number) → number` | 280 |  |
-| `MathUtil.vector2LengthSq(x: number, y: number) → number` | 289 |  |
-| `MathUtil.vector2Normalize(x: number, y: number) → number, number` | 299 |  |
-| `MathUtil.vector2SetLength(x: number, y: number, length: number) → number, number` | 312 |  |
-| `MathUtil.vector2Lerp(x1: number, y1: number, x2: number, y2: number, alpha: number) → number, number` | 330 |  |
-| `MathUtil.vector3Length(x: number, y: number, z: number) → number` | 342 |  |
-| `MathUtil.vector3LengthSq(x: number, y: number, z: number) → number` | 352 |  |
-| `MathUtil.vector3Normalize(x: number, y: number, z: number) → number, number, number` | 364 |  |
-| `MathUtil.vector3SetLength(x: number, y: number, z: number, length: number) → number, number, number` | 379 |  |
-| `MathUtil.vector3Clamp(x: number, y: number, z: number, minVal: number, maxVal: number) → number, number, number` | 399 |  |
-| `MathUtil.vector3Lerp(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, alpha: number) → number, number, number` | 421 |  |
-| `MathUtil.vector3ArrayLerp(v1: table, v2: table, alpha: number) → number, number, number` | 455 |  |
-| `MathUtil.inverseVector3ArrayLerp(v1: array, v2: array, cv: array) → number` | 469 |  |
-| `MathUtil.vector3Transformation(x: number, y: number, z: number, m11: number, m12: number, m13: number, m21: number, m22: number, m23: number, m31: number, m32: number, m33: number) → number, number, number` | 503 |  |
-| `MathUtil.dotProduct(ax: number, ay: number, az: number, bx: number, by: number, bz: number) → number` | 526 |  |
-| `MathUtil.crossProduct(ax: number, ay: number, az: number, bx: number, by: number, bz: number) → number, number, number` | 541 |  |
-| `MathUtil.getVectorAngleDifference(dirX1: number, dirY1: number, dirZ1: number, dirX2: number, dirY2: number, dirZ2: number) → number` | 554 |  |
-| `MathUtil.getSignedAngleBetweenVectors2D(dirX1: number, dirZ1: number, dirX2: number, dirZ2: number) → number` | 568 |  |
-| `MathUtil.getYRotationFromDirection(dx: number, dz: number) → number` | 579 |  |
-| `MathUtil.getDirectionFromYRotation(rotY: number) → number, number` | 588 |  |
-| `MathUtil.getRotationLimitedVector2(x: number, y: number, minRot: number, maxRot: number) → number, number` | 600 |  |
-| `MathUtil.quaternionVectorMultiplication(quatX: number, quatY: number, quatZ: number, quatW: number, vecX: number, vecY: number, vecZ: number) → number, number, number` | 627 |  |
-| `MathUtil.projectOnLine(px: number, pz: number, lineX: number, lineZ: number, normlineDirX: number, normlineDirZ: number) → number, number` | 657 |  |
-| `MathUtil.getProjectOnLineParameter(px: number, pz: number, lineX: number, lineZ: number, normlineDirX: number, normlineDirZ: number) → number` | 673 |  |
-| `MathUtil.quaternionMult(x: number, y: number, z: number, w: number, x1: number, y1: number, z1: number, w1: number) → number, number, number, number` | 694 |  |
-| `MathUtil.quaternionNormalized(x: number, y: number, z: number, w: number) → number, number, number, number` | 711 |  |
-| `MathUtil.slerpQuaternion(x1: number, y1: number, z1: number, w1: number, x2: number, y2: number, z2: number, w2: number, t: number) → number, number, number, number` | 734 |  |
-| `MathUtil.normalizeRotationForShortestPath(targetRotation: number, curRotation: number) → number` | 756 |  |
-| `MathUtil.nlerpQuaternionShortestPath(x1: number, y1: number, z1: number, w1: number, x2: number, y2: number, z2: number, w2: number, t: number) → number, number, number, number` | 786 |  |
-| `MathUtil.slerpQuaternionShortestPath(x1: number, y1: number, z1: number, w1: number, x2: number, y2: number, z2: number, w2: number, t: number) → number, number, number, number` | 814 |  |
-| `MathUtil.quaternionMadShortestPath(x: number, y: number, z: number, w: number, x1: number, y1: number, z1: number, w1: number, t: number) → number, number, number, number` | 855 |  |
-| `MathUtil.getDistanceToRectangle2D(posX: number, posZ: number, sx: number, sz: number, dx: number, dz: number, length: number, widthHalf: number) → number` | 875 |  |
-| `MathUtil.getSignedDistanceToLineSegment2D(x: number, z: number, sx: number, sz: number, dx: number, dz: number, length: number) → number, integer` | 918 |  |
-| `MathUtil.getLineLineIntersection2D(x1: number, z1: number, dirX1: number, dirZ1: number, x2: number, z2: number, dirX2: number, dirZ2: number) → boolean, number?, number?` | 954 |  |
-| `MathUtil.getLineSegmentsIntersection(ax1: number, az1: number, ax2: number, az2: number, bx1: number, bz1: number, bx2: number, bz2: number) → boolean, number, number` | 979 |  |
-| `MathUtil.getLineSegmentsIntersectionParameter(ax1: number, az1: number, ax2: number, az2: number, bx1: number, bz1: number, bx2: number, bz2: number) → boolean, number, number` | 1013 |  |
-| `MathUtil.getAreLineSegmentsIntersecting(ax1: number, az1: number, ax2: number, az2: number, bx1: number, bz1: number, bx2: number, bz2: number, allowEndStartSamePos: boolean?) → boolean, boolean?` | 1043 |  |
-| `MathUtil.getLineBoundingVolumeIntersect(ax1: number, ay1: number, ax2: number, ay2: number, bx1: number, by1: number, bx2: number, by2: number) → boolean` | 1110 |  |
-| `MathUtil.hasRectangleLineIntersection2D(x1: number, z1: number, dirX1: number, dirZ1: number, dirX2: number, dirZ2: number, x3: number, z3: number, dirX3: number, dirZ3: number) → boolean` | 1130 |  |
-| `MathUtil.getCircleCircleIntersection(x1: number, y1: number, r1: number, x2: number, y2: number, r2: number) → number?, number?, number?, number?` | 1208 |  |
-| `MathUtil.hasSphereSphereIntersection(x1: number, y1: number, z1: number, r1: number, x2: number, y2: number, z2: number, r2: number) → boolean` | 1263 |  |
-| `MathUtil.getDistanceToLineSegment2D(startX: number, startZ: number, endX: number, endZ: number, pointX: number, pointZ: number) → number` | 1359 |  |
-| `MathUtil.getPointPointDistance(x1: number, y1: number, x2: number, y2: number) → number` | 1417 |  |
-| `MathUtil.getPointPointDistanceSquared(x1: number, y1: number, x2: number, y2: number) → number` | 1431 |  |
-| `MathUtil.areaToHa(area: number, pixelToSqm: number) → number` | 1442 |  |
-| `MathUtil.haToSqm(area: number) → number` | 1450 |  |
-| `MathUtil.inchToM(inchValue: number) → number` | 1458 |  |
-| `MathUtil.mToInch(mValue: number) → number` | 1466 |  |
-| `MathUtil.msToMinutes(ms: integer) → number` | 1474 |  |
-| `MathUtil.msToHours(ms: integer) → number` | 1482 |  |
-| `MathUtil.msToDays(ms: integer) → number` | 1490 |  |
-| `MathUtil.minutesToMs(minutes: number) → integer` | 1498 |  |
-| `MathUtil.hoursToMs(hours: number) → integer` | 1506 |  |
-| `MathUtil.daysToMs(days: integer) → integer` | 1514 |  |
-| `MathUtil.mpsToKmh(mps: number) → number` | 1522 |  |
-| `MathUtil.kmhToMps(kmh: number) → number` | 1530 |  |
-| `MathUtil.rpmToMps(rpm: integer, radius: number) → number` | 1539 |  |
-| `MathUtil.getXZWidthAndHeight(startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number) → number, number, number, number, number, number` | 1557 |  |
-| `MathUtil.getWorldParallelogramOffset(startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number, offset: number) → number, number, number, number, number, number` | 1576 |  |
-| `MathUtil.getNumOfSetBits(bitmask: integer) → integer` | 1624 |  |
-| `MathUtil.bitsToMask(...: integer) → integer` | 1636 |  |
-| `MathUtil.getBinary(number: integer) → array` | 1649 |  |
-| `MathUtil.numberToSetBits(number: integer) → array` | 1665 |  |
-| `MathUtil.numberToSetBitsStr(number: integer, separator: string?) → string` | 1683 |  |
-| `MathUtil.getNumRequiredBits(integer: integer) → integer` | 1704 |  |
-| `MathUtil.getBrightnessFromColor(r: number, g: number, b: number) → number` | 1722 |  |
-| `MathUtil.getHorizontalRotationFromDeviceGravity(x: number, y: number, z: number) → number` | 1732 |  |
-| `MathUtil.getSteeringAngleFromDeviceGravity(x: number, y: number, z: number) → number` | 1767 |  |
-| `MathUtil.catmullRom(p0: number, p1: number, p2: number, p3: number, t: number) → number` | 1797 |  |
-| `MathUtil.equalEpsilon(a: number?, b: number?, epsilon: number?) → boolean` | 1813 |  |
-| `MathUtil.floatRange(startVal: number, endVal: number, step: number) → function` | 1830 |  |
-| `MathUtil.smoothstep(min: number, max: number, x: number) → number` | 1878 |  |
-| `MathUtil.snapValue(value: number, step: integer) → number` | 1888 |  |
-| `MathUtil.getIndexOfFirstNonZeroFractionDigit(number: number) → integer` | 1902 |  |
-| `MathUtil.vector2Rotate(x: number, y: number, angle: number) → number, number` | 1923 |  |
-| `MathUtil.getPolygon2DSize(vertices: array) → number?` | 1936 |  |
-| `MathUtil.getPolygonLabel(vertices: array, precision: number) → number, number` | 1970 |  |
-| `MathUtil.symmetricDipCurve(value: number, alpha: number, maxValue: number) → number` | 2145 |  |
-| `MathUtil.convertStringToNumber(value: string\|number) → number` | 2156 |  |
+| `MathUtil.isNan(value: number) → boolean` | 16 | ✍ Signature only (no body in the SDK dump): Tells whether a number is NaN (not a number). |
+| `MathUtil.isInt(number: number) → boolean` | 24 | ✍ Signature only (no body in the SDK dump): Tells whether a number is a whole number. |
+| `MathUtil.isInf(number: number) → boolean` | 32 | ✍ Signature only (no body in the SDK dump): Tells whether a number is positive or negative infinity. |
+| `MathUtil.isFinite(number: number) → boolean` | 40 | ✍ Signature only (no body in the SDK dump): Tells whether a number is finite, i.e. neither NaN nor infinite. |
+| `MathUtil.getIsValidTransformationValue(...: any) → boolean` | 48 | ✍ Signature only (no body in the SDK dump): Takes any number of values and returns true only if none is nil, NaN or infinite. Meant as a guard before applying translations or rotations to a node. |
+| `MathUtil.randomFloat(lowerValue: number, upperValue: number) → number` | 77 | ✍ Signature only (no body in the SDK dump): Returns a random float between the two given bounds, both included. |
+| `MathUtil.round(value: number, precision: number?) → number` | 86 | ✍ Signature only (no body in the SDK dump): Rounds a value to a number of decimals; with no precision given it rounds to the nearest integer. |
+| `MathUtil.roundToStep(value: number, step: number) → number` | 104 | ✍ Signature only (no body in the SDK dump): Rounds a value to the nearest multiple of a step size (the step defaults to 0.5 according to the annotations). |
+| `MathUtil.degToRad(degValue: number) → number` | 122 | ✍ Signature only (no body in the SDK dump): Converts an angle from degrees to radians. |
+| `MathUtil.lerp(v1: number, v2: number, alpha: number) → number` | 136 | ✍ Signature only (no body in the SDK dump): Linear interpolation between two values for a given alpha factor. |
+| `MathUtil.inverseLerp(v1: number, v2: number, cv: number) → number` | 146 | ✍ Signature only (no body in the SDK dump): Inverse of lerp: returns the alpha factor at which a current value sits between a start and an end value. |
+| `MathUtil.getIsOutOfBounds(value: number, limit1: number, limit2: number) → boolean` | 178 | ✍ Signature only (no body in the SDK dump): Returns true if a value lies outside the range given by two limits. |
+| `MathUtil.getFlooredPercent(value: number, maxValue: number) → number` | 191 | ✍ Signature only (no body in the SDK dump): Computes a value as a percentage of a maximum, with the result floored. The exact rounding and scale (0-100 or 0-1) are UNVERIFIED. |
+| `MathUtil.getFlooredBounded(value: number, minValue: number, maxValue: number) → number` | 212 | ✍ Signature only (no body in the SDK dump): Clamps a value between a minimum and a maximum and floors it. The order of the two operations is UNVERIFIED. |
+| `MathUtil.getValidLimit(limit: number) → number` | 226 | ✍ Signature only (no body in the SDK dump): Wraps a radian angle into the range from -pi to pi. |
+| `MathUtil.getAngleDifference(alpha: number, beta: number) → number` | 243 | ✍ Signature only (no body in the SDK dump): Difference between two radian angles, returned in the range -pi to pi (sign convention UNVERIFIED). |
+| `MathUtil.eulerToDirection(yaw: number, pitch: number) → number, number, number` | 256 | ✍ Turns a yaw and a pitch (radians) into a unit direction vector x, y, z. Yaw rotates around Y; the vertical component is the sine of minus the pitch, so a positive pitch points downward. |
+| `MathUtil.directionToPitchYaw(directionX: number, directionY: number, directionZ: number) → number, number` | 272 | ✍ Inverse of eulerToDirection: returns pitch then yaw (radians) for a direction vector. Pitch comes from asin of minus the Y component, yaw from atan2 of x and z. Expects a normalized direction. |
+| `MathUtil.vector2Length(x: number, y: number) → number` | 280 | ✍ Signature only (no body in the SDK dump): Length of a 2D vector. |
+| `MathUtil.vector2LengthSq(x: number, y: number) → number` | 289 | ✍ Signature only (no body in the SDK dump): Squared length of a 2D vector, cheaper than the length because it avoids a square root. |
+| `MathUtil.vector2Normalize(x: number, y: number) → number, number` | 299 | ✍ Signature only (no body in the SDK dump): Returns the 2D vector scaled to unit length. |
+| `MathUtil.vector2SetLength(x: number, y: number, length: number) → number, number` | 312 | ✍ Signature only (no body in the SDK dump): Returns the 2D vector rescaled so its length equals the given value. |
+| `MathUtil.vector2Lerp(x1: number, y1: number, x2: number, y2: number, alpha: number) → number, number` | 330 | ✍ Signature only (no body in the SDK dump): Component-wise linear interpolation between two 2D points for a given alpha. |
+| `MathUtil.vector3Length(x: number, y: number, z: number) → number` | 342 | ✍ Signature only (no body in the SDK dump): Length of a 3D vector. |
+| `MathUtil.vector3LengthSq(x: number, y: number, z: number) → number` | 352 | ✍ Signature only (no body in the SDK dump): Squared length of a 3D vector, avoiding the square root. |
+| `MathUtil.vector3Normalize(x: number, y: number, z: number) → number, number, number` | 364 | ✍ Signature only (no body in the SDK dump): Returns the 3D vector scaled to unit length. |
+| `MathUtil.vector3SetLength(x: number, y: number, z: number, length: number) → number, number, number` | 379 | ✍ Signature only (no body in the SDK dump): Returns the 3D vector rescaled so its length equals the given value. |
+| `MathUtil.vector3Clamp(x: number, y: number, z: number, minVal: number, maxVal: number) → number, number, number` | 399 | ✍ Signature only (no body in the SDK dump): Returns the 3D vector with its length limited between a minimum and a maximum length. |
+| `MathUtil.vector3Lerp(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, alpha: number) → number, number, number` | 421 | ✍ Signature only (no body in the SDK dump): Component-wise linear interpolation between two 3D points for a given alpha. |
+| `MathUtil.vector3ArrayLerp(v1: table, v2: table, alpha: number) → number, number, number` | 455 | ✍ Signature only (no body in the SDK dump): Linear interpolation between two vectors passed as tables, returning x, y, z. The table layout (indices 1 to 3) is UNVERIFIED. |
+| `MathUtil.inverseVector3ArrayLerp(v1: array, v2: array, cv: array) → number` | 469 | ✍ Signature only (no body in the SDK dump): Inverse interpolation for vectors given as arrays; takes two arrays and a current-value array and returns a single number. Exact computation UNVERIFIED. |
+| `MathUtil.vector3Transformation(x: number, y: number, z: number, m11: number, m12: number, m13: number, m21: number, m22: number, m23: number, m31: number, m32: number, m33: number) → number, number, number` | 503 | ✍ Signature only (no body in the SDK dump): Multiplies a 3D vector by a 3x3 matrix given as nine values, row by row, and returns the transformed x, y, z. |
+| `MathUtil.dotProduct(ax: number, ay: number, az: number, bx: number, by: number, bz: number) → number` | 526 | ✍ Signature only (no body in the SDK dump): Dot product of two 3D vectors. |
+| `MathUtil.crossProduct(ax: number, ay: number, az: number, bx: number, by: number, bz: number) → number, number, number` | 541 | ✍ Signature only (no body in the SDK dump): Cross product of two 3D vectors, returned as x, y, z. |
+| `MathUtil.getVectorAngleDifference(dirX1: number, dirY1: number, dirZ1: number, dirX2: number, dirY2: number, dirZ2: number) → number` | 554 | ✍ Signature only (no body in the SDK dump): Angle between two 3D direction vectors (radians presumably; unit UNVERIFIED). |
+| `MathUtil.getSignedAngleBetweenVectors2D(dirX1: number, dirZ1: number, dirX2: number, dirZ2: number) → number` | 568 | ✍ Signature only (no body in the SDK dump): Signed angle between two directions on the XZ plane. Sign convention and unit are UNVERIFIED. |
+| `MathUtil.getYRotationFromDirection(dx: number, dz: number) → number` | 579 | ✍ Signature only (no body in the SDK dump): Returns the rotation around Y for a direction given by dx and dz, measured from the Z axis rather than from the X axis. |
+| `MathUtil.getDirectionFromYRotation(rotY: number) → number, number` | 588 | ✍ Signature only (no body in the SDK dump): Returns the x and z direction components for a rotation around Y; counterpart of getYRotationFromDirection. |
+| `MathUtil.getRotationLimitedVector2(x: number, y: number, minRot: number, maxRot: number) → number, number` | 600 | ✍ Signature only (no body in the SDK dump): Returns a 2D direction restricted to a rotation range given by a minimum and a maximum angle. |
+| `MathUtil.quaternionVectorMultiplication(quatX: number, quatY: number, quatZ: number, quatW: number, vecX: number, vecY: number, vecZ: number) → number, number, number` | 627 | ✍ Signature only (no body in the SDK dump): Rotates a vector by a quaternion (x, y, z, w) and returns the resulting x, y, z. |
+| `MathUtil.projectOnLine(px: number, pz: number, lineX: number, lineZ: number, normlineDirX: number, normlineDirZ: number) → number, number` | 657 | ✍ Signature only (no body in the SDK dump): Projects a point in the XZ plane onto a line given by a point and a normalized direction, returning the projected x and z. |
+| `MathUtil.getProjectOnLineParameter(px: number, pz: number, lineX: number, lineZ: number, normlineDirX: number, normlineDirZ: number) → number` | 673 | ✍ Signature only (no body in the SDK dump): Returns the signed distance along a line (point plus normalized direction) of the projection of a point in the XZ plane. |
+| `MathUtil.quaternionMult(x: number, y: number, z: number, w: number, x1: number, y1: number, z1: number, w1: number) → number, number, number, number` | 694 | ✍ Signature only (no body in the SDK dump): Multiplies two quaternions and returns the four components of the product. |
+| `MathUtil.quaternionNormalized(x: number, y: number, z: number, w: number) → number, number, number, number` | 711 | ✍ Signature only (no body in the SDK dump): Returns the given quaternion scaled to unit norm, as four components. |
+| `MathUtil.slerpQuaternion(x1: number, y1: number, z1: number, w1: number, x2: number, y2: number, z2: number, w2: number, t: number) → number, number, number, number` | 734 | ✍ Signature only (no body in the SDK dump): Interpolates between two quaternions with factor t. The parameter annotation speaks of linear interpolation despite the name; exact method UNVERIFIED. |
+| `MathUtil.normalizeRotationForShortestPath(targetRotation: number, curRotation: number) → number` | 756 | ✍ Signature only (no body in the SDK dump): Adjusts a target angle relative to the current angle so that turning from current to target takes the shortest way. |
+| `MathUtil.nlerpQuaternionShortestPath(x1: number, y1: number, z1: number, w1: number, x2: number, y2: number, z2: number, w2: number, t: number) → number, number, number, number` | 786 | ✍ Signature only (no body in the SDK dump): Normalized linear interpolation between two quaternions along the shortest path, with factor t. |
+| `MathUtil.slerpQuaternionShortestPath(x1: number, y1: number, z1: number, w1: number, x2: number, y2: number, z2: number, w2: number, t: number) → number, number, number, number` | 814 | ✍ Signature only (no body in the SDK dump): Spherical interpolation between two quaternions along the shortest path, with factor t. |
+| `MathUtil.quaternionMadShortestPath(x: number, y: number, z: number, w: number, x1: number, y1: number, z1: number, w1: number, t: number) → number, number, number, number` | 855 | ✍ Signature only (no body in the SDK dump): Multiply-and-add style quaternion blend along the shortest path with factor t; the first quaternion is the base. Exact formula UNVERIFIED. |
+| `MathUtil.getDistanceToRectangle2D(posX: number, posZ: number, sx: number, sz: number, dx: number, dz: number, length: number, widthHalf: number) → number` | 875 | ✍ Signature only (no body in the SDK dump): Distance from a point on the XZ plane to a rectangle defined by a start point, a direction, a length and a half width. |
+| `MathUtil.getSignedDistanceToLineSegment2D(x: number, z: number, sx: number, sz: number, dx: number, dz: number, length: number) → number, integer` | 918 | ✍ Signature only (no body in the SDK dump): Distance from a point to a segment given by start, normalized direction and length. Returns the distance and a case code: 0 for perpendicular projection (signed distance), 1 or 2 for nearest end point (unsigned). |
+| `MathUtil.getLineLineIntersection2D(x1: number, z1: number, dirX1: number, dirZ1: number, x2: number, z2: number, dirX2: number, dirZ2: number) → boolean, number?, number?` | 954 | ✍ Signature only (no body in the SDK dump): Intersection of two infinite lines in the XZ plane, each given by a point and a direction. Return layout and parallel-line behaviour are UNVERIFIED. |
+| `MathUtil.getLineSegmentsIntersection(ax1: number, az1: number, ax2: number, az2: number, bx1: number, bz1: number, bx2: number, bz2: number) → boolean, number, number` | 979 | ✍ Signature only (no body in the SDK dump): Intersection point of two segments given by their end points; the annotations say it returns false for collinear segments. |
+| `MathUtil.getLineSegmentsIntersectionParameter(ax1: number, az1: number, ax2: number, az2: number, bx1: number, bz1: number, bx2: number, bz2: number) → boolean, number, number` | 1013 | ✍ Signature only (no body in the SDK dump): Like getLineSegmentsIntersection but returns the intersection parameter along the segments instead of a point; false for collinear segments. |
+| `MathUtil.getAreLineSegmentsIntersecting(ax1: number, az1: number, ax2: number, az2: number, bx1: number, bz1: number, bx2: number, bz2: number, allowEndStartSamePos: boolean?) → boolean, boolean?` | 1043 | ✍ Signature only (no body in the SDK dump): Boolean test of whether two segments cross, collinear ones included. The optional last flag lets a segment continuing the other (shared end point, as in polygon contours) not count as an intersection. |
+| `MathUtil.getLineBoundingVolumeIntersect(ax1: number, ay1: number, ax2: number, ay2: number, bx1: number, by1: number, bx2: number, by2: number) → boolean` | 1110 | ✍ Signature only (no body in the SDK dump): Tells whether the bounding boxes of two 2D lines overlap; a cheap pre-check rather than an exact intersection test. |
+| `MathUtil.hasRectangleLineIntersection2D(x1: number, z1: number, dirX1: number, dirZ1: number, dirX2: number, dirZ2: number, x3: number, z3: number, dirX3: number, dirZ3: number) → boolean` | 1130 | ✍ Signature only (no body in the SDK dump): Tests whether a rectangle and a line intersect on the XZ plane. Parameter meaning (rectangle by point plus two directions, line by point plus direction) is inferred and UNVERIFIED. |
+| `MathUtil.getCircleCircleIntersection(x1: number, y1: number, r1: number, x2: number, y2: number, r2: number) → number?, number?, number?, number?` | 1208 | ✍ Signature only (no body in the SDK dump): Returns the intersection points of two circles given by center and radius. Return layout and the no-intersection case are UNVERIFIED. |
+| `MathUtil.hasSphereSphereIntersection(x1: number, y1: number, z1: number, r1: number, x2: number, y2: number, z2: number, r2: number) → boolean` | 1263 | ✍ Signature only (no body in the SDK dump): Returns whether two spheres, each given by center and radius, intersect. |
+| `MathUtil.getDistanceToLineSegment2D(startX: number, startZ: number, endX: number, endZ: number, pointX: number, pointZ: number) → number` | 1359 | ✍ Signature only (no body in the SDK dump): Distance from a point to a 2D segment given by start and end coordinates. Argument order is segment start, segment end, then the point. |
+| `MathUtil.getPointPointDistance(x1: number, y1: number, x2: number, y2: number) → number` | 1417 | ✍ Signature only (no body in the SDK dump): Distance between two 2D points. |
+| `MathUtil.getPointPointDistanceSquared(x1: number, y1: number, x2: number, y2: number) → number` | 1431 | ✍ Signature only (no body in the SDK dump): Squared distance between two 2D points; handy when comparing distances because no square root is taken. |
+| `MathUtil.areaToHa(area: number, pixelToSqm: number) → number` | 1442 | ✍ Signature only (no body in the SDK dump): Converts an area expressed in density-map pixels to hectares, using the size of a pixel in square meters. |
+| `MathUtil.haToSqm(area: number) → number` | 1450 | ✍ Signature only (no body in the SDK dump): Converts hectares to square meters. |
+| `MathUtil.inchToM(inchValue: number) → number` | 1458 | ✍ Signature only (no body in the SDK dump): Converts inches to meters. |
+| `MathUtil.mToInch(mValue: number) → number` | 1466 | ✍ Signature only (no body in the SDK dump): Converts meters to inches. |
+| `MathUtil.msToMinutes(ms: integer) → number` | 1474 | ✍ Signature only (no body in the SDK dump): Converts milliseconds to minutes. |
+| `MathUtil.msToHours(ms: integer) → number` | 1482 | ✍ Signature only (no body in the SDK dump): Converts milliseconds to hours. |
+| `MathUtil.msToDays(ms: integer) → number` | 1490 | ✍ Signature only (no body in the SDK dump): Converts milliseconds to days. |
+| `MathUtil.minutesToMs(minutes: number) → integer` | 1498 | ✍ Signature only (no body in the SDK dump): Converts minutes to milliseconds. |
+| `MathUtil.hoursToMs(hours: number) → integer` | 1506 | ✍ Signature only (no body in the SDK dump): Converts hours to milliseconds. |
+| `MathUtil.daysToMs(days: integer) → integer` | 1514 | ✍ Signature only (no body in the SDK dump): Converts days to milliseconds. |
+| `MathUtil.mpsToKmh(mps: number) → number` | 1522 | ✍ Signature only (no body in the SDK dump): Converts a speed from meters per second to kilometers per hour. |
+| `MathUtil.kmhToMps(kmh: number) → number` | 1530 | ✍ Signature only (no body in the SDK dump): Converts a speed from kilometers per hour to meters per second. |
+| `MathUtil.rpmToMps(rpm: integer, radius: number) → number` | 1539 | ✍ Signature only (no body in the SDK dump): Converts a rotation speed in revolutions per minute and a wheel radius into a linear speed in meters per second (units presumed). |
+| `MathUtil.getXZWidthAndHeight(startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number) → number, number, number, number, number, number` | 1557 | ✍ Signature only (no body in the SDK dump): Computes width and height from a start point and two world-space offsets (width and height vectors) in the XZ plane, as used for density-map areas. Exact return values UNVERIFIED. |
+| `MathUtil.getWorldParallelogramOffset(startWorldX: number, startWorldZ: number, widthWorldX: number, widthWorldZ: number, heightWorldX: number, heightWorldZ: number, offset: number) → number, number, number, number, number, number` | 1576 | ✍ Signature only (no body in the SDK dump): Offsets a parallelogram defined by a start point and width and height vectors in the XZ plane by a given amount. Exact result UNVERIFIED. |
+| `MathUtil.getNumOfSetBits(bitmask: integer) → integer` | 1624 | ✍ Signature only (no body in the SDK dump): Counts the bits set to 1 in a bitmask. |
+| `MathUtil.bitsToMask(...: integer) → integer` | 1636 | ✍ Signature only (no body in the SDK dump): Builds a bitmask from a list of bit positions, counting from 0. |
+| `MathUtil.getBinary(number: integer) → array` | 1649 | ✍ Signature only (no body in the SDK dump): Returns the bits of a number as a list of 0 and 1 values, least significant first according to the annotated example. |
+| `MathUtil.numberToSetBits(number: integer) → array` | 1665 | ✍ Signature only (no body in the SDK dump): Returns the list of positions (from 0) of the bits set in a number. |
+| `MathUtil.numberToSetBitsStr(number: integer, separator: string?) → string` | 1683 | ✍ Signature only (no body in the SDK dump): Same as numberToSetBits but returns a string, joined with an optional separator (default comma and space). |
+| `MathUtil.getNumRequiredBits(integer: integer) → integer` | 1704 | ✍ Signature only (no body in the SDK dump): Returns how many bits are needed to store a positive integer; the result is at least 1. |
+| `MathUtil.getBrightnessFromColor(r: number, g: number, b: number) → number` | 1722 | ✍ Signature only (no body in the SDK dump): Returns the brightness of an RGB color in the 0 to 1 range, described as relative luminance. |
+| `MathUtil.getHorizontalRotationFromDeviceGravity(x: number, y: number, z: number) → number` | 1732 | ✍ Signature only (no body in the SDK dump): Derives a horizontal rotation from a device gravity vector (x, y, z), presumably from a mobile or motion sensor. Details UNVERIFIED. |
+| `MathUtil.getSteeringAngleFromDeviceGravity(x: number, y: number, z: number) → number` | 1767 | ✍ Signature only (no body in the SDK dump): Derives a steering angle from a device gravity vector (x, y, z), presumably for tilt steering. Details UNVERIFIED. |
+| `MathUtil.catmullRom(p0: number, p1: number, p2: number, p3: number, t: number) → number` | 1797 | ✍ Signature only (no body in the SDK dump): Catmull-Rom spline interpolation of one scalar between the second and third of four control values, with factor t. |
+| `MathUtil.equalEpsilon(a: number?, b: number?, epsilon: number?) → boolean` | 1813 | ✍ Signature only (no body in the SDK dump): Compares two numbers within a tolerance (default 0.0001); returns false if either value is nil. |
+| `MathUtil.floatRange(startVal: number, endVal: number, step: number) → function` | 1830 | ✍ Signature only (no body in the SDK dump): Returns an iterator over a range of floats, both ends included, unlike a numeric for loop that may stop short with floats. Raises an error for an endless range. |
+| `MathUtil.smoothstep(min: number, max: number, x: number) → number` | 1878 | ✍ Signature only (no body in the SDK dump): Smooth interpolation (smoothstep) of x between a minimum and a maximum edge. Exact curve UNVERIFIED. |
+| `MathUtil.snapValue(value: number, step: integer) → number` | 1888 | ✍ Signature only (no body in the SDK dump): Snaps a value to a multiple of an integer step. Rounding direction UNVERIFIED. |
+| `MathUtil.getIndexOfFirstNonZeroFractionDigit(number: number) → integer` | 1902 | ✍ Signature only (no body in the SDK dump): Returns the 1-based position of the first non-zero digit after the decimal point for inputs strictly between -1 and 1, and 0 otherwise (for example 0.002 gives 3). |
+| `MathUtil.vector2Rotate(x: number, y: number, angle: number) → number, number` | 1923 | ✍ Signature only (no body in the SDK dump): Rotates a 2D vector by an angle in radians; rotation direction UNVERIFIED. |
+| `MathUtil.getPolygon2DSize(vertices: array) → number?` | 1936 | ✍ Signature only (no body in the SDK dump): Returns the flat size of a polygon in the XZ plane; takes an array of node ids and only uses their x and z translation. Return layout UNVERIFIED. |
+| `MathUtil.getPolygonLabel(vertices: array, precision: number) → number, number` | 1970 | ✍ Signature only (no body in the SDK dump): Takes an array of vertices and a precision; presumably computes a label position for a polygon. Purpose UNVERIFIED. |
+| `MathUtil.symmetricDipCurve(value: number, alpha: number, maxValue: number) → number` | 2145 | ✍ Signature only (no body in the SDK dump): Returns a symmetric curve over an input in 0 to 1, with fixed values at both edges equal to a maximum and a dip in the middle whose strength is set by alpha (0 gives a flat line, 1 the deepest dip). |
+| `MathUtil.convertStringToNumber(value: string\|number) → number` | 2156 | ✍ Signature only (no body in the SDK dump): Converts a string or number to a number, tolerating underscores as digit separators and a comma as decimal separator (the annotated example turns 1_087_36,41532 into 108736.41532). |

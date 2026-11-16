@@ -1,0 +1,65 @@
+{
+ "fichier": "gui/elements/TabbedMenuFrameElement.lua",
+ "module": {
+  "en": "Base class (derived from FrameElement) for the frames shown inside the tabbed in-game menu. It stores custom menu-button info with a dirty flag so the container menu can refresh its buttons, the page number, a title, and a close-request hook for frames that must finish work first. The container is not in this file, so how it consumes these values is UNVERIFIED.",
+  "fr": "Classe de base (dérivée de FrameElement) des cadres affichés dans le menu de jeu à onglets. Elle conserve les infos de boutons de menu personnalisés avec un indicateur « sale » pour que le menu conteneur rafraîchisse ses boutons, le numéro de page, un titre et un point d'entrée de demande de fermeture pour les cadres qui doivent terminer un travail. Le conteneur n'est pas dans ce fichier : son usage de ces valeurs est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "TabbedMenuFrameElement.new": {
+   "en": "Constructor. Initialises empty menu-button info, the dirty flags, current page 1 (one page) and a no-op close callback.",
+   "fr": "Constructeur. Initialise des infos de boutons vides, les indicateurs sales, la page courante à 1 (une seule page) et un callback de fermeture sans effet."
+  },
+  "TabbedMenuFrameElement:initialize": {
+   "en": "Empty hook for late initialisation of a frame; subclasses override it. Accepts any arguments and does nothing here.",
+   "fr": "Point d'extension vide pour l'initialisation tardive d'un cadre ; les sous-classes le surchargent. Accepte tous arguments et ne fait rien ici."
+  },
+  "TabbedMenuFrameElement:getHasCustomMenuButtons": {
+   "en": "Returns whether this frame supplies its own menu buttons.",
+   "fr": "Indique si ce cadre fournit ses propres boutons de menu."
+  },
+  "TabbedMenuFrameElement:getMenuButtonInfo": {
+   "en": "Returns the stored array of custom button descriptions (input action, optional text, optional callback).",
+   "fr": "Retourne le tableau enregistré des descriptions de boutons personnalisés (action d'entrée, texte et callback optionnels)."
+  },
+  "TabbedMenuFrameElement:setMenuButtonInfo": {
+   "en": "Stores the custom button info and flags custom buttons as present unless nil is passed, which resets it. It does not mark the info dirty.",
+   "fr": "Enregistre les infos de boutons et indique des boutons personnalisés, sauf si nil est passé, ce qui réinitialise. Ne marque pas les infos comme sales."
+  },
+  "TabbedMenuFrameElement:setMenuButtonInfoDirty": {
+   "en": "Raises the dirty flag so the container menu rebuilds its buttons from this frame's info.",
+   "fr": "Lève l'indicateur sale pour que le menu conteneur reconstruise ses boutons à partir des infos de ce cadre."
+  },
+  "TabbedMenuFrameElement:isMenuButtonInfoDirty": {
+   "en": "Returns whether the button info has changed since the flag was last cleared.",
+   "fr": "Indique si les infos de boutons ont changé depuis le dernier effacement de l'indicateur."
+  },
+  "TabbedMenuFrameElement:clearMenuButtonInfoDirty": {
+   "en": "Clears the button-info dirty flag.",
+   "fr": "Efface l'indicateur sale des infos de boutons."
+  },
+  "TabbedMenuFrameElement:getMainElementSize": {
+   "en": "Returns the default main-content size {1, 1} (full screen in normalised units). Subclasses override it.",
+   "fr": "Retourne la taille par défaut du contenu principal {1, 1} (plein écran en unités normalisées). Les sous-classes la surchargent."
+  },
+  "TabbedMenuFrameElement:getMainElementPosition": {
+   "en": "Returns the default main-content position {0, 0}. Subclasses override it.",
+   "fr": "Retourne la position par défaut du contenu principal {0, 0}. Les sous-classes la surchargent."
+  },
+  "TabbedMenuFrameElement:requestClose": {
+   "en": "Stores the given callback (or a no-op) and returns true, meaning closing is allowed at once. Subclasses override it to delay closing, e.g. to save changes, and call the callback later.",
+   "fr": "Mémorise le callback donné (ou un callback sans effet) et retourne true, donc la fermeture est autorisée immédiatement. Les sous-classes la surchargent pour différer la fermeture, par exemple pour sauvegarder, et appellent le callback plus tard."
+  },
+  "TabbedMenuFrameElement:onFrameOpen": {
+   "en": "Called by the container when the frame opens. Runs the superclass onOpen, then calls updatePagingButtons, which is not defined in this file (UNVERIFIED, presumably from FrameElement).",
+   "fr": "Appelée par le conteneur à l'ouverture du cadre. Exécute onOpen de la classe parente puis appelle updatePagingButtons, non défini dans ce fichier (NON VÉRIFIÉ, probablement issu de FrameElement)."
+  },
+  "TabbedMenuFrameElement:onFrameClose": {
+   "en": "Called by the container when the frame closes. Only forwards to the superclass onClose.",
+   "fr": "Appelée par le conteneur à la fermeture du cadre. Ne fait que transmettre à onClose de la classe parente."
+  },
+  "TabbedMenuFrameElement:setTitle": {
+   "en": "Stores the frame title and, if a pagingTitle element exists on the frame, updates its text too.",
+   "fr": "Enregistre le titre du cadre et, si un élément pagingTitle existe sur le cadre, met aussi son texte à jour."
+  }
+ }
+}

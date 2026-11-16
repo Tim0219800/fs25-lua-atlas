@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/specializations/ChainRollers.lua",
+ "module": {
+  "en": "Specialization for roller chains whose elements are laid out along a hidden spline; the spline control points follow reference nodes that are moved by Cylindered moving tools or parts. Configured under vehicle.chainRollers (maxUpdateDistance and chainRoller entries with elementsNode, endReferenceNode and splineNode children). Updates run in onPostUpdate only when the vehicle is closer than maxUpdateDistance (default 100), and a debug overlay is drawn in the DEBUG_ATTRIBUTES vehicle debug state.",
+  "fr": "Spécialisation pour les chaînes à rouleaux dont les éléments sont placés le long d'une spline masquée ; les points de contrôle de la spline suivent des nœuds de référence déplacés par les outils ou pièces mobiles de Cylindered. Configurée sous vehicle.chainRollers (maxUpdateDistance et entrées chainRoller avec elementsNode, endReferenceNode et enfants splineNode). Les mises à jour se font dans onPostUpdate uniquement si le véhicule est plus proche que maxUpdateDistance (100 par défaut) ; un affichage de débogage est dessiné dans l'état de débogage DEBUG_ATTRIBUTES."
+ },
+ "fonctions": {
+  "ChainRollers.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required, although the extra dependent parts hooks only make sense with Cylindered.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise, bien que les points d'extension des pièces dépendantes n'aient de sens qu'avec Cylindered."
+  },
+  "ChainRollers.initSpecialization": {
+   "en": "Registers, via delayed registration, the chainRollers#splineNodes node-index list on Cylindered movingTool and movingPart entries.",
+   "fr": "Enregistre, par enregistrement différé, la liste d'indices de nœuds chainRollers#splineNodes sur les entrées movingTool et movingPart de Cylindered."
+  },
+  "ChainRollers.registerFunctions": {
+   "en": "Registers loadChainRollerFromXML and updateChainRoller on the vehicle type.",
+   "fr": "Enregistre loadChainRollerFromXML et updateChainRoller sur le type de véhicule."
+  },
+  "ChainRollers.registerOverwrittenFunctions": {
+   "en": "Overrides loadExtraDependentParts and updateExtraDependentParts (provided by another specialization, UNVERIFIED which one).",
+   "fr": "Remplace loadExtraDependentParts et updateExtraDependentParts (fournies par une autre spécialisation, laquelle : NON VÉRIFIÉ)."
+  },
+  "ChainRollers.registerEventListeners": {
+   "en": "Registers onLoad, onLoadFinished and onPostUpdate.",
+   "fr": "Enregistre onLoad, onLoadFinished et onPostUpdate."
+  },
+  "ChainRollers:onLoad": {
+   "en": "Reads maxUpdateDistance and loads every vehicle.chainRollers.chainRoller entry. If the block is absent or no entry loads, it removes the onLoadFinished and onPostUpdate listeners so the vehicle costs nothing.",
+   "fr": "Lit maxUpdateDistance et charge chaque entrée vehicle.chainRollers.chainRoller. Si le bloc est absent ou qu'aucune entrée ne se charge, retire les écouteurs onLoadFinished et onPostUpdate pour que le véhicule ne coûte rien."
+  },
+  "ChainRollers:onLoadFinished": {
+   "en": "Forces one immediate update by calling onPostUpdate with a very large dt so the chains start in their correct pose.",
+   "fr": "Force une mise à jour immédiate en appelant onPostUpdate avec un dt très grand pour que les chaînes démarrent dans la bonne pose."
+  },
+  "ChainRollers:onPostUpdate": {
+   "en": "When the vehicle is within maxUpdateDistance, copies the dirty spline node positions into the spline control points and re-lays the elements of every dirty chain. In the DEBUG_ATTRIBUTES state it draws the spline nodes and curve.",
+   "fr": "Quand le véhicule est dans la distance maxUpdateDistance, recopie les positions des nœuds de spline modifiés dans les points de contrôle et replace les éléments de chaque chaîne modifiée. Dans l'état DEBUG_ATTRIBUTES, dessine les nœuds et la courbe de la spline."
+  },
+  "ChainRollers:loadChainRollerFromXML": {
+   "en": "Loads one chain: elementsNode (its children are the elements), optional endReferenceNode and at least two splineNode entries, then builds a hidden spline from their positions. Returns false with an XML warning if elements or nodes are missing.",
+   "fr": "Charge une chaîne : elementsNode (ses enfants sont les éléments), endReferenceNode facultatif et au moins deux entrées splineNode, puis construit une spline masquée à partir de leurs positions. Renvoie false avec un avertissement XML s'il manque des éléments ou des nœuds."
+  },
+  "ChainRollers:updateChainRoller": {
+   "en": "Places each element at evenly spaced parameters along the spline and orients each one toward the next. The last element is aimed at endReferenceNode when set. The dt argument is not used.",
+   "fr": "Place chaque élément à des paramètres régulièrement espacés le long de la spline et oriente chacun vers le suivant. Le dernier élément vise endReferenceNode s'il est défini. L'argument dt n'est pas utilisé."
+  },
+  "ChainRollers:loadExtraDependentParts": {
+   "en": "Calls the parent, then reads chainRollers#splineNodes for the moving part and keeps the nodes on the entry. Returns false if the parent fails.",
+   "fr": "Appelle le parent puis lit chainRollers#splineNodes pour la pièce mobile et mémorise les nœuds dans l'entrée. Renvoie false si le parent échoue."
+  },
+  "ChainRollers:updateExtraDependentParts": {
+   "en": "Calls the parent, then marks the spline data of each spline node listed on the moving part as dirty so the next post update rebuilds the chain.",
+   "fr": "Appelle le parent puis marque comme modifiées les données de spline de chaque nœud listé sur la pièce mobile, afin que le prochain post-update reconstruise la chaîne."
+  }
+ }
+}

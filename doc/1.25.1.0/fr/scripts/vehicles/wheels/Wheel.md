@@ -1,0 +1,37 @@
+# vehicles/wheels/Wheel.lua
+
+*[English version](../../../../scripts/vehicles/wheels/Wheel.md)*
+
+Source: `dataS/scripts/vehicles/wheels/Wheel.lua` — FS25 1.25.1.0
+
+✍ Classe (pas une spécialisation) qui représente une roue complète : elle ne contient presque pas de logique propre et orchestre des sous-objets créés dans Wheel.new (Wheel.lua:53-58) : physics (WheelPhysics), steering (WheelSteering), destruction (WheelDestruction), effects (WheelEffects) et debug (WheelDebug), plus les roues visuelles (WheelVisual) et cales (WheelChock) chargées en XML. Appelée par la spécialisation Wheels : Wheels:onUpdate (Wheels.lua:844-846) lit une fois par frame g_currentMission.environment.weather:getGroundWetness() et le passe à Wheel:update(dt, currentUpdateIndex, groundWetness) ; Wheels:onUpdateTick (Wheels.lua:935) fait de même pour Wheel:updateTick. C'est le seul accès météo de ce fichier : une valeur groundWetness, dont l'origine (Weather) est absente du dump : NON VÉRIFIÉ. Serveur/client : sur le serveur, Wheel:update lance physics:serverUpdate (contact sol, friction, frein, direction) seulement si le véhicule est dans la physique ; sur le client, physics:clientUpdate (lecture du type de sol seulement). La partie visuelle (position de roue, rotation, suspension, direction, effets) n'est exécutée que si le véhicule est plus proche que Wheel.VISUAL_WHEEL_UPDATE_DISTANCE (valeur non définie dans ce fichier : NON VÉRIFIÉ) ou si force est vrai ; les seuils de mise à jour Wheel.STEERING_ANGLE_THRESHOLD et Wheel.SUSPENSION_THRESHOLD ne sont pas non plus définis ici. Le pas de temps dt (ms) est transmis tel quel ; Wheels.lua:633 (onLoadFinished) appelle update avec dt = 99999 et force pour initialiser les positions. Particularité de répartition de charge : chaque roue a un updateIndex de 1 à 4 ((index-1) mod 4 + 1) utilisé par WheelPhysics pour ne mesurer le contact qu'une frame sur quatre. Points d'extension pour un moddeur : aucune fonction enregistrée ; accès via vehicle.spec_wheels.wheels[i] (objet Wheel) et ses champs physics / effects / destruction ; surcharge directe de Wheel.* (partagé par toutes les roues) possible.
+
+- **Wheel** (l.28)
+
+## Fonctions
+
+| Fonction | Ligne | Description |
+|---|---|---|
+| `Wheel.new(vehicle: any, xmlFile: any, baseKey: any, wheelKey: any, wheelIndex: any, configIndex: any, indexToParentIndex: any, baseDirectory: any, customMt: any)` | 32 | ✍ Crée la roue : stocke véhicule, XML, objet XML de roue, indices ; initialise frein, état de synchronisation de contact (syncContactState = false) et les cinq sous-objets physics, steering, destruction, effects, debug. |
+| `Wheel:loadFromXML()` | 66 | ✍ Charge la roue : nœud repr obligatoire (sinon échec), nœuds drive/link (en crée un nouveau repr si le driveNode n'est pas fourni), ratio de translation de suspension, puis délègue à physics, steering, destruction et effects ; charge matériaux, cales de roue, roue visuelle principale et roues additionnelles (jumelées) en leur transmettant la masse supplémentaire. Renvoie false si la roue n'est pas dans un composant actif ou si un sous-chargement échoue. |
+| `Wheel:finalize()` | 228 | ✍ Calcule la largeur et le décalage totaux de la forme physique à partir des roues visuelles, puis finalise physics, destruction et effects et libère l'objet XML. |
+| `Wheel:postLoad()` | 254 | ✍ Post-chargement : propage aux roues visuelles, à physics et à effects. |
+| `Wheel:delete()` | 265 | ✍ Libère roues visuelles, cales, effets (particules, traces) et débogage, ainsi que l'objet XML. |
+| `Wheel:readStream(streamId: any, updateInterpolation: any)` | 285 | ✍ Client : lit l'état réseau de la roue en le déléguant à physics:readStream (contact, position, suspension, rotation selon la configuration). |
+| `Wheel:writeStream(streamId: any)` | 291 | ✍ Serveur : écrit l'état réseau de la roue via physics:writeStream. |
+| `Wheel:update(dt: any, currentUpdateIndex: any, groundWetness: any, force: any)` | 297 | ✍ Par frame. Serveur : physics:serverUpdate (si dans la physique) ; client : physics:clientUpdate. Puis, si le véhicule est proche (ou force), applique aux nœuds la direction, la rotation xDrive et la suspension issues de physics:getVisualInfo, met à jour les roues visuelles, la direction (WheelSteering), les cales, et appelle effects:update(dt, groundWetness, currentUpdateIndex). groundWetness est transmis tel quel aux effets de roue (particules humides/sèches, traces). |
+| `Wheel:updateInterpolation(dt: any, interpolationAlpha: any)` | 375 | ✍ Client : interpole les données réseau de la roue (position, suspension, rotation) via physics:updateInterpolation. |
+| `Wheel:updateTick(dt: any, groundWetness: any, currentUpdateDistance: any)` | 381 | ✍ Par tick : physics:updateTick (couleur du sol, saleté de piste, vitesse de rotation limitée) puis effects:updateTick avec groundWetness et la distance de mise à jour du véhicule. |
+| `Wheel:postUpdate(dt: any)` | 388 | ✍ Serveur : fait appliquer par physics les changements de position/friction en attente (un seul recalcul par frame). |
+| `Wheel:onUpdateEnd(dt: any)` | 394 | ✍ Fin de mise à jour : délègue à effects:onUpdateEnd (arrêt des effets). |
+| `Wheel:onPreAttach()` | 400 | ✍ Met les cales de roue en position de stationnement forcée (update avec true) avant attelage. |
+| `Wheel:onPostDetach()` | 408 | ✍ Remet les cales dans leur état normal (update avec false) après dételage. |
+| `Wheel:addToPhysics(brakeForce: any)` | 416 | ✍ Crée la forme de roue dans le moteur physique avec la force de freinage donnée (via physics). |
+| `Wheel:updatePhysics(brakeForce: any)` | 422 | ✍ Renvoie vers physics:updatePhysics pour appliquer frein/couple/direction au moteur physique. |
+| `Wheel:removeFromPhysics()` | 428 | ✍ Retire la roue de la physique (via physics). |
+| `Wheel:getMass()` | 434 | ✍ Masse de la roue : masse physique plus masse supplémentaire des roues visuelles (t). |
+| `Wheel:setSteeringValues(rotMin: any, rotMax: any, rotSpeed: any, rotSpeedNeg: any, inverted: any)` | 440 | ✍ Transmet à physics et steering les limites et vitesses de rotation de direction. |
+| `Wheel:setBrakePedal(brakePedal: any)` | 447 | ✍ Mémorise la position de pédale (0..1) et applique frein = freinage véhicule x pédale. |
+| `Wheel:setIsCareWheel(isCareWheel: any)` | 455 | ✍ Transmet à WheelDestruction le mode « care wheel » (pas de destruction de cultures). |
+| `Wheel:getFirstTireNode()` | 461 | ✍ Renvoie le premier nœud de pneu trouvé parmi les roues visuelles, ou nil. |
+| `Wheel.registerXMLPaths(schema: XMLSchema, key: string)` | 476 | ✍ Déclare les clés XML d'une roue (physics#repr, #driveNode, #linkNode, #transRatio, #material, #isLeft, #rimOffset, #filename, additionalWheel, wheelChock...) et enchaîne sur les registerXMLPaths des sous-classes (WheelPhysics, WheelSteering, WheelDestruction, WheelEffects, WheelVisual, WheelChock). |

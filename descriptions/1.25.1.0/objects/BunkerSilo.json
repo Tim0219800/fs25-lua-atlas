@@ -1,0 +1,117 @@
+{
+ "fichier": "objects/BunkerSilo.lua",
+ "module": {
+  "en": "Networked Object for a bunker silo (silage clamp) that tracks a rectangular density-map area defined by start, width and height nodes. It goes through four states: FILL (chaff is added and compacted by driving vehicles), CLOSED (covered, fermenting), FERMENTED and DRAIN (opened, output fill type taken out). Fill levels are read from the density-map height system on the server and synchronised to clients. Several constants and helpers (STATE_*, NUM_STATES, COMPACTING_BASE_MASS, MILLISECONDS_PER_DAY, updateCompacting, onHourChanged, showBunkerMessage) are referenced but not defined in this dump (UNVERIFIED). The file ends with the start of BunkerSiloActivatable, whose body is absent.",
+  "fr": "Objet réseau représentant un silo-couloir (silo d'ensilage) qui suit une zone rectangulaire de la carte de densité définie par des nœuds start, width et height. Il passe par quatre états : FILL (de l'ensilage est ajouté et compacté par les véhicules), CLOSED (bâché, en fermentation), FERMENTED et DRAIN (ouvert, le type de sortie est prélevé). Les niveaux sont lus côté serveur dans le système de hauteur de la carte de densité puis synchronisés aux clients. Plusieurs constantes et fonctions (STATE_*, NUM_STATES, COMPACTING_BASE_MASS, MILLISECONDS_PER_DAY, updateCompacting, onHourChanged, showBunkerMessage) sont utilisées mais absentes de ce dump (NON VÉRIFIÉ). Le fichier se termine par le début de BunkerSiloActivatable, dont le corps est absent."
+ },
+ "fonctions": {
+  "BunkerSilo:onCreate": {
+   "en": "Deprecated map callback: only logs an error saying BunkerSilo.onCreate is deprecated and creates nothing.",
+   "fr": "Callback de carte obsolète : se contente de journaliser une erreur indiquant que BunkerSilo.onCreate est déprécié et ne crée rien."
+  },
+  "BunkerSilo.new": {
+   "en": "Constructor. Initialises the area offsets, default fill types (input chaff, output silage, fermenting tarp), counters, the activatable and the FILL state, reserves a dirty flag and subscribes to HOUR_CHANGED. Returns the instance.",
+   "fr": "Constructeur. Initialise les décalages de zone, les types par défaut (entrée chaff, sortie silage, fermentation tarp), les compteurs, l'activatable et l'état FILL, réserve un drapeau dirty et s'abonne à HOUR_CHANGED. Retourne l'instance."
+  },
+  "BunkerSilo:load": {
+   "en": "Loads the area and innerArea nodes, trigger, accepted/input/output fill types, distanceToCompactedFillLevel, openingLength and wall nodes from XML. Registers the converting area with the density-map manager and divides the compaction distance by the economic difficulty. Returns true.",
+   "fr": "Charge depuis le XML les nœuds area et innerArea, le déclencheur, les types acceptés, d'entrée et de sortie, distanceToCompactedFillLevel, openingLength et les murs. Enregistre la zone de conversion auprès du gestionnaire de densité et divise la distance de compactage par la difficulté économique. Retourne true."
+  },
+  "BunkerSilo:delete": {
+   "en": "Removes the interaction trigger, the fixed and converting fill type areas, message subscriptions and the activatable, then calls the parent delete.",
+   "fr": "Retire le déclencheur d'interaction, les zones de types fixes et de conversion, les abonnements aux messages et l'activatable, puis appelle le delete du parent."
+  },
+  "BunkerSilo:readStream": {
+   "en": "Client side on join: after the parent, reads state (3 bits), the opened front/back flags, fill level, compacted percent (7 bits) and fermenting percent.",
+   "fr": "Côté client à la connexion : après le parent, lit l'état (3 bits), les drapeaux d'ouverture avant/arrière, le niveau de remplissage, le pourcentage compacté (7 bits) et le pourcentage de fermentation."
+  },
+  "BunkerSilo:writeStream": {
+   "en": "Server side on join: after the parent, writes the same fields that readStream reads.",
+   "fr": "Côté serveur à la connexion : après le parent, écrit les mêmes champs que ceux lus par readStream."
+  },
+  "BunkerSilo:readUpdateStream": {
+   "en": "Client side update: if the dirty bit is set, reads state (calling setState with notification on change), fill level, opened flags, then compacted percent in FILL or fermenting percent in CLOSED/FERMENTED.",
+   "fr": "Mise à jour côté client : si le bit dirty est présent, lit l'état (appelle setState avec notification en cas de changement), le niveau, les drapeaux d'ouverture, puis le pourcentage compacté en FILL ou de fermentation en CLOSED/FERMENTED."
+  },
+  "BunkerSilo:writeUpdateStream": {
+   "en": "Server side update: writes a flag for the silo dirty bit and, when set, the fields that readUpdateStream expects.",
+   "fr": "Mise à jour côté serveur : écrit un indicateur pour le bit dirty du silo puis, s'il est actif, les champs attendus par readUpdateStream."
+  },
+  "BunkerSilo:loadFromXMLFile": {
+   "en": "Restores state, fill levels, fermenting time and opened flags from the savegame, recomputes area offsets, and repairs the density map: converts or clears fill types depending on the state, and may switch DRAIN back to FILL when the silo is nearly empty. Returns true.",
+   "fr": "Restaure depuis la sauvegarde l'état, les niveaux, le temps de fermentation et les ouvertures, recalcule les décalages de zone et corrige la carte de densité : convertit ou vide des types selon l'état et peut repasser de DRAIN à FILL quand le silo est presque vide. Retourne true."
+  },
+  "BunkerSilo:saveToXMLFile": {
+   "en": "Writes state, fillLevel, compactedFillLevel, fermentingTime (percent converted to milliseconds using days per period) and the opened front/back flags to the savegame.",
+   "fr": "Écrit dans la sauvegarde l'état, fillLevel, compactedFillLevel, fermentingTime (pourcentage converti en millisecondes avec les jours par période) et les ouvertures avant/arrière."
+  },
+  "BunkerSilo:update": {
+   "en": "Per-frame update. Shows fill level and compaction or fermenting info when the local player can interact. On the server in FILL state, computes compaction from the distance moved, mass and wheel contact of vehicles in range. Keeps the global bunkerScore at the highest fill level and calls raiseActive.",
+   "fr": "Mise à jour à chaque image. Affiche niveau et compactage ou fermentation quand le joueur local peut interagir. Sur le serveur en état FILL, calcule le compactage d'après la distance parcourue, la masse et le contact des roues des véhicules à portée. Garde bunkerScore au niveau maximal et appelle raiseActive."
+  },
+  "BunkerSilo:updateTick": {
+   "en": "Server side, about every 200 to 300 ms: refreshes the fill level and, if it changed, calls updateCompacting. On first call it raises openingLength to at least the default max radius of the output fill type plus 1.",
+   "fr": "Côté serveur, environ toutes les 200 à 300 ms : actualise le niveau et, s'il a changé, appelle updateCompacting. Au premier appel, porte openingLength à au moins le rayon maximal par défaut du type de sortie plus 1."
+  },
+  "BunkerSilo:updateFillLevel": {
+   "en": "Reads the fill level from the inner area in the density map, using the fill type that matches the state (input, fermenting, or fermenting plus output). In DRAIN below emptyThreshold it clears the area and returns to FILL with notification.",
+   "fr": "Lit le niveau de remplissage dans la zone interne de la carte de densité, avec le type correspondant à l'état (entrée, fermentation, ou fermentation plus sortie). En DRAIN sous emptyThreshold, vide la zone et revient à FILL avec notification."
+  },
+  "BunkerSilo:setState": {
+   "en": "Changes the silo state and applies its effects. FILL resets compaction and areas, CLOSED converts input to fermenting and erases tire tracks, DRAIN sets the output as fixed fill type. Optionally shows a message, and on the server raises the dirty flag. No effect if the state is unchanged.",
+   "fr": "Change l'état du silo et applique ses effets. FILL réinitialise compactage et zones, CLOSED convertit l'entrée en fermentation et efface les traces de pneus, DRAIN fixe le type de sortie. Affiche éventuellement un message et, sur le serveur, lève le drapeau dirty. Sans effet si l'état est inchangé."
+  },
+  "BunkerSilo:openSilo": {
+   "en": "Switches to DRAIN with notification, recomputes offsets, then opens the end closer to the given position by converting the fermenting fill type to the output type over openingLength. Marks that end as opened and raises the dirty flag.",
+   "fr": "Passe en DRAIN avec notification, recalcule les décalages, puis ouvre l'extrémité la plus proche de la position donnée en convertissant le type en fermentation vers le type de sortie sur openingLength. Marque cette extrémité ouverte et lève le drapeau dirty."
+  },
+  "BunkerSilo:getBunkerAreaOffset": {
+   "en": "Scans the area in 1 m slices from the front or the back, starting at the given offset, and returns the offset of the first slice holding the given fill type. Returns the area length minus 1 (at least 0) if none is found.",
+   "fr": "Parcourt la zone par tranches de 1 m depuis l'avant ou l'arrière, à partir du décalage donné, et retourne le décalage de la première tranche contenant le type donné. Retourne la longueur de la zone moins 1 (au moins 0) si rien n'est trouvé."
+  },
+  "BunkerSilo:switchFillTypeAtOffset": {
+   "en": "Converts the fermenting fill type into the output fill type on a strip of the given length starting at the offset, measured from the front or from the back of the area.",
+   "fr": "Convertit le type en fermentation en type de sortie sur une bande de la longueur donnée à partir du décalage, mesuré depuis l'avant ou l'arrière de la zone."
+  },
+  "BunkerSilo:getIsCloserToFront": {
+   "en": "Returns true if the given world position is nearer to the middle of the front edge (including the front offset) than to the back edge.",
+   "fr": "Retourne true si la position monde donnée est plus proche du milieu du bord avant (décalage avant inclus) que du bord arrière."
+  },
+  "BunkerSilo:getCanInteract": {
+   "en": "Client check on the local player. In information mode it is true for a player on foot in range or for the current vehicle in range and active for input. Otherwise true only for a player on foot in range. False without a local player.",
+   "fr": "Vérification côté client sur le joueur local. En mode information, vrai pour un joueur à pied à portée ou pour le véhicule actuel à portée et actif pour les entrées. Sinon, vrai seulement pour un joueur à pied à portée. Faux sans joueur local."
+  },
+  "BunkerSilo:getCanCloseSilo": {
+   "en": "Returns true when the state is FILL, the fill level is above 0 and the compacted percent is at least 100.",
+   "fr": "Retourne true quand l'état est FILL, que le niveau est supérieur à 0 et que le pourcentage compacté atteint au moins 100."
+  },
+  "BunkerSilo:getCanOpenSilo": {
+   "en": "Returns true if the state is FERMENTED or DRAIN and the end closer to the local interaction position is not opened yet. False if there is no interaction position.",
+   "fr": "Retourne true si l'état est FERMENTED ou DRAIN et que l'extrémité la plus proche de la position d'interaction locale n'est pas encore ouverte. Faux s'il n'y a pas de position d'interaction."
+  },
+  "BunkerSilo:clearSiloArea": {
+   "en": "Clears everything from the density-map height system over the silo area defined by the start, width and height nodes.",
+   "fr": "Efface tout le contenu du système de hauteur de la carte de densité sur la zone du silo définie par les nœuds start, width et height."
+  },
+  "BunkerSilo:getInteractionPosition": {
+   "en": "Returns the local player position when on foot in range, or the first component node position of the current vehicle in range. Returns nil otherwise, including without a local player.",
+   "fr": "Retourne la position du joueur local s'il est à pied à portée, ou celle du premier nœud de composant du véhicule actuel à portée. Retourne nil sinon, y compris sans joueur local."
+  },
+  "BunkerSilo:interactionTriggerCallback": {
+   "en": "Trigger callback on enter or leave. Tracks the local player and Vehicle objects in range, adds or removes the activatable accordingly and sets or clears the vehicle's bunker silo interactor callback (for shovels).",
+   "fr": "Callback de déclencheur à l'entrée ou à la sortie. Suit le joueur local et les objets Vehicle à portée, ajoute ou retire l'activatable en conséquence et pose ou retire le callback d'interaction avec le silo du véhicule (pelles)."
+  },
+  "BunkerSilo.onChangedFillLevelCallback": {
+   "en": "Callback from a vehicle (shovel) whose fill level changed. Only reacts to negative deltas: on an opened end it extends the opened strip past the tool position by openingLength and updates the front or back offset.",
+   "fr": "Callback d'un véhicule (pelle) dont le niveau a changé. Ne réagit qu'aux variations négatives : sur une extrémité ouverte, il étend la bande ouverte au-delà de la position de l'outil de openingLength et met à jour le décalage avant ou arrière."
+  },
+  "BunkerSilo.registerXMLPaths": {
+   "en": "Registers the XML schema: area and innerArea nodes, wallLeft and wallRight nodes with collision, interactionTrigger node, acceptedFillTypes, inputFillType, outputFillType, distanceToCompactedFillLevel (default 100) and openingLength (default 5).",
+   "fr": "Enregistre le schéma XML : nœuds area et innerArea, murs wallLeft et wallRight avec collision, nœud interactionTrigger, acceptedFillTypes, inputFillType, outputFillType, distanceToCompactedFillLevel (100 par défaut) et openingLength (5 par défaut)."
+  },
+  "BunkerSilo.registerSavegameXMLPaths": {
+   "en": "Registers the savegame attributes state (0 FILL, 1 CLOSED, 2 FERMENTED, 3 DRAIN), fillLevel, compactedFillLevel, fermentingTime, openedAtFront and openedAtBack.",
+   "fr": "Enregistre les attributs de sauvegarde state (0 FILL, 1 CLOSED, 2 FERMENTED, 3 DRAIN), fillLevel, compactedFillLevel, fermentingTime, openedAtFront et openedAtBack."
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/MotorGearShiftEvent.lua",
+ "module": {
+  "en": "Network event class `MotorGearShiftEvent` (extends `Event`) that is a request to change gear, group or direction on a motorized vehicle. It carries the vehicle, a shift type (4 bits) and, for gear or group selection only, a value (5 bits). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `MotorGearShiftEvent` (hérite de `Event`) qui est une demande de changement de rapport, de groupe ou de sens sur un véhicule motorisé. Elle transporte le véhicule, un type de changement (4 bits) et, seulement pour la sélection de rapport ou de groupe, une valeur (5 bits). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "MotorGearShiftEvent.emptyNew": {
+   "en": "Creates an empty `MotorGearShiftEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `MotorGearShiftEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "MotorGearShiftEvent.new": {
+   "en": "Creates the event with its data: the vehicle, a shift type (4 bits) and, for gear or group selection only, a value (5 bits).",
+   "fr": "Crée l'événement avec ses données : le véhicule, un type de changement (4 bits) et, seulement pour la sélection de rapport ou de groupe, une valeur (5 bits)."
+  },
+  "MotorGearShiftEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, a shift type (4 bits) and, for gear or group selection only, a value (5 bits)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, un type de changement (4 bits) et, seulement pour la sélection de rapport ou de groupe, une valeur (5 bits)), puis appelle `run`."
+  },
+  "MotorGearShiftEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, a shift type (4 bits) and, for gear or group selection only, a value (5 bits)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, un type de changement (4 bits) et, seulement pour la sélection de rapport ou de groupe, une valeur (5 bits))."
+  },
+  "MotorGearShiftEvent:run": {
+   "en": "Executes the event on the receiving side: dispatches on the shift type to `shiftGear`, `selectGear`, `shiftGroup`, `selectGroup` or `changeDirection` of `spec_motorized.motor`.",
+   "fr": "Exécute l'événement côté réception : distribue selon le type vers `shiftGear`, `selectGear`, `shiftGroup`, `selectGroup` ou `changeDirection` de `spec_motorized.motor`."
+  },
+  "MotorGearShiftEvent.sendToServer": {
+   "en": "Helper that sends a new gear-shift event to the server connection when `g_client` exists.",
+   "fr": "Fonction utilitaire qui envoie un nouvel événement de changement de vitesse à la connexion serveur si `g_client` existe."
+  }
+ }
+}

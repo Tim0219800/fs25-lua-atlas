@@ -1,0 +1,21 @@
+{
+ "fichier": "objects/AnimatedMapObject.lua",
+ "module": {
+  "en": "AnimatedObject subclass for animated objects placed directly in a map i3d. The map node carries user attributes (xmlFilename and saveId) pointing to an XML that holds the actual animation definition. The onCreate entry point creates, loads, registers it with the onCreate object system and with the network.",
+  "fr": "Sous-classe d'AnimatedObject pour les objets animés placés directement dans l'i3d d'une carte. Le nœud de carte porte des attributs utilisateur (xmlFilename et saveId) qui pointent vers un XML contenant la définition réelle de l'animation. Le point d'entrée onCreate le crée, le charge et l'enregistre auprès du système d'objets onCreate et du réseau."
+ },
+ "fonctions": {
+  "AnimatedMapObject:onCreate": {
+   "en": "i3d onCreate callback: builds an instance with the current server/client flags, loads it from the node, then adds it to g_currentMission.onCreateObjectSystem and registers it on the network. If loading fails, the object is deleted.",
+   "fr": "Rappel onCreate i3d : construit une instance avec les indicateurs serveur/client courants, la charge depuis le nœud, puis l'ajoute à g_currentMission.onCreateObjectSystem et l'enregistre sur le réseau. Si le chargement échoue, l'objet est supprimé."
+  },
+  "AnimatedMapObject.new": {
+   "en": "Constructor: forwards to AnimatedObject.new using the AnimatedMapObject metatable unless a custom one is given.",
+   "fr": "Constructeur : délègue à AnimatedObject.new avec la métatable d'AnimatedMapObject sauf si une métatable personnalisée est fournie."
+  },
+  "AnimatedMapObject:load": {
+   "en": "Reads the user attributes xmlFilename (required) and saveId (the legacy attribute \"index\" is still accepted), resolves the file against the map or object base directory, finds the animatedObjects.animatedObject entry with the same saveId, and calls the parent load on it. Returns false with an error log if an attribute, the file or the entry is missing.",
+   "fr": "Lit les attributs utilisateur xmlFilename (obligatoire) et saveId (l'ancien attribut \"index\" reste accepté), résout le fichier par rapport au répertoire de base de la carte ou de l'objet, trouve l'entrée animatedObjects.animatedObject de même saveId et appelle le load parent dessus. Retourne false avec un message d'erreur si un attribut, le fichier ou l'entrée manque."
+  }
+ }
+}

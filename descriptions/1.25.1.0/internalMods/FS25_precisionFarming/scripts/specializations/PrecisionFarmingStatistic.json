@@ -1,0 +1,29 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/specializations/PrecisionFarmingStatistic.lua",
+ "module": {
+  "en": "Vehicle specialization of Precision Farming that caches, for each vehicle, the farmland under it, whether the player's farm may access it, the active contract and a smoothed on-field flag. It exposes the data and lets other specializations push values into the farmland statistics. Most setup code (load, spec fields) is not in this dump (UNVERIFIED).",
+  "fr": "Spécialisation de véhicule de Precision Farming qui met en cache, pour chaque véhicule, la parcelle sous lui, l'accès de la ferme du joueur, la mission active et un indicateur lissé « sur champ ». Elle expose ces données et permet aux autres spécialisations d'alimenter les statistiques de parcelle. La majeure partie du code d'initialisation (chargement, champs de spec) est absente du dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PrecisionFarmingStatistic.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PrecisionFarmingStatistic:onUpdateTick": {
+   "en": "Every tick accumulates moved distance; when it exceeds the update distance (or no farmland is known) it refreshes farmland id, access right, contract at position and the on-field flags. The smoothed flag only flips back after moving more than 20 m from the last position.",
+   "fr": "À chaque tick, cumule la distance parcourue ; quand elle dépasse la distance de mise à jour (ou sans parcelle connue), rafraîchit l'id de parcelle, le droit d'accès, la mission à cette position et les indicateurs sur-champ. L'indicateur lissé ne rebascule qu'après plus de 20 m depuis la dernière position."
+  },
+  "PrecisionFarmingStatistic:getPFStatisticInfo": {
+   "en": "Returns five values: the farmland statistics object, isOnField, farmlandId, isOnFieldSmoothed and the contract at the vehicle position.",
+   "fr": "Renvoie cinq valeurs : l'objet de statistiques de parcelle, isOnField, farmlandId, isOnFieldSmoothed et la mission à la position du véhicule."
+  },
+  "PrecisionFarmingStatistic:updatePFStatistic": {
+   "en": "Adds a value to the named farmland statistic, only if statistics exist, the vehicle is on a farmland the farm can access and no contract is active there.",
+   "fr": "Ajoute une valeur à la statistique de parcelle nommée, uniquement si les statistiques existent, que le véhicule est sur une parcelle accessible à la ferme et qu'aucune mission n'y est active."
+  },
+  "PrecisionFarmingStatistic:getPFYieldMap": {
+   "en": "Returns the yield map object stored in the specialization table (UNVERIFIED where it is assigned).",
+   "fr": "Renvoie l'objet de carte de rendement stocké dans la table de la spécialisation (NON VÉRIFIÉ : lieu d'affectation)."
+  }
+ }
+}

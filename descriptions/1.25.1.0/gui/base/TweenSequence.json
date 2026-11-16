@@ -1,0 +1,73 @@
+{
+ "fichier": "gui/base/TweenSequence.lua",
+ "module": {
+  "en": "Tween subclass that chains child tweens, pauses and callbacks on one timeline, and can itself be nested in another sequence. It must be started with start() before update() has any effect, also after a reset. Child tweens may overlap through the insert variants; the sequence can loop.",
+  "fr": "Sous-classe de Tween qui enchaîne tweens enfants, pauses et callbacks sur une seule ligne de temps, et peut elle-même être imbriquée dans une autre séquence. Elle doit être démarrée avec start() avant que update() n'ait un effet, y compris après un reset. Les tweens peuvent se chevaucher via les variantes insert ; la séquence peut boucler."
+ },
+ "fonctions": {
+  "TweenSequence.new": {
+   "en": "Creates an empty, stopped sequence. The optional functionTarget is given as first argument to all child setters and callbacks.",
+   "fr": "Crée une séquence vide et arrêtée. Le functionTarget optionnel est passé en premier argument à tous les setters et callbacks enfants."
+  },
+  "TweenSequence:insertTween": {
+   "en": "Registers a tween to start at the given millisecond instant, extends the total duration if needed and applies the sequence target to the tween.",
+   "fr": "Enregistre un tween démarrant à l'instant donné en millisecondes, allonge la durée totale si besoin et applique la cible de la séquence au tween."
+  },
+  "TweenSequence:addTween": {
+   "en": "Appends a tween at the current end of the sequence.",
+   "fr": "Ajoute un tween à la fin actuelle de la séquence."
+  },
+  "TweenSequence:insertInterval": {
+   "en": "Inserts a pause at an instant by shifting every tween and callback at or after it by the interval, and grows the total duration.",
+   "fr": "Insère une pause à un instant en décalant de l'intervalle tous les tweens et callbacks situés à cet instant ou après, et allonge la durée totale."
+  },
+  "TweenSequence:addInterval": {
+   "en": "Appends a pause at the end of the sequence.",
+   "fr": "Ajoute une pause à la fin de la séquence."
+  },
+  "TweenSequence:insertCallback": {
+   "en": "Registers a callback fired once at the given instant with callbackState (after the target if one is set). Callbacks are keyed by function, so the same function can be registered only once.",
+   "fr": "Enregistre un callback appelé une fois à l'instant donné avec callbackState (après la cible si définie). Les callbacks sont indexés par fonction : la même fonction ne peut être enregistrée qu'une fois."
+  },
+  "TweenSequence:addCallback": {
+   "en": "Adds a callback after everything already queued.",
+   "fr": "Ajoute un callback à la fin de la séquence."
+  },
+  "TweenSequence:getDuration": {
+   "en": "Returns the total duration of the sequence in milliseconds.",
+   "fr": "Renvoie la durée totale de la séquence en millisecondes."
+  },
+  "TweenSequence:setTarget": {
+   "en": "Sets the target table given to setters and callbacks. Note: it does not propagate to tweens already added.",
+   "fr": "Définit la table cible donnée aux setters et callbacks. À noter : elle ne se propage pas aux tweens déjà ajoutés."
+  },
+  "TweenSequence:setLooping": {
+   "en": "Enables or disables looping; on completion a looping sequence resets and restarts, callbacks included.",
+   "fr": "Active ou désactive la boucle ; à la fin, une séquence en boucle se réinitialise et redémarre, callbacks compris."
+  },
+  "TweenSequence:start": {
+   "en": "Marks the sequence as running so update() advances it.",
+   "fr": "Marque la séquence comme active pour que update() la fasse avancer."
+  },
+  "TweenSequence:stop": {
+   "en": "Marks the sequence as finished so it stops updating; elapsed time is kept.",
+   "fr": "Marque la séquence comme terminée, elle cesse de se mettre à jour ; le temps écoulé est conservé."
+  },
+  "TweenSequence:reset": {
+   "en": "Resets elapsed time, every child tween and the called flags of callbacks, and leaves the sequence stopped; call start() to play again.",
+   "fr": "Réinitialise le temps écoulé, chaque tween enfant et les indicateurs d'appel des callbacks, et laisse la séquence arrêtée ; appeler start() pour rejouer."
+  },
+  "TweenSequence:update": {
+   "en": "If running, advances by dt milliseconds, updates the tweens and callbacks, and finishes or loops when time and all tweens are done.",
+   "fr": "Si elle est active, avance de dt millisecondes, met à jour tweens et callbacks, et se termine ou boucle quand le temps et tous les tweens sont achevés."
+  },
+  "TweenSequence:updateTweens": {
+   "en": "Updates every unfinished child tween whose start instant has passed, limiting its dt to the time since its start. Returns true if all are finished. Iteration uses pairs, so order is not guaranteed.",
+   "fr": "Met à jour chaque tween enfant non terminé dont l'instant de départ est passé, en limitant son dt au temps écoulé depuis son début. Renvoie true si tous sont terminés. L'itération utilise pairs : l'ordre n'est pas garanti."
+  },
+  "TweenSequence:updateCallbacks": {
+   "en": "Fires each not-yet-called callback whose instant is reached, once, with its state (and the target first if set).",
+   "fr": "Déclenche une fois chaque callback pas encore appelé dont l'instant est atteint, avec son état (et la cible en premier si définie)."
+  }
+ }
+}

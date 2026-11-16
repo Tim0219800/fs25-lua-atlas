@@ -1,6 +1,7 @@
 """Extraction statique de l'API Lua FS25 (lecture seule des sources).
 
-Usage : python -I outils/extraire.py <dossier dataS/scripts> <scriptBinding.xml> <sortie.json>
+Usage : python -I outils/extraire.py <dossier dataS/scripts> <scriptBinding.xml> donnees/<version>/statique.json [version]
+La version du jeu vient du 4e argument, sinon du nom du dossier de sortie.
 Ne recopie aucun corps de fonction : uniquement noms, paramètres, annotations, numéros de ligne.
 """
 import json, re, sys, xml.etree.ElementTree as ET
@@ -105,10 +106,10 @@ def parse_binding(path):
     return res
 
 
-def main(scripts, binding, sortie):
+def main(scripts, binding, sortie, version=None):
     root = Path(scripts)
     files = [parse_file(p, p.relative_to(root).as_posix()) for p in sorted(root.rglob('*.lua'))]
-    data = {'gameVersion': '1.25.1.0', 'files': files, 'engine': parse_binding(binding)}
+    data = {'gameVersion': version or Path(sortie).parent.name, 'files': files, 'engine': parse_binding(binding)}
     Path(sortie).parent.mkdir(parents=True, exist_ok=True)
     Path(sortie).write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding='utf-8')
     nf = sum(len(f['functions']) for f in files)
@@ -117,4 +118,4 @@ def main(scripts, binding, sortie):
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:5])

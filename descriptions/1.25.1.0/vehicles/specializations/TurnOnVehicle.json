@@ -1,0 +1,261 @@
+{
+ "fichier": "vehicles/specializations/TurnOnVehicle.lua",
+ "module": {
+  "en": "Specialization for implements and machines that have an on/off state (PTO-driven tools, conveyors, etc.). It keeps `spec_turnOnVehicle.isTurnedOn`, syncs it through `SetTurnedOnEvent`, raises `onTurnedOn`/`onTurnedOff`, and plays sounds, effects, animation nodes and animations on the client. It also overwrites many functions of other specializations (work areas, discharge nodes, alarm triggers, shovel nodes, AI) so that they depend on the turned-on state. No prerequisites; it uses AnimatedVehicle only if present.",
+  "fr": "Spécialisation pour les outils et machines qui ont un état marche/arrêt (outils à prise de force, convoyeurs, etc.). Elle garde `spec_turnOnVehicle.isTurnedOn`, le synchronise via `SetTurnedOnEvent`, déclenche `onTurnedOn`/`onTurnedOff` et joue sons, effets, nœuds d'animation et animations côté client. Elle surcharge aussi de nombreuses fonctions d'autres spécialisations (zones de travail, nœuds de déchargement, alarmes, pelle, IA) pour les lier à l'état allumé. Aucun prérequis ; AnimatedVehicle n'est utilisée que si elle est présente."
+ },
+ "fonctions": {
+  "TurnOnVehicle.prerequisitesPresent": {
+   "en": "Always returns true: the specialization has no prerequisites.",
+   "fr": "Renvoie toujours true : la spécialisation n'a aucun prérequis."
+  },
+  "TurnOnVehicle.initSpecialization": {
+   "en": "Registers the XML schema paths under `vehicle.turnOnVehicle` (toggle button, texts, always-on flags, animation nodes, effects, sounds, animations, turned-on speed, dashboards) and the extra attributes added on attacher joints, work areas, alarm triggers, shovel and discharge nodes.",
+   "fr": "Enregistre les chemins du schéma XML sous `vehicle.turnOnVehicle` (touche, textes, drapeaux toujours actif, nœuds d'animation, effets, sons, animations, vitesse d'allumage, tableaux de bord) ainsi que les attributs ajoutés aux attaches, zones de travail, alarmes, pelle et nœuds de déchargement."
+  },
+  "TurnOnVehicle.registerEvents": {
+   "en": "Registers the two vehicle events `onTurnedOn` and `onTurnedOff`.",
+   "fr": "Enregistre les deux événements de véhicule `onTurnedOn` et `onTurnedOff`."
+  },
+  "TurnOnVehicle.registerFunctions": {
+   "en": "Adds the public functions of this specialization to the vehicle type (setIsTurnedOn, getIsTurnedOn, getCanBeTurnedOn, getTurnedOnSpeedFactor, and so on).",
+   "fr": "Ajoute au type de véhicule les fonctions publiques de cette spécialisation (setIsTurnedOn, getIsTurnedOn, getCanBeTurnedOn, getTurnedOnSpeedFactor, etc.)."
+  },
+  "TurnOnVehicle.registerOverwrittenFunctions": {
+   "en": "Registers the overrides of functions owned by other specializations (work area, discharge node, alarm trigger, shovel, AI continuation, power take-off, bunker silo compacter, work mode, and others).",
+   "fr": "Enregistre les surcharges de fonctions appartenant à d'autres spécialisations (zone de travail, déchargement, alarme, pelle, poursuite IA, prise de force, compacteur de silo, mode de travail, etc.)."
+  },
+  "TurnOnVehicle.registerEventListeners": {
+   "en": "Subscribes the specialization to the vehicle lifecycle events (load, delete, streams, update, action events, attach/detach, root vehicle change) and to its own turn on/off events.",
+   "fr": "Abonne la spécialisation aux événements du cycle de vie du véhicule (chargement, suppression, flux réseau, mise à jour, actions, attache/détache, changement de véhicule racine) et à ses propres événements d'allumage/extinction."
+  },
+  "TurnOnVehicle:onLoad": {
+   "en": "Reads the XML settings (toggle input, texts, always-on, turn-off rules, AI flags). On the client it also loads animation nodes, turn-on animations, activatable fill units, effects, sounds and the turned-on speed simulation. Removes the onDelete/onUpdate listeners on a pure server. Note: the default of `varianceSpeed` is 0.01 in code while the schema documents 1.",
+   "fr": "Lit les réglages XML (entrée de bascule, textes, toujours allumé, règles d'extinction, drapeaux IA). Côté client, charge aussi nœuds d'animation, animations d'allumage, unités de remplissage activables, effets, sons et simulation de vitesse. Retire les écouteurs onDelete/onUpdate sur un serveur pur. À noter : le défaut de `varianceSpeed` est 0.01 dans le code alors que le schéma indique 1."
+  },
+  "TurnOnVehicle:onRegisterDashboardValueTypes": {
+   "en": "Registers the two dashboard value types `turnOnVehicle.turnedOn` (boolean state) and `turnOnVehicle.rpm` (turned-on speed mapped between minRpm and maxRpm).",
+   "fr": "Enregistre les deux types de valeur de tableau de bord `turnOnVehicle.turnedOn` (état booléen) et `turnOnVehicle.rpm` (vitesse d'allumage entre minRpm et maxRpm)."
+  },
+  "TurnOnVehicle:onDelete": {
+   "en": "Client only: deletes the sound samples, animation nodes and effects created on load.",
+   "fr": "Côté client uniquement : supprime les échantillons sonores, nœuds d'animation et effets créés au chargement."
+  },
+  "TurnOnVehicle:onReadStream": {
+   "en": "Client join: reads the turned-on boolean sent by the server and applies it with `setIsTurnedOn` without re-sending an event.",
+   "fr": "Connexion d'un client : lit le booléen d'état envoyé par le serveur et l'applique avec `setIsTurnedOn` sans renvoyer d'événement."
+  },
+  "TurnOnVehicle:onWriteStream": {
+   "en": "Server side on join: writes the current `isTurnedOn` boolean into the stream.",
+   "fr": "Côté serveur lors d'une connexion : écrit le booléen `isTurnedOn` courant dans le flux."
+  },
+  "TurnOnVehicle:onUpdate": {
+   "en": "Drives the fade of each turned-on animation (speed ramps up or down by dt and the animation is stopped at zero speed). On the client it also simulates the turned-on speed (`alpha`) with a small time-based variance, used for sound and rpm dashboards.",
+   "fr": "Pilote le fondu de chaque animation d'allumage (la vitesse monte ou descend selon dt, l'animation s'arrête à vitesse nulle). Côté client, simule aussi la vitesse d'allumage (`alpha`) avec une petite variance temporelle, utilisée pour le son et les compteurs."
+  },
+  "TurnOnVehicle:onUpdateTick": {
+   "en": "Client: refreshes the toggle action event text/state unless always on or driven by the attacher. Server: when `turnOffIfNotAllowed` is set and the vehicle cannot be turned on, turns it off, or else turns off a turned-on attacher vehicle.",
+   "fr": "Client : met à jour le texte et l'état de l'action de bascule sauf si toujours allumé ou piloté par l'attelage. Serveur : si `turnOffIfNotAllowed` est actif et que l'allumage est impossible, l'éteint, sinon éteint le véhicule porteur s'il est allumé."
+  },
+  "TurnOnVehicle:setIsTurnedOn": {
+   "en": "Changes the turned-on state. When the value changes it sends `SetTurnedOnEvent` (unless `noEventSend`), raises onTurnedOn/onTurnedOff, notifies the root vehicle with a TURN_ON/TURN_OFF state change and updates the dashboard value.",
+   "fr": "Change l'état allumé. Si la valeur change, envoie `SetTurnedOnEvent` (sauf `noEventSend`), déclenche onTurnedOn/onTurnedOff, notifie le véhicule racine par un changement d'état TURN_ON/TURN_OFF et met à jour le tableau de bord."
+  },
+  "TurnOnVehicle:onTurnedOn": {
+   "en": "Client: plays the turn-on animation, start sample and work samples, and starts animation nodes and effects. Also switches to the discharge node flagged `turnOnActivateNode`, remembering the previous one.",
+   "fr": "Client : joue l'animation d'allumage, le son de démarrage et les sons de travail, et lance nœuds d'animation et effets. Bascule aussi sur le nœud de déchargement marqué `turnOnActivateNode` en mémorisant le précédent."
+  },
+  "TurnOnVehicle:onTurnedOff": {
+   "en": "Client: plays the turn-off animation and stop sample, stops work sounds, animation nodes and effects. Restores the discharge node that was current before turn-on, if one was saved.",
+   "fr": "Client : joue l'animation d'extinction et le son d'arrêt, arrête sons de travail, nœuds d'animation et effets. Restaure le nœud de déchargement courant avant l'allumage, s'il avait été mémorisé."
+  },
+  "TurnOnVehicle:getIsTurnedOn": {
+   "en": "Returns true if the vehicle is always turned on or currently switched on.",
+   "fr": "Renvoie true si le véhicule est toujours allumé ou actuellement allumé."
+  },
+  "TurnOnVehicle:getCanBeTurnedOn": {
+   "en": "Returns false for always-on vehicles, when the input attacher joint forbids turn on, or when the vehicle is not powered (`getIsPowered`); true otherwise.",
+   "fr": "Renvoie false pour les véhicules toujours allumés, si l'attache d'entrée interdit l'allumage ou si le véhicule n'est pas alimenté (`getIsPowered`) ; true sinon."
+  },
+  "TurnOnVehicle:getCanBeTurnedOnAll": {
+   "en": "Returns true only if every child vehicle of the root vehicle that has `getCanBeTurnedOn` reports it can be turned on.",
+   "fr": "Renvoie true uniquement si chaque véhicule enfant du véhicule racine disposant de `getCanBeTurnedOn` peut être allumé."
+  },
+  "TurnOnVehicle:getCanToggleTurnedOn": {
+   "en": "Returns whether the player may toggle the state: false when always on or when turned on by the attacher vehicle.",
+   "fr": "Indique si le joueur peut basculer l'état : false si toujours allumé ou allumé par le véhicule porteur."
+  },
+  "TurnOnVehicle:getTurnedOnNotAllowedWarning": {
+   "en": "Returns the localized warning text `warning_attachToPower` when the vehicle is not powered, otherwise nil.",
+   "fr": "Renvoie le texte d'avertissement localisé `warning_attachToPower` si le véhicule n'est pas alimenté, sinon nil."
+  },
+  "TurnOnVehicle:getAIRequiresTurnOn": {
+   "en": "Returns the `aiRequiresTurnOn` XML flag (whether the AI must switch this implement on).",
+   "fr": "Renvoie le drapeau XML `aiRequiresTurnOn` (l'IA doit-elle allumer cet outil)."
+  },
+  "TurnOnVehicle:getRequiresTurnOn": {
+   "en": "Returns the `requiresTurnOn` XML flag (documented in the schema as mobile-only).",
+   "fr": "Renvoie le drapeau XML `requiresTurnOn` (documenté dans le schéma comme propre à la version mobile)."
+  },
+  "TurnOnVehicle:getAIRequiresTurnOffOnHeadland": {
+   "en": "Returns false by default; other specializations can overwrite it to force a turn-off on the headland.",
+   "fr": "Renvoie false par défaut ; d'autres spécialisations peuvent la surcharger pour forcer l'extinction en bout de champ."
+  },
+  "TurnOnVehicle:loadTurnedOnAnimationFromXML": {
+   "en": "Reads one `turnedOnAnimation` entry (name, fade times converted to ms, speed scale) into the given table. Returns false with a warning if the name is missing.",
+   "fr": "Lit une entrée `turnedOnAnimation` (nom, durées de fondu converties en ms, échelle de vitesse) dans la table fournie. Renvoie false avec un avertissement si le nom manque."
+  },
+  "TurnOnVehicle:getIsTurnedOnAnimationActive": {
+   "en": "Returns true when the vehicle is turned on; the animation argument is not used here, so subclasses can refine the condition.",
+   "fr": "Renvoie true quand le véhicule est allumé ; l'argument d'animation n'est pas utilisé ici, ce qui permet d'affiner la condition ailleurs."
+  },
+  "TurnOnVehicle:getUseTurnedOnSchema": {
+   "en": "Override: also returns true when the vehicle is turned on.",
+   "fr": "Surcharge : renvoie aussi true quand le véhicule est allumé."
+  },
+  "TurnOnVehicle:loadInputAttacherJoint": {
+   "en": "Override: after the base loading, reads `#canBeTurnedOn` (default true) onto the input attacher joint.",
+   "fr": "Surcharge : après le chargement de base, lit `#canBeTurnedOn` (true par défaut) sur l'attache d'entrée."
+  },
+  "TurnOnVehicle:loadWorkAreaFromXML": {
+   "en": "Override: reads `#needsSetIsTurnedOn` (default true) for each work area.",
+   "fr": "Surcharge : lit `#needsSetIsTurnedOn` (true par défaut) pour chaque zone de travail."
+  },
+  "TurnOnVehicle:getIsWorkAreaActive": {
+   "en": "Override: a work area flagged `needsSetIsTurnedOn` is inactive while the vehicle is off; otherwise defers to the previous implementation.",
+   "fr": "Surcharge : une zone de travail marquée `needsSetIsTurnedOn` est inactive tant que le véhicule est éteint ; sinon on s'en remet à l'implémentation précédente."
+  },
+  "TurnOnVehicle:getCanAIImplementContinueWork": {
+   "en": "Override: the AI may continue only if the base check passes and, when the implement needs turn on, is in line and can be turned on, the implement is actually on. On the headland it always allows continuing.",
+   "fr": "Surcharge : l'IA ne peut continuer que si le test de base passe et, quand l'outil doit être allumé, qu'il est en ligne et allumable, il est effectivement allumé. En bout de champ, elle autorise toujours."
+  },
+  "TurnOnVehicle:getIsOperating": {
+   "en": "Override: returns true whenever the vehicle is turned on, else the previous result.",
+   "fr": "Surcharge : renvoie true dès que le véhicule est allumé, sinon le résultat précédent."
+  },
+  "TurnOnVehicle:getAlarmTriggerIsActive": {
+   "en": "Override: an alarm trigger flagged `needsTurnOn` is forced inactive while the vehicle is off.",
+   "fr": "Surcharge : une alarme marquée `needsTurnOn` est forcée inactive tant que le véhicule est éteint."
+  },
+  "TurnOnVehicle:loadAlarmTrigger": {
+   "en": "Override: after base loading, reads `#needsTurnOn` and `#turnOffInTrigger` (both default false) on the alarm trigger.",
+   "fr": "Surcharge : après le chargement de base, lit `#needsTurnOn` et `#turnOffInTrigger` (false par défaut) sur l'alarme."
+  },
+  "TurnOnVehicle:getIsFillUnitActive": {
+   "en": "Override: fill units listed as activatable are inactive while the vehicle is off.",
+   "fr": "Surcharge : les unités de remplissage déclarées activables sont inactives tant que le véhicule est éteint."
+  },
+  "TurnOnVehicle:loadShovelNode": {
+   "en": "Override: after base loading, reads `#needsActivation` into `shovelNode.needsActiveVehicle`. Always returns true.",
+   "fr": "Surcharge : après le chargement de base, lit `#needsActivation` dans `shovelNode.needsActiveVehicle`. Renvoie toujours true."
+  },
+  "TurnOnVehicle:getShovelNodeIsActive": {
+   "en": "Override: a shovel node that needs activation is inactive while the vehicle is off.",
+   "fr": "Surcharge : un nœud de pelle qui exige l'activation est inactif tant que le véhicule est éteint."
+  },
+  "TurnOnVehicle:getIsSeedChangeAllowed": {
+   "en": "Override: changing the seed is allowed only while the vehicle is turned off (and the base rule allows it).",
+   "fr": "Surcharge : le changement de semence n'est permis que véhicule éteint (et si la règle de base l'autorise)."
+  },
+  "TurnOnVehicle:getCanBeSelected": {
+   "en": "Override: always returns true, so these implements can be selected regardless of base rules.",
+   "fr": "Surcharge : renvoie toujours true, ces outils sont donc sélectionnables quelles que soient les règles de base."
+  },
+  "TurnOnVehicle:getIsPowerTakeOffActive": {
+   "en": "Override: the power take-off counts as active when the vehicle is turned on or the base says so.",
+   "fr": "Surcharge : la prise de force est considérée active si le véhicule est allumé ou si la base l'indique."
+  },
+  "TurnOnVehicle:loadDischargeNode": {
+   "en": "Override: after base loading, reads `#needsSetIsTurnedOn` and `#turnOnActivateNode` (both default false); a node with the latter flag becomes `activateableDischargeNode`.",
+   "fr": "Surcharge : après le chargement de base, lit `#needsSetIsTurnedOn` et `#turnOnActivateNode` (false par défaut) ; un nœud avec ce dernier drapeau devient `activateableDischargeNode`."
+  },
+  "TurnOnVehicle:getIsDischargeNodeActive": {
+   "en": "Override: a discharge node that needs turn on is inactive while the vehicle is off.",
+   "fr": "Surcharge : un nœud de déchargement qui exige l'allumage est inactif tant que le véhicule est éteint."
+  },
+  "TurnOnVehicle:loadBunkerSiloCompactorFromXML": {
+   "en": "Override: after base loading, reads `#turnedOnCompactingScale` into the bunker silo compacter spec (nil if absent).",
+   "fr": "Surcharge : après le chargement de base, lit `#turnedOnCompactingScale` dans la spec du compacteur de silo (nil si absent)."
+  },
+  "TurnOnVehicle:getBunkerSiloCompacterScale": {
+   "en": "Override: returns the turned-on compacting scale while the vehicle is on and the value is defined, otherwise the base scale.",
+   "fr": "Surcharge : renvoie l'échelle de compactage « allumé » quand le véhicule est allumé et la valeur définie, sinon l'échelle de base."
+  },
+  "TurnOnVehicle:getIsWorkModeChangeAllowed": {
+   "en": "Override: refuses a work mode change while turned on if the work mode spec has `allowChangeWhileTurnedOn` set to false.",
+   "fr": "Surcharge : refuse un changement de mode de travail pendant que le véhicule est allumé si la spec de mode de travail a `allowChangeWhileTurnedOn` à false."
+  },
+  "TurnOnVehicle:onRegisterActionEvents": {
+   "en": "Client: when active for input and toggling is allowed, registers the toggle action (high text priority) and the hidden `TURN_ON_ALL_IMPLEMENTS` action, both as powered action events.",
+   "fr": "Client : si actif pour l'entrée et la bascule autorisée, enregistre l'action de bascule (priorité de texte haute) et l'action masquée `TURN_ON_ALL_IMPLEMENTS`, toutes deux comme actions alimentées."
+  },
+  "TurnOnVehicle:onRegisterExternalActionEvents": {
+   "en": "Registers the external (outside-vehicle trigger) action named `turnOn` with its register and update callbacks.",
+   "fr": "Enregistre l'action externe (déclencheur hors véhicule) nommée `turnOn` avec ses rappels d'enregistrement et de mise à jour."
+  },
+  "TurnOnVehicle:onAlarmTriggerChanged": {
+   "en": "When an alarm trigger becomes active and has `turnOffInTrigger`, turns the vehicle off locally without sending an event.",
+   "fr": "Quand une alarme devient active et possède `turnOffInTrigger`, éteint le véhicule localement sans envoyer d'événement."
+  },
+  "TurnOnVehicle:onSetBroken": {
+   "en": "Turns the vehicle off (no event sent) when it breaks.",
+   "fr": "Éteint le véhicule (sans envoi d'événement) quand il tombe en panne."
+  },
+  "TurnOnVehicle:onStateChange": {
+   "en": "On MOTOR_TURN_OFF, turns the vehicle off locally if it can no longer be turned on (for example lost power).",
+   "fr": "Sur MOTOR_TURN_OFF, éteint localement le véhicule s'il ne peut plus être allumé (par exemple perte d'alimentation)."
+  },
+  "TurnOnVehicle:onDeactivate": {
+   "en": "Turns the vehicle off locally when it is deactivated and `turnOffOnDeactivate` is set (default true except on mobile).",
+   "fr": "Éteint localement le véhicule à sa désactivation si `turnOffOnDeactivate` est actif (true par défaut sauf sur mobile)."
+  },
+  "TurnOnVehicle:onPostAttach": {
+   "en": "If `turnedOnByAttacherVehicle` is set, copies the attacher vehicle's turned-on state onto this implement, without an event.",
+   "fr": "Si `turnedOnByAttacherVehicle` est actif, copie l'état allumé du véhicule porteur sur cet outil, sans événement."
+  },
+  "TurnOnVehicle:onPreDetach": {
+   "en": "Turns the implement off locally just before it is detached.",
+   "fr": "Éteint localement l'outil juste avant son détachement."
+  },
+  "TurnOnVehicle:onRootVehicleChanged": {
+   "en": "Registers or re-parents the `turnOn` action in the root vehicle's action controller (saved, with AI event listeners to turn on at line start and off at end/block/transport). Removes the action if there is no controller or toggling is not allowed.",
+   "fr": "Enregistre ou rattache l'action `turnOn` au contrôleur d'actions du véhicule racine (sauvegardée, avec écouteurs d'événements IA pour allumer au début de ligne et éteindre à la fin, au blocage ou au transport). La retire s'il n'y a pas de contrôleur ou si la bascule est interdite."
+  },
+  "TurnOnVehicle.actionControllerTurnOnEvent": {
+   "en": "Action controller callback: direction above 0 turns on if allowed and returns whether it worked; otherwise turns off and returns true if now off.",
+   "fr": "Rappel du contrôleur d'actions : direction positive allume si possible et renvoie le succès ; sinon éteint et renvoie true si l'outil est bien éteint."
+  },
+  "TurnOnVehicle.actionEventTurnOn": {
+   "en": "Input callback for the toggle key: flips the state if toggling and turning on are allowed, otherwise shows the blinking not-allowed warning (2 s) when the vehicle is off.",
+   "fr": "Rappel de la touche de bascule : inverse l'état si la bascule et l'allumage sont permis, sinon affiche l'avertissement clignotant (2 s) quand le véhicule est éteint."
+  },
+  "TurnOnVehicle.actionEventTurnOnAll": {
+   "en": "Input callback for turn-on-all: if every child vehicle can be turned on, flips the state of each child that has `setIsTurnedOn`; otherwise shows the warning if this vehicle is off.",
+   "fr": "Rappel de l'action tout allumer : si tous les véhicules enfants sont allumables, inverse l'état de chacun disposant de `setIsTurnedOn` ; sinon affiche l'avertissement si ce véhicule est éteint."
+  },
+  "TurnOnVehicle.updateActionEvents": {
+   "en": "Updates the toggle action event: sets the turn-on or turn-off text and its active state from `getCanToggleTurnedOn`.",
+   "fr": "Met à jour l'action de bascule : règle le texte allumer/éteindre et son état actif d'après `getCanToggleTurnedOn`."
+  },
+  "TurnOnVehicle.externalActionEventRegister": {
+   "en": "Registers the external toggle action; when pressed it first tries to start the motor via `Motorized.tryStartMotor`, then runs the normal toggle callback.",
+   "fr": "Enregistre l'action externe de bascule ; à l'appui, tente d'abord de démarrer le moteur via `Motorized.tryStartMotor`, puis exécute la bascule normale."
+  },
+  "TurnOnVehicle.externalActionEventUpdate": {
+   "en": "Updates the external toggle action's text and active state according to whether the vehicle is on and can be toggled.",
+   "fr": "Met à jour le texte et l'état actif de l'action externe selon que le véhicule est allumé et basculable."
+  },
+  "TurnOnVehicle:getTurnedOnSpeedFactor": {
+   "en": "Returns the simulated turned-on speed factor (`alpha`, around 0 to 1 with slight variance). Client only: the table is not created on a pure server.",
+   "fr": "Renvoie le facteur de vitesse d'allumage simulé (`alpha`, autour de 0 à 1 avec une légère variance). Client uniquement : la table n'existe pas sur un serveur pur."
+  },
+  "TurnOnVehicle.dashboardRpmAttributes": {
+   "en": "Dashboard attribute loader: reads `#minRpm` (default 0) and `#maxRpm` (default 1000) onto the dashboard entry. Returns true.",
+   "fr": "Chargeur d'attributs de tableau de bord : lit `#minRpm` (0 par défaut) et `#maxRpm` (1000 par défaut) dans l'entrée. Renvoie true."
+  },
+  "TurnOnVehicle.dashboardRpmValue": {
+   "en": "Dashboard value: interpolates between minRpm and maxRpm using the turned-on speed factor.",
+   "fr": "Valeur de tableau de bord : interpole entre minRpm et maxRpm avec le facteur de vitesse d'allumage."
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/hud/ExtendedCombineHUDExtension.lua",
+  "module": {
+    "en": "HUD box shown in the vehicle input help for combine harvesters that carry the Precision Farming ExtendedCombine specialization. It displays the last yield (t/ha with a rating bar colored by a gradient), the worked area since the last reset and the total worked area. It is created per vehicle with a low priority (GS_PRIO_LOW).",
+    "fr": "Boîte de HUD affichée dans l'aide à la saisie du véhicule pour les moissonneuses-batteuses ayant la spécialisation Precision Farming ExtendedCombine. Elle affiche le dernier rendement (t/ha avec une barre de notation colorée par un dégradé), la surface travaillée depuis la dernière réinitialisation et la surface totale travaillée. Elle est créée par véhicule avec une priorité basse (GS_PRIO_LOW)."
+  },
+  "fonctions": {
+    "ExtendedCombineHUDExtension.new": {
+      "en": "Constructor taking the vehicle: grabs spec_combine and the ExtendedCombine spec, creates the background, separator, bar and icon overlays, reads the colorblind setting and subscribes to colorblind and UI scale changes. Note: it subscribes self.storeScaledValues to the UI_SCALE setting and calls it, but that method is not defined in this file (UNVERIFIED where it comes from).",
+      "fr": "Constructeur prenant le véhicule : récupère spec_combine et la spec ExtendedCombine, crée les overlays de fond, séparateur, barre et icônes, lit le réglage daltonien et s'abonne aux changements de mode daltonien et d'échelle d'interface. À noter : il abonne self.storeScaledValues au réglage UI_SCALE et l'appelle, mais cette méthode n'est pas définie dans ce fichier (origine NON VÉRIFIÉE)."
+    },
+    "ExtendedCombineHUDExtension:delete": {
+      "en": "Deletes all overlays, unsubscribes from the message center and clears the vehicle and spec references.",
+      "fr": "Supprime tous les overlays, se désabonne du message center et efface les références au véhicule et aux specs."
+    },
+    "ExtendedCombineHUDExtension:setColorBlindMode": {
+      "en": "Stores the new colorblind flag when it changes; it is used to pick the gradient when drawing. Note: the source doc comment says it determines whether the extension is drawn, which does not match what the code does.",
+      "fr": "Mémorise le nouvel indicateur daltonien quand il change ; il sert à choisir le dégradé lors du dessin. À noter : le commentaire du source dit qu'il détermine si l'extension est dessinée, ce qui ne correspond pas à ce que fait le code."
+    },
+    "ExtendedCombineHUDExtension:getHeight": {
+      "en": "Returns the height of this HUD box in screen space (0 until it has been computed).",
+      "fr": "Retourne la hauteur de cette boîte de HUD en espace écran (0 tant qu'elle n'est pas calculée)."
+    },
+    "ExtendedCombineHUDExtension:draw": {
+      "en": "Draws the box at posX/posY: last yield with unit, yield percentage with a gradient bar (rating = (yield% - 50) / (potential - 50)), worked area since reset and total worked area. Returns the new Y below the box, or posY unchanged without the spec. Note: the source doc comment mentions a mixing wagon, which looks like a copy-paste leftover.",
+      "fr": "Dessine la boîte en posX/posY : dernier rendement avec unité, pourcentage de rendement avec barre en dégradé (note = (rendement% - 50) / (potentiel - 50)), surface travaillée depuis la réinitialisation et surface totale. Retourne le nouveau Y sous la boîte, ou posY inchangé sans la spec. À noter : le commentaire du source parle d'une mélangeuse, ce qui semble être un reste de copier-coller."
+    }
+  }
+}

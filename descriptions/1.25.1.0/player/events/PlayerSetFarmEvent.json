@@ -1,0 +1,33 @@
+{
+ "fichier": "player/events/PlayerSetFarmEvent.lua",
+ "module": {
+  "en": "Event used to change the farm a player belongs to. A client sends it to the server, which checks the farm password (master users bypass it), updates the player and farm user lists, and answers with `PlayerSetFarmAnswerEvent` and a `PlayerSwitchedFarmEvent` broadcast.",
+  "fr": "Événement servant à changer la ferme d'un joueur. Un client l'envoie au serveur, qui vérifie le mot de passe de la ferme (les utilisateurs maîtres l'ignorent), met à jour le joueur et les listes d'utilisateurs des fermes, puis répond par un `PlayerSetFarmAnswerEvent` et diffuse un `PlayerSwitchedFarmEvent`."
+ },
+ "fonctions": {
+  "PlayerSetFarmEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture depuis un flux."
+  },
+  "PlayerSetFarmEvent.new": {
+   "en": "Builds the event with the player, target farm id and optional password.",
+   "fr": "Construit l'événement avec le joueur, l'identifiant de la ferme cible et le mot de passe optionnel."
+  },
+  "PlayerSetFarmEvent:writeStream": {
+   "en": "Writes the player node object, the farm id, and an optional password behind a boolean flag.",
+   "fr": "Écrit l'objet joueur, l'identifiant de ferme et un mot de passe optionnel derrière un booléen."
+  },
+  "PlayerSetFarmEvent:readStream": {
+   "en": "Reads player, farm id and optional password, then runs the event.",
+   "fr": "Lit le joueur, l'identifiant de ferme et le mot de passe optionnel, puis exécute l'événement."
+  },
+  "PlayerSetFarmEvent:run": {
+   "en": "Server: if the farm exists and the user is a master user or the password matches (or is unset), moves the user, updates the hotspot owner, publishes `PLAYER_FARM_CHANGED`, resets the finance counter and replies OK; otherwise replies PASSWORD_REQUIRED. Client: applies the farm id locally and publishes the message. Note: the server does not nil-check the old farm.",
+   "fr": "Serveur : si la ferme existe et que l'utilisateur est maître ou que le mot de passe correspond (ou est absent), déplace l'utilisateur, met à jour le propriétaire du hotspot, publie `PLAYER_FARM_CHANGED`, remet à zéro le compteur de finances et répond OK ; sinon répond PASSWORD_REQUIRED. Client : applique l'identifiant de ferme localement et publie le message. À noter : le serveur ne vérifie pas que l'ancienne ferme existe."
+  },
+  "PlayerSetFarmEvent.sendEvent": {
+   "en": "Unless `noEventSend` is true, the server broadcasts the event (excluding the player's own connection) and a client sends it to the server. No password argument is passed here.",
+   "fr": "Sauf si `noEventSend` est vrai, le serveur diffuse l'événement (hors connexion du joueur concerné) et un client l'envoie au serveur. Aucun mot de passe n'est transmis ici."
+  }
+ }
+}

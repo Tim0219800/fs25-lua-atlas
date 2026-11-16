@@ -1,0 +1,37 @@
+{
+ "fichier": "placement/PlacementGrid2D.lua",
+ "module": {
+  "en": "Helper that models a rectangular area attached to a node (width along X, length along Z) and tracks which parts of it are occupied. Occupancy is stored as one entry per Z slice of size `spacing`, each holding the min and max X blocked. Two placement modes are mentioned in the file's comments, SIDES and FILL; the constants such as `MODE_SIDES` are not present in the dump, so their values are UNVERIFIED. The free-position query itself is not in this dump.",
+  "fr": "Utilitaire qui modélise une zone rectangulaire rattachée à un node (largeur sur X, longueur sur Z) et suit les parties occupées. L'occupation est stockée par tranche en Z de taille `spacing`, chacune avec le X min et max bloqués. Deux modes de placement (SIDES et FILL) sont évoqués dans les commentaires du fichier ; les constantes comme `MODE_SIDES` sont absentes du dump, leurs valeurs sont donc NON VÉRIFIÉ. La recherche de position libre n'est pas dans ce dump."
+ },
+ "fonctions": {
+  "PlacementGrid2D.new": {
+   "en": "Creates a grid for the given node, width, length and slice spacing. The mode defaults to `PlacementGrid2D.MODE_SIDES`. Starts with no blocked areas and two invalid lower/upper position records.",
+   "fr": "Crée une grille pour le node, la largeur, la longueur et l'espacement de tranche donnés. Le mode vaut par défaut `PlacementGrid2D.MODE_SIDES`. Démarre sans zone bloquée et avec deux enregistrements de position basse/haute invalides."
+  },
+  "PlacementGrid2D:delete": {
+   "en": "Empty destructor, nothing is released.",
+   "fr": "Destructeur vide, rien n'est libéré."
+  },
+  "PlacementGrid2D:reset": {
+   "en": "Discards all blocked areas so the whole grid is free again.",
+   "fr": "Efface toutes les zones bloquées : la grille entière redevient libre."
+  },
+  "PlacementGrid2D:blockAreaLocal": {
+   "en": "Blocks a rectangle given in the grid's local space (x, z as the corner, then width and length) by forwarding its bounds to `updateBlockedArea`. No clamping to the grid size is done here.",
+   "fr": "Bloque un rectangle exprimé dans l'espace local de la grille (coin x, z puis largeur et longueur) en transmettant ses bornes à `updateBlockedArea`. Aucun écrêtage à la taille de la grille n'est fait ici."
+  },
+  "PlacementGrid2D:blockAreaByBoundingBox": {
+   "en": "Blocks the footprint of an oriented box given by world position, direction, up vector and half extents. The eight corners are converted to the grid node's local space and their bounds are clamped to the grid before blocking.",
+   "fr": "Bloque l'emprise d'une boîte orientée donnée par position monde, direction, vecteur haut et demi-dimensions. Les huit coins sont convertis dans l'espace local du node de la grille et leurs bornes sont limitées à la grille avant blocage."
+  },
+  "PlacementGrid2D:updateBlockedArea": {
+   "en": "Marks every Z slice touched by the given range, creating missing slices and widening each slice's blocked min/max X to include the new range. Slice indices start at 1 and use `spacing` as size.",
+   "fr": "Marque chaque tranche en Z touchée par l'intervalle donné, crée les tranches manquantes et élargit le X min/max bloqué de chacune pour inclure le nouvel intervalle. Les indices de tranche commencent à 1 et la taille est `spacing`."
+  },
+  "PlacementGrid2D:drawDebug": {
+   "en": "Debug drawing: outlines the grid in white and, for each blocked slice, draws its edges in white plus a red center line. Must be called every frame to stay visible.",
+   "fr": "Dessin de débogage : trace le contour de la grille en blanc et, pour chaque tranche bloquée, ses bords en blanc plus une ligne centrale rouge. À appeler à chaque image pour rester visible."
+  }
+ }
+}

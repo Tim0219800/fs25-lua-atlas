@@ -1,0 +1,25 @@
+{
+ "fichier": "objects/UnloadingStation.lua",
+ "module": {
+  "en": "Base class for stations where goods are unloaded by vehicles, extending Object. In this dump it only holds the network join streaming of its unload triggers, a developer validation that pallet, bale and bulk fill types have a matching trigger type, and the shared XML paths. The rest of the class (load, trigger handling, storage links) is not in this file and is UNVERIFIED here. SellingStation extends it.",
+  "fr": "Classe de base des stations où les véhicules déchargent des marchandises, étendant Object. Dans ce dump elle ne contient que l'envoi réseau à la connexion de ses triggers de déchargement, une validation développeur vérifiant que les types palette, balle et vrac ont un trigger adapté, et les chemins XML communs. Le reste de la classe (chargement, gestion des triggers, liens de stockage) n'est pas dans ce fichier et reste NON VÉRIFIÉ ici. SellingStation en hérite."
+ },
+ "fonctions": {
+  "UnloadingStation:readStream": {
+   "en": "Client side initial sync: after the parent data, for each unload trigger reads its object id and stream data, then finishes registering it with the client.",
+   "fr": "Synchro initiale côté client : après les données parent, lit pour chaque trigger de déchargement son identifiant et ses données de flux, puis termine son enregistrement auprès du client."
+  },
+  "UnloadingStation:writeStream": {
+   "en": "Server side initial sync: after the parent data, writes each unload trigger's object id and stream data and registers it in the stream for that connection.",
+   "fr": "Synchro initiale côté serveur : après les données parent, écrit l'identifiant et les données de flux de chaque trigger de déchargement et l'enregistre dans le flux pour cette connexion."
+  },
+  "UnloadingStation:validateUnloadTriggers": {
+   "en": "Developer check at load time: logs a warning when a pallet, bale or bulk fill type has no suitable trigger class (PalletUnloadTrigger, BaleUnloadTrigger, UnloadTrigger). Train and pallet stations skip bale and bulk checks, and husbandry keys skip the bale warning. Changes no state.",
+   "fr": "Contrôle développeur au chargement : journalise un avertissement quand un type palette, balle ou vrac n'a pas de classe de trigger adaptée (PalletUnloadTrigger, BaleUnloadTrigger, UnloadTrigger). Les gares et stations de palettes ignorent les contrôles balle et vrac, et les clés d'élevage ignorent l'avertissement balle. Ne modifie aucun état."
+  },
+  "UnloadingStation.registerXMLPaths": {
+   "en": "Registers the station XML attributes (node, name, storage radius, hide from prices menu, extension support, train and pallet-only flags), the unload trigger paths, sounds (`active`, `idle`), animation nodes, effect nodes and the `simpleFillplane` entries.",
+   "fr": "Enregistre les attributs XML de la station (noeud, nom, rayon de stockage, masquage du menu des prix, extensions, options gare et palettes seulement), les chemins des triggers de déchargement, les sons (`active`, `idle`), noeuds d'animation, noeuds d'effets et entrées `simpleFillplane`."
+  }
+ }
+}

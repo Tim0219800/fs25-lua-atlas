@@ -1,0 +1,57 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreNitrogen.lua",
+  "module": {
+    "en": "Environmental score criterion for nitrogen fertilisation accuracy. On each harvest it records the difference between applied and target nitrogen, averaged per harvested area, and maps it to a 0 to 1 score through a curve read from XML (scoreMapping.scoreValue with nOffset and score). Server-side hook on HarvestExtension; clients get a compressed score. Subclass of EnvironmentalScoreValue.",
+    "fr": "Critère du score environnemental pour la précision de la fertilisation azotée. À chaque récolte il enregistre l'écart entre l'azote appliqué et l'azote cible, moyenné par surface récoltée, et le convertit en score de 0 à 1 via une courbe lue dans le XML (scoreMapping.scoreValue avec nOffset et score). Hook côté serveur sur HarvestExtension ; les clients reçoivent un score compressé. Sous-classe de EnvironmentalScoreValue."
+  },
+  "fonctions": {
+    "EnvironmentalScoreNitrogen.new": {
+      "en": "Constructor: builds on the parent constructor and sets the xmlKey to \"nitrogen\".",
+      "fr": "Constructeur : s'appuie sur le constructeur parent et fixe le xmlKey à \"nitrogen\"."
+    },
+    "EnvironmentalScoreNitrogen:loadFromXML": {
+      "en": "Loads the score curve from scoreMapping.scoreValue entries. Each nOffset is divided by the nitrogen of one state change from g_precisionFarming.nitrogenMap when that map exists, so the curve is expressed in map states.",
+      "fr": "Charge la courbe de score depuis les entrées scoreMapping.scoreValue. Chaque nOffset est divisé par l'azote d'un changement d'état de g_precisionFarming.nitrogenMap si cette carte existe, la courbe étant ainsi exprimée en états de la carte."
+    },
+    "EnvironmentalScoreNitrogen:update": {
+      "en": "Empty update hook.",
+      "fr": "Hook de mise à jour vide."
+    },
+    "EnvironmentalScoreNitrogen:getScore": {
+      "en": "Returns the nitrogen score: the client score if present, else the curve value for the average offset (offset sum over harvested area, rescaled by COMPRESSION), or 0.5 with no harvested area.",
+      "fr": "Retourne le score d'azote : le score client s'il existe, sinon la valeur de la courbe pour l'écart moyen (somme des écarts sur la surface récoltée, remise à l'échelle par COMPRESSION), ou 0.5 sans surface récoltée."
+    },
+    "EnvironmentalScoreNitrogen:initFarmlandData": {
+      "en": "Creates the per-farmland record: harvestedArea 0, nOffsetSum 0, pendingReset false.",
+      "fr": "Crée l'enregistrement par parcelle : harvestedArea 0, nOffsetSum 0, pendingReset false."
+    },
+    "EnvironmentalScoreNitrogen:loadFarmlandData": {
+      "en": "Reads harvestedArea, nOffsetSum and pendingReset from the savegame XML.",
+      "fr": "Lit harvestedArea, nOffsetSum et pendingReset depuis le XML de sauvegarde."
+    },
+    "EnvironmentalScoreNitrogen:saveFarmlandData": {
+      "en": "Writes harvestedArea, nOffsetSum and pendingReset to the savegame XML.",
+      "fr": "Écrit harvestedArea, nOffsetSum et pendingReset dans le XML de sauvegarde."
+    },
+    "EnvironmentalScoreNitrogen:readFarmlandDataFromStream": {
+      "en": "Client side: reads an 8 bit score and stores it as clientScore, rounded to two decimals.",
+      "fr": "Côté client : lit un score sur 8 bits et le stocke comme clientScore, arrondi à deux décimales."
+    },
+    "EnvironmentalScoreNitrogen:writeFarmlandDataToStream": {
+      "en": "Server side: writes the current score as an 8 bit value (score times 255).",
+      "fr": "Côté serveur : écrit le score actuel sur 8 bits (score fois 255)."
+    },
+    "EnvironmentalScoreNitrogen:onHarvestScoreReset": {
+      "en": "Flags the farmland so its accumulated values are cleared on the next harvest record.",
+      "fr": "Marque la parcelle afin que ses valeurs cumulées soient effacées au prochain enregistrement de récolte."
+    },
+    "EnvironmentalScoreNitrogen:addWorkedArea": {
+      "en": "Adds a harvested area and its nitrogen offset (both divided by COMPRESSION) to the farmland sums, resetting them first if a reset is pending.",
+      "fr": "Ajoute une surface récoltée et son écart d'azote (tous deux divisés par COMPRESSION) aux sommes de la parcelle, en les réinitialisant d'abord si une réinitialisation est en attente."
+    },
+    "EnvironmentalScoreNitrogen:overwriteGameFunctions": {
+      "en": "Server only. Hooks HarvestExtension.setLastScoringValues and records nActual minus nTarget for the harvested area; with ignoreOverfertilization, positive differences are clamped to 0.",
+      "fr": "Serveur uniquement. Accroche HarvestExtension.setLastScoringValues et enregistre nActual moins nTarget pour la surface récoltée ; avec ignoreOverfertilization, les écarts positifs sont ramenés à 0."
+    }
+  }
+}

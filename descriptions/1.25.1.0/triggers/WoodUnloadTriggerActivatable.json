@@ -1,0 +1,25 @@
+{
+ "fichier": "triggers/WoodUnloadTriggerActivatable.lua",
+ "module": {
+  "en": "Activatable (interaction prompt) that lets an on-foot local player sell the logs in a WoodUnloadTrigger manually. Client side; distance is measured to the trigger's activation node.",
+  "fr": "Activable (invite d'interaction) qui permet à un joueur local à pied de vendre manuellement les grumes d'un WoodUnloadTrigger. Côté client ; la distance est mesurée jusqu'au noeud d'activation du trigger."
+ },
+ "fonctions": {
+  "WoodUnloadTriggerActivatable.new": {
+   "en": "Creates the activatable for a wood unload trigger, with the localized text of action_sellWood.",
+   "fr": "Crée l'activable pour un trigger de déchargement de bois, avec le texte localisé de action_sellWood."
+  },
+  "WoodUnloadTriggerActivatable:getIsActivatable": {
+   "en": "Returns true when the local player is not in a vehicle and the local farm is not the spectator farm.",
+   "fr": "Retourne true quand le joueur local n'est pas dans un véhicule et que la ferme locale n'est pas la ferme spectateur."
+  },
+  "WoodUnloadTriggerActivatable:run": {
+   "en": "Runs the action by calling processWood on the trigger with the local farm id.",
+   "fr": "Exécute l'action en appelant processWood sur le trigger avec l'identifiant de la ferme locale."
+  },
+  "WoodUnloadTriggerActivatable:getDistance": {
+   "en": "Returns the distance from the given world position to the trigger's activation node, or math.huge if there is none.",
+   "fr": "Retourne la distance entre la position monde donnée et le noeud d'activation du trigger, ou math.huge s'il n'y en a pas."
+  }
+ }
+}

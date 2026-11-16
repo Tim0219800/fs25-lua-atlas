@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/WaterTrailerSetIsFillingEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes whether a water trailer is currently filling, between server and clients. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise le remplissage en cours d'une citerne à eau entre serveur et clients. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "WaterTrailerSetIsFillingEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "WaterTrailerSetIsFillingEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a boolean filling flag); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un booléen de remplissage) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "WaterTrailerSetIsFillingEvent:readStream": {
+      "en": "Reads a node object and a boolean filling flag from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un booléen de remplissage depuis le flux, puis appelle `run(connection)`."
+    },
+    "WaterTrailerSetIsFillingEvent:writeStream": {
+      "en": "Writes a node object and a boolean filling flag to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un booléen de remplissage dans le flux (même ordre que `readStream`)."
+    },
+    "WaterTrailerSetIsFillingEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself, then calls `setIsWaterTrailerFilling(flag, true)` on the vehicle if synchronized.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet, puis appelle `setIsWaterTrailerFilling(indicateur, true)` sur le véhicule s'il est synchronisé."
+    },
+    "WaterTrailerSetIsFillingEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

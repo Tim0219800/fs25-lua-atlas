@@ -1,0 +1,213 @@
+{
+ "fichier": "placeables/specializations/PlaceableObjectStorage.lua",
+ "module": {
+  "en": "Placeable specialization for storage buildings that hold bales and pallets as abstract objects (grouped into object infos), with spawn areas to unload them and storage areas where visual copies are shown. Players open an unload dialog through an activatable, objects enter via an object trigger (automatically or by a manual store action), and the server spawns objects back after an overlap check. Network sync uses read/write streams plus a dirty flag. The dump omits several pieces this file relies on (PlaceableObjectStorage constants, ABSTRACT_OBJECTS tables, getNextSpawnAreaAndOffset, onObjectStorageObjectTriggerCallback, onPendingObjectDelete, and the AbstractBaleObject methods): UNVERIFIED.",
+  "fr": "Spécialisation de placeable pour les bâtiments de stockage qui conservent balles et palettes sous forme d'objets abstraits (regroupés en infos d'objets), avec des zones d'apparition pour les sortir et des zones de stockage où des copies visuelles sont affichées. Le joueur ouvre un dialogue de sortie via un activatable, les objets entrent par un trigger d'objets (automatiquement ou par stockage manuel) et le serveur les refait apparaître après un test de chevauchement. La synchro réseau utilise les flux de lecture/écriture et un drapeau dirty. Le dump omet plusieurs éléments dont ce fichier dépend (constantes de PlaceableObjectStorage, tables ABSTRACT_OBJECTS, getNextSpawnAreaAndOffset, onObjectStorageObjectTriggerCallback, onPendingObjectDelete et méthodes d'AbstractBaleObject) : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlaceableObjectStorage.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is required.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableObjectStorage.registerOverwrittenFunctions": {
+   "en": "Overrides canBeSold and updateInfo on the placeable type.",
+   "fr": "Surcharge canBeSold et updateInfo sur le type de placeable."
+  },
+  "PlaceableObjectStorage.registerFunctions": {
+   "en": "Registers the object storage functions (support checks, add/remove of abstract objects, spawning, object infos, visual areas, manual store, trigger callbacks) on the placeable type.",
+   "fr": "Enregistre sur le type de placeable les fonctions du stockage d'objets (tests de support, ajout/retrait d'objets abstraits, apparition, infos d'objets, zones visuelles, stockage manuel, callbacks de triggers)."
+  },
+  "PlaceableObjectStorage.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onReadStream, onWriteStream, onReadUpdateStream, onWriteUpdateStream and onUpdate.",
+   "fr": "S'abonne à onLoad, onDelete, onReadStream, onWriteStream, onReadUpdateStream, onWriteUpdateStream et onUpdate."
+  },
+  "PlaceableObjectStorage.registerXMLPaths": {
+   "en": "Declares the objectStorage XML keys: player/object trigger nodes, supported fill types and categories, bale/pallet support, supportedObject entries, capacity (default 250), max size limits, maxUnloadAmount (default 25), spawn areas and storage areas (max stack height default 3).",
+   "fr": "Déclare les clés XML objectStorage : nœuds de trigger joueur/objet, types et catégories de remplissage supportés, support balles/palettes, entrées supportedObject, capacité (défaut 250), limites de taille, maxUnloadAmount (défaut 25), zones d'apparition et de stockage (hauteur d'empilement max par défaut 3)."
+  },
+  "PlaceableObjectStorage.registerSavegameXMLPaths": {
+   "en": "Registers the savegame keys for stored objects: a className per object plus the keys of every abstract object class in PlaceableObjectStorage.ABSTRACT_OBJECTS.",
+   "fr": "Enregistre les clés de sauvegarde des objets stockés : un className par objet plus les clés de chaque classe d'objet abstrait de PlaceableObjectStorage.ABSTRACT_OBJECTS."
+  },
+  "PlaceableObjectStorage.initSpecialization": {
+   "en": "Registers the shop spec types objectStorageCapacity and objectStorageFillTypes for placeables.",
+   "fr": "Enregistre dans le magasin les types de spec objectStorageCapacity et objectStorageFillTypes pour les placeables."
+  },
+  "PlaceableObjectStorage:onLoad": {
+   "en": "Loads triggers (object trigger on the server only), supported fill types/objects, capacity and size limits, spawn and storage areas, state tables, texts, both activatables and the dirty flag. Warns if the player or object trigger is missing.",
+   "fr": "Charge les triggers (celui des objets uniquement côté serveur), types de remplissage et objets supportés, capacité et limites de taille, zones d'apparition et de stockage, tables d'état, textes, les deux activatables et le drapeau dirty. Avertit si le trigger joueur ou objet manque."
+  },
+  "PlaceableObjectStorage:loadFromXMLFile": {
+   "en": "Savegame loading: for each object entry, finds the abstract object class by its className and lets it load itself, then marks object infos dirty. Note: the warning for a nil className prints that nil name.",
+   "fr": "Chargement de sauvegarde : pour chaque entrée d'objet, retrouve la classe d'objet abstrait par son className et la laisse se charger, puis marque les infos d'objets comme modifiées. À noter : l'avertissement pour un className nil affiche ce nom nil."
+  },
+  "PlaceableObjectStorage:saveToXMLFile": {
+   "en": "Savegame saving: writes each stored abstract object's REFERENCE_CLASS_NAME and lets it save its own data under an indexed object key.",
+   "fr": "Écriture de sauvegarde : écrit le REFERENCE_CLASS_NAME de chaque objet abstrait stocké et le laisse sauvegarder ses données sous une clé object indexée."
+  },
+  "PlaceableObjectStorage:onDelete": {
+   "en": "Removes the triggers, deletes all stored abstract objects, clears pending objects and their delete listeners, and removes both activatables.",
+   "fr": "Retire les triggers, supprime tous les objets abstraits stockés, vide les objets en attente et leurs écouteurs de suppression, et retire les deux activatables."
+  },
+  "PlaceableObjectStorage:onReadStream": {
+   "en": "Client side: rebuilds objectInfos from the stream (count, amount and abstract object per info), recomputes the stored total and refreshes the visual areas.",
+   "fr": "Côté client : reconstruit objectInfos depuis le flux (nombre, quantité et objet abstrait par info), recalcule le total stocké et met à jour les zones visuelles."
+  },
+  "PlaceableObjectStorage:onWriteStream": {
+   "en": "Server side: writes the object infos, for each its amount, the abstract object type id and the first object's stream data.",
+   "fr": "Côté serveur : écrit les infos d'objets, pour chacune sa quantité, l'identifiant du type d'objet abstrait et les données de flux du premier objet."
+  },
+  "PlaceableObjectStorage:onReadUpdateStream": {
+   "en": "Client side: if the dirty bit is set, re-reads the full object info stream; then adds or removes the manual store activatable according to the transmitted flag.",
+   "fr": "Côté client : si le bit dirty est actif, relit tout le flux d'infos d'objets ; puis ajoute ou retire l'activatable de stockage manuel selon l'indicateur transmis."
+  },
+  "PlaceableObjectStorage:onWriteUpdateStream": {
+   "en": "Server side: writes a bool for the dirty flag and, if set, the full object info stream, then a bool for pending manual store objects.",
+   "fr": "Côté serveur : écrit un booléen pour le drapeau dirty et, s'il est actif, le flux complet d'infos d'objets, puis un booléen pour les objets en attente de stockage manuel."
+  },
+  "PlaceableObjectStorage:onUpdate": {
+   "en": "Per-frame: on the server drives object spawning (one object per overlap check) and stores pending objects that can now be accepted; on all sides counts down the 1000 ms info refresh timer (updating infos, visuals and the dirty flag) and processes pending visual area updates, calling raiseActive while work remains.",
+   "fr": "À chaque image : côté serveur, pilote l'apparition des objets (un par test de chevauchement) et stocke les objets en attente désormais acceptables ; partout, décompte le minuteur de rafraîchissement de 1000 ms (infos, visuels et drapeau dirty) et traite les mises à jour de zones visuelles en attente, avec raiseActive tant qu'il reste du travail."
+  },
+  "PlaceableObjectStorage:getObjectStorageSupportsFillType": {
+   "en": "Returns true if the fill type is in the supported list, or if the list is empty (all allowed); a nil or unknown fill type is accepted only when the list is empty.",
+   "fr": "Renvoie true si le type de remplissage est dans la liste supportée, ou si la liste est vide (tout est permis) ; un type nil ou inconnu n'est accepté que si la liste est vide."
+  },
+  "PlaceableObjectStorage:getObjectStorageSupportsObject": {
+   "en": "Returns whether the object is supported at all: its abstract class must accept it and it must not already be stored (compared with each stored object's real object).",
+   "fr": "Indique si l'objet est supporté du tout : sa classe abstraite doit l'accepter et il ne doit pas déjà être stocké (comparaison avec l'objet réel de chaque objet stocké)."
+  },
+  "PlaceableObjectStorage:getObjectStorageCanStoreObject": {
+   "en": "Checks if an object can be stored right now (not while spawning, capacity, supportedObject filename and amount limits, abstract class rules; stricter when automatic). Returns a bool and, for some failures, a PlaceableObjectStorageErrorEvent error id.",
+   "fr": "Vérifie si un objet peut être stocké maintenant (pas pendant une apparition, capacité, nom de fichier et quantités de supportedObject, règles de la classe abstraite ; plus strict en mode automatique). Renvoie un booléen et, pour certains échecs, un identifiant d'erreur de PlaceableObjectStorageErrorEvent."
+  },
+  "PlaceableObjectStorage:getIsBaleSupportedByUnloadTrigger": {
+   "en": "Hook used by bale loaders to ask whether a bale is accepted; forwards to getObjectStorageSupportsObject.",
+   "fr": "Point d'appel utilisé par les chargeurs de balles pour savoir si une balle est acceptée ; transmet à getObjectStorageSupportsObject."
+  },
+  "PlaceableObjectStorage:addObjectToObjectStorage": {
+   "en": "Wraps a real bale or pallet in the matching abstract object class (looked up by class name), adds it to storage and registers it. Does nothing if no abstract class matches.",
+   "fr": "Encapsule une balle ou palette réelle dans la classe d'objet abstrait correspondante (recherchée par nom de classe), l'ajoute au stockage et l'enregistre. Ne fait rien si aucune classe abstraite ne correspond."
+  },
+  "PlaceableObjectStorage:addAbstactObjectToObjectStorage": {
+   "en": "Appends an already built abstract object to the stored list and updates the stored count (the name is misspelled in the source).",
+   "fr": "Ajoute un objet abstrait déjà construit à la liste stockée et met à jour le compteur (le nom est mal orthographié dans la source)."
+  },
+  "PlaceableObjectStorage:removeAbstractObjectsFromStorage": {
+   "en": "Server: starts unloading amount objects of an object info for a connection. Ignored if a spawn is running, infos are still refreshing, or the request exceeds the available amount; otherwise resets the spawn state and spawns the first object.",
+   "fr": "Serveur : lance la sortie de amount objets d'une info d'objets pour une connexion. Ignoré si une apparition est en cours, si les infos se rafraîchissent encore ou si la demande dépasse la quantité disponible ; sinon réinitialise l'état d'apparition et fait apparaître le premier objet."
+  },
+  "PlaceableObjectStorage:spawnNextObjectStorageObject": {
+   "en": "Finds the next free slot in the spawn areas (respecting limited-object slots) and starts an async box overlap test there. When nothing remains or no room is found, ends the spawn run, sends a not-enough-space or limit error event to the requesting connection if objects are left, and marks infos dirty.",
+   "fr": "Trouve le prochain emplacement libre dans les zones d'apparition (en respectant les emplacements d'objets limités) et lance un test de chevauchement asynchrone. Quand il ne reste rien ou qu'il n'y a plus de place, termine l'opération, envoie un événement d'erreur (manque de place ou limite) à la connexion demandeuse s'il reste des objets, et marque les infos comme modifiées."
+  },
+  "PlaceableObjectStorage:removeAbstractObjectFromStorage": {
+   "en": "Removes an abstract object from the stored list and asks it to spawn the real object at the given world position and rotation, with onObjectFromStorageSpawned as callback; updates the stored count.",
+   "fr": "Retire un objet abstrait de la liste stockée et lui demande de créer l'objet réel à la position et rotation monde données, avec onObjectFromStorageSpawned en callback ; met à jour le compteur."
+  },
+  "PlaceableObjectStorage.onObjectFromStorageSpawned": {
+   "en": "Callback (called with the placeable as first argument): while a spawn run is active, records the freshly spawned object so overlap checks ignore it.",
+   "fr": "Callback (appelé avec le placeable en premier argument) : pendant une opération d'apparition, mémorise l'objet qui vient d'apparaître pour que les tests de chevauchement l'ignorent."
+  },
+  "PlaceableObjectStorage:setObjectStorageObjectInfosDirty": {
+   "en": "Starts the 1000 ms timer after which object infos, visual areas and the network dirty flag are refreshed, and keeps the placeable active.",
+   "fr": "Démarre le minuteur de 1000 ms après lequel les infos d'objets, les zones visuelles et le drapeau dirty réseau sont rafraîchis, et garde le placeable actif."
+  },
+  "PlaceableObjectStorage:updateDirtyObjectStorageObjectInfos": {
+   "en": "If the refresh timer is running, rebuilds the object infos immediately (the timer keeps running for the visual and network update).",
+   "fr": "Si le minuteur de rafraîchissement tourne, reconstruit immédiatement les infos d'objets (le minuteur continue pour la mise à jour visuelle et réseau)."
+  },
+  "PlaceableObjectStorage:updateObjectStorageObjectInfos": {
+   "en": "Rebuilds spec.objectInfos by grouping identical stored objects (via getIsIdentical), then sorts the groups by spawn width ascending.",
+   "fr": "Reconstruit spec.objectInfos en regroupant les objets stockés identiques (via getIsIdentical), puis trie les groupes par largeur d'apparition croissante."
+  },
+  "PlaceableObjectStorage:getObjectStorageObjectInfos": {
+   "en": "Returns the current list of object infos (groups of identical stored objects).",
+   "fr": "Renvoie la liste courante des infos d'objets (groupes d'objets stockés identiques)."
+  },
+  "PlaceableObjectStorage:updateObjectStorageVisualAreas": {
+   "en": "Rebuilds the visual copies of stored objects: creates a new hidden spawn node, computes positions in the storage areas for every object info and spawns them one info per update, then deletes the old node and shows the new one.",
+   "fr": "Reconstruit les copies visuelles des objets stockés : crée un nouveau nœud masqué, calcule les positions dans les zones de stockage pour chaque info d'objets et les crée une info par mise à jour, puis supprime l'ancien nœud et affiche le nouveau."
+  },
+  "PlaceableObjectStorage:getHasPendingManualStoreObjects": {
+   "en": "Returns true if a pending object cannot be stored automatically but could be stored manually.",
+   "fr": "Renvoie true si un objet en attente ne peut pas être stocké automatiquement mais pourrait l'être manuellement."
+  },
+  "PlaceableObjectStorage:storePendingManualObjects": {
+   "en": "Stores every pending object that is allowed manually (not automatically), removes its delete listener and refreshes the manual store activatable.",
+   "fr": "Stocke chaque objet en attente autorisé manuellement (et non automatiquement), retire son écouteur de suppression et met à jour l'activatable de stockage manuel."
+  },
+  "PlaceableObjectStorage:updateManualStoreActivatable": {
+   "en": "When the pending-manual-objects state changed, adds or removes the manual store activatable and raises the network dirty flag.",
+   "fr": "Quand l'état des objets en attente manuelle a changé, ajoute ou retire l'activatable de stockage manuel et lève le drapeau dirty réseau."
+  },
+  "PlaceableObjectStorage:onObjectStoragePlayerTriggerCallback": {
+   "en": "Player trigger callback: adds the unload activatable when the local player enters and removes it when leaving.",
+   "fr": "Callback du trigger joueur : ajoute l'activatable de sortie quand le joueur local entre et le retire quand il sort."
+  },
+  "PlaceableObjectStorage:onObjectStorageSpawnOverlapCallback": {
+   "en": "Overlap callback for the spawn test: ends the pending overlap and counts non-trigger hits, ignoring objects just spawned in this run.",
+   "fr": "Callback de chevauchement du test d'apparition : termine le test en cours et compte les contacts hors triggers, en ignorant les objets qui viennent d'apparaître dans cette opération."
+  },
+  "PlaceableObjectStorage:canBeSold": {
+   "en": "Override: returns true with a 'storage not empty' warning if any objects are stored, else defers to the parent.",
+   "fr": "Surcharge : renvoie true avec un avertissement « stockage non vide » si des objets sont stockés, sinon délègue au parent."
+  },
+  "PlaceableObjectStorage:updateInfo": {
+   "en": "Override: after the parent, adds a stored/capacity line, then one line per object info (title cut at 32 characters) up to MAX_HUD_INFO_ENTRIES, and a summed 'others' line for the rest.",
+   "fr": "Surcharge : après le parent, ajoute une ligne stockés/capacité, puis une ligne par info d'objets (titre coupé à 32 caractères) jusqu'à MAX_HUD_INFO_ENTRIES, et une ligne « autres » cumulée pour le reste."
+  },
+  "PlaceableObjectStorage.loadSpecValueCapacity": {
+   "en": "Shop spec loader: returns the capacity, lowered to the sum of the supportedObject amounts when those limits are used; nil if the placeable has no objectStorage.",
+   "fr": "Chargeur de spec du magasin : renvoie la capacité, abaissée à la somme des quantités supportedObject lorsque ces limites sont utilisées ; nil si le placeable n'a pas d'objectStorage."
+  },
+  "PlaceableObjectStorage.getSpecValueCapacity": {
+   "en": "Returns the capacity formatted as a number of pieces for the shop, or nil if absent.",
+   "fr": "Renvoie la capacité formatée en nombre de pièces pour le magasin, ou nil si absente."
+  },
+  "PlaceableObjectStorage.loadSpecValueFillTypes": {
+   "en": "Shop spec loader: collects the fill type indices named in the fillType attribute of each supportedObject entry.",
+   "fr": "Chargeur de spec du magasin : collecte les indices de types de remplissage nommés dans l'attribut fillType de chaque entrée supportedObject."
+  },
+  "PlaceableObjectStorage.getSpecValueFillTypes": {
+   "en": "Returns the list of fill type indices for the shop display, or nil if there are none.",
+   "fr": "Renvoie la liste des indices de types de remplissage pour l'affichage du magasin, ou nil s'il n'y en a pas."
+  },
+  "PlaceableObjectStorageActivatable.new": {
+   "en": "Creates the activatable that opens the unload menu, with its action text and 'storage is empty' warning text.",
+   "fr": "Crée l'activatable qui ouvre le menu de sortie, avec son texte d'action et son texte d'avertissement « stockage vide »."
+  },
+  "PlaceableObjectStorageActivatable:getIsActivatable": {
+   "en": "True only if the player has access to the storage and no spawn run is currently active.",
+   "fr": "Vrai seulement si le joueur a accès au stockage et qu'aucune opération d'apparition n'est en cours."
+  },
+  "PlaceableObjectStorageActivatable:run": {
+   "en": "Refreshes the object infos and opens ObjectStorageDialog with them and maxUnloadAmount, or shows a blinking warning for 2000 ms if the storage is empty.",
+   "fr": "Rafraîchit les infos d'objets et ouvre ObjectStorageDialog avec elles et maxUnloadAmount, ou affiche un avertissement clignotant de 2000 ms si le stockage est vide."
+  },
+  "PlaceableObjectStorageActivatable:getDistance": {
+   "en": "Returns the distance to the player trigger node, or math.huge if there is none.",
+   "fr": "Renvoie la distance au nœud de trigger joueur, ou math.huge s'il n'y en a pas."
+  },
+  "PlaceableObjectStorageActivatable:onObjectInfoSelected": {
+   "en": "Dialog callback: if an info index and amount were chosen, sends PlaceableObjectStorageUnloadEvent to the server.",
+   "fr": "Callback du dialogue : si un indice d'info et une quantité ont été choisis, envoie PlaceableObjectStorageUnloadEvent au serveur."
+  },
+  "PlaceableObjectStorageManualStoreActivatable.new": {
+   "en": "Creates the activatable for manually storing pending objects, with the 'unload' button text.",
+   "fr": "Crée l'activatable de stockage manuel des objets en attente, avec le texte de bouton « décharger »."
+  },
+  "PlaceableObjectStorageManualStoreActivatable:getIsActivatable": {
+   "en": "True if the player has access to the storage.",
+   "fr": "Vrai si le joueur a accès au stockage."
+  },
+  "PlaceableObjectStorageManualStoreActivatable:run": {
+   "en": "Sends PlaceableObjectStorageStoreEvent for this storage to the server.",
+   "fr": "Envoie au serveur PlaceableObjectStorageStoreEvent pour ce stockage."
+  },
+  "PlaceableObjectStorageManualStoreActivatable:getDistance": {
+   "en": "Returns the distance to the object trigger node, or math.huge if there is none (that node only exists on the server, so on clients this is always math.huge).",
+   "fr": "Renvoie la distance au nœud de trigger d'objets, ou math.huge s'il n'y en a pas (ce nœud n'existe que côté serveur, donc côté client la valeur est toujours math.huge)."
+  }
+ }
+}

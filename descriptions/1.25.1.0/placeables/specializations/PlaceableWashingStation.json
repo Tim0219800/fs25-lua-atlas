@@ -1,0 +1,49 @@
+{
+ "fichier": "placeables/specializations/PlaceableWashingStation.lua",
+ "module": {
+  "en": "Placeable specialization that hosts one or more WashingStation objects read from `placeable.washingStation.station(?)`. It creates them on load, registers them at placement, streams them to joining clients and keeps their owner farm in sync with the placeable.",
+  "fr": "Spécialisation de placeable qui héberge un ou plusieurs objets WashingStation lus sous `placeable.washingStation.station(?)`. Elle les crée au chargement, les enregistre au placement, les envoie aux clients qui rejoignent et garde leur ferme propriétaire synchronisée avec celle du placeable."
+ },
+ "fonctions": {
+  "PlaceableWashingStation.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableWashingStation.registerOverwrittenFunctions": {
+   "en": "Overrides `setOwnerFarmId` on the placeable type.",
+   "fr": "Surcharge `setOwnerFarmId` sur le type de placeable."
+  },
+  "PlaceableWashingStation.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onFinalizePlacement, onReadStream and onWriteStream.",
+   "fr": "S'abonne à onLoad, onDelete, onFinalizePlacement, onReadStream et onWriteStream."
+  },
+  "PlaceableWashingStation.registerXMLPaths": {
+   "en": "Declares the washing station XML keys by delegating to `WashingStation.registerXMLPaths` for each `station(?)`.",
+   "fr": "Déclare les clés XML de la station de lavage en déléguant à `WashingStation.registerXMLPaths` pour chaque `station(?)`."
+  },
+  "PlaceableWashingStation:onLoad": {
+   "en": "Creates a WashingStation per `station` entry and loads it; stations that fail to load are deleted and dropped.",
+   "fr": "Crée un WashingStation pour chaque entrée `station` et le charge ; ceux qui échouent sont supprimés et écartés."
+  },
+  "PlaceableWashingStation:onDelete": {
+   "en": "Deletes every washing station object.",
+   "fr": "Supprime chaque objet station de lavage."
+  },
+  "PlaceableWashingStation:onFinalizePlacement": {
+   "en": "Gives each washing station the placeable owner farm and registers it as a network object.",
+   "fr": "Donne à chaque station de lavage la ferme propriétaire du placeable et l'enregistre comme objet réseau."
+  },
+  "PlaceableWashingStation:onReadStream": {
+   "en": "Client side on join: for each station reads its object id, reads its state and finishes its network registration.",
+   "fr": "Côté client à la connexion : pour chaque station, lit son identifiant d'objet, lit son état et termine son enregistrement réseau."
+  },
+  "PlaceableWashingStation:onWriteStream": {
+   "en": "Server side on join: for each station writes its object id and state, and registers it in the connection stream.",
+   "fr": "Côté serveur à la connexion : pour chaque station, écrit son identifiant d'objet et son état, et l'enregistre dans le flux de la connexion."
+  },
+  "PlaceableWashingStation:setOwnerFarmId": {
+   "en": "Calls the parent, then copies the new owner farm to every washing station without sending an event.",
+   "fr": "Appelle le parent, puis copie la nouvelle ferme propriétaire sur chaque station de lavage sans envoyer d'événement."
+  }
+ }
+}

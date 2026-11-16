@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/husbandry/placeables/events/HusbandryFenceUpdateEvent.lua",
+ "module": {
+  "en": "Network event that tells a receiver to rebuild the fence of a husbandry placeable, optionally deleting its customizable segments first. The file does not show who sends it or the direction (UNVERIFIED).",
+  "fr": "Événement réseau qui demande au destinataire de reconstruire la clôture d'un placeable d'élevage, en supprimant éventuellement d'abord ses segments personnalisables. Le fichier n'indique ni l'émetteur ni le sens d'envoi (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HusbandryFenceUpdateEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "HusbandryFenceUpdateEvent.new": {
+   "en": "Creates the event for a placeable and a flag saying whether the customizable fence segments must be deleted.",
+   "fr": "Crée l'événement pour un placeable et un indicateur précisant s'il faut supprimer les segments de clôture personnalisables."
+  },
+  "HusbandryFenceUpdateEvent:readStream": {
+   "en": "Reads the placeable (node object) and the delete flag from the stream, then runs the event.",
+   "fr": "Lit le placeable (objet-noeud) et l'indicateur de suppression dans le flux, puis exécute l'événement."
+  },
+  "HusbandryFenceUpdateEvent:writeStream": {
+   "en": "Writes the placeable as a node object and the delete flag to the stream.",
+   "fr": "Écrit le placeable comme objet-noeud et l'indicateur de suppression dans le flux."
+  },
+  "HusbandryFenceUpdateEvent:run": {
+   "en": "When the placeable is synchronized, optionally calls `deleteCustomizableSegments()`, then always `finalizeHusbandryFence()`. No rebroadcast is done here.",
+   "fr": "Quand le placeable est synchronisé, appelle éventuellement `deleteCustomizableSegments()`, puis toujours `finalizeHusbandryFence()`. Aucune rediffusion n'est faite ici."
+  }
+ }
+}

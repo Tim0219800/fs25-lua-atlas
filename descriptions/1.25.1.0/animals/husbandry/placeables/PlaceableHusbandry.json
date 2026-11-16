@@ -1,0 +1,173 @@
+{
+ "fichier": "animals/husbandry/placeables/PlaceableHusbandry.lua",
+ "module": {
+  "en": "Base placeable specialization shared by all animal husbandries. It optionally loads an UnloadingStation, a Storage and a LoadingStation from the `placeable.husbandry` XML, registers them with the mission storage system and keeps the husbandry listed in husbandrySystem. Every hour on the server it calls updateFeeding, updateProduction and updateOutput (stubs here, meant to be overridden) and moves a global production factor up or down around a threshold. It raises the events onHusbandryFillLevelChanged and onFinishedFeeding.",
+  "fr": "Spécialisation de placeable de base commune à tous les élevages. Elle charge en option une UnloadingStation, un Storage et une LoadingStation depuis le XML `placeable.husbandry`, les enregistre auprès du système de stockage de la mission et tient l'élevage inscrit dans husbandrySystem. Chaque heure sur le serveur, elle appelle updateFeeding, updateProduction et updateOutput (des stubs ici, à surcharger) et fait monter ou descendre un facteur de production global autour d'un seuil. Elle déclenche les événements onHusbandryFillLevelChanged et onFinishedFeeding."
+ },
+ "fonctions": {
+  "PlaceableHusbandry.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisite specializations.",
+   "fr": "Retourne toujours true : cette spécialisation n'a aucune spécialisation prérequise."
+  },
+  "PlaceableHusbandry.registerEvents": {
+   "en": "Registers the placeable events onHusbandryFillLevelChanged and onFinishedFeeding.",
+   "fr": "Enregistre les événements de placeable onHusbandryFillLevelChanged et onFinishedFeeding."
+  },
+  "PlaceableHusbandry.registerFunctions": {
+   "en": "Registers the specialization's functions on the placeable type: station callbacks, feeding and production updates, info getters and the fill level helpers. Note: getProductionFactor is registered but no function of that name exists in this file, so it is registered as nil.",
+   "fr": "Enregistre les fonctions de la spécialisation sur le type de placeable : callbacks de stations, mises à jour d'alimentation et de production, getters d'infos et aides de niveau de remplissage. À noter : getProductionFactor est enregistrée mais aucune fonction de ce nom n'existe dans ce fichier, elle est donc enregistrée à nil."
+  },
+  "PlaceableHusbandry.registerOverwrittenFunctions": {
+   "en": "Overrides setOwnerFarmId, collectPickObjects, getCanBePlacedAt, canBuy and getNeedHourChanged of the placeable.",
+   "fr": "Surcharge setOwnerFarmId, collectPickObjects, getCanBePlacedAt, canBuy et getNeedHourChanged du placeable."
+  },
+  "PlaceableHusbandry.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad, onDelete, onFinalizePlacement, the four stream events, onHourChanged and onBuy.",
+   "fr": "Abonne la spécialisation à onLoad, onDelete, onFinalizePlacement, aux quatre événements de flux, à onHourChanged et à onBuy."
+  },
+  "PlaceableHusbandry.registerXMLPaths": {
+   "en": "Registers the `.husbandry` XML paths: saveId, hasStatistics, the production threshold and per-hour increase and decrease rates, plus the nested unloadingStation, storage and loadingStation schemas.",
+   "fr": "Enregistre les chemins XML `.husbandry` : saveId, hasStatistics, seuil de production et taux d'augmentation et de diminution par heure, ainsi que les schémas imbriqués unloadingStation, storage et loadingStation."
+  },
+  "PlaceableHusbandry.registerSavegameXMLPaths": {
+   "en": "Registers the savegame paths: module names, globalProductionFactor, productionFactor and the storage savegame schema.",
+   "fr": "Enregistre les chemins de sauvegarde : noms de modules, globalProductionFactor, productionFactor et le schéma de sauvegarde du stockage."
+  },
+  "PlaceableHusbandry:onLoad": {
+   "en": "Creates the unloading station, storage and loading station present in the XML (on failure it logs an error and sets the placeable loading state to ERROR) and reads the production threshold (default 0.25, clamped 0.01 to 0.99) and the hourly increase and decrease. Sets up the fill level callback that raises the fill level event.",
+   "fr": "Crée l'unloading station, le storage et la loading station présents dans le XML (en cas d'échec, journalise une erreur et met l'état de chargement du placeable à ERROR) et lit le seuil de production (défaut 0.25, borné de 0.01 à 0.99) et les variations horaires. Prépare le callback de niveau de remplissage qui déclenche l'événement associé."
+  },
+  "PlaceableHusbandry:onDelete": {
+   "en": "Removes and deletes the stations and storage from the storage system, removes the liquid manure loading station if supported, unsubscribes the storage messages and removes the placeable from husbandrySystem.",
+   "fr": "Retire et supprime les stations et le stockage du système de stockage, retire la loading station de lisier si elle le gère, désabonne les messages de stockage et retire le placeable de husbandrySystem."
+  },
+  "PlaceableHusbandry:onFinalizePlacement": {
+   "en": "Subscribes to the storage added or removed messages, registers the stations and storage with the storage system (owner farm EVERYONE becomes NOBODY), links them, adds usable storage extensions in range, and adds the husbandry to husbandrySystem.",
+   "fr": "S'abonne aux messages d'ajout et de retrait de stockage, enregistre les stations et le stockage auprès du système de stockage (la ferme propriétaire EVERYONE devient NOBODY), les relie, ajoute les extensions de stockage utilisables à portée et inscrit l'élevage dans husbandrySystem."
+  },
+  "PlaceableHusbandry:onReadStream": {
+   "en": "Client join: reads each existing station and storage with its object id and finishes object registration, then reads the two production factors as bytes divided by 255.",
+   "fr": "Connexion d'un client : lit chaque station et stockage existant avec son identifiant d'objet et termine l'enregistrement, puis lit les deux facteurs de production sous forme d'octets divisés par 255."
+  },
+  "PlaceableHusbandry:onWriteStream": {
+   "en": "Server join: writes each station and storage with its object id and registers the object in the stream, then both production factors scaled to a byte (times 255).",
+   "fr": "Connexion côté serveur : écrit chaque station et stockage avec son identifiant d'objet et enregistre l'objet dans le flux, puis les deux facteurs de production ramenés à un octet (fois 255)."
+  },
+  "PlaceableHusbandry:onReadUpdateStream": {
+   "en": "Reads the two production factors as bytes divided by 100. Note: the join stream uses a scale of 255 while update streams use 100, so the two paths are inconsistent.",
+   "fr": "Lit les deux facteurs de production sous forme d'octets divisés par 100. À noter : le flux de connexion utilise l'échelle 255 et les flux de mise à jour l'échelle 100, les deux chemins sont donc incohérents."
+  },
+  "PlaceableHusbandry:onWriteUpdateStream": {
+   "en": "Writes the two production factors as bytes scaled by 100 (see the scale note on onReadUpdateStream).",
+   "fr": "Écrit les deux facteurs de production sous forme d'octets à l'échelle 100 (voir la note d'échelle de onReadUpdateStream)."
+  },
+  "PlaceableHusbandry:saveToXMLFile": {
+   "en": "Saves the storage (under `.storage`) and the global and current production factors to the savegame.",
+   "fr": "Sauvegarde le stockage (sous `.storage`) et les facteurs de production global et courant dans la sauvegarde."
+  },
+  "PlaceableHusbandry:loadFromXMLFile": {
+   "en": "Loads the storage and the two production factors from the savegame, keeping current values as defaults.",
+   "fr": "Charge le stockage et les deux facteurs de production depuis la sauvegarde, avec les valeurs courantes par défaut."
+  },
+  "PlaceableHusbandry:setOwnerFarmId": {
+   "en": "Override: after the parent call, propagates the owner farm to storage and both stations (EVERYONE maps to NOBODY) and attaches storage extensions in range for a real owner.",
+   "fr": "Surcharge : après l'appel du parent, propage la ferme propriétaire au stockage et aux deux stations (EVERYONE devient NOBODY) et rattache les extensions de stockage à portée pour un vrai propriétaire."
+  },
+  "PlaceableHusbandry:collectPickObjects": {
+   "en": "Override: skips nodes that are the unloading station's exact-fill root nodes or the loading station's trigger nodes, so they are not picked as the placeable; others go to the parent.",
+   "fr": "Surcharge : ignore les noeuds qui sont les noeuds racine de remplissage exact de l'unloading station ou les noeuds de déclencheur de la loading station, afin qu'ils ne soient pas pris pour le placeable ; les autres vont au parent."
+  },
+  "PlaceableHusbandry:getCanBePlacedAt": {
+   "en": "Override: returns false with a too-many-husbandries message when the husbandry limit is reached, otherwise defers to the parent. Note: farmId is not passed to the parent.",
+   "fr": "Surcharge : retourne false avec un message de trop nombreux élevages quand la limite est atteinte, sinon délègue au parent. À noter : farmId n'est pas transmis au parent."
+  },
+  "PlaceableHusbandry:canBuy": {
+   "en": "Override: returns false with a too-many-husbandries message when the husbandry limit is reached, otherwise defers to the parent.",
+   "fr": "Surcharge : retourne false avec un message de trop nombreux élevages quand la limite est atteinte, sinon délègue au parent."
+  },
+  "PlaceableHusbandry:onHourChanged": {
+   "en": "Server only. Runs feeding, raises onFinishedFeeding, computes the production factor and moves the global factor up (above the threshold, rate increasePerHour) or down (below, rate decreasePerHour), clamped to 0..1. It then calls updateOutput and flags the update stream.",
+   "fr": "Serveur seulement. Exécute l'alimentation, déclenche onFinishedFeeding, calcule le facteur de production et fait monter le facteur global (au-dessus du seuil, taux increasePerHour) ou descendre (en dessous, taux decreasePerHour), borné de 0 à 1. Appelle ensuite updateOutput et marque le flux de mise à jour."
+  },
+  "PlaceableHusbandry:onBuy": {
+   "en": "After purchase, attaches usable storage extensions in range to the unloading station and, if present, the loading station.",
+   "fr": "Après l'achat, rattache les extensions de stockage utilisables à portée à l'unloading station et, si présente, à la loading station."
+  },
+  "PlaceableHusbandry:getNeedHourChanged": {
+   "en": "Override that always returns true so the placeable receives hour change events.",
+   "fr": "Surcharge qui retourne toujours true pour que le placeable reçoive les événements de changement d'heure."
+  },
+  "PlaceableHusbandry:updateFeeding": {
+   "en": "Default feeding step: returns a food factor of 1. Specializations override it with real feeding logic.",
+   "fr": "Étape d'alimentation par défaut : retourne un facteur de nourriture de 1. Les spécialisations la surchargent avec la vraie logique."
+  },
+  "PlaceableHusbandry:updateProduction": {
+   "en": "Default production step: stores the food factor as the current production factor and returns it. Called hourly on the server.",
+   "fr": "Étape de production par défaut : stocke le facteur de nourriture comme facteur de production courant et le retourne. Appelée chaque heure sur le serveur."
+  },
+  "PlaceableHusbandry:updateOutput": {
+   "en": "Empty hook called hourly with the food, production and global production factors; overridden by subclasses to produce output.",
+   "fr": "Point d'entrée vide appelé chaque heure avec les facteurs de nourriture, de production et de production globale ; surchargé par les sous-classes pour produire la sortie."
+  },
+  "PlaceableHusbandry:getGlobalProductionFactor": {
+   "en": "Returns the slowly changing global production factor (0 to 1).",
+   "fr": "Retourne le facteur de production global, à variation lente (0 à 1)."
+  },
+  "PlaceableHusbandry:getConditionInfos": {
+   "en": "Default condition info list for the animal menu: an empty table. Overridden or extended by other specializations.",
+   "fr": "Liste d'infos d'état par défaut pour le menu des animaux : une table vide. Surchargée ou étendue par d'autres spécialisations."
+  },
+  "PlaceableHusbandry:getFoodInfos": {
+   "en": "Default food info list: an empty table, to be overridden.",
+   "fr": "Liste d'infos de nourriture par défaut : une table vide, à surcharger."
+  },
+  "PlaceableHusbandry:getAnimalInfos": {
+   "en": "Default animal info list: an empty table, to be overridden.",
+   "fr": "Liste d'infos des animaux par défaut : une table vide, à surcharger."
+  },
+  "PlaceableHusbandry:getAnimalDescription": {
+   "en": "Default description text for an animal cluster: an empty string, to be overridden.",
+   "fr": "Texte de description par défaut d'un groupe d'animaux : une chaîne vide, à surcharger."
+  },
+  "PlaceableHusbandry:getHusbandryCapacity": {
+   "en": "Returns the capacity of the unloading station for a fill type and farm (default owner farm), or 0 without an unloading station.",
+   "fr": "Retourne la capacité de l'unloading station pour un type de remplissage et une ferme (ferme propriétaire par défaut), ou 0 sans unloading station."
+  },
+  "PlaceableHusbandry:getHusbandryFreeCapacity": {
+   "en": "Returns the free capacity of the unloading station for a fill type and farm, or 0 without an unloading station.",
+   "fr": "Retourne la capacité libre de l'unloading station pour un type de remplissage et une ferme, ou 0 sans unloading station."
+  },
+  "PlaceableHusbandry:addHusbandryFillLevelFromTool": {
+   "en": "Adds fill to the unloading station from a tool and returns the amount applied; returns 0 without an unloading station. Parameters are passed through to the station.",
+   "fr": "Ajoute du remplissage à l'unloading station depuis un outil et retourne la quantité appliquée ; retourne 0 sans unloading station. Les paramètres sont transmis à la station."
+  },
+  "PlaceableHusbandry:removeHusbandryFillLevel": {
+   "en": "Removes fill via the loading station and returns the remaining delta; without a loading station it returns the delta unchanged.",
+   "fr": "Retire du remplissage via la loading station et retourne le delta restant ; sans loading station, il retourne le delta inchangé."
+  },
+  "PlaceableHusbandry:getHusbandryFillLevel": {
+   "en": "Returns the unloading station fill level for a fill type and farm, or 0 without an unloading station.",
+   "fr": "Retourne le niveau de remplissage de l'unloading station pour un type de remplissage et une ferme, ou 0 sans unloading station."
+  },
+  "PlaceableHusbandry:getHusbandryIsFillTypeSupported": {
+   "en": "Returns whether the unloading station supports the fill type; false without an unloading station.",
+   "fr": "Retourne si l'unloading station gère le type de remplissage ; false sans unloading station."
+  },
+  "PlaceableHusbandry:onAddedStorageToLoadingStation": {
+   "en": "Message callback: if the loading station is this husbandry's, listens to the storage's fill level changes with the specialization callback.",
+   "fr": "Callback de message : si la loading station est celle de cet élevage, écoute les changements de niveau du stockage avec le callback de la spécialisation."
+  },
+  "PlaceableHusbandry:onRemovedStorageFromLoadingStation": {
+   "en": "Message callback: if the loading station is this husbandry's, stops listening to the storage's fill level changes.",
+   "fr": "Callback de message : si la loading station est celle de cet élevage, cesse d'écouter les changements de niveau du stockage."
+  },
+  "PlaceableHusbandry:onAddedStorageToUnloadingStation": {
+   "en": "Message callback: if the unloading station is this husbandry's, listens to the storage's fill level changes with the specialization callback.",
+   "fr": "Callback de message : si l'unloading station est celle de cet élevage, écoute les changements de niveau du stockage avec le callback de la spécialisation."
+  },
+  "PlaceableHusbandry:onRemovedStorageFromUnloadingStation": {
+   "en": "Message callback: if the unloading station is this husbandry's, stops listening to the storage's fill level changes.",
+   "fr": "Callback de message : si l'unloading station est celle de cet élevage, cesse d'écouter les changements de niveau du stockage."
+  }
+ }
+}

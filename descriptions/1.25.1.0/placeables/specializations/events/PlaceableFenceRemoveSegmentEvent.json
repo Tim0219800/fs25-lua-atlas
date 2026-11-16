@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableFenceRemoveSegmentEvent.lua",
+ "module": {
+  "en": "Network event (subclass of Event) for removing a fence panel identified by segment and pole index. A client sends it to the server, which applies it and broadcasts it to all clients.",
+  "fr": "Événement réseau (sous-classe d'Event) pour supprimer un panneau de clôture identifié par un indice de segment et de poteau. Un client l'envoie au serveur, qui l'applique et le diffuse à tous les clients."
+ },
+ "fonctions": {
+  "PlaceableFenceRemoveSegmentEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture de flux."
+  },
+  "PlaceableFenceRemoveSegmentEvent.new": {
+   "en": "Creates the event with the fence, segment index and pole index.",
+   "fr": "Crée l'événement avec la clôture, l'indice du segment et l'indice du poteau."
+  },
+  "PlaceableFenceRemoveSegmentEvent:readStream": {
+   "en": "Reads the fence, segment index and pole index (32-bit integers), then calls `run`.",
+   "fr": "Lit la clôture, l'indice du segment et l'indice du poteau (entiers 32 bits), puis appelle `run`."
+  },
+  "PlaceableFenceRemoveSegmentEvent:writeStream": {
+   "en": "Writes the fence, segment index and pole index as 32-bit integers.",
+   "fr": "Écrit la clôture, l'indice du segment et l'indice du poteau sous forme d'entiers 32 bits."
+  },
+  "PlaceableFenceRemoveSegmentEvent:run": {
+   "en": "If the fence is synchronized, deletes the panel through `doDeletePanel` and publishes the remove-segment message; on the server it then broadcasts the event to all clients.",
+   "fr": "Si la clôture est synchronisée, supprime le panneau via `doDeletePanel` et publie le message de suppression de segment ; sur le serveur, elle diffuse ensuite l'événement à tous les clients."
+  }
+ }
+}

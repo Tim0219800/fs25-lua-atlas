@@ -1,0 +1,57 @@
+{
+ "fichier": "ai/tasks/AITaskDriveTo.lua",
+ "module": {
+  "en": "AI task that drives a vehicle to a ground position with a target heading, optionally via an offset position placed behind the target along that heading. On the server, it first waits for the vehicle to be ready (with a timeout) and then sets AI targets. The task finishes when the final position is reached.",
+  "fr": "Tâche IA qui conduit un véhicule vers une position au sol avec un cap cible, éventuellement en passant par une position décalée placée derrière la cible selon ce cap. Sur le serveur, elle attend d'abord que le véhicule soit prêt (avec un délai) puis définit les cibles IA. Elle se termine à l'arrivée à la position finale."
+ },
+ "fonctions": {
+  "AITaskDriveTo.new": {
+   "en": "Creates the task with no target or vehicle, initial state drive-to-offset, max speed 10, zero offset and zero prepare timeout. Speed unit UNVERIFIED.",
+   "fr": "Crée la tâche sans cible ni véhicule, avec l'état initial de conduite vers l'offset, une vitesse maximale de 10, un offset nul et un délai de préparation nul. Unité de vitesse NON VÉRIFIÉE."
+  },
+  "AITaskDriveTo:reset": {
+   "en": "Clears the vehicle, target position and direction, restores the initial state, speed and offset, then runs the parent reset.",
+   "fr": "Efface le véhicule, la position et la direction cibles, restaure l'état, la vitesse et l'offset initiaux, puis exécute le reset du parent."
+  },
+  "AITaskDriveTo:setVehicle": {
+   "en": "Sets the vehicle to drive.",
+   "fr": "Définit le véhicule à conduire."
+  },
+  "AITaskDriveTo:setTargetOffset": {
+   "en": "Sets the distance behind the target, along the target direction, of an intermediate waypoint. Zero means drive straight to the target.",
+   "fr": "Définit la distance, derrière la cible et le long de la direction cible, d'un point intermédiaire. Zéro signifie aller directement à la cible."
+  },
+  "AITaskDriveTo:setTargetPosition": {
+   "en": "Stores the target x and z. Note: the branch meant to update a running target is empty, and it reads self.isActive, so a change after start has no effect.",
+   "fr": "Mémorise les coordonnées x et z de la cible. À noter : la branche censée mettre à jour une cible en cours est vide et lit self.isActive, donc un changement après le démarrage n'a aucun effet."
+  },
+  "AITaskDriveTo:setTargetDirection": {
+   "en": "Stores the target direction (dirX, dirZ). The update-while-active branch is empty, so a change after start has no effect.",
+   "fr": "Mémorise la direction cible (dirX, dirZ). La branche de mise à jour en cours d'exécution est vide, donc un changement après le démarrage n'a aucun effet."
+  },
+  "AITaskDriveTo:update": {
+   "en": "Server only, in the prepare state: asks the vehicle if it is ready and starts driving when so. If not ready and not preparing, it accumulates time and stops the AI job with a could-not-prepare error after PREPARE_TIMEOUT.",
+   "fr": "Serveur seulement, à l'état de préparation : demande au véhicule s'il est prêt et lance la conduite le cas échéant. S'il n'est pas prêt et ne se prépare pas, le temps s'accumule et le job IA est arrêté avec une erreur de préparation après PREPARE_TIMEOUT."
+  },
+  "AITaskDriveTo:start": {
+   "en": "On the server, switches to the prepare state, asks the vehicle to prepare for AI driving and flags the task active. Always runs the parent start.",
+   "fr": "Sur le serveur, passe à l'état de préparation, demande au véhicule de se préparer à la conduite IA et marque la tâche active. Exécute toujours le start du parent."
+  },
+  "AITaskDriveTo:stop": {
+   "en": "Runs the parent stop, then on the server clears the vehicle's AI target and flags the task inactive.",
+   "fr": "Exécute le stop du parent puis, sur le serveur, efface la cible IA du véhicule et marque la tâche inactive."
+  },
+  "AITaskDriveTo:startDriving": {
+   "en": "Reads the terrain height and sets the first AI target: the target position, or the offset waypoint when an offset is set (state becomes drive-to-offset, otherwise drive-to-final).",
+   "fr": "Lit la hauteur du terrain et définit la première cible IA : la position cible, ou le point décalé si un offset est défini (état de conduite vers l'offset, sinon vers la position finale)."
+  },
+  "AITaskDriveTo:onTargetReached": {
+   "en": "Callback on arrival. From the offset waypoint it sets the final target with the max speed and switches state; from the final position it marks the task finished.",
+   "fr": "Callback à l'arrivée. Depuis le point décalé, il définit la cible finale avec la vitesse maximale et change d'état ; depuis la position finale, il marque la tâche terminée."
+  },
+  "AITaskDriveTo:onError": {
+   "en": "Empty callback for AI errors; nothing is done with the message.",
+   "fr": "Callback vide pour les erreurs IA ; le message n'est pas traité."
+  }
+ }
+}

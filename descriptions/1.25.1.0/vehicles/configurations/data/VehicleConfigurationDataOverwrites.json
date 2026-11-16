@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/configurations/data/VehicleConfigurationDataOverwrites.lua",
+ "module": {
+  "en": "Configuration data module that lets a configuration edit the vehicle's in-memory XML before loading: remove properties, set string values, or clear a list while keeping one item.",
+  "fr": "Module de données de configuration permettant à une configuration de modifier le XML du véhicule en mémoire avant son chargement : supprimer des propriétés, définir des valeurs texte ou vider une liste en gardant un élément."
+ },
+ "fonctions": {
+  "VehicleConfigurationDataOverwrites.registerXMLPaths": {
+   "en": "Static. Registers the .xmlOverwrites entries: remove (path), set (path, value) and clearList (path, keepIndex).",
+   "fr": "Statique. Enregistre les entrées .xmlOverwrites : remove (path), set (path, value) et clearList (path, keepIndex)."
+  },
+  "VehicleConfigurationDataOverwrites.onPreLoad": {
+   "en": "On the vehicle XML, removes the listed paths, sets the listed values as strings, and for each clearList removes every item of the list except keepIndex. Skipped without a config key.",
+   "fr": "Sur le XML du véhicule, supprime les chemins listés, définit les valeurs listées comme texte et, pour chaque clearList, supprime tous les éléments de la liste sauf keepIndex. Ignoré sans clé de configuration."
+  }
+ }
+}

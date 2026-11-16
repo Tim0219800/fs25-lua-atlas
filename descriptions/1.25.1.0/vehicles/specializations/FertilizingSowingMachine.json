@@ -1,0 +1,41 @@
+{
+ "fichier": "vehicles/specializations/FertilizingSowingMachine.lua",
+ "module": {
+  "en": "Vehicle specialization for seeders that also spread fertilizer during sowing. It requires the SowingMachine and Sprayer specializations and overrides the sowing work-area processing to sow and update the spray density map in one pass, update farm spray statistics and stop AI jobs on missing seed, fertilizer or wrong field type. Note: this file reads FertilizingSowingMachine.CLIENT_DM_UPDATE_RADIUS but does not define it anywhere in the dump (UNVERIFIED where it is set).",
+  "fr": "Spécialisation de véhicule pour les semoirs qui épandent aussi de l'engrais pendant le semis. Elle exige les spécialisations SowingMachine et Sprayer et surcharge le traitement de la zone de travail de semis pour semer et mettre à jour la carte de densité de pulvérisation en un seul passage, mettre à jour les statistiques de pulvérisation de la ferme et arrêter l'IA en cas de manque de semences ou d'engrais ou de mauvais type de champ. À noter : ce fichier lit FertilizingSowingMachine.CLIENT_DM_UPDATE_RADIUS sans le définir dans le dump (origine NON VÉRIFIÉE)."
+ },
+ "fonctions": {
+  "FertilizingSowingMachine.prerequisitesPresent": {
+   "en": "Returns true only if both the SowingMachine and Sprayer specializations are present.",
+   "fr": "Renvoie true seulement si les spécialisations SowingMachine et Sprayer sont toutes deux présentes."
+  },
+  "FertilizingSowingMachine.initSpecialization": {
+   "en": "Registers the XML key vehicle.fertilizingSowingMachine#needsSetIsTurnedOn (default false).",
+   "fr": "Enregistre la clé XML vehicle.fertilizingSowingMachine#needsSetIsTurnedOn (false par défaut)."
+  },
+  "FertilizingSowingMachine.registerOverwrittenFunctions": {
+   "en": "Overrides processSowingMachineArea, getUseSprayerAIRequirements and getAreEffectsVisible on the vehicle type.",
+   "fr": "Surcharge processSowingMachineArea, getUseSprayerAIRequirements et getAreEffectsVisible sur le type de véhicule."
+  },
+  "FertilizingSowingMachine.registerEventListeners": {
+   "en": "Subscribes the specialization to the onLoad vehicle event.",
+   "fr": "Abonne la spécialisation à l'événement de véhicule onLoad."
+  },
+  "FertilizingSowingMachine:onLoad": {
+   "en": "Reads needsSetIsTurnedOn, lets the sprayer run without being filled and without speed limit, and sets needWaterInfo to true on the vehicle.",
+   "fr": "Lit needsSetIsTurnedOn, permet au pulvérisateur de fonctionner sans être rempli et sans limite de vitesse, et met needWaterInfo à true sur le véhicule."
+  },
+  "FertilizingSowingMachine:processSowingMachineArea": {
+   "en": "Per work area: checks water/land seeding, seed availability, fertilizer source and required field type (stopping AI jobs with an error when needed), erases tire tracks, then sows (normal or direct) and sprays FERTILIZER on the density maps. Updates farm spray statistics. Returns changed and total area, or 0, 0 when nothing is done.",
+   "fr": "Par zone de travail : contrôle le semis en eau ou à sec, la disponibilité des semences, la source d'engrais et le type de champ requis (en arrêtant l'IA avec une erreur si besoin), efface les traces de pneus, puis sème (normal ou direct) et pulvérise du FERTILIZER sur les cartes de densité. Met à jour les statistiques de pulvérisation de la ferme. Renvoie la surface modifiée et totale, ou 0, 0 si rien n'est fait."
+  },
+  "FertilizingSowingMachine:getUseSprayerAIRequirements": {
+   "en": "Always returns false, so the sprayer's own AI requirements are not applied to this combined machine.",
+   "fr": "Renvoie toujours false : les exigences IA propres au pulvérisateur ne s'appliquent pas à cette machine combinée."
+  },
+  "FertilizingSowingMachine:getAreEffectsVisible": {
+   "en": "Effects are visible only if the parent says so and the sprayer fill unit currently holds a known fill type (not UNKNOWN).",
+   "fr": "Les effets sont visibles seulement si le parent le permet et si l'unité de remplissage du pulvérisateur contient un type connu (pas UNKNOWN)."
+  }
+ }
+}

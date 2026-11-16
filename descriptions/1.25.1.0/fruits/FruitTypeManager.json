@@ -1,0 +1,137 @@
+{
+ "fichier": "fruits/FruitTypeManager.lua",
+ "module": {
+  "en": "Manager (parent AbstractManager) that owns every fruit type, fruit type category and fruit-to-fill-type converter. It loads fruit types from the base maps_fruitTypes.xml and from the map XML, merges mod overrides, and exposes lookups by index, name and fill type, plus category and converter helpers. It also creates the global tables FruitType, FruitTypeCategory and FruitTypeConverter (name to index). Several methods it calls (addFruitType, loadMapFruitTypes, loadMapCategoriesAndConverters, loadCategoriesFromXML, loadConvertersFromXML, initializeFruitTypeConverters) are not defined in this dump (UNVERIFIED).",
+  "fr": "Gestionnaire (parent AbstractManager) qui possède tous les types de fruits, catégories de types de fruits et convertisseurs fruit vers type de remplissage. Il charge les types de fruits depuis maps_fruitTypes.xml de base et depuis le XML de la carte, fusionne les remplacements de mods, et expose des recherches par index, nom et type de remplissage, ainsi que des aides pour catégories et convertisseurs. Il crée aussi les tables globales FruitType, FruitTypeCategory et FruitTypeConverter (nom vers index). Plusieurs méthodes qu'il appelle (addFruitType, loadMapFruitTypes, loadMapCategoriesAndConverters, loadCategoriesFromXML, loadConvertersFromXML, initializeFruitTypeConverters) ne sont pas définies dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "FruitTypeManager.new": {
+   "en": "Constructor. Creates the manager through AbstractManager.new with this class's metatable.",
+   "fr": "Constructeur. Crée le gestionnaire via AbstractManager.new avec la métatable de cette classe."
+  },
+  "FruitTypeManager:initDataStructures": {
+   "en": "Resets all lookup tables (fruit types by index, name, fill type, density type, filename, converters, windrow data, categories) and sets the globals FruitType (with UNKNOWN = 0), FruitTypeCategory and FruitTypeConverter to the name-to-index tables.",
+   "fr": "Réinitialise toutes les tables de recherche (types de fruits par index, nom, type de remplissage, type de densité, fichier, convertisseurs, données d'andain, catégories) et définit les globales FruitType (avec UNKNOWN = 0), FruitTypeCategory et FruitTypeConverter sur les tables nom vers index."
+  },
+  "FruitTypeManager:loadDefaultTypes": {
+   "en": "Loads the base game fruit types, categories and converters from data/maps/maps_fruitTypes.xml, flagged as base types.",
+   "fr": "Charge les types de fruits, catégories et convertisseurs du jeu de base depuis data/maps/maps_fruitTypes.xml, marqués comme types de base."
+  },
+  "FruitTypeManager:loadMapData": {
+   "en": "Map load entry. Loads the map's fruit types first (stored as mod fruit types), then the default types, then the map's categories and converters, and finally initialises the converters. Returns true.",
+   "fr": "Point d'entrée du chargement de carte. Charge d'abord les types de fruits de la carte (stockés comme types de fruits de mod), puis les types par défaut, puis les catégories et convertisseurs de la carte, et enfin initialise les convertisseurs. Retourne true."
+  },
+  "FruitTypeManager:loadFruitTypes": {
+   "en": "Reads fruit type entries from an XML handle, each pointing to a foliage XML loaded into a FruitTypeDesc and added to the manager. A pending mod fruit type with the same name replaces the default. Remaining mod types are added, then categories and converters are read. Stops at the network limit.",
+   "fr": "Lit des entrées de types de fruits depuis un handle XML, chacune pointant vers un XML de feuillage chargé dans un FruitTypeDesc et ajouté au gestionnaire. Un type de fruit de mod en attente de même nom remplace celui par défaut. Les types de mod restants sont ajoutés, puis catégories et convertisseurs sont lus. S'arrête à la limite réseau."
+  },
+  "FruitTypeManager:getFruitTypeByIndex": {
+   "en": "Returns the fruit type object for an index, or nil.",
+   "fr": "Retourne l'objet type de fruit pour un index, ou nil."
+  },
+  "FruitTypeManager:getFruitTypeNameByIndex": {
+   "en": "Returns the upper-case name of a fruit type by index, \"UNKNOWN\" for index 0, or nil if the index is not known.",
+   "fr": "Retourne le nom en majuscules d'un type de fruit par index, \"UNKNOWN\" pour l'index 0, ou nil si l'index est inconnu."
+  },
+  "FruitTypeManager:getFruitTypeByName": {
+   "en": "Returns the fruit type for a name (case-insensitive), or nil if the name is nil or unknown.",
+   "fr": "Retourne le type de fruit pour un nom (insensible à la casse), ou nil si le nom est nil ou inconnu."
+  },
+  "FruitTypeManager:getFruitTypes": {
+   "en": "Returns the list of all fruit types. This is the internal table; do not modify it.",
+   "fr": "Retourne la liste de tous les types de fruits. C'est la table interne ; ne pas la modifier."
+  },
+  "FruitTypeManager:getFruitTypeIndexByFillTypeIndex": {
+   "en": "Returns the fruit type index linked to a fill type index, or nil if that fill type is not a fruit.",
+   "fr": "Retourne l'index du type de fruit lié à un index de type de remplissage, ou nil si ce type de remplissage n'est pas un fruit."
+  },
+  "FruitTypeManager:getFruitTypeByFillTypeIndex": {
+   "en": "Returns the fruit type object matching a fill type index, or nil.",
+   "fr": "Retourne l'objet type de fruit correspondant à un index de type de remplissage, ou nil."
+  },
+  "FruitTypeManager:getFillTypeIndexByFruitTypeIndex": {
+   "en": "Returns the fill type index of a fruit type, or nil if there is none.",
+   "fr": "Retourne l'index du type de remplissage d'un type de fruit, ou nil s'il n'y en a pas."
+  },
+  "FruitTypeManager:getFillTypeByFruitTypeIndex": {
+   "en": "Returns the fill type object of a fruit type index, or nil.",
+   "fr": "Retourne l'objet type de remplissage d'un index de type de fruit, ou nil."
+  },
+  "FruitTypeManager:getFillTypeNameByFruitTypeIndex": {
+   "en": "Returns the fill type name of a fruit type index, or nil. Note: the local variable is named fillTypeIndex but holds the fill type object.",
+   "fr": "Retourne le nom du type de remplissage d'un index de type de fruit, ou nil. À noter : la variable locale s'appelle fillTypeIndex mais contient l'objet type de remplissage."
+  },
+  "FruitTypeManager:getCutHeightByFruitTypeIndex": {
+   "en": "Returns the cut height in metres of a fruit type. With isForageCutter it prefers the forage cut height. Defaults to 0.15 when the fruit type is unknown.",
+   "fr": "Retourne la hauteur de coupe en mètres d'un type de fruit. Avec isForageCutter, privilégie la hauteur de coupe fourragère. Vaut 0,15 par défaut si le type de fruit est inconnu."
+  },
+  "FruitTypeManager:addFruitTypeCategory": {
+   "en": "Registers a fruit type category by name (validated, upper-cased) and returns its index. Returns nil with a warning for an invalid name, or for an existing name when isBaseType is true; otherwise an existing category index is reused.",
+   "fr": "Enregistre une catégorie de types de fruits par nom (validé, en majuscules) et retourne son index. Retourne nil avec un avertissement pour un nom invalide, ou pour un nom existant quand isBaseType vaut true ; sinon l'index de la catégorie existante est réutilisé."
+  },
+  "FruitTypeManager:addFruitTypeToCategory": {
+   "en": "Appends a fruit type index to a category. Returns true if both arguments are non-nil, else false. It does not check that the category exists or avoid duplicates.",
+   "fr": "Ajoute un index de type de fruit à une catégorie. Retourne true si les deux arguments sont non nil, sinon false. Ne vérifie pas que la catégorie existe et n'évite pas les doublons."
+  },
+  "FruitTypeManager:getFruitTypesByCategoryNames": {
+   "en": "Takes space-separated category names and returns the list of fruit types in them, without duplicates. Unknown categories optionally log the given warning format.",
+   "fr": "Prend des noms de catégories séparés par des espaces et retourne la liste des types de fruits qu'elles contiennent, sans doublons. Les catégories inconnues journalisent éventuellement le format d'avertissement fourni."
+  },
+  "FruitTypeManager:getFruitTypeIndicesByCategoryNames": {
+   "en": "Same as getFruitTypesByCategoryNames but returns fruit type indices instead of objects.",
+   "fr": "Comme getFruitTypesByCategoryNames mais retourne des index de types de fruits au lieu d'objets."
+  },
+  "FruitTypeManager:getFruitTypesByNames": {
+   "en": "Takes space-separated fruit type names and returns the matching fruit types, without duplicates. Unknown names optionally log the given warning format.",
+   "fr": "Prend des noms de types de fruits séparés par des espaces et retourne les types de fruits correspondants, sans doublons. Les noms inconnus journalisent éventuellement le format d'avertissement fourni."
+  },
+  "FruitTypeManager:getFruitTypeIndicesByNames": {
+   "en": "Same as getFruitTypesByNames but returns fruit type indices.",
+   "fr": "Comme getFruitTypesByNames mais retourne des index de types de fruits."
+  },
+  "FruitTypeManager:getFillTypesByFruitTypeNames": {
+   "en": "Takes space-separated fruit type names and returns their fill type objects, without duplicates. Names with no fruit type or fill type optionally log the warning format.",
+   "fr": "Prend des noms de types de fruits séparés par des espaces et retourne leurs objets types de remplissage, sans doublons. Les noms sans type de fruit ou de remplissage journalisent éventuellement le format d'avertissement."
+  },
+  "FruitTypeManager:getFillTypeIndicesByFruitTypeNames": {
+   "en": "Same as getFillTypesByFruitTypeNames but returns fill type indices.",
+   "fr": "Comme getFillTypesByFruitTypeNames mais retourne des index de types de remplissage."
+  },
+  "FruitTypeManager:getFillTypesByFruitTypeCategoryNames": {
+   "en": "Takes space-separated category names and returns the fill types of all fruit types in them, without duplicates. Unknown categories optionally log the warning format.",
+   "fr": "Prend des noms de catégories séparés par des espaces et retourne les types de remplissage de tous les types de fruits qu'elles contiennent, sans doublons. Les catégories inconnues journalisent éventuellement le format d'avertissement."
+  },
+  "FruitTypeManager:getFillTypeIndicesByFruitTypeCategoryName": {
+   "en": "Same as getFillTypesByFruitTypeCategoryNames but returns fill type indices. The name is singular although it accepts several category names.",
+   "fr": "Comme getFillTypesByFruitTypeCategoryNames mais retourne des index de types de remplissage. Le nom est au singulier bien qu'il accepte plusieurs noms de catégories."
+  },
+  "FruitTypeManager:isFillTypeWindrow": {
+   "en": "Returns true if the fill type index is registered as a windrow fill type; false for nil or unknown.",
+   "fr": "Retourne true si l'index de type de remplissage est enregistré comme type de remplissage d'andain ; false pour nil ou inconnu."
+  },
+  "FruitTypeManager:getWindrowFillTypeIndexByFruitTypeIndex": {
+   "en": "Returns the windrow fill type index of a fruit type, or nil if it has no windrow.",
+   "fr": "Retourne l'index du type de remplissage d'andain d'un type de fruit, ou nil s'il n'a pas d'andain."
+  },
+  "FruitTypeManager:getFillTypeLiterPerSqm": {
+   "en": "Returns the liters per square metre for a fill type: the windrow value if its fruit type has a windrow, else the harvest value. Returns defaultValue if the fill type has no fruit type.",
+   "fr": "Retourne les litres par mètre carré d'un type de remplissage : la valeur d'andain si son type de fruit a un andain, sinon la valeur de récolte. Retourne defaultValue si le type de remplissage n'a pas de type de fruit."
+  },
+  "FruitTypeManager:addFruitTypeConverter": {
+   "en": "Registers a converter by name (validated, upper-cased) and returns its index. Returns nil with a warning for an invalid name or, if isBaseType is true, an existing name; otherwise reuses the existing index.",
+   "fr": "Enregistre un convertisseur par nom (validé, en majuscules) et retourne son index. Retourne nil avec un avertissement pour un nom invalide ou, si isBaseType vaut true, un nom existant ; sinon réutilise l'index existant."
+  },
+  "FruitTypeManager:addFruitTypeConversion": {
+   "en": "Queues a fruit type to fill type conversion with a factor for a converter. It is stored as names and resolved later by initializeFruitTypeConverters (not in this dump).",
+   "fr": "Met en file une conversion type de fruit vers type de remplissage avec un facteur pour un convertisseur. Elle est stockée sous forme de noms et résolue plus tard par initializeFruitTypeConverters (absent de ce dump)."
+  },
+  "FruitTypeManager:getConverterDataByName": {
+   "en": "Returns the converter data table for a converter name (case-insensitive), or nil.",
+   "fr": "Retourne la table de données du convertisseur pour un nom de convertisseur (insensible à la casse), ou nil."
+  },
+  "FruitTypeManager:addModFoliageType": {
+   "en": "Records an extra foliage type (name, XML path, optional required map mod name) to load later. Only stores the request here; the loading code is not in this file.",
+   "fr": "Enregistre un type de feuillage supplémentaire (nom, chemin XML, nom optionnel du mod de carte requis) à charger plus tard. Ne fait que mémoriser la demande ici ; le code de chargement n'est pas dans ce fichier."
+  }
+ }
+}

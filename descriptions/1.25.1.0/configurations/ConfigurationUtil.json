@@ -1,0 +1,101 @@
+{
+ "fichier": "configurations/ConfigurationUtil.lua",
+ "module": {
+  "en": "Static helpers for configurations (selectable options) of store items such as vehicles and placeables. They track bought and active configurations on an object, save and load them in savegame XML, send them over the network, parse configuration and configuration-set definitions from store XML, and pick fallbacks when a saved id no longer exists. They rely on g_storeManager, a configuration manager and configuration item classes defined elsewhere. The constant ConfigurationUtil.SEND_NUM_BITS is used here but defined outside this file (UNVERIFIED).",
+  "fr": "Fonctions utilitaires statiques pour les configurations (options sélectionnables) des articles de boutique, comme les véhicules et placeables. Elles suivent les configurations achetées et actives d'un objet, les sauvegardent et les chargent en XML de sauvegarde, les envoient sur le réseau, analysent les définitions de configurations et d'ensembles de configurations du XML de boutique, et choisissent des solutions de repli quand un identifiant sauvegardé n'existe plus. Elles dépendent de g_storeManager, d'un gestionnaire de configurations et de classes d'items définis ailleurs. La constante ConfigurationUtil.SEND_NUM_BITS est utilisée ici mais définie hors de ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "ConfigurationUtil.addBoughtConfiguration": {
+   "en": "Marks configuration id `id` of type `name` as bought on the object, creating the sub-table if needed. Does nothing if the manager does not know that configuration name.",
+   "fr": "Marque l'id de configuration `id` du type `name` comme acheté sur l'objet, en créant la sous-table si besoin. Ne fait rien si le gestionnaire ne connaît pas ce nom de configuration."
+  },
+  "ConfigurationUtil.hasBoughtConfiguration": {
+   "en": "Returns true if the object has the given configuration id marked as bought for that configuration name, false otherwise.",
+   "fr": "Retourne true si l'objet a l'id de configuration donné marqué comme acheté pour ce nom de configuration, sinon false."
+  },
+  "ConfigurationUtil.setConfiguration": {
+   "en": "Stores the active configuration id for a configuration name on the object. No validation is done.",
+   "fr": "Enregistre sur l'objet l'id de configuration actif pour un nom de configuration. Aucune validation n'est faite."
+  },
+  "ConfigurationUtil.getColorByConfigId": {
+   "en": "Looks up the store item of the object and, if the chosen configuration is a VehicleConfigurationItemColor, returns its color; otherwise returns nil. Also returns nil when the id is nil.",
+   "fr": "Cherche l'article de boutique de l'objet et, si la configuration choisie est un VehicleConfigurationItemColor, retourne sa couleur ; sinon retourne nil. Retourne aussi nil si l'id est nil."
+  },
+  "ConfigurationUtil.getConfigItemByConfigId": {
+   "en": "Returns the configuration item object for a store XML file, configuration name and id, or nil when any of them is missing. Errors if the store item is not found, since it is indexed without a nil check.",
+   "fr": "Retourne l'objet item de configuration pour un fichier XML de boutique, un nom et un id de configuration, ou nil s'il en manque un. Provoque une erreur si l'article de boutique est introuvable, car il est indexé sans test de nil."
+  },
+  "ConfigurationUtil.raiseConfigurationItemEvent": {
+   "en": "For each of the object's sorted configuration names, calls the method named `eventName` on the currently selected configuration item, passing the object and the config id, when that method exists.",
+   "fr": "Pour chaque nom de configuration trié de l'objet, appelle la méthode nommée `eventName` sur l'item de configuration actuellement sélectionné, en passant l'objet et l'id de configuration, si cette méthode existe."
+  },
+  "ConfigurationUtil.getSaveIdByConfigId": {
+   "en": "Returns the saveId string of a configuration item identified by store XML file, name and numeric id, or nil if it cannot be found.",
+   "fr": "Retourne la chaîne saveId d'un item de configuration identifié par fichier XML de boutique, nom et id numérique, ou nil s'il est introuvable."
+  },
+  "ConfigurationUtil.saveConfigurationToXMLFile": {
+   "en": "Writes one configuration item to `key(xmlIndex)` through its saveToXMLFile, with its optional extra data, and returns the incremented index. Returns the index unchanged if the item does not exist.",
+   "fr": "Écrit un item de configuration à `key(xmlIndex)` via son saveToXMLFile, avec ses données supplémentaires éventuelles, et retourne l'indice incrémenté. Retourne l'indice inchangé si l'item n'existe pas."
+  },
+  "ConfigurationUtil.saveConfigurationsToXMLFile": {
+   "en": "Saves every bought configuration of an object to the savegame XML, flagging as active the one matching the current selection. Does nothing if the store item has no configurations.",
+   "fr": "Sauvegarde dans le XML de sauvegarde toutes les configurations achetées d'un objet, en marquant active celle qui correspond à la sélection actuelle. Ne fait rien si l'article de boutique n'a pas de configurations."
+  },
+  "ConfigurationUtil.loadConfigurationsFromXMLFile": {
+   "en": "Reads saved configurations by name and saveId. If a saveId is gone it tries the item class getFallbackConfigId, then the first selectable item. Returns the active configurations, bought configurations and per-item data tables.",
+   "fr": "Lit les configurations sauvegardées par nom et saveId. Si un saveId a disparu, essaie getFallbackConfigId de la classe d'item, puis le premier item sélectionnable. Retourne les tables des configurations actives, achetées et des données par item."
+  },
+  "ConfigurationUtil.readConfigurationsFromStream": {
+   "en": "Network read counterpart of writeConfigurationsToStream: rebuilds the configuration, bought and data tables from the stream, converting zero-based wire ids to one-based. Logs an error if an item is missing on the client.",
+   "fr": "Pendant en lecture réseau de writeConfigurationsToStream : reconstruit les tables de configurations, d'achats et de données depuis le flux, en convertissant les ids de transmission de base zéro en base un. Logue une erreur si un item manque côté client."
+  },
+  "ConfigurationUtil.writeConfigurationsToStream": {
+   "en": "Writes bought configurations to a network stream: type count, then per type its index, its ids, an active flag and, if the item has writeToStream, its extra data. Ids are sent zero-based.",
+   "fr": "Écrit les configurations achetées dans un flux réseau : nombre de types, puis pour chacun son indice, ses ids, un drapeau d'activité et, si l'item possède writeToStream, ses données supplémentaires. Les ids sont envoyés en base zéro."
+  },
+  "ConfigurationUtil.getConfigurationDataHasChanged": {
+   "en": "Compares two configuration data tables and returns true if one is nil and the other not, an entry is missing from the second, or an item's hasDataChanged reports a difference. Only entries of the first table are checked.",
+   "fr": "Compare deux tables de données de configuration et retourne true si une seule est nil, si une entrée manque dans la seconde, ou si hasDataChanged d'un item signale une différence. Seules les entrées de la première table sont parcourues."
+  },
+  "ConfigurationUtil.getConfigIdBySaveId": {
+   "en": "Converts a saveId to the configuration index. Falls back to the item class getFallbackConfigId, then the first selectable item, and finally returns 1 if nothing matches.",
+   "fr": "Convertit un saveId en indice de configuration. Se rabat sur getFallbackConfigId de la classe d'item, puis sur le premier item sélectionnable, et retourne finalement 1 si rien ne correspond."
+  },
+  "ConfigurationUtil.getConfigurationValue": {
+   "en": "Reads `key..subKey..param` from the XML, then the fallback config key, then the old-style key, and returns the first found value or the default. Prints a callstack if subKey is a table.",
+   "fr": "Lit `key..subKey..param` dans le XML, puis la clé de configuration de repli, puis l'ancienne clé, et retourne la première valeur trouvée ou la valeur par défaut. Affiche la pile d'appels si subKey est une table."
+  },
+  "ConfigurationUtil.getXMLConfigurationKey": {
+   "en": "Returns the XML key of the configuration entry for a one-based index (default 1) plus that index. Falls back to the `(0)` entry, then to defaultKey, and warns if an explicit index is not present.",
+   "fr": "Retourne la clé XML de l'entrée de configuration pour un indice base un (1 par défaut) ainsi que cet indice. Se rabat sur l'entrée `(0)`, puis sur defaultKey, et avertit si un indice explicite est absent."
+  },
+  "ConfigurationUtil.getConfigurationsFromXML": {
+   "en": "For every registered configuration type, loads its items from the store XML using the item class (preLoad, new, setIndex, loadFromXML, postLoad). Returns the item lists and default ids per type, or nil, nil if none exist.",
+   "fr": "Pour chaque type de configuration enregistré, charge ses items depuis le XML de boutique via la classe d'item (preLoad, new, setIndex, loadFromXML, postLoad). Retourne les listes d'items et les ids par défaut par type, ou nil, nil s'il n'y en a aucun."
+  },
+  "ConfigurationUtil.getConfigurationSetsFromXML": {
+   "en": "Parses the `configurationSets` block of a store XML into a list of sets with name, default flag, title override, yes/no option flag and a map of configuration name to index. Invalid names or indices produce XML warnings.",
+   "fr": "Analyse le bloc `configurationSets` d'un XML de boutique en une liste d'ensembles avec nom, drapeau par défaut, titre de remplacement, drapeau oui/non et table nom de configuration vers indice. Les noms ou indices invalides produisent des avertissements XML."
+  },
+  "ConfigurationUtil.getSubConfigurationsFromConfigurations": {
+   "en": "For configuration types with a sub-selection, builds the list of sub-values and a mapping from each value to its items, keeping only types with more than one sub-value. Returns nil if no configurations are given.",
+   "fr": "Pour les types de configuration avec sous-sélection, construit la liste des sous-valeurs et une correspondance de chaque valeur vers ses items, en ne gardant que les types ayant plus d'une sous-valeur. Retourne nil si aucune configuration n'est donnée."
+  },
+  "ConfigurationUtil.getDefaultConfigIdFromItems": {
+   "en": "Returns the index of the first item flagged as default and selectable, else the first selectable item, else 1.",
+   "fr": "Retourne l'indice du premier item marqué par défaut et sélectionnable, sinon le premier item sélectionnable, sinon 1."
+  },
+  "ConfigurationUtil.getConfigurationsMatchConfigSets": {
+   "en": "Returns true if the given configurations exactly match at least one of the configuration sets on every entry of that set.",
+   "fr": "Retourne true si les configurations données correspondent exactement, sur chacune de ses entrées, à au moins un des ensembles de configurations."
+  },
+  "ConfigurationUtil.getClosestConfigurationSet": {
+   "en": "Returns the configuration set with the most matching entries and that match count. Returns nil and 0 if no set has any match.",
+   "fr": "Retourne l'ensemble de configurations ayant le plus d'entrées correspondantes et ce nombre de correspondances. Retourne nil et 0 si aucun ensemble ne correspond."
+  },
+  "ConfigurationUtil.isColorMetallic": {
+   "en": "Returns true if the material id is one of 2, 3, 19, 30, 31 or 35, which the UI shows as metallic.",
+   "fr": "Retourne true si l'id de matériau est 2, 3, 19, 30, 31 ou 35, que l'interface affiche comme métallique."
+  }
+ }
+}

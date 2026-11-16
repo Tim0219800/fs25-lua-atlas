@@ -1,0 +1,69 @@
+{
+ "fichier": "vehicles/specializations/HookLiftContainer.lua",
+ "module": {
+  "en": "Vehicle specialization for containers carried by a hooklift trailer. It requires AnimatedVehicle and Attachable. It cooperates with HookLiftTrailer: it blocks discharge and detaching unless the trailer allows them, makes the trailer tilt when the container tips, forwards physics add/remove to the trailer, and toggles a lock visual and connection hoses. It defines visual roll reference nodes read by the trailer.",
+  "fr": "Spécialisation de véhicule pour les conteneurs portés par une remorque à bras de levage (hooklift). Elle requiert AnimatedVehicle et Attachable. Elle coopère avec HookLiftTrailer : elle bloque le déversement et le détachement tant que la remorque ne les autorise pas, fait basculer la remorque quand le conteneur bascule, transmet à la remorque l'ajout ou le retrait de la physique et pilote un visuel de verrou et les flexibles. Elle définit des nœuds de référence de rouleaux lus par la remorque."
+ },
+ "fonctions": {
+  "HookLiftContainer.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both AnimatedVehicle and Attachable.",
+   "fr": "Renvoie true seulement si le type de véhicule possède AnimatedVehicle et Attachable."
+  },
+  "HookLiftContainer.initSpecialization": {
+   "en": "Registers the XML keys: tiltContainerOnDischarge, the visualRollReference start and end nodes (bottom of the container) and the object changes of containerLock.",
+   "fr": "Enregistre les clés XML : tiltContainerOnDischarge, les nœuds de début et de fin visualRollReference (bas du conteneur) et les changements d'objets de containerLock."
+  },
+  "HookLiftContainer.registerFunctions": {
+   "en": "Registers onHookLiftContainerLockChanged as a vehicle function, called by the trailer.",
+   "fr": "Enregistre onHookLiftContainerLockChanged comme fonction de véhicule, appelée par la remorque."
+  },
+  "HookLiftContainer.registerOverwrittenFunctions": {
+   "en": "Overrides getCanDischargeToObject, getCanDischargeToGround, isDetachAllowed, addToPhysics, removeFromPhysics and getBrakeForce.",
+   "fr": "Surcharge getCanDischargeToObject, getCanDischargeToGround, isDetachAllowed, addToPhysics, removeFromPhysics et getBrakeForce."
+  },
+  "HookLiftContainer.registerEventListeners": {
+   "en": "Subscribes to onLoad, onStartTipping and onStopTipping.",
+   "fr": "Abonne à onLoad, onStartTipping et onStopTipping."
+  },
+  "HookLiftContainer:onLoad": {
+   "en": "Reads the tilt option, the visual reference nodes and the lock object changes (set to off), and switches connection hoses off if the vehicle has them.",
+   "fr": "Lit l'option de basculement, les nœuds de référence visuels et les changements d'objets du verrou (mis sur off), et désactive les flexibles de connexion si le véhicule en a."
+  },
+  "HookLiftContainer:getCanDischargeToObject": {
+   "en": "Returns false when the carrying trailer says tipping is not allowed (getIsTippingAllowed), otherwise defers to the parent check.",
+   "fr": "Renvoie false si la remorque porteuse indique que le basculement n'est pas autorisé (getIsTippingAllowed), sinon s'en remet au test parent."
+  },
+  "HookLiftContainer:getCanDischargeToGround": {
+   "en": "Same rule as for objects: ground discharge is refused while the carrying trailer does not allow tipping, otherwise the parent decides.",
+   "fr": "Même règle que pour les objets : le déversement au sol est refusé tant que la remorque porteuse n'autorise pas le basculement, sinon le parent décide."
+  },
+  "HookLiftContainer:isDetachAllowed": {
+   "en": "Returns false (with nil as second value) unless the trailer reports it can detach the container, otherwise defers to the parent.",
+   "fr": "Renvoie false (avec nil en seconde valeur) sauf si la remorque indique pouvoir détacher le conteneur, sinon s'en remet au parent."
+  },
+  "HookLiftContainer:onStartTipping": {
+   "en": "If tiltContainerOnDischarge is enabled, asks the carrying trailer to start its tipping animation.",
+   "fr": "Si tiltContainerOnDischarge est activé, demande à la remorque porteuse de lancer son animation de basculement."
+  },
+  "HookLiftContainer:onStopTipping": {
+   "en": "If tiltContainerOnDischarge is enabled, asks the carrying trailer to play its tipping animation back.",
+   "fr": "Si tiltContainerOnDischarge est activé, demande à la remorque porteuse de rejouer son animation de basculement en sens inverse."
+  },
+  "HookLiftContainer:onHookLiftContainerLockChanged": {
+   "en": "Called by the trailer when the lock state changes: switches the container's connection hoses (if attached) and applies the containerLock object changes. Assumes an attacher vehicle exists.",
+   "fr": "Appelée par la remorque quand l'état du verrou change : active ou désactive les flexibles de connexion du conteneur (s'il est attelé) et applique les changements d'objets de containerLock. Suppose qu'un véhicule porteur existe."
+  },
+  "HookLiftContainer:addToPhysics": {
+   "en": "After the parent adds the container to physics, notifies the carrying trailer (setHookLiftContainerPhysicsState true). Returns false if the parent failed.",
+   "fr": "Après l'ajout du conteneur à la physique par le parent, prévient la remorque porteuse (setHookLiftContainerPhysicsState true). Renvoie false si le parent a échoué."
+  },
+  "HookLiftContainer:removeFromPhysics": {
+   "en": "Notifies the carrying trailer first (physics state false), then lets the parent remove the container. Returns false if the parent failed.",
+   "fr": "Prévient d'abord la remorque porteuse (état physique false), puis laisse le parent retirer le conteneur. Renvoie false si le parent a échoué."
+  },
+  "HookLiftContainer:getBrakeForce": {
+   "en": "Returns 0 while the container is attached to a vehicle (no own braking), otherwise the parent value.",
+   "fr": "Renvoie 0 tant que le conteneur est attelé à un véhicule (pas de freinage propre), sinon la valeur du parent."
+  }
+ }
+}

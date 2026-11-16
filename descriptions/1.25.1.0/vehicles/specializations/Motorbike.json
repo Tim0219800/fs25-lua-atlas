@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/Motorbike.lua",
+ "module": {
+  "en": "Specialization for motorbikes. It requires AnimatedVehicle and Motorized. It tilts a node in corners, plays a foot animation at low speed and a backward-walking animation in reverse, and reduces the steering range at higher speeds; on leaving, a fallen bike is stood up again on the server.",
+  "fr": "Spécialisation des motos. Elle exige AnimatedVehicle et Motorized. Elle incline un nœud dans les virages, joue une animation de pieds à basse vitesse et une animation de marche arrière, et réduit la plage de braquage à haute vitesse ; à la descente, une moto couchée est remise debout côté serveur."
+ },
+ "fonctions": {
+  "Motorbike.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both AnimatedVehicle and Motorized.",
+   "fr": "Retourne true seulement si le type de véhicule possède AnimatedVehicle et Motorized."
+  },
+  "Motorbike.initSpecialization": {
+   "en": "Registers the XML paths under vehicle.motorbike: tilt (node, maxTilt, idleTilt, backwardTilt, tiltSpeed), foot and backward animations, and steering high-speed scale and threshold.",
+   "fr": "Enregistre les chemins XML sous vehicle.motorbike : inclinaison (node, maxTilt, idleTilt, backwardTilt, tiltSpeed), animations de pieds et de marche arrière, échelle et seuil de braquage à haute vitesse."
+  },
+  "Motorbike.registerFunctions": {
+   "en": "Empty: registers no new vehicle functions.",
+   "fr": "Vide : n'enregistre aucune nouvelle fonction de véhicule."
+  },
+  "Motorbike.registerOverwrittenFunctions": {
+   "en": "Empty: overrides no vehicle functions.",
+   "fr": "Vide : ne surcharge aucune fonction de véhicule."
+  },
+  "Motorbike.registerEventListeners": {
+   "en": "Subscribes to load, post-load, update and leave-vehicle events.",
+   "fr": "S'abonne aux événements de chargement, post-chargement, mise à jour et sortie du véhicule."
+  },
+  "Motorbike:onLoad": {
+   "en": "Reads the XML tilt, animation and steering settings, converts tiltSpeed to per millisecond, applies the idle tilt to the node and stores the motor's maximum backward speed. Note: the tilt node is used without a nil check.",
+   "fr": "Lit les réglages XML d'inclinaison, d'animation et de braquage, convertit tiltSpeed par milliseconde, applique l'inclinaison au repos au nœud et mémorise la vitesse maximale en marche arrière du moteur. À noter : le nœud d'inclinaison est utilisé sans test nil."
+  },
+  "Motorbike:onPostLoad": {
+   "en": "Stores the vehicle's original steering limits (minRotTime, maxRotTime, wheelSteeringDuration) as the reference for later speed scaling.",
+   "fr": "Mémorise les limites de braquage d'origine du véhicule (minRotTime, maxRotTime, wheelSteeringDuration) comme référence pour la mise à l'échelle selon la vitesse."
+  },
+  "Motorbike:onUpdate": {
+   "en": "Each frame it moves the tilt node toward a target based on speed and steering (idle or backward values when slow or reversing), toggles the foot and backward animations, and scales the steering limits down as speed rises.",
+   "fr": "À chaque image, déplace le nœud d'inclinaison vers une cible selon la vitesse et le braquage (valeurs de repos ou de marche arrière si lent ou en recul), bascule les animations de pieds et de marche arrière, et réduit les limites de braquage quand la vitesse augmente."
+  },
+  "Motorbike:onLeaveVehicle": {
+   "en": "Server only: if the bike's up axis points mostly sideways or down (Y below 0.5), it is removed from physics and repositioned at the same spot with only its heading kept, so it stands upright again.",
+   "fr": "Serveur uniquement : si l'axe vertical de la moto pointe surtout de côté ou vers le bas (Y inférieur à 0,5), elle est retirée de la physique puis replacée au même endroit en ne gardant que son cap, donc remise debout."
+  }
+ }
+}

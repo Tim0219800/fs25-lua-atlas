@@ -1,0 +1,13 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/maps/ValueMap.lua",
+ "module": {
+  "en": "Base class of the Precision Farming value maps (soil, nitrogen, pH, yield, cover, tramline and so on). Only a static coordinate helper survives in this dump; the class body is not included.",
+  "fr": "Classe de base des cartes de valeurs de Precision Farming (sol, azote, pH, rendement, couverture, passages de roues, etc.). Seul un utilitaire statique de coordonnées subsiste dans ce dump ; le corps de la classe n'est pas inclus."
+ },
+ "fonctions": {
+  "ValueMap.roundToPixelCenter": {
+   "en": "Snaps a world x/z position to the centre of the map pixel containing it, given the terrain size and the map resolution. Returns the adjusted world x and z coordinates.",
+   "fr": "Aligne une position monde x/z sur le centre du pixel de carte qui la contient, d'après la taille du terrain et la résolution de la carte. Renvoie les coordonnées monde x et z ajustées."
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "fichier": "utils/SplineUtil.lua",
+ "module": {
+  "en": "Static helpers for spline nodes: time clamping, nearest-point searches, slope, center, conversion of a cubic spline to a linear polyline on XZ, and closest edit point queries. The dump has signatures with annotations but no bodies, so behaviour comes from the annotations and is UNVERIFIED.",
+  "fr": "Utilitaires statiques pour les noeuds de spline : bornage du temps, recherches du point le plus proche, pente, centre, conversion d'une spline cubique en polyligne linéaire sur XZ et requêtes sur le point d'édition le plus proche. Le dump contient des signatures annotées sans corps ; le comportement vient des annotations et est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "SplineUtil.getValidSplineTime": {
+   "en": "Signature only (no body in the SDK dump): Turns an input into a valid spline time in the 0 to 1 range; whether it clamps or wraps is not shown.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Ramène une entrée à un temps de spline valide entre 0 et 1 ; le fait qu'il borne ou boucle n'est pas visible."
+  },
+  "SplineUtil.getSplineTimeAtWorldPos": {
+   "en": "Signature only (no body in the SDK dump): Searches for the spline time nearest a world position (x and z only), starting at time t and stepping by a check distance up to a maximum step count. Returns the time and the steps used.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Cherche le temps de spline le plus proche d'une position monde (x et z seulement), depuis le temps t, par pas d'une distance de contrôle jusqu'à un nombre maximal de pas. Renvoie le temps et le nombre de pas utilisés."
+  },
+  "SplineUtil.getSlopeAngle": {
+   "en": "Signature only (no body in the SDK dump): Returns the slope angle in radians of the spline at a given time.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie l'angle de pente en radians de la spline à un temps donné."
+  },
+  "SplineUtil.getCenterPosition": {
+   "en": "Signature only (no body in the SDK dump): Returns the x, y, z center position of a spline node; how the center is computed is not shown.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie la position centrale x, y, z d'un noeud de spline ; le mode de calcul du centre n'est pas visible."
+  },
+  "SplineUtil.convertToLinearSplineXZ": {
+   "en": "Signature only (no body in the SDK dump): Converts a cubic spline into an array of positions approximating it linearly on XZ, with an optional angle threshold (default 5 degrees) and step size (default 0.5 m).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit une spline cubique en tableau de positions l'approchant linéairement sur XZ, avec un seuil d'angle optionnel (5 degrés par défaut) et un pas optionnel (0,5 m par défaut)."
+  },
+  "SplineUtil.getClosestEditPoint": {
+   "en": "Signature only (no body in the SDK dump): Finds the edit point nearest in 3D to a world position by exact search over all edit points. Returns a 0-based index, distance and position, or nil if the node is invalid.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Trouve le point d'édition le plus proche en 3D d'une position monde par recherche exacte parmi tous les points d'édition. Renvoie un index à partir de 0, la distance et la position, ou nil si le noeud est invalide."
+  },
+  "SplineUtil.getClosestEditPointsOnCurve": {
+   "en": "Signature only (no body in the SDK dump): Projects a world position onto the curve and returns the closest curve point, its spline time and the 0-based indices of the edit points before and after it (nil outside the ends). An optional error tolerance can be given.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Projette une position monde sur la courbe et renvoie le point de courbe le plus proche, son temps de spline et les index (à partir de 0) des points d'édition avant et après lui (nil hors des extrémités). Une tolérance d'erreur optionnelle peut être donnée."
+  }
+ }
+}

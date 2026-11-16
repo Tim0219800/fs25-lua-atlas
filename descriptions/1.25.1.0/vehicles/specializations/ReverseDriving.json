@@ -1,0 +1,133 @@
+{
+ "fichier": "vehicles/specializations/ReverseDriving.lua",
+ "module": {
+  "en": "Vehicle specialization for tractors with a reversible driver seat (reverse driving). Requires Drivable, Enterable and AnimatedVehicle. A named animation (default reverseDriving) turns the cab, the steering wheel and character IK targets are swapped, the reverser direction and light direction follow, and the AI uses a dedicated steering node. The state is saved (isActive), sent to joining clients in the stream and synchronised by ReverseDrivingSetStateEvent. Raises onStartReverseDirectionChange and onReverseDirectionChanged.",
+  "fr": "Spécialisation de véhicule pour les tracteurs à poste de conduite réversible (conduite inversée). Exige Drivable, Enterable et AnimatedVehicle. Une animation nommée (par défaut reverseDriving) retourne la cabine, le volant et les cibles IK du personnage sont échangés, la direction du réversible et celle des feux suivent, et l'IA utilise un nœud de direction dédié. L'état est sauvegardé (isActive), envoyé aux clients qui rejoignent via le flux et synchronisé par ReverseDrivingSetStateEvent. Déclenche onStartReverseDirectionChange et onReverseDirectionChanged."
+ },
+ "fonctions": {
+  "ReverseDriving.prerequisitesPresent": {
+   "en": "Returns true only if Drivable, Enterable and AnimatedVehicle are all present on the vehicle type.",
+   "fr": "Retourne true seulement si Drivable, Enterable et AnimatedVehicle sont toutes présentes sur le type de véhicule."
+  },
+  "ReverseDriving.initSpecialization": {
+   "en": "Registers XML schema entries under vehicle.reverseDriving (IK targets, steering wheel, animation name, character hiding, inverse transmission, initial state, disabling attacher joints, AI nodes), a dashboard group flag, per-light enableDirection, and the savegame isActive key.",
+   "fr": "Enregistre les entrées du schéma XML sous vehicle.reverseDriving (cibles IK, volant, nom d'animation, masquage du personnage, transmission inversée, état initial, attaches bloquantes, nœuds IA), un indicateur de groupe de dashboard, enableDirection par feu, et la clé de sauvegarde isActive."
+  },
+  "ReverseDriving.postInitSpecialization": {
+   "en": "For every vehicle configuration type, registers the optional reverseDriving#isAllowed boolean (default true) so a configuration can forbid reverse driving.",
+   "fr": "Pour chaque type de configuration de véhicule, enregistre le booléen optionnel reverseDriving#isAllowed (true par défaut) permettant à une configuration d'interdire la conduite inversée."
+  },
+  "ReverseDriving.registerEvents": {
+   "en": "Declares the events onStartReverseDirectionChange and onReverseDirectionChanged on the vehicle type.",
+   "fr": "Déclare les événements onStartReverseDirectionChange et onReverseDirectionChanged sur le type de véhicule."
+  },
+  "ReverseDriving.registerFunctions": {
+   "en": "Registers reverseDirectionChanged, setIsReverseDriving and getIsReverseDrivingAllowed on the vehicle type.",
+   "fr": "Enregistre reverseDirectionChanged, setIsReverseDriving et getIsReverseDrivingAllowed sur le type de véhicule."
+  },
+  "ReverseDriving.registerOverwrittenFunctions": {
+   "en": "Overrides steering wheel and direction, character visibility, AI start and AI node getters, dashboard group loading and activity, selection, additional light attributes and light activity.",
+   "fr": "Surcharge le volant et la direction, la visibilité du personnage, le démarrage de l'IA et ses getters de nœuds, le chargement et l'activité des groupes de dashboard, la sélection, les attributs de feux additionnels et l'activité des feux."
+  },
+  "ReverseDriving.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onReadStream, onWriteStream, onUpdate, onVehicleCharacterChanged and onRegisterActionEvents.",
+   "fr": "S'abonne à onLoad, onPostLoad, onReadStream, onWriteStream, onUpdate, onVehicleCharacterChanged et onRegisterActionEvents."
+  },
+  "ReverseDriving:onLoad": {
+   "en": "Reads XML settings (reversed IK targets, steering wheel, animation name, options, AI steering node and collision trigger) and applies configuration restrictions. hasReverseDriving is true only if the animation exists and no configuration forbids it; otherwise most listeners are removed.",
+   "fr": "Lit les réglages XML (cibles IK inversées, volant, nom d'animation, options, nœud de direction IA et déclencheur de collision) et applique les restrictions de configuration. hasReverseDriving n'est vrai que si l'animation existe et qu'aucune configuration ne l'interdit ; sinon la plupart des écouteurs sont retirés."
+  },
+  "ReverseDriving:onPostLoad": {
+   "en": "Caches the default character IK targets, restores the saved isActive state (or the initial one) and applies it with setIsReverseDriving without sending an event and with a forced update.",
+   "fr": "Mémorise les cibles IK par défaut du personnage, restaure l'état isActive sauvegardé (ou l'état initial) et l'applique via setIsReverseDriving sans envoi d'événement et avec mise à jour forcée."
+  },
+  "ReverseDriving:saveToXMLFile": {
+   "en": "Writes the reverse driving state to the savegame, only if the vehicle supports reverse driving.",
+   "fr": "Écrit l'état de conduite inversée dans la sauvegarde, seulement si le véhicule la supporte."
+  },
+  "ReverseDriving:onReadStream": {
+   "en": "Client side on join: reads a bool from the stream and applies it as the reverse driving state without sending an event.",
+   "fr": "Côté client à la connexion : lit un booléen du flux et l'applique comme état de conduite inversée sans envoyer d'événement."
+  },
+  "ReverseDriving:onWriteStream": {
+   "en": "Server side on join: writes the current reverse driving state as a bool.",
+   "fr": "Côté serveur à la connexion : écrit l'état courant de conduite inversée sous forme de booléen."
+  },
+  "ReverseDriving:onUpdate": {
+   "en": "While the direction is changing: hides the character if configured, fast-forwards the animation for a vehicle nobody sits in, calls reverseDirectionChanged when the animation ends, and moves smoothReverserDirection toward the target.",
+   "fr": "Pendant le changement de sens : masque le personnage si configuré, avance l'animation d'un coup pour un véhicule inoccupé, appelle reverseDirectionChanged à la fin de l'animation et fait évoluer smoothReverserDirection vers sa cible."
+  },
+  "ReverseDriving:reverseDirectionChanged": {
+   "en": "Ends the change: sets the reverser direction (-1 reversed, 1 normal), restores the proper IK targets and character visibility, refreshes the light mask and raises onReverseDirectionChanged with the given direction.",
+   "fr": "Termine le changement : fixe la direction du réversible (-1 inversé, 1 normal), restaure les bonnes cibles IK et la visibilité du personnage, rafraîchit le masque de feux et déclenche onReverseDirectionChanged avec la direction donnée."
+  },
+  "ReverseDriving:setIsReverseDriving": {
+   "en": "Switches reverse driving: plays the animation forward or backward, freezes character IK updates, optionally inverts the transmission direction, zeroes the reverser, raises onStartReverseDirectionChange, sends ReverseDrivingSetStateEvent unless noEventSend, and marks the AI root node dirty. Runs also when forceUpdate is set, completing the animation instantly.",
+   "fr": "Bascule la conduite inversée : joue l'animation dans un sens ou l'autre, gèle les mises à jour IK du personnage, inverse éventuellement la transmission, met le réversible à zéro, déclenche onStartReverseDirectionChange, envoie ReverseDrivingSetStateEvent sauf noEventSend et marque le nœud racine IA comme à recalculer. S'exécute aussi avec forceUpdate, qui termine l'animation instantanément."
+  },
+  "ReverseDriving:getIsReverseDrivingAllowed": {
+   "en": "Returns false when asked to enable reverse driving while an implement is attached on one of the disabling attacher joints; true otherwise.",
+   "fr": "Retourne false si l'on demande d'activer la conduite inversée alors qu'un outil est attaché sur l'une des attaches bloquantes ; true sinon."
+  },
+  "ReverseDriving:updateSteeringWheel": {
+   "en": "Overridden: when reversed, uses the dedicated reverse steering wheel (if defined) and negates the steering direction before calling the parent.",
+   "fr": "Surchargée : en conduite inversée, utilise le volant dédié (s'il existe) et inverse la direction de braquage avant d'appeler le parent."
+  },
+  "ReverseDriving:getSteeringDirection": {
+   "en": "Overridden: returns the smoothed reverser direction when reverse driving is supported, else the parent value.",
+   "fr": "Surchargée : retourne la direction lissée du réversible si la conduite inversée est supportée, sinon la valeur du parent."
+  },
+  "ReverseDriving:getAllowCharacterVisibilityUpdate": {
+   "en": "Overridden: the parent result, but false while the direction is changing if the character is configured to be hidden during the change.",
+   "fr": "Surchargée : résultat du parent, mais false pendant le changement de sens si le personnage doit être masqué pendant ce changement."
+  },
+  "ReverseDriving:getCanStartAIVehicle": {
+   "en": "Overridden: if the vehicle has no AI steering node but supports reverse driving, the AI cannot start while reversed or while changing direction. Otherwise defers to the parent.",
+   "fr": "Surchargée : si le véhicule n'a pas de nœud de direction IA mais supporte la conduite inversée, l'IA ne peut pas démarrer en mode inversé ou pendant un changement de sens. Sinon, délègue au parent."
+  },
+  "ReverseDriving:loadDashboardGroupFromXML": {
+   "en": "Overridden: after the parent loads a dashboard group, also reads its isReverseDriving condition. Returns false if the parent fails.",
+   "fr": "Surchargée : après le chargement du groupe de dashboard par le parent, lit aussi sa condition isReverseDriving. Retourne false si le parent échoue."
+  },
+  "ReverseDriving:getIsDashboardGroupActive": {
+   "en": "Overridden: a group with an isReverseDriving condition is inactive when it does not match the current state; otherwise the parent decides.",
+   "fr": "Surchargée : un groupe ayant une condition isReverseDriving est inactif si elle ne correspond pas à l'état courant ; sinon le parent décide."
+  },
+  "ReverseDriving:getCanBeSelected": {
+   "en": "Overridden to always return true.",
+   "fr": "Surchargée pour toujours retourner true."
+  },
+  "ReverseDriving:loadAdditionalLightAttributesFromXML": {
+   "en": "Overridden: after the parent, reads the optional enableDirection attribute of a light. Returns false if the parent fails.",
+   "fr": "Surchargée : après le parent, lit l'attribut optionnel enableDirection d'un feu. Retourne false si le parent échoue."
+  },
+  "ReverseDriving:getIsLightActive": {
+   "en": "Overridden: a light with enableDirection is inactive unless it equals the current reverser direction; otherwise the parent decides.",
+   "fr": "Surchargée : un feu ayant enableDirection est inactif sauf s'il correspond à la direction courante du réversible ; sinon le parent décide."
+  },
+  "ReverseDriving:getAIDirectionNode": {
+   "en": "Overridden: while reversed returns the AI steering node if defined, else the parent node.",
+   "fr": "Surchargée : en mode inversé, retourne le nœud de direction IA s'il est défini, sinon celui du parent."
+  },
+  "ReverseDriving:getAIRootNode": {
+   "en": "Overridden: while reversed returns the AI steering node if defined, else the parent node.",
+   "fr": "Surchargée : en mode inversé, retourne le nœud de direction IA s'il est défini, sinon celui du parent."
+  },
+  "ReverseDriving:getAIImplementCollisionTrigger": {
+   "en": "Overridden: while reversed returns the reverse AI collision trigger if one was loaded, else the parent trigger.",
+   "fr": "Surchargée : en mode inversé, retourne le déclencheur de collision IA inversé s'il a été chargé, sinon celui du parent."
+  },
+  "ReverseDriving:onVehicleCharacterChanged": {
+   "en": "When a character is set, finishes any pending animation update and assigns the reversed or default IK targets to it.",
+   "fr": "Quand un personnage est défini, termine toute mise à jour d'animation en attente et lui attribue les cibles IK inversées ou par défaut."
+  },
+  "ReverseDriving:onRegisterActionEvents": {
+   "en": "On clients, registers the CHANGE_DRIVING_DIRECTION action (powered action event) when active for input, with its label.",
+   "fr": "Côté client, enregistre l'action CHANGE_DRIVING_DIRECTION (action nécessitant le moteur) quand actif pour l'entrée, avec son libellé."
+  },
+  "ReverseDriving.actionEventToggleReverseDriving": {
+   "en": "Input callback: toggles reverse driving if getIsReverseDrivingAllowed accepts the new state.",
+   "fr": "Callback d'entrée : bascule la conduite inversée si getIsReverseDrivingAllowed accepte le nouvel état."
+  }
+ }
+}

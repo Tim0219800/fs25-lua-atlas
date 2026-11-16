@@ -1,0 +1,33 @@
+{
+ "fichier": "placeables/specializations/PlaceableWeatherStation.lua",
+ "module": {
+  "en": "Placeable specialization for a weather station building. When finalized it registers itself with the placeable system (`addWeatherStation`) and removes itself on delete; on clients it plays an optional idle sound under `placeable.weatherStation.sounds`. What the placeable system does with the registered stations is UNVERIFIED here.",
+  "fr": "Spécialisation de placeable pour une station météo. À la finalisation elle s'enregistre auprès du système de placeables (`addWeatherStation`) et s'en retire à la suppression ; côté client elle joue un son d'ambiance optionnel sous `placeable.weatherStation.sounds`. L'usage des stations enregistrées par le système de placeables n'est pas visible ici (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlaceableWeatherStation.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableWeatherStation.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete and onFinalizePlacement.",
+   "fr": "S'abonne à onLoad, onDelete et onFinalizePlacement."
+  },
+  "PlaceableWeatherStation.registerXMLPaths": {
+   "en": "Declares the sound XML paths of the sample named `idle` under `.weatherStation.sounds`.",
+   "fr": "Déclare les chemins XML du son nommé `idle` sous `.weatherStation.sounds`."
+  },
+  "PlaceableWeatherStation:onLoad": {
+   "en": "Client only: loads the `idle` sound sample from the XML in the environment audio group.",
+   "fr": "Client seulement : charge l'échantillon sonore `idle` depuis le XML dans le groupe audio d'environnement."
+  },
+  "PlaceableWeatherStation:onDelete": {
+   "en": "Removes this weather station from the placeable system and, on clients, deletes the sound sample.",
+   "fr": "Retire cette station météo du système de placeables et, côté client, supprime l'échantillon sonore."
+  },
+  "PlaceableWeatherStation:onFinalizePlacement": {
+   "en": "Adds this weather station to the placeable system and, on clients, starts the idle sound if loaded.",
+   "fr": "Ajoute cette station météo au système de placeables et, côté client, lance le son d'ambiance s'il est chargé."
+  }
+ }
+}

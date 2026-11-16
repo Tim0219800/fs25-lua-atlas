@@ -1,0 +1,201 @@
+{
+ "fichier": "vehicles/specializations/EnterablePassenger.lua",
+ "module": {
+  "en": "Vehicle specialization that adds passenger seats to an Enterable vehicle. Seats, cameras, exit points and optional characters are configured under vehicle.enterable.passengerSeats or a passenger configuration; the seats are active in multiplayer (or in singleplayer if allowInSingleplayer is set). It overrides interaction, enter and exit logic, optionally lets a passenger control the vehicle, and relies on events such as EnterablePassengerLeaveEvent, defined elsewhere (UNVERIFIED). The file starts without its own class declaration, so the EnterablePassenger table comes from elsewhere.",
+  "fr": "Spécialisation de véhicule qui ajoute des sièges passager à un véhicule Enterable. Sièges, caméras, points de sortie et personnages optionnels sont configurés sous vehicle.enterable.passengerSeats ou dans une configuration passager ; les sièges sont actifs en multijoueur (ou en solo si allowInSingleplayer est activé). Elle surcharge l'interaction, l'entrée et la sortie, permet éventuellement au passager de piloter le véhicule, et s'appuie sur des événements comme EnterablePassengerLeaveEvent, définis ailleurs (NON VÉRIFIÉ). Le fichier ne déclare pas lui-même la classe : la table EnterablePassenger vient d'ailleurs."
+ },
+ "fonctions": {
+  "EnterablePassenger.prerequisitesPresent": {
+   "en": "Returns true only if the Enterable specialization is present.",
+   "fr": "Renvoie true seulement si la spécialisation Enterable est présente."
+  },
+  "EnterablePassenger.initSpecialization": {
+   "en": "Registers the ENTERABLE_PASSENGER interaction flag and an 'enterablePassenger' shop configuration type, then registers the XML paths for the default seats and for each passenger configuration.",
+   "fr": "Enregistre le drapeau d'interaction ENTERABLE_PASSENGER et un type de configuration boutique « enterablePassenger », puis enregistre les chemins XML des sièges par défaut et de chaque configuration passager."
+  },
+  "EnterablePassenger.registerXMLPaths": {
+   "en": "Registers under a base path the XML keys allowInSingleplayer, allowPassengerOnly, allowVehicleControl and, per seat, node, exitPoint, outdoorCameraIndex, nicknameOffset, cameras and character node.",
+   "fr": "Enregistre sous un chemin de base les clés XML allowInSingleplayer, allowPassengerOnly, allowVehicleControl et, par siège, node, exitPoint, outdoorCameraIndex, nicknameOffset, caméras et nœud de personnage."
+  },
+  "EnterablePassenger.registerFunctions": {
+   "en": "Registers the vehicle-level functions for seat lookup, entering and leaving seats, camera handling and passenger character management.",
+   "fr": "Enregistre les fonctions de niveau véhicule pour la recherche de siège, l'entrée et la sortie, la gestion des caméras et celle des personnages passagers."
+  },
+  "EnterablePassenger.registerOverwrittenFunctions": {
+   "en": "Overrides getInteractionHelp, interact, getDistanceToNode, getIsEnterable, getExitNode, getIsInUse, getDeactivateOnLeave, getIsInteractive, getIsEnteredForInput and getRequiresPower. Note: getIsInteractive is registered but no matching function is defined in this file (UNVERIFIED).",
+   "fr": "Surcharge getInteractionHelp, interact, getDistanceToNode, getIsEnterable, getExitNode, getIsInUse, getDeactivateOnLeave, getIsInteractive, getIsEnteredForInput et getRequiresPower. À noter : getIsInteractive est enregistrée mais aucune fonction correspondante n'est définie dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "EnterablePassenger.registerEventListeners": {
+   "en": "Subscribes to load/delete, stream, post-update, UI info draw, broken state, enter/leave vehicle and action-event registration events.",
+   "fr": "S'abonne aux événements de chargement/suppression, de flux, de post-mise à jour, d'affichage d'infos UI, d'état en panne, d'entrée/sortie du véhicule et d'enregistrement des événements d'action."
+  },
+  "EnterablePassenger:onLoad": {
+   "en": "Loads the seat settings from the base path or the selected passenger configuration: nodes, exit points, cameras (including an optional existing outdoor camera), characters and nickname offset. Sets 'available' (needs seats and multiplayer or allowInSingleplayer), builds UI texts and subscribes to player style changes.",
+   "fr": "Charge les réglages des sièges depuis le chemin de base ou la configuration passager choisie : nœuds, points de sortie, caméras (dont une caméra extérieure existante optionnelle), personnages et décalage du pseudo. Définit « available » (sièges requis et multijoueur ou allowInSingleplayer), construit les textes d'interface et s'abonne aux changements de style du joueur."
+  },
+  "EnterablePassenger:onDelete": {
+   "en": "Makes the local player leave if seated as passenger, evicts other seated players, and deletes passenger cameras and characters.",
+   "fr": "Fait quitter le joueur local s'il est passager, évince les autres joueurs assis et supprime les caméras et personnages passagers."
+  },
+  "EnterablePassenger:onReadStream": {
+   "en": "Client on join: for each seat, reads whether it is used and by which user, and tells that player it entered the vehicle as passenger.",
+   "fr": "Client à la connexion : pour chaque siège, lit s'il est occupé et par quel utilisateur, et signale à ce joueur qu'il est entré comme passager."
+  },
+  "EnterablePassenger:onWriteStream": {
+   "en": "Server on join: for each seat, writes whether it is used and, if so, the user id.",
+   "fr": "Serveur à la connexion : pour chaque siège, écrit s'il est occupé et, le cas échéant, l'identifiant d'utilisateur."
+  },
+  "EnterablePassenger:onPostUpdate": {
+   "en": "Client only, when seats are available: updates the active camera, the action events and the seat characters, and keeps the vehicle active while the local player is a passenger.",
+   "fr": "Client uniquement, quand les sièges sont disponibles : met à jour la caméra active, les événements d'action et les personnages des sièges, et garde le véhicule actif tant que le joueur local est passager."
+  },
+  "EnterablePassenger:onDrawUIInfo": {
+   "en": "Client: draws the nickname of each seated player above their seat when the GUI is hidden-free, multiplayer names are enabled and the camera is close enough.",
+   "fr": "Client : affiche le pseudo de chaque joueur assis au-dessus de son siège quand aucune interface n'est ouverte, que les noms multijoueur sont activés et que la caméra est assez proche."
+  },
+  "EnterablePassenger:onSetBroken": {
+   "en": "Makes the local player leave the vehicle if it is a passenger when the vehicle breaks.",
+   "fr": "Fait quitter le véhicule au joueur local s'il est passager quand le véhicule tombe en panne."
+  },
+  "EnterablePassenger:onEnterVehicle": {
+   "en": "When the driver enters, clears the remembered last user on any seat that matches the new driver. In debug mode, also shows the user's character on every seat.",
+   "fr": "Quand le conducteur entre, efface le dernier utilisateur mémorisé sur tout siège correspondant au nouveau conducteur. En mode debug, affiche aussi le personnage de l'utilisateur sur chaque siège."
+  },
+  "EnterablePassenger:onLeaveVehicle": {
+   "en": "In debug mode only, removes the debug characters from all seats.",
+   "fr": "En mode debug uniquement, retire les personnages de debug de tous les sièges."
+  },
+  "EnterablePassenger:getInteractionHelp": {
+   "en": "Override: returns the 'enter as passenger' text when the passenger interaction flag is set; otherwise the parent text.",
+   "fr": "Surcharge : renvoie le texte « entrer comme passager » quand le drapeau d'interaction passager est actif ; sinon le texte du parent."
+  },
+  "EnterablePassenger:interact": {
+   "en": "Override: with the passenger flag set, asks to enter the vehicle as passenger at the seat closest to the player; otherwise defers to the parent.",
+   "fr": "Surcharge : avec le drapeau passager actif, demande d'entrer comme passager au siège le plus proche du joueur ; sinon délègue au parent."
+  },
+  "EnterablePassenger:getIsEnteredForInput": {
+   "en": "Override: also returns true for a passenger when the vehicle allows control from passenger seats.",
+   "fr": "Surcharge : renvoie aussi true pour un passager quand le véhicule autorise la commande depuis les sièges passager."
+  },
+  "EnterablePassenger:getRequiresPower": {
+   "en": "Override: also returns true when passenger control is allowed and at least one passenger seat is occupied.",
+   "fr": "Surcharge : renvoie aussi true quand la commande passager est autorisée et qu'au moins un siège passager est occupé."
+  },
+  "EnterablePassenger:getDistanceToNode": {
+   "en": "Override: if the vehicle is controlled (or passenger-only entry is allowed) and a free seat is closer than the normal enter distance, sets the passenger interaction flag and returns that distance.",
+   "fr": "Surcharge : si le véhicule est contrôlé (ou si l'entrée passager seule est permise) et qu'un siège libre est plus proche que la distance d'entrée normale, active le drapeau d'interaction passager et renvoie cette distance."
+  },
+  "EnterablePassenger:getIsEnterable": {
+   "en": "Override: with passenger seats available, the driver seat is enterable only when passenger seats are not the proper choice (see getCanUsePassengerSeats) and the parent allows it.",
+   "fr": "Surcharge : avec des sièges passager disponibles, le siège conducteur n'est accessible que si les sièges passager ne sont pas le bon choix (voir getCanUsePassengerSeats) et si le parent l'autorise."
+  },
+  "EnterablePassenger:getExitNode": {
+   "en": "Override: returns the exit point of the seat last used by the given player when there is one; otherwise the parent's exit node.",
+   "fr": "Surcharge : renvoie le point de sortie du siège utilisé en dernier par le joueur donné s'il y en a un ; sinon le nœud de sortie du parent."
+  },
+  "EnterablePassenger:getIsInUse": {
+   "en": "Override: true while any passenger seat is occupied; otherwise the parent's answer.",
+   "fr": "Surcharge : true tant qu'un siège passager est occupé ; sinon la réponse du parent."
+  },
+  "EnterablePassenger:getDeactivateOnLeave": {
+   "en": "Override: returns false (do not deactivate) while any passenger seat is occupied; otherwise the parent's answer.",
+   "fr": "Surcharge : renvoie false (ne pas désactiver) tant qu'un siège passager est occupé ; sinon la réponse du parent."
+  },
+  "EnterablePassenger:onPreRegisterActionEvents": {
+   "en": "Clears this specialization's action events before Enterable registers its own, so they are not removed right after.",
+   "fr": "Efface les événements d'action de cette spécialisation avant que Enterable enregistre les siens, pour qu'ils ne soient pas retirés aussitôt."
+  },
+  "EnterablePassenger:onRegisterActionEvents": {
+   "en": "Registers inputs: as passenger, leave, camera switch, zoom and seat switch; as driver, only seat switch (when active for input). Then refreshes the action event states.",
+   "fr": "Enregistre les entrées : comme passager, sortie, changement de caméra, zoom et changement de siège ; comme conducteur, seulement le changement de siège (si actif pour l'entrée). Rafraîchit ensuite l'état des événements d'action."
+  },
+  "EnterablePassenger.actionEventLeave": {
+   "en": "Input callback: makes the local player leave the vehicle if seated as passenger.",
+   "fr": "Rappel d'entrée : fait quitter le véhicule au joueur local s'il est passager."
+  },
+  "EnterablePassenger.actionEventCameraSwitch": {
+   "en": "Input callback: cycles to the next passenger camera when the local player is a passenger.",
+   "fr": "Rappel d'entrée : passe à la caméra passager suivante quand le joueur local est passager."
+  },
+  "EnterablePassenger.actionEventSwitchSeat": {
+   "en": "Input callback: moves to the next free passenger seat, else to the driver seat if free and accessible, else (fallback) to the first free passenger seat, copying the active camera type each time.",
+   "fr": "Rappel d'entrée : passe au siège passager libre suivant, sinon au siège conducteur s'il est libre et accessible, sinon (repli) au premier siège passager libre, en recopiant le type de caméra actif à chaque fois."
+  },
+  "EnterablePassenger.updateActionEvents": {
+   "en": "Updates the seat-switch action: sets its text (next seat, driver or passenger) and activates it only if there is somewhere to switch to.",
+   "fr": "Met à jour l'action de changement de siège : définit son texte (siège suivant, conducteur ou passager) et ne l'active que s'il existe une destination."
+  },
+  "EnterablePassenger:getClosestSeatIndex": {
+   "en": "Returns the index and distance of the closest free passenger seat to the given node, within the minimum enter distance (3); nil index when none qualifies.",
+   "fr": "Renvoie l'indice et la distance du siège passager libre le plus proche du nœud donné, dans la distance d'entrée minimale (3) ; indice nil si aucun ne convient."
+  },
+  "EnterablePassenger:getIsPassengerSeatAvailable": {
+   "en": "Returns true if the given seat entry is not occupied.",
+   "fr": "Renvoie true si l'entrée de siège donnée n'est pas occupée."
+  },
+  "EnterablePassenger:getIsPassengerSeatIndexAvailable": {
+   "en": "Returns true if the seat with that index exists and is free.",
+   "fr": "Renvoie true si le siège portant cet indice existe et est libre."
+  },
+  "EnterablePassenger:getFirstAvailablePassengerSeat": {
+   "en": "Returns the index of the first free passenger seat starting at startIndex (default 1), or nil.",
+   "fr": "Renvoie l'indice du premier siège passager libre à partir de startIndex (1 par défaut), ou nil."
+  },
+  "EnterablePassenger:getPlayerNameBySeatIndex": {
+   "en": "Returns the nickname of the user in the given seat, or an empty string when unknown.",
+   "fr": "Renvoie le pseudo de l'utilisateur au siège donné, ou une chaîne vide s'il est inconnu."
+  },
+  "EnterablePassenger:getCanUsePassengerSeats": {
+   "en": "Returns true when a player should use passenger seats rather than the driver seat: vehicle not broken and either already controlled or not accessible by the player.",
+   "fr": "Renvoie true quand un joueur doit utiliser les sièges passager plutôt que celui du conducteur : véhicule non en panne et soit déjà contrôlé, soit inaccessible au joueur."
+  },
+  "EnterablePassenger:enterVehiclePassengerSeat": {
+   "en": "Occupies a seat. For the local owner: leaves the previous seat, activates the passenger camera and character, map hotspot and input handling. For others: frees their old seat and sets the character. Marks the seat used with user id and style, and activates the vehicle if it was idle.",
+   "fr": "Occupe un siège. Pour le propriétaire local : quitte l'ancien siège, active la caméra et le personnage passager, le point de carte et la gestion des entrées. Pour les autres : libère leur ancien siège et définit le personnage. Marque le siège occupé avec identifiant et style, et active le véhicule s'il était inactif."
+  },
+  "EnterablePassenger:leaveLocalPassengerSeat": {
+   "en": "Leaves the local player's seat; unless noEventSend is true, first sends an EnterablePassengerLeaveEvent to the server.",
+   "fr": "Quitte le siège du joueur local ; sauf si noEventSend vaut true, envoie d'abord un EnterablePassengerLeaveEvent au serveur."
+  },
+  "EnterablePassenger:leavePassengerSeat": {
+   "en": "Frees a seat. For the local owner: deactivates the camera, resets indoor sound and environment flags, hides mirrors, removes the hotspot and input subscriptions. Clears the seat data and deactivates the vehicle if nobody is left and it is uncontrolled.",
+   "fr": "Libère un siège. Pour le propriétaire local : désactive la caméra, réinitialise les drapeaux intérieur du son et de l'environnement, masque les rétroviseurs, retire le point de carte et les abonnements d'entrée. Efface les données du siège et désactive le véhicule si plus personne ne reste et qu'il n'est pas contrôlé."
+  },
+  "EnterablePassenger:getPassengerSeatIndexByPlayer": {
+   "en": "Returns the index of the seat held by the given user id, or nil.",
+   "fr": "Renvoie l'indice du siège occupé par l'identifiant d'utilisateur donné, ou nil."
+  },
+  "EnterablePassenger:copyEnterableActiveCameraIndex": {
+   "en": "Keeps the camera choice when switching seat: with a seat index, copies the Enterable active camera to that seat; without, copies back to the Enterable cameras. Matches the same camera, else the first with the same inside/outside flag.",
+   "fr": "Conserve le choix de caméra lors d'un changement de siège : avec un indice de siège, copie la caméra active d'Enterable vers ce siège ; sans, recopie vers les caméras d'Enterable. Cherche la même caméra, sinon la première de même type intérieur/extérieur."
+  },
+  "EnterablePassenger:setPassengerActiveCameraIndex": {
+   "en": "Sets the camera index of a seat (given or next, wrapping to 1) and activates it.",
+   "fr": "Définit l'indice de caméra d'un siège (donné ou suivant, avec retour à 1) et l'active."
+  },
+  "EnterablePassenger:enablePassengerActiveCamera": {
+   "en": "Deactivates the current camera, activates the current seat's chosen camera, updates mirror visibility and the environment area reference node, refreshes characters and keeps the vehicle active.",
+   "fr": "Désactive la caméra courante, active la caméra choisie du siège courant, met à jour la visibilité des rétroviseurs et le nœud de référence des zones d'environnement, rafraîchit les personnages et garde le véhicule actif."
+  },
+  "EnterablePassenger:setPassengerSeatCharacter": {
+   "en": "Unloads the seat's character and, if a player style is given, loads the matching character asynchronously (nil style just removes it).",
+   "fr": "Décharge le personnage du siège et, si un style de joueur est donné, charge le personnage correspondant de façon asynchrone (un style nil se contente de le retirer)."
+  },
+  "EnterablePassenger:updatePassengerSeatCharacter": {
+   "en": "For every occupied seat with a character, updates its visibility and animation by dt.",
+   "fr": "Pour chaque siège occupé ayant un personnage, met à jour sa visibilité et son animation selon dt."
+  },
+  "EnterablePassenger:onPassengerPlayerStyleChanged": {
+   "en": "Message handler: reloads the character of the seat held by the user whose style changed.",
+   "fr": "Gestionnaire de message : recharge le personnage du siège occupé par l'utilisateur dont le style a changé."
+  },
+  "EnterablePassenger.vehiclePassengerCharacterLoaded": {
+   "en": "Load callback: when the character loaded correctly, updates its visibility and IK chains (and forces it visible in debug mode).",
+   "fr": "Rappel de chargement : quand le personnage est bien chargé, met à jour sa visibilité et ses chaînes IK (et le force visible en mode debug)."
+  },
+  "EnterablePassenger.consoleCommandDebugPassengerSeat": {
+   "en": "Console command: toggles the passenger seat debug mode and shows or removes debug characters on the local player's current vehicle, then logs the new state.",
+   "fr": "Commande console : bascule le mode debug des sièges passager et affiche ou retire des personnages de debug sur le véhicule courant du joueur local, puis journalise le nouvel état."
+  }
+ }
+}

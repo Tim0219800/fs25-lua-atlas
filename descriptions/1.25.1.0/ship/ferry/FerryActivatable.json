@@ -1,0 +1,25 @@
+{
+ "fichier": "ship/ferry/FerryActivatable.lua",
+ "module": {
+  "en": "Activatable (action prompt) that lets a player start a ferry from a trigger. It reads the ferry's `getCanActivateDriving`, uses the localized text `action_startFerry`, and calls `ferry:start()` on activation. The `Ferry` class and the `trigger` assignment are not in this file (UNVERIFIED).",
+  "fr": "Activatable (invite d'action) qui permet à un joueur de démarrer un ferry depuis un déclencheur. Il lit `getCanActivateDriving` du ferry, utilise le texte localisé `action_startFerry` et appelle `ferry:start()` à l'activation. La classe `Ferry` et l'affectation de `trigger` ne sont pas dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "FerryActivatable.new": {
+   "en": "Creates the activatable for a ferry. The `trigger` node starts nil and must be set by the owner; the prompt text comes from `action_startFerry`.",
+   "fr": "Crée l'activatable pour un ferry. Le node `trigger` démarre à nil et doit être défini par le propriétaire ; le texte vient de `action_startFerry`."
+  },
+  "FerryActivatable:getIsActivatable": {
+   "en": "Returns true when the ferry reports it can currently be started by driving, otherwise false.",
+   "fr": "Retourne true quand le ferry indique pouvoir être démarré actuellement par conduite, sinon false."
+  },
+  "FerryActivatable:getDistance": {
+   "en": "Returns the horizontal (XZ) distance from the given position to the trigger node. Would fail if `trigger` is still nil.",
+   "fr": "Retourne la distance horizontale (XZ) entre la position donnée et le node du déclencheur. Échouerait si `trigger` vaut encore nil."
+  },
+  "FerryActivatable:run": {
+   "en": "Starts the ferry by calling `ferry:start()` with no connection argument.",
+   "fr": "Démarre le ferry en appelant `ferry:start()` sans argument de connexion."
+  }
+ }
+}

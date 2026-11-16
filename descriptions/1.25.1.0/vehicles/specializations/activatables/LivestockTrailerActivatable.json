@@ -1,0 +1,21 @@
+{
+ "fichier": "vehicles/specializations/activatables/LivestockTrailerActivatable.lua",
+ "module": {
+  "en": "Activatable attached to a livestock trailer so the player can open the animal management screen for it. It holds a reference to the trailer and only becomes selectable when animals or rideables are present and nobody is blocking input. Client-side UI helper; it does not itself transfer animals.",
+  "fr": "Activatable rattaché à une remorque à bétail pour que le joueur puisse ouvrir l'écran de gestion des animaux. Il garde une référence à la remorque et n'est sélectionnable que si des animaux ou des rideables sont présents et que l'entrée est permise. Aide d'interface côté client ; il ne transfère pas d'animaux lui-même."
+ },
+ "fonctions": {
+  "LivestockTrailerActivatable.new": {
+   "en": "Creates the activatable for the given livestock trailer and stores the localized prompt text `action_openLivestockTrailerMenu`.",
+   "fr": "Crée l'activatable pour la remorque à bétail donnée et mémorise le texte localisé `action_openLivestockTrailerMenu`."
+  },
+  "LivestockTrailerActivatable:getIsActivatable": {
+   "en": "Returns false while the trailer has a loading trigger. Otherwise true when there are rideables in the trigger or animals aboard, and the trailer or one of those rideables is active for input.",
+   "fr": "Renvoie false tant que la remorque a un trigger de chargement. Sinon true s'il y a des rideables dans le trigger ou des animaux à bord, et que la remorque ou l'un de ces rideables est actif pour l'entrée."
+  },
+  "LivestockTrailerActivatable:run": {
+   "en": "Points `g_animalScreen` at this trailer (no husbandry, not a dealer view) and opens the `AnimalScreen` GUI.",
+   "fr": "Pointe `g_animalScreen` vers cette remorque (sans étable, hors vue marchand) et ouvre l'interface `AnimalScreen`."
+  }
+ }
+}

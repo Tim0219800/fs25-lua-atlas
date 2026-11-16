@@ -1,89 +1,89 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/WorkParticles.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation véhicule qui gère trois familles d'effets de travail du sol, uniquement côté client (sur serveur pur, ses écouteurs onDelete/onUpdateTick/onDeactivate sont retirés dans onLoad) : (1) « particleAnimations », des maillages animés par shader (paramètre VertxoffsetVertexdeformMotionUVscale) dont la visibilité suit la profondeur de travail ; (2) « particles », de vrais systèmes de particules allumés ou éteints via ParticleUtil.setEmittingState ; (3) « effects », des effets EffectManager dont le type de remplissage vient de la zone de travail. La décision est prise à chaque onUpdateTick, pas à chaque frame. Conditions communes : getDoGroundManipulation() et véhicule sur un champ (sauf vehicle.workParticles#requireField=false). Aucune donnée météo ni humidité n'entre en jeu : seuls la vitesse, le sens de marche, le contact au sol et la profondeur comptent. Point d'extension : surcharger getDoGroundManipulation (fonction enregistrée) ou les écouteurs ; tout est purement visuel, sans synchronisation réseau.
+--- Vehicle specialization handling three families of ground-work effects, client side only (on a pure server its onDelete/onUpdateTick/onDeactivate listeners are removed in onLoad): (1) "particleAnimations", shader-animated meshes (parameter VertxoffsetVertexdeformMotionUVscale) whose visibility follows the working depth; (2) "particles", real particle systems switched on or off via ParticleUtil.setEmittingState; (3) "effects", EffectManager effects whose fill type comes from the work area. The decision is taken on each onUpdateTick, not each frame. Common conditions: getDoGroundManipulation() and the vehicle being on a field (unless vehicle.workParticles#requireField=false). No weather or moisture data is involved: only speed, driving direction, ground contact and depth matter. Extension point: override getDoGroundManipulation (registered function) or the listeners; everything is purely visual, with no network synchronization.
 ---@class WorkParticles
 WorkParticles = {}
 
---- Aucun prérequis : renvoie toujours true.
+--- No prerequisite: always returns true.
 ---@param specializations any
 function WorkParticles.prerequisitesPresent(specializations) end
 
---- Enregistre dans Vehicle.xmlSchema les clés vehicle.workParticles.particleAnimation(?), .particle(?) et .effect(?) (avec speedThreshold, activeDirection, workAreaIndex, groundReferenceNodeIndex, needsSetIsTurnedOn), #requireField (par défaut true) et l'attribut #depthNode des groundReferenceNode.
+--- Registers in Vehicle.xmlSchema the keys vehicle.workParticles.particleAnimation(?), .particle(?) and .effect(?) (with speedThreshold, activeDirection, workAreaIndex, groundReferenceNodeIndex, needsSetIsTurnedOn), #requireField (default true) and the #depthNode attribute of groundReferenceNode.
 function WorkParticles.initSpecialization() end
 
---- Enregistre les attributs d'un nœud d'animation de sol : node, refNodeIndex, animMeshNode, ou bien materialType+materialId en l'absence de fichier externe, et maxDepth (par défaut -0.1 m).
+--- Registers the attributes of a ground animation node: node, refNodeIndex, animMeshNode, or materialType+materialId when there is no external file, and maxDepth (default -0.1 m).
 ---@param schema any
 ---@param key any
 function WorkParticles.registerGroundAnimationMappingXMLPaths(schema, key) end
 
---- Enregistre les attributs d'un nœud de particules de sol : node, refNodeIndex, particleNode, ou bien particleType+fillType sans fichier, speedThreshold (par défaut 0.5) et movingDirection, plus les attributs de copie de ParticleUtil.
+--- Registers the attributes of a ground particle node: node, refNodeIndex, particleNode, or particleType+fillType without a file, speedThreshold (default 0.5) and movingDirection, plus the ParticleUtil copy attributes.
 ---@param schema any
 ---@param key any
 function WorkParticles.registerGroundParticleMappingXMLPaths(schema, key) end
 
---- Expose au type de véhicule : getDoGroundManipulation, les chargeurs d'animations, particules et effets, et getFillTypeFromWorkAreaIndex.
+--- Exposes to the vehicle type: getDoGroundManipulation, the animation, particle and effect loaders, and getFillTypeFromWorkAreaIndex.
 ---@param vehicleType any
 function WorkParticles.registerFunctions(vehicleType) end
 
---- Surcharge loadGroundReferenceNode et updateGroundReferenceNode pour ajouter la mesure de profondeur, de déplacement et de sens au nœud de référence au sol.
+--- Overrides loadGroundReferenceNode and updateGroundReferenceNode to add depth, displacement and direction measurement to the ground reference node.
 ---@param vehicleType any
 function WorkParticles.registerOverwrittenFunctions(vehicleType) end
 
---- Écoute onLoad, onDelete, onUpdateTick et onDeactivate.
+--- Listens to onLoad, onDelete, onUpdateTick and onDeactivate.
 ---@param vehicleType any
 function WorkParticles.registerEventListeners(vehicleType) end
 
---- Côté client seulement : lit requireField puis charge en boucle chaque particleAnimation(i), particle(i) et effect(i) du XML du véhicule dans spec_workParticles. Sur une instance non cliente, retire les écouteurs devenus inutiles.
+--- Client side only: reads requireField then loops over each particleAnimation(i), particle(i) and effect(i) of the vehicle XML into spec_workParticles. On a non-client instance, removes the listeners that became useless.
 ---@param savegame any
 function WorkParticles:onLoad(savegame) end
 
---- Libère les I3D partagés (g_i3DManager:releaseSharedI3DFile), supprime les systèmes de particules (ParticleUtil.deleteParticleSystem) et les effets (g_effectManager:deleteEffects).
+--- Releases the shared I3Ds (g_i3DManager:releaseSharedI3DFile), deletes the particle systems (ParticleUtil.deleteParticleSystem) and the effects (g_effectManager:deleteEffects).
 function WorkParticles:onDelete() end
 
---- Cœur de la spécialisation. Animations : profondeur normalisée = depth/maxWorkDepth, bornée entre 0 et 1, lissée selon la distance parcourue, et mise à 0 hors champ ; elle pilote la visibilité et le shader. Particules : émission si manipulation active, sur champ, nœud de référence actif, vitesse > speedThreshold et bon sens de marche. Effets : mêmes conditions, plus needsSetIsTurnedOn (l'outil ou son attelage doit être allumé), le contact au sol de la zone de travail et activeDirection ; le fillType est alors transmis à setEffectTypeInfo avant startEffects. Bascule binaire marche/arrêt, sans modulation d'intensité.
+--- Core of the specialization. Animations: normalized depth = depth/maxWorkDepth, clamped to 0..1, smoothed by distance travelled, and set to 0 off-field; it drives visibility and the shader. Particles: emitting if ground manipulation is active, on a field, reference node active, speed > speedThreshold and right driving direction. Effects: same conditions, plus needsSetIsTurnedOn (the tool or its attacher must be turned on), the work area ground contact and activeDirection; the fillType is then passed to setEffectTypeInfo before startEffects. Binary on/off switch, no intensity modulation.
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function WorkParticles:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Renvoie true par défaut ; d'autres spécialisations ou mods peuvent la surcharger pour couper tous les effets de la spécialisation.
+--- Returns true by default; other specializations or mods can override it to cut all effects of the specialization.
 function WorkParticles:getDoGroundManipulation() end
 
---- Lit speedThreshold et les nœuds node(j), puis lance le chargement asynchrone de l'I3D externe (#file) via loadSubSharedI3DFile.
+--- Reads speedThreshold and the node(j) nodes, then starts the asynchronous loading of the external I3D (#file) via loadSubSharedI3DFile.
 ---@param xmlFile any
 ---@param key any
 ---@param animation any
 ---@param index any
 function WorkParticles:loadGroundAnimations(xmlFile, key, animation, index) end
 
---- Rappel de chargement : attache chaque animNode à son nœud, le masque, puis supprime la racine I3D chargée.
+--- Loading callback: attaches each animNode to its node, hides it, then deletes the loaded I3D root.
 ---@param i3dNode any
 ---@param args any
 function WorkParticles:onGroundAnimationI3DLoaded(i3dNode, args) end
 
---- Résout node, refNodeIndex et animMeshNode ; sans animMeshNode, applique au nœud le matériau de base materialType. Renvoie false (avec un avertissement XML) si une référence est invalide.
+--- Resolves node, refNodeIndex and animMeshNode; without animMeshNode, applies the base material materialType to the node. Returns false (with an XML warning) if a reference is invalid.
 ---@param xmlFile any
 ---@param key any
 ---@param mapping any
 ---@param index any
 function WorkParticles:loadGroundAnimationMapping(xmlFile, key, mapping, index) end
 
---- Avec #file : chargement asynchrone de l'I3D partagé (g_i3DManager:loadSharedI3DFileAsync). Sinon, mappings construits directement depuis le gestionnaire de particules (particleType).
+--- With #file: asynchronous loading of the shared I3D (g_i3DManager:loadSharedI3DFileAsync). Otherwise, mappings are built directly from the particle manager (particleType).
 ---@param xmlFile any
 ---@param key any
 ---@param particle any
 ---@param index any
 function WorkParticles:loadGroundParticles(xmlFile, key, particle, index) end
 
---- Rappel : construit les mappings, attache les particleNode et crée les systèmes avec ParticleUtil.loadParticleSystemFromNode (émission initiale désactivée, espace monde activé).
+--- Callback: builds the mappings, attaches the particleNodes and creates the systems with ParticleUtil.loadParticleSystemFromNode (initial emission disabled, world space enabled).
 ---@param i3dNode any
 ---@param failedReason any
 ---@param args any
 function WorkParticles:groundParticleI3DLoaded(i3dNode, failedReason, args) end
 
---- Sans fichier externe : récupère g_particleSystemManager:getParticleSystem(particleType), applique le matériau de particule du fillType s'il est connu, puis copie le système sur le nœud (ParticleUtil.copyParticleSystem). Lit speedThreshold (par défaut 0.5) et movingDirection.
+--- Without an external file: fetches g_particleSystemManager:getParticleSystem(particleType), applies the fillType particle material if known, then copies the system onto the node (ParticleUtil.copyParticleSystem). Reads speedThreshold (default 0.5) and movingDirection.
 ---@param xmlFile any
 ---@param key any
 ---@param mapping any
@@ -91,25 +91,25 @@ function WorkParticles:groundParticleI3DLoaded(i3dNode, failedReason, args) end
 ---@param i3dNode any
 function WorkParticles:loadGroundParticleMapping(xmlFile, key, mapping, index, i3dNode) end
 
---- Lit les paramètres de l'effet (speedThreshold 0.5, activeDirection 1, workAreaIndex, groundReferenceNodeIndex, needsSetIsTurnedOn false) et le charge avec g_effectManager:loadEffect.
+--- Reads the effect parameters (speedThreshold 0.5, activeDirection 1, workAreaIndex, groundReferenceNodeIndex, needsSetIsTurnedOn false) and loads it with g_effectManager:loadEffect.
 ---@param xmlFile any
 ---@param key any
 ---@param effect any
 ---@param index any
 function WorkParticles:loadGroundEffects(xmlFile, key, effect, index) end
 
---- Type de remplissage de la zone de travail : workArea.fillType, à défaut une conversion depuis workArea.fruitType, sinon FillType.UNKNOWN. À noter : la conversion passe par getFruitTypeIndexByFillTypeIndex alors que l'argument est un fruitType ; le nom laisse penser que le sens de conversion est inversé (non vérifié en jeu).
+--- Fill type of the work area: workArea.fillType, otherwise a conversion from workArea.fruitType, otherwise FillType.UNKNOWN. Note: the conversion goes through getFruitTypeIndexByFillTypeIndex although the argument is a fruitType; the name suggests the conversion direction is inverted (not verified in game).
 ---@param workAreaIndex any
 function WorkParticles:getFillTypeFromWorkAreaIndex(workAreaIndex) end
 
---- Après la fonction d'origine, ajoute au nœud de référence au sol : depthNode, movedDistance, depth et movingDirection, initialisés à 0.
+--- After the original function, adds to the ground reference node: depthNode, movedDistance, depth and movingDirection, initialized to 0.
 ---@param superFunc any
 ---@param xmlFile any
 ---@param key any
 ---@param groundReferenceNode any
 function WorkParticles:loadGroundReferenceNode(superFunc, xmlFile, key, groundReferenceNode) end
 
---- Côté client, avec un depthNode : calcule le déplacement local depuis la dernière position, le sens de marche (seuil 0.0001 sur z local), la distance parcourue et la profondeur, soit la hauteur du nœud moins getTerrainHeightAtWorldPos (en mètres, négative quand le nœud est enfoncé).
+--- Client side, with a depthNode: computes the local displacement since the last position, the driving direction (threshold 0.0001 on local z), the distance travelled and the depth, i.e. the node height minus getTerrainHeightAtWorldPos (in metres, negative when the node is sunk).
 ---@param superFunc any
 ---@param groundReferenceNode any
 ---@param x any
@@ -119,5 +119,5 @@ function WorkParticles:loadGroundReferenceNode(superFunc, xmlFile, key, groundRe
 ---@param densityHeight any
 function WorkParticles:updateGroundReferenceNode(superFunc, groundReferenceNode, x, y, z, terrainHeight, densityHeight) end
 
---- Coupe toutes les émissions de particules et masque les animations quand le véhicule est désactivé.
+--- Stops all particle emissions and hides the animations when the vehicle is deactivated.
 function WorkParticles:onDeactivate() end

@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableRiceFieldFieldEvent.lua",
+ "module": {
+  "en": "Network event that submits a newly drawn rice field (polygon, height, water height) to the receiving side of a PlaceableRiceField. The receiver builds the field and finalizes it, then answers with PlaceableRiceFieldFieldAnswerEvent. It is meant to go from a client to the server, but this file does not check which side runs it.",
+  "fr": "Événement réseau qui soumet une rizière nouvellement dessinée (polygone, hauteur, hauteur d'eau) au côté récepteur d'un PlaceableRiceField. Le récepteur construit le champ et le finalise, puis répond avec PlaceableRiceFieldFieldAnswerEvent. Il est prévu d'aller du client vers le serveur, mais ce fichier ne vérifie pas quel côté l'exécute."
+ },
+ "fonctions": {
+  "PlaceableRiceFieldFieldEvent.emptyNew": {
+   "en": "Creates an empty event bound to the main network channel (`NetworkNode.CHANNEL_MAIN`).",
+   "fr": "Crée un événement vide lié au canal réseau principal (`NetworkNode.CHANNEL_MAIN`)."
+  },
+  "PlaceableRiceFieldFieldEvent.new": {
+   "en": "Builds the event from the rice field placeable and a field table holding height, polygon and water height.",
+   "fr": "Construit l'événement à partir du placeable de rizière et d'une table de champ contenant hauteur, polygone et hauteur d'eau."
+  },
+  "PlaceableRiceFieldFieldEvent:readStream": {
+   "en": "Reads the rice field, the height, the vertex count and the 2D vertices, then the water height, creating the field via `createNewField` and a `Polygon2D`, and runs the event. Note: the rice field is not nil-checked before `createNewField`.",
+   "fr": "Lit la rizière, la hauteur, le nombre de sommets et les sommets 2D, puis la hauteur d'eau, en créant le champ via `createNewField` et un `Polygon2D`, puis exécute l'événement. À noter : la rizière n'est pas testée contre nil avant `createNewField`."
+  },
+  "PlaceableRiceFieldFieldEvent:writeStream": {
+   "en": "Writes the rice field, the field height, the vertex count and each polygon vertex coordinate as Float32, then the water height.",
+   "fr": "Écrit la rizière, la hauteur du champ, le nombre de sommets et chaque coordonnée de sommet du polygone en Float32, puis la hauteur d'eau."
+  },
+  "PlaceableRiceFieldFieldEvent:run": {
+   "en": "If the rice field is synchronized, calls `finalizeNewField` with the new field and a flag set to true, and its callback replies to the sender with a PlaceableRiceFieldFieldAnswerEvent holding the status code.",
+   "fr": "Si la rizière est synchronisée, appelle `finalizeNewField` avec le nouveau champ et un indicateur à true ; son callback répond à l'expéditeur par un PlaceableRiceFieldFieldAnswerEvent contenant le code de statut."
+  }
+ }
+}

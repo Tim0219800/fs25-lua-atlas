@@ -1,0 +1,33 @@
+{
+ "fichier": "player/events/PlayerHoldHandToolEvent.lua",
+ "module": {
+  "en": "Network event that keeps the hand tool held by a player in sync across the server and clients. It is sent on the main channel; a client sends it to the server, which re-broadcasts it to the other clients.",
+  "fr": "Événement réseau qui synchronise l'outil à main tenu par un joueur entre le serveur et les clients. Il passe par le canal principal ; un client l'envoie au serveur, qui le rediffuse aux autres clients."
+ },
+ "fonctions": {
+  "PlayerHoldHandToolEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel, used when the event is read from a stream.",
+   "fr": "Crée un événement vide sur le canal réseau principal, utilisé lors de la lecture depuis un flux."
+  },
+  "PlayerHoldHandToolEvent.new": {
+   "en": "Builds the event for a player and a hand tool object id. The `isHolding` argument is accepted but never stored or used. A nil `handToolId` means the hand tool is put away.",
+   "fr": "Construit l'événement pour un joueur et l'identifiant d'objet d'un outil à main. L'argument `isHolding` est accepté mais jamais stocké ni utilisé. Un `handToolId` nil signifie que l'outil est rangé."
+  },
+  "PlayerHoldHandToolEvent:readStream": {
+   "en": "Reads the player node object, then an optional hand tool object id (presence flag first), and immediately runs the event.",
+   "fr": "Lit l'objet joueur, puis un identifiant d'outil à main optionnel (précédé d'un indicateur de présence), et exécute aussitôt l'événement."
+  },
+  "PlayerHoldHandToolEvent:writeStream": {
+   "en": "Writes the player node object and, if set, the hand tool object id, preceded by a boolean presence flag.",
+   "fr": "Écrit l'objet joueur et, s'il est défini, l'identifiant de l'outil à main, précédé d'un booléen de présence."
+  },
+  "PlayerHoldHandToolEvent:run": {
+   "en": "On the server, re-broadcasts the event to the other clients. Then resolves the hand tool and calls `setCurrentHandTool` on the player, only if the tool exists and is synchronized, or with nil to clear it.",
+   "fr": "Sur le serveur, rediffuse l'événement aux autres clients. Puis résout l'outil à main et appelle `setCurrentHandTool` sur le joueur, seulement si l'outil existe et est synchronisé, ou avec nil pour le vider."
+  },
+  "PlayerHoldHandToolEvent.sendEvent": {
+   "en": "Sends the event unless `noEventSend` is true: the server broadcasts it to all clients, a client sends it to the server.",
+   "fr": "Envoie l'événement sauf si `noEventSend` est vrai : le serveur le diffuse à tous les clients, un client l'envoie au serveur."
+  }
+ }
+}

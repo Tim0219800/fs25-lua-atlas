@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/components/StaticLight.lua",
+ "module": {
+  "en": "A mesh-based light (emissive glow done by shader parameters, no engine light source) for vehicles. It drives the `lightControl` or `lightIds0..3` shader parameters of a shape node, or toggles its visibility, according to the active light types mask and an optional charge function. Several entries on the same node can be merged. Used by `Lights` (`spec_lights`) and by `SharedLight`; client-side visual.",
+  "fr": "Lumière à base de maillage (lueur émissive pilotée par paramètres shader, sans source de lumière du moteur) pour véhicules. Elle pilote les paramètres shader `lightControl` ou `lightIds0..3` d'un nœud de forme, ou bascule sa visibilité, selon le masque de types de lumière actifs et une fonction de charge optionnelle. Plusieurs entrées sur un même nœud peuvent être fusionnées. Utilisée par `Lights` (`spec_lights`) et par `SharedLight` ; visuel côté client."
+ },
+ "fonctions": {
+  "StaticLight.new": {
+   "en": "Creates a static light for a vehicle (may be nil) with no charge function.",
+   "fr": "Crée une lumière statique pour un véhicule (peut être nil) sans fonction de charge."
+  },
+  "StaticLight:loadFromXML": {
+   "en": "Loads one static light: requires a shape node (not a light source; inside the shared light root if one is given), detects `lightControl` or a UV slot via `lightIds`, reads intensity (default 5), visibility toggle and light types (inherited from the shared light if any). Returns false with a warning on invalid nodes or missing shader parameters, else switches the light off and returns true.",
+   "fr": "Charge une lumière statique : exige un nœud de forme (pas une source de lumière ; dans la racine de la lumière partagée si fournie), détecte `lightControl` ou un slot UV via `lightIds`, lit l'intensité (5 par défaut), la bascule de visibilité et les types de lumière (hérités de la lumière partagée le cas échéant). Renvoie false avec avertissement si le nœud est invalide ou si les paramètres shader manquent, sinon éteint la lumière et renvoie true."
+  },
+  "StaticLight:merge": {
+   "en": "Merges this light's types and excluded types into another light on the same node and returns it; returns itself unchanged when the UV slots differ.",
+   "fr": "Fusionne les types et types exclus de cette lumière dans une autre lumière du même nœud et la renvoie ; se renvoie elle-même sans changement si les slots UV diffèrent."
+  },
+  "StaticLight:setLightTypesMask": {
+   "en": "Evaluates the active-type bit mask against this light's types and excluded types (and the vehicle's light-active check) and calls `setState`; does nothing without types or vehicle.",
+   "fr": "Évalue le masque de bits des types actifs par rapport aux types et types exclus de cette lumière (et au test d'activité du véhicule) et appelle `setState` ; ne fait rien sans types ou sans véhicule."
+  },
+  "StaticLight:setIsBlinking": {
+   "en": "Marks the light as blinking in the shader `lightTypeBitMask` (whole mask, or only this UV slot if its index is 12 or below); no effect with `lightControl`.",
+   "fr": "Marque la lumière comme clignotante dans le `lightTypeBitMask` du shader (masque entier, ou seulement ce slot UV si son indice est 12 ou moins) ; sans effet avec `lightControl`."
+  },
+  "StaticLight:setState": {
+   "en": "Applies the state: toggles node visibility, or writes intensity times charge into `lightControl` or the relevant `lightIds` channel (all channels when no UV slot).",
+   "fr": "Applique l'état : bascule la visibilité du nœud, ou écrit l'intensité multipliée par la charge dans `lightControl` ou le canal `lightIds` concerné (tous les canaux sans slot UV)."
+  },
+  "StaticLight:setChargeFunction": {
+   "en": "Registers a function (and target) returning the charge scale used by `setLightTypesMask`.",
+   "fr": "Enregistre une fonction (et sa cible) renvoyant l'échelle de charge utilisée par `setLightTypesMask`."
+  },
+  "StaticLight.loadLightsFromXML": {
+   "en": "Loads all static lights under an XML base key into `lights` (created if nil), merging with an existing light on the same node through `vehicle:getStaticLightFromNode`. Returns the list.",
+   "fr": "Charge toutes les lumières statiques sous une clé XML de base dans `lights` (créée si nil), en fusionnant avec une lumière existante sur le même nœud via `vehicle:getStaticLightFromNode`. Renvoie la liste."
+  },
+  "StaticLight.registerXMLPaths": {
+   "en": "Registers the XML paths of a static light (node or shaderNode, UV slot, intensity, visibility toggle, light types).",
+   "fr": "Enregistre les chemins XML d'une lumière statique (node ou shaderNode, slot UV, intensité, bascule de visibilité, types de lumière)."
+  }
+ }
+}

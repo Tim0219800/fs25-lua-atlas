@@ -1,0 +1,85 @@
+{
+ "fichier": "placeables/specializations/PlaceableSiloExtension.lua",
+ "module": {
+  "en": "Placeable specialization with no prerequisites for storage extensions that add capacity to existing silos. It owns a single Storage object, registers it with g_currentMission.storageSystem and attaches it to the unloading and loading stations in range of the same farm. Placement is refused when no station is in range, and selling warns about stored content and pays its estimated value. The storage is streamed to clients and saved with the placeable.",
+  "fr": "Spécialisation de placeable sans prérequis pour les extensions de stockage qui ajoutent de la capacité à des silos existants. Elle possède un unique objet Storage, l'enregistre auprès de g_currentMission.storageSystem et le rattache aux stations de déchargement et de chargement à portée de la même ferme. Le placement est refusé si aucune station n'est à portée, et la vente avertit du contenu stocké et verse sa valeur estimée. Le stockage est transmis aux clients et sauvegardé avec le placeable."
+ },
+ "fonctions": {
+  "PlaceableSiloExtension.prerequisitesPresent": {
+   "en": "Always returns true.",
+   "fr": "Retourne toujours true."
+  },
+  "PlaceableSiloExtension.registerOverwrittenFunctions": {
+   "en": "Overrides setOwnerFarmId, getCanBePlacedAt and canBeSold.",
+   "fr": "Surcharge setOwnerFarmId, getCanBePlacedAt et canBeSold."
+  },
+  "PlaceableSiloExtension.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onFinalizePlacement, onReadStream, onWriteStream and onSell.",
+   "fr": "Abonne à onLoad, onDelete, onFinalizePlacement, onReadStream, onWriteStream et onSell."
+  },
+  "PlaceableSiloExtension.registerXMLPaths": {
+   "en": "Declares the XML under placeable.siloExtension: foreignSilo flag, a translatable warning for placement away from a silo, storage node and the Storage definition.",
+   "fr": "Déclare le XML sous placeable.siloExtension : indicateur foreignSilo, avertissement traduisible pour un placement loin d'un silo, nœud de stockage et définition de Storage."
+  },
+  "PlaceableSiloExtension.registerSavegameXMLPaths": {
+   "en": "Declares the savegame keys by delegating to Storage.registerSavegameXMLPaths.",
+   "fr": "Déclare les clés de sauvegarde en déléguant à Storage.registerSavegameXMLPaths."
+  },
+  "PlaceableSiloExtension.initSpecialization": {
+   "en": "Adds the shop spec type siloExtensionVolume (capacity icon) for placeables.",
+   "fr": "Ajoute le type de spécification de boutique siloExtensionVolume (icône de capacité) pour les placeables."
+  },
+  "PlaceableSiloExtension:onLoad": {
+   "en": "Creates and loads the Storage from placeable.siloExtension.storage (warns if missing), copies the foreignSilo flag to it and reads the near-silo warning text.",
+   "fr": "Crée et charge le Storage depuis placeable.siloExtension.storage (avertit s'il manque), lui copie l'indicateur foreignSilo et lit le texte d'avertissement de proximité d'un silo."
+  },
+  "PlaceableSiloExtension:onDelete": {
+   "en": "If the storage is known to the storage system, detaches it from all its unloading and loading stations and removes it; then deletes the storage.",
+   "fr": "Si le stockage est connu du système de stockage, le détache de toutes ses stations de déchargement et de chargement et le retire ; puis supprime le stockage."
+  },
+  "PlaceableSiloExtension:onFinalizePlacement": {
+   "en": "Finds extendable unloading and loading stations in range for the owner farm, gives the storage its owner, registers it as a network object and adds it to the storage system and those stations.",
+   "fr": "Trouve les stations de déchargement et de chargement extensibles à portée pour la ferme propriétaire, attribue le propriétaire au stockage, l'enregistre comme objet réseau et l'ajoute au système de stockage et à ces stations."
+  },
+  "PlaceableSiloExtension:onReadStream": {
+   "en": "Client initial sync: reads the storage's object id and data and completes its registration with g_client, if the placeable has a storage.",
+   "fr": "Synchronisation initiale côté client : lit l'identifiant d'objet et les données du stockage et termine son enregistrement auprès de g_client, si le placeable a un stockage."
+  },
+  "PlaceableSiloExtension:onWriteStream": {
+   "en": "Server initial sync: writes the storage's object id and data and registers it in the stream for this connection.",
+   "fr": "Synchronisation initiale côté serveur : écrit l'identifiant d'objet et les données du stockage et l'enregistre dans le flux de cette connexion."
+  },
+  "PlaceableSiloExtension:getCanBePlacedAt": {
+   "en": "Returns the parent's refusal if any; also false without a storage. Looks for extendable unloading and loading stations in range at the position for that farm and returns false with the near-silo warning if none is found, otherwise true.",
+   "fr": "Retourne le refus du parent le cas échéant ; faux aussi sans stockage. Cherche à la position donnée des stations de déchargement et de chargement extensibles à portée pour cette ferme et retourne false avec l'avertissement de proximité s'il n'y en a aucune, sinon true."
+  },
+  "PlaceableSiloExtension:canBeSold": {
+   "en": "Returns true; if the storage holds content, also returns a warning listing each fill type with an estimated value (lowest selling-point price times PRICE_SELL_FACTOR), and keeps the total for onSell.",
+   "fr": "Retourne true ; si le stockage contient quelque chose, retourne aussi un avertissement listant chaque type de remplissage avec une valeur estimée (prix le plus bas d'un point de vente fois PRICE_SELL_FACTOR) et conserve le total pour onSell."
+  },
+  "PlaceableSiloExtension:loadFromXMLFile": {
+   "en": "Forwards savegame loading to the storage, if any.",
+   "fr": "Transmet le chargement de la sauvegarde au stockage, s'il existe."
+  },
+  "PlaceableSiloExtension:saveToXMLFile": {
+   "en": "Forwards savegame saving to the storage, if any.",
+   "fr": "Transmet l'écriture de la sauvegarde au stockage, s'il existe."
+  },
+  "PlaceableSiloExtension:setOwnerFarmId": {
+   "en": "Calls the parent, then on the server gives the same owner farm to the storage.",
+   "fr": "Appelle le parent, puis sur le serveur donne la même ferme propriétaire au stockage."
+  },
+  "PlaceableSiloExtension:onSell": {
+   "en": "Server only: pays the farm the total stored-content value computed in canBeSold as HARVEST_INCOME.",
+   "fr": "Serveur uniquement : verse à la ferme la valeur totale du contenu calculée dans canBeSold, en HARVEST_INCOME."
+  },
+  "PlaceableSiloExtension.loadSpecValueVolume": {
+   "en": "Reads the storage capacity from the store item XML.",
+   "fr": "Lit la capacité du stockage depuis le XML de l'article de boutique."
+  },
+  "PlaceableSiloExtension.getSpecValueVolume": {
+   "en": "Returns the extension volume formatted for the shop, or nil if the store item has none.",
+   "fr": "Retourne le volume de l'extension formaté pour la boutique, ou nil si l'article n'en a pas."
+  }
+ }
+}

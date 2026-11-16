@@ -1,0 +1,209 @@
+{
+ "fichier": "vehicles/specializations/InlineWrapper.lua",
+ "module": {
+  "en": "Vehicle specialization for inline bale wrappers, which wrap a continuous line of bales (requires Foldable and Consumable for the wrap rolls). A bale trigger collects bales to push into the line, a wrap trigger tracks bales being wrapped, and the server builds InlineBale objects from them (InlineBale, InlineBaleSingle and Bale classes are not in this file). It animates pusher, wrapping and push-off animations, wrapping nodes that follow the bale surface, adjustable railings and steering nodes, releases the brake while pushing, consumes wrap per minute, and syncs bale lists to clients. A player can push the line off through input or an activatable. Also registers two store spec values for bale sizes (round and square), and contains the helper class InlineWrapperActivatable.",
+  "fr": "Spécialisation de véhicule pour les enrubanneuses en ligne, qui enrubannent une ligne continue de balles (requiert Foldable et Consumable pour les rouleaux de film). Un trigger de balles collecte les balles à pousser dans la ligne, un trigger d'enrubannage suit les balles en cours d'enrubannage, et le serveur construit des objets InlineBale à partir d'elles (les classes InlineBale, InlineBaleSingle et Bale ne sont pas dans ce fichier). Elle gère les animations de poussoir, d'enrubannage et d'éjection, des nœuds d'enrubannage qui suivent la surface de la balle, des rails réglables et des nœuds de direction, relâche le frein pendant la poussée, consomme du film par minute et synchronise les listes de balles vers les clients. Le joueur peut éjecter la ligne via une entrée ou un activable. Elle enregistre aussi deux valeurs de spécification de boutique pour les tailles de balles (rondes et carrées) et contient la classe auxiliaire InlineWrapperActivatable."
+ },
+ "fonctions": {
+  "InlineWrapper.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both Foldable and Consumable.",
+   "fr": "Renvoie true seulement si le type de véhicule possède Foldable et Consumable."
+  },
+  "InlineWrapper.initSpecialization": {
+   "en": "Registers the two shop spec types for round and square bale sizes, and the XML schema under vehicle.inlineWrapper: triggers, bale types (start node, wrap usage, railing, inline bale file, size), railings, wrapping and steering nodes, animations, pushing brake settings, move threshold, numObjectBits and sounds.",
+   "fr": "Enregistre les deux types de spécification boutique pour les tailles de balles rondes et carrées, et le schéma XML sous vehicle.inlineWrapper : triggers, types de balles (nœud de départ, usage de film, rail, fichier de balle en ligne, taille), rails, nœuds d'enrubannage et de direction, animations, réglages du frein en poussée, seuil de déplacement, numObjectBits et sons."
+  },
+  "InlineWrapper.registerFunctions": {
+   "en": "Registers the vehicle functions of the specialization: bale stream read and write, triggers callbacks, wrapping node updates, bale type lookup, railings, steering, push-off and current inline bale accessors.",
+   "fr": "Enregistre les fonctions de véhicule de la spécialisation : lecture et écriture des balles dans le flux, callbacks de triggers, mises à jour des nœuds d'enrubannage, recherche du type de balle, rails, direction, éjection et accesseurs de la balle en ligne courante."
+  },
+  "InlineWrapper.registerOverwrittenFunctions": {
+   "en": "Overrides getIsFoldAllowed, getIsActive, getBrakeForce and getShowConsumableEmptyWarning.",
+   "fr": "Surcharge getIsFoldAllowed, getIsActive, getBrakeForce et getShowConsumableEmptyWarning."
+  },
+  "InlineWrapper.registerEventListeners": {
+   "en": "Subscribes to load, delete, stream read and write, update, draw, action event, enter and leave vehicle and consumable variation events.",
+   "fr": "Abonne aux événements de chargement, suppression, lecture et écriture de flux, mise à jour, dessin, événements d'action, entrée et sortie de véhicule et variation de consommable."
+  },
+  "InlineWrapper:onLoad": {
+   "en": "Loads triggers, bale types (validated: a start node and inline bale file are required, size decides round or square), railings, wrapping and steering nodes, animation names, push and brake settings and dirty flags. Creates the activatable and, on clients, the wrap, start and stop sounds.",
+   "fr": "Charge les triggers, les types de balles (validés : nœud de départ et fichier de balle en ligne requis, la taille détermine rond ou carré), les rails, les nœuds d'enrubannage et de direction, les noms d'animations, les réglages de poussée et de frein et les drapeaux dirty. Crée l'activable et, côté client, les sons de wrap, démarrage et arrêt."
+  },
+  "InlineWrapper:onPostLoad": {
+   "en": "Sets the railings animation to its end time so the railings start fully open.",
+   "fr": "Place l'animation des rails à sa fin pour que les rails démarrent entièrement ouverts."
+  },
+  "InlineWrapper:onDelete": {
+   "en": "Removes both triggers, deletes sounds and the activatable, and releases the current inline bale (wakes it, resets wrapping state and wrapper link).",
+   "fr": "Retire les deux triggers, supprime les sons et l'activable, et libère la balle en ligne courante (la réveille, réinitialise l'état d'enrubannage et le lien avec l'enrubanneuse)."
+  },
+  "InlineWrapper:onReadStream": {
+   "en": "Client side initial sync: reads the three bale lists, the current inline bale and the incompatible-bale warning flag, then registers the activatable.",
+   "fr": "Synchronisation initiale côté client : lit les trois listes de balles, la balle en ligne courante et l'indicateur d'avertissement de balle incompatible, puis enregistre l'activable."
+  },
+  "InlineWrapper:onWriteStream": {
+   "en": "Server side initial sync: writes the three bale lists, the current inline bale (if any) and the warning flag.",
+   "fr": "Synchronisation initiale côté serveur : écrit les trois listes de balles, la balle en ligne courante (le cas échéant) et l'indicateur d'avertissement."
+  },
+  "InlineWrapper:onReadUpdateStream": {
+   "en": "Client side: when the dirty flag is set in the stream, reads the bale lists and current inline bale and registers the activatable. Always reads the incompatible-bale warning flag.",
+   "fr": "Côté client : quand le drapeau dirty est présent dans le flux, lit les listes de balles et la balle en ligne courante et enregistre l'activable. Lit toujours l'indicateur d'avertissement de balle incompatible."
+  },
+  "InlineWrapper:onWriteUpdateStream": {
+   "en": "Server side: when the bales dirty flag is raised, writes the bale lists and the current inline bale. Always writes the warning flag.",
+   "fr": "Côté serveur : quand le drapeau dirty des balles est levé, écrit les listes de balles et la balle en ligne courante. Écrit toujours l'indicateur d'avertissement."
+  },
+  "InlineWrapper:readInlineBales": {
+   "en": "Reads a named list of bale object ids from the stream (count stored in numObjectBits bits) and replaces the list in the specialization.",
+   "fr": "Lit dans le flux une liste nommée d'identifiants d'objets balle (nombre codé sur numObjectBits bits) et remplace la liste dans la spécialisation."
+  },
+  "InlineWrapper:writeInlineBales": {
+   "en": "Writes a named list of bale ids with its count in numObjectBits bits, warning if the list is longer than the bits allow (raise numObjectBits).",
+   "fr": "Écrit une liste nommée d'identifiants de balles avec son nombre sur numObjectBits bits, avec avertissement si la liste dépasse ce que les bits permettent (augmenter numObjectBits)."
+  },
+  "InlineWrapper:onUpdate": {
+   "en": "While the wrapping animation plays, updates the wrapping nodes each frame.",
+   "fr": "Pendant la lecture de l'animation d'enrubannage, met à jour les nœuds d'enrubannage à chaque frame."
+  },
+  "InlineWrapper:onUpdateTick": {
+   "en": "Main logic. Server: turns pending bales into inline bales (counts wrapped bales for stats and achievement), manages the pusher animation, brake release and the incompatible-bale flag. All sides: tracks the line steering direction, starts or stops the wrapping animation and sounds once a bale moved recently, consumes wrap on the server, moves railings, resets the push-off arm and toggles the push-off input.",
+   "fr": "Logique principale. Serveur : transforme les balles en attente en balles en ligne (compte les balles enrubannées pour les statistiques et le succès), gère l'animation du poussoir, le relâchement du frein et l'indicateur de balle incompatible. Tous côtés : suit la direction de la ligne, démarre ou arrête l'animation et les sons d'enrubannage quand une balle a bougé récemment, consomme le film côté serveur, déplace les rails, remet le bras d'éjection et active la touche d'éjection."
+  },
+  "InlineWrapper:onDraw": {
+   "en": "Client only: shows blinking warnings when bales wait while the machine is not unfolded in the allowed range, and when an incompatible bale is present.",
+   "fr": "Client uniquement : affiche des avertissements clignotants quand des balles attendent alors que la machine n'est pas dépliée dans la plage autorisée, et quand une balle incompatible est présente."
+  },
+  "InlineWrapper:updateWrappingNodes": {
+   "en": "For each wrapping node, finds the nearest bale being wrapped (skipping the pending one) and moves the node's target to the point on that bale's surface computed by the round or square helper, or back to its start translation. Resets the nodes once no inline bale remains.",
+   "fr": "Pour chaque nœud d'enrubannage, trouve la balle en cours d'enrubannage la plus proche (en ignorant celle en attente) et déplace la cible du nœud vers le point de la surface de cette balle calculé par l'aide ronde ou carrée, ou la remet à sa translation de départ. Réinitialise les nœuds quand il ne reste plus de balle en ligne."
+  },
+  "InlineWrapper:updateRoundBaleWrappingNode": {
+   "en": "Computes, for a round bale, the world position on its circular cross-section (32 samples, slightly inside the radius) that the wrapping node should aim at. Returns nil values if none qualifies.",
+   "fr": "Calcule, pour une balle ronde, la position monde sur sa section circulaire (32 échantillons, légèrement à l'intérieur du rayon) que le nœud d'enrubannage doit viser. Renvoie des valeurs nil si aucune ne convient."
+  },
+  "InlineWrapper:updateSquareBaleWrappingNode": {
+   "en": "Computes, for a square bale, the corner of its cross-section (cached as wrappingEdges) that the wrapping node should aim at, choosing the smallest angle among corners not hidden by the bale. Returns nil values if none qualifies.",
+   "fr": "Calcule, pour une balle carrée, l'angle de sa section (mis en cache dans wrappingEdges) que le nœud d'enrubannage doit viser, en choisissant le plus petit angle parmi les coins non masqués par la balle. Renvoie des valeurs nil si aucun ne convient."
+  },
+  "InlineWrapper:onRegisterActionEvents": {
+   "en": "Client only: when active for input, binds ACTIVATE_OBJECT to the push-off handler with the unload text, enabled according to getCanPushOff.",
+   "fr": "Client uniquement : quand actif pour les entrées, lie ACTIVATE_OBJECT au gestionnaire d'éjection avec le texte de déchargement, activé selon getCanPushOff."
+  },
+  "InlineWrapper:getIsFoldAllowed": {
+   "en": "Refuses folding while bales are inside the inline bale trigger, otherwise defers to the parent.",
+   "fr": "Refuse le repli tant que des balles sont dans le trigger de balles en ligne, sinon s'en remet au parent."
+  },
+  "InlineWrapper:getIsActive": {
+   "en": "Returns true while the brake is being released (or its set state is out of date) so the vehicle keeps updating, otherwise the parent value.",
+   "fr": "Renvoie true pendant que le frein est relâché (ou que son état appliqué est périmé) pour que le véhicule continue de se mettre à jour, sinon la valeur du parent."
+  },
+  "InlineWrapper:getBrakeForce": {
+   "en": "Returns 0 and records the state while pushing requires the brake to be released, otherwise the parent brake force.",
+   "fr": "Renvoie 0 et mémorise l'état tant que la poussée exige le relâchement du frein, sinon la force de freinage du parent."
+  },
+  "InlineWrapper:getShowConsumableEmptyWarning": {
+   "en": "For the wrap consumable type, shows the empty warning only when bales are pending and the fold time check passes. Note: the check uses `or` between the min and max comparisons, so it is always true.",
+   "fr": "Pour le consommable de film, n'affiche l'avertissement de vide que si des balles sont en attente et que le test de repli passe. À noter : le test utilise `or` entre les comparaisons min et max, il est donc toujours vrai."
+  },
+  "InlineWrapper:getIsInlineBalingAllowed": {
+   "en": "Returns true when the machine is unfolded within the allowed range, the pusher and push-off animations are idle at start, and wrap consumable is available.",
+   "fr": "Renvoie true quand la machine est dépliée dans la plage autorisée, que les animations de poussoir et d'éjection sont au repos au départ et que du film consommable est disponible."
+  },
+  "InlineWrapper:inlineBaleTriggerCallback": {
+   "en": "Server only trigger callback for the bale pickup trigger. Tracks entering bales as pending (supported type), incompatible, or already inline; on leaving, removes them and detaches the inline bale from the wrapper once none of its bales remain. Raises the bale dirty flag.",
+   "fr": "Callback de trigger côté serveur uniquement pour le trigger de ramassage. Suit les balles entrantes comme en attente (type supporté), incompatibles ou déjà en ligne ; à la sortie, les retire et détache la balle en ligne de l'enrubanneuse quand plus aucune de ses balles ne reste. Lève le drapeau dirty des balles."
+  },
+  "InlineWrapper:inlineWrapTriggerCallback": {
+   "en": "Server only trigger callback for the wrap trigger: adds or removes bales in the list of bales to wrap, keeps the vehicle active and raises the bale dirty flag.",
+   "fr": "Callback de trigger côté serveur uniquement pour le trigger d'enrubannage : ajoute ou retire des balles de la liste des balles à enrubanner, garde le véhicule actif et lève le drapeau dirty des balles."
+  },
+  "InlineWrapper:getWrapperBaleType": {
+   "en": "Returns the configured bale type matching a bale (supports wrapping, same diameter and width for round, same width, height and length for square), or nil if none matches.",
+   "fr": "Renvoie le type de balle configuré correspondant à une balle (supporte l'enrubannage, mêmes diamètre et largeur pour une ronde, mêmes largeur, hauteur et longueur pour une carrée), ou nil si aucun ne correspond."
+  },
+  "InlineWrapper:getAllowBalePushing": {
+   "en": "Returns false if the bale is held by a dynamic mount joint, true otherwise.",
+   "fr": "Renvoie false si la balle est retenue par un joint de montage dynamique, true sinon."
+  },
+  "InlineWrapper:updateWrapperRailings": {
+   "en": "Moves the current railing width toward the target at a fixed rate per millisecond and sets the railings animation time accordingly.",
+   "fr": "Déplace la largeur courante des rails vers la cible à une vitesse fixe par milliseconde et règle en conséquence le temps de l'animation des rails."
+  },
+  "InlineWrapper:updateInlineSteeringWheels": {
+   "en": "Aligns each steering node toward the given world direction (x, z), or restores its start rotation when no direction is given. Flags moving tools as dirty when available.",
+   "fr": "Aligne chaque nœud de direction vers la direction monde donnée (x, z), ou restaure sa rotation de départ si aucune direction n'est fournie. Marque les outils mobiles comme modifiés si disponible."
+  },
+  "InlineWrapper:onLeaveVehicle": {
+   "en": "Resets the steering amount (rotatedTime) to 0 when the player leaves the vehicle.",
+   "fr": "Remet le braquage (rotatedTime) à 0 quand le joueur quitte le véhicule."
+  },
+  "InlineWrapper:onEnterVehicle": {
+   "en": "Restores the start rotation of all steering nodes when the player enters the vehicle.",
+   "fr": "Restaure la rotation de départ de tous les nœuds de direction quand le joueur entre dans le véhicule."
+  },
+  "InlineWrapper:onConsumableVariationChanged": {
+   "en": "When the selected wrap variation carries a color, stores it as the wrap color used for new bales.",
+   "fr": "Quand la variation de film sélectionnée porte une couleur, la mémorise comme couleur de film utilisée pour les nouvelles balles."
+  },
+  "InlineWrapper:getCanInteract": {
+   "en": "Returns true if the local player is on foot, has access to the vehicle and stands within the interaction radius of its first component. The radius constant is defined outside this file (UNVERIFIED).",
+   "fr": "Renvoie true si le joueur local est à pied, a accès au véhicule et se tient dans le rayon d'interaction de son premier composant. La constante du rayon est définie hors de ce fichier (NON VÉRIFIÉ)."
+  },
+  "InlineWrapper:getCanPushOff": {
+   "en": "Returns true when an inline bale exists with no pending bale and neither the pusher nor the push-off animation is playing.",
+   "fr": "Renvoie true quand une balle en ligne existe sans balle en attente et que ni l'animation du poussoir ni celle d'éjection ne joue."
+  },
+  "InlineWrapper:setCurrentInlineBale": {
+   "en": "Stores the current inline bale: on the server as a network id (raising the dirty flag on change), on clients as the object itself when isClient is true.",
+   "fr": "Mémorise la balle en ligne courante : côté serveur sous forme d'identifiant réseau (en levant le drapeau dirty si elle change), côté client sous forme d'objet quand isClient vaut true."
+  },
+  "InlineWrapper:getCurrentInlineBale": {
+   "en": "Returns the current inline bale object resolved from the stored network id, or nil.",
+   "fr": "Renvoie l'objet de la balle en ligne courante résolu depuis l'identifiant réseau mémorisé, ou nil."
+  },
+  "InlineWrapper.pushOffInlineBaleEvent": {
+   "en": "Input callback: on press, the server pushes the bale line off directly, a client sends an InlineWrapperPushOffEvent to the server.",
+   "fr": "Callback d'entrée : à l'appui, le serveur éjecte directement la ligne de balles, un client envoie un InlineWrapperPushOffEvent au serveur."
+  },
+  "InlineWrapper:pushOffInlineBale": {
+   "en": "Starts the push-off animation forward if it is not already playing and marks the push-off as started so the arm is reset afterwards.",
+   "fr": "Démarre l'animation d'éjection en avant si elle ne joue pas déjà et marque l'éjection comme lancée pour que le bras soit remis ensuite."
+  },
+  "InlineWrapper.loadSpecValueBaleSize": {
+   "en": "Reads from a vehicle XML the min and max bale diameter (round wrappers) or length (square wrappers) over all baleType entries. Returns a table of those values, or nil if none.",
+   "fr": "Lit dans un XML de véhicule le diamètre (enrubanneuses rondes) ou la longueur (carrées) min et max sur toutes les entrées baleType. Renvoie une table de ces valeurs, ou nil s'il n'y en a pas."
+  },
+  "InlineWrapper.getSpecValueBaleSize": {
+   "en": "Shop display helper: returns the bale size as text in cm (a range when min differs from max), or as numbers with unit when returnValues is set, or empty values when absent.",
+   "fr": "Aide d'affichage boutique : renvoie la taille de balle en texte en cm (une plage si min diffère de max), ou en nombres avec unité si returnValues est vrai, ou des valeurs vides en l'absence de données."
+  },
+  "InlineWrapper.loadSpecValueBaleSizeRound": {
+   "en": "Store spec loader for round bale sizes: calls loadSpecValueBaleSize with the round flag.",
+   "fr": "Chargeur de spécification boutique pour les tailles de balles rondes : appelle loadSpecValueBaleSize avec l'indicateur rond."
+  },
+  "InlineWrapper.loadSpecValueBaleSizeSquare": {
+   "en": "Store spec loader for square bale sizes: calls loadSpecValueBaleSize without the round flag.",
+   "fr": "Chargeur de spécification boutique pour les tailles de balles carrées : appelle loadSpecValueBaleSize sans l'indicateur rond."
+  },
+  "InlineWrapper.getSpecValueBaleSizeRound": {
+   "en": "Store spec getter for round bale sizes; returns nil if the store item has no such spec, otherwise the shared formatting result.",
+   "fr": "Accesseur de spécification boutique pour les tailles de balles rondes ; renvoie nil si l'article n'a pas cette spécification, sinon le résultat du formatage partagé."
+  },
+  "InlineWrapper.getSpecValueBaleSizeSquare": {
+   "en": "Store spec getter for square bale sizes; returns nil if the store item has no such spec, otherwise the shared formatting result.",
+   "fr": "Accesseur de spécification boutique pour les tailles de balles carrées ; renvoie nil si l'article n'a pas cette spécification, sinon le résultat du formatage partagé."
+  },
+  "InlineWrapperActivatable.new": {
+   "en": "Creates the activatable object linked to an inline wrapper, with the unload text for the activation prompt.",
+   "fr": "Crée l'objet activable lié à une enrubanneuse en ligne, avec le texte de déchargement pour l'invite d'activation."
+  },
+  "InlineWrapperActivatable:getIsActivatable": {
+   "en": "Returns true when the player can interact with the wrapper and the bale line can currently be pushed off.",
+   "fr": "Renvoie true quand le joueur peut interagir avec l'enrubanneuse et que la ligne de balles peut être éjectée."
+  },
+  "InlineWrapperActivatable:run": {
+   "en": "Executes the activation: the server pushes the bale line off, a client sends an InlineWrapperPushOffEvent to the server.",
+   "fr": "Exécute l'activation : le serveur éjecte la ligne de balles, un client envoie un InlineWrapperPushOffEvent au serveur."
+  }
+ }
+}

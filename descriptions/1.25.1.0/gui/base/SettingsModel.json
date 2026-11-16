@@ -1,0 +1,457 @@
+{
+ "fichier": "gui/base/SettingsModel.lua",
+ "module": {
+  "en": "Model behind the settings screens (graphics, audio, controls, gameplay). It keeps for every setting an initial, a saved (applied) and a changed (GUI) value, with reader and writer functions that talk to GameSettings or the engine. Edits stay transient until applyChanges writes them and saveChanges persists them to the gameplay settings, the engine hardware-scalability file and the input-binding file. It also builds the option text lists for the controls and holds per-device deadzone and sensitivity state. Many add<Name>Setting helpers called from addManagedSettings, and the SETTING / SETTING_CLASS constants, are not in this dump (UNVERIFIED); the engine functions it calls (getShadowQuality, setMSAA...) are engine bindings.",
+  "fr": "Modèle derrière les écrans de réglages (graphismes, audio, commandes, jeu). Pour chaque réglage, il garde une valeur initiale, une valeur sauvegardée (appliquée) et une valeur modifiée (GUI), avec des fonctions de lecture et d'écriture vers GameSettings ou le moteur. Les modifications restent transitoires jusqu'à applyChanges, puis saveChanges les persiste dans les réglages de jeu, le fichier de scalabilité matérielle du moteur et le fichier des bindings d'entrée. Il construit aussi les listes de textes d'options des contrôles et gère l'état des zones mortes et sensibilités par périphérique. Beaucoup d'assistants add<Nom>Setting appelés par addManagedSettings, ainsi que les constantes SETTING / SETTING_CLASS, ne sont pas dans ce dump (NON VÉRIFIÉ) ; les fonctions moteur appelées (getShadowQuality, setMSAA...) sont des bindings du moteur."
+ },
+ "fonctions": {
+  "SettingsModel.new": {
+   "en": "Creates the model: empty settings tables, empty option-text lists with step constants (brightness 0.5 to 2.0, sharpness 0 to 2...), a table of quality names translated from l10n, then calls initialize. Takes no parameters. Needs g_i18n.",
+   "fr": "Crée le modèle : tables de réglages vides, listes de textes d'options vides avec constantes de pas (luminosité 0,5 à 2,0, netteté 0 à 2...), une table de noms de qualité traduits via l10n, puis appelle initialize. Ne prend aucun paramètre. Nécessite g_i18n."
+  },
+  "SettingsModel:initialize": {
+   "en": "Builds the option value and text lists, then registers all managed settings.",
+   "fr": "Construit les listes de valeurs et de textes d'options, puis enregistre tous les réglages gérés."
+  },
+  "SettingsModel:addManagedSettings": {
+   "en": "Registers every setting with its reader and writer. Non-console builds add the performance class first (it would overwrite the others' defaults), then engine quality settings (atmosphere, DRS, DLSS, FSR, XeSS, MSAA, post-process AA...) whose change callbacks switch off conflicting upscalers or anti-aliasing modes. Then come audio, camera, gameplay, HDR and direct GameSettings flags, with some added only on mobile or when the frame limit is adjustable.",
+   "fr": "Enregistre chaque réglage avec son lecteur et son écrivain. Les versions non console ajoutent d'abord la classe de performance (elle écraserait les valeurs par défaut des autres), puis les réglages de qualité moteur (atmosphère, DRS, DLSS, FSR, XeSS, MSAA, AA post-traitement...) dont les callbacks de changement désactivent les upscalers ou modes d'anticrénelage incompatibles. Viennent ensuite audio, caméra, jeu, HDR et indicateurs GameSettings directs, certains ajoutés seulement sur mobile ou si la limite d'images est réglable. Note : le callback Valar utilise g_settingsModel au lieu de self."
+  },
+  "SettingsModel:addSetting": {
+   "en": "Registers a setting under its key: reads its current value through readerFunction and stores initial, saved and changed values with the restartRequired flag, plus optional text, raw-to-value, value-to-raw and on-change functions. Also appends it to sortedSettings, which sets the apply order.",
+   "fr": "Enregistre un réglage sous sa clé : lit sa valeur actuelle via readerFunction et stocke les valeurs initiale, sauvegardée et modifiée avec l'indicateur restartRequired, plus des fonctions optionnelles de texte, brut-vers-valeur, valeur-vers-brut et de changement. L'ajoute aussi à sortedSettings, qui fixe l'ordre d'application."
+  },
+  "SettingsModel:setValue": {
+   "en": "Sets the changed (GUI) value of a setting without writing it to the engine, and calls its on-change function with the value, the raw value and whether it differs. Unknown keys log a warning; a nil value is ignored.",
+   "fr": "Définit la valeur modifiée (GUI) d'un réglage sans l'écrire dans le moteur, et appelle sa fonction de changement avec la valeur, la valeur brute et un indicateur de différence. Une clé inconnue journalise un avertissement ; une valeur nil est ignorée."
+  },
+  "SettingsModel:getValue": {
+   "en": "Returns the changed value of a setting, or 0 if the key is not registered. With trueValue it instead calls the reader and returns the live current value.",
+   "fr": "Renvoie la valeur modifiée d'un réglage, ou 0 si la clé n'est pas enregistrée. Avec trueValue, appelle le lecteur et renvoie la valeur réelle actuelle."
+  },
+  "SettingsModel:refresh": {
+   "en": "Re-reads every setting through its reader and sets initial, changed and saved to it, discarding pending edits.",
+   "fr": "Relit chaque réglage via son lecteur et fixe initial, modifié et sauvegardé à cette valeur, ce qui écarte les modifications en attente."
+  },
+  "SettingsModel:refreshChangedValue": {
+   "en": "Re-reads every setting into changed and saved but keeps initial, so reset() still goes back to the older values.",
+   "fr": "Relit chaque réglage dans modifié et sauvegardé mais garde initial, de sorte que reset() revient toujours aux anciennes valeurs."
+  },
+  "SettingsModel:reset": {
+   "en": "Restores every setting to its initial value, calling the writer for those that differ, then calls setUserConfirmScreenMode(true) (engine) and resets pending device changes.",
+   "fr": "Restaure chaque réglage à sa valeur initiale en appelant l'écrivain pour ceux qui diffèrent, puis appelle setUserConfirmScreenMode(true) (moteur) et annule les changements de périphériques en attente."
+  },
+  "SettingsModel:hasChanges": {
+   "en": "Returns true if any setting differs from its initial value or has pending device changes.",
+   "fr": "Renvoie true si un réglage diffère de sa valeur initiale ou si des changements de périphériques sont en attente."
+  },
+  "SettingsModel:needsRestartToApplyChanges": {
+   "en": "Returns two booleans: whether a changed setting flagged restartRequired exists, and, if so, whether a full process restart is needed (see needsProcessRestartToApplyChanges). Returns false, false otherwise.",
+   "fr": "Renvoie deux booléens : s'il existe un réglage modifié marqué restartRequired et, si oui, si un redémarrage complet du processus est nécessaire (voir needsProcessRestartToApplyChanges). Sinon renvoie false, false."
+  },
+  "SettingsModel:needsProcessRestartToApplyChanges": {
+   "en": "Returns true if the screen resolution or fullscreen mode setting exists and was changed. Uses the global g_settingsModel, not self.",
+   "fr": "Renvoie true si le réglage de résolution ou de mode plein écran existe et a été modifié. Utilise le global g_settingsModel et non self."
+  },
+  "SettingsModel:applyChanges": {
+   "en": "Writes every setting whose changed value differs from the saved one through its writer, then makes changed the new initial value. Saves too unless settingClassesToSave is 0; the argument is a bit mask of SETTING_CLASS flags, not a boolean.",
+   "fr": "Écrit via son écrivain chaque réglage dont la valeur modifiée diffère de la sauvegardée, puis fait de la valeur modifiée la nouvelle valeur initiale. Sauvegarde aussi sauf si settingClassesToSave vaut 0 ; l'argument est un masque de bits de drapeaux SETTING_CLASS, pas un booléen."
+  },
+  "SettingsModel:saveChanges": {
+   "en": "Persists applied settings according to the class bit mask: gameplay settings through g_gameSettings:save(), device changes always, and hardware scalability through saveHardwareScalability (plus executeSettingsChange on console or mobile). Does not apply pending changes.",
+   "fr": "Persiste les réglages appliqués selon le masque de classes : réglages de jeu via g_gameSettings:save(), changements de périphériques toujours, et scalabilité matérielle via saveHardwareScalability (plus executeSettingsChange sur console ou mobile). N'applique pas les changements en attente."
+  },
+  "SettingsModel:applyPerformanceClass": {
+   "en": "Writes the performance class value through its writer, marks it changed and saved, then refreshes all changed values from the engine since the preset alters other settings.",
+   "fr": "Écrit la valeur de classe de performance via son écrivain, la marque modifiée et sauvegardée, puis rafraîchit toutes les valeurs modifiées depuis le moteur car le préréglage change d'autres réglages."
+  },
+  "SettingsModel:applyCustomSettings": {
+   "en": "Writes every changed-but-unsaved setting except the performance class through its writer and marks it saved; does not touch initial values or persist anything.",
+   "fr": "Écrit chaque réglage modifié mais non sauvegardé, sauf la classe de performance, via son écrivain et le marque sauvegardé ; ne touche pas aux valeurs initiales et ne persiste rien."
+  },
+  "SettingsModel:createControlDisplayValues": {
+   "en": "Fills all option lists: volume, FOV, UI and resolution scale, camera and steering sensitivities, units, shadow and quality levels, frame limits, HDR ranges, percentage and tire-track steps, screen modes with aspect labels, languages, scaling modes available on this hardware, and device deadzone and sensitivity steps. Depends on engine and platform queries (UNVERIFIED values).",
+   "fr": "Remplit toutes les listes d'options : volume, FOV, échelle d'interface et de résolution, sensibilités de caméra et de direction, unités, niveaux d'ombres et de qualité, limites d'images, plages HDR, pas de pourcentage et de traces de pneus, modes d'écran avec rapport d'aspect, langues, modes de mise à l'échelle disponibles sur ce matériel, et pas de zone morte et de sensibilité des périphériques. Dépend de requêtes moteur et plateforme (valeurs NON VÉRIFIÉES)."
+  },
+  "SettingsModel:getDeadzoneTexts": {
+   "en": "Returns the list of deadzone percentage labels (0% to 30%).",
+   "fr": "Renvoie la liste des libellés de zone morte en pourcentage (0 % à 30 %)."
+  },
+  "SettingsModel:getSensitivityTexts": {
+   "en": "Returns the list of sensitivity percentage labels (50% to 200%).",
+   "fr": "Renvoie la liste des libellés de sensibilité en pourcentage (50 % à 200 %)."
+  },
+  "SettingsModel:getHeadTrackingSensitivityTexts": {
+   "en": "Returns the list of head-tracking sensitivity labels (0% to 100%).",
+   "fr": "Renvoie la liste des libellés de sensibilité du suivi de tête (0 % à 100 %)."
+  },
+  "SettingsModel:getDeviceHasAxisDeadzone": {
+   "en": "Returns true if the current device has a deadzone entry for the given axis index.",
+   "fr": "Renvoie true si le périphérique courant a une entrée de zone morte pour l'axe donné."
+  },
+  "SettingsModel:getDeviceHasAxisSensitivity": {
+   "en": "Returns true if the current device has a sensitivity entry for the given axis index.",
+   "fr": "Renvoie true si le périphérique courant a une entrée de sensibilité pour l'axe donné."
+  },
+  "SettingsModel:getNumDevices": {
+   "en": "Returns the number of input devices tracked in the device settings.",
+   "fr": "Renvoie le nombre de périphériques d'entrée suivis dans les réglages de périphériques."
+  },
+  "SettingsModel:nextDevice": {
+   "en": "Moves the current device index to the next device, wrapping to 1 after the last.",
+   "fr": "Passe à l'index de périphérique suivant, en revenant à 1 après le dernier."
+  },
+  "SettingsModel:getCurrentDeviceName": {
+   "en": "Returns the device name of the current device, or an empty string if none.",
+   "fr": "Renvoie le nom du périphérique courant, ou une chaîne vide s'il n'y en a pas."
+  },
+  "SettingsModel:initDeviceSettings": {
+   "en": "Rebuilds the per-device state from g_inputBinding.devicesByInternalId: for each gamepad axis the device has, the deadzone and sensitivity as indices into the value lists, the mouse scale for keyboard/mouse devices, and the camera head-tracking sensitivity. Sets the current device to 1 when any device exists.",
+   "fr": "Reconstruit l'état par périphérique depuis g_inputBinding.devicesByInternalId : pour chaque axe de manette du périphérique, la zone morte et la sensibilité en index des listes de valeurs, l'échelle de la souris pour les périphériques clavier/souris, et la sensibilité du suivi de tête. Place le périphérique courant à 1 si un périphérique existe."
+  },
+  "SettingsModel:hasDeviceChanges": {
+   "en": "Returns true if any device axis deadzone or sensitivity, the mouse sensitivity or the head-tracking sensitivity differs from its saved value.",
+   "fr": "Renvoie true si la zone morte ou la sensibilité d'un axe, la sensibilité de la souris ou celle du suivi de tête diffère de sa valeur sauvegardée."
+  },
+  "SettingsModel:saveDeviceChanges": {
+   "en": "Applies the current deadzone and sensitivity of every axis to the devices, and mouse and head-tracking sensitivities for keyboard/mouse devices, marks them saved, and if anything was applied reapplies gamepad deadzones and writes the input binding XML file. Note: axis values are always written, and head-tracking only for keyboard/mouse devices.",
+   "fr": "Applique aux périphériques la zone morte et la sensibilité actuelles de chaque axe, et les sensibilités de souris et de suivi de tête pour les périphériques clavier/souris, les marque sauvegardées, et si quelque chose a été appliqué, réapplique les zones mortes des manettes et écrit le fichier XML des bindings. À noter : les valeurs d'axe sont toujours écrites, et le suivi de tête seulement pour les périphériques clavier/souris."
+  },
+  "SettingsModel:resetDeviceChanges": {
+   "en": "Sets every device's current deadzone, sensitivity, mouse and head-tracking values back to their saved values.",
+   "fr": "Remet les valeurs actuelles de zone morte, sensibilité, souris et suivi de tête de chaque périphérique à leurs valeurs sauvegardées."
+  },
+  "SettingsModel:setDeviceDeadzoneValue": {
+   "en": "Sets the pending deadzone index for an axis on the current device; does nothing if there is no current device.",
+   "fr": "Définit l'index de zone morte en attente pour un axe du périphérique courant ; sans effet s'il n'y a pas de périphérique courant."
+  },
+  "SettingsModel:setDeviceSensitivityValue": {
+   "en": "Sets the pending sensitivity index for an axis on the current device; does nothing if there is no current device.",
+   "fr": "Définit l'index de sensibilité en attente pour un axe du périphérique courant ; sans effet s'il n'y a pas de périphérique courant."
+  },
+  "SettingsModel:getCurrentDeviceSensitivityValue": {
+   "en": "Returns the actual sensitivity number (not the index) for an axis on the current device, or nil when there is no current device.",
+   "fr": "Renvoie la valeur réelle de sensibilité (pas l'index) d'un axe du périphérique courant, ou nil s'il n'y a pas de périphérique courant."
+  },
+  "SettingsModel:setMouseSensitivity": {
+   "en": "Sets the pending mouse sensitivity index on the current device if one exists.",
+   "fr": "Définit l'index de sensibilité de souris en attente sur le périphérique courant s'il existe."
+  },
+  "SettingsModel:setHeadTrackingSensitivity": {
+   "en": "Sets the pending head-tracking sensitivity index on the current device if one exists.",
+   "fr": "Définit l'index de sensibilité du suivi de tête en attente sur le périphérique courant s'il existe."
+  },
+  "SettingsModel:getDeviceAxisDeadzoneValue": {
+   "en": "Returns the pending deadzone index of an axis on the current device. No nil check: errors if there is no current device or axis.",
+   "fr": "Renvoie l'index de zone morte en attente d'un axe du périphérique courant. Pas de contrôle nil : erreur s'il n'y a pas de périphérique ou d'axe courant."
+  },
+  "SettingsModel:getDeviceAxisSensitivityValue": {
+   "en": "Returns the pending sensitivity index of an axis on the current device. No nil check, like the deadzone getter.",
+   "fr": "Renvoie l'index de sensibilité en attente d'un axe du périphérique courant. Pas de contrôle nil, comme pour la zone morte."
+  },
+  "SettingsModel:getMouseSensitivityValue": {
+   "en": "Returns the pending mouse sensitivity index of the current device; the axisIndex parameter is unused.",
+   "fr": "Renvoie l'index de sensibilité de souris en attente du périphérique courant ; le paramètre axisIndex est inutilisé."
+  },
+  "SettingsModel:getHeadTrackingSensitivityValue": {
+   "en": "Returns the pending head-tracking sensitivity index of the current device; the axisIndex parameter is unused.",
+   "fr": "Renvoie l'index de sensibilité du suivi de tête en attente du périphérique courant ; le paramètre axisIndex est inutilisé."
+  },
+  "SettingsModel:getIsDeviceMouse": {
+   "en": "Returns true if the current device is in the keyboard and mouse category.",
+   "fr": "Renvoie true si le périphérique courant est de catégorie clavier et souris."
+  },
+  "SettingsModel:getResolutionTexts": {
+   "en": "Returns the screen mode labels (size and aspect ratio) built from the engine's screen mode list.",
+   "fr": "Renvoie les libellés de modes d'écran (taille et rapport d'aspect) construits depuis la liste des modes d'écran du moteur."
+  },
+  "SettingsModel:getFullscreenModeTexts": {
+   "en": "Returns the labels for windowed, borderless and exclusive fullscreen modes.",
+   "fr": "Renvoie les libellés des modes fenêtré, plein écran fenêtré et plein écran exclusif."
+  },
+  "SettingsModel:getMPLanguageTexts": {
+   "en": "Returns the language names offered for multiplayer, as listed by the engine.",
+   "fr": "Renvoie les noms de langues proposés en multijoueur, tels que listés par le moteur."
+  },
+  "SettingsModel:getFrameLimitTexts": {
+   "en": "Returns the frame limit option labels built from g_gameSettings.frameLimitValues.",
+   "fr": "Renvoie les libellés des limites d'images construits depuis g_gameSettings.frameLimitValues."
+  },
+  "SettingsModel:getInputHelpModeTexts": {
+   "en": "Returns the labels for input help mode: auto, keyboard, gamepad.",
+   "fr": "Renvoie les libellés du mode d'aide à la saisie : auto, clavier, manette."
+  },
+  "SettingsModel:getDirectionChangeModeTexts": {
+   "en": "Returns labels for automatic and manual direction change, keyed by the VehicleMotor mode constants.",
+   "fr": "Renvoie les libellés du changement de sens automatique et manuel, indexés par les constantes de mode de VehicleMotor."
+  },
+  "SettingsModel:getGearShiftModeTexts": {
+   "en": "Returns gear shift mode labels keyed by VehicleMotor constants; the manual-with-clutch entry is omitted on console.",
+   "fr": "Renvoie les libellés des modes de passage de vitesse indexés par les constantes de VehicleMotor ; l'entrée manuel avec embrayage est absente sur console."
+  },
+  "SettingsModel:getHudSpeedGaugeTexts": {
+   "en": "Returns labels for the speed gauge showing RPM or speed, keyed by SpeedMeterDisplay constants.",
+   "fr": "Renvoie les libellés du compteur affichant le régime ou la vitesse, indexés par les constantes de SpeedMeterDisplay."
+  },
+  "SettingsModel:getLanguageTexts": {
+   "en": "Returns the global table of available language names, g_availableLanguageNamesTable (defined elsewhere).",
+   "fr": "Renvoie la table globale des noms de langues disponibles, g_availableLanguageNamesTable (définie ailleurs)."
+  },
+  "SettingsModel:getIsLanguageDisabled": {
+   "en": "Returns true when at most one language is available or the build is the Steam version, meaning the language selector is locked.",
+   "fr": "Renvoie true quand au plus une langue est disponible ou que la version est Steam, c'est-à-dire que le sélecteur de langue est verrouillé."
+  },
+  "SettingsModel:getPerformanceClassTexts": {
+   "en": "Returns the six preset labels (very low to ultra), the current performance class and whether it is custom. On non-mobile builds the current slot is relabelled custom or auto from getPerformanceClass and getAutoPerformanceClass (engine).",
+   "fr": "Renvoie les six libellés de préréglage (très bas à ultra), la classe de performance actuelle et si elle est personnalisée. Hors mobile, l'emplacement courant est renommé personnalisé ou auto d'après getPerformanceClass et getAutoPerformanceClass (moteur)."
+  },
+  "SettingsModel:getHDRPeakBrightnessTexts": {
+   "en": "Returns the HDR peak brightness labels (50 to 1000 in steps of 10).",
+   "fr": "Renvoie les libellés de luminosité maximale HDR (50 à 1000 par pas de 10)."
+  },
+  "SettingsModel:getHDRContrastTexts": {
+   "en": "Returns the HDR contrast labels (0.80 to 2.00 in steps of 0.01).",
+   "fr": "Renvoie les libellés de contraste HDR (0,80 à 2,00 par pas de 0,01)."
+  },
+  "SettingsModel:getOverlayBrightnessTexts": {
+   "en": "Returns the overlay brightness labels (50 to 1000 in steps of 10).",
+   "fr": "Renvoie les libellés de luminosité des overlays (50 à 1000 par pas de 10)."
+  },
+  "SettingsModel:getPostProcessAAToolTip": {
+   "en": "Returns the post-process anti-aliasing tooltip, extended with the TAA and DLAA sentences when the engine supports them.",
+   "fr": "Renvoie l'infobulle de l'anticrénelage de post-traitement, complétée par les phrases TAA et DLAA quand le moteur les prend en charge."
+  },
+  "SettingsModel:getDRSTargetFPSTexts": {
+   "en": "Returns the dynamic resolution target FPS labels, built from the frame limit values.",
+   "fr": "Renvoie les libellés de FPS cible de la résolution dynamique, construits depuis les valeurs de limite d'images."
+  },
+  "SettingsModel:getShadingRateQualityTexts": {
+   "en": "Returns the four-level low to very high labels for shading rate quality.",
+   "fr": "Renvoie les libellés à quatre niveaux, bas à très élevé, de la qualité du taux d'ombrage."
+  },
+  "SettingsModel:getShadowQualityTexts": {
+   "en": "Returns the shadow quality labels: off, medium, high, very high.",
+   "fr": "Renvoie les libellés de qualité des ombres : désactivé, moyen, élevé, très élevé."
+  },
+  "SettingsModel:getShadowDistanceQualityTexts": {
+   "en": "Returns the shadow distance labels: low, medium, high.",
+   "fr": "Renvoie les libellés de distance des ombres : bas, moyen, élevé."
+  },
+  "SettingsModel:getSoftShadowsTexts": {
+   "en": "Returns the off/on labels for soft shadows.",
+   "fr": "Renvoie les libellés désactivé/activé des ombres douces."
+  },
+  "SettingsModel:getSSAOQualityTexts": {
+   "en": "Returns the four-level labels for ambient occlusion quality.",
+   "fr": "Renvoie les libellés à quatre niveaux de la qualité de l'occlusion ambiante."
+  },
+  "SettingsModel:getShaderQualityTexts": {
+   "en": "Returns the four-level low to very high labels, shared with other settings.",
+   "fr": "Renvoie les libellés à quatre niveaux, bas à très élevé, partagés avec d'autres réglages."
+  },
+  "SettingsModel:getTextureResolutionTexts": {
+   "en": "Returns the low/high labels for texture resolution.",
+   "fr": "Renvoie les libellés bas/élevé de la résolution des textures."
+  },
+  "SettingsModel:getShadowMapFilteringTexts": {
+   "en": "Returns the low/high labels for shadow map filtering.",
+   "fr": "Renvoie les libellés bas/élevé du filtrage des cartes d'ombres."
+  },
+  "SettingsModel:getTerraingQualityTexts": {
+   "en": "Returns the four-level labels for terrain quality. The name has a typo (Terraing) but is the real one.",
+   "fr": "Renvoie les libellés à quatre niveaux de la qualité du terrain. Le nom contient une faute (Terraing) mais c'est le vrai nom."
+  },
+  "SettingsModel:getLightsProfileTexts": {
+   "en": "Returns the five-level labels, low to ultra, for the lights profile.",
+   "fr": "Renvoie les libellés à cinq niveaux, bas à ultra, du profil d'éclairage."
+  },
+  "SettingsModel:getShadowMapLightsTexts": {
+   "en": "Returns the labels 1 to 10 for the maximum number of shadow-casting lights.",
+   "fr": "Renvoie les libellés 1 à 10 pour le nombre maximal de lumières projetant des ombres."
+  },
+  "SettingsModel:getObjectDrawDistanceTexts": {
+   "en": "Returns the shared percentage labels (50% to 200% by 5%) used for object draw distance.",
+   "fr": "Renvoie les libellés de pourcentage partagés (50 % à 200 % par 5 %) utilisés pour la distance d'affichage des objets."
+  },
+  "SettingsModel:getFoliageDrawDistanceTexts": {
+   "en": "Returns the same shared percentage labels, used for foliage draw distance.",
+   "fr": "Renvoie les mêmes libellés de pourcentage partagés, utilisés pour la distance d'affichage du feuillage."
+  },
+  "SettingsModel:getLODDistanceTexts": {
+   "en": "Returns the same shared percentage labels, used for LOD distance.",
+   "fr": "Renvoie les mêmes libellés de pourcentage partagés, utilisés pour la distance de LOD."
+  },
+  "SettingsModel:getTerrainLODDistanceTexts": {
+   "en": "Returns the same shared percentage labels, used for terrain LOD distance.",
+   "fr": "Renvoie les mêmes libellés de pourcentage partagés, utilisés pour la distance de LOD du terrain."
+  },
+  "SettingsModel:getFoliageLODDistanceTexts": {
+   "en": "Returns the same shared percentage labels, used for foliage LOD distance.",
+   "fr": "Renvoie les mêmes libellés de pourcentage partagés, utilisés pour la distance de LOD du feuillage."
+  },
+  "SettingsModel:getVolumeMeshTessalationTexts": {
+   "en": "Returns the same shared percentage labels, used for volume mesh tessellation (name misspelled Tessalation).",
+   "fr": "Renvoie les mêmes libellés de pourcentage partagés, utilisés pour la tessellation des volumes (nom mal orthographié Tessalation)."
+  },
+  "SettingsModel:getMaxTireTracksTexts": {
+   "en": "Returns the tire track percentage labels (0% to 400% in steps of 50%).",
+   "fr": "Renvoie les libellés de pourcentage des traces de pneus (0 % à 400 % par pas de 50 %)."
+  },
+  "SettingsModel:getMaxMirrorsTexts": {
+   "en": "Returns the labels 0 to 7 for the maximum number of mirrors.",
+   "fr": "Renvoie les libellés 0 à 7 pour le nombre maximal de rétroviseurs."
+  },
+  "SettingsModel:getBrightnessTexts": {
+   "en": "Returns the brightness labels from 0.5 to 2.0 in steps of 0.1.",
+   "fr": "Renvoie les libellés de luminosité de 0,5 à 2,0 par pas de 0,1."
+  },
+  "SettingsModel:getFovYTexts": {
+   "en": "Returns the vertical field of view labels, one per degree between the platform's min and max FOV.",
+   "fr": "Renvoie les libellés du champ de vision vertical, un par degré entre le FOV minimal et maximal de la plateforme."
+  },
+  "SettingsModel:getUiScaleTexts": {
+   "en": "Returns the 16 UI scale labels from 50% to 125% in steps of 5%.",
+   "fr": "Renvoie les 16 libellés d'échelle d'interface de 50 % à 125 % par pas de 5 %."
+  },
+  "SettingsModel:getAudioVolumeTexts": {
+   "en": "Returns the volume labels: off, then 10% to 100%.",
+   "fr": "Renvoie les libellés de volume : désactivé, puis 10 % à 100 %."
+  },
+  "SettingsModel:getVoiceInputSensitivityTexts": {
+   "en": "Returns the voice input threshold labels: auto, then 0% to 100% in steps of 10%.",
+   "fr": "Renvoie les libellés du seuil d'entrée vocale : auto, puis 0 % à 100 % par pas de 10 %."
+  },
+  "SettingsModel:getForceFeedbackTexts": {
+   "en": "Returns the volume label list (off to 100%), reused for force feedback strength.",
+   "fr": "Renvoie la liste de libellés de volume (désactivé à 100 %), réutilisée pour la force du retour de force."
+  },
+  "SettingsModel:getRecordingVolumeTexts": {
+   "en": "Returns the microphone recording volume labels: auto, then 50% to 150%.",
+   "fr": "Renvoie les libellés de volume d'enregistrement du micro : auto, puis 50 % à 150 %."
+  },
+  "SettingsModel:getVoiceModeTexts": {
+   "en": "Returns the voice mode labels: off, voice activity, and push-to-talk when the platform supports it.",
+   "fr": "Renvoie les libellés du mode vocal : désactivé, activité vocale, et appuyer pour parler si la plateforme le prend en charge."
+  },
+  "SettingsModel:getCameraSensitivityTexts": {
+   "en": "Returns the camera sensitivity labels, 50% to 300% in 25% steps.",
+   "fr": "Renvoie les libellés de sensibilité de la caméra, 50 % à 300 % par pas de 25 %."
+  },
+  "SettingsModel:getVehicleArmSensitivityTexts": {
+   "en": "Returns the vehicle arm sensitivity labels, 50% to 300% in 25% steps.",
+   "fr": "Renvoie les libellés de sensibilité des bras de véhicule, 50 % à 300 % par pas de 25 %."
+  },
+  "SettingsModel:getRealBeaconLightBrightnessTexts": {
+   "en": "Returns the beacon light brightness labels: off, then 10% to 100%.",
+   "fr": "Renvoie les libellés de luminosité des gyrophares : désactivé, puis 10 % à 100 %."
+  },
+  "SettingsModel:getSteeringBackSpeedTexts": {
+   "en": "Returns the steering return speed labels built from Platform.gameplay.steeringBackSpeedSettings.",
+   "fr": "Renvoie les libellés de vitesse de retour de la direction construits depuis Platform.gameplay.steeringBackSpeedSettings."
+  },
+  "SettingsModel:getMoneyUnitTexts": {
+   "en": "Returns the currency labels: euro, dollar, pound.",
+   "fr": "Renvoie les libellés de devise : euro, dollar, livre."
+  },
+  "SettingsModel:getDistanceUnitTexts": {
+   "en": "Returns the distance unit labels: km, miles.",
+   "fr": "Renvoie les libellés d'unité de distance : km, miles."
+  },
+  "SettingsModel:getTemperatureUnitTexts": {
+   "en": "Returns the temperature unit labels: Celsius, Fahrenheit.",
+   "fr": "Renvoie les libellés d'unité de température : Celsius, Fahrenheit."
+  },
+  "SettingsModel:getAreaUnitTexts": {
+   "en": "Returns the area unit labels: hectare, acre.",
+   "fr": "Renvoie les libellés d'unité de surface : hectare, acre."
+  },
+  "SettingsModel:getRadioModeTexts": {
+   "en": "Returns the radio mode labels: always, or only in vehicles.",
+   "fr": "Renvoie les libellés du mode radio : toujours, ou seulement dans les véhicules."
+  },
+  "SettingsModel:getResolutionScaleTexts": {
+   "en": "Returns the 2D resolution scale labels, 50% to 200% in 10% steps.",
+   "fr": "Renvoie les libellés d'échelle de résolution 2D, 50 % à 200 % par pas de 10 %."
+  },
+  "SettingsModel:getResolutionScale3dTexts": {
+   "en": "Returns the 3D resolution scale labels, 50% to 200% in 10% steps.",
+   "fr": "Renvoie les libellés d'échelle de résolution 3D, 50 % à 200 % par pas de 10 %."
+  },
+  "SettingsModel:addShadingRateQualitySetting": {
+   "en": "Registers the shading rate quality setting; the GUI index is the engine value plus 1 and writing subtracts 1 (never below 0), using getShadingRateQuality / setShadingRateQuality (engine).",
+   "fr": "Enregistre le réglage de qualité du taux d'ombrage ; l'index GUI vaut la valeur moteur plus 1 et l'écriture soustrait 1 (jamais sous 0), via getShadingRateQuality / setShadingRateQuality (moteur)."
+  },
+  "SettingsModel:addSSAOQualitySetting": {
+   "en": "Registers the ambient occlusion quality setting, passed straight to getSSAOQuality and setSSAOQuality (engine).",
+   "fr": "Enregistre le réglage de qualité de l'occlusion ambiante, transmis tel quel à getSSAOQuality et setSSAOQuality (moteur)."
+  },
+  "SettingsModel:addCloudShadowsQualitySetting": {
+   "en": "Registers cloud shadows as a boolean: true when the engine quality equals 1, written back as 1 or 0.",
+   "fr": "Enregistre les ombres de nuages comme booléen : true quand la qualité moteur vaut 1, réécrit en 1 ou 0."
+  },
+  "SettingsModel:addTextureResolutionSetting": {
+   "en": "Registers the texture resolution setting, converting between the engine value and a GUI index with SettingsModel.getTextureResolutionIndex / ByIndex (not in this dump).",
+   "fr": "Enregistre le réglage de résolution des textures, en convertissant entre la valeur moteur et un index GUI avec SettingsModel.getTextureResolutionIndex / ByIndex (absents de ce dump)."
+  },
+  "SettingsModel:addShadowQualitySetting": {
+   "en": "Registers shadow quality, which combines the engine's shadow quality value and its focus box flag into one GUI index through SettingsModel helpers (not in this dump).",
+   "fr": "Enregistre la qualité des ombres, qui combine la valeur de qualité d'ombres du moteur et son indicateur de boîte de focus en un seul index GUI via des assistants de SettingsModel (absents de ce dump)."
+  },
+  "SettingsModel:addShadowDistanceQualitySetting": {
+   "en": "Registers shadow distance quality; the GUI index is the engine value plus 1.",
+   "fr": "Enregistre la qualité de distance des ombres ; l'index GUI vaut la valeur moteur plus 1."
+  },
+  "SettingsModel:addSoftShadowsSetting": {
+   "en": "Registers soft shadows through the engine shadow filter quality, with a GUI index equal to the engine value plus 1.",
+   "fr": "Enregistre les ombres douces via la qualité de filtre d'ombres du moteur, avec un index GUI égal à la valeur moteur plus 1."
+  },
+  "SettingsModel:addShaderQualitySetting": {
+   "en": "Registers shader quality, converted with SettingsModel.getShaderQualityIndex / ByIndex (not in this dump).",
+   "fr": "Enregistre la qualité des shaders, convertie avec SettingsModel.getShaderQualityIndex / ByIndex (absents de ce dump)."
+  },
+  "SettingsModel:addShadowMapFilteringSetting": {
+   "en": "Registers the shadow map filter size, converted with SettingsModel.getShadowMapFilterIndex / ByIndex (not in this dump).",
+   "fr": "Enregistre la taille du filtre de carte d'ombres, convertie avec SettingsModel.getShadowMapFilterIndex / ByIndex (absents de ce dump)."
+  },
+  "SettingsModel:addShadowMaxLightsSetting": {
+   "en": "Registers the maximum number of shadow-casting lights, passed straight to getMaxNumShadowLights and setMaxNumShadowLights (engine).",
+   "fr": "Enregistre le nombre maximal de lumières projetant des ombres, transmis tel quel à getMaxNumShadowLights et setMaxNumShadowLights (moteur)."
+  },
+  "SettingsModel:addTerrainQualitySetting": {
+   "en": "Registers terrain quality, converted with SettingsModel helpers (not in this dump). The source comment says a restart is needed for the right shader cache, yet restartRequired is not set.",
+   "fr": "Enregistre la qualité du terrain, convertie avec des assistants de SettingsModel (absents de ce dump). Le commentaire de la source dit qu'un redémarrage est requis pour le bon cache de shaders, pourtant restartRequired n'est pas défini."
+  },
+  "SettingsModel:addObjectDrawDistanceSetting": {
+   "en": "Registers object draw distance as an index into the shared percentage values, using getViewDistanceCoeff / setViewDistanceCoeff (engine).",
+   "fr": "Enregistre la distance d'affichage des objets comme index dans les valeurs de pourcentage partagées, via getViewDistanceCoeff / setViewDistanceCoeff (moteur)."
+  },
+  "SettingsModel:addFoliageDrawDistanceSetting": {
+   "en": "Registers foliage draw distance as an index into the percentage values, using getFoliageViewDistanceCoeff / setFoliageViewDistanceCoeff (engine).",
+   "fr": "Enregistre la distance d'affichage du feuillage comme index dans les valeurs de pourcentage, via getFoliageViewDistanceCoeff / setFoliageViewDistanceCoeff (moteur)."
+  },
+  "SettingsModel:addFoliageShadowSetting": {
+   "en": "Registers the foliage shadows flag through getAllowFoliageShadows / setAllowFoliageShadows (engine).",
+   "fr": "Enregistre l'indicateur d'ombres du feuillage via getAllowFoliageShadows / setAllowFoliageShadows (moteur)."
+  },
+  "SettingsModel:addLODDistanceSetting": {
+   "en": "Registers LOD distance as an index into the percentage values, using getLODDistanceCoeff / setLODDistanceCoeff (engine).",
+   "fr": "Enregistre la distance de LOD comme index dans les valeurs de pourcentage, via getLODDistanceCoeff / setLODDistanceCoeff (moteur)."
+  },
+  "SettingsModel:addTerrainLODDistanceSetting": {
+   "en": "Registers terrain LOD distance as an index into the percentage values, using getTerrainLODDistanceCoeff / setTerrainLODDistanceCoeff (engine).",
+   "fr": "Enregistre la distance de LOD du terrain comme index dans les valeurs de pourcentage, via getTerrainLODDistanceCoeff / setTerrainLODDistanceCoeff (moteur)."
+  },
+  "SettingsModel:addFoliageLODDistanceSetting": {
+   "en": "Registers foliage LOD distance as an index into the percentage values, using getFoliageLODDistanceCoeff / setFoliageLODDistanceCoeff (engine).",
+   "fr": "Enregistre la distance de LOD du feuillage comme index dans les valeurs de pourcentage, via getFoliageLODDistanceCoeff / setFoliageLODDistanceCoeff (moteur)."
+  },
+  "SettingsModel:addVolumeMeshTessellationSetting": {
+   "en": "Registers volume mesh tessellation as an index into the percentage values, through SettingsModel.getVolumeMeshTessellationCoeff / set... (not in this dump).",
+   "fr": "Enregistre la tessellation des volumes comme index dans les valeurs de pourcentage, via SettingsModel.getVolumeMeshTessellationCoeff / set... (absents de ce dump)."
+  },
+  "SettingsModel:addMaxTireTracksSetting": {
+   "en": "Registers the maximum tire tracks setting as an index into the tire track values, using getTyreTracksSegmentsCoeff / setTyreTracksSegmentsCoeff (engine).",
+   "fr": "Enregistre le réglage maximal de traces de pneus comme index dans les valeurs de traces, via getTyreTracksSegmentsCoeff / setTyreTracksSegmentsCoeff (moteur)."
+  }
+ }
+}

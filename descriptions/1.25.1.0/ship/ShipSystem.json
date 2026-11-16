@@ -1,0 +1,13 @@
+{
+ "fichier": "ship/ShipSystem.lua",
+ "module": {
+  "en": "Minimal container for ship routes. In this dump it only creates two empty tables, `splines` and `crossingNodes`; any other use is UNVERIFIED.",
+  "fr": "Conteneur minimal pour les trajets de navires. Dans ce dump il ne crée que deux tables vides, `splines` et `crossingNodes` ; tout autre usage est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "ShipSystem.new": {
+   "en": "Creates the object with empty `splines` and `crossingNodes` tables.",
+   "fr": "Crée l'objet avec des tables `splines` et `crossingNodes` vides."
+  }
+ }
+}

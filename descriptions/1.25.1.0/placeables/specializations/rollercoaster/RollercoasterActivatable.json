@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/rollercoaster/RollercoasterActivatable.lua",
+ "module": {
+  "en": "Activatable object that lets the local player ride a rollercoaster placeable: it shows the localized ride action text and, when triggered, sends a request event to the server. It has no base class and relies on `getCanEnter` and `getFreeSeatIndex` of the rollercoaster.",
+  "fr": "Objet activable qui permet au joueur local de monter dans une montagne russe : il affiche le texte d'action traduit et, quand il est déclenché, envoie un événement de demande au serveur. Il n'a pas de classe parente et s'appuie sur `getCanEnter` et `getFreeSeatIndex` de la montagne russe."
+ },
+ "fonctions": {
+  "RollercoasterActivatable.new": {
+   "en": "Creates the activatable for a rollercoaster and loads the `action_rideRollercoaster` text as activate text.",
+   "fr": "Crée l'activable pour une montagne russe et charge le texte `action_rideRollercoaster` comme texte d'activation."
+  },
+  "RollercoasterActivatable:getIsActivatable": {
+   "en": "Returns whether the rollercoaster currently accepts a new passenger, via its `getCanEnter`.",
+   "fr": "Indique si la montagne russe accepte actuellement un nouveau passager, via son `getCanEnter`."
+  },
+  "RollercoasterActivatable:run": {
+   "en": "If entry is allowed and a free seat exists, sends a RollercoasterPassengerEnterRequestEvent for `g_localPlayer` to the server connection. The seat index is only checked locally; the server picks the final seat.",
+   "fr": "Si l'entrée est permise et qu'un siège est libre, envoie un RollercoasterPassengerEnterRequestEvent pour `g_localPlayer` à la connexion serveur. L'index de siège n'est vérifié que localement ; le serveur choisit le siège final."
+  }
+ }
+}

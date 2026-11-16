@@ -1,0 +1,93 @@
+{
+ "fichier": "objects/PhysicsObject.lua",
+ "module": {
+  "en": "Base class (extends Object) for networked rigid-body objects such as bales and pallets. It owns a scene node, adds it to physics, sends compressed position and rotation from the server when it moved beyond a small threshold, and on clients interpolates the received pose with kinematic bodies. It also provides scope and priority tests based on clip distance, ghost add/remove and node-to-object registration with the mission.",
+  "fr": "Classe de base (hérite de Object) pour les objets rigides en réseau comme les balles et les palettes. Elle possède un noeud de scène, l'ajoute à la physique, envoie depuis le serveur la position et la rotation compressées quand l'objet a bougé au-delà d'un petit seuil, et interpole côté client la pose reçue avec des corps cinématiques. Elle fournit aussi des tests de portée et de priorité basés sur la distance de clip, l'ajout/retrait fantôme et l'enregistrement noeud-objet auprès de la mission."
+ },
+ "fonctions": {
+  "PhysicsObject.new": {
+   "en": "Creates the object with no node, a network time interpolator (1.2), a forced clip distance of 60 and a dirty flag for pose updates.",
+   "fr": "Crée l'objet sans noeud, avec un interpolateur de temps réseau (1,2), une distance de clip forcée de 60 et un dirty flag pour les mises à jour de pose."
+  },
+  "PhysicsObject:delete": {
+   "en": "Unmaps the node's children from the mission, deletes the scene node, marks the object deleted, then calls the parent delete.",
+   "fr": "Retire les enfants du noeud de la table noeud-objet de la mission, supprime le noeud de scène, marque l'objet comme supprimé puis appelle le delete parent."
+  },
+  "PhysicsObject:getAllowsAutoDelete": {
+   "en": "Returns true: this object may be removed automatically by the game.",
+   "fr": "Retourne true : cet objet peut être supprimé automatiquement par le jeu."
+  },
+  "PhysicsObject:loadOnCreate": {
+   "en": "Uses a node from the map's i3D: assigns it with setNodeId and, on a client, puts it in ghost (hidden, out of physics) state.",
+   "fr": "Utilise un noeud de l'i3D de la map : l'assigne via setNodeId et, sur un client, le met en état fantôme (masqué, hors physique)."
+  },
+  "PhysicsObject:setNodeId": {
+   "en": "Stores the node, sets its rigid body type (default type: dynamic on server, kinematic on client), adds it to physics, remembers the initial pose, creates the interpolators on clients and registers the node tree.",
+   "fr": "Mémorise le noeud, fixe son type de corps rigide (par défaut dynamique sur le serveur, cinématique sur le client), l'ajoute à la physique, retient la pose initiale, crée les interpolateurs sur les clients et enregistre l'arbre de noeuds."
+  },
+  "PhysicsObject:readStream": {
+   "en": "Client join: after the parent readStream, reads the compressed world position and rotation and applies it immediately, then resets the network time interpolator. Asserts that a node exists.",
+   "fr": "Connexion côté client : après le readStream parent, lit la position et la rotation monde compressées et les applique immédiatement, puis réinitialise l'interpolateur de temps réseau. Vérifie qu'un noeud existe."
+  },
+  "PhysicsObject:writeStream": {
+   "en": "Server join: after the parent writeStream, writes the node's compressed world position and rotation.",
+   "fr": "Connexion côté serveur : après le writeStream parent, écrit la position et la rotation monde compressées du noeud."
+  },
+  "PhysicsObject:readUpdateStream": {
+   "en": "Client update: when the flag is set, reads a compressed pose and sets it as the interpolation target, starting a new network phase.",
+   "fr": "Mise à jour côté client : si le booléen est vrai, lit une pose compressée et la fixe comme cible d'interpolation en démarrant une nouvelle phase réseau."
+  },
+  "PhysicsObject:writeUpdateStream": {
+   "en": "Server update: if the pose dirty flag is set in the mask, writes the last sent position and rotation (compressed).",
+   "fr": "Mise à jour côté serveur : si le dirty flag de pose est présent dans le masque, écrit la dernière position et rotation envoyées (compressées)."
+  },
+  "PhysicsObject:update": {
+   "en": "Does nothing if already deleted. Client: advances the interpolators and applies the interpolated pose, staying active while interpolating. Server: stays active while the body is not asleep.",
+   "fr": "Ne fait rien si l'objet est déjà supprimé. Client : fait avancer les interpolateurs et applique la pose interpolée, en restant actif pendant l'interpolation. Serveur : reste actif tant que le corps n'est pas endormi."
+  },
+  "PhysicsObject:updateMove": {
+   "en": "Compares the node's world pose with the last sent one (0.005 for position, 0.02 for rotation). If it moved, raises the pose dirty flag and stores the new pose. Returns whether it moved.",
+   "fr": "Compare la pose monde du noeud à la dernière envoyée (0,005 en position, 0,02 en rotation). S'il a bougé, lève le dirty flag de pose et mémorise la nouvelle pose. Retourne s'il a bougé."
+  },
+  "PhysicsObject:updateTick": {
+   "en": "On the server only, calls updateMove to detect movement for network sync.",
+   "fr": "Uniquement sur le serveur, appelle updateMove pour détecter le mouvement à synchroniser."
+  },
+  "PhysicsObject:testScope": {
+   "en": "Returns true if the object is closer to the viewer position than the node's clip distance times coeff, capped by forcedClipDistance. Used to decide which clients receive the object.",
+   "fr": "Retourne true si l'objet est plus proche de la position de l'observateur que la distance de clip du noeud multipliée par coeff, plafonnée par forcedClipDistance. Sert à décider quels clients reçoivent l'objet."
+  },
+  "PhysicsObject:getUpdatePriority": {
+   "en": "Computes the network update priority: closer objects score higher (80 percent weight), with a bonus for how many updates were skipped (20 percent weight).",
+   "fr": "Calcule la priorité de mise à jour réseau : les objets proches obtiennent un score plus élevé (poids de 80 %), avec un bonus selon le nombre de mises à jour sautées (poids de 20 %)."
+  },
+  "PhysicsObject:onGhostRemove": {
+   "en": "Hides the node and removes it from physics (ghost state).",
+   "fr": "Masque le noeud et le retire de la physique (état fantôme)."
+  },
+  "PhysicsObject:onGhostAdd": {
+   "en": "Shows the node and adds it back to physics.",
+   "fr": "Affiche le noeud et le remet dans la physique."
+  },
+  "PhysicsObject:wakeUp": {
+   "en": "Wakes the node's physics body through I3DUtil.wakeUpObject.",
+   "fr": "Réveille le corps physique du noeud via I3DUtil.wakeUpObject."
+  },
+  "PhysicsObject:setWorldPositionQuaternion": {
+   "en": "Sets the node's world position and quaternion. If changeInterp is set, a client resets its interpolators to this pose, and the server raises the dirty flag and stores it as the last sent pose.",
+   "fr": "Fixe la position monde et le quaternion du noeud. Si changeInterp est vrai, un client réinitialise ses interpolateurs sur cette pose, et le serveur lève le dirty flag et la mémorise comme dernière pose envoyée."
+  },
+  "PhysicsObject:setLocalPositionQuaternion": {
+   "en": "Same as the world version but with local translation and quaternion; with changeInterp, the interpolators or sent pose use the resulting world pose.",
+   "fr": "Équivalent de la version monde mais avec translation et quaternion locaux ; avec changeInterp, les interpolateurs ou la pose envoyée utilisent la pose monde résultante."
+  },
+  "PhysicsObject:getDefaultRigidBodyType": {
+   "en": "Returns DYNAMIC on the server and KINEMATIC on clients, as the server drives the physics.",
+   "fr": "Retourne DYNAMIC sur le serveur et KINEMATIC sur les clients, car le serveur pilote la physique."
+  },
+  "PhysicsObject:addChildenToNodeObject": {
+   "en": "Recursively walks the node tree; every node with a rigid body is mapped to this object in the mission, and on the server gets a wake-up report calling onPhysicObjectWakeUpCallback. The name keeps the original spelling 'Childen'.",
+   "fr": "Parcourt récursivement l'arbre de noeuds ; chaque noeud ayant un corps rigide est associé à cet objet dans la mission et, sur le serveur, reçoit un rapport de réveil appelant onPhysicObjectWakeUpCallback. Le nom garde l'orthographe d'origine 'Childen'."
+  }
+ }
+}

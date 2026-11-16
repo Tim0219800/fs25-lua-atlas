@@ -1,0 +1,81 @@
+{
+ "fichier": "vehicles/specializations/SplineVehicle.lua",
+ "module": {
+  "en": "Specialization for vehicles that only move along a spline (the train wagons and locomotives). It reads the front/back nodes and the two dollies, measures their distances, and lets the train system (`self.trainSystem`, set through `setTrainSystem`) place the vehicle along the rail spline with `alignToSplineTime`. It overrides speed, surface sound and discharge activation. The TrainSystem class is not in the dump, so its behaviour is UNVERIFIED. Note: `setSplineSpeed` is registered as a vehicle function but no function of that name is defined in this file.",
+  "fr": "Spécialisation pour les véhicules qui ne se déplacent que le long d'une spline (wagons et locomotives de train). Elle lit les nœuds avant/arrière et les deux bogies, mesure leurs distances, et laisse le système de train (`self.trainSystem`, défini via `setTrainSystem`) placer le véhicule sur la spline du rail avec `alignToSplineTime`. Elle surcharge la vitesse, le son de surface et l'activation des décharges. La classe TrainSystem n'est pas dans le dump : son comportement est NON VÉRIFIÉ. À noter : `setSplineSpeed` est enregistrée comme fonction du véhicule mais aucune fonction de ce nom n'est définie dans ce fichier."
+ },
+ "fonctions": {
+  "SplineVehicle.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Retourne toujours true : aucune autre spécialisation n'est requise."
+  },
+  "SplineVehicle.initSpecialization": {
+   "en": "Declares the XML schema for `vehicle.splineVehicle.dollies` (front/back nodes, the two dolly nodes, align flag) and the `needsIsEntered` attribute on discharge nodes (also per configuration).",
+   "fr": "Déclare le schéma XML de `vehicle.splineVehicle.dollies` (nœuds avant/arrière, les deux nœuds de bogie, option d'alignement) et l'attribut `needsIsEntered` sur les nœuds de décharge (aussi par configuration)."
+  },
+  "SplineVehicle.registerFunctions": {
+   "en": "Registers `getFrontToBackDistance`, `getSplineTimeFromDistance`, `getSplinePositionAndTimeFromDistance`, `alignToSplineTime`, `getCurrentSplinePosition` and `setSplineSpeed`.",
+   "fr": "Enregistre `getFrontToBackDistance`, `getSplineTimeFromDistance`, `getSplinePositionAndTimeFromDistance`, `alignToSplineTime`, `getCurrentSplinePosition` et `setSplineSpeed`."
+  },
+  "SplineVehicle.registerOverwrittenFunctions": {
+   "en": "Overrides `getLastSpeed`, `setTrainSystem`, `getCurrentSurfaceSound`, `getAreSurfaceSoundsActive`, `getIsDischargeNodeActive` and `loadDischargeNode`.",
+   "fr": "Surcharge `getLastSpeed`, `setTrainSystem`, `getCurrentSurfaceSound`, `getAreSurfaceSoundsActive`, `getIsDischargeNodeActive` et `loadDischargeNode`."
+  },
+  "SplineVehicle.registerEventListeners": {
+   "en": "Subscribes to onLoad and onUpdate.",
+   "fr": "S'abonne à onLoad et onUpdate."
+  },
+  "SplineVehicle:onLoad": {
+   "en": "Reads the front, back and dolly nodes, computes their distances (front to back, dolly to dolly, root to each end) with `calcDistanceFrom`, reads the align flag and zeroes the spline position and speed state.",
+   "fr": "Lit les nœuds avant, arrière et de bogie, calcule leurs distances (avant-arrière, bogie-bogie, racine vers chaque extrémité) avec `calcDistanceFrom`, lit l'option d'alignement et met à zéro l'état de position et de vitesse sur la spline."
+  },
+  "SplineVehicle:onUpdate": {
+   "en": "If a train system is set, asks it to update the railroad vehicle positions with `updateRailroadVehiclePositions(dt)`.",
+   "fr": "Si un système de train est défini, lui demande de mettre à jour les positions des véhicules ferroviaires avec `updateRailroadVehiclePositions(dt)`."
+  },
+  "SplineVehicle:setTrainSystem": {
+   "en": "Calls the parent, then converts the vehicle's measured distances into spline time fractions using the spline length from the train system.",
+   "fr": "Appelle le parent, puis convertit les distances mesurées du véhicule en fractions de temps de spline à partir de la longueur de spline fournie par le système de train."
+  },
+  "SplineVehicle:getCurrentSplinePosition": {
+   "en": "Returns the current spline position (time value) of the vehicle.",
+   "fr": "Retourne la position courante (valeur de temps) du véhicule sur la spline."
+  },
+  "SplineVehicle:getFrontToBackDistance": {
+   "en": "Returns the distance between the front and back nodes, measured at load.",
+   "fr": "Retourne la distance entre les nœuds avant et arrière, mesurée au chargement."
+  },
+  "SplineVehicle:getSplineTimeFromDistance": {
+   "en": "Returns the valid spline time reached by moving a given distance from spline time `t`; direction forward if `stepSize` is not negative. Returns nothing without a train system.",
+   "fr": "Retourne le temps de spline valide atteint en avançant d'une distance donnée depuis le temps `t` ; vers l'avant si `stepSize` n'est pas négatif. Ne retourne rien sans système de train."
+  },
+  "SplineVehicle:getSplinePositionAndTimeFromDistance": {
+   "en": "Same as `getSplineTimeFromDistance` but returns the x, y, z spline position and the valid spline time. Returns nothing without a train system.",
+   "fr": "Comme `getSplineTimeFromDistance` mais retourne la position x, y, z sur la spline et le temps de spline valide. Ne retourne rien sans système de train."
+  },
+  "SplineVehicle:alignToSplineTime": {
+   "en": "Places the vehicle on the spline from the front spline time: derives the moving direction, positions the root from the front and dolly points, sets orientation, feeds the network interpolators, aligns the dolly nodes, stores the position and returns the spline time of the back node. Note: it reads `spec.trainSystem` for the spline length, while the rest of the file uses `self.trainSystem`, so this looks like a bug (UNVERIFIED which one is set).",
+   "fr": "Place le véhicule sur la spline à partir du temps de spline avant : déduit le sens de déplacement, positionne la racine d'après les points avant et de bogie, fixe l'orientation, alimente les interpolateurs réseau, aligne les bogies, mémorise la position et retourne le temps de spline du nœud arrière. À noter : elle lit `spec.trainSystem` pour la longueur de spline alors que le reste du fichier utilise `self.trainSystem`, ce qui ressemble à un bug (lequel est défini : NON VÉRIFIÉ)."
+  },
+  "SplineVehicle:getLastSpeed": {
+   "en": "Returns the absolute spline speed converted to km/h (spline position speed times 3.6), ignoring the parent.",
+   "fr": "Retourne la vitesse absolue sur la spline convertie en km/h (vitesse de position fois 3,6), sans appeler le parent."
+  },
+  "SplineVehicle:getCurrentSurfaceSound": {
+   "en": "Returns the wheel surface sound registered under \"railroad\".",
+   "fr": "Retourne le son de surface de roue enregistré sous « railroad »."
+  },
+  "SplineVehicle:getAreSurfaceSoundsActive": {
+   "en": "Delegates to the root vehicle when this is not the root (so only the train head decides); otherwise returns true.",
+   "fr": "Délègue au véhicule racine quand celui-ci n'est pas la racine (seule la tête du train décide) ; sinon retourne true."
+  },
+  "SplineVehicle:loadDischargeNode": {
+   "en": "Calls the parent and additionally reads `needsIsEntered` (default true) onto the discharge node entry.",
+   "fr": "Appelle le parent et lit en plus `needsIsEntered` (true par défaut) sur l'entrée du nœud de décharge."
+  },
+  "SplineVehicle:getIsDischargeNodeActive": {
+   "en": "For nodes that need the vehicle to be entered, returns false while the root vehicle is not controlled; otherwise defers to the parent.",
+   "fr": "Pour les nœuds qui exigent un véhicule occupé, retourne false tant que le véhicule racine n'est pas contrôlé ; sinon délègue au parent."
+  }
+ }
+}

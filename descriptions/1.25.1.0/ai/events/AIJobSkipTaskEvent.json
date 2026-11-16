@@ -1,0 +1,29 @@
+{
+ "fichier": "ai/events/AIJobSkipTaskEvent.lua",
+ "module": {
+  "en": "Network event sent by a client so that the server skips the current task of an AI job; it carries only the job id and publishes `MessageType.AI_TASK_SKIPPED` on mobile. It asserts client-to-server direction.",
+  "fr": "Événement réseau envoyé par un client pour que le serveur saute la tâche en cours d'un job IA ; il ne transporte que l'id du job et publie `MessageType.AI_TASK_SKIPPED` sur mobile. Il vérifie par assertion le sens client vers serveur."
+ },
+ "fonctions": {
+  "AIJobSkipTaskEvent.emptyNew": {
+   "en": "Creates an empty event, used when the event is rebuilt from a stream.",
+   "fr": "Crée un événement vide, utilisé quand l'événement est reconstruit depuis un flux."
+  },
+  "AIJobSkipTaskEvent.new": {
+   "en": "Creates the event for the given job.",
+   "fr": "Crée l'événement pour le job donné."
+  },
+  "AIJobSkipTaskEvent:readStream": {
+   "en": "Reads the job id, resolves the job via `g_currentMission.aiSystem:getJobById` and runs the event immediately.",
+   "fr": "Lit l'id du job, retrouve le job via `g_currentMission.aiSystem:getJobById` et exécute l'événement aussitôt."
+  },
+  "AIJobSkipTaskEvent:writeStream": {
+   "en": "Writes the job id as an int32.",
+   "fr": "Écrit l'id du job en int32."
+  },
+  "AIJobSkipTaskEvent:run": {
+   "en": "Asserts it runs on the server side, then calls `aiSystem:skipCurrentTaskInternal` for the job. Publishes `AI_TASK_SKIPPED` when the platform is mobile.",
+   "fr": "Vérifie qu'il s'exécute côté serveur, puis appelle `aiSystem:skipCurrentTaskInternal` pour le job. Publie `AI_TASK_SKIPPED` sur plateforme mobile."
+  }
+ }
+}

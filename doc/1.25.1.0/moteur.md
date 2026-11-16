@@ -1,5 +1,7 @@
 # Engine functions
 
+*[Version française](fr/moteur.md)*
+
 Signatures from `sdk/debugger/scriptBinding.xml` (incomplete: some functions called by the game or by mods are not listed).
 
 ## Animation

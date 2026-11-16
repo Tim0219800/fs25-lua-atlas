@@ -1,0 +1,69 @@
+{
+ "fichier": "handTools/HandToolSystem.lua",
+ "module": {
+  "en": "Manager (child of `AbstractManager`) that tracks all hand tools and hand tool holders in the world, by unique id and by click box. It saves hand tools to `handTools.xml`, loads them back through `HandToolLoadingData`, tracks pending loads for the mission start, and publishes `HANDTOOL_ADDED` and `HANDTOOL_REMOVED` on the message center. It registers the console commands `gsHandToolReload` and, with test commands, `gsHandToolsPendingLoadings`.",
+  "fr": "Gestionnaire (fille de `AbstractManager`) qui suit tous les outils à main et holders du monde, par identifiant unique et par click box. Il sauvegarde les outils dans `handTools.xml`, les recharge via `HandToolLoadingData`, suit les chargements en attente pour le démarrage de la mission et publie `HANDTOOL_ADDED` et `HANDTOOL_REMOVED` sur le message center. Il enregistre les commandes console `gsHandToolReload` et, avec les commandes de test, `gsHandToolsPendingLoadings`."
+ },
+ "fonctions": {
+  "HandToolSystem.new": {
+   "en": "Creates the system with empty collections and registers its console commands; the handler functions they name are not defined in this file (UNVERIFIED). Note: `handToolsToLoad` is not initialized here although `loadHandToolFromXML` increments it.",
+   "fr": "Crée le système avec des collections vides et enregistre ses commandes console ; les fonctions de traitement qu'elles nomment ne sont pas définies dans ce fichier (NON VÉRIFIÉ). À noter : `handToolsToLoad` n'est pas initialisé ici alors que `loadHandToolFromXML` l'incrémente."
+  },
+  "HandToolSystem:addHandTool": {
+   "en": "Adds a hand tool after checking its type and that its unique id is not already used; assigns a new unique id if it has none. Publishes `HANDTOOL_ADDED`. Returns true on success, false on error or duplicate.",
+   "fr": "Ajoute un outil à main après vérification du type et de l'unicité de son identifiant ; en attribue un s'il n'en a pas. Publie `HANDTOOL_ADDED`. Renvoie true en cas de succès, false si erreur ou doublon."
+  },
+  "HandToolSystem:removeHandTool": {
+   "en": "Removes the hand tool from the list and from the unique id map, then publishes `HANDTOOL_REMOVED`. Does nothing for nil.",
+   "fr": "Retire l'outil de la liste et de la table des identifiants uniques, puis publie `HANDTOOL_REMOVED`. Ne fait rien pour nil."
+  },
+  "HandToolSystem:getHandToolByUniqueId": {
+   "en": "Returns the hand tool with the given unique id, or nil.",
+   "fr": "Renvoie l'outil à main portant cet identifiant unique, ou nil."
+  },
+  "HandToolSystem:addHandToolHolder": {
+   "en": "Adds a holder (type-checked), gives it a unique id if needed and indexes its click boxes. Returns false on a duplicate id. Note: the holder is inserted in the list before the duplicate check, so a rejected duplicate stays in the list (apparent bug).",
+   "fr": "Ajoute un holder (type vérifié), lui attribue un identifiant unique si besoin et indexe ses click boxes. Renvoie false si l'identifiant est déjà utilisé. À noter : le holder est inséré dans la liste avant le test de doublon, donc un doublon refusé y reste (bug apparent)."
+  },
+  "HandToolSystem:removeHandToolHolder": {
+   "en": "Removes a holder from the list, the unique id map and the click box map.",
+   "fr": "Retire un holder de la liste, de la table des identifiants uniques et de celle des click boxes."
+  },
+  "HandToolSystem:getHandToolHolderByUniqueId": {
+   "en": "Returns the holder with the given unique id, or nil.",
+   "fr": "Renvoie le holder portant cet identifiant unique, ou nil."
+  },
+  "HandToolSystem:save": {
+   "en": "Creates `xmlFilename` with root `handTools` and the savegame schema, writes the hand tools needing saving, then frees the XML file.",
+   "fr": "Crée `xmlFilename` avec la racine `handTools` et le schéma de sauvegarde, y écrit les outils à sauvegarder, puis libère le fichier XML."
+  },
+  "HandToolSystem:saveToXML": {
+   "en": "Writes each hand tool for which `getNeedsSaving()` is true as `handTools.handTool(i)`, and saves the file only if at least one was written.",
+   "fr": "Écrit chaque outil dont `getNeedsSaving()` est vrai sous `handTools.handTool(i)` et ne sauvegarde le fichier que si au moins un outil a été écrit."
+  },
+  "HandToolSystem:saveHandToolToXML": {
+   "en": "Writes one hand tool: mod name (also recorded in `usedModNames`), network-converted and HTML-encoded config filename, then the tool's own `saveToXMLFile` data.",
+   "fr": "Écrit un outil : nom du mod (aussi noté dans `usedModNames`), nom de fichier de config converti pour le réseau et encodé HTML, puis les données propres de `saveToXMLFile`."
+  },
+  "HandToolSystem:loadHandToolFromXML": {
+   "en": "Reads the filename at `key`, looks up the store item and starts loading via `HandToolLoadingData` with savegame data; `loadHandToolFinished` is the callback. Returns true if a load was started, false if the store item is unknown. Note: `allowedToLoad` is a constant true.",
+   "fr": "Lit le nom de fichier à `key`, cherche l'item de boutique et lance le chargement via `HandToolLoadingData` avec les données de sauvegarde ; le callback est `loadHandToolFinished`. Renvoie true si un chargement a démarré, false si l'item est inconnu. À noter : `allowedToLoad` est une constante à true."
+  },
+  "HandToolSystem:loadHandToolFinished": {
+   "en": "Load callback: collects successfully loaded hand tools, remembers the first non-OK state, decrements the counter and, when it reaches 0, calls the stored async callback with the list and final state, then clears it.",
+   "fr": "Callback de chargement : collecte les outils chargés avec succès, retient le premier état non OK, décrémente le compteur et, à 0, appelle le callback asynchrone mémorisé avec la liste et l'état final, puis l'efface."
+  },
+  "HandToolSystem:addPendingHandToolLoad": {
+   "en": "Marks a hand tool as pending (still loading or synchronizing).",
+   "fr": "Marque un outil à main comme en attente (chargement ou synchronisation en cours)."
+  },
+  "HandToolSystem:removePendingHandToolLoad": {
+   "en": "Removes a hand tool from the pending list.",
+   "fr": "Retire un outil à main de la liste des attentes."
+  },
+  "HandToolSystem:canStartMission": {
+   "en": "Returns true only if every registered hand tool is synchronized and no hand tool load is pending.",
+   "fr": "Renvoie true seulement si tous les outils à main enregistrés sont synchronisés et qu'aucun chargement n'est en attente."
+  }
+ }
+}

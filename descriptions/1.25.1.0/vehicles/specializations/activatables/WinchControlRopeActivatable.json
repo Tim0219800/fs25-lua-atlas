@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/specializations/activatables/WinchControlRopeActivatable.lua",
+ "module": {
+  "en": "Activatable for controlling a tensioned winch rope with a tree already attached: wind/unwind, detach the tree or start attaching another one. One instance per rope, selected when the local player stands near the rope line. Work is delegated to the vehicle's winch methods (UNVERIFIED: defined in Winch.lua, outside this file).",
+  "fr": "Activatable pour commander un câble de treuil tendu dont un arbre est déjà attaché : enrouler/dérouler, détacher l'arbre ou en attacher un autre. Une instance par câble, sélectionnée quand le joueur local se tient près de la ligne du câble. Le travail est délégué aux méthodes de treuil du véhicule (NON VÉRIFIÉ : définies dans Winch.lua, hors de ce fichier)."
+ },
+ "fonctions": {
+  "WinchControlRopeActivatable.new": {
+   "en": "Creates the activatable for one winch rope; caches the winch texts and rope list from `spec_winch`.",
+   "fr": "Crée l'activatable pour un câble de treuil ; met en cache les textes et la liste des câbles de `spec_winch`."
+  },
+  "WinchControlRopeActivatable:registerCustomInput": {
+   "en": "Registers three action events at very high priority: winch control (`WINCH_CONTROL`, analog capable), tree detach (`WINCH_DETACH`) and attach-another-tree mode (`WINCH_ATTACH_MODE`), each with its text.",
+   "fr": "Enregistre trois événements d'action à priorité très haute : commande du treuil (`WINCH_CONTROL`, analogique possible), détachement d'arbre (`WINCH_DETACH`) et mode d'attache d'un autre arbre (`WINCH_ATTACH_MODE`), chacun avec son texte."
+  },
+  "WinchControlRopeActivatable:removeCustomInput": {
+   "en": "Removes every input action event registered by this object (all events bound to it as target).",
+   "fr": "Retire tous les événements d'action d'entrée enregistrés par cet objet (tous ceux dont il est la cible)."
+  },
+  "WinchControlRopeActivatable:onControlWinch": {
+   "en": "Input callback: forwards the input value to the vehicle with `setWinchControlInput` for this rope index (winds or unwinds the rope).",
+   "fr": "Callback d'entrée : transmet la valeur d'entrée au véhicule avec `setWinchControlInput` pour l'index de ce câble (enroule ou déroule le câble)."
+  },
+  "WinchControlRopeActivatable:onDetachTree": {
+   "en": "Input callback: calls `detachTreeFromWinch` on the vehicle for this rope index.",
+   "fr": "Callback d'entrée : appelle `detachTreeFromWinch` sur le véhicule pour l'index de ce câble."
+  },
+  "WinchControlRopeActivatable:onAttachMode": {
+   "en": "Input callback: enters attach mode for this rope if it can still take more trees; otherwise shows a blinking warning for 2500 ms.",
+   "fr": "Callback d'entrée : active le mode d'attache de ce câble s'il peut encore recevoir des arbres ; sinon affiche un avertissement clignotant pendant 2500 ms."
+  },
+  "WinchControlRopeActivatable:update": {
+   "en": "Enables the attach-another-tree action only when the local player is within the rope's `maxSubLength` plus `SUB_ATTACH_ADDITIONAL_RANGE` of the first tree's hook (horizontal distance). Note: indexes `attachedTrees[1]` without a nil check.",
+   "fr": "Active l'action d'attache d'un autre arbre seulement si le joueur local est à moins de `maxSubLength` du câble plus `SUB_ATTACH_ADDITIONAL_RANGE` du crochet du premier arbre (distance horizontale). À noter : indexe `attachedTrees[1]` sans test de nil."
+  },
+  "WinchControlRopeActivatable:getIsActivatable": {
+   "en": "True when the vehicle is owned by the local farm, no other rope has a player in range or attach mode active, and the local player (controlled, no hand tool) is closer than `Winch.CONTROL_RANGE`.",
+   "fr": "True si le véhicule appartient à la ferme locale, qu'aucun autre câble n'a de joueur à portée ni de mode d'attache actif, et que le joueur local (contrôlé, sans outil à main) est plus proche que `Winch.CONTROL_RANGE`."
+  },
+  "WinchControlRopeActivatable:activate": {
+   "en": "Empty hook; nothing happens when the activatable becomes the selected one.",
+   "fr": "Fonction vide ; rien ne se passe quand l'activatable devient celui sélectionné."
+  },
+  "WinchControlRopeActivatable:deactivate": {
+   "en": "Empty hook; nothing happens when the activatable stops being the selected one.",
+   "fr": "Fonction vide ; rien ne se passe quand l'activatable n'est plus celui sélectionné."
+  },
+  "WinchControlRopeActivatable:getDistance": {
+   "en": "Returns the horizontal distance from the point to the rope segment between rope node and first tree hook; `math.huge` if another rope is active, no tree is attached or the hook node no longer exists.",
+   "fr": "Renvoie la distance horizontale entre le point et le segment de câble entre le nœud du câble et le crochet du premier arbre ; `math.huge` si un autre câble est actif, si aucun arbre n'est attaché ou si le nœud du crochet n'existe plus."
+  },
+  "WinchControlRopeActivatable:draw": {
+   "en": "Empty hook; this activatable draws nothing on screen.",
+   "fr": "Fonction vide ; cet activatable n'affiche rien à l'écran."
+  }
+ }
+}

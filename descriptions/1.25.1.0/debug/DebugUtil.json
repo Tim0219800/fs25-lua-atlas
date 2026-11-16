@@ -1,0 +1,113 @@
+{
+ "fichier": "debug/DebugUtil.lua",
+ "module": {
+  "en": "DebugUtil is a static helper table with immediate-mode debug drawing (lines, gizmos, circles, cubes, parallelograms) built on the engine functions `drawDebugLine`, `drawDebugTriangle` and `drawDebugPoint`, plus text helpers and table/node-hierarchy printers. Drawing functions must be called every frame. Some functions in this dump reference helpers whose bodies are not included (`DebugGizmo.renderAtNodeWithOffset`, `DebugUtil.setNodeEffectivelyVisible`, `DebugUtil.DEFAULT_RENDERLINE_SCALAR`).",
+  "fr": "DebugUtil est une table d'aides statiques pour le dessin de débogage en mode immédiat (lignes, repères, cercles, cubes, parallélogrammes), construit sur les fonctions moteur `drawDebugLine`, `drawDebugTriangle` et `drawDebugPoint`, avec en plus des aides pour le texte et l'affichage de tables ou de hiérarchies de noeuds. Les fonctions de dessin doivent être appelées à chaque image. Certaines fonctions de ce dump s'appuient sur des aides dont le corps n'est pas inclus (`DebugGizmo.renderAtNodeWithOffset`, `DebugUtil.setNodeEffectivelyVisible`, `DebugUtil.DEFAULT_RENDERLINE_SCALAR`)."
+ },
+ "fonctions": {
+  "DebugUtil.drawDebugNode": {
+   "en": "Draws a coloured axis gizmo at a node's world position using the node's up and forward directions, optionally with a text label, a Y offset and snapping to the terrain.",
+   "fr": "Dessine un repère d'axes coloré à la position monde d'un noeud, selon ses directions haut et avant, avec en option un texte, un décalage en Y et un alignement sur le terrain."
+  },
+  "DebugUtil.drawDebugGizmoAtWorldPos": {
+   "en": "Draws three 0.3 m axis lines (red side, green up, blue forward) at a world position from direction and up vectors. Optionally snaps to 0.1 m above the terrain and renders a text label.",
+   "fr": "Dessine trois axes de 0,3 m (rouge latéral, vert haut, bleu avant) à une position monde à partir de vecteurs direction et haut. Peut s'aligner à 0,1 m au-dessus du terrain et afficher un texte."
+  },
+  "DebugUtil.drawDebugArea": {
+   "en": "Draws a work area defined by start/width/height nodes as a rectangle, optionally with gizmos on the three nodes and a white centre line with a circle computed by `DensityMapHeightUtil.getLineByArea` (radius from that call).",
+   "fr": "Dessine une zone de travail définie par les noeuds start/width/height sous forme de rectangle, avec en option des repères sur les trois noeuds et une ligne centrale blanche avec un cercle calculés par `DensityMapHeightUtil.getLineByArea` (rayon issu de cet appel)."
+  },
+  "DebugUtil.drawDebugLine": {
+   "en": "Draws a line between two world points (default white, nil Y treated as 0), optionally snapped to 0.1 m above terrain, and optionally a circle of the given radius at each end.",
+   "fr": "Dessine une ligne entre deux points monde (blanc par défaut, Y nil traité comme 0), avec en option un alignement à 0,1 m au-dessus du terrain et un cercle du rayon donné à chaque extrémité."
+  },
+  "DebugUtil.drawDebugAreaRectangle": {
+   "en": "Draws the outline of a parallelogram given an origin and two corner points in world space, optionally snapping each of the three points to 0.1 m above the terrain. Colour is passed as r, g, b.",
+   "fr": "Dessine le contour d'un parallélogramme à partir d'une origine et de deux coins en coordonnées monde, avec alignement optionnel de chacun des trois points à 0,1 m au-dessus du terrain. La couleur est passée en r, g, b."
+  },
+  "DebugUtil.drawDebugAreaRectangleFilled": {
+   "en": "Draws a filled, semi-transparent version of the area rectangle using two triangles (fourth corner derived from the other points), optionally snapped to the terrain. Alpha is the last argument.",
+   "fr": "Dessine une version remplie et semi-transparente du rectangle de zone à l'aide de deux triangles (quatrième coin déduit des autres points), avec alignement optionnel sur le terrain. L'alpha est le dernier argument."
+  },
+  "DebugUtil.drawDebugRectangle": {
+   "en": "Draws a rectangle in a node's local XZ plane (min/max X and Z at a given Y offset) as four lines, optionally filled with two triangles of the given colour and alpha.",
+   "fr": "Dessine un rectangle dans le plan XZ local d'un noeud (X et Z min/max à un décalage Y donné) avec quatre lignes, avec en option un remplissage par deux triangles de la couleur et de l'alpha donnés."
+  },
+  "DebugUtil.drawDebugCircle": {
+   "en": "Draws a circle of line segments around a world point in the horizontal plane (default red), with optional terrain alignment, filled translucent triangles and solid flag. Note: with terrain alignment the centre Y is overwritten inside the loop, so later segments use a changed height.",
+   "fr": "Dessine un cercle de segments de ligne autour d'un point monde dans le plan horizontal (rouge par défaut), avec alignement optionnel sur le terrain, triangles translucides de remplissage et option solide. À noter : avec l'alignement terrain, le Y du centre est réécrit dans la boucle, donc les segments suivants utilisent une hauteur modifiée."
+  },
+  "DebugUtil.drawDebugCircleAtNode": {
+   "en": "Draws a circle around a node, horizontal or vertical in the node's local space, with an optional local offset and colour (red by default).",
+   "fr": "Dessine un cercle autour d'un noeud, horizontal ou vertical dans l'espace local du noeud, avec un décalage local optionnel et une couleur (rouge par défaut)."
+  },
+  "DebugUtil.drawDebugCubeAtWorldPos": {
+   "en": "Draws a wireframe box at a world position oriented by direction and up vectors. It creates a temporary transform group under the root node, draws with `drawDebugCube`, then deletes it.",
+   "fr": "Dessine une boîte filaire à une position monde, orientée par des vecteurs direction et haut. Elle crée un groupe de transformation temporaire sous le noeud racine, dessine avec `drawDebugCube`, puis le supprime."
+  },
+  "DebugUtil.drawOverlapBox": {
+   "en": "Draws an overlap box given its centre, Euler rotation and half-extents, by building a temporary transform group and drawing a cube twice the extents in size. Useful to visualise overlap test volumes.",
+   "fr": "Dessine une boîte de recouvrement à partir de son centre, de sa rotation d'Euler et de ses demi-dimensions, via un groupe de transformation temporaire et un cube de taille double des demi-dimensions. Utile pour visualiser les volumes de tests de recouvrement."
+  },
+  "DebugUtil.drawDebugCube": {
+   "en": "Draws the twelve edges of a wireframe box centred on a node (plus optional local offset), scaled by the given full sizes along local X, Y and Z, default colour white.",
+   "fr": "Dessine les douze arêtes d'une boîte filaire centrée sur un noeud (plus un décalage local optionnel), mise à l'échelle par les tailles complètes données sur les axes locaux X, Y et Z, blanche par défaut."
+  },
+  "DebugUtil.drawSimpleDebugCube": {
+   "en": "Draws an axis-aligned wireframe cube of the given edge length centred on a world point, plus a point at its centre. Colour r, g, b is required.",
+   "fr": "Dessine un cube filaire aligné sur les axes, de l'arête donnée, centré sur un point monde, plus un point en son centre. La couleur r, g, b est requise."
+  },
+  "DebugUtil.drawDebugReferenceAxisFromNode": {
+   "en": "Draws reference axes at a node's world position using its local up and forward directions. Does nothing when the node is nil.",
+   "fr": "Dessine des axes de référence à la position monde d'un noeud selon ses directions locales haut et avant. Ne fait rien si le noeud est nil."
+  },
+  "DebugUtil.drawDebugReferenceAxis": {
+   "en": "Draws three 0.4 m axis lines centred on a world position (each extending 0.2 m both ways, white to red, green or blue) from up and direction vectors.",
+   "fr": "Dessine trois axes de 0,4 m centrés sur une position monde (chacun s'étendant de 0,2 m de part et d'autre, du blanc vers le rouge, le vert ou le bleu) à partir de vecteurs haut et direction."
+  },
+  "DebugUtil.drawDebugParallelogram": {
+   "en": "Draws a double-sided translucent parallelogram plus outline from an XZ origin and width/height vectors, following the terrain height plus an offset, or flat at the offset when `fixedHeight` is set.",
+   "fr": "Dessine un parallélogramme translucide à double face avec son contour, à partir d'une origine XZ et de vecteurs largeur/hauteur, en suivant la hauteur du terrain plus un décalage, ou à plat à ce décalage si `fixedHeight` est vrai."
+  },
+  "DebugUtil.drawDebugWorldParallelogram": {
+   "en": "Same as `drawDebugParallelogram`, but the width and height arguments are absolute world corner coordinates instead of vectors; the fourth corner is derived from them.",
+   "fr": "Identique à `drawDebugParallelogram`, mais les arguments de largeur et hauteur sont des coordonnées monde absolues de coins et non des vecteurs ; le quatrième coin en est déduit."
+  },
+  "DebugUtil.drawArea": {
+   "en": "Draws a work area table (start/width/height nodes) as a parallelogram. Note: it passes r, g, b, a where `drawDebugParallelogram` expects the height offset first, so the arguments are shifted and the call looks buggy.",
+   "fr": "Dessine une table de zone de travail (noeuds start/width/height) sous forme de parallélogramme. À noter : elle passe r, g, b, a là où `drawDebugParallelogram` attend d'abord le décalage de hauteur, les arguments sont donc décalés et l'appel semble erroné."
+  },
+  "DebugUtil.drawCutNodeArea": {
+   "en": "Draws a rectangle spanning a node's local Y and Z axes (sizes default to 1), default green. Does nothing when the node is nil.",
+   "fr": "Dessine un rectangle couvrant les axes locaux Y et Z d'un noeud (tailles à 1 par défaut), vert par défaut. Ne fait rien si le noeud est nil."
+  },
+  "DebugUtil.printTableRecursively": {
+   "en": "Prints each key and value of a table to the log, descending into sub-tables up to `maxDepth` (default 3, indent grows each level). Returns an empty string.",
+   "fr": "Affiche dans le journal chaque clé et valeur d'une table, en descendant dans les sous-tables jusqu'à `maxDepth` (3 par défaut, l'indentation augmente à chaque niveau). Renvoie une chaîne vide."
+  },
+  "DebugUtil.debugTableToString": {
+   "en": "Builds and returns a multi-line string of a table's keys and values, recursing to `maxDepth` (default 2). Returns nil when the depth is exceeded; impractical for large tables.",
+   "fr": "Construit et renvoie une chaîne multi-lignes des clés et valeurs d'une table, avec récursion jusqu'à `maxDepth` (2 par défaut). Renvoie nil si la profondeur est dépassée ; peu pratique pour de grandes tables."
+  },
+  "DebugUtil.renderTable": {
+   "en": "Renders a list of name/value pairs on screen at a position, names right-aligned before the values; numbers use 4 decimals. An entry with `newColumn` or `columnOffset` starts a new column.",
+   "fr": "Affiche à l'écran une liste de paires nom/valeur à une position, noms alignés à droite avant les valeurs ; les nombres ont 4 décimales. Une entrée avec `newColumn` ou `columnOffset` démarre une nouvelle colonne."
+  },
+  "DebugUtil.renderTextLine": {
+   "en": "Renders one left-aligned line of text (optional bold and colour, white by default) and returns the Y position of the next line, moved down by the text size times a spacing factor.",
+   "fr": "Affiche une ligne de texte alignée à gauche (gras et couleur optionnels, blanc par défaut) et renvoie la position Y de la ligne suivante, abaissée de la taille du texte multipliée par un facteur d'espacement."
+  },
+  "DebugUtil.renderNewLine": {
+   "en": "Returns Y moved down by the text size times the spacing scalar; when no scalar is given it uses `DebugUtil.DEFAULT_RENDERLINE_SCALAR`, whose value is not in this dump (UNVERIFIED).",
+   "fr": "Renvoie Y abaissé de la taille du texte multipliée par le facteur d'espacement ; sans facteur, elle utilise `DebugUtil.DEFAULT_RENDERLINE_SCALAR`, dont la valeur n'est pas dans ce dump (NON VÉRIFIÉ)."
+  },
+  "DebugUtil.printNodeHierarchy": {
+   "en": "Logs a node and all its descendants by name, indented per level, optionally appending the class ids (from `ClassIds`) that each node has.",
+   "fr": "Écrit dans le journal un noeud et tous ses descendants par nom, indentés par niveau, avec en option les identifiants de classe (issus de `ClassIds`) que possède chaque noeud."
+  },
+  "DebugUtil.printCallingFunctionLocation": {
+   "en": "Prints the script name and line of the code that called the function that invoked this helper (stack level 3), via `debug.info`.",
+   "fr": "Affiche le nom du script et la ligne du code qui a appelé la fonction ayant invoqué cette aide (niveau de pile 3), via `debug.info`."
+  }
+ }
+}

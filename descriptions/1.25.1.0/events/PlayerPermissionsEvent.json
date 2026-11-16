@@ -1,0 +1,13 @@
+{
+ "fichier": "events/PlayerPermissionsEvent.lua",
+ "module": {
+  "en": "Event class for pushing a player's farm permissions. In this dump only the static helper `sendEvent` is present; `new`, the stream methods and `run` are absent, so what the event carries and how it is applied are UNVERIFIED.",
+  "fr": "Classe d'événement pour diffuser les permissions de ferme d'un joueur. Dans ce dump seule l'aide statique `sendEvent` est présente ; `new`, les méthodes de flux et `run` sont absents, donc le contenu de l'événement et son application sont NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlayerPermissionsEvent.sendEvent": {
+   "en": "Builds the event (unless `noEventSend` is true). On a server it broadcasts it, passing the player found through the user's farm; on a client it sends it to the server connection. Assumes the user belongs to a farm.",
+   "fr": "Construit l'événement (sauf si `noEventSend` vaut true). Sur un serveur il le diffuse en passant le joueur trouvé via la ferme de l'utilisateur ; sur un client il l'envoie à la connexion serveur. Suppose que l'utilisateur appartient à une ferme."
+  }
+ }
+}

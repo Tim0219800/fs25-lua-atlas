@@ -1,0 +1,25 @@
+{
+ "fichier": "objects/SunAdmirer.lua",
+ "module": {
+  "en": "Map object whose node is visible only when the sun is out and it is not raining. It subscribes to the day/night message and optionally switches the collision mask with the visibility (user attribute `switchCollision`).",
+  "fr": "Objet de carte dont le noeud n'est visible que lorsque le soleil est levé et qu'il ne pleut pas. Il s'abonne au message jour/nuit et peut basculer le masque de collision avec la visibilité (attribut utilisateur `switchCollision`)."
+ },
+ "fonctions": {
+  "SunAdmirer:onCreate": {
+   "en": "i3d onCreate callback: creates the object for the node and registers it as a non-updateable in the current mission.",
+   "fr": "Callback onCreate de l'i3d : crée l'objet pour le noeud et l'enregistre comme non-updatable dans la mission courante."
+  },
+  "SunAdmirer.new": {
+   "en": "Constructor: reads the `switchCollision` user attribute (default false), stores the original collision mask if enabled, shows the node, and subscribes to `MessageType.DAY_NIGHT_CHANGED`. Note: `setVisibility` is not defined in this file (UNVERIFIED, probably defined elsewhere).",
+   "fr": "Constructeur : lit l'attribut utilisateur `switchCollision` (false par défaut), mémorise le masque de collision d'origine si activé, affiche le noeud et s'abonne à `MessageType.DAY_NIGHT_CHANGED`. À noter : `setVisibility` n'est pas défini dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "SunAdmirer:delete": {
+   "en": "Unsubscribes this object from all message center subscriptions.",
+   "fr": "Désabonne cet objet de toutes les souscriptions du centre de messages."
+  },
+  "SunAdmirer:onWeatherChanged": {
+   "en": "Message handler: when the mission environment exists, sets visibility to true only if the sun is on and the weather reports no rain. Weather internals are UNVERIFIED (class absent from the dump).",
+   "fr": "Gestionnaire de message : si l'environnement de la mission existe, la visibilité est vraie seulement si le soleil est levé et que la météo ne signale pas de pluie. Le fonctionnement de la météo est NON VÉRIFIÉ (classe absente du dump)."
+  }
+ }
+}

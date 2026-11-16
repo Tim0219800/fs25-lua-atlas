@@ -1,0 +1,33 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/ExtendedSowingMachineRateEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that synchronises the seed rate setting of an extended sowing machine: automatic mode on or off and, in manual mode, a 2 bit rate value.",
+    "fr": "Événement réseau (sous-classe de Event) qui synchronise le réglage de dose de semis d'un semoir étendu : mode automatique actif ou non et, en mode manuel, une valeur de dose sur 2 bits."
+  },
+  "fonctions": {
+    "ExtendedSowingMachineRateEvent.emptyNew": {
+      "en": "Creates an empty ExtendedSowingMachineRateEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de ExtendedSowingMachineRateEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "ExtendedSowingMachineRateEvent.new": {
+      "en": "Creates the event for a machine object, an automatic mode flag and a manual rate value.",
+      "fr": "Crée l'événement pour un objet machine, un indicateur de mode automatique et une valeur de dose manuelle."
+    },
+    "ExtendedSowingMachineRateEvent:readStream": {
+      "en": "Reads the object, the automatic flag and, only if automatic is off, the 2 bit manual value; then calls run.",
+      "fr": "Lit l'objet, l'indicateur automatique et, seulement si l'automatique est désactivé, la valeur manuelle sur 2 bits ; puis appelle run."
+    },
+    "ExtendedSowingMachineRateEvent:writeStream": {
+      "en": "Writes the object and the automatic flag, followed by the 2 bit manual value only when automatic mode is off.",
+      "fr": "Écrit l'objet et l'indicateur automatique, suivis de la valeur manuelle sur 2 bits seulement si le mode automatique est désactivé."
+    },
+    "ExtendedSowingMachineRateEvent:run": {
+      "en": "Receiving side. On the server it first re-broadcasts the event to the other clients (not the sender); then, if the target object exists and is synchronized, it applies the change locally without sending a new event. It calls object:setSeedRateAutoMode and, in manual mode, object:setManualSeedRate.",
+      "fr": "Côté réception. Sur le serveur, il rediffuse d'abord l'événement aux autres clients (pas à l'expéditeur) ; puis, si l'objet cible existe et est synchronisé, il applique le changement localement sans renvoyer d'événement. Il appelle object:setSeedRateAutoMode et, en mode manuel, object:setManualSeedRate."
+    },
+    "ExtendedSowingMachineRateEvent.sendEvent": {
+      "en": "Entry point to sync the seed rate. Server: broadcasts a new ExtendedSowingMachineRateEvent to the clients (bound to the object); client: sends it to the server. Does nothing when noEventSend is true.",
+      "fr": "Point d'entrée pour synchroniser la dose de semis. Serveur : diffuse un nouvel ExtendedSowingMachineRateEvent aux clients (lié à l'objet) ; client : l'envoie au serveur. Ne fait rien si noEventSend vaut true."
+    }
+  }
+}

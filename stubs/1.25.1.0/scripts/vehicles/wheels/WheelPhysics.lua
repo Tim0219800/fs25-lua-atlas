@@ -1,83 +1,83 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/wheels/WheelPhysics.lua (generated stub, FS25 Lua Atlas)
 
---- Classe (pas une spécialisation) créée par roue (Wheel.physics) : porte les paramètres physiques XML (rayon, largeur, masse, raideurs, suspension, type de pneu) et l'état dynamique de la roue (contact, type de sol, neige, eau, couleur de piste, enfoncement). C'est la source principale du CONTACT PNEU/SOL pour les mods d'effets : WheelEffects, TireTracks et Wheels (saleté/boue) lisent ses champs. SERVEUR / CLIENT : serverUpdate fait tout (contact par la forme de roue du moteur, friction, enfoncement, frein) ; clientUpdate ne relit que le type de sol et la neige au point de contact (le contact lui-même vient du flux réseau seulement si wheel.syncContactState est vrai, sinon il reste à sa valeur initiale côté client : lecture du flux réseau à vérifier). CADENCE : le contact n'est recalculé qu'une frame sur quatre par roue (currentUpdateIndex == wheel.updateIndex) ; la couleur/saleté de piste n'est mise à jour que dans updateTick et seulement si le véhicule est sous TireTracks.MAX_CREATION_DISTANCE ou WheelEffects.MAX_UPDATE_DISTANCE (valeurs hors de ce fichier : NON VÉRIFIÉ). DONNÉES SOL (champs publics utiles) : contact (WheelContactType : NONE, GROUND, GROUND_HEIGHT, OBJECT, d'après les valeurs utilisées ici), hasGroundContact, hasWaterContact (raycast asynchrone sur CollisionFlag.WATER dans un rayon + 0.25 m, vrai si le point d'eau est au-dessus du terrain), hasSnowContact (type de hauteur de densité = neige de snowSystem), densityBits et densityType (FieldGroundType, lu dans la carte de densité GROUND_TYPE via fieldGroundSystem seulement quand contact == GROUND ; FieldGroundType.NONE sinon, donc hors champ ou sur route), lastTerrainAttribute (attribut de terrain hors champ via getTerrainAttributesAtWorldPos), groundColor / fieldGroundColor / trackColor (RGB), groundDepth, dirtAmount (0..1 de transfert de terre), trackAlpha, snowScale, hasSoilContact (vrai sur champ hors herbe/herbe coupée), sink (enfoncement, m). DONNÉES MÉTÉO LUES : uniquement le paramètre groundWetness (valeur numérique passée par Wheel:update / updateTick, issue de weather:getGroundWetness ; Weather absent du dump : NON VÉRIFIÉ). Elle intervient (1) dans updateFriction via WheelsUtil.getTireFriction (coefficient de friction pneu/sol/humidité/neige ; corps de WheelsUtil non relu), avec groundWetness forcée à 0 en cas de contact neige ; (2) dans updateTick : la longueur de piste (distance d'effacement de la terre sur la roue) croît avec la valeur (30 m x (1 + wetness), augmentée à basse vitesse). Aucune lecture directe de pluie, vent ou température ici. PHYSIQUE : la roue est une forme de roue du moteur (createWheelShape, setWheelShapeProps...) créée côté serveur seulement ; l'enfoncement (extraSink) utilise les tables WheelPhysics.MAX_SINK (par type de sol) et WheelPhysics.WATER_SINK, non définies dans ce fichier : NON VÉRIFIÉ. Le pas de temps dt est en ms ; xDriveSpeed utilise g_physicsDtNonInterpolated côté serveur. Réseau : synchronise xDriveDiff, hauteur y (8 bits, plage -5..5), longueur de suspension (7 bits), contact (2 bits, optionnel), angle de direction versatile (9 bits). Points d'extension : aucun registerFunction ; accès via wheel.physics.* ; surcharge de WheelPhysics.* possible (partagée par toutes les roues).
+--- Class (not a specialization) created per wheel (Wheel.physics): carries the XML physics parameters (radius, width, mass, stiffnesses, suspension, tire type) and the wheel's dynamic state (contact, ground type, snow, water, track color, sinking). It is the main source of TIRE/GROUND CONTACT for effect mods: WheelEffects, TireTracks and Wheels (dirt/mud) read its fields. SERVER / CLIENT: serverUpdate does everything (contact through the engine wheel shape, friction, sinking, brake); clientUpdate only re-reads the ground type and snow at the contact point (the contact itself comes from the network stream only if wheel.syncContactState is true, otherwise it stays at its initial value client side: reading of the network stream to be checked). CADENCE: contact is only recomputed one frame in four per wheel (currentUpdateIndex == wheel.updateIndex); the track color/dirt is only updated in updateTick and only if the vehicle is under TireTracks.MAX_CREATION_DISTANCE or WheelEffects.MAX_UPDATE_DISTANCE (values outside this file: UNVERIFIED). GROUND DATA (useful public fields): contact (WheelContactType: NONE, GROUND, GROUND_HEIGHT, OBJECT, from the values used here), hasGroundContact, hasWaterContact (asynchronous raycast on CollisionFlag.WATER within a radius + 0.25 m, true if the water point is above the terrain), hasSnowContact (height density type = snowSystem snow), densityBits and densityType (FieldGroundType, read from the GROUND_TYPE density map through fieldGroundSystem only when contact == GROUND; FieldGroundType.NONE otherwise, hence off-field or on road), lastTerrainAttribute (off-field terrain attribute via getTerrainAttributesAtWorldPos), groundColor / fieldGroundColor / trackColor (RGB), groundDepth, dirtAmount (0..1 dirt transfer), trackAlpha, snowScale, hasSoilContact (true on a field other than grass/cut grass), sink (sinking, m). WEATHER DATA READ: only the groundWetness parameter (numeric value passed by Wheel:update / updateTick, coming from weather:getGroundWetness; Weather absent from the dump: UNVERIFIED). It is used (1) in updateFriction through WheelsUtil.getTireFriction (tire/ground/moisture/snow friction coefficient; WheelsUtil body not re-read), with groundWetness forced to 0 on snow contact; (2) in updateTick: the track length (distance over which dirt wears off the wheel) grows with the value (30 m x (1 + wetness), increased at low speed). No direct reading of rain, wind or temperature here. PHYSICS: the wheel is an engine wheel shape (createWheelShape, setWheelShapeProps...) created server side only; sinking (extraSink) uses the tables WheelPhysics.MAX_SINK (per ground type) and WheelPhysics.WATER_SINK, not defined in this file: UNVERIFIED. The time step dt is in ms; xDriveSpeed uses g_physicsDtNonInterpolated server side. Network: synchronizes xDriveDiff, height y (8 bits, range -5..5), suspension length (7 bits), contact (2 bits, optional), versatile steering angle (9 bits). Extension points: no registerFunction; access through wheel.physics.*; overriding WheelPhysics.* is possible (shared by all wheels).
 ---@class WheelPhysics
 WheelPhysics = {}
 
---- Initialise l'état par défaut : couleurs à zéro, contact NONE, sol FieldGroundType.NONE, pas de neige ni d'eau, friction 1.0, enfoncement nul.
+--- Initializes the default state: colors at zero, contact NONE, ground FieldGroundType.NONE, no snow or water, friction 1.0, no sinking.
 ---@param wheel any
 function WheelPhysics.new(wheel) end
 
---- Lit tous les paramètres physics#... : rayon et largeur (défaut 0.5 m, avec avertissement), masse (0.1), restLoad (1 t), frictionScale, raideurs max longitudinale/latérale, offsets, suspension (suspTravel 0.01, spring, amortisseurs avec leurs ratios par défaut), type de pneu (tireType, défaut mud), facteurs de saleté (fieldDirtMultiplier 75, streetDirtMultiplier -150, waterWetnessFactor 20, minDirtPercentage 0.35, maxDirtOffset 0.5, dirtColorChangeSpeed 20 s), paramètres de direction et de rotation « versatile », enfoncement supplémentaire (extraSink, max par défaut 20 % du rayon), masque de collision. Le masque exclut TERRAIN_DISPLACEMENT si Platform.gameplay.wheelTerrainDisplacement est faux ou si l'enfoncement n'est pas supporté (supportsWheelSink n'est vrai que sur le serveur).
+--- Reads all the physics#... parameters: radius and width (default 0.5 m, with a warning), mass (0.1), restLoad (1 t), frictionScale, max longitudinal/lateral stiffnesses, offsets, suspension (suspTravel 0.01, spring, dampers with their default ratios), tire type (tireType, default mud), dirt factors (fieldDirtMultiplier 75, streetDirtMultiplier -150, waterWetnessFactor 20, minDirtPercentage 0.35, maxDirtOffset 0.5, dirtColorChangeSpeed 20 s), steering and "versatile" rotation parameters, extra sinking (extraSink, max defaulting to 20% of the radius), collision mask. The mask excludes TERRAIN_DISPLACEMENT if Platform.gameplay.wheelTerrainDisplacement is false or if sinking is not supported (supportsWheelSink is only true on the server).
 ---@param xmlObject any
 function WheelPhysics:loadFromXML(xmlObject) end
 
---- Ajoute masse et raideurs d'une roue additionnelle (jumelée) à la roue physique.
+--- Adds the mass and stiffnesses of an additional (dual) wheel to the physical wheel.
 ---@param xmlObject any
 function WheelPhysics:loadAdditionalWheel(xmlObject) end
 
---- Prépare netInfo (position, suspension, xDrive, vitesse lissée, glissement), met à l'échelle les raideurs par la charge au repos et crée les interpolateurs réseau (xDriveDiff, position, suspension).
+--- Prepares netInfo (position, suspension, xDrive, smoothed speed, slip), scales the stiffnesses by the rest load and creates the network interpolators (xDriveDiff, position, suspension).
 function WheelPhysics:finalize() end
 
---- Vide (aucune action).
+--- Empty (no action).
 function WheelPhysics:postLoad() end
 
---- Client : décode xDriveDiff (échelle non linéaire, puissance 1/4), hauteur y, longueur de suspension, contact et autorisation de traces (si syncContactState) et angle de direction versatile ; valeurs fixées directement ou comme cibles d'interpolation.
+--- Client: decodes xDriveDiff (non-linear scale, power 1/4), height y, suspension length, contact and track permission (if syncContactState) and the versatile steering angle; values are set directly or as interpolation targets.
 ---@param streamId any
 ---@param updateInterpolation any
 function WheelPhysics:readStream(streamId, updateInterpolation) end
 
---- Serveur : encode les mêmes valeurs (signe et amplitude de xDriveDiff avec compression, y sur 8 bits, suspension sur 7 bits, contact sur 2 bits si syncContactState, angle versatile sur 9 bits).
+--- Server: encodes the same values (sign and magnitude of xDriveDiff with compression, y on 8 bits, suspension on 7 bits, contact on 2 bits if syncContactState, versatile angle on 9 bits).
 ---@param streamId any
 function WheelPhysics:writeStream(streamId) end
 
---- Serveur, une frame sur quatre. Lance un raycast d'eau asynchrone ; au-delà de 2 frames après la création de la forme, lit le point de contact, l'objet touché et la présence de matière en hauteur de densité (donne GROUND_HEIGHT), du terrain (GROUND) ou d'un objet (OBJECT, avec l'attribut utilisateur noTireTracks ; non relu en détail) ou aucun contact. Si GROUND, lit la carte de densité GROUND_TYPE au point de contact et déduit densityType ; si GROUND_HEIGHT, lit la carte de hauteur pour détecter la neige. Point d'accès à surveiller pour identifier le sol sous un pneu.
+--- Server, one frame in four. Launches an asynchronous water raycast; beyond 2 frames after the shape creation, reads the contact point, the hit object and the presence of height-density material (gives GROUND_HEIGHT), terrain (GROUND) or an object (OBJECT, with the user attribute noTireTracks; not read in detail) or no contact. If GROUND, reads the GROUND_TYPE density map at the contact point and derives densityType; if GROUND_HEIGHT, reads the height map to detect snow. Entry point to watch to identify the ground under a tire.
 function WheelPhysics:updateContact() end
 
---- Client : refait la lecture du type de sol (si contact == GROUND) et de la neige (si GROUND_HEIGHT) au point de contact, d'après le dernier contact reçu. Ne détermine pas le contact lui-même.
+--- Client: redoes the reading of the ground type (if contact == GROUND) and of snow (if GROUND_HEIGHT) at the contact point, based on the last received contact. Does not determine the contact itself.
 function WheelPhysics:updateContactClient() end
 
---- Serveur, si extraSink supporté : calcule un enfoncement cible selon le type de sol (WheelPhysics.MAX_SINK, valeurs NON VÉRIFIÉES), renforcé dans l'eau (WATER_SINK), plafonné par extraSinkMaxValue ; seulement au-dessus de 0.3 m/s ; le rapproche progressivement (vitesse proportionnelle à la vitesse du véhicule, avec dt en ms) puis modifie deltaY. Le paramètre groundWetness est reçu mais non utilisé dans ce corps.
+--- Server, if extraSink is supported: computes a target sinking according to the ground type (WheelPhysics.MAX_SINK, values UNVERIFIED), increased in water (WATER_SINK), capped by extraSinkMaxValue; only above 0.3 m/s; brings it closer progressively (rate proportional to vehicle speed, with dt in ms) then modifies deltaY. The groundWetness parameter is received but unused in this body.
 ---@param dt any
 ---@param groundWetness any
 function WheelPhysics:updateSink(dt, groundWetness) end
 
---- Serveur : choisit le type de sol (WheelsUtil.getGroundType avec champ/non-champ, contact autre que GROUND, profondeur) et calcule le coefficient de friction du pneu avec la valeur d'humidité (0 si neige, snowScale 1). N'est appliqué qu'au-dessus de 0.2 m/s ; marque la friction à mettre à jour. Corps de WheelsUtil non relu : NON VÉRIFIÉ. C'est là que l'humidité du sol modifie réellement l'adhérence.
+--- Server: chooses the ground type (WheelsUtil.getGroundType with field/non-field, non-GROUND contact, depth) and computes the tire friction coefficient with the moisture value (0 if snow, snowScale 1). Only applied above 0.2 m/s; flags the friction for update. WheelsUtil body not re-read: UNVERIFIED. This is where ground moisture actually changes grip.
 ---@param dt any
 ---@param groundWetness any
 function WheelPhysics:updateFriction(dt, groundWetness) end
 
---- Serveur : (re)crée la forme de roue du moteur (createWheelShape) avec rayon, course de suspension, ressort et amortisseurs, puis règle point de force, centre de direction, direction/axe, largeur et déplacement de terrain.
+--- Server: (re)creates the engine wheel shape (createWheelShape) with radius, suspension travel, spring and dampers, then sets force point, steering center, direction/axis, width and terrain displacement.
 function WheelPhysics:updateBase() end
 
---- Recalcule position et direction de la forme depuis les nœuds repr/driveNode et marque la position à recalculer en postUpdate.
+--- Recomputes the shape's position and direction from the repr/driveNode nodes and flags the position to be recomputed in postUpdate.
 function WheelPhysics:updateShapePosition() end
 
---- Serveur : applique au moteur les raideurs et la friction (frictionScale x coefficient pneu/sol) via setWheelShapeTireFriction.
+--- Server: applies stiffnesses and friction (frictionScale x tire/ground coefficient) to the engine through setWheelShapeTireFriction.
 function WheelPhysics:updateTireFriction() end
 
---- Serveur : applique couple, frein (x brakeFactor), angle de direction, amortissement de rotation et frein de stationnement automatique à la forme de roue.
+--- Server: applies torque, brake (x brakeFactor), steering angle, rotation damping and automatic parking brake to the wheel shape.
 ---@param brakeForce any
 ---@param torque any
 function WheelPhysics:updatePhysics(brakeForce, torque) end
 
---- Serveur : lit la position, la rotation (xDrive) et la suspension de la forme de roue dans netInfo, lève le drapeau réseau si la position X/Z a changé, et calcule la vitesse de rotation (n'agit pas si g_physicsDtNonInterpolated vaut 0).
+--- Server: reads the wheel shape's position, rotation (xDrive) and suspension into netInfo, raises the network flag if the X/Z position changed, and computes the rotation speed (does nothing if g_physicsDtNonInterpolated is 0).
 ---@param dt any
 function WheelPhysics:updateNetInfo(dt) end
 
---- Calcule l'angle de direction : essieu directeur de l'attelage, rotation versatile (serveur), ou angle proportionnel au temps de rotation du volant (rotatedTime) borné par rotMin/rotMax ; une fonction personnalisée du véhicule peut le corriger.
+--- Computes the steering angle: steering axle of the hitch, versatile rotation (server), or an angle proportional to the steering wheel rotation time (rotatedTime) clamped by rotMin/rotMax; a custom vehicle function can correct it.
 ---@param dt any
 function WheelPhysics:updateSteeringAngle(dt) end
 
---- Remet à zéro la rotation brute, crée la forme, applique friction et propriétés avec couple nul.
+--- Resets the raw rotation, creates the shape, applies friction and properties with zero torque.
 ---@param brakeForce any
 function WheelPhysics:addToPhysics(brakeForce) end
 
---- Oublie la forme de roue (wheelShape = 0) et réinitialise l'état de création.
+--- Forgets the wheel shape (wheelShape = 0) and resets the creation state.
 function WheelPhysics:removeFromPhysics() end
 
---- Met à jour les limites et vitesses de rotation (inverse les vitesses si inversé, en tenant compte de invertRotLimit).
+--- Updates the rotation limits and speeds (inverts the speeds if inverted, taking invertRotLimit into account).
 ---@param rotMin any
 ---@param rotMax any
 ---@param rotSpeed any
@@ -85,79 +85,79 @@ function WheelPhysics:removeFromPhysics() end
 ---@param inverted any
 function WheelPhysics:setSteeringValues(rotMin, rotMax, rotSpeed, rotSpeedNeg, inverted) end
 
---- Modifie la largeur et le décalage de la forme et marque la position à recalculer.
+--- Changes the shape's width and offset and flags the position to be recomputed.
 ---@param width any
 ---@param offset any
 function WheelPhysics:setWheelShapeWidth(width, offset) end
 
---- Fixe le sens du couple (+1 ou -1) et recrée la forme si le sens change.
+--- Sets the torque direction (+1 or -1) and recreates the shape if the direction changes.
 ---@param torqueDirection any
 function WheelPhysics:setTorqueDirection(torqueDirection) end
 
---- Autorise ou non la déformation du terrain par la roue (setWheelShapeTerrainDisplacement) ; utilisé par les IA de travail aux champs.
+--- Allows or forbids terrain deformation by the wheel (setWheelShapeTerrainDisplacement); used by field-work AIs.
 ---@param displacementAllowed any
 function WheelPhysics:setDisplacementAllowed(displacementAllowed) end
 
---- Active ou retire TERRAIN_DISPLACEMENT du masque de collision de la roue, puis recrée la forme si le masque change.
+--- Enables or removes TERRAIN_DISPLACEMENT from the wheel's collision mask, then recreates the shape if the mask changes.
 ---@param displacementCollisionEnabled any
 function WheelPhysics:setDisplacementCollisionEnabled(displacementCollisionEnabled) end
 
---- Applique des multiplicateurs de ressort et d'amortissement (défaut 1) et marque la position à recalculer.
+--- Applies spring and damping multipliers (default 1) and flags the position to be recomputed.
 ---@param springMultiplier any
 ---@param dampingMultiplier any
 function WheelPhysics:setSuspensionMultipliers(springMultiplier, dampingMultiplier) end
 
---- Renvoie x, y, z, rotation xDrive, longueur de suspension (relative à deltaYOriginal) et angle de direction visible (selon showSteeringAngle) pour l'affichage de la roue.
+--- Returns x, y, z, xDrive rotation, suspension length (relative to deltaYOriginal) and visible steering angle (according to showSteeringAngle) for displaying the wheel.
 function WheelPhysics:getVisualInfo() end
 
---- Par frame côté serveur (si véhicule actif) : contact (une frame sur quatre), enfoncement, friction avec groundWetness, frein, couple/direction, puis lecture des infos réseau.
+--- Per frame server side (if the vehicle is active): contact (one frame in four), sinking, friction with groundWetness, brake, torque/steering, then reading of the network info.
 ---@param dt any
 ---@param currentUpdateIndex any
 ---@param groundWetness any
 function WheelPhysics:serverUpdate(dt, currentUpdateIndex, groundWetness) end
 
---- Par frame côté client (si véhicule actif) : relit le sol au point de contact une frame sur quatre ; ne fait pas de physique.
+--- Per frame client side (if the vehicle is active): re-reads the ground at the contact point one frame in four; does no physics.
 ---@param dt any
 ---@param currentUpdateIndex any
 ---@param groundWetness any
 function WheelPhysics:clientUpdate(dt, currentUpdateIndex, groundWetness) end
 
---- Par tick : limite la vitesse de rotation de direction si rotSpeedLimit est défini (à noter : ce code appelle self:getLastSpeed() sur l'objet WheelPhysics et utilise currentRotSpeedAlpha/rotSpeedDefault qui ne sont pas initialisés dans ce fichier ; non vérifié en jeu, sans doute inactif par défaut). Puis, si le véhicule est assez proche, calcule couleur et quantité de terre de la piste : sur champ (couleur de la carte de sol, dirtAmount cible 1, 0.7 sur herbe, 0.6 sur herbe coupée, hasSoilContact vrai hors herbe), hors champ (attributs du terrain, alpha 0.5 si profondeur positive), sur matière en hauteur (alpha 1), sur objet (profondeur 0). dirtAmount monte avec la distance parcourue et redescend en 30 m x (1 + groundWetness), allongé à basse vitesse ; la couleur finale mélange couleur de champ et couleur du terrain selon dirtAmount. Ces valeurs alimentent les traces de pneus.
+--- Per tick: limits the steering rotation speed if rotSpeedLimit is defined (Note: this code calls self:getLastSpeed() on the WheelPhysics object and uses currentRotSpeedAlpha/rotSpeedDefault which are not initialized in this file; not verified in game, probably inactive by default). Then, if the vehicle is close enough, computes the track color and dirt amount: on a field (ground map color, target dirtAmount 1, 0.7 on grass, 0.6 on cut grass, hasSoilContact true except on grass), off-field (terrain attributes, alpha 0.5 if depth is positive), on height material (alpha 1), on an object (depth 0). dirtAmount rises with distance traveled and falls back over 30 m x (1 + groundWetness), lengthened at low speed; the final color blends field color and terrain color according to dirtAmount. These values feed the tire tracks.
 ---@param dt any
 ---@param groundWetness any
 ---@param currentUpdateDistance any
 function WheelPhysics:updateTick(dt, groundWetness, currentUpdateDistance) end
 
---- Serveur : applique les changements de position ou de friction en attente.
+--- Server: applies the pending position or friction changes.
 ---@param dt any
 function WheelPhysics:postUpdate(dt) end
 
---- Client : interpole position, suspension et rotation reçues du réseau, puis recalcule vitesse de rotation et angle de direction avec dt en ms.
+--- Client: interpolates position, suspension and rotation received from the network, then recomputes rotation speed and steering angle with dt in ms.
 ---@param dt any
 ---@param interpolationAlpha any
 function WheelPhysics:updateInterpolation(dt, interpolationAlpha) end
 
---- Calcule la vitesse angulaire de la roue (rad/s), la vitesse linéaire lissée (m/s, via MathUtil.rpmToMps et un filtre à 0.9/0.1) et le glissement (0 = adhérence, 1 = glissement total) comme rapport entre vitesse de roue lissée et vitesse du véhicule, borné entre 1 et 2 puis diminué de 1. Le glissement netInfo.slip est lu par WheelEffects.
+--- Computes the wheel's angular speed (rad/s), the smoothed linear speed (m/s, via MathUtil.rpmToMps and a 0.9/0.1 filter) and the slip (0 = grip, 1 = full slip) as the ratio between smoothed wheel speed and vehicle speed, clamped between 1 and 2 then reduced by 1. The netInfo.slip slip is read by WheelEffects.
 ---@param dt any
 function WheelPhysics:updateXDriveSpeed(dt) end
 
---- Renvoie couleur de piste (RGB), profondeur du sol, attribut de terrain, alpha de piste (maximum de trackAlpha et dirtAmount) et mélange avec le terrain, pour les traces de pneus.
+--- Returns the track color (RGB), ground depth, terrain attribute, track alpha (maximum of trackAlpha and dirtAmount) and the blend with the terrain, for tire tracks.
 function WheelPhysics:getGroundAttributes() end
 
---- Vrai s'il y a contact avec la neige ou si le type de sol est un champ non herbacé (ni NONE, ni GRASS, ni GRASS_CUT). Utilisé pour la saleté de roue (Wheels:updateWheelDirtAmount).
+--- True if there is snow contact or if the ground type is a non-grass field (neither NONE, nor GRASS, nor GRASS_CUT). Used for wheel dirt (Wheels:updateWheelDirtAmount).
 function WheelPhysics:getIsOnField() end
 
---- Renvoie un nom de surface (shallowWater, field, snow, asphalt) ou un attribut de terrain pour choisir le son de roulement ; sur GROUND hors champ, retourne l'attribut de terrain.
+--- Returns a surface name (shallowWater, field, snow, asphalt) or a terrain attribute to choose the rolling sound; on non-field GROUND, returns the terrain attribute.
 function WheelPhysics:getSurfaceSoundAttributes() end
 
---- Calcule la charge normale du pneu en tonnes à partir de la force de contact du moteur, de la normale et de la masse de la roue ; renvoie 0 sans forme créée ou sans contact.
+--- Computes the tire's normal load in tonnes from the engine contact force, the normal and the wheel mass; returns 0 without a created shape or without contact.
 function WheelPhysics:getTireLoad() end
 
---- Pour les roues pivotantes libres (roulettes) : avec contact, délègue à Utils.getVersatileRotation ; en l'air et avec ressort défini, simule un ressort amorti avec frottements statique/dynamique à partir de l'accélération du nœud (impact 0.2). Non relu en détail.
+--- For free-pivoting wheels (casters): with contact, delegates to Utils.getVersatileRotation; airborne and with a spring defined, simulates a damped spring with static/dynamic friction from the node's acceleration (impact 0.2). Not read in detail.
 ---@param dt any
 function WheelPhysics:getVersatileYRotation(dt) end
 
---- Rappel du raycast d'eau : hasWaterContact vaut vrai si le point touché est au-dessus de la hauteur du terrain, faux au dernier résultat sans impact.
+--- Water raycast callback: hasWaterContact is true if the hit point is above the terrain height, false on the last result without a hit.
 ---@param actorId any
 ---@param x any
 ---@param y any
@@ -171,12 +171,12 @@ function WheelPhysics:getVersatileYRotation(dt) end
 ---@param isLast any
 function WheelPhysics:waterRaycastCallback(actorId, x, y, z, distance, nx, ny, nz, subShapeIndex, shapeId, isLast, ...) end
 
---- Déclare les clés XML physics#... de la roue (non relu ligne à ligne).
+--- Declares the wheel's physics#... XML keys (not read line by line).
 ---@param schema any
 ---@param key any
 function WheelPhysics.registerXMLPaths(schema, key) end
 
---- Déclare les clés XML des roues additionnelles (masse et raideurs ajoutées).
+--- Declares the XML keys of additional wheels (added mass and stiffnesses).
 ---@param schema any
 ---@param key any
 function WheelPhysics.registerAdditionalWheelXMLPaths(schema, key) end

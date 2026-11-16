@@ -1,0 +1,41 @@
+{
+ "fichier": "gui/elements/TimerElement.lua",
+ "module": {
+  "en": "Clock-like circular timer element (value 0 to 1) built from a front image, two background halves, two value halves and a marker that orbits at a given radius. Derived from GuiElement. The source file itself marks it as not in use. Note: timerOffset is never assigned in this file, so draw would fail on it unless set elsewhere (UNVERIFIED).",
+  "fr": "Élément de minuteur circulaire type horloge (valeur de 0 à 1) composé d'une image avant, de deux moitiés de fond, de deux moitiés de valeur et d'un marqueur qui tourne à un rayon donné. Dérivé de GuiElement. Le fichier lui-même indique qu'il n'est pas utilisé. À noter : timerOffset n'est jamais affecté dans ce fichier, donc draw échouerait dessus sauf affectation ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "TimerElement.new": {
+   "en": "Constructor. Initialises value 0, unit timer/marker sizes, radius and empty overlays for front, backgrounds, values and marker.",
+   "fr": "Constructeur. Initialise la valeur 0, des tailles de minuteur/marqueur unitaires, le rayon et des overlays vides pour l'avant, les fonds, les valeurs et le marqueur."
+  },
+  "TimerElement:delete": {
+   "en": "Deletes all six overlays, then calls the parent delete.",
+   "fr": "Supprime les six overlays, puis appelle le delete du parent."
+  },
+  "TimerElement:loadFromXML": {
+   "en": "Loads the image/bgImage/valueImage/markerImage overlays plus timerSize, markerSize, value and radius from XML, creates the overlays and sets the initial value.",
+   "fr": "Charge depuis le XML les overlays image/bgImage/valueImage/markerImage ainsi que timerSize, markerSize, value et radius, crée les overlays et fixe la valeur initiale."
+  },
+  "TimerElement:loadProfile": {
+   "en": "Loads the same overlays and the sizes, value and radius from a GUI profile. Does not create the overlays or set UVs here.",
+   "fr": "Charge les mêmes overlays ainsi que les tailles, la valeur et le rayon depuis un profil GUI. Ne crée pas les overlays et ne règle pas les UV ici."
+  },
+  "TimerElement:copyAttributes": {
+   "en": "Copies sizes, offset, radius, value and all overlays from a source element. Note: it indexes src.timerOffset, which is nil unless assigned elsewhere.",
+   "fr": "Copie les tailles, le décalage, le rayon, la valeur et tous les overlays depuis un élément source. À noter : il indexe src.timerOffset, qui est nil sauf affectation ailleurs."
+  },
+  "TimerElement:setValue": {
+   "en": "Clamps the value to 0..1 and rotates the UVs of the first value and first background overlays so the pie fill matches it.",
+   "fr": "Borne la valeur entre 0 et 1 et fait pivoter les UV du premier overlay de valeur et du premier fond pour que le remplissage corresponde."
+  },
+  "TimerElement:updateUVs": {
+   "en": "Writes the eight UV coordinates of an overlay as a quad rotated by the given angle in radians around its centre.",
+   "fr": "Écrit les huit coordonnées UV d'un overlay sous forme d'un quad pivoté de l'angle donné (radians) autour de son centre."
+  },
+  "TimerElement:draw": {
+   "en": "Draws the background and value halves according to whether the value is above or below one half, then the front image and the marker placed on an ellipse of the configured radius.",
+   "fr": "Dessine les moitiés de fond et de valeur selon que la valeur est au-dessus ou en dessous de la moitié, puis l'image avant et le marqueur placé sur une ellipse du rayon configuré."
+  }
+ }
+}

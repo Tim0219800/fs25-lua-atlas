@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/elements/OptionToggleElement.lua",
+ "module": {
+  "en": "Thin subclass of MultiTextOptionElement used for toggle-style options. It adds only a single field and no behaviour of its own in this dump, so everything else comes from the parent class.",
+  "fr": "Mince sous-classe de MultiTextOptionElement utilisée pour les options de type bascule. Elle n'ajoute qu'un seul champ et aucun comportement propre dans ce dump ; tout le reste vient de la classe parente."
+ },
+ "fonctions": {
+  "OptionToggleElement.new": {
+   "en": "Constructor. Builds a MultiTextOptionElement and adds a dataSouce field initialised to nil (the spelling comes from the source). Nothing else reads it in this file.",
+   "fr": "Constructeur. Construit un MultiTextOptionElement et ajoute un champ dataSouce initialisé à nil (l'orthographe vient de la source). Rien d'autre ne le lit dans ce fichier."
+  }
+ }
+}

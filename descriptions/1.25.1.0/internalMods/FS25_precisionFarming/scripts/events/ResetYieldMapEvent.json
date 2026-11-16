@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/ResetYieldMapEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) sent by a client to reset the yield map data of a farmland. The server applies it through the yieldMap object of g_precisionFarming.",
+    "fr": "Événement réseau (sous-classe de Event) envoyé par un client pour réinitialiser les données de la carte de rendement d'une parcelle. Le serveur l'applique via l'objet yieldMap de g_precisionFarming."
+  },
+  "fonctions": {
+    "ResetYieldMapEvent.emptyNew": {
+      "en": "Creates an empty ResetYieldMapEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de ResetYieldMapEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "ResetYieldMapEvent.new": {
+      "en": "Creates the event for a farmland id.",
+      "fr": "Crée l'événement pour un id de parcelle."
+    },
+    "ResetYieldMapEvent:readStream": {
+      "en": "Server side: reads the farmland id, then calls run.",
+      "fr": "Côté serveur : lit l'id de parcelle, puis appelle run."
+    },
+    "ResetYieldMapEvent:writeStream": {
+      "en": "Client side: writes the farmland id.",
+      "fr": "Côté client : écrit l'id de parcelle."
+    },
+    "ResetYieldMapEvent:run": {
+      "en": "Executes only on the server: calls g_precisionFarming.yieldMap:resetFarmlandYieldArea for the farmland, then updatePrecisionFarmingOverlays.",
+      "fr": "S'exécute uniquement sur le serveur : appelle g_precisionFarming.yieldMap:resetFarmlandYieldArea pour la parcelle, puis updatePrecisionFarmingOverlays."
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+ "fichier": "placeables/specializations/PlaceableRollercoaster.lua",
+ "module": {
+  "en": "Placeable specialization for a rideable rollercoaster, requiring PlaceableConstructible. It loads an animation clip played on the coaster, carts with seats (camera and character per seat), exit points, a player trigger, spline-linked sounds and a map hotspot with optional teleport. Per-player ride counts are saved by unique user id and seat occupancy is streamed to joining clients. Ride logic functions (enter, exit, start, animation time) are registered but have no body in the dump, so they are UNVERIFIED.",
+  "fr": "Spécialisation de placeable pour des montagnes russes utilisables, exigeant PlaceableConstructible. Elle charge un clip d'animation joué sur le circuit, des wagons avec sièges (caméra et personnage par siège), des points de sortie, un déclencheur joueur, des sons liés à une spline et un point d'intérêt sur la carte avec téléportation optionnelle. Le nombre de tours par joueur est sauvegardé par identifiant utilisateur unique et l'occupation des sièges est transmise aux clients entrants. Les fonctions de logique de manège (entrer, sortir, démarrer, temps d'animation) sont enregistrées mais sans corps dans le dump : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlaceableRollercoaster.prerequisitesPresent": {
+   "en": "Requires the PlaceableConstructible specialization.",
+   "fr": "Exige la spécialisation PlaceableConstructible."
+  },
+  "PlaceableRollercoaster.registerFunctions": {
+   "en": "Registers the ride API (getCanEnter, startRide, endRide, enterRide, exitRide, riders-changed listeners, player trigger, getNumRides, etc.). Only onSharedAnimationFileLoaded has a body in this dump; the rest is UNVERIFIED.",
+   "fr": "Enregistre l'API du manège (getCanEnter, startRide, endRide, enterRide, exitRide, écouteurs de changement de passagers, déclencheur joueur, getNumRides, etc.). Seule onSharedAnimationFileLoaded a un corps dans ce dump ; le reste est NON VÉRIFIÉ."
+  },
+  "PlaceableRollercoaster.registerOverwrittenFunctions": {
+   "en": "Overrides getHotspot and finalizeConstruction; their bodies are not in this dump.",
+   "fr": "Surcharge getHotspot et finalizeConstruction ; leurs corps ne sont pas dans ce dump."
+  },
+  "PlaceableRollercoaster.registerEventListeners": {
+   "en": "Subscribes to onLoad, onFinalizePlacement, onDelete, onUpdate, onReadStream and onWriteStream.",
+   "fr": "Abonne à onLoad, onFinalizePlacement, onDelete, onUpdate, onReadStream et onWriteStream."
+  },
+  "PlaceableRollercoaster.registerXMLPaths": {
+   "en": "Declares the XML under placeable.rollercoaster: animation clip, moving audio sources, five driving sounds, player trigger, exit points, hotspot link and teleport nodes, and carts with seats including camera and character definitions.",
+   "fr": "Déclare le XML sous placeable.rollercoaster : clip d'animation, sources audio mobiles, cinq sons de roulage, déclencheur joueur, points de sortie, nœuds de lien et de téléportation du point d'intérêt, et wagons avec sièges (caméra et personnage)."
+  },
+  "PlaceableRollercoaster.registerSavegameXMLPaths": {
+   "en": "Declares savegame keys: state index, spline time, and per-player unique user id with ride count.",
+   "fr": "Déclare les clés de sauvegarde : indice d'état, temps sur la spline, et par joueur l'identifiant utilisateur unique avec son nombre de tours."
+  },
+  "PlaceableRollercoaster:onLoad": {
+   "en": "Loads the animation setup (async shared i3d for the clip), player trigger, activatable, carts and seats with camera/character, exit points (warns if fewer than seats), hotspot nodes, and on the client the moving audio sources and driving samples. Subscribes to USER_REMOVED.",
+   "fr": "Charge la configuration d'animation (i3d partagé asynchrone pour le clip), le déclencheur joueur, l'activatable, les wagons et sièges avec caméra/personnage, les points de sortie (avertit s'ils sont moins nombreux que les sièges), les nœuds du point d'intérêt et, côté client, les sources audio mobiles et les échantillons de roulage. S'abonne à USER_REMOVED."
+  },
+  "PlaceableRollercoaster:onSharedAnimationFileLoaded": {
+   "en": "Callback after the animation i3d loads: clones its anim character set onto the clip root node, binds the named clip to track 0 (no loop, speed scale), stores its duration, deletes the loaded node, resets ride counters, initializes the constructible state machine states and finishes the loading task.",
+   "fr": "Callback après chargement de l'i3d d'animation : clone son jeu de personnage d'animation sur le nœud racine du clip, lie le clip nommé à la piste 0 (sans boucle, avec échelle de vitesse), stocke sa durée, supprime le nœud chargé, réinitialise les compteurs de tours, initialise les états de la machine d'états constructible et termine la tâche de chargement."
+  },
+  "PlaceableRollercoaster:onFinalizePlacement": {
+   "en": "Configures the map hotspot (placeable, no owner farm, world and teleport positions) and adds it to the mission. The first finalized rollercoaster becomes PlaceableRollercoaster.INSTANCE.",
+   "fr": "Configure le point d'intérêt de la carte (placeable, sans ferme propriétaire, positions monde et de téléportation) et l'ajoute à la mission. La première montagne russe finalisée devient PlaceableRollercoaster.INSTANCE."
+  },
+  "PlaceableRollercoaster:onDelete": {
+   "en": "Unsubscribes messages, removes and deletes the hotspot, releases the animation i3d, deletes seat characters and cameras, removes moving sounds and samples, removes the player trigger and clears INSTANCE if it was this placeable.",
+   "fr": "Se désabonne des messages, retire et supprime le point d'intérêt, libère l'i3d d'animation, supprime personnages et caméras des sièges, retire les sons mobiles et échantillons, retire le déclencheur joueur et efface INSTANCE si c'était ce placeable."
+  },
+  "PlaceableRollercoaster:saveToXMLFile": {
+   "en": "Saves each player's unique user id and ride count.",
+   "fr": "Sauvegarde l'identifiant utilisateur unique et le nombre de tours de chaque joueur."
+  },
+  "PlaceableRollercoaster:loadFromXMLFile": {
+   "en": "Restores the per-player ride counters from the savegame, ignoring incomplete entries.",
+   "fr": "Restaure les compteurs de tours par joueur depuis la sauvegarde, en ignorant les entrées incomplètes."
+  },
+  "PlaceableRollercoaster:onReadStream": {
+   "en": "Client initial sync: for each occupied seat, reads the player object and calls enterRide for that seat.",
+   "fr": "Synchronisation initiale côté client : pour chaque siège occupé, lit l'objet joueur et appelle enterRide pour ce siège."
+  },
+  "PlaceableRollercoaster:onWriteStream": {
+   "en": "Server initial sync: writes for each seat whether it is occupied and, if so, the player's node object.",
+   "fr": "Synchronisation initiale côté serveur : écrit pour chaque siège s'il est occupé et, le cas échéant, l'objet du joueur."
+  }
+ }
+}

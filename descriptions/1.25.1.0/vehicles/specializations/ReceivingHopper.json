@@ -1,0 +1,85 @@
+{
+ "fichier": "vehicles/specializations/ReceivingHopper.lua",
+ "module": {
+  "en": "Vehicle specialization for receiving hoppers that take tipped goods (such as potatoes) and optionally spawn boxes (pallet-like vehicles) to fill. Requires FillUnit and Dischargeable. Box spawning runs on the server only, can be toggled by the player with an action event, is synchronised through ReceivingHopperSetCreateBoxesEvent and saved as createBoxes in the savegame. XML under vehicle.receivingHopper: fill unit index, spawn place node and one box file per fill type.",
+  "fr": "Spécialisation de véhicule pour les trémies de réception qui reçoivent des produits déversés (pommes de terre par exemple) et peuvent faire apparaître des caisses (véhicules de type palette) à remplir. Exige FillUnit et Dischargeable. L'apparition des caisses se fait uniquement côté serveur, le joueur peut l'activer par une action, elle est synchronisée par ReceivingHopperSetCreateBoxesEvent et sauvegardée sous createBoxes. XML sous vehicle.receivingHopper : index d'unité de remplissage, nœud de point d'apparition et un fichier de caisse par type de remplissage."
+ },
+ "fonctions": {
+  "ReceivingHopper.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both the FillUnit and Dischargeable specializations.",
+   "fr": "Retourne true seulement si le type de véhicule possède les spécialisations FillUnit et Dischargeable."
+  },
+  "ReceivingHopper.initSpecialization": {
+   "en": "Registers the XML schema entries (fill unit index, box spawn place node, box fill type and filename) and the savegame key for createBoxes.",
+   "fr": "Enregistre les entrées du schéma XML (index d'unité de remplissage, nœud d'apparition, type de remplissage et fichier de caisse) et la clé de sauvegarde createBoxes."
+  },
+  "ReceivingHopper.registerFunctions": {
+   "en": "Registers setCreateBoxes, getCanSpawnNextBox, collisionTestCallback, createBox and onCreateBoxFinished on the vehicle type.",
+   "fr": "Enregistre setCreateBoxes, getCanSpawnNextBox, collisionTestCallback, createBox et onCreateBoxFinished sur le type de véhicule."
+  },
+  "ReceivingHopper.registerOverwrittenFunctions": {
+   "en": "Overrides handleDischargeRaycast and getCanBeSelected on the vehicle type.",
+   "fr": "Surcharge handleDischargeRaycast et getCanBeSelected sur le type de véhicule."
+  },
+  "ReceivingHopper.registerEventListeners": {
+   "en": "Subscribes to onLoad, onUpdateTick, onRegisterActionEvents and onFillUnitFillLevelChanged.",
+   "fr": "S'abonne à onLoad, onUpdateTick, onRegisterActionEvents et onFillUnitFillLevelChanged."
+  },
+  "ReceivingHopper:onLoad": {
+   "en": "Warns about deprecated XML keys, reads the fill unit index, spawn place and the fill type to box file map, and restores createBoxes from the savegame. Removes the onUpdateTick listener when not on the server.",
+   "fr": "Signale les clés XML obsolètes, lit l'index d'unité de remplissage, le point d'apparition et la table type de remplissage vers fichier de caisse, et restaure createBoxes depuis la sauvegarde. Retire l'écouteur onUpdateTick hors serveur."
+  },
+  "ReceivingHopper:saveToXMLFile": {
+   "en": "Writes the createBoxes flag into the vehicle savegame XML.",
+   "fr": "Écrit l'indicateur createBoxes dans le XML de sauvegarde du véhicule."
+  },
+  "ReceivingHopper:onUpdateTick": {
+   "en": "Server tick. When box creation is on and the discharge state is off, creates a new box if getCanSpawnNextBox allows it.",
+   "fr": "Tick serveur. Quand la création de caisses est activée et que l'état de déchargement est éteint, crée une nouvelle caisse si getCanSpawnNextBox l'autorise."
+  },
+  "ReceivingHopper:setCreateBoxes": {
+   "en": "Changes the box creation flag. If the value differs it sends ReceivingHopperSetCreateBoxesEvent (unless noEventSend), refreshes the action text and forgets the last box.",
+   "fr": "Change l'indicateur de création de caisses. Si la valeur diffère, envoie ReceivingHopperSetCreateBoxesEvent (sauf noEventSend), met à jour le texte d'action et oublie la dernière caisse."
+  },
+  "ReceivingHopper:getCanSpawnNextBox": {
+   "en": "Returns true if no box is being created, the current fill type has a box file, the previous box is full and an overlap box test at the spawn place finds no other object or player.",
+   "fr": "Retourne true si aucune caisse n'est en cours de création, que le type de remplissage courant a un fichier de caisse, que la caisse précédente est pleine et qu'un test de recouvrement au point d'apparition ne trouve aucun objet ni joueur."
+  },
+  "ReceivingHopper:collisionTestCallback": {
+   "en": "Overlap callback: flags the spawn place as occupied when the hit node belongs to a registered object or player other than this vehicle.",
+   "fr": "Callback de recouvrement : marque le point d'apparition comme occupé si le nœud touché appartient à un objet ou joueur enregistré autre que ce véhicule."
+  },
+  "ReceivingHopper:createBox": {
+   "en": "Server only. Loads the box vehicle for the current fill type at the spawn place with VehicleLoadingData, owned by the hopper's farm, and calls onCreateBoxFinished when done.",
+   "fr": "Serveur uniquement. Charge le véhicule caisse du type de remplissage courant au point d'apparition via VehicleLoadingData, appartenant à la ferme de la trémie, et appelle onCreateBoxFinished à la fin."
+  },
+  "ReceivingHopper:onCreateBoxFinished": {
+   "en": "Loading callback: clears the creating flag and, on success, stores the first loaded vehicle as the last box.",
+   "fr": "Callback de chargement : efface l'indicateur de création et, en cas de succès, mémorise le premier véhicule chargé comme dernière caisse."
+  },
+  "ReceivingHopper:handleDischargeRaycast": {
+   "en": "Overridden discharge raycast handler. Sets the discharge state to OBJECT while the hit object accepts the fill type and has free capacity, and back to OFF when not. The parent function is not called.",
+   "fr": "Gestionnaire de raycast de déchargement surchargé. Met l'état de déchargement à OBJECT tant que l'objet touché accepte le type et a de la place, et le remet à OFF sinon. La fonction parente n'est pas appelée."
+  },
+  "ReceivingHopper:getCanBeSelected": {
+   "en": "Overridden to always return true, so the hopper can be selected by the player.",
+   "fr": "Surchargée pour toujours retourner true : la trémie peut toujours être sélectionnée par le joueur."
+  },
+  "ReceivingHopper:onRegisterActionEvents": {
+   "en": "On clients, rebuilds the action events and, when active for input, registers IMPLEMENT_EXTRA to toggle box creation, then updates its text.",
+   "fr": "Côté client, reconstruit les actions et, si actif pour l'entrée, enregistre IMPLEMENT_EXTRA pour activer ou désactiver la création de caisses, puis met à jour son texte."
+  },
+  "ReceivingHopper:onFillUnitFillLevelChanged": {
+   "en": "Keeps the vehicle awake (raiseActive) whenever the changed fill unit still holds some fill.",
+   "fr": "Garde le véhicule actif (raiseActive) tant que l'unité de remplissage modifiée contient du produit."
+  },
+  "ReceivingHopper.actionEventToggleBoxCreation": {
+   "en": "Input callback that flips the box creation flag through setCreateBoxes.",
+   "fr": "Callback d'entrée qui inverse l'indicateur de création de caisses via setCreateBoxes."
+  },
+  "ReceivingHopper.updateActionEvents": {
+   "en": "Sets the action text to the enable or disable pallet spawning label according to the current createBoxes state.",
+   "fr": "Règle le texte d'action sur le libellé d'activation ou de désactivation de l'apparition de palettes selon l'état courant de createBoxes."
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableObjectStorageErrorEvent.lua",
+ "module": {
+  "en": "Network event (subclass of Event) from the server to a client telling that an object storage action failed. The client shows a blinking warning only for the owner farm and when the player is within a warning distance of the storage. Error ids and the distance constants are defined elsewhere in this class.",
+  "fr": "Événement réseau (sous-classe d'Event) envoyé du serveur à un client pour signaler l'échec d'une action de stockage d'objets. Le client n'affiche un avertissement clignotant que pour la ferme propriétaire et si le joueur est assez proche du stockage. Les identifiants d'erreur et les constantes de distance sont définis ailleurs dans cette classe."
+ },
+ "fonctions": {
+  "PlaceableObjectStorageErrorEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture de flux."
+  },
+  "PlaceableObjectStorageErrorEvent.new": {
+   "en": "Creates the event with the storage placeable and an error id.",
+   "fr": "Crée l'événement avec le placeable de stockage et un identifiant d'erreur."
+  },
+  "PlaceableObjectStorageErrorEvent:readStream": {
+   "en": "Reads the placeable and the error id (`SEND_NUM_BITS` bits), then calls `run`.",
+   "fr": "Lit le placeable et l'identifiant d'erreur (`SEND_NUM_BITS` bits), puis appelle `run`."
+  },
+  "PlaceableObjectStorageErrorEvent:writeStream": {
+   "en": "Writes the placeable and the error id (`SEND_NUM_BITS` bits).",
+   "fr": "Écrit le placeable et l'identifiant d'erreur (`SEND_NUM_BITS` bits)."
+  },
+  "PlaceableObjectStorageErrorEvent:run": {
+   "en": "If the placeable is synchronized, belongs to the local farm and is within `SHOW_WARNING_DISTANCE` (XZ) of the client, shows a blinking warning for the matching error: not enough space, storage full, bale or pallet slot limit, unsupported object, or max amount reached.",
+   "fr": "Si le placeable est synchronisé, appartient à la ferme locale et se trouve à moins de `SHOW_WARNING_DISTANCE` (XZ) du client, affiche un avertissement clignotant selon l'erreur : pas assez de place, stockage plein, limite d'emplacements de balles ou de palettes, objet non pris en charge, ou quantité maximale atteinte."
+  }
+ }
+}

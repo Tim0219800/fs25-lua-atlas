@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/BigBag.lua",
+ "module": {
+  "en": "Specialization for big bags (bulk sacks): it scales a size animation with the fill level and adjusts the limits of a component joint so the bag stretches when lifted and full. Configured under vehicle.bigBag (fillUnitIndex, sizeAnimation, componentJoint). Joint limits are changed on the server only; the animation runs on every machine. It also overrides the info box title with the big bag shop text.",
+  "fr": "Spécialisation des big bags (sacs en vrac) : elle ajuste une animation de taille selon le niveau de remplissage et les limites d'un joint de composants pour que le sac s'étire quand il est soulevé et plein. Configurée sous vehicle.bigBag (fillUnitIndex, sizeAnimation, componentJoint). Les limites du joint ne sont modifiées que côté serveur ; l'animation tourne sur toutes les machines. Elle remplace aussi le titre de l'infobulle par le texte de boutique des big bags."
+ },
+ "fonctions": {
+  "BigBag.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "BigBag.initSpecialization": {
+   "en": "Registers the vehicle.bigBag XML keys: fill unit index, size animation name with min/max/lift-shrink times, and component joint index, rotation and translation limits plus angular damping.",
+   "fr": "Enregistre les clés XML vehicle.bigBag : indice de l'unité de remplissage, animation de taille (temps min, max et réduction au levage), indice du joint de composants, limites de rotation et de translation et amortissement angulaire."
+  },
+  "BigBag.registerFunctions": {
+   "en": "Empty hook, registers no new vehicle functions.",
+   "fr": "Point d'entrée vide, n'enregistre aucune nouvelle fonction de véhicule."
+  },
+  "BigBag.registerOverwrittenFunctions": {
+   "en": "Overrides getInfoBoxTitle on the vehicle type.",
+   "fr": "Remplace getInfoBoxTitle sur le type de véhicule."
+  },
+  "BigBag.registerEventListeners": {
+   "en": "Registers onLoad, onUpdate and onFillUnitFillLevelChanged.",
+   "fr": "Enregistre onLoad, onUpdate et onFillUnitFillLevelChanged."
+  },
+  "BigBag:onLoad": {
+   "en": "Reads the bigBag XML values. If the referenced component joint exists, creates a reference transform group on the second component, stores the joint limits and sets angular damping on both components; initialises animation state.",
+   "fr": "Lit les valeurs XML bigBag. Si le joint de composants référencé existe, crée un groupe de transformation de référence sur le second composant, mémorise les limites et applique l'amortissement angulaire aux deux composants ; initialise l'état d'animation."
+  },
+  "BigBag:onUpdate": {
+   "en": "Measures how far the joint has moved from its reference to derive a lift alpha and a shrink time for the size animation. On the server it re-interpolates the joint rotation limits when alpha changes by more than 0.05.",
+   "fr": "Mesure le déplacement du joint par rapport à sa référence pour en déduire un alpha de levage et un temps de réduction de l'animation de taille. Côté serveur, réinterpole les limites de rotation du joint quand alpha varie de plus de 0,05."
+  },
+  "BigBag:onFillUnitFillLevelChanged": {
+   "en": "When the tracked fill unit changes, recomputes the size animation time from the fill percentage and sets the animation. On the server it also interpolates the joint translation limits between the empty and full values.",
+   "fr": "Quand l'unité de remplissage suivie change, recalcule le temps d'animation de taille d'après le pourcentage de remplissage et l'applique. Côté serveur, interpole aussi les limites de translation du joint entre les valeurs vide et plein."
+  },
+  "BigBag:getInfoBoxTitle": {
+   "en": "Returns the localized text shopItem_bigBag as the info box title, ignoring the parent implementation.",
+   "fr": "Renvoie le texte localisé shopItem_bigBag comme titre de l'infobulle, sans appeler l'implémentation parente."
+  }
+ }
+}

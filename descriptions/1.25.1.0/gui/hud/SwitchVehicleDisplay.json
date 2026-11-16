@@ -1,0 +1,61 @@
+{
+ "fichier": "gui/hud/SwitchVehicleDisplay.lua",
+ "module": {
+  "en": "Touch/mobile HUD element (HUDDisplayElement subclass) with left/right arrows and input glyphs to cycle through the player vehicles via g_localPlayer. It slides between a controller position and a touch position depending on input mode, gyroscope steering and platform touch support. Client-side only. createBackgroundElements is called here but not defined in this file (UNVERIFIED).",
+  "fr": "Élément HUD tactile/mobile (sous-classe de HUDDisplayElement) avec flèches gauche/droite et glyphes d'entrée pour passer d'un véhicule du joueur à l'autre via g_localPlayer. Il glisse entre une position manette et une position tactile selon le mode d'entrée, la direction gyroscope et le support tactile de la plateforme. Côté client uniquement. createBackgroundElements est appelée ici mais non définie dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "SwitchVehicleDisplay.new": {
+   "en": "Creates the display on an empty positioning overlay, initialises state (no vehicle/player, empty touch button and control lists) and builds the components.",
+   "fr": "Crée l'affichage sur un overlay de positionnement vide, initialise l'état (ni véhicule ni joueur, listes de boutons tactiles et de contrôles vides) et construit les composants."
+  },
+  "SwitchVehicleDisplay:setVehicle": {
+   "en": "Stores the controlled vehicle and updates the position state.",
+   "fr": "Mémorise le véhicule contrôlé et met à jour l'état de position."
+  },
+  "SwitchVehicleDisplay:setPlayer": {
+   "en": "Stores the on-foot player and updates the position state.",
+   "fr": "Mémorise le joueur à pied et met à jour l'état de position."
+  },
+  "SwitchVehicleDisplay:createComponents": {
+   "en": "Builds the background, icon, the two input glyphs (switch vehicle and switch back), the left and right arrow overlays and registers three touch handlers per arrow (release, press, cancel) with the HUD. Stores the touch and gamepad target positions.",
+   "fr": "Construit le fond, l'icône, les deux glyphes d'entrée (changer de véhicule et revenir), les overlays de flèches gauche et droite et enregistre trois gestionnaires tactiles par flèche (relâchement, appui, annulation) auprès du HUD. Mémorise les positions cibles tactile et manette."
+  },
+  "SwitchVehicleDisplay:onSwitchLeft": {
+   "en": "Left arrow handler: unless sleeping, inactive or cancelled, makes the local player cycle to the previous vehicle (-1).",
+   "fr": "Gestionnaire de la flèche gauche : sauf sommeil, inactivité ou annulation, fait passer le joueur local au véhicule précédent (-1)."
+  },
+  "SwitchVehicleDisplay:onSwitchRight": {
+   "en": "Right arrow handler: unless sleeping, inactive or cancelled, makes the local player cycle to the next vehicle (+1).",
+   "fr": "Gestionnaire de la flèche droite : sauf sommeil, inactivité ou annulation, fait passer le joueur local au véhicule suivant (+1)."
+  },
+  "SwitchVehicleDisplay:updatePositionState": {
+   "en": "Chooses the controller state for gamepad input, no touch sliders, or gyroscope steering while in a vehicle; otherwise the touch state. Applies it through setPositionState.",
+   "fr": "Choisit l'état manette pour une entrée manette, l'absence de curseurs tactiles ou la direction gyroscope en véhicule ; sinon l'état tactile. L'applique via setPositionState."
+  },
+  "SwitchVehicleDisplay:onInputHelpModeChange": {
+   "en": "Stores the new input help mode and updates the position state, optionally forced.",
+   "fr": "Mémorise le nouveau mode d'aide à la saisie et met à jour l'état de position, éventuellement forcé."
+  },
+  "SwitchVehicleDisplay:onGyroscopeSteeringChanged": {
+   "en": "Stores the gyroscope steering state and updates the position state.",
+   "fr": "Mémorise l'état de la direction au gyroscope et met à jour l'état de position."
+  },
+  "SwitchVehicleDisplay:setPositionState": {
+   "en": "Tweens the display to the gamepad or touch position when the state changes (faster towards touch, near-instant when forced). Does nothing on platforms without touch sliders.",
+   "fr": "Interpole l'affichage vers la position manette ou tactile quand l'état change (plus rapide vers le tactile, quasi instantané si forcé). Ne fait rien sur les plateformes sans curseurs tactiles."
+  },
+  "SwitchVehicleDisplay:setScale": {
+   "en": "Applies a new UI scale: resizes the element, recomputes touch and gamepad positions and the stored original position, and keeps the touch position when that state is active.",
+   "fr": "Applique une nouvelle échelle d'interface : redimensionne l'élément, recalcule les positions tactile et manette et la position d'origine, et conserve la position tactile quand cet état est actif."
+  },
+  "SwitchVehicleDisplay.getBackgroundPosition": {
+   "en": "Returns the screen position of the display for the given scale (the width argument is unused).",
+   "fr": "Renvoie la position écran de l'affichage pour l'échelle donnée (l'argument de largeur est inutilisé)."
+  },
+  "SwitchVehicleDisplay.createBackground": {
+   "en": "Creates the empty overlay used only as the positioning frame of the display.",
+   "fr": "Crée l'overlay vide servant uniquement de cadre de positionnement à l'affichage."
+  }
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "fichier": "ai/parameters/AIParameterPositionAngle.lua",
+ "module": {
+  "en": "AI job parameter that stores a map position plus a heading angle (radians). It extends AIParameterPosition, adds XML and network persistence of the angle, and snaps the angle to a configurable step. Validation requires an angle in addition to the position checks of the parent.",
+  "fr": "Paramètre de job IA qui mémorise une position sur la carte et un angle de cap (radians). Il étend AIParameterPosition, ajoute la persistance XML et réseau de l'angle et l'aligne sur un pas configurable. La validation exige un angle en plus des contrôles du parent."
+ },
+ "fonctions": {
+  "AIParameterPositionAngle.new": {
+   "en": "Creates the parameter with type POSITION_ANGLE, no angle yet, and a snapping step (absolute value of the argument, default 5 degrees in radians).",
+   "fr": "Crée le paramètre de type POSITION_ANGLE, sans angle pour l'instant, avec un pas d'alignement (valeur absolue de l'argument, 5 degrés en radians par défaut)."
+  },
+  "AIParameterPositionAngle:saveToXMLFile": {
+   "en": "Calls the parent save, then writes the angle to the `#angle` attribute of the key if one is set.",
+   "fr": "Appelle la sauvegarde du parent, puis écrit l'angle dans l'attribut `#angle` de la clé s'il est défini."
+  },
+  "AIParameterPositionAngle:loadFromXMLFile": {
+   "en": "Calls the parent load, then reads `#angle` from the key, keeping the current value if the attribute is absent.",
+   "fr": "Appelle le chargement du parent, puis lit `#angle` ; la valeur actuelle est conservée si l'attribut est absent."
+  },
+  "AIParameterPositionAngle:readStream": {
+   "en": "Reads the parent data, then an optional angle sent as a 9-bit integer in degrees, converted to radians via setAngle.",
+   "fr": "Lit les données du parent, puis un angle optionnel transmis comme entier sur 9 bits en degrés, converti en radians via setAngle."
+  },
+  "AIParameterPositionAngle:writeStream": {
+   "en": "Writes the parent data, then a presence flag and the angle converted to degrees as a 9-bit integer. Precision is limited to whole degrees (UNVERIFIED rounding in the engine write call).",
+   "fr": "Écrit les données du parent, puis un indicateur de présence et l'angle converti en degrés sur 9 bits. La précision se limite aux degrés entiers (arrondi de l'appel moteur NON VÉRIFIÉ)."
+  },
+  "AIParameterPositionAngle:setAngle": {
+   "en": "Normalizes the angle to the range 0 to 2 pi, then rounds it to the nearest multiple of the snapping step when that step is above zero, and stores it.",
+   "fr": "Normalise l'angle dans l'intervalle 0 à 2 pi, puis l'arrondit au multiple le plus proche du pas d'alignement si celui-ci est supérieur à zéro, et le stocke."
+  },
+  "AIParameterPositionAngle:getAngle": {
+   "en": "Returns the stored angle in radians, or nil if none was set.",
+   "fr": "Retourne l'angle stocké en radians, ou nil s'il n'est pas défini."
+  },
+  "AIParameterPositionAngle:getDirection": {
+   "en": "Returns the x and z components of the unit direction for the stored angle (via MathUtil), or nil, nil when no angle is set.",
+   "fr": "Retourne les composantes x et z de la direction unitaire correspondant à l'angle stocké (via MathUtil), ou nil, nil si aucun angle n'est défini."
+  },
+  "AIParameterPositionAngle:setSnappingAngle": {
+   "en": "Sets the snapping step in radians, stored as an absolute value. It does not re-snap an angle already stored.",
+   "fr": "Définit le pas d'alignement en radians, stocké en valeur absolue. L'angle déjà stocké n'est pas réaligné."
+  },
+  "AIParameterPositionAngle:getSnappingAngle": {
+   "en": "Returns the current snapping step in radians.",
+   "fr": "Retourne le pas d'alignement actuel en radians."
+  },
+  "AIParameterPositionAngle:getString": {
+   "en": "Builds a display string with the x and z coordinates and the angle in degrees. Note: it formats the angle unconditionally, so it errors if no angle is set.",
+   "fr": "Construit une chaîne d'affichage avec les coordonnées x et z et l'angle en degrés. À noter : l'angle est formaté sans test, donc une erreur survient si aucun angle n'est défini."
+  },
+  "AIParameterPositionAngle:validate": {
+   "en": "Runs the parent validation first, then fails with the localized no-angle message if the angle is nil. Returns a boolean and an optional error text.",
+   "fr": "Exécute d'abord la validation du parent, puis échoue avec le message localisé d'absence d'angle si l'angle est nil. Retourne un booléen et un texte d'erreur optionnel."
+  }
+ }
+}

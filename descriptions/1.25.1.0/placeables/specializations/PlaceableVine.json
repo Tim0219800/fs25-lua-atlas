@@ -1,0 +1,109 @@
+{
+ "fichier": "placeables/specializations/PlaceableVine.lua",
+ "module": {
+  "en": "Placeable specialization for vineyards, built on PlaceableFence: each fence panel carries a vine node whose growth state is read from the fruit-type density map (`FSDensityMapUtil` vine area functions, signatures only in the dump, so their internals are UNVERIFIED). It loads the fruit type, panel size, sections, growth-state visuals and reset rules from `placeable.vine`, and offers harvest, prepare and shake/squeeze hooks used by vine machines, working server side. The vine system in `g_currentMission.vineSystem` tracks the panels.",
+  "fr": "Spécialisation de placeable pour les vignobles, construite sur PlaceableFence : chaque panneau de clôture porte un nœud de vigne dont l'état de croissance est lu dans la carte de densité du type de culture (fonctions de zone de vigne de `FSDensityMapUtil`, signatures seules dans le dump, donc fonctionnement interne NON VÉRIFIÉ). Elle charge le type de culture, la taille des panneaux, les sections, les visuels par état de croissance et les règles de réinitialisation depuis `placeable.vine`, et fournit des points d'entrée de récolte, de préparation, de secousse et d'écrasement utilisés par les machines à vigne, côté serveur. Le système de vigne `g_currentMission.vineSystem` suit les panneaux."
+ },
+ "fonctions": {
+  "PlaceableVine.prerequisitesPresent": {
+   "en": "Returns true only if the placeable type includes the PlaceableFence specialization.",
+   "fr": "Renvoie true seulement si le type de placeable inclut la spécialisation PlaceableFence."
+  },
+  "PlaceableVine.registerFunctions": {
+   "en": "Registers the vine functions: node and visual updates, area destruction, fruit type and initial growth state getters, shake and squeeze factors, harvest, prepare, section factor, area by node and segment helpers.",
+   "fr": "Enregistre les fonctions de vigne : mises à jour de nœud et de visuels, destruction de zone, accesseurs de type de culture et d'état initial, facteurs de secousse et d'écrasement, récolte, préparation, facteur de section, zone par nœud et aides de segment."
+  },
+  "PlaceableVine.registerOverwrittenFunctions": {
+   "en": "Overrides the fence functions `doDeletePanel`, `generateSegmentPoles`, `deleteSegment` and `getHasParallelSnapping`. Note: no `getHasParallelSnapping` function is defined in this file (UNVERIFIED target).",
+   "fr": "Surcharge les fonctions de clôture `doDeletePanel`, `generateSegmentPoles`, `deleteSegment` et `getHasParallelSnapping`. À noter : aucune fonction `getHasParallelSnapping` n'est définie dans ce fichier (cible NON VÉRIFIÉE)."
+  },
+  "PlaceableVine.registerEventListeners": {
+   "en": "Subscribes to onLoad and onCreateSegmentPanel (the latter is raised by the fence specialization for each created panel).",
+   "fr": "S'abonne à onLoad et onCreateSegmentPanel (ce dernier est déclenché par la spécialisation de clôture pour chaque panneau créé)."
+  },
+  "PlaceableVine.registerXMLPaths": {
+   "en": "Declares the `.vine` keys: `#fruitType`, `#width`, `#length`, `#thresholdFactor`, `#numLODOffsets`, `#numSections`, on/off-season growth states, growth state nodes with foliage states, and reset states with threshold and target.",
+   "fr": "Déclare les clés `.vine` : `#fruitType`, `#width`, `#length`, `#thresholdFactor`, `#numLODOffsets`, `#numSections`, états de croissance en et hors saison, nœuds d'état de croissance avec états de feuillage, et états de réinitialisation avec seuil et cible."
+  },
+  "PlaceableVine.registerSavegameXMLPaths": {
+   "en": "Declares the savegame attribute `#startGrowthState` of the vineyard.",
+   "fr": "Déclare l'attribut de sauvegarde `#startGrowthState` du vignoble."
+  },
+  "PlaceableVine:onLoad": {
+   "en": "Reads the fruit type (warns and aborts if missing or unknown), panel dimensions, section count, on/off-season growth states, growth-state foliage mappings (with validity checks) and reset states, plus the saved start growth state.",
+   "fr": "Lit le type de culture (avertit et abandonne s'il manque ou est inconnu), les dimensions du panneau, le nombre de sections, les états de croissance en et hors saison, les correspondances d'états de feuillage (avec vérifications) et les états de réinitialisation, ainsi que l'état de départ sauvegardé."
+  },
+  "PlaceableVine:deleteSegment": {
+   "en": "Forgets the stored vine data of the segment, then calls the parent to delete it.",
+   "fr": "Oublie les données de vigne stockées pour le segment, puis appelle le parent pour le supprimer."
+  },
+  "PlaceableVine:generateSegmentPoles": {
+   "en": "Before the parent regenerates a non-preview segment, unregisters its previous vine nodes from the vine system and resets the segment data list.",
+   "fr": "Avant que le parent ne régénère un segment hors aperçu, désenregistre ses anciens nœuds de vigne du système de vigne et réinitialise la liste de données du segment."
+  },
+  "PlaceableVine:onCreateSegmentPanel": {
+   "en": "Called per new fence panel. Optionally disables shadow casting, then for real panels creates the vine node data, hides the growth-state nodes, adjusts custom LOD children and random UV offsets, computes section areas and reads existing vine pixels. If no vine exists yet it creates the area with the start state, and registers the node with the vine system. In preview it only shows the preview state.",
+   "fr": "Appelée pour chaque nouveau panneau de clôture. Désactive éventuellement les ombres, puis pour les vrais panneaux crée les données du nœud de vigne, masque les nœuds d'état, ajuste les enfants de LOD et décalages UV aléatoires, calcule les zones de section et lit les pixels de vigne existants. Si aucune vigne n'existe, elle crée la zone avec l'état de départ, et enregistre le nœud auprès du système de vigne. En aperçu, elle n'affiche que l'état d'aperçu."
+  },
+  "PlaceableVine:doDeletePanel": {
+   "en": "Before the parent deletes a panel, removes the matching vine node from the vine system and destroys its density-map vine area; does nothing for an invalid segment or pole index.",
+   "fr": "Avant que le parent ne supprime un panneau, retire le nœud de vigne correspondant du système de vigne et détruit sa zone de vigne dans la carte de densité ; ne fait rien si le segment ou l'indice de poteau est invalide."
+  },
+  "PlaceableVine:destroyVineArea": {
+   "en": "Server only: destroys the density-map vine area of each section of the given panel data.",
+   "fr": "Serveur seulement : détruit la zone de vigne de la carte de densité de chaque section des données du panneau donné."
+  },
+  "PlaceableVine:getVineFruitTypeIndex": {
+   "en": "Returns the index of the vineyard fruit type.",
+   "fr": "Renvoie l'indice du type de culture du vignoble."
+  },
+  "PlaceableVine:getInitialGrowthState": {
+   "en": "Returns the growth state new vines start in: the off-season state when the fruit type cannot be planted in the current period and one is defined, else the on-season state or 1. Uses `environment.currentPeriod`, UNVERIFIED.",
+   "fr": "Renvoie l'état de croissance initial des nouvelles vignes : l'état hors saison si le type de culture ne peut pas être planté dans la période courante et qu'il est défini, sinon l'état en saison ou 1. Utilise `environment.currentPeriod`, NON VÉRIFIÉ."
+  },
+  "PlaceableVine:updateVineNode": {
+   "en": "Refreshes a panel node: if growing, may reset the whole area to a target state when part of it is already in a reset state (server only); then re-reads the growth values of every section from the density map and updates visuals. Ignores unknown or deleted nodes.",
+   "fr": "Actualise un nœud de panneau : en croissance, peut réinitialiser toute la zone à un état cible lorsqu'une partie est déjà dans un état de réinitialisation (serveur seulement) ; relit ensuite les valeurs de croissance de chaque section dans la carte de densité et met à jour les visuels. Ignore les nœuds inconnus ou supprimés."
+  },
+  "PlaceableVine:updateVineVisuals": {
+   "en": "Shows the growth-state node with the largest foliage area, hides the others, and sets its `hideSectionStates` shader parameter from the dominant state of each section (the shader call uses only three section values).",
+   "fr": "Affiche le nœud d'état de croissance dont la surface de feuillage est la plus grande, masque les autres, et fixe son paramètre de shader `hideSectionStates` d'après l'état dominant de chaque section (l'appel n'utilise que trois valeurs de section)."
+  },
+  "PlaceableVine:harvestVine": {
+   "en": "Server only: for sections overlapped by the harvester path beyond the threshold factor, cuts the vine area and calls `callback(target, ...)` with area, weed, spray, plow and lime factors; then refreshes the node.",
+   "fr": "Serveur seulement : pour les sections couvertes par le passage de la récolteuse au-delà du facteur de seuil, coupe la zone de vigne et appelle `callback(target, ...)` avec la surface et les facteurs de mauvaises herbes, de pulvérisation, de labour et de chaux ; puis actualise le nœud."
+  },
+  "PlaceableVine:setShakingFactor": {
+   "en": "Sets the `harvestPosition` shader parameter (world position and intensity) on all growth-state nodes of the panel to animate shaking.",
+   "fr": "Fixe le paramètre de shader `harvestPosition` (position monde et intensité) sur tous les nœuds d'état du panneau pour animer la secousse."
+  },
+  "PlaceableVine:setSqueezeFactor": {
+   "en": "Sets the squeeze shader parameters (`harvestSqueezePosition` and `harvestSqueezeScale` with strength, length, fade length) on all growth-state nodes of the panel.",
+   "fr": "Fixe les paramètres de shader d'écrasement (`harvestSqueezePosition` et `harvestSqueezeScale` avec force, longueur, longueur de fondu) sur tous les nœuds d'état du panneau."
+  },
+  "PlaceableVine:prepareVine": {
+   "en": "Server only: applies the prepare operation to sections touched by the machine path (beyond the threshold factor), refreshes the node if anything changed and returns the total prepared area (0 on clients or unknown nodes).",
+   "fr": "Serveur seulement : applique l'opération de préparation aux sections touchées par la trajectoire de la machine (au-delà du facteur de seuil), actualise le nœud si quelque chose a changé et renvoie la surface préparée totale (0 sur client ou nœud inconnu)."
+  },
+  "PlaceableVine:getSectionFactor": {
+   "en": "Returns the fraction (0 to 1) of section `i` covered along the node local Z axis by the segment between the start and current world positions.",
+   "fr": "Renvoie la fraction (0 à 1) de la section `i` couverte, le long de l'axe Z local du nœud, par le segment entre les positions monde de départ et courante."
+  },
+  "PlaceableVine:getVineAreaByNode": {
+   "en": "Returns six numbers (start, width and height corner coordinates in XZ) of the rectangle covered by a panel node, using the configured vine width and length.",
+   "fr": "Renvoie six nombres (coordonnées XZ des coins de départ, de largeur et de hauteur) du rectangle couvert par un nœud de panneau, selon la largeur et la longueur de vigne configurées."
+  },
+  "PlaceableVine:getVineFruitType": {
+   "en": "Returns the vineyard fruit type index, same value as `getVineFruitTypeIndex`.",
+   "fr": "Renvoie l'indice du type de culture du vignoble, même valeur que `getVineFruitTypeIndex`."
+  },
+  "PlaceableVine:getHasSegmentTargetGrowthState": {
+   "en": "Returns true if any panel of the segment has area in the harvest growth states (or the withered state when preparing) for the given fruit type; false for another fruit type or when neither mode is requested.",
+   "fr": "Renvoie true si un panneau du segment a de la surface dans les états de croissance de récolte (ou l'état flétri en préparation) pour le type de culture donné ; false pour un autre type ou si aucun mode n'est demandé."
+  },
+  "PlaceableVine:getSegmentSideArea": {
+   "en": "Returns six XZ coordinates describing a strip along one side of a fence segment, offset from the segment by the snap distance (side 1 by default).",
+   "fr": "Renvoie six coordonnées XZ décrivant une bande le long d'un côté d'un segment de clôture, décalée du segment selon la distance d'accrochage (côté 1 par défaut)."
+  }
+ }
+}

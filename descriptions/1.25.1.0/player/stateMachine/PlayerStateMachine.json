@@ -1,0 +1,17 @@
+{
+ "fichier": "player/stateMachine/PlayerStateMachine.lua",
+ "module": {
+  "en": "Top-level state machine of a player. It holds the on-foot sub-machine plus the driving, passenger and rollercoaster states, starts on foot and is passive: the state changes are driven by player events, not by transitions. The driving, passenger and rollercoaster classes are not in this file.",
+  "fr": "Machine à états de plus haut niveau d'un joueur. Elle contient la sous-machine à pied ainsi que les états conduite, passager et montagnes russes, démarre à pied et est passive : les changements d'état sont pilotés par des événements du joueur, pas par des transitions. Les classes de conduite, passager et montagnes russes ne sont pas dans ce fichier."
+ },
+ "fonctions": {
+  "PlayerStateMachine.new": {
+   "en": "Creates the machine with its four states (onFoot, driving, passenger, rollercoaster), builds the transitions, sets onFoot as current and default, and marks the machine passive.",
+   "fr": "Crée la machine avec ses quatre états (onFoot, driving, passenger, rollercoaster), construit les transitions, définit onFoot comme état courant et par défaut, et marque la machine passive."
+  },
+  "PlayerStateMachine:updateWhilePaused": {
+   "en": "Forwards an updateWhilePaused call to the current state, with the delta time and whether the player is in a GUI or frozen. What the states do with it is UNVERIFIED.",
+   "fr": "Transmet un appel updateWhilePaused à l'état courant, avec le delta de temps et l'indication que le joueur est dans une interface ou gelé. Ce que les états en font est NON VÉRIFIÉ."
+  }
+ }
+}

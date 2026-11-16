@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/VehicleLeaveEvent.lua",
+ "module": {
+  "en": "Network event signalling that a user left a vehicle. Clients send it to the server, which clears the owner connection and controller farm and rebroadcasts it; every machine then calls `leaveVehicle` on the matching player. `sendEvent` is the entry point used by game code. Main channel.",
+  "fr": "Événement réseau signalant qu'un utilisateur a quitté un véhicule. Les clients l'envoient au serveur, qui efface la connexion propriétaire et la ferme contrôleuse puis le rediffuse ; chaque machine appelle ensuite `leaveVehicle` sur le joueur concerné. `sendEvent` est le point d'entrée utilisé par le code du jeu. Canal principal."
+ },
+ "fonctions": {
+  "VehicleLeaveEvent.emptyNew": {
+   "en": "Creates an empty event instance on the main network channel.",
+   "fr": "Crée une instance d'événement vide sur le canal réseau principal."
+  },
+  "VehicleLeaveEvent.new": {
+   "en": "Builds the event from the vehicle and the id of the user leaving it.",
+   "fr": "Construit l'événement à partir du véhicule et de l'identifiant de l'utilisateur qui le quitte."
+  },
+  "VehicleLeaveEvent:readStream": {
+   "en": "Reads the vehicle object and the user id from the stream, then calls `run`.",
+   "fr": "Lit l'objet véhicule et l'identifiant d'utilisateur depuis le flux, puis appelle `run`."
+  },
+  "VehicleLeaveEvent:writeStream": {
+   "en": "Writes the vehicle object and the user id to the stream.",
+   "fr": "Écrit dans le flux l'objet véhicule et l'identifiant d'utilisateur."
+  },
+  "VehicleLeaveEvent:run": {
+   "en": "Ignored if the vehicle is missing or unsynchronized. On the server it resets owner connection and `controllerFarmId` and rebroadcasts to other clients. Everywhere it calls `leaveVehicle(vehicle, true)` on the player found by user id.",
+   "fr": "Ignoré si le véhicule manque ou n'est pas synchronisé. Sur le serveur, réinitialise la connexion propriétaire et `controllerFarmId` puis rediffuse aux autres clients. Partout, appelle `leaveVehicle(vehicle, true)` sur le joueur retrouvé par utilisateur."
+  },
+  "VehicleLeaveEvent.sendEvent": {
+   "en": "Static helper: unless `noEventSend` is true, the server broadcasts the event to clients and a client sends it to the server connection.",
+   "fr": "Aide statique : sauf si `noEventSend` est vrai, le serveur diffuse l'événement aux clients et un client l'envoie à la connexion serveur."
+  }
+ }
+}

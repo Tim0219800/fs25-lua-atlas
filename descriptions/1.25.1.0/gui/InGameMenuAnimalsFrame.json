@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/InGameMenuAnimalsFrame.lua",
+ "module": {
+  "en": "In-game menu frame, derived from TabbedMenuFrameElement, that shows information about the player's animal pens and horses. Only the delete cleanup is described here. Most of the file is outside the described entries.",
+  "fr": "Cadre du menu en jeu, dérivé de TabbedMenuFrameElement, qui affiche des informations sur les enclos d'animaux et les chevaux du joueur. Seul le nettoyage delete est décrit ici. L'essentiel du fichier est hors des entrées décrites."
+ },
+ "fonctions": {
+  "InGameMenuAnimalsFrame:delete": {
+   "en": "Deletes the cloned dot elements in the sub-category dot box and the dot template, then calls the parent delete.",
+   "fr": "Supprime les éléments points clonés de la boîte de points des sous-catégories et le modèle de point, puis appelle le delete du parent."
+  }
+ }
+}

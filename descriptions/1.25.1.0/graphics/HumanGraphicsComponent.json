@@ -1,0 +1,65 @@
+{
+ "fichier": "graphics/HumanGraphicsComponent.lua",
+ "module": {
+  "en": "Visual side of a human character (player or NPC). It owns the scene root node, a shoulder camera node, a foliage bending node, the HumanModel, the PlayerStyle objects, an optional facial animation, the sounds object and a ConditionalAnimation with its registered parameters (speed, grounded, swimming, crouching, chainsaw...). The model, style and facial animation classes are defined elsewhere (UNVERIFIED).",
+  "fr": "Partie visuelle d'un personnage humain (joueur ou PNJ). Elle possède le nœud racine de scène, un nœud de caméra d'épaule, un nœud de pliage du feuillage, le HumanModel, les objets PlayerStyle, une animation faciale optionnelle, l'objet de sons et une ConditionalAnimation avec ses paramètres enregistrés (vitesse, au sol, nage, accroupi, tronçonneuse...). Les classes de modèle, style et animation faciale sont définies ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HumanGraphicsComponent.new": {
+   "en": "Builds the component with empty model, two PlayerStyle objects (current and base), sounds, and a ConditionalAnimation registering about twenty typed parameters. Then calls defaultAllParameters, which is not defined in this file (UNVERIFIED).",
+   "fr": "Construit le composant avec un modèle vide, deux PlayerStyle (courant et de base), les sons, et une ConditionalAnimation enregistrant une vingtaine de paramètres typés. Appelle ensuite defaultAllParameters, non défini dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "HumanGraphicsComponent:initialize": {
+   "en": "Creates the scene nodes under the root node: graphics root, right shoulder camera node (fixed local offset) and foliage bending node. Call once when the character enters the map.",
+   "fr": "Crée les nœuds de scène sous le nœud racine : racine graphique, nœud de caméra d'épaule droite (décalage local fixe) et nœud de pliage du feuillage. À appeler une fois à l'arrivée du personnage sur la carte."
+  },
+  "HumanGraphicsComponent:show": {
+   "en": "Makes the character model visible by calling setModelVisibility(true).",
+   "fr": "Rend le modèle du personnage visible en appelant setModelVisibility(true)."
+  },
+  "HumanGraphicsComponent:hide": {
+   "en": "Hides the character model by calling setModelVisibility(false), which also removes foliage bending.",
+   "fr": "Masque le modèle du personnage via setModelVisibility(false), ce qui retire aussi le pliage du feuillage."
+  },
+  "HumanGraphicsComponent:delete": {
+   "en": "Releases everything: facial animation, sounds, animation, model, the graphics root node and the foliage bending object registered in the mission's foliageBendingSystem.",
+   "fr": "Libère tout : animation faciale, sons, animation, modèle, nœud racine graphique et objet de pliage du feuillage enregistré dans le foliageBendingSystem de la mission."
+  },
+  "HumanGraphicsComponent:setModel": {
+   "en": "Replaces the current model by another with a root node (logs an error and returns if absent). Deletes the old model, links the new root under the graphics node, then calls loadAnimation and loadSounds (not defined in this file, UNVERIFIED) and shows it.",
+   "fr": "Remplace le modèle courant par un autre ayant un nœud racine (erreur et retour sinon). Supprime l'ancien modèle, rattache la nouvelle racine au nœud graphique, puis appelle loadAnimation et loadSounds (non définis ici, NON VÉRIFIÉ) et l'affiche."
+  },
+  "HumanGraphicsComponent:setModelVisibility": {
+   "en": "Shows or hides the model, re-applies the root node visibility, and creates or destroys the foliage bending rectangle (about 1 m square) depending on visibility or the optional override.",
+   "fr": "Affiche ou masque le modèle, réapplique la visibilité du nœud racine, et crée ou détruit le rectangle de pliage du feuillage (environ 1 m de côté) selon la visibilité ou la surcharge optionnelle."
+  },
+  "HumanGraphicsComponent:applyCustomWorkStyle": {
+   "en": "Applies a named style preset (for example work clothes) on a copy of the base style, as a temporary style. With an empty or unknown preset name it goes back to the base style. Style loading is asynchronous.",
+   "fr": "Applique un préréglage de style nommé (par exemple tenue de travail) sur une copie du style de base, comme style temporaire. Avec un nom vide ou inconnu, revient au style de base. Le chargement du style est asynchrone."
+  },
+  "HumanGraphicsComponent:getStyle": {
+   "en": "Returns the current style if the flag is true, otherwise the base style (falling back to the current one if no base exists).",
+   "fr": "Retourne le style courant si le drapeau est true, sinon le style de base (avec repli sur le courant si aucun style de base)."
+  },
+  "HumanGraphicsComponent:getRequiresModelReload": {
+   "en": "Returns true if the style uses a different model XML than the current model, meaning the model is reloaded and its node ids become invalid.",
+   "fr": "Retourne true si le style utilise un XML de modèle différent du modèle courant, ce qui recharge le modèle et invalide ses identifiants de nœuds."
+  },
+  "HumanGraphicsComponent:setStyleAsync": {
+   "en": "Applies a style, either by updating the existing model parts or by loading a new model first, then optionally loads facial animation. The callback receives the loading state and whether a new model was loaded; per its own doc it may not run in multiplayer. A failed model load only logs a warning.",
+   "fr": "Applique un style, soit en mettant à jour les parties du modèle existant, soit en chargeant d'abord un nouveau modèle, puis charge éventuellement l'animation faciale. Le rappel reçoit l'état de chargement et si un nouveau modèle a été chargé ; il peut ne pas s'exécuter en multijoueur. Un échec de chargement du modèle ne produit qu'un avertissement."
+  },
+  "HumanGraphicsComponent:update": {
+   "en": "Per-frame update (dt in ms) of the animation, the sounds and, if present, the facial animation and its emotions.",
+   "fr": "Mise à jour à chaque image (dt en ms) de l'animation, des sons et, si présente, de l'animation faciale et de ses émotions."
+  },
+  "HumanGraphicsComponent:debugDraw": {
+   "en": "Draws debug overlays: the model (unless disabled), the root and shoulder camera nodes, a header, the yaw of the root node and the style info. Returns the next y screen position.",
+   "fr": "Dessine les surcouches de débogage : le modèle (sauf désactivation), les nœuds racine et caméra d'épaule, un titre, le lacet du nœud racine et les infos de style. Retourne la prochaine position y à l'écran."
+  },
+  "HumanGraphicsComponent:debugDrawAnimator": {
+   "en": "Draws the animation debug info at the given position and returns the new y position.",
+   "fr": "Dessine les infos de débogage de l'animation à la position donnée et retourne la nouvelle position y."
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/AnimationValueBool.lua",
+ "module": {
+  "en": "Boolean variant of the animated-vehicle value classes. It inherits from AnimationValueFloat but replaces loading and updating: instead of interpolating over time, it switches a property to a fixed boolean as soon as the animation touches the part. Used by the AnimatedVehicle specialization, which owns the animation parts.",
+  "fr": "Variante booléenne des classes de valeurs d'animation de véhicule. Elle hérite de AnimationValueFloat mais remplace le chargement et la mise à jour : au lieu d'interpoler dans le temps, elle bascule une propriété vers un booléen fixe dès que l'animation atteint la partie. Utilisée par la spécialisation AnimatedVehicle, qui possède les parties d'animation."
+ },
+ "fonctions": {
+  "AnimationValueBool.new": {
+   "en": "Constructor. Simply delegates to `AnimationValueFloat.new` with the same arguments, using this class metatable unless a custom one is given. No boolean-specific state is created here.",
+   "fr": "Constructeur. Délègue simplement à `AnimationValueFloat.new` avec les mêmes arguments, en utilisant la métatable de cette classe sauf si une métatable personnalisée est fournie. Aucun état propre au booléen n'est créé ici."
+  },
+  "AnimationValueBool:load": {
+   "en": "Reads the target boolean from the XML attribute named by `startName` on the given key and keeps the XML file and key for warnings. Returns true only if the value exists and the `extraLoad` callback succeeds.",
+   "fr": "Lit le booléen cible depuis l'attribut XML nommé par `startName` sur la clé donnée, et conserve le fichier XML et la clé pour les avertissements. Retourne true seulement si la valeur existe et que le callback `extraLoad` réussit."
+  },
+  "AnimationValueBool:init": {
+   "en": "Intentionally empty override. The part-chaining logic of the float parent class does not apply to booleans.",
+   "fr": "Redéfinition volontairement vide. La logique de chaînage des parties de la classe parente float ne s'applique pas aux booléens."
+  },
+  "AnimationValueBool:postInit": {
+   "en": "Intentionally empty override. No start value is captured from the vehicle, unlike the float parent.",
+   "fr": "Redéfinition volontairement vide. Aucune valeur de départ n'est lue sur le véhicule, contrairement à la classe parente float."
+  },
+  "AnimationValueBool:reset": {
+   "en": "Clears the cached current value so the next update re-reads it through the `get` callback.",
+   "fr": "Efface la valeur courante en cache, de sorte que la prochaine mise à jour la relise via le callback `get`."
+  },
+  "AnimationValueBool:update": {
+   "en": "Reads the current value via `get` on first call, then if it differs from the target calls `set` with the target. Returns true when a change was applied, false otherwise. The time arguments are ignored.",
+   "fr": "Lit la valeur courante via `get` au premier appel, puis si elle diffère de la cible appelle `set` avec la cible. Retourne true si un changement a été appliqué, false sinon. Les arguments de temps sont ignorés."
+  }
+ }
+}

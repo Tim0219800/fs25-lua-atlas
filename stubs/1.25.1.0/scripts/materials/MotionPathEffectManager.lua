@@ -1,88 +1,88 @@
 ---@meta
 -- FS25 1.25.1.0 : materials/MotionPathEffectManager.lua (generated stub, FS25 Lua Atlas)
 
---- Gestionnaire des effets « motion path » définis par carte (g_motionPathEffectManager, dérive d'AbstractManager) : effets de végétation/terre à base de maillages animés par shader (coupe de la barre de coupe, chaumes, cultivateur, charrue, andaineur). Il ne crée pas les effets : il charge des définitions XML, des I3D partagés et des matériaux, puis fournit à la classe d'effet (MotionPathEffect et ses classes filles, absentes du dump) les maillages, matériaux et réglages de shader appropriés. Le comportement des classes d'effets est donc NON VÉRIFIÉ ici. Tourne sur chaque pair (client et serveur) ; aucun réseau.
+--- Manager of map-defined "motion path" effects (g_motionPathEffectManager, derives from AbstractManager): vegetation/soil effects based on shader-animated meshes (cutter bar cut, stubble, cultivator, plow, windrower). It does not create the effects: it loads XML definitions, shared I3Ds and materials, then provides the effect class (MotionPathEffect and its child classes, absent from the dump) with the appropriate meshes, materials and shader settings. The behaviour of the effect classes is therefore UNVERIFIED here. Runs on every peer (client and server); no network.
 --- 
---- CHARGEMENT. loadMapData lit, dans le XML de la carte, map.motionPathEffects.motionPathEffect(?)#filename (fichiers internes d'abord, donc prioritaires à la sélection) et map.motionPathEffects#filename (fichier externe qui énumère d'autres fichiers). Il refuse un nom de fichier I3D à cet endroit (il faut un XML d'effets). Chaque XML d'effets (schéma créé par createMotionPathEffectXMLSchema) contient motionPathEffects.motionPathEffect(?) avec : #effectClass (MotionPathEffect par défaut ; classe cherchée dans g_effectManager, puis avec le préfixe de l'environnement du mod, puis par ClassUtil.getClassObject), #effectType (mots séparés par des espaces, mis en majuscules, DEFAULT par défaut), #filename (I3D chargé en asynchrone et partagé), .typeDefinition (propre à la classe d'effet), .effectMeshes.effectMesh(?) (#node, #rowLength 30, #numRows 12, #skipPositions, #numVariations 1), .effectMaterials.effectMaterial(?) (nœud, LOD, textures personnalisées diffuse/normale/spéculaire) et des réglages de shader (variation, cartes personnalisées, paramètres). Une fois l'I3D chargé (motionPathEffectI3DFileLoaded), les nœuds retenus sont détachés, l'I3D racine supprimé, et l'effet indexé par type (effectsByType, liste effects).
+--- LOADING. loadMapData reads, in the map XML, map.motionPathEffects.motionPathEffect(?)#filename (internal files first, hence prioritized at selection) and map.motionPathEffects#filename (external file that lists other files). It rejects an I3D file name at this spot (an effects XML is required). Each effects XML (schema created by createMotionPathEffectXMLSchema) contains motionPathEffects.motionPathEffect(?) with: #effectClass (MotionPathEffect by default; class looked up in g_effectManager, then with the mod environment prefix, then via ClassUtil.getClassObject), #effectType (space-separated words, uppercased, DEFAULT by default), #filename (I3D loaded asynchronously and shared), .typeDefinition (specific to the effect class), .effectMeshes.effectMesh(?) (#node, #rowLength 30, #numRows 12, #skipPositions, #numVariations 1), .effectMaterials.effectMaterial(?) (node, LOD, custom diffuse/normal/specular textures) and shader settings (variation, custom maps, parameters). Once the I3D is loaded (motionPathEffectI3DFileLoaded), the kept nodes are detached, the root I3D deleted, and the effect indexed by type (effectsByType, effects list).
 --- 
---- SÉLECTION ET APPLICATION. Un effet de véhicule demande un effet partagé (getSharedMotionPathEffect) puis le maillage (getMotionPathEffectMesh) et le matériau (getMotionPathEffectMaterial) par appariement fait par l'objet d'effet lui-même (getIsSharedEffectMatching / getIsEffectMeshMatching / getIsEffectMaterialMatching, avec un second passage « alternatives » si rien ne correspond). applyEffectConfiguration applique à chaque clone les réglages de shader (cartes, variation, paramètres), fixe les cartes « shapeArray » et « animationArray » depuis une texture et calcule la vitesse d'animation : valeur forcée sinon matériau, sinon maillage, sinon effet partagé, sinon 0.5. Les paramètres shader s'appliquent par setShaderParameterRecursive. La vitesse est une échelle d'animation ; aucun dt n'intervient dans ce fichier.
+--- SELECTION AND APPLICATION. A vehicle effect asks for a shared effect (getSharedMotionPathEffect) then the mesh (getMotionPathEffectMesh) and the material (getMotionPathEffectMaterial), matched by the effect object itself (getIsSharedEffectMatching / getIsEffectMeshMatching / getIsEffectMaterialMatching, with a second "alternatives" pass if nothing matches). applyEffectConfiguration applies the shader settings (maps, variation, parameters) to each clone, sets the "shapeArray" and "animationArray" maps from a texture and computes the animation speed: forced value otherwise material, otherwise mesh, otherwise shared effect, otherwise 0.5. Shader parameters are applied with setShaderParameterRecursive. The speed is an animation scale; no dt is involved in this file.
 --- 
---- POINTS D'EXTENSION. Un mod peut déclarer ses effets par le XML de carte/mod (effectClass d'un mod accepté avec préfixe d'environnement) ; la liste modMotionPathEffectsToLoad est initialisée mais jamais utilisée dans ce fichier (à noter, non vérifié en jeu).
+--- EXTENSION POINTS. A mod can declare its effects through the map/mod XML (a mod effectClass is accepted with the environment prefix); the modMotionPathEffectsToLoad list is initialized but never used in this file (note, not verified in game).
 ---@class MotionPathEffectManager : AbstractManager
 MotionPathEffectManager = {}
 
---- Crée le gestionnaire.
+--- Creates the manager.
 ---@param customMt any
 ---@return table
 function MotionPathEffectManager.new(customMt) end
 
---- Initialise les listes de XML ouverts, d'identifiants de chargement partagé, d'effets par type, d'effets et d'effets de mods (cette dernière liste n'est pas utilisée ailleurs dans ce fichier).
+--- Initializes the lists of open XMLs, shared loading ids, effects by type, effects and mod effects (this last list is not used elsewhere in this file).
 function MotionPathEffectManager:initDataStructures() end
 
---- Mémorise le répertoire de base, déduit l'environnement de mod, charge les effets déclarés dans le XML de la carte puis ceux d'un éventuel fichier externe. Renvoie vrai.
+--- Remembers the base directory, derives the mod environment, loads the effects declared in the map XML then those of an optional external file. Returns true.
 ---@param xmlFile any
 ---@param missionInfo any
 ---@param baseDirectory any
 ---@return boolean
 function MotionPathEffectManager:loadMapData(xmlFile, missionInfo, baseDirectory) end
 
---- Ouvre un XML externe contenant la liste d'effets (clé motionPathEffects.motionPathEffect) et la charge, puis ferme le fichier.
+--- Opens an external XML containing the effects list (key motionPathEffects.motionPathEffect) and loads it, then closes the file.
 ---@param filename string
 ---@param baseDirectory string
 ---@param customEnvironment string?
 function MotionPathEffectManager:loadMotionPathEffectsFromExternalFile(filename, baseDirectory, customEnvironment) end
 
---- Parcourt une liste de clés motionPathEffect dans un XML ; pour chacune lit #filename et charge le XML d'effets associé. S'arrête avec une erreur XML si le nom désigne un .i3d.
+--- Walks a list of motionPathEffect keys in an XML; for each reads #filename and loads the associated effects XML. Stops with an XML error if the name designates an .i3d.
 ---@param xmlFileHandle integer
 ---@param key string
 ---@param baseDirectory string
 ---@param customEnvironment string?
 function MotionPathEffectManager:loadMotionPathEffects(xmlFileHandle, key, baseDirectory, customEnvironment) end
 
---- Charge un XML d'effets, instancie les définitions, résout la classe d'effet, lit types, typeDefinition (par la classe d'effet) et lance le chargement asynchrone de l'I3D partagé de chaque effet. Compte les références pour fermer le XML une fois tous les I3D reçus.
+--- Loads an effects XML, instantiates the definitions, resolves the effect class, reads types, typeDefinition (through the effect class) and starts the asynchronous loading of each effect's shared I3D. Counts the references to close the XML once all I3Ds have been received.
 ---@param filename string
 ---@param baseDirectory string
 ---@param customEnvironment string?
 function MotionPathEffectManager:loadMotionPathEffectsXML(filename, baseDirectory, customEnvironment) end
 
---- Rappel de chargement de l'I3D : crée les maillages (rowLength, numRows, skipPositions, numVariations, réglages shader, données de classe d'effet) et les matériaux (LOD, textures personnalisées, réglages shader), détache les nœuds, indexe l'effet par type, supprime l'I3D racine et libère le XML au dernier retour. À noter : pour la normal map personnalisée, l'appel setMaterialNormalMapFromFile reçoit le chemin customDiffuse au lieu de customNormal (lignes 277-278) ; apparent défaut, non vérifié en jeu.
+--- I3D load callback: creates the meshes (rowLength, numRows, skipPositions, numVariations, shader settings, effect class data) and the materials (LOD, custom textures, shader settings), detaches the nodes, indexes the effect by type, deletes the root I3D and releases the XML on the last return. Note: for the custom normal map, the setMaterialNormalMapFromFile call receives the customDiffuse path instead of customNormal (lines 277-278); apparent bug, not verified in game.
 ---@param i3dNode any
 ---@param failedReason any
 ---@param args any
 function MotionPathEffectManager:motionPathEffectI3DFileLoaded(i3dNode, failedReason, args) end
 
---- Lit les réglages de shader d'une entité : nom de variation, cartes personnalisées (nom, fichier, texture créée par createMaterialTextureFromFile) et paramètres (nom, vecteur de 4 valeurs, 0 0 0 0 par défaut). À noter : les appels pour maillages et matériaux ne passent pas de répertoire de base (le chemin est résolu par Utils.getFilename avec baseDirectory nil ; effet NON VÉRIFIÉ).
+--- Reads the shader settings of an entity: variation name, custom maps (name, file, texture created by createMaterialTextureFromFile) and parameters (name, 4-value vector, 0 0 0 0 by default). Note: the calls for meshes and materials pass no base directory (the path is resolved by Utils.getFilename with baseDirectory nil; effect UNVERIFIED).
 ---@param target table
 ---@param xmlFile table
 ---@param key string
 ---@param baseDirectory any
 function MotionPathEffectManager:loadCustomShaderSettingsFromXML(target, xmlFile, key, baseDirectory) end
 
---- Supprime les nœuds de maillages et de matériaux encore existants, les textures de cartes personnalisées, libère les I3D partagés, ferme les XML en attente puis délègue à la classe parente.
+--- Deletes the mesh and material nodes that still exist, the custom map textures, releases the shared I3Ds, closes the pending XMLs then delegates to the parent class.
 function MotionPathEffectManager:unloadMapData() end
 
---- Supprime les textures de cartes personnalisées d'une entité si elles existent encore.
+--- Deletes the custom map textures of an entity if they still exist.
 ---@param entity any
 function MotionPathEffectManager:deleteCustomShaderMaps(entity) end
 
---- Renvoie le premier effet dont l'objet d'effet demandeur accepte la correspondance stricte, sinon la première correspondance « alternative » ; nil si rien.
+--- Returns the first effect for which the requesting effect object accepts the strict match, otherwise the first "alternative" match; nil if nothing.
 ---@param motionPathEffectObject table
 ---@return table
 function MotionPathEffectManager:getSharedMotionPathEffect(motionPathEffectObject) end
 
---- Renvoie le maillage d'effet qui correspond (passe stricte puis alternative), nil sinon.
+--- Returns the matching effect mesh (strict pass then alternative), nil otherwise.
 ---@param sharedEffect table
 ---@param motionPathEffectObject table
 ---@return table
 function MotionPathEffectManager:getMotionPathEffectMesh(sharedEffect, motionPathEffectObject) end
 
---- Renvoie le matériau d'effet qui correspond (passe stricte puis alternative), nil sinon.
+--- Returns the matching effect material (strict pass then alternative), nil otherwise.
 ---@param sharedEffect table
 ---@param motionPathEffectObject table
 ---@return table
 function MotionPathEffectManager:getMotionPathEffectMaterial(sharedEffect, motionPathEffectObject) end
 
---- Applique aux nœuds clonés les réglages de shader de l'effet, du maillage et du matériau, puis les cartes « shapeArray » et « animationArray » (texture donnée) ; renvoie l'échelle de vitesse (forcée, sinon matériau, maillage, effet, 0.5 par défaut). Sans effet partagé ni clones, renvoie la valeur forcée ou 1.
+--- Applies to the cloned nodes the shader settings of the effect, mesh and material, then the "shapeArray" and "animationArray" maps (given texture); returns the speed scale (forced, otherwise material, mesh, effect, 0.5 by default). With no shared effect or clones, returns the forced value or 1.
 ---@param sharedEffect table
 ---@param effectMesh table
 ---@param effectMaterial array
@@ -91,12 +91,12 @@ function MotionPathEffectManager:getMotionPathEffectMaterial(sharedEffect, motio
 ---@param overwrittenSpeedScale number
 function MotionPathEffectManager:applyEffectConfiguration(sharedEffect, effectMesh, effectMaterial, clonedNodes, textureEntityId, overwrittenSpeedScale) end
 
---- Applique à un nœud les cartes, la variation de shader et les paramètres vectoriels d'une cible (setShaderParameterRecursive).
+--- Applies to a node the maps, the shader variation and the vector parameters of a target (setShaderParameterRecursive).
 ---@param node any
 ---@param target any
 function MotionPathEffectManager:applyShaderSettingsParameters(node, target) end
 
---- Lit un paramètre de shader sur le nœud (ou son premier enfant forme) ; renvoie quatre zéros si aucune forme n'est trouvée.
+--- Reads a shader parameter on the node (or its first shape child); returns four zeros if no shape is found.
 ---@param node integer
 ---@param name string
 ---@return number
@@ -105,32 +105,32 @@ function MotionPathEffectManager:applyShaderSettingsParameters(node, target) end
 ---@return number
 function MotionPathEffectManager:getEffectShaderParameter(node, name) end
 
---- Applique une variation de shader au matériau du nœud et de tous ses enfants formes (LOD), en remplaçant le matériau si un nouveau est créé.
+--- Applies a shader variation to the material of the node and of all its shape children (LOD), replacing the material if a new one is created.
 ---@param node integer
 ---@param variation string
 function MotionPathEffectManager:setEffectCustomShaderVariation(node, variation) end
 
---- Applique une carte personnalisée au matériau de l'emplacement 0 du nœud ; remplace le matériau si nécessaire.
+--- Applies a custom map to the material in slot 0 of the node; replaces the material if needed.
 ---@param node integer
 ---@param name string
 ---@param textureEntityId integer
 function MotionPathEffectManager:setEffectCustomMapOnNode(node, name, textureEntityId) end
 
---- Applique une carte personnalisée au nœud et à ses enfants formes (LOD).
+--- Applies a custom map to the node and its shape children (LOD).
 ---@param node integer
 ---@param name string
 ---@param textureEntityId integer
 function MotionPathEffectManager:setEffectCustomMap(node, name, textureEntityId) end
 
---- Affecte le matériau d'effet à un nœud et à ses enfants (matériau spécifique par LOD si défini, à partir du deuxième enfant).
+--- Assigns the effect material to a node and its children (specific material per LOD if defined, from the second child on).
 ---@param node integer
 ---@param material integer
 function MotionPathEffectManager:setEffectMaterial(node, material) end
 
---- Construit une fois le schéma XML des effets (clés génériques plus celles des classes MotionPathEffect, TypedMotionPathEffect, CutterMotionPathEffect, CultivatorMotionPathEffect, PlowMotionPathEffect, WindrowerMotionPathEffect) ; plusieurs clés ne servent qu'aux scripts de génération hors jeu.
+--- Builds once the XML schema of the effects (generic keys plus those of the MotionPathEffect, TypedMotionPathEffect, CutterMotionPathEffect, CultivatorMotionPathEffect, PlowMotionPathEffect, WindrowerMotionPathEffect classes); several keys are only used by out-of-game generation scripts.
 function MotionPathEffectManager.createMotionPathEffectXMLSchema() end
 
---- Enregistre les clés de réglages de shader : variation (#name), paramètres (#name, #value) et cartes (#name, #filename).
+--- Registers the shader setting keys: variation (#name), parameters (#name, #value) and maps (#name, #filename).
 ---@param schema any
 ---@param basePath any
 function MotionPathEffectManager.registerCustomShaderSettingXMLPaths(schema, basePath) end

@@ -1,0 +1,61 @@
+{
+ "fichier": "configurations/ConfigurationManager.lua",
+ "module": {
+  "en": "Manager subclassing AbstractManager that holds the registered configuration types (for example vehicle or placeable options) with name/index lookups and a priority-sorted name list. In this file it only stores and exposes that data; registration of configurations happens elsewhere (UNVERIFIED). Each description is expected to carry an item class with a SELECTOR value and XML keys.",
+  "fr": "Gestionnaire héritant d'AbstractManager qui contient les types de configuration enregistrés (par exemple options de véhicule ou de placeable), avec recherche par nom/indice et une liste de noms triée par priorité. Dans ce fichier il ne fait que stocker et exposer ces données ; l'enregistrement se fait ailleurs (NON VÉRIFIÉ). Chaque description doit porter une classe d'item avec une valeur SELECTOR et des clés XML."
+ },
+ "fonctions": {
+  "ConfigurationManager.new": {
+   "en": "Creates the manager via AbstractManager.new, stores the type name and XML root element name, and initializes the data tables.",
+   "fr": "Crée le gestionnaire via AbstractManager.new, mémorise le nom de type et le nom de l'élément racine XML, et initialise les tables de données."
+  },
+  "ConfigurationManager:initDataStructures": {
+   "en": "Resets the configurations table, the index-to-name and name-to-index maps and the sorted name list to empty tables.",
+   "fr": "Réinitialise la table des configurations, les correspondances indice vers nom et nom vers indice, et la liste de noms triée à des tables vides."
+  },
+  "ConfigurationManager:getNumOfConfigurationTypes": {
+   "en": "Returns how many configuration types are registered (length of the index-to-name list).",
+   "fr": "Retourne le nombre de types de configuration enregistrés (longueur de la liste indice vers nom)."
+  },
+  "ConfigurationManager:getConfigurationTypes": {
+   "en": "Returns the list of configuration names in registration (index) order. This is the internal table, not a copy.",
+   "fr": "Retourne la liste des noms de configuration dans l'ordre d'enregistrement (indice). C'est la table interne, pas une copie."
+  },
+  "ConfigurationManager:getSortedConfigurationTypes": {
+   "en": "Returns the list of configuration names sorted by priority. This is the internal table, not a copy.",
+   "fr": "Retourne la liste des noms de configuration triée par priorité. C'est la table interne, pas une copie."
+  },
+  "ConfigurationManager:getConfigurationNameByIndex": {
+   "en": "Returns the configuration name registered at the given index, or nil.",
+   "fr": "Retourne le nom de configuration enregistré à l'indice donné, ou nil."
+  },
+  "ConfigurationManager:getConfigurationIndexByName": {
+   "en": "Returns the index of the configuration with the given name, or nil.",
+   "fr": "Retourne l'indice de la configuration portant le nom donné, ou nil."
+  },
+  "ConfigurationManager:getConfigurations": {
+   "en": "Returns the table of all configuration descriptions keyed by name.",
+   "fr": "Retourne la table de toutes les descriptions de configuration indexée par nom."
+  },
+  "ConfigurationManager:getConfigurationDescByName": {
+   "en": "Returns the description table of a configuration by name, or nil if unknown.",
+   "fr": "Retourne la table de description d'une configuration par nom, ou nil si inconnue."
+  },
+  "ConfigurationManager:getConfigurationAttribute": {
+   "en": "Returns one attribute from a configuration description. Not nil-safe: it errors if the configuration name is unknown.",
+   "fr": "Retourne un attribut d'une description de configuration. Non protégé contre nil : provoque une erreur si le nom de configuration est inconnu."
+  },
+  "ConfigurationManager:getConfigurationSelectorType": {
+   "en": "Returns the SELECTOR value of the configuration's item class, or ConfigurationUtil.SELECTOR_MULTIOPTION when the configuration is unknown.",
+   "fr": "Retourne la valeur SELECTOR de la classe d'item de la configuration, ou ConfigurationUtil.SELECTOR_MULTIOPTION si la configuration est inconnue."
+  },
+  "ConfigurationManager:getConfigurationKeys": {
+   "en": "Returns the XML key of the configurations container and of the individual configuration element for a name, or nil, nil if unknown.",
+   "fr": "Retourne la clé XML du conteneur de configurations et celle de l'élément de configuration individuel pour un nom, ou nil, nil si inconnu."
+  },
+  "ConfigurationManager:configurationKeyIterator": {
+   "en": "Returns an iterator over all configuration types yielding the container key and the element key with a `(?)` index wildcard appended. Note: it would error if a name has no registered keys, since it concatenates a nil.",
+   "fr": "Retourne un itérateur sur tous les types de configuration qui fournit la clé du conteneur et la clé de l'élément avec le joker d'indice `(?)` ajouté. À noter : une erreur surviendrait si un nom n'a pas de clés enregistrées, car une valeur nil est concaténée."
+  }
+ }
+}

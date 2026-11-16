@@ -1,0 +1,29 @@
+{
+ "fichier": "misc/AbstractManager.lua",
+ "module": {
+  "en": "Abstract base class for map-bound managers (BaleManager, ConsumableManager and others inherit from it). It defines the lifecycle: construction calls initDataStructures, then load and loadMapData run at startup and unloadMapData resets the state when the mission is deleted.",
+  "fr": "Classe de base abstraite des gestionnaires liés à la carte (BaleManager, ConsumableManager et d'autres en héritent). Elle définit le cycle de vie : le constructeur appelle initDataStructures, puis load et loadMapData au démarrage, et unloadMapData remet l'état à zéro à la suppression de la mission."
+ },
+ "fonctions": {
+  "AbstractManager.new": {
+   "en": "Creates the manager instance with the given metatable (or the default one), calls initDataStructures and marks map data as not loaded. Prints a callstack if the argument is not a table.",
+   "fr": "Crée l'instance du gestionnaire avec la métatable fournie (ou celle par défaut), appelle initDataStructures et marque les données de carte comme non chargées. Affiche la pile d'appels si l'argument n'est pas une table."
+  },
+  "AbstractManager:initDataStructures": {
+   "en": "Empty hook that subclasses override to create their tables; called from the constructor and again on unloadMapData.",
+   "fr": "Hook vide que les sous-classes surchargent pour créer leurs tables ; appelé par le constructeur puis de nouveau par unloadMapData."
+  },
+  "AbstractManager:load": {
+   "en": "Hook for initial loading, returns true by default. Subclasses override it to read their own configuration.",
+   "fr": "Hook de chargement initial, renvoie true par défaut. Les sous-classes le surchargent pour lire leur propre configuration."
+  },
+  "AbstractManager:loadMapData": {
+   "en": "Sets the loadedMapData flag and returns true. In a development version it logs an error and a callstack if map data was already loaded without being unloaded first. Subclasses extend it to read map XML.",
+   "fr": "Active l'indicateur loadedMapData et renvoie true. Dans une version de développement, journalise une erreur et la pile d'appels si les données de carte étaient déjà chargées sans déchargement préalable. Les sous-classes l'étendent pour lire le XML de la carte."
+  },
+  "AbstractManager:unloadMapData": {
+   "en": "Clears loadedMapData and calls initDataStructures again, which discards all data of the manager at mission end.",
+   "fr": "Remet loadedMapData à false et rappelle initDataStructures, ce qui efface toutes les données du gestionnaire à la fin de la mission."
+  }
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "fichier": "placeables/specializations/PlaceableFactory.lua",
+ "module": {
+  "en": "Placeable specialization for a factory building that consumes configured input fill types over time and, once all are used up, yields a single high-value item (for example a finished machine) sold by the farm. It requires PlaceableSellingStation, reuses its SellingStation, adds a Storage for the inputs, and registers itself as a production-like entry for the production menu. Server drives the progress; clients receive it through the stream. Several methods it registers (updateRemainingAmount, setMeshProgress, createFactoryItem, sellFactoryItem, updateInfo, onUpdate and others) have no body in the SDK dump: UNVERIFIED.",
+  "fr": "Spécialisation de placeable pour une usine qui consomme au fil du temps des types de remplissage d'entrée configurés puis produit un unique objet de grande valeur (par exemple une machine terminée), vendu par la ferme. Elle exige PlaceableSellingStation, réutilise son SellingStation, ajoute un Storage pour les entrées et s'inscrit comme une production dans le menu des productions. Le serveur pilote la progression ; les clients la reçoivent via le flux réseau. Plusieurs méthodes enregistrées (updateRemainingAmount, setMeshProgress, createFactoryItem, sellFactoryItem, updateInfo, onUpdate, etc.) n'ont pas de corps dans le dump du SDK : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlaceableFactory.prerequisitesPresent": {
+   "en": "Returns true only when the placeable type also has the PlaceableSellingStation specialization.",
+   "fr": "Renvoie true uniquement si le type de placeable possède aussi la spécialisation PlaceableSellingStation."
+  },
+  "PlaceableFactory.registerFunctions": {
+   "en": "Registers the factory methods on the placeable type: mesh loading, remaining amount and progress, item creation and selling, capacity and fill level, buy request, player trigger and info data.",
+   "fr": "Enregistre sur le type de placeable les méthodes de l'usine : chargement des meshes, quantité restante et progression, création et vente de l'objet, capacité et niveau, demande d'achat, déclencheur joueur et données d'info."
+  },
+  "PlaceableFactory.registerOverwrittenFunctions": {
+   "en": "Overrides updateInfo and setOwnerFarmId on the placeable type so the factory can add its own info lines and react to ownership changes.",
+   "fr": "Surcharge updateInfo et setOwnerFarmId sur le type de placeable pour que l'usine ajoute ses lignes d'info et réagisse aux changements de propriétaire."
+  },
+  "PlaceableFactory.registerEventListeners": {
+   "en": "Subscribes the specialization to load, delete, update, stream read/write, update-stream, finalize-placement and info-trigger enter/leave events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, suppression, mise à jour, lecture/écriture de flux, flux de mise à jour, finalisation du placement et entrée/sortie du déclencheur d'info."
+  },
+  "PlaceableFactory.registerXMLPaths": {
+   "en": "Declares the XML paths under factory: player trigger, item (link node, i3d file, reward, progressive-visibility meshes), production inputs and output, selling station, storage and active sound.",
+   "fr": "Déclare les chemins XML sous factory : déclencheur joueur, objet (noeud de liaison, fichier i3d, récompense, meshes à visibilité progressive), entrées et sortie de production, station de vente, stockage et son actif."
+  },
+  "PlaceableFactory.registerSavegameXMLPaths": {
+   "en": "Declares the savegame paths: one input entry per fill type with its remaining amount, plus the storage block.",
+   "fr": "Déclare les chemins de sauvegarde : une entrée par type de remplissage avec sa quantité restante, plus le bloc de stockage."
+  },
+  "PlaceableFactory:onLoad": {
+   "en": "Loads the item i3d asynchronously, builds the Storage and patches the SellingStation (accepts any good, skips selling while a farm owns it). Parses inputs (amount, usagePerHour converted to per second) and the output into a productions entry, creates the player trigger and the sound.",
+   "fr": "Charge l'i3d de l'objet en asynchrone, crée le Storage et adapte le SellingStation (accepte toute marchandise, saute la vente si une ferme le possède). Lit les entrées (quantité, usagePerHour converti par seconde) et la sortie dans une entrée de productions, puis crée le déclencheur joueur et le son."
+  },
+  "PlaceableFactory:saveToXMLFile": {
+   "en": "Saves each input's fill type and remaining amount, then the storage content, into the savegame.",
+   "fr": "Sauvegarde le type de remplissage et la quantité restante de chaque entrée, puis le contenu du stockage."
+  },
+  "PlaceableFactory:loadFromXMLFile": {
+   "en": "Restores remaining amounts per input by matching fill type names (through updateRemainingAmount), then loads the storage content.",
+   "fr": "Restaure les quantités restantes par entrée en faisant correspondre les noms de types de remplissage (via updateRemainingAmount), puis charge le contenu du stockage."
+  },
+  "PlaceableFactory:onReadStream": {
+   "en": "Client side join: reads the storage object id and state, the has-input-materials flag, the compressed progress and each progressive mesh's hide index, applying them with setMeshProgress.",
+   "fr": "Côté client à la connexion : lit l'id et l'état du stockage, l'indicateur de matières d'entrée, la progression compressée et l'index de masquage de chaque mesh progressif, appliqué avec setMeshProgress."
+  },
+  "PlaceableFactory:onWriteStream": {
+   "en": "Server side counterpart of onReadStream: writes the storage object id and state, registers it in the stream, then the input flag, the progress and the last value of each progressive mesh.",
+   "fr": "Pendant serveur de onReadStream : écrit l'id et l'état du stockage, l'enregistre dans le flux, puis l'indicateur d'entrée, la progression et la dernière valeur de chaque mesh progressif."
+  },
+  "PlaceableFactory:setOwnerFarmId": {
+   "en": "Calls the parent, then shows the player trigger only while the factory is unowned. Outside construction preview it re-registers the factory in the production chain and adds or removes its selling station from the economy and storage systems.",
+   "fr": "Appelle le parent, puis n'affiche le déclencheur joueur que tant que l'usine n'a pas de propriétaire. Hors aperçu de construction, elle réinscrit l'usine dans la chaîne de production et ajoute ou retire sa station de vente de l'économie et du système de stockage."
+  }
+ }
+}

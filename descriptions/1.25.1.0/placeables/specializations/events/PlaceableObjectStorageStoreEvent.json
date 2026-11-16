@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableObjectStorageStoreEvent.lua",
+ "module": {
+  "en": "Network event (subclass of Event) asking the server to store the objects pending in the object storage placeable. It only carries the placeable reference.",
+  "fr": "Événement réseau (sous-classe d'Event) qui demande au serveur de stocker les objets en attente dans le placeable de stockage d'objets. Il ne transporte que la référence du placeable."
+ },
+ "fonctions": {
+  "PlaceableObjectStorageStoreEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture de flux."
+  },
+  "PlaceableObjectStorageStoreEvent.new": {
+   "en": "Creates the event for the given storage placeable.",
+   "fr": "Crée l'événement pour le placeable de stockage donné."
+  },
+  "PlaceableObjectStorageStoreEvent:readStream": {
+   "en": "Reads the placeable, then calls `run`.",
+   "fr": "Lit le placeable, puis appelle `run`."
+  },
+  "PlaceableObjectStorageStoreEvent:writeStream": {
+   "en": "Writes the placeable reference.",
+   "fr": "Écrit la référence du placeable."
+  },
+  "PlaceableObjectStorageStoreEvent:run": {
+   "en": "If the placeable is synchronized and has `storePendingManualObjects`, calls it to store the waiting objects.",
+   "fr": "Si le placeable est synchronisé et possède `storePendingManualObjects`, l'appelle pour stocker les objets en attente."
+  }
+ }
+}

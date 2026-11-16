@@ -1,0 +1,69 @@
+{
+ "fichier": "vehicles/DashboardValueType.lua",
+ "module": {
+  "en": "Descriptor of one kind of value that a vehicle dashboard can display, identified by a specialization name and a value name (full name `spec.name`). It records where the value comes from, an optional range, centre, factor, comparison set and interpolation speed, and where its XML definitions are read from through `vehicle:loadDashboardsFromXML`. Specializations create and configure these objects; the Dashboard specialization itself is not in this file (UNVERIFIED here). Its header comment wrongly says animation value.",
+  "fr": "Descripteur d'un type de valeur qu'un tableau de bord de véhicule peut afficher, identifié par un nom de spécialisation et un nom de valeur (nom complet `spec.name`). Il enregistre l'origine de la valeur, une plage, un centre, un facteur, un ensemble de comparaison et une vitesse d'interpolation optionnels, ainsi que l'endroit où lire ses définitions XML via `vehicle:loadDashboardsFromXML`. Les spécialisations créent et configurent ces objets ; la spécialisation Dashboard elle-même n'est pas dans ce fichier (NON VÉRIFIÉ ici). À noter : son commentaire d'en-tête parle à tort de valeur d'animation."
+ },
+ "fonctions": {
+  "DashboardValueType.new": {
+   "en": "Constructor. Builds the full name from specialization and value name, with polling enabled, factor 1, and every getter (source, min, max, center, interpolation speed) defaulting to a function returning nil.",
+   "fr": "Constructeur. Construit le nom complet à partir de la spécialisation et du nom de la valeur, avec l'interrogation active, un facteur de 1, et tous les accesseurs (source, min, max, centre, vitesse d'interpolation) réglés par défaut sur une fonction retournant nil."
+  },
+  "DashboardValueType:setXMLKey": {
+   "en": "Sets a custom XML key from which dashboard definitions of this value type are loaded.",
+   "fr": "Définit une clé XML personnalisée depuis laquelle les définitions de tableau de bord de ce type de valeur sont chargées."
+  },
+  "DashboardValueType:loadFromXML": {
+   "en": "Asks the vehicle to load dashboards from the XML, using the custom key if set, otherwise `<root>.<specName>.dashboards`, passing this value type.",
+   "fr": "Demande au véhicule de charger les tableaux de bord depuis le XML, avec la clé personnalisée si elle est définie, sinon `<racine>.<specName>.dashboards`, en lui passant ce type de valeur."
+  },
+  "DashboardValueType:setPollUpdate": {
+   "en": "Sets the poll flag stored on this type. How the dashboard system uses it is UNVERIFIED (not in this file).",
+   "fr": "Définit l'indicateur d'interrogation stocké sur ce type. Son usage par le système de tableau de bord est NON VÉRIFIÉ (absent de ce fichier)."
+  },
+  "DashboardValueType:setAdditionalFunctions": {
+   "en": "Stores an optional load function and an optional state function. They are only stored here and used elsewhere (UNVERIFIED).",
+   "fr": "Stocke une fonction de chargement et une fonction d'état optionnelles. Elles sont seulement stockées ici et utilisées ailleurs (NON VÉRIFIÉ)."
+  },
+  "DashboardValueType:setValueFactor": {
+   "en": "Sets the multiplier applied to numeric values in `getValue`.",
+   "fr": "Définit le multiplicateur appliqué aux valeurs numériques dans `getValue`."
+  },
+  "DashboardValueType:setValueCompare": {
+   "en": "Builds a set from the given arguments. Once set, `getValue` returns a boolean telling whether the source value is in this set instead of the raw value.",
+   "fr": "Construit un ensemble à partir des arguments donnés. Une fois défini, `getValue` retourne un booléen indiquant si la valeur source appartient à cet ensemble, au lieu de la valeur brute."
+  },
+  "DashboardValueType:setIdleValue": {
+   "en": "Stores the value to use when idle. It is only stored here; its consumer is outside this file (UNVERIFIED).",
+   "fr": "Stocke la valeur à utiliser au repos. Elle est seulement stockée ici ; son consommateur est hors de ce fichier (NON VÉRIFIÉ)."
+  },
+  "DashboardValueType:setValue": {
+   "en": "Declares the object that provides the value and the source: a constant, a function called with the object, or the name of a field or method on it. Also remembers the object for the later range, centre and speed setters.",
+   "fr": "Déclare l'objet qui fournit la valeur et la source : une constante, une fonction appelée avec l'objet, ou le nom d'un champ ou d'une méthode de celui-ci. Mémorise aussi l'objet pour les définitions ultérieures de plage, centre et vitesse."
+  },
+  "DashboardValueType:setCenter": {
+   "en": "Sets the source of the centre value (constant, function or member name on the value object). Call `setValue` first so the object is known.",
+   "fr": "Définit la source de la valeur centrale (constante, fonction ou nom de membre sur l'objet de valeur). Appeler `setValue` d'abord pour que l'objet soit connu."
+  },
+  "DashboardValueType:setRange": {
+   "en": "Sets the sources of the minimum and maximum values, each as a constant, function or member name on the value object. Call `setValue` first.",
+   "fr": "Définit les sources des valeurs minimale et maximale, chacune sous forme de constante, fonction ou nom de membre sur l'objet de valeur. Appeler `setValue` d'abord."
+  },
+  "DashboardValueType:setInterpolationSpeed": {
+   "en": "Sets the source of the interpolation speed (constant, function or member name on the value object). Call `setValue` first.",
+   "fr": "Définit la source de la vitesse d'interpolation (constante, fonction ou nom de membre sur l'objet de valeur). Appeler `setValue` d'abord."
+  },
+  "DashboardValueType:getValue": {
+   "en": "Reads the source value for a dashboard. Applies the compare set if any, and for numbers the factor, then returns value, min, max, center and an is-number flag (min, max and center are nil for non-numbers).",
+   "fr": "Lit la valeur source pour un tableau de bord. Applique l'ensemble de comparaison s'il existe et, pour les nombres, le facteur, puis retourne valeur, min, max, centre et un indicateur de nombre (min, max et centre sont nil pour les non-nombres)."
+  },
+  "DashboardValueType:setFunction": {
+   "en": "Internal helper. Replaces the named getter by a closure built from a constant, a function, or a field or method name looked up on the object. If the type is unsupported or the member missing, the getter is left unchanged.",
+   "fr": "Fonction interne. Remplace l'accesseur nommé par une fermeture construite à partir d'une constante, d'une fonction, ou d'un nom de champ ou de méthode cherché sur l'objet. Si le type n'est pas géré ou si le membre est absent, l'accesseur reste inchangé."
+  },
+  "DashboardValueType:getDefaultValue": {
+   "en": "Default getter; always returns nil.",
+   "fr": "Accesseur par défaut ; retourne toujours nil."
+  }
+ }
+}

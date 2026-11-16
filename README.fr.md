@@ -20,8 +20,8 @@ et d'un relevé en jeu des globales réellement disponibles.
 | [`doc/1.25.1.0/moteur.md`](doc/1.25.1.0/moteur.md) | Fonctions moteur (signatures issues de `scriptBinding.xml`) |
 | [`doc/1.25.1.0/releve.md`](doc/1.25.1.0/releve.md) | Relevé en jeu : classes et fonctions présentes en jeu mais absentes des sources du SDK (`Weather`, `Environment`, `FSBaseMission`…) |
 | `stubs/1.25.1.0/` | Stubs `---@meta` : `scripts/` (même arborescence que `dataS/scripts`), `moteur.lua`, `releve/` |
-| `descriptions/1.25.1.0/` | Descriptions rédigées à la main (JSON), fusionnées par le générateur |
-| `outils/` | `extraire.py`, `generer.py`, `importer_releve.py`, `empaqueter.py`, `mod_releve/` |
+| `descriptions/1.25.1.0/` | Descriptions rédigées (JSON, anglais + français), fusionnées par le générateur |
+| `outils/` | `extraire.py`, `generer.py`, `verifier_descriptions.py`, `importer_releve.py`, `empaqueter.py`, `mod_releve/` |
 
 ### Couverture
 | Couche | Contenu |
@@ -29,10 +29,10 @@ et d'un relevé en jeu des globales réellement disponibles.
 | Sources du SDK | 961 fichiers, 13 390 fonctions (signatures, types, héritage, renvois `fichier:ligne`) |
 | Fonctions moteur | 819 signatures |
 | Relevé en jeu | 4 308 globales, dont 2 651 absentes des sources du SDK (noms seulement) |
-| Descriptions ✍ | 35 fichiers, 1 325 fonctions : effets, particules, roues, météo et humidité, moteur, lumières, outils de travail du sol et de récolte |
+| Descriptions ✍ | **les 961 fichiers, 13 390 fonctions**, en anglais et en français |
 
-Les descriptions ont été écrites en priorité pour les systèmes d'effets visuels et d'environnement.
-Elles signalent aussi les bugs apparents du jeu repérés en lisant le code (« à noter… »).
+Les descriptions signalent aussi les bugs apparents du jeu repérés en lisant le code (« À noter : … »).
+Les pages françaises sont sous `doc/1.25.1.0/fr/` ([site en français](https://tim0219800.github.io/fs25-lua-atlas/1.25.1.0/fr/)).
 
 ## Utiliser les stubs dans VS Code
 1. Installe l'extension **Lua** (sumneko / LuaLS).
@@ -66,7 +66,8 @@ Passage à une nouvelle version du jeu : voir [NOUVELLE_VERSION.md](NOUVELLE_VER
 - **Statique** : fiable pour les fonctions Lua présentes dans le dump du SDK. 9 fichiers n'y contiennent que des signatures, sans corps (signalés ⚠), et certains en-têtes de fichiers (constantes) sont vides.
 - **Relevé en jeu** : la bibliothèque `debug` n'existe pas en jeu, donc les classes absentes du SDK n'ont que leurs noms, sans paramètres.
 - `scriptBinding.xml` est incomplet : certaines fonctions moteur appelées par le jeu n'y figurent pas.
-- Les descriptions indiquent leur niveau de confiance : **NON VÉRIFIÉ** (dépend de code absent), « non relu » (partie survolée), « non vérifié en jeu » (lu dans le code mais pas testé).
+- Les descriptions indiquent leur niveau de confiance : **NON VÉRIFIÉ** (dépend de code absent du dump), « Signature seule » (fichier sans corps dans le dump), « non vérifié en jeu ».
+- Les descriptions ont été rédigées avec l'aide d'une IA à partir des sources du SDK et vérifiées automatiquement (clés, deux langues, aucun texte recopié des sources) ; elles n'ont pas toutes été relues par un humain. Les corrections sont les bienvenues.
 
 ## Licence
 Textes, doc et stubs : [CC BY 4.0](LICENSE). Outils (`outils/`) : [MIT](LICENSE-tools).

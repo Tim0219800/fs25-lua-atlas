@@ -1,0 +1,165 @@
+{
+ "fichier": "ai/jobs/AIJob.lua",
+ "module": {
+  "en": "Base class of all AI helper jobs. A job owns an ordered list of tasks and named/grouped parameters; the server drives task start, update and stop and broadcasts `AITaskStartEvent`/`AITaskStopEvent`, while clients are only notified. It also handles per-millisecond cost, notifications and XML/stream (de)serialization of its parameters. Concrete jobs such as `AIJobFieldWork` or `AIJobGoTo` subclass it.",
+  "fr": "Classe de base de tous les jobs d'assistant IA. Un job possède une liste ordonnée de tâches et des paramètres nommés/groupés ; le serveur pilote démarrage, mise à jour et arrêt des tâches et diffuse `AITaskStartEvent`/`AITaskStopEvent`, tandis que les clients sont seulement notifiés. Il gère aussi le coût par milliseconde, les notifications et la (dé)sérialisation XML/flux de ses paramètres. Les jobs concrets comme `AIJobFieldWork` ou `AIJobGoTo` en héritent."
+ },
+ "fonctions": {
+  "AIJob.new": {
+   "en": "Creates a job with empty task and parameter lists, `currentTaskIndex` 0, no job id and no pending cost. `isServer` decides whether the instance drives the tasks.",
+   "fr": "Crée un job avec des listes de tâches et de paramètres vides, `currentTaskIndex` à 0, sans id de job ni coût en attente. `isServer` détermine si l'instance pilote les tâches."
+  },
+  "AIJob:delete": {
+   "en": "Deletes every named parameter and every task of the job.",
+   "fr": "Supprime chaque paramètre nommé et chaque tâche du job."
+  },
+  "AIJob:saveToXMLFile": {
+   "en": "Writes each named parameter that supports saving as a `parameter(i)` entry with its name, delegating the content to the parameter. Returns true.",
+   "fr": "Écrit chaque paramètre nommé sauvegardable comme une entrée `parameter(i)` avec son nom, en déléguant le contenu au paramètre. Renvoie true."
+  },
+  "AIJob:loadFromXMLFile": {
+   "en": "Iterates the `parameter` entries under the key and lets the matching named parameter load itself when it supports loading. Unknown names are ignored.",
+   "fr": "Parcourt les entrées `parameter` sous la clé et laisse le paramètre nommé correspondant se charger s'il le permet. Les noms inconnus sont ignorés."
+  },
+  "AIJob:readStream": {
+   "en": "Reads the direct-start flag, the optional job id, every named parameter in order, calls `setValues` and then reads the current task index (uint8).",
+   "fr": "Lit le drapeau de démarrage direct, l'id de job optionnel, chaque paramètre nommé dans l'ordre, appelle `setValues` puis lit l'index de tâche courant (uint8)."
+  },
+  "AIJob:writeStream": {
+   "en": "Writes the same data `readStream` expects: direct-start flag, optional job id, all named parameters and the current task index.",
+   "fr": "Écrit les données attendues par `readStream` : drapeau de démarrage direct, id de job optionnel, tous les paramètres nommés et l'index de tâche courant."
+  },
+  "AIJob:update": {
+   "en": "Server only. With no active task it checks `canStartWork` and starts the first task or stops the job with a message. Otherwise it updates the current task and, when finished, checks `canContinueWork`, moves to the next task, loops if `getIsLooping`, or stops with `AIMessageSuccessFinishedJob`.",
+   "fr": "Serveur uniquement. Sans tâche active, vérifie `canStartWork` et démarre la première tâche ou arrête le job avec un message. Sinon met à jour la tâche courante et, une fois finie, vérifie `canContinueWork`, passe à la suivante, boucle si `getIsLooping`, ou s'arrête avec `AIMessageSuccessFinishedJob`."
+  },
+  "AIJob:updateCost": {
+   "en": "Accumulates the running cost (`getPricePerMs` times dt times the economy cost multiplier) and stops the job with `AIMessageErrorOutOfMoney` if the farm balance would go negative. Once pending cost exceeds 25 it is booked as money of type `MoneyType.AI`.",
+   "fr": "Cumule le coût courant (`getPricePerMs` fois dt fois le multiplicateur de coût de l'économie) et arrête le job avec `AIMessageErrorOutOfMoney` si le solde de la ferme devenait négatif. Au-delà de 25 de coût en attente, il est débité en argent de type `MoneyType.AI`."
+  },
+  "AIJob:canContinueWork": {
+   "en": "Hook called after a task finishes; returns true and a nil message by default. Subclasses return false plus an `AIMessage` to abort the job.",
+   "fr": "Point d'extension appelé à la fin d'une tâche ; renvoie true et un message nil par défaut. Les sous-classes renvoient false plus un `AIMessage` pour interrompre le job."
+  },
+  "AIJob:canStartWork": {
+   "en": "Hook called before the first task starts; returns true and nil by default. Subclasses can refuse with a message.",
+   "fr": "Point d'extension appelé avant le démarrage de la première tâche ; renvoie true et nil par défaut. Les sous-classes peuvent refuser avec un message."
+  },
+  "AIJob:getPricePerMs": {
+   "en": "Returns the base cost per millisecond, 0.0004 by default; subclasses override it (for example field work and conveyor).",
+   "fr": "Renvoie le coût de base par milliseconde, 0.0004 par défaut ; les sous-classes le redéfinissent (par exemple travail des champs et convoyeur)."
+  },
+  "AIJob:getNextTaskIndex": {
+   "en": "Returns the index of the following task, the current index plus one. Subclasses override it to branch.",
+   "fr": "Renvoie l'index de la tâche suivante, l'index courant plus un. Les sous-classes le redéfinissent pour brancher."
+  },
+  "AIJob:validate": {
+   "en": "Hook that checks the job parameters before start; returns true and nil by default, subclasses return false plus an error text.",
+   "fr": "Point d'extension qui vérifie les paramètres du job avant le démarrage ; renvoie true et nil par défaut, les sous-classes renvoient false plus un texte d'erreur."
+  },
+  "AIJob:getIsLooping": {
+   "en": "Returns false by default: the job ends after its last task. Looping jobs override it.",
+   "fr": "Renvoie false par défaut : le job se termine après sa dernière tâche. Les jobs en boucle le redéfinissent."
+  },
+  "AIJob:setValues": {
+   "en": "Empty hook that copies the parameter values into the tasks; subclasses implement it and `readStream` calls it.",
+   "fr": "Point d'extension vide qui recopie les valeurs des paramètres dans les tâches ; les sous-classes l'implémentent et `readStream` l'appelle."
+  },
+  "AIJob:startTask": {
+   "en": "Makes the task current, calls `task:start()` and, on the server, broadcasts an `AITaskStartEvent`.",
+   "fr": "Rend la tâche courante, appelle `task:start()` et, sur le serveur, diffuse un `AITaskStartEvent`."
+  },
+  "AIJob:stopTask": {
+   "en": "Calls `task:stop(wasJobStopped)` and, on the server, broadcasts an `AITaskStopEvent`.",
+   "fr": "Appelle `task:stop(wasJobStopped)` et, sur le serveur, diffuse un `AITaskStopEvent`."
+  },
+  "AIJob:start": {
+   "en": "Picks a random helper from `g_helperManager`, stores its index and the farm id, marks the job as running and, on the server, resets the task index to 0.",
+   "fr": "Choisit un assistant aléatoire dans `g_helperManager`, mémorise son index et l'id de ferme, marque le job comme actif et, sur le serveur, remet l'index de tâche à 0."
+  },
+  "AIJob:getCanSkipTask": {
+   "en": "Returns false by default; jobs with skippable tasks override it.",
+   "fr": "Renvoie false par défaut ; les jobs avec des tâches ignorables le redéfinissent."
+  },
+  "AIJob:skipCurrentTask": {
+   "en": "Empty hook for skipping the current task; overridden where `getCanSkipTask` can be true.",
+   "fr": "Point d'extension vide pour ignorer la tâche courante ; redéfini là où `getCanSkipTask` peut être vrai."
+  },
+  "AIJob:stop": {
+   "en": "Marks the job as not running; on the server stops the current task with `wasJobStopped` true, books any pending cost, shows the notification for the given message and resets all tasks.",
+   "fr": "Marque le job comme inactif ; sur le serveur arrête la tâche courante avec `wasJobStopped` à true, débite le coût en attente, affiche la notification du message donné et réinitialise toutes les tâches."
+  },
+  "AIJob:addTask": {
+   "en": "Appends a task and assigns its `taskIndex`. Asserts that the task was not already added.",
+   "fr": "Ajoute une tâche à la fin et lui attribue son `taskIndex`. Vérifie par assertion que la tâche n'a pas déjà été ajoutée."
+  },
+  "AIJob:resetTasks": {
+   "en": "Calls `reset()` on every task of the job.",
+   "fr": "Appelle `reset()` sur chaque tâche du job."
+  },
+  "AIJob:getTaskByIndex": {
+   "en": "Returns the task at the given index, or nil.",
+   "fr": "Renvoie la tâche à l'index donné, ou nil."
+  },
+  "AIJob:getTitle": {
+   "en": "Returns the title of the helper assigned to the job.",
+   "fr": "Renvoie le titre de l'assistant affecté au job."
+  },
+  "AIJob:getDescription": {
+   "en": "Returns the title of the job type from `aiJobTypeManager` for this job's `jobTypeIndex`. Subclasses append the current task description.",
+   "fr": "Renvoie le titre du type de job d'`aiJobTypeManager` pour le `jobTypeIndex` du job. Les sous-classes y ajoutent la description de la tâche courante."
+  },
+  "AIJob:getHelperName": {
+   "en": "Returns the helper title, which is the name inserted into AI messages.",
+   "fr": "Renvoie le titre de l'assistant, nom inséré dans les messages IA."
+  },
+  "AIJob:showNotification": {
+   "en": "Shows an in-game notification for the message, only on the client whose local player belongs to the farm that started the job. The notification kind (critical, OK, info) follows `aiMessage:getType()`. Does nothing if the helper no longer exists.",
+   "fr": "Affiche une notification en jeu pour le message, seulement sur le client dont le joueur local appartient à la ferme qui a lancé le job. Le type (critique, OK, info) suit `aiMessage:getType()`. Ne fait rien si l'assistant n'existe plus."
+  },
+  "AIJob:getStartTaskIndex": {
+   "en": "Returns the index of the first task to run, 1 by default; subclasses may skip ahead.",
+   "fr": "Renvoie l'index de la première tâche à exécuter, 1 par défaut ; les sous-classes peuvent sauter des étapes."
+  },
+  "AIJob:addNamedParameter": {
+   "en": "Registers a parameter under a name so it can be saved, streamed and looked up by name.",
+   "fr": "Enregistre un paramètre sous un nom pour qu'il puisse être sauvegardé, transmis et retrouvé par son nom."
+  },
+  "AIJob:setParameterValid": {
+   "en": "Sets the validity flag of every named parameter to the given value.",
+   "fr": "Fixe le drapeau de validité de chaque paramètre nommé à la valeur donnée."
+  },
+  "AIJob:getNamedParameters": {
+   "en": "Returns the list of `{name, parameter}` entries.",
+   "fr": "Renvoie la liste des entrées `{name, parameter}`."
+  },
+  "AIJob:getNamedParameter": {
+   "en": "Finds a parameter by name, case-insensitively. Returns nil for a nil or unknown name.",
+   "fr": "Trouve un paramètre par son nom, sans tenir compte de la casse. Renvoie nil pour un nom nil ou inconnu."
+  },
+  "AIJob:getGroupedParameters": {
+   "en": "Returns the parameter groups used to lay out the job in the UI.",
+   "fr": "Renvoie les groupes de paramètres utilisés pour présenter le job dans l'interface."
+  },
+  "AIJob:applyCurrentState": {
+   "en": "Hook that initializes the parameters from the vehicle and mission state; the base version only stores the direct-start flag.",
+   "fr": "Point d'extension qui initialise les paramètres à partir de l'état du véhicule et de la mission ; la version de base ne mémorise que le drapeau de démarrage direct."
+  },
+  "AIJob:getIsAvailableForVehicle": {
+   "en": "Returns true by default, meaning the job can be offered for any vehicle; subclasses restrict it.",
+   "fr": "Renvoie true par défaut : le job peut être proposé pour tout véhicule ; les sous-classes le restreignent."
+  },
+  "AIJob:setId": {
+   "en": "Stores the job id used to identify the job in network events.",
+   "fr": "Mémorise l'id du job utilisé pour l'identifier dans les événements réseau."
+  },
+  "AIJob:onParameterValueChanged": {
+   "en": "Empty hook called when a parameter value changes in the UI; subclasses react to it.",
+   "fr": "Point d'extension vide appelé quand une valeur de paramètre change dans l'interface ; les sous-classes y réagissent."
+  },
+  "AIJob:getIsStartable": {
+   "en": "Returns true and `AIJob.START_SUCCESS` by default; subclasses return false plus a start-error state. `AIJob.START_SUCCESS` is not defined in this file (UNVERIFIED).",
+   "fr": "Renvoie true et `AIJob.START_SUCCESS` par défaut ; les sous-classes renvoient false plus un état d'erreur de démarrage. `AIJob.START_SUCCESS` n'est pas défini dans ce fichier (NON VÉRIFIÉ)."
+  }
+ }
+}

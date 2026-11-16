@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableObjectStorageUnloadEvent.lua",
+ "module": {
+  "en": "Network event (subclass of Event) asking the server to unload a number of stored objects of one kind from an object storage placeable. It carries the placeable, the object info index and the amount.",
+  "fr": "Événement réseau (sous-classe d'Event) qui demande au serveur de décharger un certain nombre d'objets stockés d'un même type d'un placeable de stockage d'objets. Il transporte le placeable, l'indice d'information d'objet et la quantité."
+ },
+ "fonctions": {
+  "PlaceableObjectStorageUnloadEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture de flux."
+  },
+  "PlaceableObjectStorageUnloadEvent.new": {
+   "en": "Creates the event with the storage placeable, the object info index and the amount to unload.",
+   "fr": "Crée l'événement avec le placeable de stockage, l'indice d'information d'objet et la quantité à décharger."
+  },
+  "PlaceableObjectStorageUnloadEvent:readStream": {
+   "en": "Reads the placeable, the object info index (`NUM_BITS_OBJECT_INFO` bits) and the amount (`NUM_BITS_AMOUNT` bits), then calls `run`.",
+   "fr": "Lit le placeable, l'indice d'information d'objet (`NUM_BITS_OBJECT_INFO` bits) et la quantité (`NUM_BITS_AMOUNT` bits), puis appelle `run`."
+  },
+  "PlaceableObjectStorageUnloadEvent:writeStream": {
+   "en": "Writes the placeable, the object info index and the amount with the same bit widths as reading.",
+   "fr": "Écrit le placeable, l'indice d'information d'objet et la quantité avec les mêmes largeurs de bits qu'à la lecture."
+  },
+  "PlaceableObjectStorageUnloadEvent:run": {
+   "en": "If the placeable is synchronized and has `removeAbstractObjectsFromStorage`, calls it with the index, amount and connection.",
+   "fr": "Si le placeable est synchronisé et possède `removeAbstractObjectsFromStorage`, l'appelle avec l'indice, la quantité et la connexion."
+  }
+ }
+}

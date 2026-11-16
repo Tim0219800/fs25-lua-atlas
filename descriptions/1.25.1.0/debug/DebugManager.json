@@ -1,0 +1,33 @@
+{
+ "fichier": "debug/DebugManager.lua",
+ "module": {
+  "en": "DebugManager is the manager that owns and draws debug elements (DebugLine, DebugText, DebugSpline, etc.). It derives from AbstractManager and is reached through the global `g_debugManager`. Elements are stored by id and by group, can be hidden per group, and are drawn in two passes: 3D elements before the UI, and objects with `drawDebug` after it. This dump only contains part of the file (initialisation, the two draw passes and two console commands); the other methods are absent, so the element/group API is UNVERIFIED here.",
+  "fr": "DebugManager est le gestionnaire qui possède et dessine les éléments de débogage (DebugLine, DebugText, DebugSpline, etc.). Il dérive de AbstractManager et s'obtient via le global `g_debugManager`. Les éléments sont rangés par identifiant et par groupe, peuvent être masqués par groupe, et sont dessinés en deux passes : les éléments 3D avant l'interface, puis les objets dotés de `drawDebug` après elle. Ce dump ne contient qu'une partie du fichier (initialisation, les deux passes de dessin et deux commandes console) ; les autres méthodes sont absentes, l'API éléments/groupes est donc NON VÉRIFIÉE ici."
+ },
+ "fonctions": {
+  "DebugManager:initDataStructures": {
+   "en": "Resets all element tables, the debug material and the spline/occluder debug flags. On first call it also registers the console commands `gsDebugManagerClearElements`, `gsDebugManagerGroupsList`, `gsDebugManagerGroupVisibilitySet`, `gsDebugManagerGroupRemove`, `gsSplineDebug` and `gsTerrainLayerDebug`.",
+   "fr": "Réinitialise toutes les tables d'éléments, le matériau de débogage et les drapeaux de débogage des splines et des occluders. Au premier appel, il enregistre aussi les commandes console `gsDebugManagerClearElements`, `gsDebugManagerGroupsList`, `gsDebugManagerGroupVisibilitySet`, `gsDebugManagerGroupRemove`, `gsSplineDebug` et `gsTerrainLayerDebug`."
+  },
+  "DebugManager:unloadMapData": {
+   "en": "Clears the loaded-map flag and rebuilds the empty data structures, which drops every registered debug element when a map is unloaded.",
+   "fr": "Remet à faux l'indicateur de carte chargée et reconstruit des structures vides, ce qui supprime tous les éléments de débogage enregistrés lors du déchargement d'une carte."
+  },
+  "DebugManager:drawPreUI": {
+   "en": "Draws every element of every non-hidden group (if it has `draw` and its `getShouldBeDrawn` allows it), then draws and removes the single-frame elements. Intended for 3D content, rendered before the UI.",
+   "fr": "Dessine chaque élément de chaque groupe non masqué (s'il possède `draw` et que son `getShouldBeDrawn` l'autorise), puis dessine et retire les éléments valables une seule image. Prévu pour le contenu 3D, rendu avant l'interface."
+  },
+  "DebugManager:drawPostUI": {
+   "en": "Calls `drawDebug` on every registered drawable, after the UI has been rendered so they can draw on top of it.",
+   "fr": "Appelle `drawDebug` sur chaque objet dessinable enregistré, après le rendu de l'interface, afin qu'il puisse dessiner par-dessus."
+  },
+  "DebugManager:consoleCommandRemoveElements": {
+   "en": "Console command handler: calls `delete` on each element that has one, empties the id, group and lifetime tables, and returns a confirmation string. Frame elements and drawables are left untouched.",
+   "fr": "Gestionnaire de commande console : appelle `delete` sur chaque élément qui en possède une, vide les tables d'identifiants, de groupes et de durées de vie, et renvoie une chaîne de confirmation. Les éléments d'une image et les objets dessinables ne sont pas touchés."
+  },
+  "DebugManager:consoleCommandSplineToggleDebug": {
+   "en": "Console command handler that toggles spline debugging. When enabled, it walks the whole scene from the root node, recolours each spline with the debug material and adds a DebugSpline (clip distance 500) to group `splineDebug`; when disabled it removes that group. Returns a status string.",
+   "fr": "Gestionnaire de commande console qui active ou désactive le débogage des splines. À l'activation, il parcourt toute la scène depuis le noeud racine, recolore chaque spline avec le matériau de débogage et ajoute un DebugSpline (distance de clip 500) au groupe `splineDebug` ; à la désactivation, il retire ce groupe. Renvoie une chaîne d'état."
+  }
+ }
+}

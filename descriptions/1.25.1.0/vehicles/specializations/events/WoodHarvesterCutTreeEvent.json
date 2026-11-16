@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/WoodHarvesterCutTreeEvent.lua",
+  "module": {
+    "en": "Network event that makes a wood harvester cut the held tree at a given length, synchronized between server and clients. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui fait couper à une abatteuse l'arbre tenu à une longueur donnée, synchronisé entre serveur et clients. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "WoodHarvesterCutTreeEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "WoodHarvesterCutTreeEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a float32 cut length); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et une longueur de coupe float32) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "WoodHarvesterCutTreeEvent:readStream": {
+      "en": "Reads a node object and a float32 cut length from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et une longueur de coupe float32 depuis le flux, puis appelle `run(connection)`."
+    },
+    "WoodHarvesterCutTreeEvent:writeStream": {
+      "en": "Writes a node object and a float32 cut length to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et une longueur de coupe float32 dans le flux (même ordre que `readStream`)."
+    },
+    "WoodHarvesterCutTreeEvent:run": {
+      "en": "Applies the event on the receiving side: calls `cutTree(length, true)` on the object if synchronized; on the server it first re-broadcasts a new event to the other clients.",
+      "fr": "Applique l'événement côté récepteur : appelle `cutTree(longueur, true)` sur l'objet s'il est synchronisé ; sur le serveur, il retransmet d'abord un nouvel événement aux autres clients."
+    },
+    "WoodHarvesterCutTreeEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

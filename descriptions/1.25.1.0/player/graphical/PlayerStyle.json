@@ -1,0 +1,41 @@
+{
+ "fichier": "player/graphical/PlayerStyle.lua",
+ "module": {
+  "en": "Holds the look of a player avatar: one PlayerStyleConfig per slot (hair, glasses, headgear, face, beard, top, gloves, bottom, footwear, onepiece and so on), plus presets, attach points and body parts read from the player XML. It can be copied between instances and serialised for multiplayer. Large parts of the file body are absent from the SDK dump, so only the listed functions are documented here.",
+  "fr": "Contient l'apparence d'un avatar de joueur : une PlayerStyleConfig par emplacement (cheveux, lunettes, couvre-chef, visage, barbe, haut, gants, bas, chaussures, combinaison, etc.), plus les préréglages, points d'attache et parties du corps lus dans le XML du joueur. Il peut être copié entre instances et sérialisé pour le multijoueur. De larges parties du corps du fichier sont absentes du dump du SDK : seules les fonctions listées sont documentées ici."
+ },
+ "fonctions": {
+  "PlayerStyle.new": {
+   "en": "Constructor. Creates the empty style, registers all the configs with their getter filters, aligns the hair colours and starts with face item 1 and hair style item 2 selected.",
+   "fr": "Constructeur. Crée le style vide, enregistre toutes les configs avec leurs filtres, harmonise les couleurs de cheveux et démarre avec le visage 1 et la coiffure 2 sélectionnés."
+  },
+  "PlayerStyle:writeStream": {
+   "en": "Writes the style to a network stream: the network-converted XML filename, then each config in order. Must be read back with readStream in the same order.",
+   "fr": "Écrit le style dans un flux réseau : le nom de fichier XML converti pour le réseau, puis chaque config dans l'ordre. À relire avec readStream dans le même ordre."
+  },
+  "PlayerStyle:readStream": {
+   "en": "Reads the style from a network stream. Loads the configuration if still needed (selections are sent by name), reads each config, refreshes the disabled options and unifies the hair colours.",
+   "fr": "Lit le style depuis un flux réseau. Charge la configuration si nécessaire (les sélections sont transmises par nom), lit chaque config, met à jour les options désactivées et harmonise les couleurs de cheveux."
+  },
+  "PlayerStyle:copyFrom": {
+   "en": "Copies both configuration and selection from another style. If the source has its configuration loaded, shared tables (presets, body parts, hat hair index) are referenced rather than deep-copied; otherwise this style is flagged as not loaded.",
+   "fr": "Copie la configuration et la sélection d'un autre style. Si la source a sa configuration chargée, les tables partagées (préréglages, parties du corps, index de coiffure pour chapeau) sont référencées sans copie profonde ; sinon ce style est marqué non chargé."
+  },
+  "PlayerStyle:copyConfigurationFrom": {
+   "en": "Copies only the configuration (filenames, attach points, body parts, presets, config items) from another style, leaving the selection untouched. Logs an error and does nothing if the source is not yet loaded.",
+   "fr": "Copie uniquement la configuration (noms de fichiers, points d'attache, parties du corps, préréglages, items des configs) d'un autre style, sans toucher à la sélection. Journalise une erreur et ne fait rien si la source n'est pas chargée."
+  },
+  "PlayerStyle:copySelectionFrom": {
+   "en": "Copies only the selection of each config from another style. The configuration stays flagged as loaded only if both styles use the same XML file. Hair colours are unified afterwards.",
+   "fr": "Copie uniquement la sélection de chaque config depuis un autre style. La configuration reste marquée chargée seulement si les deux styles utilisent le même fichier XML. Les couleurs de cheveux sont harmonisées ensuite."
+  },
+  "PlayerStyle:loadConfigurationXML": {
+   "en": "Loads the style from a player XML (keys under player.playerStyle: colors, attachPoints, configs, bodyParts, presets). Reuses an already loaded style if possible, falls back to a default file on failure and tries to keep the previous selection by name, then by index. Invalid or duplicate presets are rejected with a log message.",
+   "fr": "Charge le style depuis un XML de joueur (clés sous player.playerStyle : colors, attachPoints, configs, bodyParts, presets). Réutilise un style déjà chargé si possible, se rabat sur un fichier par défaut en cas d'échec et tente de conserver la sélection précédente par nom puis par index. Les préréglages invalides ou en double sont rejetés avec un message de log."
+  },
+  "PlayerStyle:debugDraw": {
+   "en": "Draws debug text on screen: whether the configuration is loaded, the XML filename and the selected item and colour index of each config. Returns the y position after the last line.",
+   "fr": "Affiche du texte de débogage à l'écran : état de chargement de la configuration, nom du fichier XML, item et couleur sélectionnés de chaque config. Retourne la position y après la dernière ligne."
+  }
+ }
+}

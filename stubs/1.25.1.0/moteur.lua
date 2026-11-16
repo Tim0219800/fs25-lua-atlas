@@ -1,5 +1,5 @@
 ---@meta
--- FS25 1.25.1.0 : fonctions moteur (signatures depuis scriptBinding.xml)
+-- FS25 1.25.1.0 : engine functions (signatures from scriptBinding.xml)
 
 ---@alias entityId integer
 ---@alias float number

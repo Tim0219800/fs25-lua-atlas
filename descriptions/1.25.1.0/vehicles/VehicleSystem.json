@@ -1,52 +1,193 @@
 {
  "fichier": "vehicles/VehicleSystem.lua",
- "module": "Classe de gestion (pas une spécialisation) : registre global de tous les véhicules de la partie (vehicles, vehicleByUniqueId, enterables, interactiveVehicles, joints d'attache), chargement/sauvegarde des véhicules en XML et commandes console de débogage. Instance créée par la mission (accès exact, par ex. g_currentMission.vehicleSystem, dans FSBaseMission/Mission00 absents du dump : NON VÉRIFIÉ). POINT CLÉ MÉTÉO : VehicleSystem:update(dt) (VehicleSystem.lua:~137-175) est le SEUL endroit du vanilla (parmi les fichiers lus) qui pilote l'HUMIDITÉ des véhicules : côté serveur seulement (g_server ~= nil), il lit weather:getRainFallScale(), puis, si > 0.1, weather:getTimeSinceLastRain() et weather:getCurrentTemperature() ; si temps depuis la dernière pluie < 30 et température > 0, il appelle pour chaque véhicule présent (hors showroom, avec updateWetness) vehicle:updateWetness(true, dt x échelle de temps effective) quand le véhicule est à l'extérieur (indoorMask:getIsIndoorAtWorldPosition(x, z) à la position de rootNode) et updateWetness(false, ...) quand il est à l'intérieur (donc séchage sous abri), en tenant à jour la table wetVehicles. Quand rainScale <= 0.1 et que wetVehicles n'est pas vide, tous les véhicules mouillés sèchent (updateWetness(false)) jusqu'à ne plus l'être. À noter : si rainScale > 0.1 mais que la condition (temps depuis la pluie < 30 ET température > 0) est fausse, aucun branchement ne sèche ni ne mouille (apparent trou de logique ; non vérifié en jeu). L'échelle de temps vient de g_currentMission:getEffectiveTimeScale() (corps absent du dump : NON VÉRIFIÉ) : c'est donc ici que la pause/l'accélération du temps est prise en compte pour l'humidité. Unités et plages des valeurs météo : implémentation Weather absente du dump, NON VÉRIFIÉ. Aucune lecture du vent ici. RÉSEAU : le registre existe sur toutes les machines ; la mise à jour d'humidité et la sauvegarde/le chargement sont côté serveur (le chargement exige un serveur pour la plupart des commandes console). Les valeurs d'humidité résultantes sont ensuite synchronisées par Washable. Chargement : asynchrone via g_asyncTaskManager et VehicleLoadingData ; les véhicules sont ajoutés à la physique seulement quand tous sont chargés (loadVehicleFinished). Points d'extension pour un moddeur : surcharger VehicleSystem:update (global, non enregistré par SpecializationUtil) pour modifier la règle de mouillage ou prendre en compte d'autres sources ; lire vehicles / wetVehicles / enterables pour énumérer les véhicules sans scan global ; s'abonner aux messages MessageType.VEHICLE_ADDED / VEHICLE_REMOVED publiés par addVehicle / removeVehicle.",
+ "module": {
+  "en": "Management class (not a specialization): global registry of all vehicles in the game (vehicles, vehicleByUniqueId, enterables, interactiveVehicles, attacher joints), XML loading/saving of vehicles and debug console commands. Instance created by the mission (exact access, e.g. g_currentMission.vehicleSystem, lives in FSBaseMission/Mission00, absent from the dump: UNVERIFIED). WEATHER KEY POINT: VehicleSystem:update(dt) (VehicleSystem.lua:~137-175) is the ONLY place in vanilla (among the files read) that drives vehicle WETNESS: server side only (g_server ~= nil), it reads weather:getRainFallScale(), then, if > 0.1, weather:getTimeSinceLastRain() and weather:getCurrentTemperature(); if time since last rain < 30 and temperature > 0, it calls for each present vehicle (outside the showroom, with updateWetness) vehicle:updateWetness(true, dt x effective time scale) when the vehicle is outdoors (indoorMask:getIsIndoorAtWorldPosition(x, z) at the rootNode position) and updateWetness(false, ...) when it is indoors (hence drying under shelter), keeping the wetVehicles table up to date. When rainScale <= 0.1 and wetVehicles is not empty, all wet vehicles dry (updateWetness(false)) until none is wet. Note: if rainScale > 0.1 but the condition (time since rain < 30 AND temperature > 0) is false, no branch dries or wets anything (apparent logic gap; not verified in game). The time scale comes from g_currentMission:getEffectiveTimeScale() (body absent from the dump: UNVERIFIED): this is therefore where pause/time acceleration is taken into account for wetness. Units and ranges of the weather values: Weather implementation absent from the dump, UNVERIFIED. No wind reading here. NETWORK: the registry exists on every machine; the wetness update and the save/load are server side (loading requires a server for most console commands). The resulting wetness values are then synchronised by Washable. Loading: asynchronous via g_asyncTaskManager and VehicleLoadingData; vehicles are added to the physics only once all are loaded (loadVehicleFinished). Extension points for a modder: override VehicleSystem:update (global, not registered via SpecializationUtil) to change the wetting rule or take other sources into account; read vehicles / wetVehicles / enterables to enumerate vehicles without a global scan; subscribe to the MessageType.VEHICLE_ADDED / VEHICLE_REMOVED messages published by addVehicle / removeVehicle.",
+  "fr": "Classe de gestion (pas une spécialisation) : registre global de tous les véhicules de la partie (vehicles, vehicleByUniqueId, enterables, interactiveVehicles, joints d'attache), chargement/sauvegarde des véhicules en XML et commandes console de débogage. Instance créée par la mission (accès exact, par ex. g_currentMission.vehicleSystem, dans FSBaseMission/Mission00 absents du dump : NON VÉRIFIÉ). POINT CLÉ MÉTÉO : VehicleSystem:update(dt) (VehicleSystem.lua:~137-175) est le SEUL endroit du vanilla (parmi les fichiers lus) qui pilote l'HUMIDITÉ des véhicules : côté serveur seulement (g_server ~= nil), il lit weather:getRainFallScale(), puis, si > 0.1, weather:getTimeSinceLastRain() et weather:getCurrentTemperature() ; si temps depuis la dernière pluie < 30 et température > 0, il appelle pour chaque véhicule présent (hors showroom, avec updateWetness) vehicle:updateWetness(true, dt x échelle de temps effective) quand le véhicule est à l'extérieur (indoorMask:getIsIndoorAtWorldPosition(x, z) à la position de rootNode) et updateWetness(false, ...) quand il est à l'intérieur (donc séchage sous abri), en tenant à jour la table wetVehicles. Quand rainScale <= 0.1 et que wetVehicles n'est pas vide, tous les véhicules mouillés sèchent (updateWetness(false)) jusqu'à ne plus l'être. À noter : si rainScale > 0.1 mais que la condition (temps depuis la pluie < 30 ET température > 0) est fausse, aucun branchement ne sèche ni ne mouille (apparent trou de logique ; non vérifié en jeu). L'échelle de temps vient de g_currentMission:getEffectiveTimeScale() (corps absent du dump : NON VÉRIFIÉ) : c'est donc ici que la pause/l'accélération du temps est prise en compte pour l'humidité. Unités et plages des valeurs météo : implémentation Weather absente du dump, NON VÉRIFIÉ. Aucune lecture du vent ici. RÉSEAU : le registre existe sur toutes les machines ; la mise à jour d'humidité et la sauvegarde/le chargement sont côté serveur (le chargement exige un serveur pour la plupart des commandes console). Les valeurs d'humidité résultantes sont ensuite synchronisées par Washable. Chargement : asynchrone via g_asyncTaskManager et VehicleLoadingData ; les véhicules sont ajoutés à la physique seulement quand tous sont chargés (loadVehicleFinished). Points d'extension pour un moddeur : surcharger VehicleSystem:update (global, non enregistré par SpecializationUtil) pour modifier la règle de mouillage ou prendre en compte d'autres sources ; lire vehicles / wetVehicles / enterables pour énumérer les véhicules sans scan global ; s'abonner aux messages MessageType.VEHICLE_ADDED / VEHICLE_REMOVED publiés par addVehicle / removeVehicle."
+ },
  "fonctions": {
-  "VehicleSystem.new": "Crée le registre (tables vehicles, wetVehicles, enterables, interactiveVehicles, joints, chargements en attente), déclare les commandes console (certaines seulement serveur ou avec g_addCheatCommands / g_addTestCommands) et s'abonne à BuyVehicleEvent.",
-  "VehicleSystem:delete": "Annule les chargements en attente, supprime tous les véhicules, vide les tables, désabonne les messages et retire les commandes console.",
-  "VehicleSystem:deleteAll": "Supprime tous les véhicules enregistrés et renvoie leur nombre.",
-  "VehicleSystem:update": "Par frame. Charge éventuellement le prochain véhicule de débogage ; côté serveur, applique la logique d'humidité décrite dans le module : lecture de la pluie, de la durée depuis la dernière pluie et de la température, mouillage des véhicules extérieurs, séchage des véhicules sous abri ou une fois la pluie finie, avec dt x échelle de temps effective.",
-  "VehicleSystem:draw": "Appelle drawUIInfo pour chaque véhicule entrable (informations d'interface).",
-  "VehicleSystem:addVehicle": "Enregistre un véhicule (vérifie le type et l'unicité de l'identifiant unique, en génère un au besoin), l'ajoute à wetVehicles s'il est déjà mouillé et publie VEHICLE_ADDED.",
-  "VehicleSystem:removeVehicle": "Retire un véhicule des tables (dont wetVehicles) et publie VEHICLE_REMOVED.",
-  "VehicleSystem:getVehicleByUniqueId": "Renvoie le véhicule associé à un identifiant unique.",
-  "VehicleSystem:addPendingVehicleLoad": "Mémorise un chargement de véhicule en cours.",
-  "VehicleSystem:removePendingVehicleLoad": "Retire un chargement de véhicule terminé.",
-  "VehicleSystem:canStartMission": "Vrai si tous les véhicules sont synchronisés et qu'aucun chargement n'est en attente.",
-  "VehicleSystem:addEnterableVehicle": "Ajoute un véhicule à la liste des véhicules entrables.",
-  "VehicleSystem:removeEnterableVehicle": "Retire un véhicule entrable et recale l'indice du dernier véhicule utilisé (pour la touche de changement).",
-  "VehicleSystem:setEnteredVehicle": "Mémorise l'indice du véhicule dans lequel le joueur est entré.",
-  "VehicleSystem:getNextEnterableVehicle": "Trouve le prochain véhicule entrable et utilisable (tabbable) selon un pas (+1 ou -1) : le dernier véhicule utilisé quand le joueur est à pied avec un pas positif, le dernier de la liste avec un pas négatif.",
-  "VehicleSystem:registerInputAttacherJoint": "Enregistre un joint d'attache avec sa position monde et renvoie la structure d'info.",
-  "VehicleSystem:updateInputAttacherJoint": "Met à jour la position monde d'un joint d'attache enregistré.",
-  "VehicleSystem:removeInputAttacherJoint": "Retire un joint d'attache enregistré.",
-  "VehicleSystem:addInteractiveVehicle": "Marque un véhicule comme interactif.",
-  "VehicleSystem:removeInteractiveVehicle": "Retire un véhicule des véhicules interactifs.",
-  "VehicleSystem:save": "Crée le fichier XML de sauvegarde des véhicules et y écrit tous ceux qui doivent l'être.",
-  "VehicleSystem:saveToXML": "Écrit dans le fichier les véhicules dont getNeedsSaving est vrai.",
-  "VehicleSystem:saveVehicleToXML": "Écrit un véhicule (nom de mod, nom de fichier réseau) puis délègue à vehicle:saveToXMLFile (donc aux spécialisations, dont Washable).",
-  "VehicleSystem:load": "Ouvre le XML de sauvegarde des véhicules et lance le chargement ; en cas d'absence, rappelle le callback avec une erreur.",
-  "VehicleSystem:loadFromXMLFile": "Planifie le chargement asynchrone de chaque véhicule d'un fichier XML (mise en file si un chargement est en cours).",
-  "VehicleSystem:loadVehicleFromXML": "Charge un véhicule : vérifie s'il est autorisé (propriété par défaut, compétitif, solo), retrouve l'élément de magasin, gère les emplacements disponibles (rembourse sinon) et lance VehicleLoadingData.",
-  "VehicleSystem:loadVehicleFinished": "À chaque fin de chargement : accumule les véhicules ; quand tous sont terminés, les ajoute à la physique, appelle le callback et passe à la file de chargements en attente.",
-  "VehicleSystem:updatePendingSavegameLoadings": "Lance le prochain chargement de sauvegarde en attente, le cas échéant.",
-  "VehicleSystem:onVehicleBuyEvent": "Après un achat : compte les véhicules motorisés et attachables de la ferme locale (hors big bags) pour débloquer des succès.",
-  "VehicleSystem:getVehicleByNodeId": "Retrouve le véhicule à partir d'un nœud physique et de son sous-nœud (gère les composés) via g_currentMission.nodeToObject ; nil si ce n'est pas un Vehicle.",
-  "VehicleSystem:consoleCommandShowVehicleDistance": "Commande console : active ou bascule l'affichage de la distance véhicule-caméra (g_showVehicleDistance).",
-  "VehicleSystem:consoleCommandReloadVehicle": "Commande console (serveur) : recharge le véhicule contrôlé ou ceux d'un rayon donné. Non relu en détail.",
-  "VehicleSystem:consoleCommandAddPallet": "Commande console (triche) : ajoute une palette d'un type de remplissage donné. Non relu en détail.",
-  "VehicleSystem:consoleCommandSetFuel": "Commande console (triche) : fixe le carburant du véhicule contrôlé. Non relu en détail.",
-  "VehicleSystem:consoleCommandSetMotorTemperature": "Commande console (triche) : fixe la température du moteur. Non relu en détail.",
-  "VehicleSystem:consoleCommandFillUnitAdd": "Commande console (triche) : ajoute du contenu à une unité de remplissage. Non relu en détail.",
-  "VehicleSystem:consoleCommandSetOperatingTime": "Commande console (triche) : fixe la durée de fonctionnement. Non relu en détail.",
-  "VehicleSystem:consoleCommandAddDirtAmount": "Commande console (triche, serveur) : ajoute une quantité de saleté à tous les véhicules de la chaîne du véhicule contrôlé via setDirtAmount. Utile pour tester la boue.",
-  "VehicleSystem:consoleCommandAddWearAmount": "Commande console (triche) : ajoute de l'usure. Non relu en détail.",
-  "VehicleSystem:consoleCommandAddWetnessAmount": "Commande console (triche, serveur) : ajoute une quantité d'humidité (addWetnessAmount) à tous les véhicules de la chaîne du véhicule contrôlé. Utile pour tester le rendu d'humidité sans pluie.",
-  "VehicleSystem:consoleCommandAddDamageAmount": "Commande console (triche) : ajoute des dégâts. Non relu en détail.",
-  "VehicleSystem:consoleCommandLoadAllVehicles": "Commande console (triche) : charge tous les véhicules du magasin pour test. Non relu en détail.",
-  "VehicleSystem:consoleCommandLoadAllVehiclesNext": "Passe au prochain véhicule du chargement de test (appelée depuis update). Non relu en détail.",
-  "VehicleSystem:consoleCommandVehicleRemoveAll": "Commande console (test) : supprime tous les véhicules. Non relu en détail.",
-  "VehicleSystem:consoleCommandVehicleToggleRandomFail": "Commande console (test) : active ou désactive l'échec aléatoire de chargement. Non relu en détail.",
-  "VehicleSystem:consoleCommandExportVehicleSets": "Commande console (test) : exporte des ensembles de véhicules. Non relu en détail."
+  "VehicleSystem.new": {
+   "en": "Creates the registry (tables vehicles, wetVehicles, enterables, interactiveVehicles, joints, pending loads), declares the console commands (some server-only or with g_addCheatCommands / g_addTestCommands) and subscribes to BuyVehicleEvent.",
+   "fr": "Crée le registre (tables vehicles, wetVehicles, enterables, interactiveVehicles, joints, chargements en attente), déclare les commandes console (certaines seulement serveur ou avec g_addCheatCommands / g_addTestCommands) et s'abonne à BuyVehicleEvent."
+  },
+  "VehicleSystem:delete": {
+   "en": "Cancels pending loads, deletes all vehicles, empties the tables, unsubscribes the messages and removes the console commands.",
+   "fr": "Annule les chargements en attente, supprime tous les véhicules, vide les tables, désabonne les messages et retire les commandes console."
+  },
+  "VehicleSystem:deleteAll": {
+   "en": "Deletes all registered vehicles and returns their count.",
+   "fr": "Supprime tous les véhicules enregistrés et renvoie leur nombre."
+  },
+  "VehicleSystem:update": {
+   "en": "Per frame. Optionally loads the next debug vehicle; on the server, applies the wetness logic described in the module: reading rain, time since last rain and temperature, wetting outdoor vehicles, drying vehicles under shelter or once the rain is over, with dt x effective time scale.",
+   "fr": "Par frame. Charge éventuellement le prochain véhicule de débogage ; côté serveur, applique la logique d'humidité décrite dans le module : lecture de la pluie, de la durée depuis la dernière pluie et de la température, mouillage des véhicules extérieurs, séchage des véhicules sous abri ou une fois la pluie finie, avec dt x échelle de temps effective."
+  },
+  "VehicleSystem:draw": {
+   "en": "Calls drawUIInfo for each enterable vehicle (interface information).",
+   "fr": "Appelle drawUIInfo pour chaque véhicule entrable (informations d'interface)."
+  },
+  "VehicleSystem:addVehicle": {
+   "en": "Registers a vehicle (checks the type and the uniqueness of the unique id, generating one if needed), adds it to wetVehicles if it is already wet and publishes VEHICLE_ADDED.",
+   "fr": "Enregistre un véhicule (vérifie le type et l'unicité de l'identifiant unique, en génère un au besoin), l'ajoute à wetVehicles s'il est déjà mouillé et publie VEHICLE_ADDED."
+  },
+  "VehicleSystem:removeVehicle": {
+   "en": "Removes a vehicle from the tables (including wetVehicles) and publishes VEHICLE_REMOVED.",
+   "fr": "Retire un véhicule des tables (dont wetVehicles) et publie VEHICLE_REMOVED."
+  },
+  "VehicleSystem:getVehicleByUniqueId": {
+   "en": "Returns the vehicle associated with a unique id.",
+   "fr": "Renvoie le véhicule associé à un identifiant unique."
+  },
+  "VehicleSystem:addPendingVehicleLoad": {
+   "en": "Records a vehicle load in progress.",
+   "fr": "Mémorise un chargement de véhicule en cours."
+  },
+  "VehicleSystem:removePendingVehicleLoad": {
+   "en": "Removes a finished vehicle load.",
+   "fr": "Retire un chargement de véhicule terminé."
+  },
+  "VehicleSystem:canStartMission": {
+   "en": "True if all vehicles are synchronised and no load is pending.",
+   "fr": "Vrai si tous les véhicules sont synchronisés et qu'aucun chargement n'est en attente."
+  },
+  "VehicleSystem:addEnterableVehicle": {
+   "en": "Adds a vehicle to the list of enterable vehicles.",
+   "fr": "Ajoute un véhicule à la liste des véhicules entrables."
+  },
+  "VehicleSystem:removeEnterableVehicle": {
+   "en": "Removes an enterable vehicle and readjusts the index of the last used vehicle (for the switch key).",
+   "fr": "Retire un véhicule entrable et recale l'indice du dernier véhicule utilisé (pour la touche de changement)."
+  },
+  "VehicleSystem:setEnteredVehicle": {
+   "en": "Records the index of the vehicle the player entered.",
+   "fr": "Mémorise l'indice du véhicule dans lequel le joueur est entré."
+  },
+  "VehicleSystem:getNextEnterableVehicle": {
+   "en": "Finds the next enterable and usable (tabbable) vehicle for a step (+1 or -1): the last used vehicle when the player is on foot with a positive step, the last in the list with a negative step.",
+   "fr": "Trouve le prochain véhicule entrable et utilisable (tabbable) selon un pas (+1 ou -1) : le dernier véhicule utilisé quand le joueur est à pied avec un pas positif, le dernier de la liste avec un pas négatif."
+  },
+  "VehicleSystem:registerInputAttacherJoint": {
+   "en": "Registers an attacher joint with its world position and returns the info structure.",
+   "fr": "Enregistre un joint d'attache avec sa position monde et renvoie la structure d'info."
+  },
+  "VehicleSystem:updateInputAttacherJoint": {
+   "en": "Updates the world position of a registered attacher joint.",
+   "fr": "Met à jour la position monde d'un joint d'attache enregistré."
+  },
+  "VehicleSystem:removeInputAttacherJoint": {
+   "en": "Removes a registered attacher joint.",
+   "fr": "Retire un joint d'attache enregistré."
+  },
+  "VehicleSystem:addInteractiveVehicle": {
+   "en": "Marks a vehicle as interactive.",
+   "fr": "Marque un véhicule comme interactif."
+  },
+  "VehicleSystem:removeInteractiveVehicle": {
+   "en": "Removes a vehicle from the interactive vehicles.",
+   "fr": "Retire un véhicule des véhicules interactifs."
+  },
+  "VehicleSystem:save": {
+   "en": "Creates the vehicles save XML file and writes into it all vehicles that must be saved.",
+   "fr": "Crée le fichier XML de sauvegarde des véhicules et y écrit tous ceux qui doivent l'être."
+  },
+  "VehicleSystem:saveToXML": {
+   "en": "Writes to the file the vehicles for which getNeedsSaving is true.",
+   "fr": "Écrit dans le fichier les véhicules dont getNeedsSaving est vrai."
+  },
+  "VehicleSystem:saveVehicleToXML": {
+   "en": "Writes a vehicle (mod name, network filename) then delegates to vehicle:saveToXMLFile (hence to the specializations, including Washable).",
+   "fr": "Écrit un véhicule (nom de mod, nom de fichier réseau) puis délègue à vehicle:saveToXMLFile (donc aux spécialisations, dont Washable)."
+  },
+  "VehicleSystem:load": {
+   "en": "Opens the vehicles save XML and starts loading; if it is missing, calls the callback again with an error.",
+   "fr": "Ouvre le XML de sauvegarde des véhicules et lance le chargement ; en cas d'absence, rappelle le callback avec une erreur."
+  },
+  "VehicleSystem:loadFromXMLFile": {
+   "en": "Schedules the asynchronous loading of each vehicle of an XML file (queued if a load is in progress).",
+   "fr": "Planifie le chargement asynchrone de chaque véhicule d'un fichier XML (mise en file si un chargement est en cours)."
+  },
+  "VehicleSystem:loadVehicleFromXML": {
+   "en": "Loads a vehicle: checks it is allowed (default ownership, competitive, solo), finds the store item, handles available slots (refunds otherwise) and starts VehicleLoadingData.",
+   "fr": "Charge un véhicule : vérifie s'il est autorisé (propriété par défaut, compétitif, solo), retrouve l'élément de magasin, gère les emplacements disponibles (rembourse sinon) et lance VehicleLoadingData."
+  },
+  "VehicleSystem:loadVehicleFinished": {
+   "en": "On each load end: accumulates the vehicles; when all are done, adds them to the physics, calls the callback and moves on to the queue of pending loads.",
+   "fr": "À chaque fin de chargement : accumule les véhicules ; quand tous sont terminés, les ajoute à la physique, appelle le callback et passe à la file de chargements en attente."
+  },
+  "VehicleSystem:updatePendingSavegameLoadings": {
+   "en": "Starts the next pending savegame load, if any.",
+   "fr": "Lance le prochain chargement de sauvegarde en attente, le cas échéant."
+  },
+  "VehicleSystem:onVehicleBuyEvent": {
+   "en": "After a purchase: counts the motorized and attachable vehicles of the local farm (excluding big bags) to unlock achievements.",
+   "fr": "Après un achat : compte les véhicules motorisés et attachables de la ferme locale (hors big bags) pour débloquer des succès."
+  },
+  "VehicleSystem:getVehicleByNodeId": {
+   "en": "Finds the vehicle from a physics node and its sub-node (handles compounds) via g_currentMission.nodeToObject; nil if it is not a Vehicle.",
+   "fr": "Retrouve le véhicule à partir d'un nœud physique et de son sous-nœud (gère les composés) via g_currentMission.nodeToObject ; nil si ce n'est pas un Vehicle."
+  },
+  "VehicleSystem:consoleCommandShowVehicleDistance": {
+   "en": "Console command: enables or toggles the display of the vehicle-camera distance (g_showVehicleDistance).",
+   "fr": "Commande console : active ou bascule l'affichage de la distance véhicule-caméra (g_showVehicleDistance)."
+  },
+  "VehicleSystem:consoleCommandReloadVehicle": {
+   "en": "Console command (server): reloads the controlled vehicle or those within a given radius. Not read in detail.",
+   "fr": "Commande console (serveur) : recharge le véhicule contrôlé ou ceux d'un rayon donné. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandAddPallet": {
+   "en": "Console command (cheat): adds a pallet of a given fill type. Not read in detail.",
+   "fr": "Commande console (triche) : ajoute une palette d'un type de remplissage donné. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandSetFuel": {
+   "en": "Console command (cheat): sets the fuel of the controlled vehicle. Not read in detail.",
+   "fr": "Commande console (triche) : fixe le carburant du véhicule contrôlé. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandSetMotorTemperature": {
+   "en": "Console command (cheat): sets the engine temperature. Not read in detail.",
+   "fr": "Commande console (triche) : fixe la température du moteur. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandFillUnitAdd": {
+   "en": "Console command (cheat): adds content to a fill unit. Not read in detail.",
+   "fr": "Commande console (triche) : ajoute du contenu à une unité de remplissage. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandSetOperatingTime": {
+   "en": "Console command (cheat): sets the operating time. Not read in detail.",
+   "fr": "Commande console (triche) : fixe la durée de fonctionnement. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandAddDirtAmount": {
+   "en": "Console command (cheat, server): adds an amount of dirt to all vehicles of the controlled vehicle's chain via setDirtAmount. Useful for testing mud.",
+   "fr": "Commande console (triche, serveur) : ajoute une quantité de saleté à tous les véhicules de la chaîne du véhicule contrôlé via setDirtAmount. Utile pour tester la boue."
+  },
+  "VehicleSystem:consoleCommandAddWearAmount": {
+   "en": "Console command (cheat): adds wear. Not read in detail.",
+   "fr": "Commande console (triche) : ajoute de l'usure. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandAddWetnessAmount": {
+   "en": "Console command (cheat, server): adds an amount of wetness (addWetnessAmount) to all vehicles of the controlled vehicle's chain. Useful for testing the wetness rendering without rain.",
+   "fr": "Commande console (triche, serveur) : ajoute une quantité d'humidité (addWetnessAmount) à tous les véhicules de la chaîne du véhicule contrôlé. Utile pour tester le rendu d'humidité sans pluie."
+  },
+  "VehicleSystem:consoleCommandAddDamageAmount": {
+   "en": "Console command (cheat): adds damage. Not read in detail.",
+   "fr": "Commande console (triche) : ajoute des dégâts. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandLoadAllVehicles": {
+   "en": "Console command (cheat): loads all store vehicles for testing. Not read in detail.",
+   "fr": "Commande console (triche) : charge tous les véhicules du magasin pour test. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandLoadAllVehiclesNext": {
+   "en": "Moves on to the next vehicle of the test load (called from update). Not read in detail.",
+   "fr": "Passe au prochain véhicule du chargement de test (appelée depuis update). Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandVehicleRemoveAll": {
+   "en": "Console command (test): removes all vehicles. Not read in detail.",
+   "fr": "Commande console (test) : supprime tous les véhicules. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandVehicleToggleRandomFail": {
+   "en": "Console command (test): enables or disables random load failure. Not read in detail.",
+   "fr": "Commande console (test) : active ou désactive l'échec aléatoire de chargement. Non relu en détail."
+  },
+  "VehicleSystem:consoleCommandExportVehicleSets": {
+   "en": "Console command (test): exports vehicle sets. Not read in detail.",
+   "fr": "Commande console (test) : exporte des ensembles de véhicules. Non relu en détail."
+  }
  }
 }

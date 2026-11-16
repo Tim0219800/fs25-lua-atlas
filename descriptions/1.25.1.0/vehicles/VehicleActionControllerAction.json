@@ -1,0 +1,113 @@
+{
+ "fichier": "vehicles/VehicleActionControllerAction.lua",
+ "module": {
+  "en": "One controlled action owned by a `VehicleActionController`: it wraps an input callback (called with a direction +1/-1), an optional finished-check function, optional availability, accessibility and auto-deactivate functions, icons, an AI event listener list and a flag for savegame persistence. It tracks `lastDirection` and `lastValidDirection`.",
+  "fr": "Une action contrôlée appartenant à un `VehicleActionController` : elle encapsule un rappel d'entrée (appelé avec une direction +1/-1), une fonction optionnelle de contrôle de fin, des fonctions optionnelles de disponibilité, d'accessibilité et de désactivation automatique, des icônes, une liste d'écouteurs d'événements IA et un indicateur de persistance en sauvegarde. Elle suit `lastDirection` et `lastValidDirection`."
+ },
+ "fonctions": {
+  "VehicleActionControllerAction.new": {
+   "en": "Creates an action for a parent controller with name, input action and priority. Defaults: direction -1, saved = false, reset on deactivation = true, empty identifier.",
+   "fr": "Crée une action pour un contrôleur parent avec nom, action d'entrée et priorité. Valeurs par défaut : direction -1, sauvegarde = faux, réinitialisation à la désactivation = vrai, identifiant vide."
+  },
+  "VehicleActionControllerAction:remove": {
+   "en": "Removes this action from its parent controller.",
+   "fr": "Retire cette action de son contrôleur parent."
+  },
+  "VehicleActionControllerAction:updateParent": {
+   "en": "Moves the action to another controller (removing it from the old one and adding it to the new one) when it differs from the current parent.",
+   "fr": "Déplace l'action vers un autre contrôleur (retrait de l'ancien, ajout au nouveau) s'il diffère du parent actuel."
+  },
+  "VehicleActionControllerAction:setCallback": {
+   "en": "Sets the target and the callbacks for forward and reverse input, and takes the target's `configFileName` as the action identifier (empty string if absent). Only `inputCallback` is invoked by `doAction`.",
+   "fr": "Définit la cible et les rappels d'entrée avant et arrière, et prend le `configFileName` de la cible comme identifiant de l'action (chaîne vide s'il manque). Seul `inputCallback` est appelé par `doAction`."
+  },
+  "VehicleActionControllerAction:setFinishedFunctions": {
+   "en": "Sets the function used to know when the action is done, and the values it must return for the positive and the reverse direction (`finishedResult`, `finishedResultRev`).",
+   "fr": "Définit la fonction servant à savoir si l'action est terminée, et les valeurs qu'elle doit renvoyer pour la direction positive et la direction inverse (`finishedResult`, `finishedResultRev`)."
+  },
+  "VehicleActionControllerAction:setDeactivateFunction": {
+   "en": "Sets a function that, while the action is on and returns true (or false if inverted), makes the parent start a new sequence in `update`.",
+   "fr": "Définit une fonction qui, tant que l'action est active et renvoie vrai (ou faux si inversée), fait lancer une nouvelle séquence au parent dans `update`."
+  },
+  "VehicleActionControllerAction:setIsAvailableFunction": {
+   "en": "Sets the function that tells whether the action is currently available.",
+   "fr": "Définit la fonction indiquant si l'action est actuellement disponible."
+  },
+  "VehicleActionControllerAction:setIsAccessibleFunction": {
+   "en": "Stores the accessibility function. Note: no method in this dump reads it, although the controller calls `isAccessible()` on actions (UNVERIFIED where it is defined).",
+   "fr": "Enregistre la fonction d'accessibilité. À noter : aucune méthode de ce dump ne la lit, alors que le contrôleur appelle `isAccessible()` sur les actions (NON VÉRIFIÉ : définition ailleurs)."
+  },
+  "VehicleActionControllerAction:setActionIcons": {
+   "en": "Sets the positive and negative icons and whether the colour changes.",
+   "fr": "Définit les icônes positive et négative et si la couleur change."
+  },
+  "VehicleActionControllerAction:setResetOnDeactivation": {
+   "en": "Sets whether the action is toggled back when removed from the controller.",
+   "fr": "Définit si l'action est rebasculée lorsqu'elle est retirée du contrôleur."
+  },
+  "VehicleActionControllerAction:setIsSaved": {
+   "en": "Sets whether this action is written to the savegame.",
+   "fr": "Définit si cette action est écrite dans la sauvegarde."
+  },
+  "VehicleActionControllerAction:getIsSaved": {
+   "en": "Returns whether this action is saved.",
+   "fr": "Renvoie si cette action est sauvegardée."
+  },
+  "VehicleActionControllerAction:isAvailable": {
+   "en": "Calls the availability function if set, otherwise returns true.",
+   "fr": "Appelle la fonction de disponibilité si elle est définie, sinon renvoie vrai."
+  },
+  "VehicleActionControllerAction:getControlledActionIcons": {
+   "en": "Returns positive icon, negative icon and the colour-change flag.",
+   "fr": "Renvoie l'icône positive, l'icône négative et l'indicateur de changement de couleur."
+  },
+  "VehicleActionControllerAction:getLastDirection": {
+   "en": "Returns the last requested direction (+1 or -1).",
+   "fr": "Renvoie la dernière direction demandée (+1 ou -1)."
+  },
+  "VehicleActionControllerAction:getDoResetOnDeactivation": {
+   "en": "Returns whether the action is toggled back on removal.",
+   "fr": "Renvoie si l'action est rebasculée lors du retrait."
+  },
+  "VehicleActionControllerAction:addAIEventListener": {
+   "en": "Registers an AI event name to react to, with the direction to apply and a flag to keep forcing it until it succeeds; also records the source vehicle.",
+   "fr": "Enregistre un nom d'événement IA auquel réagir, avec la direction à appliquer et un indicateur pour le forcer jusqu'à réussite ; mémorise aussi le véhicule source."
+  },
+  "VehicleActionControllerAction:registerActionEvents": {
+   "en": "Does nothing: the body is only commented-out code, so no per-action input event is registered.",
+   "fr": "Ne fait rien : le corps ne contient que du code commenté, aucun événement d'entrée par action n'est enregistré."
+  },
+  "VehicleActionControllerAction:actionEvent": {
+   "en": "Input callback that runs `doAction()` with the opposite of the last direction.",
+   "fr": "Rappel d'entrée qui exécute `doAction()` avec l'opposé de la dernière direction."
+  },
+  "VehicleActionControllerAction:doAction": {
+   "en": "Sets the direction (default: opposite of the last one) and calls the input callback with target, direction and AI flag. Records `lastValidDirection` on success and returns the callback's result.",
+   "fr": "Définit la direction (par défaut l'opposé de la dernière) et appelle le rappel d'entrée avec la cible, la direction et l'indicateur IA. Enregistre `lastValidDirection` en cas de succès et renvoie le résultat du rappel."
+  },
+  "VehicleActionControllerAction:getIsFinished": {
+   "en": "Compares the finished function's result to the expected value for the direction; true when no finished function is set.",
+   "fr": "Compare le résultat de la fonction de fin à la valeur attendue pour la direction ; vrai si aucune fonction de fin n'est définie."
+  },
+  "VehicleActionControllerAction:getSourceVehicle": {
+   "en": "Returns the vehicle set by `addAIEventListener`, or nil.",
+   "fr": "Renvoie le véhicule défini par `addAIEventListener`, ou nil."
+  },
+  "VehicleActionControllerAction:onAIEvent": {
+   "en": "For each listener matching the event name, runs the action with its direction. If it fails and forcing is requested, remembers the direction to retry; otherwise clears a contrary forced direction and stops the parent's sequence.",
+   "fr": "Pour chaque écouteur correspondant au nom d'événement, exécute l'action avec sa direction. En cas d'échec avec forçage demandé, mémorise la direction pour réessayer ; sinon efface une direction forcée contraire et arrête la séquence du parent."
+  },
+  "VehicleActionControllerAction:update": {
+   "en": "While the action is on and its deactivate function returns the triggering value, asks the parent to start a sequence, unless one is running or a forced AI direction is pending.",
+   "fr": "Tant que l'action est active et que sa fonction de désactivation renvoie la valeur déclenchante, demande au parent de lancer une séquence, sauf si une séquence est en cours ou si une direction IA forcée est en attente."
+  },
+  "VehicleActionControllerAction:updateForAI": {
+   "en": "Retries the forced AI direction; on success clears it and stops the parent's sequence.",
+   "fr": "Réessaie la direction IA forcée ; en cas de succès l'efface et arrête la séquence du parent."
+  },
+  "VehicleActionControllerAction:getDebugText": {
+   "en": "Builds a debug line with priority, vehicle name, action name and current/target finished values. Calls the finished function and `getName()` on the callback target.",
+   "fr": "Construit une ligne de débogage avec priorité, nom du véhicule, nom de l'action et valeurs de fin courante/cible. Appelle la fonction de fin et `getName()` sur la cible du rappel."
+  }
+ }
+}

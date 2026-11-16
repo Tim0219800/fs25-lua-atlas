@@ -1,0 +1,117 @@
+{
+ "fichier": "vehicles/specializations/WorkArea.lua",
+ "module": {
+  "en": "Core specialization that gives implements work areas (start, width and height nodes forming a parallelogram) and runs their processing function every update tick. It requires GroundReference and supports a `workArea` configuration. Each tick it raises `onStartWorkAreaProcessing` and `onEndWorkAreaProcessing`, checks activity (ground contact, direction, lowered state) and farmland access, calls optional pre/process/post functions named in the XML, and adds worked hectares and time to farm stats. Registers the default and auxiliary area types. `getMissionByWorkArea` is registered as a vehicle function but its body is not in the dump (UNVERIFIED).",
+  "fr": "Spécialisation centrale qui donne aux outils des zones de travail (nœuds de départ, de largeur et de hauteur formant un parallélogramme) et exécute leur fonction de traitement à chaque tick de mise à jour. Elle exige GroundReference et gère une configuration `workArea`. À chaque tick elle déclenche `onStartWorkAreaProcessing` et `onEndWorkAreaProcessing`, vérifie l'activité (contact au sol, sens, état abaissé) et l'accès aux parcelles, appelle les fonctions de pré/traitement/post nommées dans le XML et ajoute hectares travaillés et temps aux statistiques de la ferme. Elle enregistre les types de zone default et auxiliary. `getMissionByWorkArea` est enregistrée comme fonction du véhicule mais son corps n'est pas dans le dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "WorkArea.initSpecialization": {
+   "en": "Registers the work area types `default` and `auxiliary`, adds the `workArea` configuration type, and declares the work area XML paths (base and per configuration) plus `#workAreaIndex` for speed rotating parts.",
+   "fr": "Enregistre les types de zone `default` et `auxiliary`, ajoute le type de configuration `workArea` et déclare les chemins XML de zone (de base et par configuration) ainsi que `#workAreaIndex` pour les pièces rotatives à vitesse."
+  },
+  "WorkArea.registerWorkAreaXMLPaths": {
+   "en": "Registers the XML attributes of one work area under a base path: type, ground contact, backwards disabling, owned farmland requirement, function names, the three area nodes, ground reference node index and lowered-only flag.",
+   "fr": "Enregistre les attributs XML d'une zone de travail sous un chemin de base : type, contact au sol, désactivation en marche arrière, obligation de parcelle possédée, noms de fonctions, les trois nœuds de zone, indice du nœud de référence au sol et option abaissé seulement."
+  },
+  "WorkArea.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the GroundReference specialization.",
+   "fr": "Renvoie true seulement si le type de véhicule possède la spécialisation GroundReference."
+  },
+  "WorkArea.registerEvents": {
+   "en": "Registers the vehicle events `onStartWorkAreaProcessing` and `onEndWorkAreaProcessing`.",
+   "fr": "Enregistre les événements de véhicule `onStartWorkAreaProcessing` et `onEndWorkAreaProcessing`."
+  },
+  "WorkArea.registerFunctions": {
+   "en": "Registers the work area API on the vehicle type: loading, lookup, activity, width, processing state, typed areas, farmland access, last worked area, mission lookup and AI width.",
+   "fr": "Enregistre l'API des zones de travail sur le type de véhicule : chargement, accès par indice, activité, largeur, état de traitement, zones par type, accès aux parcelles, dernière surface travaillée, mission et largeur IA."
+  },
+  "WorkArea.registerOverwrittenFunctions": {
+   "en": "Overrides `loadSpeedRotatingPartFromXML`, `getIsSpeedRotatingPartActive`, `checkMovingPartDirtyUpdateNode` and `getImplementAllowAutomaticSteering`.",
+   "fr": "Surcharge `loadSpeedRotatingPartFromXML`, `getIsSpeedRotatingPartActive`, `checkMovingPartDirtyUpdateNode` et `getImplementAllowAutomaticSteering`."
+  },
+  "WorkArea.registerEventListeners": {
+   "en": "Subscribes to onLoad and onUpdateTick.",
+   "fr": "S'abonne à onLoad et onUpdateTick."
+  },
+  "WorkArea:onLoad": {
+   "en": "Selects the XML section of the chosen `workArea` configuration (falling back to `vehicle.workAreas`), loads every valid work area, computes widths and indexes areas by type. Initializes farmland warning state and texts.",
+   "fr": "Choisit la section XML de la configuration `workArea` retenue (repli sur `vehicle.workAreas`), charge chaque zone valide, calcule les largeurs et indexe les zones par type. Initialise l'état d'avertissement de parcelle et les textes."
+  },
+  "WorkArea:getIsAccessibleAtWorldPosition": {
+   "en": "Returns three values: whether the farm may work at x, z, the farmland owner id, and whether the land is buyable. Mission vehicles defer to `g_missionManager`; unowned or non-buyable land is refused.",
+   "fr": "Renvoie trois valeurs : si la ferme peut travailler en x, z, l'identifiant du propriétaire de la parcelle, et si la terre est achetable. Les véhicules de mission s'en remettent à `g_missionManager` ; une terre sans propriétaire ou non achetable est refusée."
+  },
+  "WorkArea:updateLastWorkedArea": {
+   "en": "Keeps the largest worked area value reported during the current tick, later converted to hectares for stats.",
+   "fr": "Conserve la plus grande surface travaillée signalée pendant le tick courant, convertie ensuite en hectares pour les statistiques."
+  },
+  "WorkArea:getLastTouchedFarmlandFarmId": {
+   "en": "Returns the farm id of the last farmland where an owned work area was accessible, or 0 if none.",
+   "fr": "Renvoie l'identifiant de la ferme de la dernière parcelle où une zone de travail était accessible, ou 0 sinon."
+  },
+  "WorkArea:onUpdateTick": {
+   "en": "Per tick: raises the start event, then for each non-auxiliary area checks activity and farmland access (testing start, width, height and the fourth corner), runs pre, main and post functions, and stores worked hectares and processing time. Shows a blinking warning if no area is on accessible buyable land, raises the end event, then adds hectares and minutes to farm stats.",
+   "fr": "À chaque tick : déclenche l'événement de début, puis pour chaque zone non auxiliaire vérifie l'activité et l'accès à la parcelle (départ, largeur, hauteur et quatrième coin), exécute les fonctions de pré, principale et post, et mémorise hectares travaillés et date de traitement. Affiche un avertissement clignotant si aucune zone n'est sur une terre accessible et achetable, déclenche l'événement de fin, puis ajoute hectares et minutes aux statistiques de la ferme."
+  },
+  "WorkArea:loadWorkAreaFromXML": {
+   "en": "Fills a work area table from XML and returns true on success. Validates the three nodes (distinct positions), type, ground reference (when ground contact is required), mandatory `functionName` that must exist on the vehicle, and optional pre/post functions. Note: the `workArea.type == nil` test can never trigger because of the `or WorkAreaType.DEFAULT` fallback just above it.",
+   "fr": "Remplit une table de zone de travail depuis le XML et renvoie true en cas de succès. Valide les trois nœuds (positions distinctes), le type, la référence au sol (si le contact est requis), le `functionName` obligatoire qui doit exister sur le véhicule, et les fonctions pré/post optionnelles. À noter : le test `workArea.type == nil` ne peut jamais se déclencher à cause du repli `or WorkAreaType.DEFAULT` juste au-dessus."
+  },
+  "WorkArea:getWorkAreaByIndex": {
+   "en": "Returns the work area table at the given 1-based index, or nil.",
+   "fr": "Renvoie la table de zone de travail à l'indice donné (à partir de 1), ou nil."
+  },
+  "WorkArea:getIsWorkAreaActive": {
+   "en": "True if the area passes its conditions: ground reference node active (if required), not moving backwards (if `disableBackwards`), and implement lowered (if `onlyActiveWhenLowered`).",
+   "fr": "Vrai si la zone remplit ses conditions : nœud de référence au sol actif (si requis), pas de marche arrière (si `disableBackwards`) et outil abaissé (si `onlyActiveWhenLowered`)."
+  },
+  "WorkArea:updateWorkAreaWidth": {
+   "en": "Recomputes the area's `workWidth` (meters) as the lateral spread of the start, width and height nodes measured from the first component. Does nothing if the index is invalid.",
+   "fr": "Recalcule la `workWidth` de la zone (mètres) comme l'étalement latéral des nœuds de départ, de largeur et de hauteur mesuré depuis le premier composant. Sans effet si l'indice est invalide."
+  },
+  "WorkArea:getWorkAreaWidth": {
+   "en": "Returns the last computed width of the work area at the given index (no nil check on the index).",
+   "fr": "Renvoie la dernière largeur calculée de la zone de travail à l'indice donné (sans vérification de nil sur l'indice)."
+  },
+  "WorkArea:getIsWorkAreaProcessing": {
+   "en": "True if the area produced a result within the last 200 ms of mission time.",
+   "fr": "Vrai si la zone a produit un résultat dans les 200 dernières ms de temps de mission."
+  },
+  "WorkArea:getTypedNetworkAreas": {
+   "en": "For the active areas of a type, returns a list of {x, z, x1, z1, x2, z2} corner coordinates to send over the network, a flag telling whether any area was refused for access, and the summed area size. When `needsFieldProperty` is set, checks the local farm's land access.",
+   "fr": "Pour les zones actives d'un type, renvoie une liste de coordonnées {x, z, x1, z1, x2, z2} à envoyer sur le réseau, un indicateur signalant si une zone a été refusée faute d'accès, et la surface cumulée. Si `needsFieldProperty` est défini, vérifie l'accès du local à la terre."
+  },
+  "WorkArea:getTypedWorkAreas": {
+   "en": "Returns the table of work areas of a given type, or an empty table.",
+   "fr": "Renvoie la table des zones de travail d'un type donné, ou une table vide."
+  },
+  "WorkArea:getIsTypedWorkAreaActive": {
+   "en": "Returns whether at least one area of the type is active, plus the list of areas of that type.",
+   "fr": "Indique si au moins une zone du type est active, et renvoie aussi la liste des zones de ce type."
+  },
+  "WorkArea:getAIWorkAreaWidth": {
+   "en": "Returns the largest `workWidth` among areas whose type is flagged as an AI area by the work area type manager (0 if none).",
+   "fr": "Renvoie la plus grande `workWidth` parmi les zones dont le type est marqué zone IA par le gestionnaire de types (0 s'il n'y en a pas)."
+  },
+  "WorkArea:getIsFarmlandNotOwnedWarningShown": {
+   "en": "Returns whether the not-owned-farmland warning was raised during the last tick.",
+   "fr": "Indique si l'avertissement de parcelle non possédée a été déclenché au dernier tick."
+  },
+  "WorkArea:loadSpeedRotatingPartFromXML": {
+   "en": "Extends the parent loader: after it succeeds, also reads `#workAreaIndex` into the speed rotating part. Returns false if the parent fails.",
+   "fr": "Étend le chargeur parent : après son succès, lit aussi `#workAreaIndex` dans la pièce rotative. Renvoie false si le parent échoue."
+  },
+  "WorkArea:getIsSpeedRotatingPartActive": {
+   "en": "If the part is tied to a work area, it is active only while that area is processing; an invalid index logs a warning and returns true. Otherwise defers to the parent. Note: the warning prints the index after it was set to nil.",
+   "fr": "Si la pièce est liée à une zone, elle n'est active que pendant le traitement de cette zone ; un indice invalide journalise un avertissement et renvoie true. Sinon s'en remet au parent. À noter : l'avertissement affiche l'indice après l'avoir mis à nil."
+  },
+  "WorkArea:checkMovingPartDirtyUpdateNode": {
+   "en": "Calls the parent check, then logs an XML error if a work area node or ground reference node is under a moving part with a limited update distance.",
+   "fr": "Appelle la vérification parente, puis journalise une erreur XML si un nœud de zone ou de référence au sol se trouve sous une pièce mobile à distance de mise à jour limitée."
+  },
+  "WorkArea:getImplementAllowAutomaticSteering": {
+   "en": "Returns true if any work area has a type flagged for steering assist; otherwise defers to the parent.",
+   "fr": "Renvoie true si une zone de travail a un type marqué pour l'aide à la conduite ; sinon s'en remet au parent."
+  }
+ }
+}

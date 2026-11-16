@@ -1,0 +1,25 @@
+{
+ "fichier": "vehicles/configurations/data/VehicleConfigurationDataObjectChange.lua",
+ "module": {
+  "en": "Configuration data module that adds ObjectChangeUtil object changes to every configuration, applied either at load or after post-load depending on the postLoadObjectChange flag.",
+  "fr": "Module de données de configuration qui ajoute des changements d'objets ObjectChangeUtil à chaque configuration, appliqués au chargement ou après le post-chargement selon l'indicateur postLoadObjectChange."
+ },
+ "fonctions": {
+  "VehicleConfigurationDataObjectChange.registerXMLPaths": {
+   "en": "Static. Registers the #postLoadObjectChange attribute and the object change XML paths for the configuration.",
+   "fr": "Statique. Enregistre l'attribut #postLoadObjectChange et les chemins XML des changements d'objets pour la configuration."
+  },
+  "VehicleConfigurationDataObjectChange.loadConfigItem": {
+   "en": "Reads postLoadObjectChange (default false) from the base key into the config item.",
+   "fr": "Lit postLoadObjectChange (false par défaut) depuis la clé de base dans l'entrée de configuration."
+  },
+  "VehicleConfigurationDataObjectChange.onLoad": {
+   "en": "When the item is not flagged post-load, applies the object changes of the chosen configuration to the vehicle components during load.",
+   "fr": "Si l'entrée n'est pas marquée post-chargement, applique aux composants du véhicule les changements d'objets de la configuration choisie pendant le chargement."
+  },
+  "VehicleConfigurationDataObjectChange.onPostLoad": {
+   "en": "When the item is flagged post-load, applies the object changes at the post-load stage instead.",
+   "fr": "Si l'entrée est marquée post-chargement, applique plutôt les changements d'objets à l'étape de post-chargement."
+  }
+ }
+}

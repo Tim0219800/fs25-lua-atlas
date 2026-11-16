@@ -1,66 +1,249 @@
 {
  "fichier": "vehicles/specializations/Plow.lua",
- "module": "Spécialisation des charrues (réversibles ou non, repliables). AUCUN effet, particule ni animationNode d'effet : la seule animation gérée est la rotation de la charrue (turnAnimation) et les pièces tournantes (speedRotatingParts) ; le son de travail et de retournement est géré côté client. La terre soulevée par une charrue vient de WorkParticles (WorkParticles.lua:238 : actif si getDoGroundManipulation() et sur champ ; Plow ne surcharge pas getDoGroundManipulation, donc valeur par défaut vrai, WorkParticles.lua:311, indépendante de l'état de travail de ce script). TRAVAIL : processPlowArea (zone PLOW) efface les traces de pneus (aussi sur client lointain), puis, sauf client plus loin que Plow.CLIENT_DM_UPDATE_RADIUS (constante non définie ici : NON VÉRIFIÉ), appelle FSDensityMapUtil.updatePlowArea (avec angle, limitToField, limitFruitDestructionToField) et updateVineCultivatorArea, mais seulement si self.tailwaterDepth < 0.1 (pas de labour sous plus de 0.1 de profondeur d'eau, unité non précisée dans ce fichier) ; isWorking = vitesse > 0.5, même si rien n'est labouré. Les corps FSDensityMapUtil sont absents du dump : effet exact sur le terrain NON VÉRIFIÉ. CONDITIONS de zone : inactive pendant 2000 ms après l'attelage, et, par défaut, si l'outil n'est pas abaissé (onlyActiveWhenLowered). L'allumage n'existe pas pour une charrue. LIMITE AU CHAMP : l'option limitToField (basculable par action IMPLEMENT_EXTRA3, synchronisée par PlowLimitToFieldEvent) est forcée à vrai sans la permission createFields ou sur les plateformes qui interdisent la création de champs ; remise à vrai au dételage. ROTATION : setRotationMax/setRotationCenter pilotent l'animation et envoient PlowRotationEvent / PlowRotationCenterEvent ; l'état (rotationMax, temps d'animation) est sauvegardé (saveToXMLFile) et envoyé au flux initial. La rotation est refusée si le pliage, la hauteur, l'alimentation (getIsPowered) ou l'état de levage ne le permettent pas ; les tournages IA se font en bout de ligne (onAIImplement*). MÉTÉO/HUMIDITÉ : aucune lecture. RÉSEAU : seulement flux initial (rotation) et événements de rotation/limite ; aucun effet synchronisé. dt : non utilisé hors signature (statistiques de temps : dt/60000 min, plowedTime). Statistiques serveur : plowedHectares, plowedTime. POINTS D'EXTENSION : fonctions setRotationMax, setRotationCenter, setPlowLimitToField, getIsPlowRotationAllowed, getCanTogglePlowRotation, getPlowLimitToField, getPlowForceLimitToField, setPlowAIRequirements, processPlowArea ; nombreuses surcharges (pliage, détachement, abaissement, IA, pièces tournantes, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML type PLOW, getIsWorkAreaActive). Vitesse limite par défaut : 15. Initialisation et enregistrement XML (initSpecialization, registerXMLPaths) non relus clé par clé.",
+ "module": {
+  "en": "Specialization for plows (reversible or not, foldable). NO effect, particle or effect animationNode: the only animation handled is the plow's rotation (turnAnimation) and the rotating parts (speedRotatingParts); the work and turning sound is handled on the client. The soil thrown up by a plow comes from WorkParticles (WorkParticles.lua:238: active if getDoGroundManipulation() and on a field; Plow does not override getDoGroundManipulation, so the default is true, WorkParticles.lua:311, independent of the work state of this script). WORK: processPlowArea (PLOW area) erases tire tracks (also on a distant client), then, except for a client farther than Plow.CLIENT_DM_UPDATE_RADIUS (constant not defined here: UNVERIFIED), calls FSDensityMapUtil.updatePlowArea (with angle, limitToField, limitFruitDestructionToField) and updateVineCultivatorArea, but only if self.tailwaterDepth < 0.1 (no plowing under more than 0.1 of water depth, unit not given in this file); isWorking = speed > 0.5, even if nothing is plowed. The FSDensityMapUtil bodies are absent from the dump: exact effect on the terrain UNVERIFIED. AREA CONDITIONS: inactive for 2000 ms after attaching, and, by default, if the implement is not lowered (onlyActiveWhenLowered). There is no switching on for a plow. FIELD LIMIT: the limitToField option (toggled by the IMPLEMENT_EXTRA3 action, synchronized by PlowLimitToFieldEvent) is forced to true without the createFields permission or on platforms that forbid field creation; reset to true on detaching. ROTATION: setRotationMax/setRotationCenter drive the animation and send PlowRotationEvent / PlowRotationCenterEvent; the state (rotationMax, animation time) is saved (saveToXMLFile) and sent in the initial stream. Rotation is refused if folding, height, power (getIsPowered) or the lifting state do not allow it; AI turns happen at the end of the row (onAIImplement*). WEATHER/MOISTURE: no reading. NETWORK: only the initial stream (rotation) and the rotation/limit events; no synchronized effect. dt: unused except in the signature (time statistics: dt/60000 min, plowedTime). Server statistics: plowedHectares, plowedTime. EXTENSION POINTS: functions setRotationMax, setRotationCenter, setPlowLimitToField, getIsPlowRotationAllowed, getCanTogglePlowRotation, getPlowLimitToField, getPlowForceLimitToField, setPlowAIRequirements, processPlowArea; many overrides (folding, detaching, lowering, AI, rotating parts, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML PLOW type, getIsWorkAreaActive). Default speed limit: 15. Initialization and XML registration (initSpecialization, registerXMLPaths) not reread key by key.",
+  "fr": "Spécialisation des charrues (réversibles ou non, repliables). AUCUN effet, particule ni animationNode d'effet : la seule animation gérée est la rotation de la charrue (turnAnimation) et les pièces tournantes (speedRotatingParts) ; le son de travail et de retournement est géré côté client. La terre soulevée par une charrue vient de WorkParticles (WorkParticles.lua:238 : actif si getDoGroundManipulation() et sur champ ; Plow ne surcharge pas getDoGroundManipulation, donc valeur par défaut vrai, WorkParticles.lua:311, indépendante de l'état de travail de ce script). TRAVAIL : processPlowArea (zone PLOW) efface les traces de pneus (aussi sur client lointain), puis, sauf client plus loin que Plow.CLIENT_DM_UPDATE_RADIUS (constante non définie ici : NON VÉRIFIÉ), appelle FSDensityMapUtil.updatePlowArea (avec angle, limitToField, limitFruitDestructionToField) et updateVineCultivatorArea, mais seulement si self.tailwaterDepth < 0.1 (pas de labour sous plus de 0.1 de profondeur d'eau, unité non précisée dans ce fichier) ; isWorking = vitesse > 0.5, même si rien n'est labouré. Les corps FSDensityMapUtil sont absents du dump : effet exact sur le terrain NON VÉRIFIÉ. CONDITIONS de zone : inactive pendant 2000 ms après l'attelage, et, par défaut, si l'outil n'est pas abaissé (onlyActiveWhenLowered). L'allumage n'existe pas pour une charrue. LIMITE AU CHAMP : l'option limitToField (basculable par action IMPLEMENT_EXTRA3, synchronisée par PlowLimitToFieldEvent) est forcée à vrai sans la permission createFields ou sur les plateformes qui interdisent la création de champs ; remise à vrai au dételage. ROTATION : setRotationMax/setRotationCenter pilotent l'animation et envoient PlowRotationEvent / PlowRotationCenterEvent ; l'état (rotationMax, temps d'animation) est sauvegardé (saveToXMLFile) et envoyé au flux initial. La rotation est refusée si le pliage, la hauteur, l'alimentation (getIsPowered) ou l'état de levage ne le permettent pas ; les tournages IA se font en bout de ligne (onAIImplement*). MÉTÉO/HUMIDITÉ : aucune lecture. RÉSEAU : seulement flux initial (rotation) et événements de rotation/limite ; aucun effet synchronisé. dt : non utilisé hors signature (statistiques de temps : dt/60000 min, plowedTime). Statistiques serveur : plowedHectares, plowedTime. POINTS D'EXTENSION : fonctions setRotationMax, setRotationCenter, setPlowLimitToField, getIsPlowRotationAllowed, getCanTogglePlowRotation, getPlowLimitToField, getPlowForceLimitToField, setPlowAIRequirements, processPlowArea ; nombreuses surcharges (pliage, détachement, abaissement, IA, pièces tournantes, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML type PLOW, getIsWorkAreaActive). Vitesse limite par défaut : 15. Initialisation et enregistrement XML (initSpecialization, registerXMLPaths) non relus clé par clé."
+ },
  "fonctions": {
-  "Plow.initSpecialization": "Déclare le type de zone plow, la configuration de charrue et le schéma XML. Non relu clé par clé.",
-  "Plow.registerXMLPaths": "Enregistre les clés XML de vehicle.plow : rotationPart (animation, limites de pliage/détachement), directionNode, onlyActiveWhenLowered, paramètres IA, sons. Non relu clé par clé.",
-  "Plow.prerequisitesPresent": "Exige la spécialisation WorkArea.",
-  "Plow.registerFunctions": "Enregistre les fonctions de rotation, de limite au champ, de besoins IA et processPlowArea.",
-  "Plow.registerOverwrittenFunctions": "Surcharge pliage, détachement, abaissement, IA, pièces tournantes, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML, getIsWorkAreaActive, doCheckSpeedLimit et getCanBeSelected (liste non relue ligne à ligne).",
-  "Plow.registerEventListeners": "S'abonne notamment à onLoad, onPostLoad, onDelete, flux initial, onUpdate, onRegisterActionEvents, aux événements de traitement de zone, onPostAttach, onPreDetach, onDeactivate, aux événements IA, d'animation, de pliage et onRootVehicleChanged.",
-  "Plow:onLoad": "Lit la configuration de charrue : parties tournantes, limites d'animation, noeud de direction, paramètres IA, textes, sons ; initialise rotationMax, limitToField, délai d'activation et les paramètres de passe (lecture détaillée non relue).",
-  "Plow:onPostLoad": "Restaure depuis la sauvegarde l'orientation de la charrue (rotationMax, temps d'animation) si la rotation est permise.",
-  "Plow:onDelete": "Libère les sons de travail et de retournement.",
-  "Plow:saveToXMLFile": "Sauvegarde rotationMax et le temps d'animation de rotation.",
-  "Plow:onReadStream": "Lit orientation et temps d'animation envoyés à la connexion et les applique.",
-  "Plow:onWriteStream": "Écrit l'orientation et le temps d'animation.",
-  "Plow:onUpdate": "Client : met à jour le texte/l'activation des actions de limite au champ (selon permission) et de rotation (selon getCanTogglePlowRotation). Aucun effet visuel.",
-  "Plow:processPlowArea": "Efface les traces de pneus, laboure la zone dans la carte de densité (hors client lointain et si l'eau est assez basse), cumule les surfaces et met isWorking (vitesse > 0.5). Renvoie surface modifiée et totale.",
-  "Plow:setRotationMax": "Fixe le côté de la charrue, envoie PlowRotationEvent et lance l'animation de rotation (ou la place directement à un temps donné).",
-  "Plow:setRotationCenter": "Amène l'animation vers la position centrale IA et envoie PlowRotationCenterEvent.",
-  "Plow:setPlowLimitToField": "Change l'option limitToField, la diffuse (serveur : à tous ; client : au serveur) et met à jour le texte de l'action.",
-  "Plow:getIsPlowRotationAllowed": "Vrai si l'état de pliage permet la rotation (limites rotationFoldMin/Max).",
-  "Plow:getCanTogglePlowRotation": "Vrai si la rotation est permise par le pliage, si l'outil n'est pas abaissé quand rotationAllowedIfLowered est faux, et si le véhicule est alimenté (getIsPowered).",
-  "Plow:getPlowLimitToField": "Renvoie l'option limitToField.",
-  "Plow:getPlowForceLimitToField": "Vrai si la limite est imposée (forceLimitToField ou plateforme sans création de champs).",
-  "Plow:setPlowAIRequirements": "Définit les types de sol exigés par l'IA (avec exclusions éventuelles) et active le décalage latéral variable.",
-  "Plow:getIsFoldAllowed": "Interdit le pliage si la charrue est retournée dans une position non permise ou abaissée selon la configuration.",
-  "Plow:getIsFoldMiddleAllowed": "Idem pour la position de pliage intermédiaire.",
-  "Plow:getDirtMultiplier": "Ajoute la salissure de travail pondérée vitesse/limite quand isWorking.",
-  "Plow:getWearMultiplier": "Ajoute l'usure de travail pondérée vitesse/limite quand isWorking.",
-  "Plow:loadSpeedRotatingPartFromXML": "Lit les options de pièces tournantes liées au retournement (disableOnTurn, turnAnimLimit, turnAnimLimitSide, invertDirectionOnRotation).",
-  "Plow:getIsSpeedRotatingPartActive": "Désactive une pièce tournante pendant le retournement selon le temps d'animation et ses limites.",
-  "Plow:getSpeedRotatingPartDirection": "Inverse le sens de rotation d'une pièce quand la charrue est retournée (temps d'animation > 0.5).",
-  "Plow:doCheckSpeedLimit": "Applique la limite de vitesse si onlyActiveWhenLowered et la chaîne d'outils est abaissée.",
-  "Plow:loadWorkAreaFromXML": "Force le type de zone PLOW si DEFAULT.",
-  "Plow.getDefaultSpeedLimit": "Limite de vitesse par défaut : 15.",
-  "Plow:getIsWorkAreaActive": "Pour PLOW : inactive pendant le délai post-attelage et, si exigé, tant que l'outil n'est pas abaissé.",
-  "Plow:getCanAIImplementContinueWork": "L'IA ne continue pas pendant que l'animation de rotation joue (sauf paramètre stopDuringTurn).",
-  "Plow:getAIInvertMarkersOnTurn": "Indique si les marqueurs IA sont inversés dans un virage selon le côté de la charrue.",
-  "Plow:getCanBeSelected": "Renvoie vrai : l'outil est sélectionnable.",
-  "Plow:isDetachAllowed": "Refuse le dételage pendant la rotation ou hors des limites d'animation de détachement (avec avertissement).",
-  "Plow:getAllowsLowering": "Refuse l'abaissement pendant la rotation.",
-  "Plow:getIsAIReadyToDrive": "Pas prête pour l'IA si rotationMax est vrai ou si la rotation est en cours.",
-  "Plow:getIsAIPreparingToDrive": "Vrai pendant la rotation.",
-  "Plow:onRegisterActionEvents": "Enregistre les actions de rotation (si animation) et de limite au champ (IMPLEMENT_EXTRA3).",
-  "Plow:onStartWorkAreaProcessing": "Avant la passe : isWorking = faux ; calcule limitToField (forcé sans permission createFields) et l'angle de la carte de densité ; remet les surfaces à zéro.",
-  "Plow:onEndWorkAreaProcessing": "Serveur : statistiques plowedHectares/plowedTime et surface travaillée. Client : démarre/arrête le son de travail selon isWorking.",
-  "Plow:onPostAttach": "Arme le délai d'activation (2000 ms) et reprend une animation de rotation interrompue au dételage.",
-  "Plow:onPreDetach": "Remet limitToField à vrai et stoppe une rotation en cours (mémorisée pour reprise).",
-  "Plow:onDeactivate": "Coupe les sons de travail et de retournement.",
-  "Plow:onAIFieldCourseSettingsInitialized": "Paramètres de parcours IA : recouvrement total et angle de découpe de 25 degrés.",
-  "Plow:onAIImplementStartTurn": "Réinitialise la position de tête de champ de l'IA.",
-  "Plow:onAIImplementTurnProgress": "Pendant un virage IA : passe la charrue au centre puis la retourne complètement aux positions de progression configurées.",
-  "Plow:onAIImplementEndTurn": "Retourne la charrue du côté du virage à la fin du virage IA.",
-  "Plow:onAIImplementSideOffsetChanged": "Applique le côté initial de la charrue (immédiatement ou dès que la rotation sera permise).",
-  "Plow:onAIImplementEnd": "Efface la rotation différée IA.",
-  "Plow:onStartAnimation": "Joue le son de retournement au début de l'animation de rotation.",
-  "Plow:onFinishAnimation": "Coupe le son de retournement à la fin de l'animation de rotation.",
-  "Plow:onFoldTimeChanged": "Serveur : applique une rotation IA différée dès qu'elle devient permise.",
-  "Plow:onRootVehicleChanged": "Enregistre/met à jour auprès de l'actionController les actions « rotatePlow » et « rotateBackPlow » (retournement, lié à l'IA).",
-  "Plow.actionEventTurn": "Callback d'entrée : bascule le côté de la charrue si permis.",
-  "Plow.actionEventLimitToField": "Callback d'entrée : bascule limitToField si non imposée.",
-  "Plow.actionControllerRotateBackEvent": "Callback d'actionController : ramène la charrue à l'état non retourné sur événement IA.",
-  "Plow.actionControllerRotateEvent": "Callback d'actionController : retourne la charrue ou termine l'animation interrompue."
+  "Plow.initSpecialization": {
+   "en": "Declares the plow area type, the plow configuration and the XML schema. Not reread key by key.",
+   "fr": "Déclare le type de zone plow, la configuration de charrue et le schéma XML. Non relu clé par clé."
+  },
+  "Plow.registerXMLPaths": {
+   "en": "Registers the XML keys of vehicle.plow: rotationPart (animation, folding/detaching limits), directionNode, onlyActiveWhenLowered, AI parameters, sounds. Not reread key by key.",
+   "fr": "Enregistre les clés XML de vehicle.plow : rotationPart (animation, limites de pliage/détachement), directionNode, onlyActiveWhenLowered, paramètres IA, sons. Non relu clé par clé."
+  },
+  "Plow.prerequisitesPresent": {
+   "en": "Requires the WorkArea specialization.",
+   "fr": "Exige la spécialisation WorkArea."
+  },
+  "Plow.registerFunctions": {
+   "en": "Registers the rotation functions, the field limit, the AI requirements and processPlowArea.",
+   "fr": "Enregistre les fonctions de rotation, de limite au champ, de besoins IA et processPlowArea."
+  },
+  "Plow.registerOverwrittenFunctions": {
+   "en": "Overrides folding, detaching, lowering, AI, rotating parts, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML, getIsWorkAreaActive, doCheckSpeedLimit and getCanBeSelected (list not reread line by line).",
+   "fr": "Surcharge pliage, détachement, abaissement, IA, pièces tournantes, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML, getIsWorkAreaActive, doCheckSpeedLimit et getCanBeSelected (liste non relue ligne à ligne)."
+  },
+  "Plow.registerEventListeners": {
+   "en": "Subscribes notably to onLoad, onPostLoad, onDelete, the initial stream, onUpdate, onRegisterActionEvents, the area processing events, onPostAttach, onPreDetach, onDeactivate, the AI, animation and folding events, and onRootVehicleChanged.",
+   "fr": "S'abonne notamment à onLoad, onPostLoad, onDelete, flux initial, onUpdate, onRegisterActionEvents, aux événements de traitement de zone, onPostAttach, onPreDetach, onDeactivate, aux événements IA, d'animation, de pliage et onRootVehicleChanged."
+  },
+  "Plow:onLoad": {
+   "en": "Reads the plow configuration: rotating parts, animation limits, direction node, AI parameters, texts, sounds; initializes rotationMax, limitToField, activation delay and pass parameters (detailed reading not reread).",
+   "fr": "Lit la configuration de charrue : parties tournantes, limites d'animation, noeud de direction, paramètres IA, textes, sons ; initialise rotationMax, limitToField, délai d'activation et les paramètres de passe (lecture détaillée non relue)."
+  },
+  "Plow:onPostLoad": {
+   "en": "Restores the plow orientation from the savegame (rotationMax, animation time) if rotation is allowed.",
+   "fr": "Restaure depuis la sauvegarde l'orientation de la charrue (rotationMax, temps d'animation) si la rotation est permise."
+  },
+  "Plow:onDelete": {
+   "en": "Releases the work and turning sounds.",
+   "fr": "Libère les sons de travail et de retournement."
+  },
+  "Plow:saveToXMLFile": {
+   "en": "Saves rotationMax and the rotation animation time.",
+   "fr": "Sauvegarde rotationMax et le temps d'animation de rotation."
+  },
+  "Plow:onReadStream": {
+   "en": "Reads the orientation and animation time sent on connection and applies them.",
+   "fr": "Lit orientation et temps d'animation envoyés à la connexion et les applique."
+  },
+  "Plow:onWriteStream": {
+   "en": "Writes the orientation and the animation time.",
+   "fr": "Écrit l'orientation et le temps d'animation."
+  },
+  "Plow:onUpdate": {
+   "en": "Client: updates the text/activation of the field limit action (depending on permission) and of the rotation action (depending on getCanTogglePlowRotation). No visual effect.",
+   "fr": "Client : met à jour le texte/l'activation des actions de limite au champ (selon permission) et de rotation (selon getCanTogglePlowRotation). Aucun effet visuel."
+  },
+  "Plow:processPlowArea": {
+   "en": "Erases tire tracks, plows the area in the density map (outside a distant client and if the water is low enough), accumulates the surfaces and sets isWorking (speed > 0.5). Returns the modified and total area.",
+   "fr": "Efface les traces de pneus, laboure la zone dans la carte de densité (hors client lointain et si l'eau est assez basse), cumule les surfaces et met isWorking (vitesse > 0.5). Renvoie surface modifiée et totale."
+  },
+  "Plow:setRotationMax": {
+   "en": "Sets the plow side, sends PlowRotationEvent and starts the rotation animation (or places it directly at a given time).",
+   "fr": "Fixe le côté de la charrue, envoie PlowRotationEvent et lance l'animation de rotation (ou la place directement à un temps donné)."
+  },
+  "Plow:setRotationCenter": {
+   "en": "Brings the animation to the AI center position and sends PlowRotationCenterEvent.",
+   "fr": "Amène l'animation vers la position centrale IA et envoie PlowRotationCenterEvent."
+  },
+  "Plow:setPlowLimitToField": {
+   "en": "Changes the limitToField option, broadcasts it (server: to all; client: to the server) and updates the action text.",
+   "fr": "Change l'option limitToField, la diffuse (serveur : à tous ; client : au serveur) et met à jour le texte de l'action."
+  },
+  "Plow:getIsPlowRotationAllowed": {
+   "en": "True if the folding state allows rotation (rotationFoldMin/Max limits).",
+   "fr": "Vrai si l'état de pliage permet la rotation (limites rotationFoldMin/Max)."
+  },
+  "Plow:getCanTogglePlowRotation": {
+   "en": "True if rotation is allowed by the folding, if the implement is not lowered when rotationAllowedIfLowered is false, and if the vehicle is powered (getIsPowered).",
+   "fr": "Vrai si la rotation est permise par le pliage, si l'outil n'est pas abaissé quand rotationAllowedIfLowered est faux, et si le véhicule est alimenté (getIsPowered)."
+  },
+  "Plow:getPlowLimitToField": {
+   "en": "Returns the limitToField option.",
+   "fr": "Renvoie l'option limitToField."
+  },
+  "Plow:getPlowForceLimitToField": {
+   "en": "True if the limit is imposed (forceLimitToField or a platform without field creation).",
+   "fr": "Vrai si la limite est imposée (forceLimitToField ou plateforme sans création de champs)."
+  },
+  "Plow:setPlowAIRequirements": {
+   "en": "Defines the ground types required by the AI (with possible exclusions) and enables the variable lateral offset.",
+   "fr": "Définit les types de sol exigés par l'IA (avec exclusions éventuelles) et active le décalage latéral variable."
+  },
+  "Plow:getIsFoldAllowed": {
+   "en": "Forbids folding if the plow is turned to a position that is not allowed or lowered depending on the configuration.",
+   "fr": "Interdit le pliage si la charrue est retournée dans une position non permise ou abaissée selon la configuration."
+  },
+  "Plow:getIsFoldMiddleAllowed": {
+   "en": "Same for the intermediate folding position.",
+   "fr": "Idem pour la position de pliage intermédiaire."
+  },
+  "Plow:getDirtMultiplier": {
+   "en": "Adds the work dirt weighted by speed/limit when isWorking.",
+   "fr": "Ajoute la salissure de travail pondérée vitesse/limite quand isWorking."
+  },
+  "Plow:getWearMultiplier": {
+   "en": "Adds the work wear weighted by speed/limit when isWorking.",
+   "fr": "Ajoute l'usure de travail pondérée vitesse/limite quand isWorking."
+  },
+  "Plow:loadSpeedRotatingPartFromXML": {
+   "en": "Reads the rotating part options tied to the turning (disableOnTurn, turnAnimLimit, turnAnimLimitSide, invertDirectionOnRotation).",
+   "fr": "Lit les options de pièces tournantes liées au retournement (disableOnTurn, turnAnimLimit, turnAnimLimitSide, invertDirectionOnRotation)."
+  },
+  "Plow:getIsSpeedRotatingPartActive": {
+   "en": "Disables a rotating part during turning according to the animation time and its limits.",
+   "fr": "Désactive une pièce tournante pendant le retournement selon le temps d'animation et ses limites."
+  },
+  "Plow:getSpeedRotatingPartDirection": {
+   "en": "Inverts the rotation direction of a part when the plow is turned (animation time > 0.5).",
+   "fr": "Inverse le sens de rotation d'une pièce quand la charrue est retournée (temps d'animation > 0.5)."
+  },
+  "Plow:doCheckSpeedLimit": {
+   "en": "Applies the speed limit if onlyActiveWhenLowered and the implement chain is lowered.",
+   "fr": "Applique la limite de vitesse si onlyActiveWhenLowered et la chaîne d'outils est abaissée."
+  },
+  "Plow:loadWorkAreaFromXML": {
+   "en": "Forces the PLOW area type if it is DEFAULT.",
+   "fr": "Force le type de zone PLOW si DEFAULT."
+  },
+  "Plow.getDefaultSpeedLimit": {
+   "en": "Default speed limit: 15.",
+   "fr": "Limite de vitesse par défaut : 15."
+  },
+  "Plow:getIsWorkAreaActive": {
+   "en": "For PLOW: inactive during the post-attach delay and, if required, while the implement is not lowered.",
+   "fr": "Pour PLOW : inactive pendant le délai post-attelage et, si exigé, tant que l'outil n'est pas abaissé."
+  },
+  "Plow:getCanAIImplementContinueWork": {
+   "en": "The AI does not continue while the rotation animation is playing (except with the stopDuringTurn parameter).",
+   "fr": "L'IA ne continue pas pendant que l'animation de rotation joue (sauf paramètre stopDuringTurn)."
+  },
+  "Plow:getAIInvertMarkersOnTurn": {
+   "en": "Indicates whether the AI markers are inverted in a turn depending on the plow side.",
+   "fr": "Indique si les marqueurs IA sont inversés dans un virage selon le côté de la charrue."
+  },
+  "Plow:getCanBeSelected": {
+   "en": "Returns true: the implement is selectable.",
+   "fr": "Renvoie vrai : l'outil est sélectionnable."
+  },
+  "Plow:isDetachAllowed": {
+   "en": "Refuses detaching during rotation or outside the detach animation limits (with a warning).",
+   "fr": "Refuse le dételage pendant la rotation ou hors des limites d'animation de détachement (avec avertissement)."
+  },
+  "Plow:getAllowsLowering": {
+   "en": "Refuses lowering during rotation.",
+   "fr": "Refuse l'abaissement pendant la rotation."
+  },
+  "Plow:getIsAIReadyToDrive": {
+   "en": "Not ready for the AI if rotationMax is true or if rotation is in progress.",
+   "fr": "Pas prête pour l'IA si rotationMax est vrai ou si la rotation est en cours."
+  },
+  "Plow:getIsAIPreparingToDrive": {
+   "en": "True during rotation.",
+   "fr": "Vrai pendant la rotation."
+  },
+  "Plow:onRegisterActionEvents": {
+   "en": "Registers the rotation actions (if there is an animation) and the field limit action (IMPLEMENT_EXTRA3).",
+   "fr": "Enregistre les actions de rotation (si animation) et de limite au champ (IMPLEMENT_EXTRA3)."
+  },
+  "Plow:onStartWorkAreaProcessing": {
+   "en": "Before the pass: isWorking = false; computes limitToField (forced without the createFields permission) and the density map angle; resets the surfaces to zero.",
+   "fr": "Avant la passe : isWorking = faux ; calcule limitToField (forcé sans permission createFields) et l'angle de la carte de densité ; remet les surfaces à zéro."
+  },
+  "Plow:onEndWorkAreaProcessing": {
+   "en": "Server: plowedHectares/plowedTime statistics and worked area. Client: starts/stops the work sound according to isWorking.",
+   "fr": "Serveur : statistiques plowedHectares/plowedTime et surface travaillée. Client : démarre/arrête le son de travail selon isWorking."
+  },
+  "Plow:onPostAttach": {
+   "en": "Arms the activation delay (2000 ms) and resumes a rotation animation interrupted at detaching.",
+   "fr": "Arme le délai d'activation (2000 ms) et reprend une animation de rotation interrompue au dételage."
+  },
+  "Plow:onPreDetach": {
+   "en": "Resets limitToField to true and stops a rotation in progress (remembered for resuming).",
+   "fr": "Remet limitToField à vrai et stoppe une rotation en cours (mémorisée pour reprise)."
+  },
+  "Plow:onDeactivate": {
+   "en": "Cuts the work and turning sounds.",
+   "fr": "Coupe les sons de travail et de retournement."
+  },
+  "Plow:onAIFieldCourseSettingsInitialized": {
+   "en": "AI course settings: total overlap and a cutting angle of 25 degrees.",
+   "fr": "Paramètres de parcours IA : recouvrement total et angle de découpe de 25 degrés."
+  },
+  "Plow:onAIImplementStartTurn": {
+   "en": "Resets the AI headland position.",
+   "fr": "Réinitialise la position de tête de champ de l'IA."
+  },
+  "Plow:onAIImplementTurnProgress": {
+   "en": "During an AI turn: moves the plow to the center then turns it fully at the configured progress positions.",
+   "fr": "Pendant un virage IA : passe la charrue au centre puis la retourne complètement aux positions de progression configurées."
+  },
+  "Plow:onAIImplementEndTurn": {
+   "en": "Turns the plow to the turn side at the end of the AI turn.",
+   "fr": "Retourne la charrue du côté du virage à la fin du virage IA."
+  },
+  "Plow:onAIImplementSideOffsetChanged": {
+   "en": "Applies the initial plow side (immediately or as soon as rotation is allowed).",
+   "fr": "Applique le côté initial de la charrue (immédiatement ou dès que la rotation sera permise)."
+  },
+  "Plow:onAIImplementEnd": {
+   "en": "Clears the AI deferred rotation.",
+   "fr": "Efface la rotation différée IA."
+  },
+  "Plow:onStartAnimation": {
+   "en": "Plays the turning sound at the start of the rotation animation.",
+   "fr": "Joue le son de retournement au début de l'animation de rotation."
+  },
+  "Plow:onFinishAnimation": {
+   "en": "Cuts the turning sound at the end of the rotation animation.",
+   "fr": "Coupe le son de retournement à la fin de l'animation de rotation."
+  },
+  "Plow:onFoldTimeChanged": {
+   "en": "Server: applies a deferred AI rotation as soon as it becomes allowed.",
+   "fr": "Serveur : applique une rotation IA différée dès qu'elle devient permise."
+  },
+  "Plow:onRootVehicleChanged": {
+   "en": "Registers/updates with the actionController the \"rotatePlow\" and \"rotateBackPlow\" actions (turning, AI-related).",
+   "fr": "Enregistre/met à jour auprès de l'actionController les actions « rotatePlow » et « rotateBackPlow » (retournement, lié à l'IA)."
+  },
+  "Plow.actionEventTurn": {
+   "en": "Input callback: toggles the plow side if allowed.",
+   "fr": "Callback d'entrée : bascule le côté de la charrue si permis."
+  },
+  "Plow.actionEventLimitToField": {
+   "en": "Input callback: toggles limitToField if not imposed.",
+   "fr": "Callback d'entrée : bascule limitToField si non imposée."
+  },
+  "Plow.actionControllerRotateBackEvent": {
+   "en": "actionController callback: returns the plow to the non-turned state on an AI event.",
+   "fr": "Callback d'actionController : ramène la charrue à l'état non retourné sur événement IA."
+  },
+  "Plow.actionControllerRotateEvent": {
+   "en": "actionController callback: turns the plow or finishes the interrupted animation.",
+   "fr": "Callback d'actionController : retourne la charrue ou termine l'animation interrompue."
+  }
  }
 }

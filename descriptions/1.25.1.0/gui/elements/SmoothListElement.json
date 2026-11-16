@@ -1,0 +1,193 @@
+{
+ "fichier": "gui/elements/SmoothListElement.lua",
+ "module": {
+  "en": "Virtualised, smooth-scrolling list element (derived from GuiElement, with IndexChangeSubjectMixin and PlaySampleMixin). A data source supplies sections, item counts, cell type names and cell population, while a delegate receives events. Child ListItemElement cells are moved into a cell database, cloned on demand, recycled through a cache and positioned from computed offsets, so only visible rows exist. It supports vertical or horizontal lists, several items per row, section headers, empty filler cells, mouse, touch and gamepad input. Many members used here (scrollTo, setSelectedItem, setHighlightedItem, updateCellPosition, updateScrollClippers, raiseSliderUpdateEvent, update) are not in the parts of this file described below, so their behaviour is UNVERIFIED.",
+  "fr": "Élément de liste à défilement fluide et virtualisée (dérivé de GuiElement, avec IndexChangeSubjectMixin et PlaySampleMixin). Une source de données fournit sections, nombre d'éléments, noms de types de cellules et remplissage des cellules, tandis qu'un délégué reçoit les événements. Les cellules ListItemElement enfants sont placées dans une base de cellules, clonées à la demande, recyclées via un cache et positionnées d'après des décalages calculés : seules les lignes visibles existent. Il gère listes verticales ou horizontales, plusieurs éléments par ligne, en-têtes de section, cellules vides de remplissage, souris, tactile et manette. Plusieurs membres utilisés ici (scrollTo, setSelectedItem, setHighlightedItem, updateCellPosition, updateScrollClippers, raiseSliderUpdateEvent, update) ne figurent pas dans les parties décrites de ce fichier : leur comportement est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "SmoothListElement.new": {
+   "en": "Constructor. Mixes in index-change and sound mixins and sets defaults: vertical, one lateral item, no spacing, selection at 1/1, mouse scrolling on, double-click interval 400 ms, touch scrolling only on touch platforms, empty cache and no sections.",
+   "fr": "Constructeur. Intègre les mixins de changement d'index et de son et définit les défauts : vertical, un élément latéral, sans espacement, sélection en 1/1, défilement souris actif, intervalle de double clic de 400 ms, défilement tactile seulement sur plateformes tactiles, cache vide et aucune section."
+  },
+  "SmoothListElement:loadFromXML": {
+   "en": "Loads list settings from XML: callbacks (onScroll, onDoubleClick, onClick, onPressed), orientation, spacing, alignment, selection and scroll options, empty indicator id, delegate, data source, section header cell and clipper element names. Note: the listDataSource branch tests delegateName instead of dataSourceName, apparently a typo.",
+   "fr": "Charge les réglages de la liste depuis le XML : callbacks (onScroll, onDoubleClick, onClick, onPressed), orientation, espacements, alignement, options de sélection et de défilement, id de l'indicateur vide, délégué, source de données, nom de la cellule d'en-tête de section et des éléments de clipping. À noter : la branche listDataSource teste delegateName au lieu de dataSourceName, apparemment une faute de frappe."
+  },
+  "SmoothListElement:loadProfile": {
+   "en": "Loads the same list settings from a GUI profile (orientation, spacing, alignment, scrolling, selection, focus and empty-row options, empty indicator id). Delegate, data source, callbacks and clipper names are not read from profiles.",
+   "fr": "Charge les mêmes réglages de liste depuis un profil GUI (orientation, espacements, alignement, défilement, sélection, options de focus et de lignes vides, id de l'indicateur vide). Délégué, source de données, callbacks et noms de clippers ne sont pas lus depuis les profils."
+  },
+  "SmoothListElement:clone": {
+   "en": "Clones the list through the parent class, then clones every cell of the cell database for the copy and creates empty caches with the same names. Returns the new list.",
+   "fr": "Clone la liste via la classe parente, puis clone chaque cellule de la base de cellules pour la copie et crée des caches vides portant les mêmes noms. Retourne la nouvelle liste."
+  },
+  "SmoothListElement:copyAttributes": {
+   "en": "Copies data source, delegate, cell and clipper names, layout, spacing, selection and scroll options, axes, callbacks and loaded flag from a source list, and clones the sound mixin.",
+   "fr": "Copie source de données, délégué, noms de cellules et de clippers, mise en page, espacements, options de sélection et de défilement, axes, callbacks et indicateur de chargement depuis une liste source, et clone le mixin de son."
+  },
+  "SmoothListElement:onGuiSetupFinished": {
+   "en": "Called once the screen is built. Resolves the clipper elements and the empty indicator (made visible), and on first call builds the cell database from the child cells.",
+   "fr": "Appelée quand l'écran est construit. Résout les éléments de clipping et l'indicateur de liste vide (rendu visible) et, au premier appel, construit la base de cellules à partir des cellules enfants."
+  },
+  "SmoothListElement:buildCellDatabase": {
+   "en": "Moves each ListItemElement child into the cell database by name (auto-naming unnamed ones), unlinks it and removes it from the focus manager. Warns and drops an unknown section header name, and records a single cell type when only one exists.",
+   "fr": "Place chaque enfant ListItemElement dans la base de cellules par son nom (nom automatique si absent), le détache et le retire du gestionnaire de focus. Avertit et abandonne un nom d'en-tête de section inconnu, et retient un type de cellule unique s'il n'y en a qu'un."
+  },
+  "SmoothListElement:iterateOverDatabase": {
+   "en": "Calls the given function on every template cell in the database and every recycled cell in the cache. Does not visit cells currently shown in the list.",
+   "fr": "Appelle la fonction donnée sur chaque cellule modèle de la base et chaque cellule recyclée du cache. Ne visite pas les cellules actuellement affichées dans la liste."
+  },
+  "SmoothListElement:delete": {
+   "en": "Deletes all cached cells and database cells, then deletes the list through the parent class (which handles the visible children).",
+   "fr": "Supprime toutes les cellules du cache et de la base, puis supprime la liste via la classe parente (qui gère les enfants visibles)."
+  },
+  "SmoothListElement:onOpen": {
+   "en": "When the screen opens, applies a selection stored earlier while the list was hidden (with sound suppressed) and clears the stored indices.",
+   "fr": "À l'ouverture de l'écran, applique une sélection mémorisée pendant que la liste était masquée (son supprimé) et efface les indices mémorisés."
+  },
+  "SmoothListElement:onClose": {
+   "en": "When the screen closes, if a smooth scroll is in progress, jumps immediately to its target offset via scrollTo (not defined in the visible code, UNVERIFIED).",
+   "fr": "À la fermeture de l'écran, si un défilement fluide est en cours, saute immédiatement à son décalage cible via scrollTo (non défini dans le code visible, NON VÉRIFIÉ)."
+  },
+  "SmoothListElement:setDataSource": {
+   "en": "Sets the object that supplies sections, counts, cell types and cell contents. Also becomes the delegate if none is set yet.",
+   "fr": "Définit l'objet qui fournit sections, nombres, types de cellules et contenus. Devient aussi le délégué si aucun n'est encore défini."
+  },
+  "SmoothListElement:setDelegate": {
+   "en": "Sets the object that receives list events such as selection changes. Also becomes the data source if none is set yet.",
+   "fr": "Définit l'objet qui reçoit les événements de la liste, comme les changements de sélection. Devient aussi la source de données si aucune n'est encore définie."
+  },
+  "SmoothListElement:dequeueReusableCell": {
+   "en": "Returns a cell of the given type, taking one from the cache and re-adding it as a child, or cloning the template. Returns nil for an unknown type. Registers the cell with the focus manager.",
+   "fr": "Retourne une cellule du type donné, prise dans le cache et rattachée comme enfant, ou clonée depuis le modèle. Retourne nil pour un type inconnu. Enregistre la cellule auprès du gestionnaire de focus."
+  },
+  "SmoothListElement:queueReusableCell": {
+   "en": "Returns a cell to the cache: clears its slot in its section, resets its section indices, unlinks it and removes it from the focus manager.",
+   "fr": "Remet une cellule dans le cache : libère son emplacement dans sa section, réinitialise ses indices de section, la détache et la retire du gestionnaire de focus."
+  },
+  "SmoothListElement:setTarget": {
+   "en": "Sets the target through the parent class, replaces the delegate and data source when they equal the original target, and propagates the new target to all template and cached cells.",
+   "fr": "Définit la cible via la classe parente, remplace le délégué et la source de données s'ils valent la cible d'origine, et propage la nouvelle cible à toutes les cellules modèles et en cache."
+  },
+  "SmoothListElement:reloadData": {
+   "en": "Rebuilds section info and refreshes the view with repopulation; call it whenever the data changes. With forceCellTypeUpdate, shown cells are recycled first so their types are re-queried. Does nothing without a data source; sound is suppressed meanwhile.",
+   "fr": "Reconstruit les infos de sections et rafraîchit la vue avec repopulation ; à appeler à chaque changement des données. Avec forceCellTypeUpdate, les cellules affichées sont d'abord recyclées pour redemander leurs types. Sans effet sans source de données ; le son est supprimé pendant l'opération."
+  },
+  "SmoothListElement:reloadSection": {
+   "en": "Meant to reload one section but currently just calls reloadData for the whole list (marked TODO in the source). The section argument is unused.",
+   "fr": "Destinée à recharger une section mais appelle actuellement reloadData pour toute la liste (marqué TODO dans la source). L'argument de section est inutilisé."
+  },
+  "SmoothListElement:buildSectionInfo": {
+   "en": "Asks the data source for section and item counts, computes per-item length and lateral offsets, row layout, section bounds, content size, scroll step and alignment offset, clamps the selection and view offset, toggles the empty indicator and updates the clippers.",
+   "fr": "Interroge la source de données pour les sections et nombres d'éléments, calcule longueurs et décalages latéraux, disposition en lignes, bornes de sections, taille du contenu, pas de défilement et décalage d'alignement, borne la sélection et le décalage de vue, bascule l'indicateur vide et met à jour les clippers."
+  },
+  "SmoothListElement:getLengthOfItemFast": {
+   "en": "Returns the cell template length along the list's length axis for the item, using the single cell type if there is one, else the data source's cell type for that item.",
+   "fr": "Retourne la longueur du modèle de cellule selon l'axe de longueur de la liste pour l'élément, avec le type de cellule unique s'il existe, sinon celui indiqué par la source de données."
+  },
+  "SmoothListElement:getWidthOfItemFast": {
+   "en": "Returns the cell template size along the list's width axis for the item, using the single cell type if there is one, else the data source's cell type.",
+   "fr": "Retourne la taille du modèle de cellule selon l'axe de largeur de la liste pour l'élément, avec le type de cellule unique s'il existe, sinon celui de la source de données."
+  },
+  "SmoothListElement:updateView": {
+   "en": "Works out the first and last visible items from the view offset, recycles cells outside the range, creates and populates missing cells (headers, items, empty fillers), repopulates existing ones if asked, repositions all cells, then raises the slider update unless updateSlider is false.",
+   "fr": "Détermine les premiers et derniers éléments visibles d'après le décalage de vue, recycle les cellules hors plage, crée et remplit les cellules manquantes (en-têtes, éléments, remplissage vide), repeuple les existantes si demandé, repositionne toutes les cellules, puis déclenche la mise à jour du slider sauf si updateSlider est faux."
+  },
+  "SmoothListElement:scrollToStartGamepad": {
+   "en": "Called each frame while the gamepad jump-to-start input is held: starts a hold timer and, once the delay has passed, calls scrollToStart a single time.",
+   "fr": "Appelée à chaque image tant que l'entrée manette de saut au début est maintenue : démarre un minuteur et, le délai écoulé, appelle scrollToStart une seule fois."
+  },
+  "SmoothListElement:scrollToEndGamepad": {
+   "en": "Called each frame while the gamepad jump-to-end input is held: starts a hold timer and, once the delay has passed, calls scrollToEnd a single time.",
+   "fr": "Appelée à chaque image tant que l'entrée manette de saut à la fin est maintenue : démarre un minuteur et, le délai écoulé, appelle scrollToEnd une seule fois."
+  },
+  "SmoothListElement:scrollToStart": {
+   "en": "Selects the first item: of the whole list with a single section, left Ctrl held or a non-keyboard input mode, otherwise the first item of the current section.",
+   "fr": "Sélectionne le premier élément : de toute la liste s'il n'y a qu'une section, si Ctrl gauche est maintenu ou hors mode clavier, sinon le premier élément de la section courante."
+  },
+  "SmoothListElement:scrollToEnd": {
+   "en": "Selects the last item: of the whole list with a single section, left Ctrl held or a non-keyboard input mode, otherwise the last item of the current section. Errors if the list has no sections.",
+   "fr": "Sélectionne le dernier élément : de toute la liste s'il n'y a qu'une section, si Ctrl gauche est maintenu ou hors mode clavier, sinon le dernier élément de la section courante. Provoque une erreur si la liste n'a aucune section."
+  },
+  "SmoothListElement:scrollToPrevPage": {
+   "en": "Page up. With one section or Ctrl held, selects the item that starts the previous page of the content; otherwise selects the first item of the previous section. Note: targetOffset can stay nil if no matching cell is found.",
+   "fr": "Page précédente. Avec une section ou Ctrl maintenu, sélectionne l'élément qui ouvre la page précédente du contenu ; sinon sélectionne le premier élément de la section précédente. À noter : targetOffset peut rester nil si aucune cellule ne correspond."
+  },
+  "SmoothListElement:scrollToNextPage": {
+   "en": "Page down. With one section or Ctrl held, selects the first item beyond the visible area and smooth-scrolls to it (or selects the last item if at the end); otherwise selects the first item of the next section and scrolls it to the top.",
+   "fr": "Page suivante. Avec une section ou Ctrl maintenu, sélectionne le premier élément au-delà de la zone visible et y défile en douceur (ou sélectionne le dernier élément en fin de liste) ; sinon sélectionne le premier élément de la section suivante et l'amène en haut."
+  },
+  "SmoothListElement:smoothScrollTo": {
+   "en": "Sets a target view offset (clamped to the content) that the list moves toward over time. Note: with listSmoothingDisabled it calls scrollTo but does not return, so the smooth target is still set afterwards.",
+   "fr": "Définit un décalage de vue cible (borné au contenu) vers lequel la liste se déplace progressivement. À noter : avec listSmoothingDisabled, elle appelle scrollTo mais ne retourne pas, donc la cible fluide est quand même définie ensuite."
+  },
+  "SmoothListElement:applyElementSelection": {
+   "en": "Marks the visible cell matching the selected section and index as selected and others as not, unless selection is hidden when the list lacks focus.",
+   "fr": "Marque comme sélectionnée la cellule visible correspondant à la section et à l'indice sélectionnés et les autres comme non sélectionnées, sauf si la sélection est masquée quand la liste n'a pas le focus."
+  },
+  "SmoothListElement:clearElementSelection": {
+   "en": "Sets every child cell that supports it to not selected, for example when the list loses focus.",
+   "fr": "Met à l'état non sélectionné chaque cellule enfant qui le gère, par exemple quand la liste perd le focus."
+  },
+  "SmoothListElement:getItemCount": {
+   "en": "Returns the total number of items from the last section scan (headers are not counted in the sum computed in buildSectionInfo).",
+   "fr": "Retourne le nombre total d'éléments du dernier balayage des sections (les en-têtes ne sont pas comptés dans la somme de buildSectionInfo)."
+  },
+  "SmoothListElement:getSelectedIndexInSection": {
+   "en": "Returns the selected index inside its section.",
+   "fr": "Retourne l'indice sélectionné dans sa section."
+  },
+  "SmoothListElement:getSelectedPath": {
+   "en": "Returns the selected section index and the selected index within that section.",
+   "fr": "Retourne l'indice de la section sélectionnée et l'indice sélectionné dans cette section."
+  },
+  "SmoothListElement:getElementAtSectionIndex": {
+   "en": "Returns the currently shown cell for a section and index, or nil if the section does not exist or the cell is not displayed.",
+   "fr": "Retourne la cellule actuellement affichée pour une section et un indice, ou nil si la section n'existe pas ou si la cellule n'est pas affichée."
+  },
+  "SmoothListElement:activateInput": {
+   "en": "Handles a click or tap on the hovered cell: detects double clicks within the interval, selects the cell (unless the press was a scroll gesture) and raises click or double-click notifications. Resets the click timer if nothing is hovered.",
+   "fr": "Gère un clic ou une pression sur la cellule survolée : détecte les doubles clics dans l'intervalle, sélectionne la cellule (sauf si le geste était un défilement) et déclenche les notifications de clic ou de double clic. Réinitialise le minuteur de clic si rien n'est survolé."
+  },
+  "SmoothListElement:onInputDown": {
+   "en": "Marks the input as pressed, resets its timer and gives focus to this list.",
+   "fr": "Marque l'entrée comme appuyée, réinitialise son minuteur et donne le focus à cette liste."
+  },
+  "SmoothListElement:onInputUp": {
+   "en": "Marks the input as released and resets the accumulated touch movement distance.",
+   "fr": "Marque l'entrée comme relâchée et réinitialise la distance de mouvement tactile cumulée."
+  },
+  "SmoothListElement:notifyDoubleClick": {
+   "en": "Raises onDoubleClickCallback with the list, section, index, cell and a true flag.",
+   "fr": "Déclenche onDoubleClickCallback avec la liste, la section, l'indice, la cellule et un indicateur vrai."
+  },
+  "SmoothListElement:notifyClick": {
+   "en": "Raises onClickCallback with the list, section, index, cell and whether the item was already selected.",
+   "fr": "Déclenche onClickCallback avec la liste, la section, l'indice, la cellule et l'indication que l'élément était déjà sélectionné."
+  },
+  "SmoothListElement:mouseEvent": {
+   "en": "Handles mouse input when active and not ignoring the mouse: updates the hovered cell (headers and fillers excluded), starts and activates on left press, scrolls or moves the selection with the wheel, and ends the press on release. Returns whether the event was used.",
+   "fr": "Gère la souris quand la liste est active et n'ignore pas la souris : met à jour la cellule survolée (en-têtes et remplissages exclus), démarre et active à l'appui gauche, défile ou déplace la sélection avec la molette, et termine l'appui au relâchement. Retourne si l'événement a été utilisé."
+  },
+  "SmoothListElement:touchEvent": {
+   "en": "Handles touch input: tracks the hovered cell, accumulates drag distance and delta for touch scrolling when supported, keeps the touch id, and activates the cell on release if the gesture was not a scroll. Returns whether the event was used.",
+   "fr": "Gère le tactile : suit la cellule survolée, cumule distance et delta de glissement pour le défilement tactile s'il est pris en charge, conserve l'identifiant du toucher et active la cellule au relâchement si le geste n'était pas un défilement. Retourne si l'événement a été utilisé."
+  },
+  "SmoothListElement:canReceiveFocus": {
+   "en": "Returns true if the list is visible, handles focus, is enabled and either has items or canReceiveFocusWhileEmpty is set.",
+   "fr": "Retourne true si la liste est visible, gère le focus, est activée et contient des éléments ou si canReceiveFocusWhileEmpty est actif."
+  },
+  "SmoothListElement:onFocusActivate": {
+   "en": "Called when the focused list is activated (confirm). Does nothing if empty or ignoring activation; otherwise raises the click callback for the selected item, or else the double-click callback, if one is set.",
+   "fr": "Appelée quand la liste focalisée est activée (validation). Sans effet si vide ou si l'activation est ignorée ; sinon déclenche le callback de clic pour l'élément sélectionné, ou à défaut celui de double clic, s'il est défini."
+  },
+  "SmoothListElement:onFocusEnter": {
+   "en": "On gaining focus, applies the selection display and tells the delegate through onListSelectionChanged (if defined) with the selected section and index.",
+   "fr": "À l'obtention du focus, applique l'affichage de la sélection et en informe le délégué via onListSelectionChanged (s'il existe) avec la section et l'indice sélectionnés."
+  },
+  "SmoothListElement:onFocusLeave": {
+   "en": "On losing focus, clears the cell selection display if selection is not shown without focus, then runs the parent handler.",
+   "fr": "À la perte du focus, efface l'affichage de la sélection si celle-ci n'est pas montrée sans focus, puis exécute le gestionnaire parent."
+  }
+ }
+}

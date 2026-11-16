@@ -1,0 +1,33 @@
+{
+ "fichier": "collections/MapDataGrid.lua",
+ "module": {
+  "en": "DataGrid subclass that divides a square map, centered on world origin, into an equal number of blocks per row and column, so values can be read and written by world X/Z position. Positions outside the map are clamped to the edge blocks when looking up row and column.",
+  "fr": "Sous-classe de DataGrid qui divise une carte carrée, centrée sur l'origine du monde, en un nombre égal de blocs par ligne et par colonne, afin de lire et écrire des valeurs par position monde X/Z. Les positions hors de la carte sont ramenées aux blocs de bord lors du calcul de la ligne et de la colonne."
+ },
+ "fonctions": {
+  "MapDataGrid.new": {
+   "en": "Creates a square grid of blocksPerRowColumn by blocksPerRowColumn blocks covering a map of mapSize, and stores blockSize = mapSize / blocksPerRowColumn.",
+   "fr": "Crée une grille carrée de blocksPerRowColumn par blocksPerRowColumn blocs couvrant une carte de taille mapSize, et mémorise blockSize = mapSize / blocksPerRowColumn."
+  },
+  "MapDataGrid.createFromBlockSize": {
+   "en": "Creates a grid from a map size and a desired block size in metres, using ceil(mapSize / blockSize) blocks per side, so the real block size may be slightly smaller.",
+   "fr": "Crée une grille à partir d'une taille de carte et d'une taille de bloc souhaitée en mètres, avec ceil(mapSize / blockSize) blocs par côté ; la taille réelle d'un bloc peut donc être légèrement plus petite."
+  },
+  "MapDataGrid:getValueAtWorldPos": {
+   "en": "Returns the value stored in the block containing a world X/Z, followed by the row and column used.",
+   "fr": "Retourne la valeur stockée dans le bloc contenant un X/Z monde, suivie de la ligne et de la colonne utilisées."
+  },
+  "MapDataGrid:setValueAtWorldPos": {
+   "en": "Stores a value in the block containing a world X/Z. Positions outside the map write to the nearest edge block.",
+   "fr": "Stocke une valeur dans le bloc contenant un X/Z monde. Les positions hors de la carte écrivent dans le bloc de bord le plus proche."
+  },
+  "MapDataGrid:getRowColumnFromWorldPos": {
+   "en": "Converts a world X/Z to a one-based row (from Z) and column (from X), clamped to the grid, with the map centered on the origin.",
+   "fr": "Convertit un X/Z monde en ligne (depuis Z) et colonne (depuis X) base un, bornées à la grille, avec la carte centrée sur l'origine."
+  },
+  "MapDataGrid:isWorldPositionInRange": {
+   "en": "Returns true if the world X/Z lies inside the map square; the lower edge is exclusive and the upper edge inclusive.",
+   "fr": "Retourne true si le X/Z monde se trouve dans le carré de la carte ; le bord inférieur est exclu et le bord supérieur inclus."
+  }
+ }
+}

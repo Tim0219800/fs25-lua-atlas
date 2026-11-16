@@ -1,0 +1,13 @@
+{
+ "fichier": "graphics/HumanSounds.lua",
+ "module": {
+  "en": "Sound holder for the human player model. In this dump only the constructor remains: it stores a base directory and builds a raycast collision mask (static objects, water, terrain, terrain delta, road, building, vehicle). Other members are not present (UNVERIFIED).",
+  "fr": "Support des sons du modèle humain du joueur. Dans ce dump il ne reste que le constructeur : il mémorise un répertoire de base et construit un masque de collision de raycast (objets statiques, eau, terrain, delta de terrain, route, bâtiment, véhicule). Les autres membres sont absents (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HumanSounds.new": {
+   "en": "Creates the object with isLoaded false, the given baseDirectory and a raycastMask combining several CollisionFlag values; vehicles are included so a player on a boat is detected.",
+   "fr": "Crée l'objet avec isLoaded à false, le baseDirectory donné et un raycastMask combinant plusieurs valeurs CollisionFlag ; les véhicules sont inclus pour détecter un joueur sur un bateau."
+  }
+ }
+}

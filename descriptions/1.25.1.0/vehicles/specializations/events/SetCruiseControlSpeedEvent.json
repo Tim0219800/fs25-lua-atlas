@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/SetCruiseControlSpeedEvent.lua",
+ "module": {
+  "en": "Network event class `SetCruiseControlSpeedEvent` (extends `Event`) that replicates the cruise control target speeds (forward and reverse). It carries the vehicle and two uint8 speeds (forward, reverse). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `SetCruiseControlSpeedEvent` (hérite de `Event`) qui réplique les vitesses cibles du régulateur (avant et arrière). Elle transporte le véhicule et deux vitesses uint8 (avant, arrière). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "SetCruiseControlSpeedEvent.emptyNew": {
+   "en": "Creates an empty `SetCruiseControlSpeedEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `SetCruiseControlSpeedEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "SetCruiseControlSpeedEvent.new": {
+   "en": "Creates the event with its data: the vehicle and two uint8 speeds (forward, reverse).",
+   "fr": "Crée l'événement avec ses données : le véhicule et deux vitesses uint8 (avant, arrière)."
+  },
+  "SetCruiseControlSpeedEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle and two uint8 speeds (forward, reverse)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule et deux vitesses uint8 (avant, arrière)), puis appelle `run`."
+  },
+  "SetCruiseControlSpeedEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle and two uint8 speeds (forward, reverse)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule et deux vitesses uint8 (avant, arrière))."
+  },
+  "SetCruiseControlSpeedEvent:run": {
+   "en": "Executes the event on the receiving side: calls `setCruiseControlMaxSpeed(speed, speedReverse)` on the vehicle. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `setCruiseControlMaxSpeed(speed, speedReverse)` sur le véhicule. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  }
+ }
+}

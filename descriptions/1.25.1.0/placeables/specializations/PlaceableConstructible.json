@@ -1,0 +1,69 @@
+{
+ "fichier": "placeables/specializations/PlaceableConstructible.lua",
+ "module": {
+  "en": "Placeable specialization for buildings erected in stages by a state machine of `ConstructibleState` classes (building, finalize, etc.) defined in the XML, with named states, transitions, a start state and a preview state. It owns a selling (unloading) station and a storage that receive construction materials, syncs the current state to joining clients, and saves the state name. Several registered functions (`setConstructibleState`, `finalizeConstruction`, `getConstructibleFillLevel`, etc.) have no body in the dump: UNVERIFIED.",
+  "fr": "Spécialisation de placeable pour les bâtiments érigés par étapes via une machine à états de classes `ConstructibleState` (construction, finalisation, etc.) définie dans le XML, avec états nommés, transitions, un état de départ et un état d'aperçu. Elle possède une station de déchargement (vente) et un stockage qui reçoivent les matériaux de construction, synchronise l'état courant vers les clients qui rejoignent et sauvegarde le nom de l'état. Plusieurs fonctions enregistrées (`setConstructibleState`, `finalizeConstruction`, `getConstructibleFillLevel`, etc.) n'ont pas de corps dans le dump : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlaceableConstructible.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableConstructible.registerFunctions": {
+   "en": "Registers 13 functions: state setting and lookup, finalize, fill level and fill type support, preview state, reset, a console command to finish a state and its removal, finished-state count and progress info. Their bodies are not in the dump: UNVERIFIED.",
+   "fr": "Enregistre 13 fonctions : définition et recherche d'état, finalisation, niveau de remplissage et prise en charge des types, état d'aperçu, réinitialisation, commande console pour terminer un état et sa suppression, nombre d'états terminés et infos de progression. Leurs corps ne sont pas dans le dump : NON VÉRIFIÉ."
+  },
+  "PlaceableConstructible.registerOverwrittenFunctions": {
+   "en": "Overrides `collectPickObjects`, `updateInfo` and `setOwnerFarmId`. Only `collectPickObjects` has a body in the dump.",
+   "fr": "Surcharge `collectPickObjects`, `updateInfo` et `setOwnerFarmId`. Seul `collectPickObjects` a un corps dans le dump."
+  },
+  "PlaceableConstructible.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onFinalizePlacement`, `onDelete`, `onUpdate`, the four network stream events, and the info trigger enter/leave events.",
+   "fr": "S'abonne à `onLoad`, `onFinalizePlacement`, `onDelete`, `onUpdate`, aux quatre événements de flux réseau et aux événements d'entrée/sortie du déclencheur d'infos."
+  },
+  "PlaceableConstructible.registerXMLPaths": {
+   "en": "Declares the `constructible` keys: state definitions (`name`, `class`, `isStartState`, `isPreviewState` plus the `ConstructibleState*` keys), transitions (`from`/`to`), selling station and storage.",
+   "fr": "Déclare les clés `constructible` : définitions d'états (`name`, `class`, `isStartState`, `isPreviewState` et les clés `ConstructibleState*`), transitions (`from`/`to`), station de vente et stockage."
+  },
+  "PlaceableConstructible.registerSavegameXMLPaths": {
+   "en": "Declares the savegame keys `state#index`, `state#name`, and delegates to `ConstructibleStateBuilding` and `Storage`.",
+   "fr": "Déclare les clés de sauvegarde `state#index`, `state#name`, et délègue à `ConstructibleStateBuilding` et `Storage`."
+  },
+  "PlaceableConstructible:onLoad": {
+   "en": "Creates the unloading station and storage and registers them with the storage and economy systems, then builds the state machine from the XML (up to 255 states, state classes must derive from `ConstructibleState`, dirty flags are shared round-robin over 10 flags) and its transitions. Applies the preview state when the placeable is in construction preview.",
+   "fr": "Crée la station de déchargement et le stockage et les enregistre auprès des systèmes de stockage et d'économie, puis construit la machine à états depuis le XML (jusqu'à 255 états, les classes d'état doivent dériver de `ConstructibleState`, les drapeaux de modification sont partagés en rotation sur 10 drapeaux) et ses transitions. Applique l'état d'aperçu si le placeable est en aperçu de construction."
+  },
+  "PlaceableConstructible:onFinalizePlacement": {
+   "en": "Sets the owner farm on the station and storage. On the server it replays states from 1 up to the loaded (or start) state, runs the pending post-finalize load step and keeps itself active.",
+   "fr": "Applique la ferme propriétaire à la station et au stockage. Côté serveur, rejoue les états de 1 jusqu'à l'état chargé (ou de départ), exécute l'étape de chargement différée et reste actif."
+  },
+  "PlaceableConstructible:onDelete": {
+   "en": "Removes the finish-state console command, unsubscribes from messages, unregisters and deletes the unloading station, deletes the storage and every state.",
+   "fr": "Retire la commande console de fin d'état, se désabonne des messages, désenregistre et supprime la station de déchargement, supprime le stockage et chaque état."
+  },
+  "PlaceableConstructible:collectPickObjects": {
+   "en": "Skips picking nodes that are the exact-fill root node of one of the unloading triggers; other nodes go to the parent implementation.",
+   "fr": "Ignore les nœuds de sélection qui sont le nœud racine de remplissage exact d'un des déclencheurs de déchargement ; les autres nœuds sont transmis au parent."
+  },
+  "PlaceableConstructible:saveToXMLFile": {
+   "en": "Saves the current state name and its own data, then the storage.",
+   "fr": "Sauvegarde le nom de l'état courant et ses données propres, puis le stockage."
+  },
+  "PlaceableConstructible:loadFromXMLFile": {
+   "en": "Reads the saved state name into a pending state index (falling back to 1), schedules the state's own data to load after finalization (so physics is not overwritten), and loads the storage.",
+   "fr": "Lit le nom d'état sauvegardé dans un index d'état en attente (1 par défaut), planifie le chargement des données propres de l'état après la finalisation (pour ne pas écraser la physique), et charge le stockage."
+  },
+  "PlaceableConstructible:onReadStream": {
+   "en": "Client side join: reads and registers the unloading station and storage, then, if a state was sent, replays states up to that index and reads the state's stream data.",
+   "fr": "Connexion côté client : lit et enregistre la station de déchargement et le stockage puis, si un état a été envoyé, rejoue les états jusqu'à cet index et lit les données de flux de l'état."
+  },
+  "PlaceableConstructible:onWriteStream": {
+   "en": "Server side join: writes the station and storage, then a flag telling whether a state exists, followed by the state index and its stream data.",
+   "fr": "Connexion côté serveur : écrit la station et le stockage, puis un indicateur précisant si un état existe, suivi de l'index d'état et de ses données de flux."
+  },
+  "PlaceableConstructible.loadSpecValueFillTypes": {
+   "en": "Store spec loader: if the XML has a `constructible` section, adds every fill type named by a state's `input` entry to the result table (keyed by name) and returns it.",
+   "fr": "Chargeur de caractéristique de boutique : si le XML contient une section `constructible`, ajoute à la table de résultat chaque type de remplissage nommé par une entrée `input` d'un état (clé = nom) et la renvoie."
+  }
+ }
+}

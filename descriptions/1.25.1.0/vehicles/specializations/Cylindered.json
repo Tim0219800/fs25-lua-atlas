@@ -1,0 +1,449 @@
+{
+ "fichier": "vehicles/specializations/Cylindered.lua",
+ "module": {
+  "en": "Vehicle specialization that animates articulated parts of a machine: moving tools (player-controlled axes such as loader arms, driven by rotation, translation or an animation) and moving parts (passive nodes that aim at a reference point, such as hydraulic cylinders). Requires VehicleSettings and also talks to AnimatedVehicle, Wheels, AttacherJoints, Dischargeable, Shovel and DynamicMountAttacher. It runs input and limits on the server, interpolates on clients, syncs tool positions over the network and saves them in the savegame. It also provides the optional easy arm control (a two-segment inverse kinematics scheme), control groups, hydraulic and action sounds, and dashboard values. Constants such as MOVING_TOOLS_XML_KEYS, the SOUND_ACTION_* and SOUND_TYPE_* values are not visible in this dump (UNVERIFIED).",
+  "fr": "Spécialisation de véhicule qui anime les parties articulées d'une machine : les moving tools (axes commandés par le joueur, comme les bras de chargeur, pilotés par rotation, translation ou animation) et les moving parts (nœuds passifs qui visent un point de référence, comme les vérins hydrauliques). Elle exige VehicleSettings et dialogue aussi avec AnimatedVehicle, Wheels, AttacherJoints, Dischargeable, Shovel et DynamicMountAttacher. Le serveur gère les entrées et les limites, les clients interpolent, les positions des outils sont synchronisées par le réseau et sauvegardées. Elle fournit aussi la commande de bras simplifiée (cinématique inverse à deux segments), les groupes de contrôle, les sons hydrauliques et d'action, et les valeurs de tableau de bord. Les constantes comme MOVING_TOOLS_XML_KEYS, SOUND_ACTION_* et SOUND_TYPE_* ne figurent pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "Cylindered.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type includes the VehicleSettings specialization; Cylindered cannot be added without it.",
+   "fr": "Renvoie vrai seulement si le type de véhicule contient la spécialisation VehicleSettings ; Cylindered ne peut pas être ajoutée sans elle."
+  },
+  "Cylindered.initSpecialization": {
+   "en": "Registers the \"cylindered\" shop configuration type and declares all vehicle XML paths (moving tools, moving parts, easy arm control, control groups, dashboards, object-change extensions, discharge, shovel and dynamic-mount activation) plus the savegame keys for tool translation, rotation and animation time.",
+   "fr": "Enregistre le type de configuration boutique \"cylindered\" et déclare tous les chemins XML du véhicule (moving tools, moving parts, commande de bras, groupes de contrôle, tableaux de bord, extensions d'object change, activation de vidange, de pelle et de montage dynamique) ainsi que les clés de sauvegarde (translation, rotation, temps d'animation des outils)."
+  },
+  "Cylindered.registerSoundXMLPaths": {
+   "en": "Declares the XML paths of the hydraulic sample and of the action sounds (action names, trigger nodes, pitch drop-off factor and time) under the given base key.",
+   "fr": "Déclare les chemins XML du son hydraulique et des sons d'action (noms d'actions, nœuds déclencheurs, facteur et durée de baisse de hauteur) sous la clé de base donnée."
+  },
+  "Cylindered.registerEasyArmControlXMLPaths": {
+   "en": "Declares the XML attributes of the easy arm control block: root, target and reference nodes, target speed and acceleration, the translation/rotation move ratio settings, and the Z translation and X rotation nodes.",
+   "fr": "Déclare les attributs XML du bloc de commande de bras simplifiée : nœuds racine, cible et référence, vitesse et accélération de la cible, réglages du ratio translation/rotation, nœuds de translation Z et de rotation X."
+  },
+  "Cylindered.registerMovingToolXMLPaths": {
+   "en": "Declares every XML attribute of one moving tool: rotation, translation and animation limits and speeds, controls (axis, icon, group), power use, attach and detach limits, required configurations, dependent parts, wheels, attacher joints, fill and fold limits. Also chains the dependent joint, animation and tool registrations.",
+   "fr": "Déclare tous les attributs XML d'un moving tool : limites et vitesses de rotation, translation et animation, commandes (axe, icône, groupe), consommation de puissance, limites d'attelage et de dételage, configurations requises, pièces dépendantes, roues, attaches, limites de remplissage et de pliage. Enchaîne aussi les enregistrements des joints, animations et outils dépendants."
+  },
+  "Cylindered.registerMovingPartXMLPaths": {
+   "en": "Declares every XML attribute of one moving part: node, reference frame and points, alignment modes (direction, line, 3D line, rotation, world Y), distance and threshold settings, smoothing, update distance, translating parts and dependent elements.",
+   "fr": "Déclare tous les attributs XML d'une moving part : nœud, repère et points de référence, modes d'alignement (direction, ligne, ligne 3D, rotation, axe Y monde), distances et seuils, lissage, distance de mise à jour, pièces coulissantes et éléments dépendants."
+  },
+  "Cylindered.registerDependentComponentJointXMLPaths": {
+   "en": "Declares the XML paths for component joints that must follow a moving tool or part: joint index, ignore-warning flag and anchor actor.",
+   "fr": "Déclare les chemins XML des joints de composants qui doivent suivre un moving tool ou une moving part : index du joint, drapeau d'avertissement ignoré et acteur d'ancrage."
+  },
+  "Cylindered.registerCopyLocalDirectionXMLPaths": {
+   "en": "Declares the XML paths of copyLocalDirectionPart entries (node, direction scale, up-vector scale) and their optional component joints.",
+   "fr": "Déclare les chemins XML des entrées copyLocalDirectionPart (nœud, échelle de direction, échelle du vecteur haut) et de leurs joints de composants éventuels."
+  },
+  "Cylindered.registerDependentAnimationXMLPaths": {
+   "en": "Declares the XML paths of dependent animations driven by a part's axis value: animation name, axis, translating part index, value range and inversion.",
+   "fr": "Déclare les chemins XML des animations dépendantes pilotées par la valeur d'un axe d'une pièce : nom de l'animation, axe, index de pièce coulissante, plage de valeurs et inversion."
+  },
+  "Cylindered.registerDependentMovingToolXMLPaths": {
+   "en": "Declares the XML paths of dependent moving tools: node, axis, speed scale, requiresMovement, rotation-based limit keyframes and min/max translation or rotation limit pairs.",
+   "fr": "Déclare les chemins XML des moving tools dépendants : nœud, axe, facteur de vitesse, requiresMovement, points clés de limites selon la rotation et paires de limites min/max de translation ou de rotation."
+  },
+  "Cylindered.registerEvents": {
+   "en": "Registers the vehicle event onMovingToolChanged, raised with the tool, the speed and dt whenever a moving tool actually moves.",
+   "fr": "Enregistre l'événement de véhicule onMovingToolChanged, déclenché avec l'outil, la vitesse et dt chaque fois qu'un moving tool se déplace réellement."
+  },
+  "Cylindered.registerFunctions": {
+   "en": "Registers the specialization's public vehicle functions (loading helpers, dirty updates, node lookups, active-state getters, easy control, dependent updates, sound events, control groups) on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les fonctions publiques de la spécialisation (chargement, mises à jour dirty, recherche par nœud, états actifs, commande simplifiée, mises à jour dépendantes, événements sonores, groupes de contrôle)."
+  },
+  "Cylindered.registerOverwrittenFunctions": {
+   "en": "Overrides existing vehicle functions: detach permission, object-change loading and applying, discharge-node, shovel and dynamic-mount hooks, component joint frame, schema text, wear multiplier, PTO power use and consuming load.",
+   "fr": "Surcharge des fonctions de véhicule existantes : autorisation de dételage, chargement et application des object changes, points d'accroche des nœuds de vidange, pelle et montage dynamique, repère de joint de composant, texte de schéma, multiplicateur d'usure, consommation PTO et charge consommée."
+  },
+  "Cylindered.registerEventListeners": {
+   "en": "Subscribes the specialization to the vehicle lifecycle, network, update, draw, input, attach, selection, AI, setting and animation-value events it needs.",
+   "fr": "Abonne la spécialisation aux événements du véhicule dont elle a besoin : cycle de vie, réseau, mise à jour, affichage, entrées, attelage, sélection, IA, réglages et valeurs d'animation."
+  },
+  "Cylindered:onLoad": {
+   "en": "Builds the whole articulated setup from the vehicle XML (base and configuration keys): moving parts and tools, dependent links, control groups with sub-selections, easy arm control, dashboard value, sounds, dirty flags and the EASY_ARM_CONTROL vehicle setting. Warns on invalid entries and drops dependent tools that are not defined.",
+   "fr": "Construit tout l'ensemble articulé à partir du XML du véhicule (clés de base et de configuration) : moving parts et tools, liens dépendants, groupes de contrôle avec sous-sélections, commande de bras, valeur de tableau de bord, sons, drapeaux dirty et réglage EASY_ARM_CONTROL. Avertit sur les entrées invalides et retire les outils dépendants non définis."
+  },
+  "Cylindered:onPostLoad": {
+   "en": "Applies start positions, loads attacher-joint and wheel dependencies, restores saved tool positions clamped to their limits (unless the savegame resets vehicles), then runs the initial update. Removes event listeners that the vehicle does not need (no tools, no parts, not a client).",
+   "fr": "Applique les positions de départ, charge les dépendances d'attaches et de roues, restaure les positions d'outils sauvegardées bornées à leurs limites (sauf réinitialisation des véhicules), puis lance la mise à jour initiale. Retire les écouteurs d'événements inutiles (pas d'outils, pas de pièces, pas client)."
+  },
+  "Cylindered:onLoadFinished": {
+   "en": "Ends the loading phase and flushes the delayed-node history of tools that have pending delayed data.",
+   "fr": "Termine la phase de chargement et purge l'historique des nœuds retardés des outils qui ont des données retardées en attente."
+  },
+  "Cylindered:onRegisterDashboardValueTypes": {
+   "en": "Registers the cylindered/movingTool dashboard value (range 0 to 1, idle 0.5) fed by getMovingToolDashboardState.",
+   "fr": "Enregistre la valeur de tableau de bord cylindered/movingTool (plage 0 à 1, repos 0,5) alimentée par getMovingToolDashboardState."
+  },
+  "Cylindered:onDelete": {
+   "en": "Releases the hydraulic and action sound samples and deletes the axis icons of the moving tools.",
+   "fr": "Libère les sons hydrauliques et d'action et supprime les icônes d'axe des moving tools."
+  },
+  "Cylindered:saveToXMLFile": {
+   "en": "Writes the current translation, rotation and animation time of every saveable moving tool into the savegame, indexed in order of saveable tools only.",
+   "fr": "Écrit dans la sauvegarde la translation, la rotation et le temps d'animation actuels de chaque moving tool sauvegardable, indexés dans l'ordre des seuls outils sauvegardables."
+  },
+  "Cylindered:onReadStream": {
+   "en": "Client side, on join: if the server flagged states as loadable, reads each tool's absolute translation, rotation and animation time, resets interpolators, applies them and raises onMovingToolChanged.",
+   "fr": "Côté client à la connexion : si le serveur a indiqué que les états sont chargeables, lit la translation, la rotation et le temps d'animation absolus de chaque outil, réinitialise les interpolateurs, les applique et déclenche onMovingToolChanged."
+  },
+  "Cylindered:onWriteStream": {
+   "en": "Server side, on join: writes a flag (allowLoadMovingToolStates) and then each networked tool's absolute translation, rotation and animation time for the joining client.",
+   "fr": "Côté serveur à la connexion : écrit un drapeau (allowLoadMovingToolStates) puis la translation, la rotation et le temps d'animation absolus de chaque outil synchronisé pour le client entrant."
+  },
+  "Cylindered:onReadUpdateStream": {
+   "en": "Server reads the 12-bit input value of each controllable tool sent by a client. Client reads the compressed rotation, translation and animation targets (and synced rotation limits) and feeds the network interpolators.",
+   "fr": "Le serveur lit la valeur d'entrée sur 12 bits de chaque outil pilotable envoyée par un client. Le client lit les cibles compressées de rotation, translation et animation (et les limites de rotation synchronisées) et alimente les interpolateurs réseau."
+  },
+  "Cylindered:onWriteUpdateStream": {
+   "en": "Client sends its current input values (12-bit, only when the input dirty flag is set). Server sends the compressed state of every tool whose dirty flag is set and that is active.",
+   "fr": "Le client envoie ses valeurs d'entrée actuelles (12 bits, seulement si le drapeau dirty d'entrée est levé). Le serveur envoie l'état compressé de chaque outil actif dont le drapeau dirty est levé."
+  },
+  "Cylindered:onUpdate": {
+   "en": "Per-frame update. Server: converts input (or AI target) into accelerated rotation, translation and animation motion, drives dependent tools and limits, raises dirty flags and power-consumption timing. Client: interpolates toward the last network state. Also advances delayed nodes and the power timer.",
+   "fr": "Mise à jour à chaque image. Serveur : transforme l'entrée (ou la cible de l'IA) en mouvement accéléré de rotation, translation et animation, pilote outils et limites dépendants, lève les drapeaux dirty et gère le délai de consommation de puissance. Client : interpole vers le dernier état réseau. Fait aussi avancer les nœuds retardés et le minuteur de puissance."
+  },
+  "Cylindered:setDelayedData": {
+   "en": "Stores the tool node's current rotation and translation as the newest entry of its delayed-frames history (optionally filling the whole history at once).",
+   "fr": "Stocke la rotation et la translation actuelles du nœud de l'outil comme entrée la plus récente de son historique d'images retardées (avec remplissage complet optionnel)."
+  },
+  "Cylindered:updateDelayedTool": {
+   "en": "Shifts the delayed history by one frame and applies the oldest stored pose to the tool's delayedNode, marking a matching moving part or tool dirty. Can first force every entry to the latest pose.",
+   "fr": "Décale l'historique retardé d'une image et applique la plus ancienne pose stockée au delayedNode de l'outil, en marquant dirty la moving part ou le tool correspondant. Peut d'abord forcer toutes les entrées à la dernière pose."
+  },
+  "Cylindered:loadEasyArmControlFromXML": {
+   "en": "Reads and validates the easy arm control block: two target tools, optional Z translation nodes and exactly two X rotation nodes, with position checks. Computes the maximum reach if not given. Returns false with an XML warning or error when the setup is invalid.",
+   "fr": "Lit et valide le bloc de commande de bras : deux outils cibles, nœuds de translation Z optionnels et exactement deux nœuds de rotation X, avec contrôles de position. Calcule la portée maximale si elle n'est pas donnée. Renvoie faux avec un avertissement ou une erreur XML si la configuration est invalide."
+  },
+  "Cylindered:updateEasyControl": {
+   "en": "While easy control is on and the player moves the Y or Z target, moves a reference point within reach and solves the two-segment arm (circle intersection plus law of cosines), driving the Z translation and X rotation tools within their limits. Server only for the movement.",
+   "fr": "Quand la commande simplifiée est active et que le joueur déplace la cible Y ou Z, déplace un point de référence dans la portée et résout le bras à deux segments (intersection de cercles et loi des cosinus), en pilotant les outils de translation Z et de rotation X dans leurs limites. Mouvement côté serveur uniquement."
+  },
+  "Cylindered:setIsEasyControlActive": {
+   "en": "Switches easy arm control on or off. On the server, enabling it first snaps the Y and Z target tools to the reference node and syncs. Requests an action-event refresh on all sides.",
+   "fr": "Active ou désactive la commande de bras simplifiée. Sur le serveur, l'activation aligne d'abord les outils cibles Y et Z sur le nœud de référence et synchronise. Demande un rafraîchissement des événements d'action partout."
+  },
+  "Cylindered:setEasyControlForcedTransMove": {
+   "en": "Sets a one-shot forced move factor for the easy control translation nodes, consumed at the next easy control update; ignored without easy arm control.",
+   "fr": "Définit un facteur de déplacement forcé ponctuel pour les nœuds de translation de la commande simplifiée, consommé à la prochaine mise à jour ; ignoré sans commande de bras."
+  },
+  "Cylindered:updateExtraDependentParts": {
+   "en": "Empty extension hook called after a tool or part updates, so other specializations can override it to update extra dependent content.",
+   "fr": "Point d'extension vide appelé après la mise à jour d'un outil ou d'une pièce, que d'autres spécialisations peuvent surcharger pour mettre à jour du contenu dépendant supplémentaire."
+  },
+  "Cylindered:updateDependentAnimations": {
+   "en": "Maps the part's current translation or rotation on its axis to a normalised 0..1 value (optionally inverted) and sets each dependent animation to that time.",
+   "fr": "Convertit la translation ou la rotation actuelle de la pièce sur son axe en valeur normalisée 0..1 (inversion possible) et règle chaque animation dépendante sur ce temps."
+  },
+  "Cylindered:updateDependentToolLimits": {
+   "en": "Interpolates the min/max translation or rotation limits of a dependent tool from the driving tool's state, then re-clamps the dependent tool and marks it dirty if it moved.",
+   "fr": "Interpole les limites min/max de translation ou de rotation d'un outil dépendant selon l'état de l'outil pilote, puis rebride l'outil dépendant et le marque dirty s'il a bougé."
+  },
+  "Cylindered:onMovingPartSoundEvent": {
+   "en": "Triggers the action samples registered for a part and action: one-shot, continuous, ending or starting types, using timestamps so ending and starting sounds are debounced. Client-side sound handling.",
+   "fr": "Déclenche les sons d'action enregistrés pour une pièce et une action : types ponctuel, continu, de fin ou de début, avec horodatage pour filtrer les sons de fin et de début. Gestion sonore côté client."
+  },
+  "Cylindered:updateMovingToolSoundEvents": {
+   "en": "Translates a tool movement (direction, limit reached, left a limit) into the matching start, end, positive and negative sound action events for the tool.",
+   "fr": "Traduit un mouvement d'outil (sens, limite atteinte, limite quittée) en événements sonores d'action de début, de fin, positifs et négatifs pour l'outil."
+  },
+  "Cylindered:updateControlGroups": {
+   "en": "Rebuilds the sub-selections from control groups that still have an active controllable tool, refreshes the root vehicle's selectable objects and reselects this vehicle if it was selected.",
+   "fr": "Reconstruit les sous-sélections à partir des groupes de contrôle qui ont encore un outil pilotable actif, rafraîchit les objets sélectionnables du véhicule racine et resélectionne ce véhicule s'il l'était."
+  },
+  "Cylindered:onUpdateTick": {
+   "en": "Client side: enables or disables each tool's input action depending on whether the tool is active, resets stuck input, refreshes control groups on state change and times out active, ending and starting action samples.",
+   "fr": "Côté client : active ou désactive l'action d'entrée de chaque outil selon son état, remet à zéro les entrées bloquées, rafraîchit les groupes de contrôle lors d'un changement d'état et gère l'expiration des sons d'action actifs, de fin et de début."
+  },
+  "Cylindered:onUpdateEnd": {
+   "en": "Forces all always-dirty moving parts to update regardless of camera distance just before the vehicle goes to sleep, then flushes dirty parts.",
+   "fr": "Force la mise à jour de toutes les moving parts en dirty permanent, quelle que soit la distance de la caméra, juste avant la mise en veille du véhicule, puis traite les pièces dirty."
+  },
+  "Cylindered:onPostUpdate": {
+   "en": "Marks always-dirty moving parts dirty when the vehicle is within their max update distance, then updates dirty parts and the hydraulic sound.",
+   "fr": "Marque dirty les moving parts à dirty permanent lorsque le véhicule est dans leur distance de mise à jour maximale, puis met à jour les pièces dirty et le son hydraulique."
+  },
+  "Cylindered:onPostUpdateTick": {
+   "en": "Updates parts set dirty during the update tick, without the sound step, so they are not one frame late.",
+   "fr": "Met à jour les pièces marquées dirty pendant le tick de mise à jour, sans l'étape sonore, pour qu'elles n'aient pas une image de retard."
+  },
+  "Cylindered:updateDirtyMovingParts": {
+   "en": "Processes dirty tools (wheels, server component joints, extra and animation dependents) and dirty moving parts, then starts or stops the hydraulic sample on clients when updateSound is true.",
+   "fr": "Traite les outils dirty (roues, joints de composants côté serveur, dépendants supplémentaires et d'animation) et les moving parts dirty, puis démarre ou arrête le son hydraulique sur les clients si updateSound est vrai."
+  },
+  "Cylindered:onDraw": {
+   "en": "When the vehicle has several control groups and is active for input, adds an extra HUD text with the current control group name and number.",
+   "fr": "Quand le véhicule a plusieurs groupes de contrôle et est actif pour les entrées, ajoute un texte HUD supplémentaire avec le nom et le numéro du groupe de contrôle courant."
+  },
+  "Cylindered:loadMovingPartsFromXML": {
+   "en": "Loads every moving part found under the key with its dependent parts, joints, copy-direction parts, extras and animations, and registers it by node. Duplicate nodes are skipped with a warning.",
+   "fr": "Charge toutes les moving parts trouvées sous la clé avec leurs pièces dépendantes, joints, pièces à copie de direction, extras et animations, et les enregistre par nœud. Les nœuds en double sont ignorés avec un avertissement."
+  },
+  "Cylindered:loadMovingPartFromXML": {
+   "en": "Reads one moving part (reference frame and points, alignment modes, distances, thresholds, smoothing, update distance) into entry. Returns false when the node or frame is missing or when incompatible alignment modes are combined.",
+   "fr": "Lit une moving part (repère et points de référence, modes d'alignement, distances, seuils, lissage, distance de mise à jour) dans entry. Renvoie faux si le nœud ou le repère manque ou si des modes d'alignement incompatibles sont combinés."
+  },
+  "Cylindered:loadMovingToolsFromXML": {
+   "en": "Loads every moving tool found under the key with its dependent tools, parts, joints, extras and animations, and registers it by node. Duplicate nodes are skipped with a warning.",
+   "fr": "Charge tous les moving tools trouvés sous la clé avec leurs outils et pièces dépendants, joints, extras et animations, et les enregistre par nœud. Les nœuds en double sont ignorés avec un avertissement."
+  },
+  "Cylindered:loadMovingToolFromXML": {
+   "en": "Reads one moving tool into entry: speeds (converted from per-second to per-ms), limits, network bit depth, animation, controls, detach locks, required configurations, delayed node and interpolators. Returns false if a min limit is not below its max.",
+   "fr": "Lit un moving tool dans entry : vitesses (converties de par seconde en par ms), limites, précision réseau en bits, animation, commandes, verrous de dételage, configurations requises, nœud retardé et interpolateurs. Renvoie faux si une limite min n'est pas inférieure à sa max."
+  },
+  "Cylindered:loadDependentMovingTools": {
+   "en": "Reads the dependentMovingTool entries of a tool or part: speed scale, requiresMovement, rotation-based limit curve and min/max limit pairs. Only entries with a node and at least one rule are kept.",
+   "fr": "Lit les entrées dependentMovingTool d'un outil ou d'une pièce : facteur de vitesse, requiresMovement, courbe de limites selon la rotation et paires de limites min/max. Seules les entrées avec un nœud et au moins une règle sont conservées."
+  },
+  "Cylindered:loadDependentParts": {
+   "en": "Reads the dependentPart nodes (and their max update distance, unlimited by default) of an entry; they are resolved to real parts later by resolveDependentPartData.",
+   "fr": "Lit les nœuds dependentPart (et leur distance de mise à jour maximale, illimitée par défaut) d'une entrée ; ils sont résolus plus tard en vraies pièces par resolveDependentPartData."
+  },
+  "Cylindered:resolveDependentPartData": {
+   "en": "Links each dependent node to the moving parts or tools registered for it (adding extra entries when several share a node), flags them as dependent and removes unresolved entries.",
+   "fr": "Relie chaque nœud dépendant aux moving parts ou tools enregistrés pour lui (en ajoutant des entrées si plusieurs partagent un nœud), les marque comme dépendants et supprime les entrées non résolues."
+  },
+  "Cylindered:loadDependentComponentJoints": {
+   "en": "Server only: reads the component joints to update with a tool or part and stores the offset and orientation of the second component relative to the joint node. Invalid indices raise a warning unless ignoreWarning is set.",
+   "fr": "Serveur uniquement : lit les joints de composants à mettre à jour avec un outil ou une pièce et stocke le décalage et l'orientation du second composant par rapport au nœud du joint. Un index invalide provoque un avertissement sauf si ignoreWarning est défini."
+  },
+  "Cylindered:loadDependentAttacherJoints": {
+   "en": "Resolves the listed attacher joint indices of this vehicle into joint entries and reads whether the input attacher joint must be updated as well. Missing indices warn unless ignored.",
+   "fr": "Résout les index d'attaches de ce véhicule en entrées de joint et lit si l'attache d'entrée doit aussi être mise à jour. Les index absents donnent un avertissement sauf s'ils sont ignorés."
+  },
+  "Cylindered:loadDependentWheels": {
+   "en": "If the vehicle has the Wheels specialization, resolves wheels listed by index or by node name so their shapes follow the part. Unknown wheels produce a warning.",
+   "fr": "Si le véhicule a la spécialisation Wheels, résout les roues listées par index ou par nom de nœud pour que leurs formes suivent la pièce. Une roue inconnue donne un avertissement."
+  },
+  "Cylindered:loadDependentTranslatingParts": {
+   "en": "Reads the translatingPart entries of a moving part with reference points: start position, reference distance, Z limits and whether the distance is shared among parts (divider counted).",
+   "fr": "Lit les entrées translatingPart d'une moving part avec points de référence : position de départ, distance de référence, limites Z et partage ou non de la distance entre pièces (diviseur compté)."
+  },
+  "Cylindered:loadExtraDependentParts": {
+   "en": "Empty extension hook called while loading a tool or part; returns true. Meant to be overridden by other specializations.",
+   "fr": "Point d'extension vide appelé pendant le chargement d'un outil ou d'une pièce ; renvoie vrai. Prévu pour être surchargé par d'autres spécialisations."
+  },
+  "Cylindered:loadDependentAnimations": {
+   "en": "Reads the dependentAnimation entries (name, translation or rotation axis, optional translating part, value range converted to radians for rotation, invert flag) of an entry.",
+   "fr": "Lit les entrées dependentAnimation (nom, axe de translation ou de rotation, pièce coulissante optionnelle, plage de valeurs convertie en radians pour la rotation, drapeau d'inversion) d'une entrée."
+  },
+  "Cylindered:loadCopyLocalDirectionParts": {
+   "en": "Reads copyLocalDirectionPart entries whose orientation copies the part's direction and up vector with per-axis scale. Entries missing dirScale or upScale are skipped with a warning.",
+   "fr": "Lit les entrées copyLocalDirectionPart dont l'orientation copie la direction et le vecteur haut de la pièce avec une échelle par axe. Les entrées sans dirScale ou upScale sont ignorées avec un avertissement."
+  },
+  "Cylindered:loadRotationBasedLimits": {
+   "en": "Builds one keyframe (rotation, min/max rotation and translation, normalised to the tool's range if it has one) for a rotation-based limit curve. Returns nil if the rotation or all limits are missing.",
+   "fr": "Construit un point clé (rotation, rotation et translation min/max, normalisé sur la plage de l'outil s'il en a une) pour une courbe de limites selon la rotation. Renvoie nil si la rotation ou toutes les limites manquent."
+  },
+  "Cylindered:loadActionSoundsFromXML": {
+   "en": "Loads the actionSound samples and maps each listed node and SOUND_ACTION_* name to the sample list, attaching it to the matching part, translating part or tool. Unknown actions or nodes warn.",
+   "fr": "Charge les sons actionSound et associe chaque nœud et chaque nom SOUND_ACTION_* à la liste de sons, en la rattachant à la moving part, la pièce coulissante ou le tool correspondant. Les actions ou nœuds inconnus donnent un avertissement."
+  },
+  "Cylindered:checkMovingPartDirtyUpdateNode": {
+   "en": "Empty hook used in development builds to check nodes under limited-distance moving parts; the body is empty in this dump.",
+   "fr": "Point d'extension vide utilisé dans les versions de développement pour vérifier les nœuds sous des moving parts à distance limitée ; le corps est vide dans ce dump."
+  },
+  "Cylindered:setMovingToolDirty": {
+   "en": "Call after an outside change (such as an animation) moved a tool node: refreshes cached position, plays sound events, marks the tool dirty, syncs client interpolators and optionally updates parts immediately.",
+   "fr": "À appeler quand un changement extérieur (animation par exemple) a déplacé le nœud d'un outil : rafraîchit la position en cache, joue les sons, marque l'outil dirty, synchronise les interpolateurs client et met à jour les pièces immédiatement si demandé."
+  },
+  "Cylindered:setMovingPartReferenceNode": {
+   "en": "Replaces the reference point of a moving part (nil restores the XML one) and optionally changes its always-dirty state, handling smoothed direction transitions. Updates the part right away and propagates to dependents that share the original reference.",
+   "fr": "Remplace le point de référence d'une moving part (nil rétablit celui du XML) et change éventuellement son état dirty permanent, en gérant les transitions de direction lissées. Met la pièce à jour immédiatement et propage aux dépendants qui partagent la référence d'origine."
+  },
+  "Cylindered:updateMovingPartByNode": {
+   "en": "Immediately recomputes the moving part registered for the node, including its dependent parts, extras and animations; does nothing if the node is unknown.",
+   "fr": "Recalcule immédiatement la moving part enregistrée pour le nœud, avec ses pièces dépendantes, extras et animations ; sans effet si le nœud est inconnu."
+  },
+  "Cylindered:updateCylinderedInitial": {
+   "en": "Full initial pass over tools and parts (wheels, server component joints, extras, animations), placing components unless told otherwise. keepDirty leaves the dirty flags set.",
+   "fr": "Passe initiale complète sur les outils et les pièces (roues, joints de composants côté serveur, extras, animations), en plaçant les composants sauf indication contraire. keepDirty laisse les drapeaux dirty levés."
+  },
+  "Cylindered:allowLoadMovingToolStates": {
+   "en": "Always returns true here; an overridable switch that lets saved moving tool states be loaded and sent to joining clients.",
+   "fr": "Renvoie toujours vrai ici ; interrupteur surchargeable qui autorise le chargement des états sauvegardés des moving tools et leur envoi aux clients entrants."
+  },
+  "Cylindered:getMovingToolByNode": {
+   "en": "Returns the moving tool registered for the node, or nil.",
+   "fr": "Renvoie le moving tool enregistré pour le nœud, ou nil."
+  },
+  "Cylindered:getMovingPartByNode": {
+   "en": "Returns the moving part registered for the node, or nil.",
+   "fr": "Renvoie la moving part enregistrée pour le nœud, ou nil."
+  },
+  "Cylindered:getTranslatingPartByNode": {
+   "en": "Searches all moving parts for a translating part using the node and returns it, or nil.",
+   "fr": "Parcourt toutes les moving parts à la recherche d'une pièce coulissante utilisant ce nœud et la renvoie, ou nil."
+  },
+  "Cylindered:getIsMovingToolActive": {
+   "en": "Returns true if the tool is enabled and its required configuration is installed.",
+   "fr": "Renvoie vrai si l'outil est activé et si sa configuration requise est installée."
+  },
+  "Cylindered:getIsMovingPartActive": {
+   "en": "Returns the part's active flag (changed by object changes).",
+   "fr": "Renvoie le drapeau actif de la pièce (modifié par les object changes)."
+  },
+  "Cylindered:getMovingToolMoveValue": {
+   "en": "Returns the tool's total input: player input plus external move (for example from a driving tool).",
+   "fr": "Renvoie l'entrée totale de l'outil : entrée du joueur plus déplacement externe (par exemple d'un outil pilote)."
+  },
+  "Cylindered:isDetachAllowed": {
+   "en": "Override: returns false when any tool with detach limits sits outside its allowed rotation or translation range; otherwise defers to the parent implementation.",
+   "fr": "Surcharge : renvoie faux si un outil avec limites de dételage est hors de sa plage de rotation ou de translation autorisée ; sinon délègue à l'implémentation parente."
+  },
+  "Cylindered:loadObjectChangeValuesFromXML": {
+   "en": "Override: after the parent, reads per-state moving tool limits and start values for the node, and a movingPartUpdate toggle that sets the moving part's active flag.",
+   "fr": "Surcharge : après le parent, lit les limites et valeurs de départ d'un moving tool par état pour le nœud, ainsi qu'un interrupteur movingPartUpdate qui règle le drapeau actif de la moving part."
+  },
+  "Cylindered:setObjectChangeValues": {
+   "en": "Override: after the parent, applies the active or inactive rotation and translation limits and start values to the tool of the object-change node.",
+   "fr": "Surcharge : après le parent, applique les limites et valeurs de départ de rotation et translation (état actif ou inactif) au tool du nœud d'object change."
+  },
+  "Cylindered:loadDischargeNode": {
+   "en": "Override: after the parent succeeds, reads an optional movingToolActivation block (node, inversion, open factor and offset) on the discharge node.",
+   "fr": "Surcharge : si le parent réussit, lit un bloc optionnel movingToolActivation (nœud, inversion, facteur et décalage d'ouverture) sur le nœud de vidange."
+  },
+  "Cylindered:getDischargeNodeEmptyFactor": {
+   "en": "Override: scales the discharge speed by how far the linked moving tool is open (state, inversion, offset and open factor); without activation data the parent value is used.",
+   "fr": "Surcharge : module la vitesse de vidange selon l'ouverture du moving tool lié (état, inversion, décalage et facteur d'ouverture) ; sans données d'activation, la valeur parente est utilisée."
+  },
+  "Cylindered:loadShovelNode": {
+   "en": "Override: after the parent succeeds, reads an optional movingToolActivation block (node, inversion, open factor) for the shovel node.",
+   "fr": "Surcharge : si le parent réussit, lit un bloc optionnel movingToolActivation (nœud, inversion, facteur d'ouverture) pour le nœud de pelle."
+  },
+  "Cylindered:getShovelNodeIsActive": {
+   "en": "Override: a shovel node counts as active only if the parent says so and the linked moving tool state is above the open factor (after optional inversion).",
+   "fr": "Surcharge : un nœud de pelle n'est actif que si le parent le dit et si l'état du moving tool lié dépasse le facteur d'ouverture (après inversion éventuelle)."
+  },
+  "Cylindered:loadDynamicMountGrabFromXML": {
+   "en": "Override: after the parent succeeds, reads an optional movingToolActivation block for a dynamic mount grab.",
+   "fr": "Surcharge : si le parent réussit, lit un bloc optionnel movingToolActivation pour une pince de montage dynamique."
+  },
+  "Cylindered:getIsDynamicMountGrabOpened": {
+   "en": "Override: the grab is opened only if the parent says so and the linked moving tool state is above the open factor (after optional inversion).",
+   "fr": "Surcharge : la pince n'est ouverte que si le parent le dit et si l'état du moving tool lié dépasse le facteur d'ouverture (après inversion éventuelle)."
+  },
+  "Cylindered:setComponentJointFrame": {
+   "en": "Override: after the parent, recomputes the stored component offsets of every tool's component joints. Note: it reads the tools' componentJoints list, which is only created on the server, so it is presumably server-only (UNVERIFIED).",
+   "fr": "Surcharge : après le parent, recalcule les décalages de composants stockés pour les joints de chaque outil. À noter : elle lit la liste componentJoints des outils, créée seulement sur le serveur ; usage serveur présumé (NON VÉRIFIÉ)."
+  },
+  "Cylindered:getAdditionalSchemaText": {
+   "en": "Override: on the client, when active for input and several control groups exist, returns the current group number as schema text.",
+   "fr": "Surcharge : côté client, lorsque le véhicule est actif pour les entrées et que plusieurs groupes de contrôle existent, renvoie le numéro du groupe courant comme texte de schéma."
+  },
+  "Cylindered:getWearMultiplier": {
+   "en": "Override: adds the work wear multiplier while the hydraulic sound is playing, so moving the arms wears the vehicle.",
+   "fr": "Surcharge : ajoute le multiplicateur d'usure de travail tant que le son hydraulique joue, si bien que bouger les bras use le véhicule."
+  },
+  "Cylindered:getDoConsumePtoPower": {
+   "en": "Override: also true while the power-consuming timer of the moving tools is still running.",
+   "fr": "Surcharge : renvoie aussi vrai tant que le minuteur de consommation de puissance des moving tools est en cours."
+  },
+  "Cylindered:getConsumingLoad": {
+   "en": "Override: adds one consumer to the load sum, weighted by the remaining power-consuming timer relative to its delay.",
+   "fr": "Surcharge : ajoute un consommateur à la somme de charge, pondéré par le minuteur de consommation restant par rapport à son délai."
+  },
+  "Cylindered:onRegisterActionEvents": {
+   "en": "Client side: registers an axis action for each controllable tool of the selected control group, powered or plain, depending on easy arm control and on whether the tool is an easy control target.",
+   "fr": "Côté client : enregistre une action d'axe pour chaque outil pilotable du groupe de contrôle sélectionné, avec ou sans exigence de puissance, selon la commande de bras et selon que l'outil est une cible de cette commande."
+  },
+  "Cylindered:onPostAttach": {
+   "en": "After the vehicle is attached, clamps each tool's translation and rotation to its attach limits if they are set, and marks changed tools dirty.",
+   "fr": "Après l'attelage du véhicule, borne la translation et la rotation de chaque outil à ses limites d'attelage si elles sont définies, et marque dirty les outils modifiés."
+  },
+  "Cylindered:onSelect": {
+   "en": "Sets the current control group from the selected sub-selection index (0 if it has no mapped group).",
+   "fr": "Définit le groupe de contrôle courant à partir de l'index de sous-sélection choisi (0 s'il n'a pas de groupe associé)."
+  },
+  "Cylindered:onUnselect": {
+   "en": "Resets the current control group to 0.",
+   "fr": "Remet le groupe de contrôle courant à 0."
+  },
+  "Cylindered:onDeactivate": {
+   "en": "On clients, stops the hydraulic sound and zeroes every tool's input and external move.",
+   "fr": "Sur les clients, arrête le son hydraulique et remet à zéro l'entrée et le déplacement externe de chaque outil."
+  },
+  "Cylindered:onAnimationPartChanged": {
+   "en": "Reacts to an animation changing a node by calling setMovingToolDirty for it.",
+   "fr": "Réagit à une animation qui modifie un nœud en appelant setMovingToolDirty pour celui-ci."
+  },
+  "Cylindered:onAIImplementStart": {
+   "en": "When the AI starts working, sets each tool that has an aiActivePosition to move toward that position (target and direction).",
+   "fr": "Au démarrage du travail de l'IA, fait aller chaque outil ayant une aiActivePosition vers cette position (cible et direction)."
+  },
+  "Cylindered:onVehicleSettingChanged": {
+   "en": "Reacts to the EASY_ARM_CONTROL setting by calling setIsEasyControlActive with the new state.",
+   "fr": "Réagit au réglage EASY_ARM_CONTROL en appelant setIsEasyControlActive avec le nouvel état."
+  },
+  "Cylindered:onRegisterAnimationValueTypes": {
+   "en": "Registers the animation value type \"movingPartReferencePoint\", which slides a moving part's reference point between a start and an end node as the animation plays, via a helper transform group.",
+   "fr": "Enregistre le type de valeur d'animation \"movingPartReferencePoint\", qui fait glisser le point de référence d'une moving part entre un nœud de début et de fin pendant l'animation, via un groupe de transformation auxiliaire."
+  },
+  "Cylindered.setToolTranslation": {
+   "en": "Moves the tool along its translation axis by speed times dt or by a delta, clamped to its limits. Updates sounds, raises onMovingToolChanged and returns true if the move exceeded 0.0001. Called with a plain dot, passing the vehicle first.",
+   "fr": "Déplace l'outil le long de son axe de translation selon vitesse fois dt ou un delta, borné par ses limites. Met à jour les sons, déclenche onMovingToolChanged et renvoie vrai si le déplacement dépasse 0,0001. Appelée avec un point, véhicule en premier argument."
+  },
+  "Cylindered.setAbsoluteToolTranslation": {
+   "en": "Moves the tool to an absolute translation; if it changed, marks it dirty and raises network dirty flags.",
+   "fr": "Place l'outil à une translation absolue ; en cas de changement, le marque dirty et lève les drapeaux dirty réseau."
+  },
+  "Cylindered.setToolRotation": {
+   "en": "Rotates the tool on its rotation axis by speed times dt or by a delta, clamped to its limits (wrapped to 0..2 pi when unlimited). Updates sounds, raises onMovingToolChanged and returns true if the change exceeded 0.0001.",
+   "fr": "Fait tourner l'outil sur son axe de rotation selon vitesse fois dt ou un delta, borné par ses limites (ramené à 0..2 pi si illimité). Met à jour les sons, déclenche onMovingToolChanged et renvoie vrai si le changement dépasse 0,0001."
+  },
+  "Cylindered.setAbsoluteToolRotation": {
+   "en": "Rotates the tool to an absolute angle; if it changed, marks it dirty, optionally updates the delayed node and raises network dirty flags.",
+   "fr": "Fait tourner l'outil à un angle absolu ; en cas de changement, le marque dirty, met à jour le nœud retardé si demandé et lève les drapeaux dirty réseau."
+  },
+  "Cylindered.setToolAnimation": {
+   "en": "Advances the tool's animation time by speed times dt within its min/max, detecting external changes for network reset. Updates sounds, raises onMovingToolChanged and returns true on change.",
+   "fr": "Fait avancer le temps d'animation de l'outil selon vitesse fois dt dans ses bornes min/max, en détectant les changements externes pour la réinitialisation réseau. Met à jour les sons, déclenche onMovingToolChanged et renvoie vrai en cas de changement."
+  },
+  "Cylindered.getMovingToolState": {
+   "en": "Returns the tool's position as a 0..1 fraction of its rotation or translation range, the raw value if unlimited, or the animation time for animation tools.",
+   "fr": "Renvoie la position de l'outil en fraction 0..1 de sa plage de rotation ou de translation, la valeur brute si illimité, ou le temps d'animation pour les outils d'animation."
+  },
+  "Cylindered.setDirty": {
+   "en": "Marks a part or tool dirty (once, or always while loading), propagates to dependent parts within their update distance, updates attacher joints and wheels for tools and applies delayed data.",
+   "fr": "Marque une pièce ou un outil dirty (une seule fois, ou toujours pendant le chargement), propage aux pièces dépendantes dans leur distance de mise à jour, met à jour attaches et roues pour les outils et applique les données retardées."
+  },
+  "Cylindered.updateWheels": {
+   "en": "Refreshes the physics shape position of the wheels linked to a part, and their wheel chocks.",
+   "fr": "Rafraîchit la position de la forme physique des roues liées à une pièce, ainsi que leurs cales."
+  },
+  "Cylindered.updateMovingPart": {
+   "en": "Core solver for a moving part: finds the direction (reference point, circle intersections, line alignments, world Y, rotation copy), applies it with thresholds and smoothing, moves translating parts, copies directions, updates joints and wheels on the server and recurses into dependents.",
+   "fr": "Cœur du calcul d'une moving part : détermine la direction (point de référence, intersections de cercles, alignements sur ligne, axe Y monde, copie de rotation), l'applique avec seuils et lissage, déplace les pièces coulissantes, copie les directions, met à jour joints et roues côté serveur et descend dans les dépendants."
+  },
+  "Cylindered.updateComponentJoints": {
+   "en": "Server only: for each joint of the entry, optionally repositions the second component against the joint node, then refreshes the joint frame through setComponentJointFrame.",
+   "fr": "Serveur uniquement : pour chaque joint de l'entrée, replace éventuellement le second composant par rapport au nœud du joint, puis rafraîchit le repère du joint via setComponentJointFrame."
+  },
+  "Cylindered.updateAttacherJoints": {
+   "en": "Server only: re-applies the joint frames of the listed attacher joints and, if requested, recomputes the input attacher joint frame of the vehicle attached to a parent, using the joint offsets.",
+   "fr": "Serveur uniquement : réapplique les repères des attaches listées et, si demandé, recalcule le repère de l'attache d'entrée du véhicule attelé à un parent, en tenant compte des décalages du joint."
+  },
+  "Cylindered.limitInterpolator": {
+   "en": "Interpolation function for rotation-based limit curves, mixing rotMin, rotMax, transMin and transMax of two keyframes. Note: the transMin branch reads first.minTrans, a field never set (keyframes use transMin), which would raise an arithmetic error on nil if reached.",
+   "fr": "Fonction d'interpolation des courbes de limites selon la rotation, qui mélange rotMin, rotMax, transMin et transMax de deux points clés. À noter : la branche transMin lit first.minTrans, champ jamais défini (les points clés utilisent transMin), ce qui provoquerait une erreur arithmétique sur nil si elle était atteinte."
+  },
+  "Cylindered.updateRotationBasedLimits": {
+   "en": "Evaluates the rotation-based limit curve from the driving tool's state or node rotation and applies min/max to the dependent tool. Server clamps and syncs; client only updates interpolator limits.",
+   "fr": "Évalue la courbe de limites selon la rotation à partir de l'état de l'outil pilote ou de la rotation du nœud et applique les min/max à l'outil dépendant. Le serveur borne et synchronise ; le client met seulement à jour les limites de l'interpolateur."
+  },
+  "Cylindered.actionEventInput": {
+   "en": "Input callback for a tool axis: applies inversion, the arm sensitivity setting and mouse scaling, arbitrates between simultaneous mouse axes (including attached implements) and sets tool.move; flags the input dirty flag so the value is sent to the server.",
+   "fr": "Callback d'entrée pour l'axe d'un outil : applique l'inversion, le réglage de sensibilité des bras et la mise à l'échelle de la souris, arbitre entre axes de souris simultanés (y compris les outils attelés) et règle tool.move ; lève le drapeau dirty d'entrée pour envoyer la valeur au serveur."
+  },
+  "Cylindered.getMovingToolDashboardState": {
+   "en": "Dashboard value callback: finds the vehicle (self or the implement on the configured attacher joints) and returns the smoothed input of the moving tool matching the dashboard axis, mapped to 0..1; 0.5 when idle or not found.",
+   "fr": "Callback de valeur de tableau de bord : trouve le véhicule (lui-même ou l'outil sur les attaches configurées) et renvoie l'entrée lissée du moving tool correspondant à l'axe du tableau de bord, ramenée à 0..1 ; 0,5 au repos ou sans correspondance."
+  },
+  "Cylindered.movingToolDashboardAttributes": {
+   "en": "Reads the dashboard XML attributes axis (required), attacherJointIndex, attacherJointNode and attacherJointNodes. Returns false with a warning when the axis is missing.",
+   "fr": "Lit les attributs XML de tableau de bord axis (obligatoire), attacherJointIndex, attacherJointNode et attacherJointNodes. Renvoie faux avec un avertissement si l'axe manque."
+  }
+ }
+}

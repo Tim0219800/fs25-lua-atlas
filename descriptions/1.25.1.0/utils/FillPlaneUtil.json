@@ -1,0 +1,25 @@
+{
+ "fichier": "utils/FillPlaneUtil.lua",
+ "module": {
+  "en": "Static helpers for fill planes, the visual meshes that show bulk material inside vehicles and trailers. The dump only contains signatures: XML path registration, creation from XML, default material assignment from the terrain and fill type switching. Behaviour is inferred from names and parameters and is UNVERIFIED.",
+  "fr": "Utilitaires statiques pour les fill planes, les maillages visuels qui montrent la matière en vrac dans les véhicules et remorques. Le dump ne contient que des signatures : enregistrement des chemins XML, création depuis le XML, attribution des matériaux par défaut depuis le terrain et changement de type de remplissage. Le comportement est déduit des noms et paramètres et NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "FillPlaneUtil.registerFillPlaneXMLPaths": {
+   "en": "Signature only (no body in the SDK dump): Registers the XML paths used to describe a fill plane in the given schema, under the given key.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Enregistre dans le schéma donné les chemins XML décrivant un fill plane, sous la clé donnée."
+  },
+  "FillPlaneUtil.createFromXML": {
+   "en": "Signature only (no body in the SDK dump): Presumably builds a fill plane from an XML file at a key, attached to a base node, with a default capacity when the XML gives none. Returns the fill plane node or nil. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Construit probablement un fill plane depuis un fichier XML à une clé, rattaché à un noeud de base, avec une capacité par défaut si le XML n'en donne pas. Renvoie le noeud du fill plane ou nil. NON VÉRIFIÉ."
+  },
+  "FillPlaneUtil.assignDefaultMaterialsFromTerrain": {
+   "en": "Signature only (no body in the SDK dump): Presumably assigns default materials taken from the terrain root node to the fill plane mesh and returns a success boolean. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Attribue probablement au maillage du fill plane des matériaux par défaut pris sur le noeud racine du terrain et renvoie un booléen de succès. NON VÉRIFIÉ."
+  },
+  "FillPlaneUtil.setFillType": {
+   "en": "Signature only (no body in the SDK dump): Presumably switches the fill plane to the look of the given fill type index. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fait probablement passer le fill plane à l'apparence du type de remplissage donné par son index. NON VÉRIFIÉ."
+  }
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "fichier": "vehicles/specializations/BaleGrab.lua",
+ "module": {
+  "en": "Specialization for bale grabs (front-loader or telehandler tools) that hold bales by dynamically mounting them once the grab arms are closed. Everything is server-side: a trigger node collects bales in reach, and component-joint offsets (rotation or translation) tell when each grab has closed. Closing is also throttled by a timer and by blocking configured moving tools. It also registers two shop spec values (round and square bale sizes). Reads the `vehicle.baleGrab` XML keys. The constant `BaleGrab.CLOSE_TIMER` is used but not defined in this file (UNVERIFIED where it is set).",
+  "fr": "Spécialisation des pinces à balles (outils de chargeur frontal ou de télescopique) qui retiennent les balles en les montant dynamiquement une fois les bras fermés. Tout se passe côté serveur : un nœud trigger recense les balles à portée et les décalages des joints de composant (rotation ou translation) indiquent la fermeture de chaque pince. La fermeture est aussi temporisée et peut bloquer des outils mobiles configurés. Elle enregistre en plus deux valeurs de boutique (tailles de balles rondes et carrées). Lit les clés XML `vehicle.baleGrab`. La constante `BaleGrab.CLOSE_TIMER` est utilisée mais non définie dans ce fichier (NON VÉRIFIÉ : où elle est fixée)."
+ },
+ "fonctions": {
+  "BaleGrab.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisites on other specializations.",
+   "fr": "Renvoie toujours true : cette spécialisation n'exige aucune autre spécialisation."
+  },
+  "BaleGrab.initSpecialization": {
+   "en": "Registers the `vehicle.baleGrab` XML schema keys (sizes, trigger, mount type, per-grab joint and moving-tool settings) and declares the two shop spec types for round and square bale sizes.",
+   "fr": "Enregistre les clés XML `vehicle.baleGrab` dans le schéma (tailles, trigger, type de montage, joint et outils mobiles de chaque pince) et déclare les deux types de spécifications de boutique pour les balles rondes et carrées."
+  },
+  "BaleGrab.registerFunctions": {
+   "en": "Adds the grab's vehicle functions: trigger callback, add/remove dynamic mounted object, closed check, and mount/unmount of a bale.",
+   "fr": "Ajoute au type de véhicule les fonctions de la pince : callback du trigger, ajout/retrait d'objet monté dynamiquement, test de fermeture, montage et démontage d'une balle."
+  },
+  "BaleGrab.registerOverwrittenFunctions": {
+   "en": "Overrides `getMovingToolMoveValue` so that closing moving tools can be blocked while a bale is being gripped.",
+   "fr": "Surcharge `getMovingToolMoveValue` pour pouvoir bloquer les outils mobiles de fermeture pendant qu'une balle est saisie."
+  },
+  "BaleGrab.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete and onUpdateTick.",
+   "fr": "S'abonne aux événements onLoad, onPostLoad, onDelete et onUpdateTick."
+  },
+  "BaleGrab:onLoad": {
+   "en": "Server only: reads the trigger, root node, mount type, force acceleration and each grab (joint index, rotation or translation axis and threshold, moving tools). Creates a joint node and the trigger. If no trigger node is set, removes the other listeners.",
+   "fr": "Serveur uniquement : lit le trigger, le nœud racine, le type de montage, l'accélération de force et chaque pince (index de joint, axe et seuil de rotation ou de translation, outils mobiles). Crée un nœud de joint et le trigger. Sans trigger, retire les autres écouteurs."
+  },
+  "BaleGrab:onPostLoad": {
+   "en": "Resolves each grab's moving-tool nodes into real moving tools and drops entries with no match.",
+   "fr": "Convertit les nœuds d'outils mobiles de chaque pince en véritables outils mobiles et supprime ceux qui n'ont pas de correspondance."
+  },
+  "BaleGrab:onDelete": {
+   "en": "Removes delete and mount-state listeners from pending bales, unmounts every mounted object, and removes the trigger.",
+   "fr": "Retire les écouteurs de suppression et d'état de montage des balles en attente, démonte tous les objets montés et supprime le trigger."
+  },
+  "BaleGrab:onUpdateTick": {
+   "en": "Server only: per grab, runs the close timer and a joint checksum so that small impacts do not toggle the state. When all grabs are closed, it mounts pending bales and raises joint damping; otherwise it unmounts them and restores the damping.",
+   "fr": "Serveur uniquement : pour chaque pince, gère la temporisation de fermeture et une somme de contrôle du joint pour que de petits chocs ne changent pas l'état. Quand toutes les pinces sont fermées, monte les balles en attente et augmente l'amortissement du joint ; sinon les démonte et rétablit l'amortissement."
+  },
+  "BaleGrab:getMovingToolMoveValue": {
+   "en": "Override: returns the normal move value, but forces 0 when a bale is pending and the tool is moving in its closing direction while the close timer is running. Also stores the last move value.",
+   "fr": "Surcharge : renvoie la valeur de déplacement normale, mais force 0 quand une balle est en attente et que l'outil va dans le sens de fermeture pendant que la temporisation tourne. Mémorise aussi la dernière valeur."
+  },
+  "BaleGrab:addDynamicMountedObject": {
+   "en": "Records an object in the table of objects currently mounted on the grab.",
+   "fr": "Enregistre un objet dans la table des objets actuellement montés sur la pince."
+  },
+  "BaleGrab:removeDynamicMountedObject": {
+   "en": "Calls `unmountDynamic` on the object if it is dynamically mounted and forgets it. With `isDeleting` it is also removed from the pending list.",
+   "fr": "Appelle `unmountDynamic` sur l'objet s'il est monté dynamiquement et l'oublie. Avec `isDeleting`, il est aussi retiré de la liste des objets en attente."
+  },
+  "BaleGrab.onPendingObjectDelete": {
+   "en": "Delete listener: when a pending or mounted object is deleted, removes it from the grab with the deleting flag.",
+   "fr": "Écouteur de suppression : quand un objet en attente ou monté est supprimé, le retire de la pince avec l'indicateur de suppression."
+  },
+  "BaleGrab.onPendingObjectMountStateChanged": {
+   "en": "Mount-state listener: if the object gets mounted by something other than this grab, it is released from the grab's pending and mounted tables.",
+   "fr": "Écouteur d'état de montage : si l'objet est monté par autre chose que cette pince, il est retiré des tables d'attente et de montage de la pince."
+  },
+  "BaleGrab:baleGrabTriggerCallback": {
+   "en": "Trigger callback. On enter, counts the shapes of a mountable object (with mount-state listener support) and registers listeners on its first shape. On leave, decrements the count and releases the object at zero.",
+   "fr": "Callback du trigger. À l'entrée, compte les formes d'un objet montable (gérant les écouteurs d'état de montage) et enregistre des écouteurs à la première forme. À la sortie, décrémente le compteur et relâche l'objet à zéro."
+  },
+  "BaleGrab:getIsBaleGrabClosed": {
+   "en": "Returns true when one grab is closed: false while its moving tools are fully open, otherwise true if the joint offset exceeds the rotation or translation threshold. Updates the cached offsets.",
+   "fr": "Renvoie true quand une pince est fermée : false si ses outils mobiles sont totalement ouverts, sinon true si le décalage du joint dépasse le seuil de rotation ou de translation. Met à jour les décalages en cache."
+  },
+  "BaleGrab:mountBaleGrabObject": {
+   "en": "Places the joint node at the object's center of mass and calls `mountDynamic`. On success sets the joint springs, registers the object as mounted and returns true.",
+   "fr": "Place le nœud de joint au centre de masse de l'objet et appelle `mountDynamic`. En cas de succès, règle les ressorts du joint, enregistre l'objet comme monté et renvoie true."
+  },
+  "BaleGrab:unmountBaleGrabObject": {
+   "en": "Releases a mounted object from the grab (without the deleting flag). Always returns true.",
+   "fr": "Libère un objet monté de la pince (sans l'indicateur de suppression). Renvoie toujours true."
+  },
+  "BaleGrab:updateDebugValues": {
+   "en": "Server only: adds debug lines to the given table: offset, threshold and state per grab, moving-tool direction (with blocked flag), and the pending or mounted objects.",
+   "fr": "Serveur uniquement : ajoute des lignes de debug à la table fournie : décalage, seuil et état par pince, direction des outils mobiles (avec indicateur de blocage), et objets en attente ou montés."
+  },
+  "BaleGrab.loadSpecValueMaxSize": {
+   "en": "Reads a min and max size from two XML keys, rounded to 2 decimals. Returns a table with minSize and maxSize, or nil if both are 0.",
+   "fr": "Lit une taille min et une taille max depuis deux clés XML, arrondies à 2 décimales. Renvoie une table minSize/maxSize, ou nil si les deux valent 0."
+  },
+  "BaleGrab.loadSpecValueMaxSizeRound": {
+   "en": "Shop loader for round bale sizes, using `vehicle.baleGrab#minSizeRound` and `#maxSizeRound`.",
+   "fr": "Chargeur de boutique pour les tailles de balles rondes, via `vehicle.baleGrab#minSizeRound` et `#maxSizeRound`."
+  },
+  "BaleGrab.loadSpecValueMaxSizeSquare": {
+   "en": "Shop loader for square bale sizes, using `vehicle.baleGrab#minSizeSquare` and `#maxSizeSquare`.",
+   "fr": "Chargeur de boutique pour les tailles de balles carrées, via `vehicle.baleGrab#minSizeSquare` et `#maxSizeSquare`."
+  },
+  "BaleGrab.getSpecValueMaxSize": {
+   "en": "Formats the stored bale size for the shop, in cm (values multiplied by 100). Returns a text such as a range or a single value, or raw numbers plus the unit when `returnValues` is set.",
+   "fr": "Met en forme la taille de balle stockée pour la boutique, en cm (valeurs multipliées par 100). Renvoie un texte (plage ou valeur unique), ou les nombres bruts et l'unité si `returnValues` est vrai."
+  },
+  "BaleGrab.getSpecValueMaxSizeRound": {
+   "en": "Shop getter for round bale size; delegates to `getSpecValueMaxSize` with the `baleGrabMaxSizeRound` spec.",
+   "fr": "Accesseur boutique pour la taille des balles rondes ; délègue à `getSpecValueMaxSize` avec la spec `baleGrabMaxSizeRound`."
+  },
+  "BaleGrab.getSpecValueMaxSizeSquare": {
+   "en": "Shop getter for square bale size; delegates to `getSpecValueMaxSize` with the `baleGrabMaxSizeSquare` spec.",
+   "fr": "Accesseur boutique pour la taille des balles carrées ; délègue à `getSpecValueMaxSize` avec la spec `baleGrabMaxSizeSquare`."
+  }
+ }
+}

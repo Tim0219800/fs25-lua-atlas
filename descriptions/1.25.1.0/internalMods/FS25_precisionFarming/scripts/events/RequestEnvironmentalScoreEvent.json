@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/RequestEnvironmentalScoreEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) sent by a client to ask the server for the environmental score data of its farm. The server answers with an EnvironmentalScoreEvent to that connection only.",
+    "fr": "Événement réseau (sous-classe de Event) envoyé par un client pour demander au serveur les données de score environnemental de sa ferme. Le serveur répond par un EnvironmentalScoreEvent à cette seule connexion."
+  },
+  "fonctions": {
+    "RequestEnvironmentalScoreEvent.emptyNew": {
+      "en": "Creates an empty RequestEnvironmentalScoreEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de RequestEnvironmentalScoreEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "RequestEnvironmentalScoreEvent.new": {
+      "en": "Creates the request for a farm id.",
+      "fr": "Crée la requête pour un id de ferme."
+    },
+    "RequestEnvironmentalScoreEvent:readStream": {
+      "en": "Server side: reads the farm id (FarmManager.FARM_ID_SEND_NUM_BITS bits), then calls run.",
+      "fr": "Côté serveur : lit l'id de ferme (FarmManager.FARM_ID_SEND_NUM_BITS bits), puis appelle run."
+    },
+    "RequestEnvironmentalScoreEvent:writeStream": {
+      "en": "Client side: writes the farm id using FarmManager.FARM_ID_SEND_NUM_BITS bits.",
+      "fr": "Côté client : écrit l'id de ferme sur FarmManager.FARM_ID_SEND_NUM_BITS bits."
+    },
+    "RequestEnvironmentalScoreEvent:run": {
+      "en": "Executes only on the server: sends an EnvironmentalScoreEvent for the requested farm back to the requesting connection alone.",
+      "fr": "S'exécute uniquement sur le serveur : renvoie un EnvironmentalScoreEvent pour la ferme demandée à la seule connexion demandeuse."
+    }
+  }
+}

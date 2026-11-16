@@ -1,0 +1,105 @@
+{
+ "fichier": "player/PlayerInputComponent.lua",
+ "module": {
+  "en": "Collects raw input for one on-foot player (movement, look, run, jump, crouch, flight, camera switch, vehicle enter, hand tool and flashlight actions) and stores it as per-frame axis values that `PlayerMover`, `PlayerCamera` and the player states read. Only the owning player registers action events through `g_inputBinding` (and touch gestures when `g_touchHandler` exists). Several handlers it registers (zoom, flight toggle, hand tool, flashlight, pause actions) and helpers such as `setMovementDirection` are not in this dump (UNVERIFIED).",
+  "fr": "Collecte les entrées brutes d'un joueur à pied (déplacement, regard, course, saut, accroupissement, vol, changement de caméra, entrée en véhicule, outil à main et lampe) et les stocke sous forme de valeurs d'axe par image lues par `PlayerMover`, `PlayerCamera` et les états du joueur. Seul le joueur propriétaire enregistre des action events via `g_inputBinding` (et des gestes tactiles si `g_touchHandler` existe). Plusieurs gestionnaires enregistrés (zoom, bascule du vol, outil à main, lampe, actions de pause) et des aides comme `setMovementDirection` ne sont pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlayerInputComponent.new": {
+   "en": "Creates the input component for a player with all axes at zero, unlocked, and builds the flashlight on/off texts from the translation `storeItem_flashlight`.",
+   "fr": "Crée le composant d'entrée d'un joueur avec tous les axes à zéro, non verrouillé, et construit les textes d'activation et de désactivation de la lampe à partir de la traduction `storeItem_flashlight`."
+  },
+  "PlayerInputComponent:addPauseListeners": {
+   "en": "If this player is controlled and a mission exists, subscribes `onGamePaused` to the mission's pause notifications; otherwise does nothing.",
+   "fr": "Si ce joueur est contrôlé et qu'une mission existe, abonne `onGamePaused` aux notifications de pause de la mission ; sinon ne fait rien."
+  },
+  "PlayerInputComponent:registerActionEvents": {
+   "en": "Owner only: in the player input context, registers actions for move, look, zoom, run, flight, jump, crouch, camera switch, hand tool, enter and flashlight, plus touch gestures and pause actions. It also registers a target type (animals, vehicles, trees, dynamic objects, 0.5 to 3 m) on the player's targeter.",
+   "fr": "Propriétaire uniquement : dans le contexte d'entrée du joueur, enregistre les actions de déplacement, regard, zoom, course, vol, saut, accroupissement, changement de caméra, outil à main, entrée et lampe, ainsi que des gestes tactiles et des actions de pause. Il enregistre aussi un type de cible (animaux, véhicules, arbres, objets dynamiques, 0,5 à 3 m) sur le targeter du joueur."
+  },
+  "PlayerInputComponent:unregisterActionEvents": {
+   "en": "Owner only: removes every action event registered by this component, the touch gesture listeners for pinch, Y and X, and the targeter type, then clears stored action ids. The double-tap listener is not removed here.",
+   "fr": "Propriétaire uniquement : retire tous les action events enregistrés par ce composant, les écouteurs de gestes tactiles pincement, Y et X, et le type de cible du targeter, puis efface les identifiants d'actions stockés. L'écouteur du double tap n'est pas retiré ici."
+  },
+  "PlayerInputComponent:resetState": {
+   "en": "Copies the current input values into the `last*` fields, then zeroes movement, run, flight, jump and camera inputs. Crouch is kept while the component is locked.",
+   "fr": "Copie les valeurs d'entrée courantes dans les champs `last*`, puis remet à zéro les entrées de déplacement, course, vol, saut et caméra. L'accroupissement est conservé tant que le composant est verrouillé."
+  },
+  "PlayerInputComponent:lock": {
+   "en": "Remembers the current crouch value and ignores most input until unlocked.",
+   "fr": "Mémorise la valeur d'accroupissement actuelle et ignore la plupart des entrées jusqu'au déverrouillage."
+  },
+  "PlayerInputComponent:unlock": {
+   "en": "Unlocks input and, if the crouch input changed while locked, re-applies the crouch value stored during the lock.",
+   "fr": "Déverrouille les entrées et, si l'entrée d'accroupissement a changé pendant le verrouillage, réapplique la valeur d'accroupissement stockée pendant celui-ci."
+  },
+  "PlayerInputComponent:calculateNormalisedMovementDirection": {
+   "en": "Returns the move direction as a normalised 2D vector (right, forward) in the player's local space, or 0, 0 when there is no movement input.",
+   "fr": "Renvoie la direction de déplacement sous forme de vecteur 2D normalisé (droite, avant) dans l'espace local du joueur, ou 0, 0 sans entrée de déplacement."
+  },
+  "PlayerInputComponent:calculateNormalisedWorldMovementDirection": {
+   "en": "Converts the normalised local move direction into world x/z through the camera's yaw node. Returns 0, 0 without input or without a yaw node, so it only works for the controlled player.",
+   "fr": "Convertit la direction de déplacement locale normalisée en x/z monde via le noeud de lacet de la caméra. Renvoie 0, 0 sans entrée ou sans noeud de lacet, donc ne fonctionne que pour le joueur contrôlé."
+  },
+  "PlayerInputComponent:onInputMoveSide": {
+   "en": "Action callback for left/right movement: ignores locked input and values inside the joystick deadzone, clamps to -1..1, adds to `moveRight`, then updates the walk axis and world movement direction.",
+   "fr": "Callback d'action du déplacement gauche/droite : ignore les entrées verrouillées et les valeurs dans la zone morte du joystick, borne à -1..1, ajoute à `moveRight`, puis met à jour l'axe de marche et la direction de déplacement monde."
+  },
+  "PlayerInputComponent:onInputMoveForward": {
+   "en": "Action callback for forward/back movement: same filtering as the side movement, but the value is subtracted from `moveForward`. It then updates the walk axis and world direction.",
+   "fr": "Callback d'action du déplacement avant/arrière : même filtrage que le déplacement latéral, mais la valeur est soustraite de `moveForward`. Met ensuite à jour l'axe de marche et la direction monde."
+  },
+  "PlayerInputComponent:touchEventLookUpDown": {
+   "en": "Touch gesture handler for vertical look: ignored outside the player input context, otherwise scales the gesture by screen size and passes it to `onInputLookUpDown` as non-mouse input.",
+   "fr": "Gestionnaire de geste tactile pour le regard vertical : ignoré hors du contexte d'entrée du joueur, sinon met le geste à l'échelle de l'écran et le transmet à `onInputLookUpDown` comme entrée non souris."
+  },
+  "PlayerInputComponent:touchEventZoomInOut": {
+   "en": "Touch pinch handler: ignored outside the player input context, otherwise forwards the scaled, inverted value to `onInputZoomInOut` (defined outside this dump).",
+   "fr": "Gestionnaire de pincement tactile : ignoré hors du contexte d'entrée du joueur, sinon transmet la valeur mise à l'échelle et inversée à `onInputZoomInOut` (défini hors de ce dump)."
+  },
+  "PlayerInputComponent:touchEventLookLeftRight": {
+   "en": "Touch gesture handler for horizontal look: ignored outside the player input context, otherwise scales by aspect ratio and passes it to `onInputLookLeftRight` as non-mouse input.",
+   "fr": "Gestionnaire de geste tactile pour le regard horizontal : ignoré hors du contexte d'entrée du joueur, sinon met à l'échelle selon le ratio d'écran et le transmet à `onInputLookLeftRight` comme entrée non souris."
+  },
+  "PlayerInputComponent:onInputLookLeftRight": {
+   "en": "Adds horizontal look input to `cameraRotationY`, skipping locked input and the deadzone. Mouse values use a fixed 16.666 ms step, other devices use the current frame time; also records whether the source was a mouse.",
+   "fr": "Ajoute l'entrée de regard horizontal à `cameraRotationY`, en ignorant l'entrée verrouillée et la zone morte. Les valeurs souris utilisent un pas fixe de 16,666 ms, les autres périphériques le temps de l'image courante ; mémorise aussi si la source était la souris."
+  },
+  "PlayerInputComponent:onInputLookUpDown": {
+   "en": "Adds vertical look input to `cameraRotationX` with the same deadzone and timing rules as horizontal look, and flips the sign when the INVERT_Y_LOOK setting is on.",
+   "fr": "Ajoute l'entrée de regard vertical à `cameraRotationX` avec les mêmes règles de zone morte et de temps que le regard horizontal, et inverse le signe si le réglage INVERT_Y_LOOK est actif."
+  },
+  "PlayerInputComponent:onInputRun": {
+   "en": "Sets the run axis from the input value clamped to 0..1, unless input is locked.",
+   "fr": "Définit l'axe de course à partir de la valeur d'entrée bornée à 0..1, sauf si l'entrée est verrouillée."
+  },
+  "PlayerInputComponent:onInputChangeAltitude": {
+   "en": "Sets the flight axis (-1 down to 1 up) from the input value, unless input is locked. Used by the debug flight mode.",
+   "fr": "Définit l'axe de vol (-1 vers le bas à 1 vers le haut) à partir de la valeur d'entrée, sauf si l'entrée est verrouillée. Utilisé par le mode vol de debug."
+  },
+  "PlayerInputComponent:onInputJump": {
+   "en": "Sets the jump power from the input value clamped to 0..1, unless input is locked.",
+   "fr": "Définit la puissance de saut à partir de la valeur d'entrée bornée à 0..1, sauf si l'entrée est verrouillée."
+  },
+  "PlayerInputComponent:onInputCrouch": {
+   "en": "Stores the crouch value clamped to 0..1; while locked it is saved into the locked crouch value instead and applied on unlock.",
+   "fr": "Enregistre la valeur d'accroupissement bornée à 0..1 ; pendant le verrouillage, elle est stockée dans la valeur d'accroupissement verrouillée et appliquée au déverrouillage."
+  },
+  "PlayerInputComponent:onInputSwitchCamera": {
+   "en": "Toggles first/third person on the player's camera, unless input is locked or the player is in a vehicle.",
+   "fr": "Bascule entre première et troisième personne sur la caméra du joueur, sauf si l'entrée est verrouillée ou si le joueur est dans un véhicule."
+  },
+  "PlayerInputComponent:onInputEnter": {
+   "en": "Handles the enter action: ignored within 200 ms of the last interaction. Interacts with the interactive vehicle in range, or else starts riding the targeted rideable animal (screen fade) or shows a critical notification if the ride limit is reached. `FSBaseMission` details are UNVERIFIED.",
+   "fr": "Gère l'action d'entrée : ignorée dans les 200 ms suivant la dernière interaction. Interagit avec le véhicule interactif à portée, ou sinon démarre la monte de l'animal ciblé (fondu d'écran) ou affiche une notification critique si la limite de monte est atteinte. Les détails de `FSBaseMission` sont NON VÉRIFIÉS."
+  },
+  "PlayerInputComponent:onGamePaused": {
+   "en": "Pause listener: locks the input when the game pauses and unlocks it on resume.",
+   "fr": "Écouteur de pause : verrouille les entrées quand le jeu se met en pause et les déverrouille à la reprise."
+  },
+  "PlayerInputComponent:debugDraw": {
+   "en": "Draws debug text for the previous frame's jump power, crouch and movement flag, then calls `debugDrawMovementGraphs` (not in this dump). Returns the next y position.",
+   "fr": "Affiche du texte de debug pour la puissance de saut, l'accroupissement et l'indicateur de mouvement de l'image précédente, puis appelle `debugDrawMovementGraphs` (absente de ce dump). Renvoie la position y suivante."
+  }
+ }
+}

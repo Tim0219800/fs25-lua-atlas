@@ -1,0 +1,65 @@
+{
+ "fichier": "vehicles/specializations/FoliageBending.lua",
+ "module": {
+  "en": "Specialization that makes a vehicle push aside foliage on the map through g_currentMission.foliageBendingSystem. Bending nodes are rectangles (X and Z extents plus a height offset) attached to a vehicle node, created when the vehicle is activated and destroyed on deactivation or deletion. Configuration-dependent foliageBendingModifier entries can resize or disable nodes. The FoliageBendingSystem class itself is not in the dump (UNVERIFIED).",
+  "fr": "Spécialisation qui permet à un véhicule d'écarter le feuillage de la carte via g_currentMission.foliageBendingSystem. Les nœuds de courbure sont des rectangles (étendues en X et Z plus un décalage en hauteur) liés à un nœud du véhicule, créés à l'activation du véhicule et détruits à la désactivation ou à la suppression. Des foliageBendingModifier dépendant de la configuration peuvent redimensionner ou désactiver les nœuds. La classe FoliageBendingSystem elle-même est absente du dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "FoliageBending.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "FoliageBending.initSpecialization": {
+   "en": "Declares the XML attributes of a bending node (node, min/max X and Z extents, yOffset).",
+   "fr": "Déclare les attributs XML d'un nœud de courbure (nœud, étendues min/max en X et Z, yOffset)."
+  },
+  "FoliageBending.postInitSpecialization": {
+   "en": "After all specializations are known, registers the foliageBendingModifier XML element under every vehicle configuration type: index or indices, extents, yOffset, isActive and overwrite.",
+   "fr": "Une fois toutes les spécialisations connues, déclare l'élément XML foliageBendingModifier sous chaque type de configuration de véhicule : index ou indices, étendues, yOffset, isActive et overwrite."
+  },
+  "FoliageBending.registerFunctions": {
+   "en": "Registers the bending node load, modifier load, activate, deactivate and lookup functions on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les fonctions de chargement de nœud, de chargement de modificateur, d'activation, de désactivation et de recherche."
+  },
+  "FoliageBending.registerEventListeners": {
+   "en": "Subscribes to post load, delete, activate and deactivate events.",
+   "fr": "Abonne aux événements de post-chargement, suppression, activation et désactivation."
+  },
+  "FoliageBending:onPostLoad": {
+   "en": "Loads all vehicle.foliageBending.bendingNode entries, then applies foliageBendingModifier entries of the active configurations: either overwriting the node extents or widening them, and optionally disabling a node. Warns on undefined indices.",
+   "fr": "Charge toutes les entrées vehicle.foliageBending.bendingNode, puis applique les foliageBendingModifier des configurations actives : soit en remplaçant les étendues du nœud, soit en les élargissant, avec désactivation optionnelle d'un nœud. Avertit pour les indices non définis."
+  },
+  "FoliageBending:onDelete": {
+   "en": "Removes all active bending objects of the vehicle from the foliage bending system.",
+   "fr": "Retire du système de courbure du feuillage tous les objets de courbure actifs du véhicule."
+  },
+  "FoliageBending:loadBendingNodeFromXML": {
+   "en": "Reads one bending node: node (defaults to the vehicle root node), extents minX/maxX/minZ/maxZ (default -1 to 1) and yOffset (default 0). Always returns true.",
+   "fr": "Lit un nœud de courbure : nœud (par défaut le nœud racine du véhicule), étendues minX/maxX/minZ/maxZ (défaut -1 à 1) et yOffset (défaut 0). Renvoie toujours true."
+  },
+  "FoliageBending:loadBendingNodeModifierFromXML": {
+   "en": "Reads one modifier (index or indices, optional extents, isActive, overwrite) and queues it in spec.bendingModifiers. Returns nothing and logs a warning when no index is given.",
+   "fr": "Lit un modificateur (index ou indices, étendues optionnelles, isActive, overwrite) et le met en file dans spec.bendingModifiers. Ne renvoie rien et journalise un avertissement si aucun index n'est donné."
+  },
+  "FoliageBending:activateBendingNodes": {
+   "en": "Creates a rectangle in g_currentMission.foliageBendingSystem for each active node that has none yet, storing its id. The system class is not in the dump (UNVERIFIED behaviour).",
+   "fr": "Crée un rectangle dans g_currentMission.foliageBendingSystem pour chaque nœud actif qui n'en a pas encore, en stockant son id. La classe du système est absente du dump (comportement NON VÉRIFIÉ)."
+  },
+  "FoliageBending:deactivateBendingNodes": {
+   "en": "Destroys the foliage bending objects created for this vehicle and clears their ids; safe to call when no node exists.",
+   "fr": "Détruit les objets de courbure du feuillage créés pour ce véhicule et efface leurs ids ; sans danger si aucun nœud n'existe."
+  },
+  "FoliageBending:getFoliageBendingNodeByIndex": {
+   "en": "Returns the bending node table at the given index (nil if out of range).",
+   "fr": "Renvoie la table du nœud de courbure à l'indice donné (nil hors plage)."
+  },
+  "FoliageBending:onActivate": {
+   "en": "Calls activateBendingNodes when the vehicle is activated.",
+   "fr": "Appelle activateBendingNodes quand le véhicule est activé."
+  },
+  "FoliageBending:onDeactivate": {
+   "en": "Calls deactivateBendingNodes when the vehicle is deactivated.",
+   "fr": "Appelle deactivateBendingNodes quand le véhicule est désactivé."
+  }
+ }
+}

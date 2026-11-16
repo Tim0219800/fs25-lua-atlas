@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/WindBending.lua",
+ "module": {
+  "en": "Client-side specialization that makes foliage-like shapes (e.g. crop on a header or load) bend according to vehicle motion, by feeding the `directionBend` shader parameter. It has no prerequisites and registers no functions of its own; it only reacts to onLoad and onUpdate. Nodes are declared under `vehicle.windBending.windBendingNodes.windBendingNode`.",
+  "fr": "Spécialisation côté client qui fait plier des formes de type feuillage (par ex. végétation sur une coupe ou un chargement) selon le mouvement du véhicule, en alimentant le paramètre de shader `directionBend`. Aucun prérequis et aucune fonction propre ; elle ne réagit qu'à onLoad et onUpdate. Les nœuds se déclarent sous `vehicle.windBending.windBendingNodes.windBendingNode`."
+ },
+ "fonctions": {
+  "WindBending.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisite specializations.",
+   "fr": "Renvoie toujours true : cette spécialisation n'a aucune spécialisation prérequise."
+  },
+  "WindBending.initSpecialization": {
+   "en": "Registers the XML schema paths of a wind bending node: `#node`, `#decalNode`, `#speedReferenceNode`, `#maxBending` (meters, default 0.15), `#maxBendingNeg` and `#maxBendingSpeed` (km/h, default 20).",
+   "fr": "Enregistre dans le schéma XML les chemins d'un nœud de courbure : `#node`, `#decalNode`, `#speedReferenceNode`, `#maxBending` (mètres, 0,15 par défaut), `#maxBendingNeg` et `#maxBendingSpeed` (km/h, 20 par défaut)."
+  },
+  "WindBending.registerFunctions": {
+   "en": "Empty: the specialization adds no new vehicle functions.",
+   "fr": "Vide : la spécialisation n'ajoute aucune nouvelle fonction au véhicule."
+  },
+  "WindBending.registerEventListeners": {
+   "en": "Subscribes the vehicle type to onLoad and onUpdate.",
+   "fr": "Abonne le type de véhicule à onLoad et onUpdate."
+  },
+  "WindBending:onLoad": {
+   "en": "Client only: reads each configured node, keeping it only if it is a shape with the `directionBend` shader parameter (otherwise logs an XML error). Removes the onUpdate listener on servers or when no valid node exists.",
+   "fr": "Client uniquement : lit chaque nœud configuré et ne le conserve que si c'est une forme possédant le paramètre de shader `directionBend` (sinon erreur XML journalisée). Retire l'écouteur onUpdate sur un serveur ou sans nœud valide."
+  },
+  "WindBending:onUpdate": {
+   "en": "For each node, derives a movement direction from the reference node's position change since the last call, then sets `directionBend` through `g_animationManager` with an amount scaled by vehicle speed over `maxBendingSpeed`. Uses the negative maximum when moving in reverse. The decal node gets the same values. Note: the speed is computed with a fixed factor of 10, not with dt.",
+   "fr": "Pour chaque nœud, déduit une direction de mouvement à partir du déplacement du nœud de référence depuis le dernier appel, puis règle `directionBend` via `g_animationManager` avec une amplitude proportionnelle à la vitesse sur `maxBendingSpeed`. Utilise le maximum négatif en marche arrière. Le nœud de décalque reçoit les mêmes valeurs. À noter : la vitesse est calculée avec un facteur fixe de 10, pas avec dt."
+  }
+ }
+}

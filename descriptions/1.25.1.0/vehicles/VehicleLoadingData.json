@@ -1,0 +1,109 @@
+{
+ "fichier": "vehicles/VehicleLoadingData.lua",
+ "module": {
+  "en": "Collects everything needed to load a vehicle (or a bundle of vehicles) from a store item: configurations, owner, property state, spawn position/rotation, savegame data, flags such as registered, saved, added to physics and force-server. `load` starts loading through `g_currentMission.vehicleSystem` and `g_vehicleTypeManager`. Note: the SDK dump omits parts of this class (e.g. `loadVehicle`, `resetVehiclePosition`, `getPositionAndRotation` are called but not present), so loading internals are UNVERIFIED.",
+  "fr": "Rassemble tout ce qu'il faut pour charger un véhicule (ou un lot de véhicules) depuis un article de boutique : configurations, propriétaire, état de propriété, position/rotation d'apparition, données de sauvegarde, indicateurs (enregistré, sauvegardé, ajouté à la physique, forçage serveur). `load` lance le chargement via `g_currentMission.vehicleSystem` et `g_vehicleTypeManager`. À noter : le dump du SDK omet des parties de cette classe (par exemple `loadVehicle`, `resetVehiclePosition`, `getPositionAndRotation` sont appelées mais absentes), le détail du chargement est donc NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "VehicleLoadingData.new": {
+   "en": "Creates a loading-data object with defaults: invalid until a store item is set, owned property state, owner `AccessHandler.EVERYONE`, registered, saved, added to physics, centred on spawn position, position and rotation zero.",
+   "fr": "Crée un objet de données de chargement avec des valeurs par défaut : invalide tant qu'aucun article n'est défini, état possédé, propriétaire `AccessHandler.EVERYONE`, enregistré, sauvegardé, ajouté à la physique, centré sur la position d'apparition, position et rotation nulles."
+  },
+  "VehicleLoadingData:setFilename": {
+   "en": "Finds the store item by XML filename in `g_storeManager` and sets it; logs an error with callstack if none exists.",
+   "fr": "Trouve l'article de boutique par nom de fichier XML dans `g_storeManager` et le définit ; journalise une erreur avec pile d'appels s'il n'existe pas."
+  },
+  "VehicleLoadingData:setStoreItem": {
+   "en": "Sets the store item, takes its Y rotation, and builds the vehicle list: one entry per bundle item (with offsets) for a bundle, otherwise the item itself. `isValid` becomes true if the list is non-empty.",
+   "fr": "Définit l'article de boutique, reprend sa rotation Y et construit la liste de véhicules : une entrée par élément du lot (avec décalages) pour un lot, sinon l'article lui-même. `isValid` devient vrai si la liste n'est pas vide."
+  },
+  "VehicleLoadingData:setPropertyState": {
+   "en": "Sets the vehicle property state (a `VehiclePropertyState` value, owned by default).",
+   "fr": "Définit l'état de propriété du véhicule (valeur de `VehiclePropertyState`, possédé par défaut)."
+  },
+  "VehicleLoadingData:setOwnerFarmId": {
+   "en": "Sets the farm id that will own the loaded vehicle.",
+   "fr": "Définit l'identifiant de la ferme propriétaire du véhicule chargé."
+  },
+  "VehicleLoadingData:setSaleItem": {
+   "en": "Stores the sale item and merges its bought configurations into this object's own table.",
+   "fr": "Mémorise l'article en vente et fusionne ses configurations achetées dans la table de cet objet."
+  },
+  "VehicleLoadingData:setSavegameData": {
+   "en": "Stores savegame data (expects `xmlFile`, `key`, and optional `resetVehicles`, `keepPosition`, `useNewPosition`). If a store item is set, loads configurations from the savegame, plus legacy `boughtConfiguration` entries (warning on invalid ones).",
+   "fr": "Mémorise les données de sauvegarde (attend `xmlFile`, `key` et optionnellement `resetVehicles`, `keepPosition`, `useNewPosition`). Si un article est défini, charge les configurations depuis la sauvegarde, plus les anciennes entrées `boughtConfiguration` (avertissement si invalides)."
+  },
+  "VehicleLoadingData:setConfigurations": {
+   "en": "Sets the configuration table (id per configuration name); nil resets to an empty table.",
+   "fr": "Définit la table de configurations (identifiant par nom de configuration) ; nil la remet à vide."
+  },
+  "VehicleLoadingData:setBoughtConfigurations": {
+   "en": "Sets the bought-configurations table; nil resets to an empty table.",
+   "fr": "Définit la table des configurations achetées ; nil la remet à vide."
+  },
+  "VehicleLoadingData:setConfigurationData": {
+   "en": "Sets the extra configuration data table; nil resets to an empty table.",
+   "fr": "Définit la table de données de configuration supplémentaires ; nil la remet à vide."
+  },
+  "VehicleLoadingData:getConfigurations": {
+   "en": "Returns deep copies of configurations, bought configurations and configuration data for one config file. For a bundle item other than the main one, drops configs it does not offer, fills defaults and applies dependent configurations.",
+   "fr": "Renvoie des copies profondes des configurations, des configurations achetées et des données de configuration pour un fichier de config. Pour un élément de lot autre que le principal, retire les configs qu'il n'offre pas, complète par les défauts et applique les configurations dépendantes."
+  },
+  "VehicleLoadingData:setIsRegistered": {
+   "en": "Sets whether the vehicle is registered in the game after loading.",
+   "fr": "Définit si le véhicule est enregistré dans le jeu après chargement."
+  },
+  "VehicleLoadingData:setForceServer": {
+   "en": "Sets whether the vehicle is created with server-side behaviour (e.g. dynamic physics) even on a client.",
+   "fr": "Définit si le véhicule est créé avec un comportement serveur (par exemple physique dynamique) même sur un client."
+  },
+  "VehicleLoadingData:setIsSaved": {
+   "en": "Sets whether the vehicle is written to the savegame.",
+   "fr": "Définit si le véhicule est écrit dans la sauvegarde."
+  },
+  "VehicleLoadingData:setAddToPhysics": {
+   "en": "Sets whether the vehicle is added to the physics world when loaded.",
+   "fr": "Définit si le véhicule est ajouté au monde physique au chargement."
+  },
+  "VehicleLoadingData:setCustomParameter": {
+   "en": "Stores a named custom value that the loaded vehicle can read later.",
+   "fr": "Mémorise une valeur personnalisée nommée que le véhicule chargé peut lire ensuite."
+  },
+  "VehicleLoadingData:getCustomParameter": {
+   "en": "Returns the custom parameter stored under the given name, or nil.",
+   "fr": "Renvoie le paramètre personnalisé mémorisé sous le nom donné, ou nil."
+  },
+  "VehicleLoadingData:setPosition": {
+   "en": "Sets the world spawn position. If `y` is nil, uses the terrain height at x/z plus an optional offset.",
+   "fr": "Définit la position d'apparition dans le monde. Si `y` est nil, utilise la hauteur du terrain en x/z plus un décalage optionnel."
+  },
+  "VehicleLoadingData:setRotation": {
+   "en": "Sets the world spawn rotation (rx, ry, rz).",
+   "fr": "Définit la rotation d'apparition dans le monde (rx, ry, rz)."
+  },
+  "VehicleLoadingData:setSpawnNode": {
+   "en": "Copies world translation and rotation from a scene node as the spawn pose.",
+   "fr": "Copie la translation et la rotation monde d'un noeud de scène comme pose d'apparition."
+  },
+  "VehicleLoadingData:setIgnoreShopOffset": {
+   "en": "Sets whether the shop translation/rotation offset from the XML is ignored when positioning.",
+   "fr": "Définit si le décalage de boutique (translation/rotation) du XML est ignoré lors du placement."
+  },
+  "VehicleLoadingData:setComponentPositionData": {
+   "en": "Records world translation and rotation of every component of an existing vehicle so they can be re-applied to the newly loaded one.",
+   "fr": "Enregistre la translation et la rotation monde de chaque composant d'un véhicule existant pour les réappliquer au véhicule nouvellement chargé."
+  },
+  "VehicleLoadingData:applyPositionData": {
+   "en": "Places a loaded vehicle: returns false if the spawn place was invalid. Uses recorded component data, else savegame component positions (falling back to `resetVehiclePosition` on invalid, missing or reset data), else the default store position. Returns true on success.",
+   "fr": "Place un véhicule chargé : renvoie faux si l'emplacement d'apparition était invalide. Utilise les données de composants enregistrées, sinon les positions de composants de la sauvegarde (repli sur `resetVehiclePosition` si invalides, absentes ou réinitialisées), sinon la position par défaut de la boutique. Renvoie vrai en cas de succès."
+  },
+  "VehicleLoadingData:setLoadingPlace": {
+   "en": "Picks a free spot among shop spawn places for the store item (size from `StoreItemUtil`, with minimum dimensions and offsets) and sets position and rotation. Returns false and marks the location invalid if none fits; requires the store item to be set first.",
+   "fr": "Choisit un emplacement libre parmi les places d'apparition de la boutique pour l'article (taille via `StoreItemUtil`, avec dimensions minimales et décalages) et définit position et rotation. Renvoie faux et marque l'emplacement invalide si rien ne convient ; l'article doit être défini avant."
+  },
+  "VehicleLoadingData:load": {
+   "en": "Starts loading all vehicles of the item: registers a pending load on `vehicleSystem`, resolves each vehicle type/class, and aborts with `VehicleLoadingState.ERROR` (calling the callback) if one is missing. Otherwise calls `loadVehicle` for each (not in this dump, UNVERIFIED).",
+   "fr": "Lance le chargement de tous les véhicules de l'article : enregistre un chargement en attente sur `vehicleSystem`, résout le type/la classe de chaque véhicule et abandonne avec `VehicleLoadingState.ERROR` (en appelant le rappel) si l'un manque. Sinon appelle `loadVehicle` pour chacun (absent de ce dump, NON VÉRIFIÉ)."
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/WoodHarvesterDropTreeEvent.lua",
+  "module": {
+    "en": "Network event that makes a wood harvester drop its held tree, synchronized between server and clients. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui fait lâcher à une abatteuse l'arbre qu'elle tient, synchronisé entre serveur et clients. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "WoodHarvesterDropTreeEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "WoodHarvesterDropTreeEvent.new": {
+      "en": "Builds the event with the data to send (only the node object); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (uniquement l'objet nœud) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "WoodHarvesterDropTreeEvent:readStream": {
+      "en": "Reads only the node object from the stream, then calls `run(connection)`.",
+      "fr": "Lit uniquement l'objet nœud depuis le flux, puis appelle `run(connection)`."
+    },
+    "WoodHarvesterDropTreeEvent:writeStream": {
+      "en": "Writes only the node object to the stream (same order as `readStream`).",
+      "fr": "Écrit uniquement l'objet nœud dans le flux (même ordre que `readStream`)."
+    },
+    "WoodHarvesterDropTreeEvent:run": {
+      "en": "Applies the event on the receiving side: calls `dropWoodHarvesterTree(true)` on the object if synchronized; on the server it first re-broadcasts a new event to the other clients.",
+      "fr": "Applique l'événement côté récepteur : appelle `dropWoodHarvesterTree(true)` sur l'objet s'il est synchronisé ; sur le serveur, il retransmet d'abord un nouvel événement aux autres clients."
+    },
+    "WoodHarvesterDropTreeEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

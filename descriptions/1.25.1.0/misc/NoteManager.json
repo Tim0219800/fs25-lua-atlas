@@ -1,0 +1,13 @@
+{
+ "fichier": "misc/NoteManager.lua",
+ "module": {
+  "en": "Debug manager (extends AbstractManager) for creating note nodes at runtime and exporting them as an i3d file. In this dump only the data-structure initialisation is visible; the export and list handlers are referenced but not defined here (UNVERIFIED).",
+  "fr": "Gestionnaire de debug (étend AbstractManager) pour créer des noeuds de note à l'exécution et les exporter en fichier i3d. Dans ce dump seule l'initialisation des structures est visible ; les gestionnaires d'export et de liste sont référencés mais non définis ici (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "NoteManager:initDataStructures": {
+   "en": "Resets session fields and builds the colour list (white plus DebugUtil.COLORS). On first call it registers the console commands gsNoteExport and gsNoteList, whose handlers consoleCommandExportNotes and consoleCommandListNotes are not in this file.",
+   "fr": "Réinitialise les champs de session et construit la liste de couleurs (blanc plus DebugUtil.COLORS). Au premier appel, enregistre les commandes console gsNoteExport et gsNoteList, dont les gestionnaires consoleCommandExportNotes et consoleCommandListNotes ne sont pas dans ce fichier."
+  }
+ }
+}

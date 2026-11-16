@@ -1,0 +1,189 @@
+{
+ "fichier": "vehicles/specializations/Wearable.lua",
+ "module": {
+  "en": "Specialization giving vehicles two kinds of ageing. Damage (0..1) grows on the server while the vehicle is in use, reduces performance through `getVehicleDamage` and sets the repair price. Wear (0..1 per wearable node group) is stored in the shader parameter `scratches_dirt_snow_wetness` of every node that has it and drives the repaint price. Both are saved, synced by dirty flags with a quantized bit stream, and the store gets a 'condition' spec when `Platform.gameplay.hasVehicleDamage`. On mobile some listeners (streams, update tick, sale item) are not registered.",
+  "fr": "Spécialisation donnant deux types de vieillissement aux véhicules. Les dégâts (0..1) augmentent côté serveur pendant l'utilisation, réduisent les performances via `getVehicleDamage` et fixent le prix de réparation. L'usure (0..1 par groupe de nœuds) est stockée dans le paramètre de shader `scratches_dirt_snow_wetness` de chaque nœud qui le possède et détermine le prix de repeinture. Les deux sont sauvegardés, synchronisés par drapeaux de modification avec un flux quantifié, et la boutique reçoit une spec « état » si `Platform.gameplay.hasVehicleDamage`. Sur mobile, certains écouteurs (flux, tick, objet en vente) ne sont pas enregistrés."
+ },
+ "fonctions": {
+  "Wearable.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisites.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "Wearable.initSpecialization": {
+   "en": "Registers the store spec type `wearable` (condition icon) when vehicle damage is enabled on the platform, the XML paths wearDuration (minutes, default 600), workMultiplier (20), fieldMultiplier (2), showOnHud, and the savegame attributes for damage and per-node wear.",
+   "fr": "Enregistre le type de spec boutique `wearable` (icône d'état) quand les dégâts de véhicule sont activés sur la plateforme, les chemins XML wearDuration (minutes, 600 par défaut), workMultiplier (20), fieldMultiplier (2), showOnHud, ainsi que les attributs de sauvegarde des dégâts et de l'usure par nœud."
+  },
+  "Wearable.registerFunctions": {
+   "en": "Adds the damage, wear and wearable-node management functions to the vehicle type (addDamageAmount, setNodeWearAmount, repairVehicle, repaintVehicle, validateWearableNode, and others). Note: `repaintVehicle` is registered here but has no body in this file (UNVERIFIED).",
+   "fr": "Ajoute au type de véhicule les fonctions de gestion des dégâts, de l'usure et des nœuds (addDamageAmount, setNodeWearAmount, repairVehicle, repaintVehicle, validateWearableNode, etc.). À noter : `repaintVehicle` est enregistrée ici mais n'a pas de corps dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "Wearable.registerOverwrittenFunctions": {
+   "en": "Overrides getVehicleDamage, getRepairPrice, getRepaintPrice and showInfo.",
+   "fr": "Surcharge getVehicleDamage, getRepairPrice, getRepaintPrice et showInfo."
+  },
+  "Wearable.registerEventListeners": {
+   "en": "Subscribes to onLoad and onLoadFinished, and, except on mobile, to onSaleItemSet, the stream events and onUpdateTick.",
+   "fr": "S'abonne à onLoad et onLoadFinished, et, hors mobile, à onSaleItemSet, aux événements de flux et à onUpdateTick."
+  },
+  "Wearable:onLoad": {
+   "en": "Creates the default (global) wearable node, converts wearDuration from minutes into a per-millisecond rate times `Wearable.WEAR_FACTOR`, initializes damage and totals, reads the work/field multipliers and HUD flag, and allocates a dirty flag.",
+   "fr": "Crée le nœud d'usure par défaut (global), convertit wearDuration de minutes en taux par milliseconde multiplié par `Wearable.WEAR_FACTOR`, initialise dégâts et totaux, lit les multiplicateurs travail/champ et le drapeau HUD, et alloue un drapeau de modification."
+  },
+  "Wearable:onLoadFinished": {
+   "en": "Loads saved damage (and derives `damageByCurve`), scans all components for nodes with the wear shader parameter, then applies saved per-node wear or resets it to 0.",
+   "fr": "Charge les dégâts sauvegardés (et en déduit `damageByCurve`), parcourt tous les composants à la recherche de nœuds avec le paramètre de shader d'usure, puis applique l'usure sauvegardée par nœud ou la remet à 0."
+  },
+  "Wearable:onSaleItemSet": {
+   "en": "Applies the damage and wear stored on a sale item to the vehicle, forcing the sync.",
+   "fr": "Applique au véhicule les dégâts et l'usure stockés dans un objet en vente, en forçant la synchronisation."
+  },
+  "Wearable:saveToXMLFile": {
+   "en": "Saves the damage value and each wearable node's wear amount to the savegame.",
+   "fr": "Sauvegarde la valeur de dégâts et l'usure de chaque nœud dans la sauvegarde."
+  },
+  "Wearable:onReadStream": {
+   "en": "Client join: reads damage and per-node wear, quantized with `Wearable.SEND_NUM_BITS` bits, and applies them forcibly.",
+   "fr": "Connexion d'un client : lit dégâts et usure par nœud, quantifiés sur `Wearable.SEND_NUM_BITS` bits, et les applique de force."
+  },
+  "Wearable:onWriteStream": {
+   "en": "Server side on join: writes damage and per-node wear as quantized integers.",
+   "fr": "Côté serveur lors d'une connexion : écrit dégâts et usure par nœud sous forme d'entiers quantifiés."
+  },
+  "Wearable:onReadUpdateStream": {
+   "en": "Client: when the server flagged a change, reads damage and per-node wear and applies them.",
+   "fr": "Client : quand le serveur a signalé un changement, lit dégâts et usure par nœud et les applique."
+  },
+  "Wearable:onWriteUpdateStream": {
+   "en": "Server: writes a presence boolean for the dirty flag, then damage and per-node wear when set.",
+   "fr": "Serveur : écrit un booléen de présence du drapeau de modification, puis dégâts et usure par nœud s'il est posé."
+  },
+  "Wearable:onUpdateTick": {
+   "en": "Server only: adds the damage computed by `updateDamageAmount` and, for each wearable node, the change returned by its update function.",
+   "fr": "Serveur uniquement : ajoute les dégâts calculés par `updateDamageAmount` et, pour chaque nœud d'usure, la variation renvoyée par sa fonction de mise à jour."
+  },
+  "Wearable:setDamageAmount": {
+   "en": "Clamps damage to 0..1, recomputes `damageByCurve` (damage above 0.3 rescaled to 0..1) and, on the server, raises the dirty flag when the change since the last send exceeds `Wearable.SEND_THRESHOLD` or when forced.",
+   "fr": "Borne les dégâts à 0..1, recalcule `damageByCurve` (dégâts au-dessus de 0,3 remis à l'échelle 0..1) et, sur le serveur, pose le drapeau de modification quand la variation depuis le dernier envoi dépasse `Wearable.SEND_THRESHOLD` ou si forcé."
+  },
+  "Wearable:updateWearAmount": {
+   "en": "Default wear update function for a node: returns dt times the wear rate times `getWearMultiplier`, halved, or 0 when usage causes no wear.",
+   "fr": "Fonction de mise à jour d'usure par défaut d'un nœud : renvoie dt fois le taux d'usure fois `getWearMultiplier`, divisé par deux, ou 0 si l'usage ne cause pas d'usure."
+  },
+  "Wearable:updateDamageAmount": {
+   "en": "Returns the damage increase for dt ms when usage causes damage, scaled by 0.35 and by an ageing factor built from age/lifetime and operating hours with the economy manager constants. Returns 0 otherwise.",
+   "fr": "Renvoie l'augmentation de dégâts pour dt ms quand l'usage cause des dégâts, pondérée par 0,35 et par un facteur de vieillissement fondé sur l'âge/durée de vie et les heures de fonctionnement avec les constantes de l'économie. Renvoie 0 sinon."
+  },
+  "Wearable:getUsageCausesWear": {
+   "en": "Returns true by default: usage always causes wear.",
+   "fr": "Renvoie true par défaut : l'usage cause toujours de l'usure."
+  },
+  "Wearable:getUsageCausesDamage": {
+   "en": "Returns true when the vehicle is active and not a mission-owned vehicle. For non-motorized vehicles it returns false if the root node is sleeping (physics).",
+   "fr": "Renvoie true quand le véhicule est actif et n'est pas un véhicule de mission. Pour les véhicules non motorisés, renvoie false si le nœud racine dort (physique)."
+  },
+  "Wearable:addWearAmount": {
+   "en": "Adds the given wear to every wearable node (clamped by `setNodeWearAmount`).",
+   "fr": "Ajoute l'usure donnée à chaque nœud d'usure (bornée par `setNodeWearAmount`)."
+  },
+  "Wearable:addDamageAmount": {
+   "en": "Adds the given amount to the current damage through `setDamageAmount`.",
+   "fr": "Ajoute la quantité donnée aux dégâts actuels via `setDamageAmount`."
+  },
+  "Wearable:setNodeWearAmount": {
+   "en": "Clamps and stores a node group's wear. When the change exceeds the threshold or is forced, writes it to the `scratches_dirt_snow_wetness` shader parameter of each node, raises the dirty flag on the server and recomputes the average total wear.",
+   "fr": "Borne et mémorise l'usure d'un groupe de nœuds. Si le changement dépasse le seuil ou est forcé, l'écrit dans le paramètre de shader `scratches_dirt_snow_wetness` de chaque nœud, pose le drapeau de modification sur le serveur et recalcule l'usure totale moyenne."
+  },
+  "Wearable:getNodeWearAmount": {
+   "en": "Returns the wear amount of the given node group.",
+   "fr": "Renvoie l'usure du groupe de nœuds donné."
+  },
+  "Wearable:getWearTotalAmount": {
+   "en": "Returns the average wear (0..1) over all wearable node groups.",
+   "fr": "Renvoie l'usure moyenne (0..1) sur tous les groupes de nœuds."
+  },
+  "Wearable:getDamageAmount": {
+   "en": "Returns the current damage value (0..1).",
+   "fr": "Renvoie la valeur de dégâts actuelle (0..1)."
+  },
+  "Wearable:getDamageShowOnHud": {
+   "en": "Returns whether the damage should be shown on the HUD (XML `showOnHud`).",
+   "fr": "Indique si les dégâts doivent être affichés sur le HUD (XML `showOnHud`)."
+  },
+  "Wearable:repairVehicle": {
+   "en": "On the server charges the repair price to the owner farm (MoneyType.VEHICLE_REPAIR), updates the repair statistic and tries to unlock repair achievements; then resets damage to 0 (on every side that calls it).",
+   "fr": "Sur le serveur, débite le prix de réparation à la ferme propriétaire (MoneyType.VEHICLE_REPAIR), met à jour la statistique de réparations et tente de débloquer les succès ; puis remet les dégâts à 0 (de chaque côté qui l'appelle)."
+  },
+  "Wearable:getRepairPrice": {
+   "en": "Override: base repair price plus `calculateRepairPrice` of the vehicle price and current damage.",
+   "fr": "Surcharge : prix de réparation de base plus `calculateRepairPrice` du prix du véhicule et des dégâts actuels."
+  },
+  "Wearable.calculateRepairPrice": {
+   "en": "Repair price formula: price times damage to the power 1.5 times 0.09 (so 9 percent of the price at full damage). Also used by the sale system.",
+   "fr": "Formule du prix de réparation : prix fois dégâts puissance 1,5 fois 0,09 (soit 9 pour cent du prix à dégâts maximaux). Utilisée aussi par le système de vente."
+  },
+  "Wearable:getRepaintPrice": {
+   "en": "Override: base repaint price plus `calculateRepaintPrice` of the vehicle price and total wear.",
+   "fr": "Surcharge : prix de repeinture de base plus `calculateRepaintPrice` du prix du véhicule et de l'usure totale."
+  },
+  "Wearable:showInfo": {
+   "en": "Override: adds a damage percentage line to the info box when damage is above 1 percent, then calls the previous implementation.",
+   "fr": "Surcharge : ajoute une ligne de pourcentage de dégâts à la boîte d'information au-dessus de 1 pour cent, puis appelle l'implémentation précédente."
+  },
+  "Wearable.calculateRepaintPrice": {
+   "en": "Repaint price formula: price times the square root of wear/100 times 2. Note: wear is a 0..1 value elsewhere, so the division by 100 looks unusual (inferred from the code).",
+   "fr": "Formule du prix de repeinture : prix fois racine carrée de usure/100 fois 2. À noter : l'usure est une valeur 0..1 ailleurs, la division par 100 paraît donc inhabituelle (déduit du code)."
+  },
+  "Wearable:getVehicleDamage": {
+   "en": "Override: adds the curve-based damage to the previous value and caps the result at 1, so damage affects performance only above 30 percent.",
+   "fr": "Surcharge : ajoute les dégâts par courbe à la valeur précédente et plafonne le résultat à 1 ; les dégâts n'affectent donc les performances qu'au-delà de 30 pour cent."
+  },
+  "Wearable:addAllSubWearableNodes": {
+   "en": "Walks the node hierarchy from the root and registers every node having the `scratches_dirt_snow_wetness` shader parameter as wearable.",
+   "fr": "Parcourt la hiérarchie depuis la racine et déclare usables tous les nœuds possédant le paramètre de shader `scratches_dirt_snow_wetness`."
+  },
+  "Wearable:addWearableNode": {
+   "en": "Asks `validateWearableNode` how to handle a node and adds it either to the global node group or to a local group with its own update function.",
+   "fr": "Demande à `validateWearableNode` comment traiter un nœud et l'ajoute au groupe global ou à un groupe local avec sa propre fonction de mise à jour."
+  },
+  "Wearable:validateWearableNode": {
+   "en": "Default validation: every node is global. Other specializations may overwrite it to return a local group, update function, custom index and extra parameters.",
+   "fr": "Validation par défaut : tout nœud est global. D'autres spécialisations peuvent la surcharger pour renvoyer un groupe local, une fonction de mise à jour, un indice personnalisé et des paramètres supplémentaires."
+  },
+  "Wearable:addToGlobalWearableNode": {
+   "en": "Adds the node to the first (default) wearable node group, if it exists.",
+   "fr": "Ajoute le nœud au premier groupe d'usure (par défaut), s'il existe."
+  },
+  "Wearable:addToLocalWearableNode": {
+   "en": "Creates a wearable node group with its own update function and extra fields, or, when `customIndex` already exists, just adds the node to that group.",
+   "fr": "Crée un groupe d'usure avec sa propre fonction de mise à jour et des champs supplémentaires, ou, si `customIndex` existe déjà, y ajoute simplement le nœud."
+  },
+  "Wearable:removeAllSubWearableNodes": {
+   "en": "Walks the node hierarchy from the root and removes each node with the wear shader parameter from its wearable groups.",
+   "fr": "Parcourt la hiérarchie depuis la racine et retire de ses groupes d'usure chaque nœud portant le paramètre de shader d'usure."
+  },
+  "Wearable:removeWearableNode": {
+   "en": "Removes the node from every wearable node group.",
+   "fr": "Retire le nœud de tous les groupes d'usure."
+  },
+  "Wearable:getWearMultiplier": {
+   "en": "Returns the wear speed multiplier: 0 when the last speed is below 1, otherwise 1, multiplied by the field multiplier while on a field. The node argument is unused here.",
+   "fr": "Renvoie le multiplicateur de vitesse d'usure : 0 si la dernière vitesse est inférieure à 1, sinon 1, multiplié par le multiplicateur de champ sur un champ. L'argument de nœud n'est pas utilisé ici."
+  },
+  "Wearable:getWorkWearMultiplier": {
+   "en": "Returns the XML work multiplier (default 20) for use by work-related wear.",
+   "fr": "Renvoie le multiplicateur de travail du XML (20 par défaut), utilisable pour l'usure liée au travail."
+  },
+  "Wearable:updateDebugValues": {
+   "en": "Debug display: adds the damage rate per hour and the wear rate per hour of each node (server only) to the values list.",
+   "fr": "Affichage de debug : ajoute à la liste le taux de dégâts par heure et le taux d'usure par heure de chaque nœud (serveur uniquement)."
+  },
+  "Wearable.loadSpecValueCondition": {
+   "en": "Store spec loader: returns nil because the condition spec only applies to existing items.",
+   "fr": "Chargeur de spec boutique : renvoie nil car la spec d'état ne concerne que les objets existants."
+  },
+  "Wearable.getSpecValueCondition": {
+   "en": "Store spec getter: returns the damage as a percentage string for a real item, or nil if there is no item or it lacks `getDamageAmount`.",
+   "fr": "Accesseur de spec boutique : renvoie les dégâts en pourcentage (chaîne) pour un objet réel, ou nil s'il n'y a pas d'objet ou s'il n'a pas `getDamageAmount`."
+  }
+ }
+}

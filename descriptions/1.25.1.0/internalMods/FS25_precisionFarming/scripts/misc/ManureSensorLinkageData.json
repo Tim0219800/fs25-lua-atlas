@@ -1,0 +1,41 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/misc/ManureSensorLinkageData.lua",
+ "module": {
+  "en": "Precision Farming data holder that links the manure sensor to vehicles. It loads ManureSensorLinkageData.xml (vehicle filenames, link nodes with offset and scale, price) and a sensor i3d file, hands out cloned sensor nodes, and adds a yes/no manureSensor configuration to the listed vehicles by overriding ConfigurationUtil.getConfigurationsFromXML. Same structure as CropSensorLinkageData.",
+  "fr": "Conteneur de données de Precision Farming qui relie le capteur de lisier à des véhicules. Il charge ManureSensorLinkageData.xml (noms de fichiers de véhicules, nœuds de liaison avec décalage et échelle, prix) et un fichier i3d de capteurs, fournit des nœuds de capteur clonés et ajoute une configuration oui/non manureSensor aux véhicules listés en surchargeant ConfigurationUtil.getConfigurationsFromXML. Même structure que CropSensorLinkageData."
+ },
+ "fonctions": {
+  "ManureSensorLinkageData:delete": {
+   "en": "Deletes the loaded sensor nodes and clears the sensor and linkage data tables.",
+   "fr": "Supprime les nœuds de capteurs chargés et vide les tables de données de capteurs et de liaison."
+  },
+  "ManureSensorLinkageData:loadFromXML": {
+   "en": "Map load hook: loads the linkage data once if not already loaded. Arguments are ignored and nothing is returned.",
+   "fr": "Crochet de chargement de la carte : charge les données de liaison une seule fois si ce n'est pas déjà fait. Les arguments sont ignorés et rien n'est renvoyé."
+  },
+  "ManureSensorLinkageData:loadLinkageData": {
+   "en": "Reads ManureSensorLinkageData.xml: configuration price and vehicle entries with link nodes (type default DEFAULT, translation, rotation, optional scale), and optionally starts async loading of the sensors i3d. Flags can skip vehicles or sensors. Returns true.",
+   "fr": "Lit ManureSensorLinkageData.xml : prix de configuration et entrées de véhicules avec nœuds de liaison (type DEFAULT par défaut, translation, rotation, échelle optionnelle), et lance éventuellement le chargement asynchrone de l'i3d des capteurs. Des indicateurs permettent d'ignorer véhicules ou capteurs. Renvoie true."
+  },
+  "ManureSensorLinkageData:onSensorDataLoaded": {
+   "en": "Async callback: records each sensor (node and type), unlinks the nodes, then deletes the loaded i3d root and the XML file.",
+   "fr": "Callback asynchrone : enregistre chaque capteur (nœud et type), détache les nœuds, puis supprime la racine i3d chargée et le fichier XML."
+  },
+  "ManureSensorLinkageData:getManureSensorLinkageData": {
+   "en": "Returns the vehicle linkage entry whose filename is the end of the given config file name, or nil.",
+   "fr": "Renvoie l'entrée de liaison du véhicule dont le nom de fichier termine le nom de fichier de configuration donné, ou nil."
+  },
+  "ManureSensorLinkageData:getClonedManureSensorNode": {
+   "en": "Finds the sensor of the given type (case-insensitive) and returns a copy of its data with a cloned node reset to zero translation, rotation and unit scale, or nil if the type is unknown.",
+   "fr": "Cherche le capteur du type donné (insensible à la casse) et renvoie une copie de ses données avec un nœud cloné remis à translation et rotation nulles et à l'échelle 1, ou nil si le type est inconnu."
+  },
+  "ManureSensorLinkageData:overwriteGameFunctions": {
+   "en": "Overrides VehicleSystem.consoleCommandReloadVehicle (reloads vehicle linkage data first) and ConfigurationUtil.getConfigurationsFromXML (adds a manureSensor yes/no configuration at the XML price to listed vehicles).",
+   "fr": "Surcharge VehicleSystem.consoleCommandReloadVehicle (recharge d'abord les données de liaison) et ConfigurationUtil.getConfigurationsFromXML (ajoute une configuration manureSensor oui/non au prix du XML aux véhicules listés)."
+  },
+  "ManureSensorLinkageData:registerXMLPaths": {
+   "en": "Registers the XML schema paths for sensors, vehicles, link nodes and configuration price. Note: the price description text still says crop sensor config, apparently copied from the crop sensor class.",
+   "fr": "Enregistre les chemins de schéma XML des capteurs, véhicules, nœuds de liaison et du prix de configuration. À noter : la description du prix parle encore de crop sensor, apparemment copiée de la classe du capteur de culture."
+  }
+ }
+}

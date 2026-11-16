@@ -1,0 +1,101 @@
+{
+ "fichier": "shop/StoreItemUtil.lua",
+ "module": {
+  "en": "Static helpers for store item tables: species checks (vehicle, animal, placeable, object, hand tool), configurability and leasing checks, cost sums including configuration extras, and parsing of functions, specs, brand, VRAM usage and size from store XML. It also computes footprint sizes with configuration overrides and 90-degree rotation, and registers the configuration-set XML schema paths. Depends on g_storeManager, g_brandManager, StoreSpecies and ConfigurationUtil defined elsewhere.",
+  "fr": "Fonctions utilitaires statiques pour les tables d'articles de boutique : tests d'espèce (véhicule, animal, placeable, objet, outil à main), tests de configurabilité et de location, sommes de coûts incluant les suppléments de configuration, et lecture des fonctions, specs, marque, usage de VRAM et dimensions depuis le XML de boutique. Elles calculent aussi les dimensions d'emprise avec surcharges de configuration et rotation par pas de 90 degrés, et enregistrent les chemins de schéma XML des ensembles de configurations. Dépend de g_storeManager, g_brandManager, StoreSpecies et ConfigurationUtil définis ailleurs."
+ },
+ "fonctions": {
+  "StoreItemUtil.getIsVehicle": {
+   "en": "Returns true if the store item is non-nil and its species is StoreSpecies.VEHICLE.",
+   "fr": "Retourne true si l'article de boutique est non nil et que son espèce est StoreSpecies.VEHICLE."
+  },
+  "StoreItemUtil.getIsAnimal": {
+   "en": "Returns true if the store item is non-nil and its species is StoreSpecies.ANIMAL.",
+   "fr": "Retourne true si l'article de boutique est non nil et que son espèce est StoreSpecies.ANIMAL."
+  },
+  "StoreItemUtil.getIsPlaceable": {
+   "en": "Returns true if the store item is non-nil and its species is StoreSpecies.PLACEABLE.",
+   "fr": "Retourne true si l'article de boutique est non nil et que son espèce est StoreSpecies.PLACEABLE."
+  },
+  "StoreItemUtil.getIsObject": {
+   "en": "Returns true if the store item is non-nil and its species is StoreSpecies.OBJECT.",
+   "fr": "Retourne true si l'article de boutique est non nil et que son espèce est StoreSpecies.OBJECT."
+  },
+  "StoreItemUtil.getIsHandTool": {
+   "en": "Returns true if the store item is non-nil and its species is StoreSpecies.HANDTOOL.",
+   "fr": "Retourne true si l'article de boutique est non nil et que son espèce est StoreSpecies.HANDTOOL."
+  },
+  "StoreItemUtil.getIsConfigurable": {
+   "en": "Returns true if the item has configurations and at least one configuration type offers more than one selectable option (isSelectable not false).",
+   "fr": "Retourne true si l'article a des configurations et qu'au moins un type de configuration propose plus d'une option sélectionnable (isSelectable différent de false)."
+  },
+  "StoreItemUtil.getCanBeShownInConfigScreen": {
+   "en": "Returns false for hand tools, which are bought directly, and true for every other item, which goes through the shop config screen.",
+   "fr": "Retourne false pour les outils à main, achetés directement, et true pour tous les autres articles, qui passent par l'écran de configuration de la boutique."
+  },
+  "StoreItemUtil.getIsLeasable": {
+   "en": "Returns true if the item allows leasing, has a runningLeasingFactor and is not a placeable.",
+   "fr": "Retourne true si l'article autorise la location, possède un runningLeasingFactor et n'est pas un placeable."
+  },
+  "StoreItemUtil.getDefaultConfigId": {
+   "en": "Returns the default configuration index for a configuration name by delegating to ConfigurationUtil.getDefaultConfigIdFromItems. Errors if the item has no configurations table.",
+   "fr": "Retourne l'indice de configuration par défaut pour un nom de configuration en déléguant à ConfigurationUtil.getDefaultConfigIdFromItems. Provoque une erreur si l'article n'a pas de table de configurations."
+  },
+  "StoreItemUtil.getDefaultPrice": {
+   "en": "Returns the base price plus the price of each selected configuration, via getCosts with the `price` field.",
+   "fr": "Retourne le prix de base plus le prix de chaque configuration choisie, via getCosts avec le champ `price`."
+  },
+  "StoreItemUtil.getDailyUpkeep": {
+   "en": "Returns the base daily upkeep plus the upkeep of each selected configuration, via getCosts with the `dailyUpkeep` field.",
+   "fr": "Retourne l'entretien quotidien de base plus celui de chaque configuration choisie, via getCosts avec le champ `dailyUpkeep`."
+  },
+  "StoreItemUtil.getCosts": {
+   "en": "Sums the item's value for a cost field (0 if absent) with the same field of each selected configuration item. Returns 0 for a nil item; the configurations argument must be a table when the item has configurations.",
+   "fr": "Additionne la valeur de l'article pour un champ de coût (0 si absent) avec le même champ de chaque item de configuration choisi. Retourne 0 pour un article nil ; l'argument configurations doit être une table quand l'article a des configurations."
+  },
+  "StoreItemUtil.getFunctionsFromXML": {
+   "en": "Reads the list of function texts under `<parent>.functions.function`, translated in the given mod environment, and returns them as an array, or nil if none are present.",
+   "fr": "Lit la liste des textes de fonctions sous `<parent>.functions.function`, traduits dans l'environnement de mod donné, et les retourne sous forme de tableau, ou nil s'il n'y en a aucun."
+  },
+  "StoreItemUtil.loadSpecsFromXML": {
+   "en": "Lazily loads an item's specs from its XML if not already loaded, then does the same recursively for the items of its bundle. Spec loading itself is done by getSpecsFromXML.",
+   "fr": "Charge paresseusement les specs d'un article depuis son XML si ce n'est pas déjà fait, puis fait de même récursivement pour les articles de son lot. Le chargement des specs est assuré par getSpecsFromXML."
+  },
+  "StoreItemUtil.getSpecsFromXML": {
+   "en": "Builds a specs table by calling each registered spec type's loadFunc for the item's species, keyed by spec name. Returns the table (possibly empty).",
+   "fr": "Construit une table de specs en appelant la loadFunc de chaque type de spec enregistré pour l'espèce de l'article, indexée par nom de spec. Retourne la table (éventuellement vide)."
+  },
+  "StoreItemUtil.getBrandIndexFromXML": {
+   "en": "Reads the `.brand` name under the given key (default empty) and returns its index via g_brandManager. Unknown names log a warning and fall back to the default brand.",
+   "fr": "Lit le nom `.brand` sous la clé donnée (vide par défaut) et retourne son indice via g_brandManager. Les noms inconnus logent un avertissement et se replient sur la marque par défaut."
+  },
+  "StoreItemUtil.getVRamUsageFromXML": {
+   "en": "Reads memory usage values from the XML and returns shared VRAM (vertex, index and texture buffers), per-instance VRAM (instance vertex and index buffers) and the ignoreVramUsage flag. Units are as written in the XML (UNVERIFIED).",
+   "fr": "Lit les valeurs d'usage mémoire du XML et retourne la VRAM partagée (tampons de sommets, d'indices et textures), la VRAM par instance (tampons d'instance) et le drapeau ignoreVramUsage. Les unités sont celles écrites dans le XML (NON VÉRIFIÉ)."
+  },
+  "StoreItemUtil.getSubConfigurationIndex": {
+   "en": "Returns the position in the sub-configuration value list whose item group contains the given configuration index, or nil. Errors if the item has no subConfigurations entry for that name.",
+   "fr": "Retourne la position dans la liste des sous-valeurs de configuration dont le groupe d'items contient l'indice de configuration donné, ou nil. Provoque une erreur si l'article n'a pas d'entrée subConfigurations pour ce nom."
+  },
+  "StoreItemUtil.getSubConfigurationItems": {
+   "en": "Returns the list of configuration items belonging to the sub-configuration value at position `state`. Errors if the item has no subConfigurations entry for that name.",
+   "fr": "Retourne la liste des items de configuration appartenant à la sous-valeur de configuration à la position `state`. Provoque une erreur si l'article n'a pas d'entrée subConfigurations pour ce nom."
+  },
+  "StoreItemUtil.getSizeValues": {
+   "en": "Loads a vehicle XML and returns its footprint size table (width, length, height and offsets) for a rotation and configurations. Returns default Vehicle sizes if the file cannot be loaded.",
+   "fr": "Charge un XML de véhicule et retourne sa table d'emprise (largeur, longueur, hauteur et décalages) pour une rotation et des configurations. Retourne les dimensions par défaut de Vehicle si le fichier ne peut pas être chargé."
+  },
+  "StoreItemUtil.getSizeValuesFromXML": {
+   "en": "Reads the base size from an already open vehicle XML, using the `base.size` element and Vehicle.DEFAULT_SIZE defaults, by delegating to getSizeValuesFromXMLByKey.",
+   "fr": "Lit la taille de base depuis un XML de véhicule déjà ouvert, avec l'élément `base.size` et les valeurs par défaut Vehicle.DEFAULT_SIZE, en déléguant à getSizeValuesFromXMLByKey."
+  },
+  "StoreItemUtil.getSizeValuesFromXMLByKey": {
+   "en": "Reads size attributes, lets selected configuration items adjust them through onSizeLoad and applies optional minimum sizes. The rotation is snapped to 90-degree steps, swapping width and length and rotating the offsets accordingly. Returns the size table.",
+   "fr": "Lit les attributs de taille, laisse les items de configuration choisis les ajuster via onSizeLoad et applique des tailles minimales optionnelles. La rotation est ramenée à des pas de 90 degrés, avec échange de largeur et longueur et rotation des décalages en conséquence. Retourne la table de dimensions."
+  },
+  "StoreItemUtil.registerConfigurationSetXMLPaths": {
+   "en": "Registers on an XML schema the paths of the `configurationSets` block (title, yes/no flag, sets with name, params, default flag and configuration name, index and showWarning), matching what ConfigurationUtil.getConfigurationSetsFromXML reads.",
+   "fr": "Enregistre sur un schéma XML les chemins du bloc `configurationSets` (titre, drapeau oui/non, ensembles avec nom, paramètres, drapeau par défaut et nom, indice et showWarning de configuration), correspondant à ce que lit ConfigurationUtil.getConfigurationSetsFromXML."
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/VehicleSetBeaconLightEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the beacon light visibility of a vehicle between server and clients. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise la visibilité du gyrophare d'un véhicule entre serveur et clients. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "VehicleSetBeaconLightEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "VehicleSetBeaconLightEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a boolean active flag); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un booléen d'activation) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "VehicleSetBeaconLightEvent:readStream": {
+      "en": "Reads a node object and a boolean active flag from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un booléen d'activation depuis le flux, puis appelle `run(connection)`."
+    },
+    "VehicleSetBeaconLightEvent:writeStream": {
+      "en": "Writes a node object and a boolean active flag to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un booléen d'activation dans le flux (même ordre que `readStream`)."
+    },
+    "VehicleSetBeaconLightEvent:run": {
+      "en": "Applies the event on the receiving side: calls `setBeaconLightsVisibility(active, true, true)` on the object if synchronized, then the server re-broadcasts to the other clients.",
+      "fr": "Applique l'événement côté récepteur : appelle `setBeaconLightsVisibility(actif, true, true)` sur l'objet s'il est synchronisé, puis le serveur retransmet aux autres clients."
+    }
+  }
+}

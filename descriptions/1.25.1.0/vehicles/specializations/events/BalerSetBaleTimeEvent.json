@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/BalerSetBaleTimeEvent.lua",
+ "module": {
+  "en": "Network event class `BalerSetBaleTimeEvent` (extends `Event`) that synchronizes the time value of one bale held by a baler. It carries the vehicle, a bale index (int32) and a time (float32). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `BalerSetBaleTimeEvent` (hérite de `Event`) qui synchronise la valeur de temps d'une balle contenue dans une presse. Elle transporte le véhicule, un index de balle (int32) et un temps (float32). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "BalerSetBaleTimeEvent.emptyNew": {
+   "en": "Creates an empty `BalerSetBaleTimeEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `BalerSetBaleTimeEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "BalerSetBaleTimeEvent.new": {
+   "en": "Creates the event with its data: the vehicle, a bale index (int32) and a time (float32).",
+   "fr": "Crée l'événement avec ses données : le véhicule, un index de balle (int32) et un temps (float32)."
+  },
+  "BalerSetBaleTimeEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, a bale index (int32) and a time (float32)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, un index de balle (int32) et un temps (float32)), puis appelle `run`."
+  },
+  "BalerSetBaleTimeEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, a bale index (int32) and a time (float32)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, un index de balle (int32) et un temps (float32))."
+  },
+  "BalerSetBaleTimeEvent:run": {
+   "en": "Executes the event on the receiving side: calls `setBaleTime(bale, baleTime)` on the vehicle (no rebroadcast in `run`).",
+   "fr": "Exécute l'événement côté réception : appelle `setBaleTime(bale, baleTime)` sur le véhicule (pas de retransmission dans `run`)."
+  }
+ }
+}

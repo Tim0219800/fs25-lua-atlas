@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/base/OverlayManager.lua",
+ "module": {
+  "en": "Loads texture config XML files (image file, size, list of slices with UV rectangles) and creates `Overlay` objects from named slices, identified as \"prefix.sliceId\". Mods can pass a custom environment name that is prepended to the prefix. The `textureConfigs` table is initialised elsewhere (UNVERIFIED); the global instance is `g_overlayManager`.",
+  "fr": "Charge les fichiers XML de configuration de textures (image, taille, liste de tranches avec rectangles UV) et crée des objets `Overlay` à partir de tranches nommées, identifiées par « prefix.sliceId ». Les mods peuvent fournir un nom d'environnement personnalisé préfixé au préfixe. La table `textureConfigs` est initialisée ailleurs (NON VÉRIFIÉ) ; l'instance globale est `g_overlayManager`."
+ },
+ "fonctions": {
+  "OverlayManager:addTextureConfigFile": {
+   "en": "Reads the XML (texture.meta filename and size, texture.slices.slice entries with id and uvs) and registers slices under the prefix, with a warning and abort on missing data. Duplicate prefix is refused except during GUI reload. Note: early error returns skip `xmlFile:delete()`.",
+   "fr": "Lit le XML (nom et taille dans texture.meta, entrées texture.slices.slice avec id et uvs) et enregistre les tranches sous le préfixe, avec avertissement et arrêt si des données manquent. Un préfixe en double est refusé sauf pendant un rechargement du GUI. À noter : les retours d'erreur précoces sautent `xmlFile:delete()`."
+  },
+  "OverlayManager:createOverlay": {
+   "en": "Splits \"prefix.sliceId\", finds the slice and returns a new `Overlay` with its image and UVs, at the given position (default 0) and size (default slice size). Returns nil with a warning if unknown.",
+   "fr": "Sépare « prefix.sliceId », trouve la tranche et renvoie un nouvel `Overlay` avec son image et ses UV, à la position donnée (0 par défaut) et à la taille donnée (taille de la tranche par défaut). Renvoie nil avec un avertissement si inconnue."
+  },
+  "OverlayManager:getSliceInfoById": {
+   "en": "Returns the stored slice table (id, size, UVs, file, image size) for \"prefix.sliceId\", or nil with a warning if the identifier or config is invalid. A nil identifier returns nil silently.",
+   "fr": "Renvoie la table de tranche mémorisée (id, taille, UV, fichier, taille d'image) pour « prefix.sliceId », ou nil avec un avertissement si l'identifiant ou la configuration est invalide. Un identifiant nil renvoie nil sans message."
+  },
+  "OverlayManager:getConfigMetaData": {
+   "en": "Returns a table {filename, imageSize} for a loaded config prefix, or nil with a warning if the prefix is nil or not loaded.",
+   "fr": "Renvoie une table {filename, imageSize} pour un préfixe de configuration chargé, ou nil avec un avertissement si le préfixe est nil ou non chargé."
+  }
+ }
+}

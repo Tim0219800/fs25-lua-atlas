@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/SlopeCompensation.lua",
+ "module": {
+  "en": "Specialization that tilts parts of a vehicle to follow the slope, either from the height difference between two groups of wheels (raycasts under the wheels) or from a reference node angle. It requires Wheels, adds a \"slopeCompensation\" configuration type, drives an animation, a rotation node and/or animation parts per compensation node, and saves the last angle. It also registers an animation value type \"slopeCompensationLevel\". Note: `updateSlopeCompensationAngle` is registered as a vehicle function and called every update, but no function of that name is defined in this file (its body is absent from the dump); where it is defined is UNVERIFIED.",
+  "fr": "Spécialisation qui incline des parties d'un véhicule pour suivre la pente, soit d'après la différence de hauteur entre deux groupes de roues (raycasts sous les roues), soit d'après l'angle d'un nœud de référence. Elle exige Wheels, ajoute un type de configuration \"slopeCompensation\", pilote par nœud de compensation une animation, un nœud de rotation et/ou des pièces d'animation, et sauvegarde le dernier angle. Elle enregistre aussi un type de valeur d'animation \"slopeCompensationLevel\". À noter : `updateSlopeCompensationAngle` est enregistrée comme fonction du véhicule et appelée à chaque mise à jour, mais aucune fonction de ce nom n'est définie dans ce fichier (corps absent du dump) ; son emplacement est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "SlopeCompensation.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the Wheels specialization.",
+   "fr": "Retourne vrai uniquement si le type de véhicule possède la spécialisation Wheels."
+  },
+  "SlopeCompensation.initSpecialization": {
+   "en": "Registers the \"slopeCompensation\" configuration type, the XML schema (base and per-configuration), the delayed AnimatedVehicle part attributes (`slopeCompensationNodeIndex`, start/end level) and the savegame `lastAngle` per compensation node.",
+   "fr": "Enregistre le type de configuration \"slopeCompensation\", le schéma XML (de base et par configuration), les attributs différés des parts d'AnimatedVehicle (`slopeCompensationNodeIndex`, niveaux de début/fin) et le `lastAngle` sauvegardé par nœud de compensation."
+  },
+  "SlopeCompensation.registerXMLPaths": {
+   "en": "Declares the schema under a base path: update threshold, high update frequency flag, and each `compensationNode` (wheels or wheel nodes, angle limits, speed, inversion, heights, animation name, reference and rotation nodes with axes, animation parts with min/max rotation and translation).",
+   "fr": "Déclare le schéma sous un chemin de base : seuil de mise à jour, option de haute fréquence, et chaque `compensationNode` (roues ou nœuds de roue, limites d'angle, vitesse, inversion, hauteurs, nom d'animation, nœuds de référence et de rotation avec axes, pièces d'animation avec rotation et translation min/max)."
+  },
+  "SlopeCompensation.registerFunctions": {
+   "en": "Registers `loadSlopeCompensationWheels`, `loadSlopeCompensationNodeFromXML`, `getSlopeCompensationAngle`, `getSlopeCompensationAngleScale`, `updateSlopeCompensationAngle` and `setSlopeCompensationNodeAngle`.",
+   "fr": "Enregistre `loadSlopeCompensationWheels`, `loadSlopeCompensationNodeFromXML`, `getSlopeCompensationAngle`, `getSlopeCompensationAngleScale`, `updateSlopeCompensationAngle` et `setSlopeCompensationNodeAngle`."
+  },
+  "SlopeCompensation.registerEventListeners": {
+   "en": "Subscribes to onLoad, onLoadFinished, onUpdate, onUpdateTick and onRegisterAnimationValueTypes.",
+   "fr": "S'abonne à onLoad, onLoadFinished, onUpdate, onUpdateTick et onRegisterAnimationValueTypes."
+  },
+  "SlopeCompensation:onLoad": {
+   "en": "Reads the threshold and update frequency, loads the compensation nodes from the base XML and from the selected configuration (which can override threshold and frequency). Removes unused listeners: all if no node, onUpdateTick if high frequency, otherwise onUpdate.",
+   "fr": "Lit le seuil et la fréquence de mise à jour, charge les nœuds de compensation du XML de base et de la configuration choisie (qui peut surcharger seuil et fréquence). Retire les écouteurs inutiles : tous s'il n'y a pas de nœud, onUpdateTick en haute fréquence, sinon onUpdate."
+  },
+  "SlopeCompensation:onLoadFinished": {
+   "en": "Primes each node's animation by stepping it through times 0, 1 and 0.5, then restores the saved angle of each node from the savegame, or sets 0 for a new vehicle.",
+   "fr": "Amorce l'animation de chaque nœud en la faisant passer par les temps 0, 1 puis 0,5, puis restaure l'angle sauvegardé de chaque nœud, ou 0 pour un véhicule neuf."
+  },
+  "SlopeCompensation:saveToXMLFile": {
+   "en": "Saves the last applied angle of each compensation node.",
+   "fr": "Sauvegarde le dernier angle appliqué de chaque nœud de compensation."
+  },
+  "SlopeCompensation:onUpdate": {
+   "en": "For each node, clamps the detected angle to its limits, scales it, optionally inverts it, updates the target when the change exceeds the threshold, moves the current angle toward the target at the node speed (with an easing factor) and applies it, then calls `updateSlopeCompensationAngle`.",
+   "fr": "Pour chaque nœud, borne l'angle détecté à ses limites, le met à l'échelle, l'inverse éventuellement, met à jour la cible quand la variation dépasse le seuil, fait avancer l'angle courant vers la cible à la vitesse du nœud (avec un facteur d'adoucissement) et l'applique, puis appelle `updateSlopeCompensationAngle`."
+  },
+  "SlopeCompensation:onUpdateTick": {
+   "en": "Runs the same logic as onUpdate (used when high update frequency is off).",
+   "fr": "Exécute la même logique que onUpdate (utilisé quand la haute fréquence est désactivée)."
+  },
+  "SlopeCompensation:onRegisterAnimationValueTypes": {
+   "en": "Registers the animation value type \"slopeCompensationLevel\" (float): it reads or writes the `compensationLevel` of the node chosen by `slopeCompensationNodeIndex` and reapplies the current angle when it changes.",
+   "fr": "Enregistre le type de valeur d'animation « slopeCompensationLevel » (flottant) : il lit ou écrit le `compensationLevel` du nœud désigné par `slopeCompensationNodeIndex` et réapplique l'angle courant lorsqu'il change."
+  },
+  "SlopeCompensation:loadSlopeCompensationWheels": {
+   "en": "Resolves one side's wheels from a wheel index, a wheel node and/or a list of wheel nodes. Returns true, the list of wheel drive nodes and the largest wheel radius, or false with a warning if a wheel is not found or none is defined.",
+   "fr": "Résout les roues d'un côté à partir d'un index de roue, d'un nœud de roue et/ou d'une liste de nœuds de roue. Retourne true, la liste des nœuds d'entraînement et le plus grand rayon de roue, ou false avec un avertissement si une roue est introuvable ou si aucune n'est définie."
+  },
+  "SlopeCompensation:loadSlopeCompensationNodeFromXML": {
+   "en": "Loads one compensation node: if both wheel groups resolve, sets up raycast callbacks that compute the ground angle between the two groups (static bodies only); also reads reference and rotation nodes, angle limits (swapped and inverted if min is above max), speed, animation, heights and animation parts. Always returns true.",
+   "fr": "Charge un nœud de compensation : si les deux groupes de roues sont résolus, installe des callbacks de raycast qui calculent l'angle du sol entre les deux groupes (corps statiques uniquement) ; lit aussi les nœuds de référence et de rotation, les limites d'angle (échangées et inversées si min dépasse max), la vitesse, l'animation, les hauteurs et les pièces d'animation. Retourne toujours true."
+  },
+  "SlopeCompensation:getSlopeCompensationAngle": {
+   "en": "Returns the last detected slope angle of the given compensation node.",
+   "fr": "Retourne le dernier angle de pente détecté du nœud de compensation donné."
+  },
+  "SlopeCompensation:getSlopeCompensationAngleScale": {
+   "en": "Returns 1 by default; meant to be overridden to scale the compensation of a node.",
+   "fr": "Retourne 1 par défaut ; prévu pour être surchargé afin de moduler la compensation d'un nœud."
+  },
+  "SlopeCompensation:setSlopeCompensationNodeAngle": {
+   "en": "Applies an angle to a node: maps it to a 0..1 position between min and max, drives the animation, sets the rotation node on its axis, and moves animation parts (rotation and/or translation, side-dependent, blended with the compensation level). Stores it as the node's last angle.",
+   "fr": "Applique un angle à un nœud : le convertit en position 0..1 entre min et max, pilote l'animation, fixe la rotation du nœud sur son axe, et déplace les pièces d'animation (rotation et/ou translation, selon le côté, mélangées avec le niveau de compensation). Le mémorise comme dernier angle du nœud."
+  },
+  "SlopeCompensation:updateDebugValues": {
+   "en": "Debug helper: adds one line per compensation node with its clamped detected angle in degrees.",
+   "fr": "Aide de débogage : ajoute une ligne par nœud de compensation avec son angle détecté borné, en degrés."
+  }
+ }
+}

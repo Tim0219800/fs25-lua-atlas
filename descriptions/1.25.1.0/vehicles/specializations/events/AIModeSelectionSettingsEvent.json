@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/AIModeSelectionSettingsEvent.lua",
+ "module": {
+  "en": "Network event that synchronises the AI mode field course settings (`FieldCourseSettings`) of a vehicle. Clients send it to the server, which applies it and relays it to the others. Use `sendEvent` to emit it.",
+  "fr": "Événement réseau qui synchronise les réglages de parcours de champ du mode IA (`FieldCourseSettings`) d'un véhicule. Les clients l'envoient au serveur, qui l'applique et le relaie aux autres. Utiliser `sendEvent` pour l'émettre."
+ },
+ "fonctions": {
+  "AIModeSelectionSettingsEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable; used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe ; utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "AIModeSelectionSettingsEvent.new": {
+   "en": "Creates the event for a vehicle with the `FieldCourseSettings` object to sync.",
+   "fr": "Crée l'événement pour un véhicule avec l'objet `FieldCourseSettings` à synchroniser."
+  },
+  "AIModeSelectionSettingsEvent:readStream": {
+   "en": "Reads the vehicle and the settings attributes, rebuilds a `FieldCourseSettings` for it and calls `run`.",
+   "fr": "Lit le véhicule et les attributs de réglages, reconstruit un `FieldCourseSettings` pour lui et appelle `run`."
+  },
+  "AIModeSelectionSettingsEvent:writeStream": {
+   "en": "Writes the vehicle and the field course settings.",
+   "fr": "Écrit le véhicule et les réglages de parcours de champ."
+  },
+  "AIModeSelectionSettingsEvent:run": {
+   "en": "Calls `setAIModeFieldCourseSettings` on a synchronized vehicle; on the server it rebroadcasts to the other clients, excluding the sender.",
+   "fr": "Appelle `setAIModeFieldCourseSettings` sur un véhicule synchronisé ; sur le serveur il le rediffuse aux autres clients, en excluant l'émetteur."
+  },
+  "AIModeSelectionSettingsEvent.sendEvent": {
+   "en": "Sends the event unless `noEventSend` is true: the server broadcasts it, a client sends it to the server.",
+   "fr": "Envoie l'événement sauf si `noEventSend` vaut true : le serveur le diffuse, un client l'envoie au serveur."
+  }
+ }
+}

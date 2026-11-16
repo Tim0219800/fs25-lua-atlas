@@ -1,0 +1,25 @@
+{
+  "fichier": "vehicles/wheels/WheelVisualPartConnector.lua",
+  "module": {
+    "en": "Visual wheel part for the connector between twin wheels (subclass of WheelVisualPart). When the visual wheel has a connected twin, it positions the connector node and feeds connector shader parameters, in inches, from the wheel widths and offsets, with two modes (connectorPos or widthAndDiam).",
+    "fr": "Partie visuelle de roue pour le connecteur entre roues jumelées (sous-classe de WheelVisualPart). Quand la roue visuelle a une jumelle connectée, elle positionne le nœud du connecteur et alimente les paramètres shader du connecteur, en pouces, d'après les largeurs et décalages, selon deux modes (connectorPos ou widthAndDiam)."
+  },
+  "fonctions": {
+    "WheelVisualPartConnector.new": {
+      "en": "Creates a connector part through the parent constructor. Note: the customMt argument is ignored; the connector metatable is always used.",
+      "fr": "Crée une partie connecteur via le constructeur parent. À noter : l'argument customMt est ignoré ; la métatable du connecteur est toujours utilisée."
+    },
+    "WheelVisualPartConnector:loadFromXML": {
+      "en": "Calls the parent loader, then reads the connector options (useWidthAndDiam, usePosAndScale, diameter, offset, hookOffset, width, start/end positions and offsets, uniformScale). Returns false if the parent load fails.",
+      "fr": "Appelle le chargeur parent, puis lit les options du connecteur (useWidthAndDiam, usePosAndScale, diameter, offset, hookOffset, width, positions et décalages de début/fin, uniformScale). Retourne false si le chargement parent échoue."
+    },
+    "WheelVisualPartConnector:setNode": {
+      "en": "Calls the parent `setNode`; if a connected wheel exists, moves the node to it and sets the connectorPos or widthAndDiam shader parameters (and connectorPosAndScale if enabled) from the wheel dimensions.",
+      "fr": "Appelle le `setNode` parent ; s'il existe une roue connectée, déplace le nœud vers elle et définit les paramètres shader connectorPos ou widthAndDiam (et connectorPosAndScale si activé) d'après les dimensions des roues."
+    },
+    "WheelVisualPartConnector.registerXMLPaths": {
+      "en": "Registers the XML paths of the connector; currently just forwards to the parent registration.",
+      "fr": "Enregistre les chemins XML du connecteur ; se contente actuellement de déléguer à l'enregistrement parent."
+    }
+  }
+}

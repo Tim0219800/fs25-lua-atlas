@@ -1,0 +1,33 @@
+{
+ "fichier": "animals/events/AnimalNameEvent.lua",
+ "module": {
+  "en": "Network event for renaming an animal cluster in a husbandry. A client sends it to the server, which applies the rename and rebroadcasts it to the other clients. The static sendEvent helper picks the right path (broadcast on the server, send to server on a client).",
+  "fr": "Événement réseau pour renommer un groupe d'animaux dans un élevage. Un client l'envoie au serveur, qui applique le renommage et le rediffuse aux autres clients. L'aide statique sendEvent choisit le bon chemin (diffusion sur le serveur, envoi au serveur sur un client)."
+ },
+ "fonctions": {
+  "AnimalNameEvent.emptyNew": {
+   "en": "Creates an empty event instance, used before reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée avant la lecture depuis un flux."
+  },
+  "AnimalNameEvent.new": {
+   "en": "Creates the event for a husbandry, cluster id and new name.",
+   "fr": "Crée l'événement pour un élevage, un identifiant de groupe et un nouveau nom."
+  },
+  "AnimalNameEvent:readStream": {
+   "en": "Reads the husbandry, cluster id and name string, then runs the event.",
+   "fr": "Lit l'élevage, l'identifiant du groupe et la chaîne du nom, puis exécute l'événement."
+  },
+  "AnimalNameEvent:writeStream": {
+   "en": "Writes the husbandry, cluster id and name to the stream.",
+   "fr": "Écrit l'élevage, l'identifiant du groupe et le nom dans le flux."
+  },
+  "AnimalNameEvent:run": {
+   "en": "Calls renameAnimal on the husbandry (without sending a new event). If it came from a client, the server rebroadcasts the event to the other clients. There is no nil check on the husbandry.",
+   "fr": "Appelle renameAnimal sur l'élevage (sans renvoyer d'événement). S'il vient d'un client, le serveur rediffuse l'événement aux autres clients. Aucun test de nil n'est fait sur l'élevage."
+  },
+  "AnimalNameEvent.sendEvent": {
+   "en": "Sends the rename unless noEventSend is true: the server broadcasts to clients, a client sends to the server.",
+   "fr": "Envoie le renommage sauf si noEventSend vaut true : le serveur diffuse aux clients, un client envoie au serveur."
+  }
+ }
+}

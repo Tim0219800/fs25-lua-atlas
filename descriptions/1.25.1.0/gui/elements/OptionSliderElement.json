@@ -1,0 +1,57 @@
+{
+ "fichier": "gui/elements/OptionSliderElement.lua",
+ "module": {
+  "en": "Variant of MultiTextOptionElement that adds a draggable slider (and an optional filling bar) whose position follows the current state. Children named slider and fillingBar are bound by name and can be auto-created from default profiles. The slider spans the element width minus a side offset (the left button width by default), and the value text can follow the slider.",
+  "fr": "Variante de MultiTextOptionElement qui ajoute un curseur déplaçable (et une barre de remplissage optionnelle) dont la position suit l'état courant. Les enfants nommés slider et fillingBar sont associés par nom et peuvent être créés automatiquement depuis des profils par défaut. Le curseur couvre la largeur de l'élément moins un décalage latéral (la largeur du bouton gauche par défaut), et le texte de valeur peut suivre le curseur."
+ },
+ "fonctions": {
+  "OptionSliderElement.new": {
+   "en": "Constructor. Builds a MultiTextOptionElement and adds slider fields: slider and filling bar references, default profile names, filling bar off, and text-follows-slider on.",
+   "fr": "Constructeur. Construit un MultiTextOptionElement et ajoute les champs du curseur : références du curseur et de la barre de remplissage, noms de profils par défaut, barre de remplissage désactivée, texte suivant le curseur activé."
+  },
+  "OptionSliderElement:loadFromXML": {
+   "en": "Loads the base element, then reads sliderOffset, useFillingBar and updateTextPosition from XML. Note: because of the 'or' pattern, an explicit false for the two boolean keys cannot override a true default.",
+   "fr": "Charge l'élément de base, puis lit sliderOffset, useFillingBar et updateTextPosition depuis le XML. À noter : à cause du motif 'or', un false explicite pour les deux booléens ne peut pas remplacer une valeur par défaut à true."
+  },
+  "OptionSliderElement:loadProfile": {
+   "en": "Loads the base profile, then sliderOffset, useFillingBar, updateTextPosition and the default profile names for the slider, round slider, filling bar and three-part filling bar.",
+   "fr": "Charge le profil de base, puis sliderOffset, useFillingBar, updateTextPosition et les noms de profils par défaut du curseur, du curseur arrondi, de la barre de remplissage et de la barre en trois parties."
+  },
+  "OptionSliderElement:copyAttributes": {
+   "en": "Copies the slider-specific settings and default profile names from a source element after the base copy.",
+   "fr": "Copie les réglages propres au curseur et les noms de profils par défaut depuis un élément source, après la copie de base."
+  },
+  "OptionSliderElement:setElementsByName": {
+   "en": "Binds the slider and fillingBar children by name after the base binding. Disables the filling bar if absent, and logs a warning if no slider exists or if there is not enough room, in which case the offset is set to half the width.",
+   "fr": "Associe les enfants slider et fillingBar par nom après l'association de base. Désactive la barre de remplissage si elle est absente, et journalise un avertissement si le curseur manque ou si la place est insuffisante ; le décalage vaut alors la moitié de la largeur."
+  },
+  "OptionSliderElement:addDefaultElements": {
+   "en": "When autoAddDefaultElements is set, also creates a missing filling bar (bitmap or three-part) and a missing slider (round-corner or bitmap), depending on which default profiles are defined.",
+   "fr": "Quand autoAddDefaultElements est actif, crée aussi une barre de remplissage manquante (bitmap ou trois parties) et un curseur manquant (coins arrondis ou bitmap), selon les profils par défaut définis."
+  },
+  "OptionSliderElement:onOpen": {
+   "en": "Runs the base open handling, then repositions the slider for the current state.",
+   "fr": "Exécute le traitement d'ouverture de base, puis repositionne le curseur selon l'état courant."
+  },
+  "OptionSliderElement:mouseEvent": {
+   "en": "Mouse handling that skips the MultiTextOptionElement version: detects presses on arrows, slider or the slider track, resets repeat state on release, and while dragging snaps the slider to a step, calls setState with forceEvent, and moves the text and filling bar.",
+   "fr": "Gestion de la souris qui saute la version de MultiTextOptionElement : détecte les appuis sur les flèches, le curseur ou la piste, réinitialise la répétition au relâchement et, pendant le glissement, aligne le curseur sur un pas, appelle setState avec forceEvent et déplace le texte et la barre de remplissage."
+  },
+  "OptionSliderElement:touchEvent": {
+   "en": "Touch version of the mouse handler: only a press on the slider itself starts a drag (the track area is not used), with the same snapping, state change and text/filling-bar updates.",
+   "fr": "Version tactile du gestionnaire souris : seul un appui sur le curseur lui-même démarre un glissement (la piste n'est pas utilisée), avec le même alignement, changement d'état et mise à jour du texte et de la barre."
+  },
+  "OptionSliderElement:updateSlider": {
+   "en": "Places the slider proportionally to (state-1)/(number of texts-1) between its min and max X, centers the text on it if enabled and sizes the filling bar. Sets the default offset to the left button width if none is defined.",
+   "fr": "Place le curseur proportionnellement à (état-1)/(nombre de textes-1) entre ses positions X min et max, centre le texte dessus si activé et dimensionne la barre de remplissage. Fixe le décalage par défaut à la largeur du bouton gauche s'il n'est pas défini."
+  },
+  "OptionSliderElement:updateAbsolutePosition": {
+   "en": "Updates the absolute position through the parent, then repositions the slider.",
+   "fr": "Met à jour la position absolue via le parent, puis repositionne le curseur."
+  },
+  "OptionSliderElement:updateContentElement": {
+   "en": "Refreshes the displayed content through the parent, then repositions the slider.",
+   "fr": "Met à jour le contenu affiché via le parent, puis repositionne le curseur."
+  }
+ }
+}

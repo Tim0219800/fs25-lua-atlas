@@ -1,0 +1,33 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/SoilSamplerSendEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) telling a soil sampler vehicle to send its taken samples for analysis. Synchronised between clients and server through the usual re-broadcast pattern.",
+    "fr": "Événement réseau (sous-classe de Event) qui ordonne à un véhicule préleveur de sol d'envoyer ses échantillons prélevés à l'analyse. Synchronisé entre clients et serveur par le schéma habituel de rediffusion."
+  },
+  "fonctions": {
+    "SoilSamplerSendEvent.emptyNew": {
+      "en": "Creates an empty SoilSamplerSendEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de SoilSamplerSendEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "SoilSamplerSendEvent.new": {
+      "en": "Creates the event for a soil sampler object.",
+      "fr": "Crée l'événement pour un objet préleveur de sol."
+    },
+    "SoilSamplerSendEvent:readStream": {
+      "en": "Reads the network object reference, then calls run.",
+      "fr": "Lit la référence de l'objet réseau, puis appelle run."
+    },
+    "SoilSamplerSendEvent:writeStream": {
+      "en": "Writes the network object reference.",
+      "fr": "Écrit la référence de l'objet réseau."
+    },
+    "SoilSamplerSendEvent:run": {
+      "en": "Receiving side. On the server it first re-broadcasts the event to the other clients (not the sender); then, if the target object exists and is synchronized, it applies the change locally without sending a new event. It calls object:sendTakenSoilSamples(true).",
+      "fr": "Côté réception. Sur le serveur, il rediffuse d'abord l'événement aux autres clients (pas à l'expéditeur) ; puis, si l'objet cible existe et est synchronisé, il applique le changement localement sans renvoyer d'événement. Il appelle object:sendTakenSoilSamples(true)."
+    },
+    "SoilSamplerSendEvent.sendEvent": {
+      "en": "Entry point to sync the sending of taken soil samples. Server: broadcasts a new SoilSamplerSendEvent to the clients (bound to the object); client: sends it to the server. Does nothing when noEventSend is true.",
+      "fr": "Point d'entrée pour synchroniser l'envoi des échantillons de sol prélevés. Serveur : diffuse un nouvel SoilSamplerSendEvent aux clients (lié à l'objet) ; client : l'envoie au serveur. Ne fait rien si noEventSend vaut true."
+    }
+  }
+}

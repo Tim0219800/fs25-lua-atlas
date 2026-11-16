@@ -1,0 +1,33 @@
+{
+ "fichier": "handTools/specializations/HandToolStorable.lua",
+ "module": {
+  "en": "Hand tool specialization for tools that can be hung in a hand tool holder. It reads a list of holder types from the tool XML, each with an optional node used to orient the tool in that holder, and exposes a lookup by holder type. It has no prerequisites and only listens to onLoad.",
+  "fr": "Spécialisation d'outil à main pour les outils qui peuvent être rangés dans un support d'outil. Elle lit dans le XML de l'outil une liste de types de supports, chacun avec un nœud optionnel servant à orienter l'outil dans ce support, et fournit une recherche par type de support. Elle n'a aucun prérequis et n'écoute que onLoad."
+ },
+ "fonctions": {
+  "HandToolStorable.registerXMLPaths": {
+   "en": "Registers the repeated handTool.storable.holderType XML entries: a required #type string and an optional #node index pointing at the orientation node.",
+   "fr": "Déclare les entrées XML répétées handTool.storable.holderType : une chaîne #type obligatoire et un index #node optionnel désignant le nœud d'orientation."
+  },
+  "HandToolStorable.registerFunctions": {
+   "en": "Registers the function getHolsterNodeByType on the hand tool type.",
+   "fr": "Enregistre la fonction getHolsterNodeByType sur le type d'outil à main."
+  },
+  "HandToolStorable.registerEventListeners": {
+   "en": "Subscribes the specialization to the onLoad event.",
+   "fr": "Abonne la spécialisation à l'événement onLoad."
+  },
+  "HandToolStorable.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisites.",
+   "fr": "Retourne toujours true : cette spécialisation n'a aucun prérequis."
+  },
+  "HandToolStorable:onLoad": {
+   "en": "Builds a table of holder type to orientation node from the XML. Entries without a type are logged as XML errors and skipped; entries without a resolvable node are not stored, so that holder type is not accepted.",
+   "fr": "Construit une table type de support vers nœud d'orientation à partir du XML. Les entrées sans type sont signalées en erreur XML et ignorées ; celles sans nœud résolu ne sont pas stockées, donc ce type de support n'est pas accepté."
+  },
+  "HandToolStorable:getHolsterNodeByType": {
+   "en": "Returns the orientation node registered for the given holder type name, or nil if the tool cannot be stored in that kind of holder.",
+   "fr": "Retourne le nœud d'orientation enregistré pour le nom de type de support donné, ou nil si l'outil ne peut pas être rangé dans ce type de support."
+  }
+ }
+}

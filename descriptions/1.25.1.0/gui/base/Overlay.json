@@ -1,0 +1,81 @@
+{
+ "fichier": "gui/base/Overlay.lua",
+ "module": {
+  "en": "Basic 2D image overlay: wraps an engine image overlay handle with position, size, alignment, UVs, color, rotation, scale and visibility, and renders it with optional clipping. Used throughout the HUD and menus, and created by `OverlayManager` from texture slices. Constants such as `Overlay.DEFAULT_UVS` and the ALIGN_* values are defined elsewhere (UNVERIFIED). Client-side only.",
+  "fr": "Overlay image 2D de base : enveloppe un handle d'overlay image du moteur avec position, taille, alignement, UV, couleur, rotation, échelle et visibilité, et l'affiche avec découpe optionnelle. Utilisé partout dans le HUD et les menus, et créé par `OverlayManager` à partir de tranches de texture. Les constantes comme `Overlay.DEFAULT_UVS` et les valeurs ALIGN_* sont définies ailleurs (NON VÉRIFIÉ). Côté client uniquement."
+ },
+ "fonctions": {
+  "Overlay.new": {
+   "en": "Creates an overlay at x, y with the given size, loading the image file if a filename is given (otherwise the engine id stays 0 and nothing is drawn). Defaults: white, bottom-left alignment, no rotation, full UVs.",
+   "fr": "Crée un overlay en x, y avec la taille donnée, en chargeant l'image si un nom de fichier est fourni (sinon l'id moteur reste 0 et rien n'est dessiné). Par défaut : blanc, alignement en bas à gauche, sans rotation, UV complets."
+  },
+  "Overlay:delete": {
+   "en": "Releases the engine image handle if one exists. The overlay must not be rendered afterwards.",
+   "fr": "Libère le handle d'image du moteur s'il existe. L'overlay ne doit plus être affiché ensuite."
+  },
+  "Overlay:setColor": {
+   "en": "Sets the RGBA tint multiplied with the texture; nil channels keep their current value, and the engine is only called when something changes.",
+   "fr": "Définit la teinte RGBA multipliée avec la texture ; les canaux nil gardent leur valeur et le moteur n'est appelé que si quelque chose change."
+  },
+  "Overlay:setUVs": {
+   "en": "Stores and applies 8 UV values defining the displayed texture area; ignored when the overlay has no image.",
+   "fr": "Mémorise et applique 8 valeurs UV définissant la zone de texture affichée ; ignoré si l'overlay n'a pas d'image."
+  },
+  "Overlay:setSliceId": {
+   "en": "Looks up the slice \"prefix.id\" in `g_overlayManager` and applies its UVs; does nothing if the slice is unknown or there is no image. Size is not changed.",
+   "fr": "Cherche la tranche « prefix.id » dans `g_overlayManager` et applique ses UV ; sans effet si la tranche est inconnue ou s'il n'y a pas d'image. La taille n'est pas modifiée."
+  },
+  "Overlay:setPosition": {
+   "en": "Sets the screen position (0 to 1); nil keeps the current coordinate. Alignment offsets are applied separately at render time.",
+   "fr": "Définit la position à l'écran (0 à 1) ; nil conserve la coordonnée actuelle. Les décalages d'alignement sont appliqués séparément au rendu."
+  },
+  "Overlay:getPosition": {
+   "en": "Returns the stored x and y position, without alignment offsets.",
+   "fr": "Renvoie la position x et y mémorisée, sans décalages d'alignement."
+  },
+  "Overlay:setDimension": {
+   "en": "Sets width and height (nil keeps the current one) and recomputes the alignment offsets. Does not change the scale factors.",
+   "fr": "Définit largeur et hauteur (nil conserve l'actuelle) et recalcule les décalages d'alignement. Ne modifie pas les facteurs d'échelle."
+  },
+  "Overlay:resetDimensions": {
+   "en": "Restores the width and height given at construction and resets the scale to 1.",
+   "fr": "Restaure la largeur et la hauteur données à la construction et remet l'échelle à 1."
+  },
+  "Overlay:setInvertX": {
+   "en": "Flips the image horizontally by swapping UV pairs, or restores normal UVs. Only acts if the state changes and an image exists.",
+   "fr": "Retourne l'image horizontalement en permutant les paires d'UV, ou restaure les UV normaux. N'agit que si l'état change et qu'une image existe."
+  },
+  "Overlay:setRotation": {
+   "en": "Sets rotation in radians around a pivot given as an offset from the overlay position (screen units); the engine is only called on change.",
+   "fr": "Définit la rotation en radians autour d'un pivot donné en décalage par rapport à la position de l'overlay (unités d'écran) ; le moteur n'est appelé qu'en cas de changement."
+  },
+  "Overlay:setScale": {
+   "en": "Sets the size as default size times the given factors, stores the factors and refreshes the alignment offsets.",
+   "fr": "Définit la taille comme taille par défaut multipliée par les facteurs donnés, mémorise les facteurs et rafraîchit les décalages d'alignement."
+  },
+  "Overlay:getScale": {
+   "en": "Returns the current width and height scale factors.",
+   "fr": "Renvoie les facteurs d'échelle courants en largeur et hauteur."
+  },
+  "Overlay:render": {
+   "en": "Draws the overlay if visible, with an image and alpha above 0. With clip bounds it renders a clipped part via temporary UVs (`Overlay.getClippingUVs`, not in this file, UNVERIFIED) and restores them; also draws debug frames in debug builds.",
+   "fr": "Dessine l'overlay s'il est visible, avec une image et un alpha supérieur à 0. Avec des bornes de découpe, il affiche une partie découpée via des UV temporaires (`Overlay.getClippingUVs`, absent de ce fichier, NON VÉRIFIÉ) puis les restaure ; trace aussi des cadres de debug en build debug."
+  },
+  "Overlay:setAlignment": {
+   "en": "Sets vertical (bottom, middle, top) and horizontal (left, center, right) alignment and computes the draw offsets from the current size; nil values fall back to bottom/left.",
+   "fr": "Définit l'alignement vertical (bas, milieu, haut) et horizontal (gauche, centre, droite) et calcule les décalages de dessin selon la taille courante ; les valeurs nil retombent sur bas/gauche."
+  },
+  "Overlay:setIsVisible": {
+   "en": "Shows or hides the overlay; hidden overlays skip drawing in `render`.",
+   "fr": "Affiche ou masque l'overlay ; un overlay masqué n'est pas dessiné par `render`."
+  },
+  "Overlay:getIsVisible": {
+   "en": "Returns whether the overlay is currently set visible.",
+   "fr": "Renvoie si l'overlay est actuellement visible."
+  },
+  "Overlay:setImage": {
+   "en": "Switches to another image file: deletes the old engine handle and creates a new one when the filename differs. Previously set UVs are not reapplied here.",
+   "fr": "Passe à un autre fichier image : supprime l'ancien handle moteur et en crée un nouveau si le nom diffère. Les UV précédents ne sont pas réappliqués ici."
+  }
+ }
+}

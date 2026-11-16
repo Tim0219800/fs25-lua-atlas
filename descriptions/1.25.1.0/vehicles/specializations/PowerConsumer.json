@@ -1,0 +1,117 @@
+{
+ "fichier": "vehicles/specializations/PowerConsumer.lua",
+ "module": {
+  "en": "Specialization for implements that draw engine power, either through the PTO or as a pulling resistance. It has no prerequisites. It reads vehicle.powerConsumer (optionally per powerConsumer configuration), adds a drag force while moving, reports PTO torque and rpm to the root motor, and can refuse turn-on when the tractor motor lacks torque. It also provides the 'neededPower' store spec and an optional speed limit offset depending on the source motor power.",
+  "fr": "Spécialisation pour les outils qui prélèvent de la puissance moteur, via la prise de force ou comme résistance à la traction. Elle n'a aucun prérequis. Elle lit vehicle.powerConsumer (éventuellement par configuration powerConsumer), applique une force de résistance en mouvement, communique couple et régime de prise de force au moteur racine, et peut refuser la mise en marche si le moteur du tracteur manque de couple. Elle fournit aussi la caractéristique de boutique « neededPower » et un décalage optionnel de limite de vitesse selon la puissance du moteur source."
+ },
+ "fonctions": {
+  "PowerConsumer.initSpecialization": {
+   "en": "Registers the 'powerConsumer' configuration type and the 'neededPower' store spec, then the XML paths (base and per configuration), the store data keys and the work mode attributes forceScale and ptoPowerScale.",
+   "fr": "Enregistre le type de configuration « powerConsumer » et la caractéristique de boutique « neededPower », puis les chemins XML (de base et par configuration), les clés de données de boutique et les attributs de mode de travail forceScale et ptoPowerScale."
+  },
+  "PowerConsumer.registerPowerConsumerXMLPaths": {
+   "en": "Registers all powerConsumer XML attributes under a given base path: force nodes, maxForce (kN), forceDir, turn-on peak settings, PTO power and rpm, virtual power multiplier and speedLimitModifier entries.",
+   "fr": "Enregistre tous les attributs XML powerConsumer sous un chemin de base donné : nœuds de force, maxForce (kN), forceDir, réglages du pic à l'allumage, puissance et régime de prise de force, multiplicateur de puissance virtuelle et entrées speedLimitModifier."
+  },
+  "PowerConsumer.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Retourne toujours true : aucune spécialisation prérequise."
+  },
+  "PowerConsumer.registerFunctions": {
+   "en": "Adds loadPowerSetup, getPtoRpm, getDoConsumePtoPower, getPowerMultiplier, getConsumedPtoTorque and getConsumingLoad to the vehicle type.",
+   "fr": "Ajoute loadPowerSetup, getPtoRpm, getDoConsumePtoPower, getPowerMultiplier, getConsumedPtoTorque et getConsumingLoad au type de véhicule."
+  },
+  "PowerConsumer.registerOverwrittenFunctions": {
+   "en": "Overrides getCanBeTurnedOn, getCanBeTurnedOnAll, getTurnedOnNotAllowedWarning, getRawSpeedLimit and loadWorkModeFromXML.",
+   "fr": "Surcharge getCanBeTurnedOn, getCanBeTurnedOnAll, getTurnedOnNotAllowedWarning, getRawSpeedLimit et loadWorkModeFromXML."
+  },
+  "PowerConsumer.registerEventListeners": {
+   "en": "Subscribes to onLoad, onUpdate, onStateChange, onWorkModeChanged and onTurnedOn.",
+   "fr": "Abonne aux événements onLoad, onUpdate, onStateChange, onWorkModeChanged et onTurnedOn."
+  },
+  "PowerConsumer:onLoad": {
+   "en": "Reads force, turn-on peak and speedLimitModifier settings from the configuration key (or vehicle.powerConsumer if absent) and calls loadPowerSetup. Horsepower limits are converted to kW. Note: it removes an 'onPostDetach' listener that was never registered here.",
+   "fr": "Lit les réglages de force, de pic à l'allumage et de speedLimitModifier depuis la clé de configuration (ou vehicle.powerConsumer à défaut) et appelle loadPowerSetup. Les limites en chevaux sont converties en kW. À noter : elle retire un écouteur « onPostDetach » qui n'a jamais été enregistré ici."
+  },
+  "PowerConsumer:onUpdate": {
+   "en": "While active and moving in forceDir, applies a braking force at the force node, equal to a friction term capped by maxForce and scaled by getPowerMultiplier. Also counts down the turn-on peak timer.",
+   "fr": "Tant que le véhicule est actif et avance dans forceDir, applique au nœud de force une force de freinage égale à un terme de frottement plafonné par maxForce et mis à l'échelle par getPowerMultiplier. Décompte aussi le minuteur du pic à l'allumage."
+  },
+  "PowerConsumer:loadPowerSetup": {
+   "en": "Loads min and max needed PTO power (kW at ptoRpm), PTO rpm and the virtual power multiplier from the XML. Warns on a deprecated key and if max is below min.",
+   "fr": "Charge la puissance de prise de force minimale et maximale requise (kW au régime ptoRpm), le régime de prise de force et le multiplicateur de puissance virtuelle depuis le XML. Avertit pour une clé obsolète et si le maximum est inférieur au minimum."
+  },
+  "PowerConsumer:getPtoRpm": {
+   "en": "Returns the configured PTO rpm while the vehicle consumes PTO power, otherwise 0.",
+   "fr": "Retourne le régime de prise de force configuré tant que le véhicule consomme de la puissance de prise de force, sinon 0."
+  },
+  "PowerConsumer:getDoConsumePtoPower": {
+   "en": "True if useTurnOnState is set and the vehicle is turned on (it needs getIsTurnedOn).",
+   "fr": "True si useTurnOnState est actif et que le véhicule est allumé (nécessite getIsTurnedOn)."
+  },
+  "PowerConsumer:getPowerMultiplier": {
+   "en": "Returns 1 by default; meant to be overridden to scale the drag force in onUpdate.",
+   "fr": "Retourne 1 par défaut ; destinée à être surchargée pour moduler la force de résistance dans onUpdate."
+  },
+  "PowerConsumer:getConsumedPtoTorque": {
+   "en": "Returns the PTO torque (kNm) and a virtual multiplier. Power is interpolated between min and max by the average consuming load, divided by angular speed, with a temporary peak after turn-on unless ignoreTurnOnPeak. Returns 0, 1 when idle.",
+   "fr": "Retourne le couple de prise de force (kNm) et un multiplicateur virtuel. La puissance est interpolée entre minimum et maximum selon la charge moyenne, divisée par la vitesse angulaire, avec un pic temporaire après l'allumage sauf si ignoreTurnOnPeak. Retourne 0, 1 au repos."
+  },
+  "PowerConsumer:getConsumingLoad": {
+   "en": "Default returns 0, 0 (load, count); specializations override it to report their load for getConsumedPtoTorque.",
+   "fr": "Retourne par défaut 0, 0 (charge, nombre) ; les spécialisations la surchargent pour fournir leur charge à getConsumedPtoTorque."
+  },
+  "PowerConsumer:getCanBeTurnedOn": {
+   "en": "Returns false (plus a not-enough-power flag) when the expected torque of this and all implements, scaled to engine side, exceeds 90 percent of the root motor peak torque and the tool is off. Otherwise defers to the parent.",
+   "fr": "Retourne false (avec un indicateur de puissance insuffisante) quand le couple attendu de cet outil et de tous les outils attelés, ramené côté moteur, dépasse 90 % du couple maximal du moteur racine et que l'outil est éteint. Sinon délègue au parent."
+  },
+  "PowerConsumer:getCanBeTurnedOnAll": {
+   "en": "Same torque check for the whole implement chain: returns false with the turn-on warning text if all PTO torques exceed 90 percent of peak motor torque and this tool is off.",
+   "fr": "Même vérification de couple pour toute la chaîne d'outils : retourne false avec le texte d'avertissement si l'ensemble des couples de prise de force dépasse 90 % du couple maximal du moteur et que cet outil est éteint."
+  },
+  "PowerConsumer:getTurnedOnNotAllowedWarning": {
+   "en": "Returns the insufficient-power warning if getCanBeTurnedOn reports missing power; otherwise defers to the parent.",
+   "fr": "Retourne l'avertissement de puissance insuffisante si getCanBeTurnedOn signale un manque de puissance ; sinon délègue au parent."
+  },
+  "PowerConsumer:getRawSpeedLimit": {
+   "en": "Adds the offset of the last speedLimitModifier whose power range contains the source motor peak power (kW) to the parent speed limit.",
+   "fr": "Ajoute à la limite de vitesse du parent le décalage de la dernière entrée speedLimitModifier dont la plage de puissance contient la puissance maximale du moteur source (kW)."
+  },
+  "PowerConsumer:loadWorkModeFromXML": {
+   "en": "After the parent loads a work mode, reads its forceScale and ptoPowerScale (default 1). Returns false if the parent failed.",
+   "fr": "Après le chargement du mode de travail par le parent, lit ses forceScale et ptoPowerScale (1 par défaut). Retourne false si le parent a échoué."
+  },
+  "PowerConsumer:onStateChange": {
+   "en": "On attach or detach, stores the root vehicle motor peak power in sourceMotorPeakPower (math.huge without a motor).",
+   "fr": "À l'attelage ou au dételage, mémorise la puissance maximale du moteur du véhicule racine dans sourceMotorPeakPower (math.huge sans moteur)."
+  },
+  "PowerConsumer:onWorkModeChanged": {
+   "en": "Rescales maxForce and the min/max needed PTO power from their original values using the work mode forceScale. Note: ptoPowerScale is loaded but not used here.",
+   "fr": "Remet à l'échelle maxForce et la puissance de prise de force min/max à partir de leurs valeurs d'origine avec le forceScale du mode de travail. À noter : ptoPowerScale est chargé mais non utilisé ici."
+  },
+  "PowerConsumer:onTurnedOn": {
+   "en": "Starts the turn-on peak timer at 1.5 times the peak duration.",
+   "fr": "Démarre le minuteur du pic à l'allumage à 1,5 fois la durée du pic."
+  },
+  "PowerConsumer.getTotalConsumedPtoTorque": {
+   "en": "Recursively sums consumed PTO torque (kNm) over a vehicle and its attached implements, optionally excluding one vehicle. Returns the total and a torque-weighted virtual multiplier.",
+   "fr": "Additionne récursivement le couple de prise de force consommé (kNm) d'un véhicule et de ses outils attelés, en excluant éventuellement un véhicule. Retourne le total et un multiplicateur virtuel pondéré par le couple."
+  },
+  "PowerConsumer.getMaxPtoRpm": {
+   "en": "Recursively returns the highest PTO rpm requested by a vehicle or any implement attached to it.",
+   "fr": "Retourne récursivement le régime de prise de force le plus élevé demandé par un véhicule ou par un outil qui lui est attelé."
+  },
+  "PowerConsumer:consoleSetPowerConsumer": {
+   "en": "Console command handler: overrides power and force values on the selected implement and on all vehicles with the same config file, for live tuning. Returns a status or usage string.",
+   "fr": "Gestionnaire de commande console : remplace les valeurs de puissance et de force de l'outil sélectionné et de tous les véhicules de même fichier de configuration, pour du réglage en direct. Retourne un message d'état ou d'usage."
+  },
+  "PowerConsumer.loadSpecValueNeededPower": {
+   "en": "Store spec loader: reads neededPower, its maxPower and one value per powerConsumer configuration from the XML into a table (base, maxPower, config).",
+   "fr": "Chargeur de caractéristique de boutique : lit neededPower, son maxPower et une valeur par configuration powerConsumer depuis le XML dans une table (base, maxPower, config)."
+  },
+  "PowerConsumer.getSpecValueNeededPower": {
+   "en": "Builds the shop text for needed power, a single kW/HP value or an HP range across configurations. Returns nil if no power is set or the minimum is 0.",
+   "fr": "Construit le texte de boutique de la puissance requise, une valeur unique kW/ch ou une plage en ch selon les configurations. Retourne nil si aucune puissance n'est définie ou si le minimum vaut 0."
+  }
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/ai/AIVehicleUtil.lua",
+ "module": {
+  "en": "Static helper table with the low-level routines the AI uses to steer vehicles and to query the land around implements: driving toward a point, along a curvature or in a direction, turn radius and reverse permissions of attached tools, marker inversion, turn-side validity checks, and field-crop or density-height area queries. Some functions draw debug lines when VehicleDebug is in AI mode.",
+  "fr": "Table statique d'utilitaires bas niveau utilisés par l'IA pour diriger les véhicules et interroger le terrain autour des outils : conduite vers un point, le long d'une courbure ou dans une direction, rayon de braquage et permissions de marche arrière des outils attelés, inversion des marqueurs, validité des côtés de virage, et requêtes de surface de cultures ou de hauteur de densité. Certaines fonctions dessinent du debug quand VehicleDebug est en mode IA."
+ },
+ "fonctions": {
+  "AIVehicleUtil.driveToPoint": {
+   "en": "Steers the vehicle toward a local target (tX, tZ): computes steering from the circle through the target, smooths rotatedTime, lowers speed with steering error, sets the motor speed limit, enables cruise control and applies wheel physics. Does nothing before the first update.",
+   "fr": "Dirige le véhicule vers une cible locale (tX, tZ) : calcule le braquage d'après le cercle passant par la cible, lisse rotatedTime, réduit la vitesse selon l'erreur de braquage, fixe la limite du moteur, active le régulateur et applique la physique des roues. Sans effet avant la première mise à jour."
+  },
+  "AIVehicleUtil.driveAlongCurvature": {
+   "en": "Sets the steering directly from a curvature value, applies the speed limit and cruise control and updates wheel physics; acceleration is cut when maxSpeed is not positive. Wheel part only after the first update.",
+   "fr": "Règle directement le braquage à partir d'une courbure, applique la limite de vitesse et le régulateur et met à jour la physique des roues ; l'accélération est coupée si maxSpeed n'est pas positif. La partie roues n'agit qu'après la première mise à jour."
+  },
+  "AIVehicleUtil.driveInDirection": {
+   "en": "Steers toward a normalised local direction (lx, lz): steering is proportional to the angle up to steeringAngleLimit, speed or acceleration is reduced above slowAngleLimit, cruise control is enabled when a speed limit is given, then wheel physics run.",
+   "fr": "Dirige vers une direction locale normalisée (lx, lz) : le braquage est proportionnel à l'angle jusqu'à steeringAngleLimit, la vitesse ou l'accélération est réduite au-delà de slowAngleLimit, le régulateur est activé si une limite de vitesse est donnée, puis la physique des roues est appliquée."
+  },
+  "AIVehicleUtil.getDriveDirection": {
+   "en": "Converts a world position into the local space of refNode and returns the normalised x and z direction (lx, lz) toward it.",
+   "fr": "Convertit une position monde dans l'espace local de refNode et renvoie la direction x, z normalisée (lx, lz) vers celle-ci."
+  },
+  "AIVehicleUtil.getAverageDriveDirection": {
+   "en": "Same as getDriveDirection but toward the midpoint of two world positions. Returns the normalised lx, lz and the distance to that midpoint in local x-z.",
+   "fr": "Comme getDriveDirection mais vers le milieu de deux positions monde. Renvoie lx, lz normalisés et la distance vers ce milieu dans le plan local x-z."
+  },
+  "AIVehicleUtil.getAttachedImplementsAllowTurnBackward": {
+   "en": "Recursively checks the vehicle and its attached implements; returns false if any getAIAllowTurnBackward reports false, true otherwise.",
+   "fr": "Vérifie récursivement le véhicule et ses outils attelés ; renvoie false si un getAIAllowTurnBackward répond false, sinon true."
+  },
+  "AIVehicleUtil.getAttachedImplementsBlockTurnBackward": {
+   "en": "Recursively checks the vehicle and its attached implements; returns true as soon as one getAIBlockTurnBackward reports true, false otherwise.",
+   "fr": "Vérifie récursivement le véhicule et ses outils attelés ; renvoie true dès qu'un getAIBlockTurnBackward répond true, sinon false."
+  },
+  "AIVehicleUtil.getAttachedImplementsMaxTurnRadius": {
+   "en": "Recursively takes the largest turn radius limitation (getAITurnRadiusLimitation) among attached implements. Returns -1 when none defines one.",
+   "fr": "Prend récursivement la plus grande limite de rayon de braquage (getAITurnRadiusLimitation) parmi les outils attelés. Renvoie -1 si aucun n'en définit."
+  },
+  "AIVehicleUtil.getAIToolReverserDirectionNode": {
+   "en": "Searches attached implements, recursively, for the first AI tool reverser direction node and returns it, or nil if none exists.",
+   "fr": "Cherche récursivement dans les outils attelés le premier noeud de direction d'inverseur d'outil IA et le renvoie, ou nil s'il n'y en a pas."
+  },
+  "AIVehicleUtil.getMaxToolRadius": {
+   "en": "Estimates the maximum turn radius of an implement from its wheel positions, rotation limits of the attacher or component joint and steering axle, merged with the manual radius of the root vehicle tree. Logs a warning if the rotation node matches no joint.",
+   "fr": "Estime le rayon de braquage maximal d'un outil d'après la position de ses roues, les limites de rotation de l'attache ou de l'articulation et l'essieu directeur, combiné au rayon manuel de l'arbre du véhicule racine. Journalise un avertissement si le noeud de rotation ne correspond à aucune articulation."
+  },
+  "AIVehicleUtil.updateInvertLeftRightMarkers": {
+   "en": "Compares the x positions of the left and right AI markers of a vehicle in the AI direction node space of the root attacher vehicle, and calls setAIMarkersInverted if the right marker has the larger x.",
+   "fr": "Compare les positions x des marqueurs IA gauche et droit d'un véhicule dans l'espace du noeud de direction IA du véhicule porteur racine, et appelle setAIMarkersInverted si le marqueur droit a le x le plus grand."
+  },
+  "AIVehicleUtil.getValidityOfTurnDirections": {
+   "en": "Samples work area to the left and right ahead of the implements (using getAIAreaOfVehicle) and returns the average left and right area ratios used to pick a turn side. Draws debug lines in AI debug mode. Note: turnData is optional (marker width is used without it) and the average divides by the implement count.",
+   "fr": "Échantillonne la surface de travail à gauche et à droite devant les outils (via getAIAreaOfVehicle) et renvoie les ratios moyens gauche et droite servant à choisir le côté du virage. Dessine des lignes de debug en mode IA. À noter : turnData est optionnel (sinon la largeur des marqueurs est utilisée) et la moyenne divise par le nombre d'outils."
+  },
+  "AIVehicleUtil.getAreaDimensions": {
+   "en": "Builds the six values (start, width, height corners) of a parallelogram from left and right nodes, offsets and a direction vector, shifted back by half a meter at the start. Returns sX, sZ, wX, wZ, hX, hZ.",
+   "fr": "Construit les six valeurs (coins début, largeur, hauteur) d'un parallélogramme à partir de noeuds gauche et droit, de décalages et d'un vecteur de direction, avec un recul d'un demi-mètre au départ. Renvoie sX, sZ, wX, wZ, hX, hZ."
+  },
+  "AIVehicleUtil.getIsAreaOwned": {
+   "en": "Returns true if the area center is on land owned by the vehicle's AI job farm, or if a mission allows work there for that farm; false otherwise.",
+   "fr": "Renvoie true si le centre de la zone est sur un terrain appartenant à la ferme de la mission IA du véhicule, ou si une mission autorise le travail à cet endroit pour cette ferme ; sinon false."
+  },
+  "AIVehicleUtil.getAIAreaOfVehicle": {
+   "en": "Returns (area, totalArea) of workable ground for the vehicle in a parallelogram: uses density height requirements if the vehicle defines any, else its field crops query (0, 0 if invalid).",
+   "fr": "Renvoie (area, totalArea) de la surface travaillable pour le véhicule dans un parallélogramme : utilise les exigences de hauteur de densité si le véhicule en définit, sinon sa requête de cultures du champ (0, 0 si invalide)."
+  },
+  "AIVehicleUtil.getAIFruitArea": {
+   "en": "Converts the corner points to x, z, width, height form and returns the result of the crops query's getParallelogram (area, total area).",
+   "fr": "Convertit les points de coin en forme x, z, largeur, hauteur et renvoie le résultat de getParallelogram de la requête de cultures (surface, surface totale)."
+  },
+  "AIVehicleUtil.getAIDensityHeightArea": {
+   "en": "Returns (area, totalArea) of the required fill types on the density height map in the parallelogram; returns 0, 0 when the zone is not a field. Sums areas over requirements with a known fill type.",
+   "fr": "Renvoie (area, totalArea) des types de remplissage requis sur la carte de hauteur de densité dans le parallélogramme ; renvoie 0, 0 si la zone n'est pas un champ. Additionne les surfaces des exigences ayant un type de remplissage connu."
+  }
+ }
+}

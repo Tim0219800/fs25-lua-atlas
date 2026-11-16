@@ -1,0 +1,41 @@
+{
+ "fichier": "gui/elements/AnimationElement.lua",
+ "module": {
+  "en": "GUI image element that animates itself, either by stepping UV coordinates across the frames of a sprite sheet (UV_SHIFT, default) or by continuously rotating the overlay. Derived from BitmapElement and uses the \"image\" layer. Client-side GUI only.",
+  "fr": "Élément GUI d'image qui s'anime soit en décalant ses coordonnées UV sur les images d'une feuille de sprites (UV_SHIFT, par défaut), soit en faisant tourner l'overlay en continu. Dérivé de BitmapElement, utilise la couche \"image\". Interface côté client uniquement."
+ },
+ "fonctions": {
+  "AnimationElement.new": {
+   "en": "Constructor. Defaults: UV_SHIFT mode, 8 frames, 120 ms per step (or per rotation turn), no rotation pivot; creates the element through BitmapElement.",
+   "fr": "Constructeur. Valeurs par défaut : mode UV_SHIFT, 8 images, 120 ms par pas (ou par tour en rotation), pas de pivot de rotation ; crée l'élément via BitmapElement."
+  },
+  "AnimationElement:loadFromXML": {
+   "en": "Reads animationOffset, animationFrames, animationSpeed, animationRotationPivot, animationUVOffset and animationMode (\"uvshift\" or anything else = rotate) from the XML node, remembers the default UVs, then computes frame data.",
+   "fr": "Lit animationOffset, animationFrames, animationSpeed, animationRotationPivot, animationUVOffset et animationMode (\"uvshift\", sinon rotation) depuis le nœud XML, mémorise les UV par défaut, puis calcule les données de frame."
+  },
+  "AnimationElement:loadProfile": {
+   "en": "Same settings as the XML loader (offset, frames, speed, rotation pivot, UV offset, mode) but read from a GUI profile. Does not recompute frame data itself.",
+   "fr": "Mêmes réglages que le chargeur XML (offset, images, vitesse, pivot, décalage UV, mode) mais lus depuis un profil GUI. Ne recalcule pas lui-même les données de frame."
+  },
+  "AnimationElement:copyAttributes": {
+   "en": "Copies the animation settings and default UVs from a source element, resets the image UVs to those defaults and recomputes the frame data.",
+   "fr": "Copie les réglages d'animation et les UV par défaut d'un élément source, remet les UV de l'image à ces valeurs et recalcule les données de frame."
+  },
+  "AnimationElement:update": {
+   "en": "Per-frame update. In UV_SHIFT mode advances to the next frame (wrapping to 0) each time the timer of animationSpeed ms elapses; in ROTATE mode turns the overlay by a full turn per animationSpeed ms.",
+   "fr": "Mise à jour à chaque frame. En mode UV_SHIFT, passe à l'image suivante (retour à 0 en fin de cycle) à chaque écoulement du minuteur de animationSpeed ms ; en mode ROTATE, fait tourner l'overlay d'un tour complet par animationSpeed ms."
+  },
+  "AnimationElement:updateAnimationUVs": {
+   "en": "In UV_SHIFT mode, sets the image UVs to the horizontal slice of the current frame (start position plus frame size and optional gap times the frame index). No effect in rotate mode.",
+   "fr": "En mode UV_SHIFT, règle les UV de l'image sur la tranche horizontale de l'image courante (position de départ plus taille de frame et espacement optionnel multipliés par l'indice). Sans effet en mode rotation."
+  },
+  "AnimationElement:updateRotation": {
+   "en": "Applies the current rotation angle to the overlay around the pivot (the custom rotation pivot if set, otherwise the element pivot) scaled by the absolute size.",
+   "fr": "Applique l'angle de rotation courant à l'overlay autour du pivot (pivot de rotation personnalisé s'il existe, sinon pivot de l'élément) mis à l'échelle de la taille absolue."
+  },
+  "AnimationElement:setAnimationData": {
+   "en": "If an overlay exists, derives the width of one frame and the start position from the overlay UVs, frame count and gap, then refreshes the UVs.",
+   "fr": "Si un overlay existe, déduit la largeur d'une image et la position de départ à partir des UV de l'overlay, du nombre d'images et de l'espacement, puis rafraîchit les UV."
+  }
+ }
+}

@@ -1,0 +1,197 @@
+{
+ "fichier": "vehicles/specializations/LivestockTrailer.lua",
+ "module": {
+  "en": "Specialization for trailers that carry live animals. Animals are held in an `AnimalClusterSystem`; per animal type the XML defines slot nodes where posed animal meshes are loaded. A load trigger collects rideable animals, spawn places define unloading areas, and a `LivestockTrailerActivatable` opens the interaction. The trailer adds animal weight and value (75 percent) to mass and sell price, ages its clusters on day/period changes, and registers with `g_currentMission.husbandrySystem`. No prerequisites.",
+  "fr": "Spécialisation pour les remorques transportant des animaux vivants. Les animaux sont gérés par un `AnimalClusterSystem` ; pour chaque type d'animal le XML définit des nœuds d'emplacement où sont chargés les modèles d'animaux. Un déclencheur de chargement recense les animaux montables, des spawn places définissent les zones de déchargement et un `LivestockTrailerActivatable` ouvre l'interaction. La remorque ajoute poids et valeur (75 pour cent) des animaux à la masse et au prix de vente, fait vieillir ses clusters au changement de jour/période et s'enregistre auprès de `g_currentMission.husbandrySystem`. Aucun prérequis."
+ },
+ "fonctions": {
+  "LivestockTrailer.initSpecialization": {
+   "en": "Registers the store spec types for cow, pig, sheep and horse counts, the XML schema (animal type, node, slot count, load trigger, spawn places) and the savegame attributes including cluster paths.",
+   "fr": "Enregistre les types de spec boutique pour le nombre de vaches, porcs, moutons et chevaux, le schéma XML (type d'animal, nœud, nombre d'emplacements, déclencheur, spawn places) et les attributs de sauvegarde dont les chemins des clusters."
+  },
+  "LivestockTrailer.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours vrai : aucune autre spécialisation n'est requise."
+  },
+  "LivestockTrailer.registerFunctions": {
+   "en": "Registers the animal, cluster, slot, trigger, unload-place and screen-controller functions of this specialization on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les fonctions d'animaux, clusters, emplacements, déclencheur, places de déchargement et contrôleur d'écran de cette spécialisation."
+  },
+  "LivestockTrailer.registerOverwrittenFunctions": {
+   "en": "Overrides `getAdditionalComponentMass`, `getSellPrice`, `dayChanged` and `periodChanged`.",
+   "fr": "Surcharge `getAdditionalComponentMass`, `getSellPrice`, `dayChanged` et `periodChanged`."
+  },
+  "LivestockTrailer.registerEventListeners": {
+   "en": "Subscribes to onLoad, onLoadFinished, onDelete, onReadStream and onWriteStream.",
+   "fr": "S'abonne aux événements onLoad, onLoadFinished, onDelete, onReadStream et onWriteStream."
+  },
+  "LivestockTrailer:onLoad": {
+   "en": "Builds the animal places and slots per type, adds the load trigger and spawn places, creates the activatable and the cluster system, subscribes to `AnimalClusterUpdateEvent` and registers with the husbandry system. Note: the spawn place width defaults to 15 in the schema but 5 in the loader.",
+   "fr": "Construit les places et emplacements d'animaux par type, ajoute le déclencheur de chargement et les spawn places, crée l'activatable et le système de clusters, s'abonne à `AnimalClusterUpdateEvent` et s'enregistre auprès du husbandry system. À noter : la largeur par défaut d'une spawn place est 15 dans le schéma mais 5 dans le chargeur."
+  },
+  "LivestockTrailer:onLoadFinished": {
+   "en": "Loads the cluster data from the savegame (unless vehicles are reset) and refreshes the cluster system immediately.",
+   "fr": "Charge les données de clusters depuis la sauvegarde (sauf réinitialisation des véhicules) et rafraîchit immédiatement le système de clusters."
+  },
+  "LivestockTrailer:onDelete": {
+   "en": "Clears animals, unsubscribes from cluster updates, unregisters from the husbandry system, removes trigger and activatable, detaches rideable delete listeners and releases the loading trigger link.",
+   "fr": "Efface les animaux, se désabonne des mises à jour de clusters, se retire du husbandry system, supprime déclencheur et activatable, détache les écouteurs de suppression des montures et libère le lien du déclencheur de chargement."
+  },
+  "LivestockTrailer:saveToXMLFile": {
+   "en": "Saves the cluster system to the vehicle savegame entry.",
+   "fr": "Sauvegarde le système de clusters dans l'entrée de sauvegarde du véhicule."
+  },
+  "LivestockTrailer:onReadStream": {
+   "en": "Client join: reads the cluster system from the stream.",
+   "fr": "Connexion client : lit le système de clusters depuis le flux."
+  },
+  "LivestockTrailer:onWriteStream": {
+   "en": "Server join: writes the cluster system to the stream.",
+   "fr": "Connexion côté serveur : écrit le système de clusters dans le flux."
+  },
+  "LivestockTrailer:getSupportsAnimalType": {
+   "en": "Returns true if the trailer defines a place for the given animal type index.",
+   "fr": "Renvoie vrai si la remorque définit une place pour l'index de type d'animal donné."
+  },
+  "LivestockTrailer:getSupportsAnimalSubType": {
+   "en": "Returns true if the type owning the given animal sub-type index is supported by this trailer.",
+   "fr": "Renvoie vrai si le type auquel appartient l'index de sous-type d'animal donné est géré par cette remorque."
+  },
+  "LivestockTrailer:getCurrentAnimalType": {
+   "en": "Returns the animal type table of the first loaded cluster, or nil when the trailer is empty.",
+   "fr": "Renvoie la table du type d'animal du premier cluster chargé, ou nil si la remorque est vide."
+  },
+  "LivestockTrailer:setLoadingTrigger": {
+   "en": "Stores the animal loading trigger currently linked to this trailer.",
+   "fr": "Mémorise le déclencheur de chargement d'animaux actuellement lié à cette remorque."
+  },
+  "LivestockTrailer:getLoadingTrigger": {
+   "en": "Returns the linked loading trigger, or nil.",
+   "fr": "Renvoie le déclencheur de chargement lié, ou nil."
+  },
+  "LivestockTrailer:setAnimalScreenController": {
+   "en": "Stores the animal screen controller that is notified when rideables enter or leave the trigger.",
+   "fr": "Mémorise le contrôleur d'écran d'animaux notifié quand des montures entrent ou sortent du déclencheur."
+  },
+  "LivestockTrailer:addAnimals": {
+   "en": "Creates cluster(s) for a sub-type with the given count and age and adds them. Mergeable clusters become one cluster; otherwise one single-animal cluster per animal.",
+   "fr": "Crée un ou plusieurs clusters pour un sous-type avec le nombre et l'âge donnés et les ajoute. Les clusters fusionnables forment un seul cluster ; sinon un cluster d'un animal par animal."
+  },
+  "LivestockTrailer:addCluster": {
+   "en": "Queues the cluster as pending add in the cluster system and updates it right away.",
+   "fr": "Met le cluster en attente d'ajout dans le système de clusters et le met à jour immédiatement."
+  },
+  "LivestockTrailer:getClusters": {
+   "en": "Returns the list of animal clusters on the trailer.",
+   "fr": "Renvoie la liste des clusters d'animaux présents sur la remorque."
+  },
+  "LivestockTrailer:getRideablesInTrigger": {
+   "en": "Returns the table of supported rideable animals currently in the load trigger.",
+   "fr": "Renvoie la table des animaux montables gérés actuellement dans le déclencheur de chargement."
+  },
+  "LivestockTrailer:getClusterById": {
+   "en": "Returns the cluster with the given id from the cluster system.",
+   "fr": "Renvoie le cluster portant l'identifiant donné dans le système de clusters."
+  },
+  "LivestockTrailer:getClusterSystem": {
+   "en": "Returns the trailer's `AnimalClusterSystem`.",
+   "fr": "Renvoie l'`AnimalClusterSystem` de la remorque."
+  },
+  "LivestockTrailer:getNumOfAnimals": {
+   "en": "Returns the number of occupied slots for the current animal type (0 if empty).",
+   "fr": "Renvoie le nombre d'emplacements occupés pour le type d'animal actuel (0 si vide)."
+  },
+  "LivestockTrailer:getMaxNumOfAnimals": {
+   "en": "Returns slot capacity for the given animal type, or the current type if nil. Returns 0 if the trailer is empty and no type is given, holds another type, or does not support the type.",
+   "fr": "Renvoie la capacité en emplacements pour le type d'animal donné, ou le type actuel si nil. Renvoie 0 si la remorque est vide sans type donné, contient un autre type ou ne gère pas ce type."
+  },
+  "LivestockTrailer:getNumOfFreeAnimalSlots": {
+   "en": "Returns free slots for the type of the given sub-type index: capacity minus current animal count.",
+   "fr": "Renvoie les emplacements libres pour le type du sous-type donné : capacité moins nombre d'animaux actuel."
+  },
+  "LivestockTrailer:updatedClusters": {
+   "en": "Message-center callback: when the updated trailer is this one, rebuilds the visible animals and marks the mass dirty.",
+   "fr": "Callback du message center : si la remorque mise à jour est celle-ci, reconstruit les animaux visibles et marque la masse comme à recalculer."
+  },
+  "LivestockTrailer:updateAnimals": {
+   "en": "Clears existing meshes then asynchronously loads a posed animal model per animal into consecutive slots, chosen by sub-type and age.",
+   "fr": "Efface les modèles existants puis charge de façon asynchrone un modèle d'animal posé par animal dans des emplacements consécutifs, selon sous-type et âge."
+  },
+  "LivestockTrailer:clearAnimals": {
+   "en": "Releases shared i3D load requests and deletes all loaded animal meshes in all slots.",
+   "fr": "Libère les requêtes de chargement i3D partagées et supprime tous les modèles d'animaux chargés dans tous les emplacements."
+  },
+  "LivestockTrailer:onAnimalLoaded": {
+   "en": "Async load callback: on success, links the mesh to its slot node and sets the atlas UV shader parameter for the visual variation and zero dirt.",
+   "fr": "Callback de chargement asynchrone : en cas de succès, rattache le modèle à son nœud d'emplacement et règle le paramètre shader d'atlas UV de la variation visuelle, avec saleté nulle."
+  },
+  "LivestockTrailer:getAdditionalComponentMass": {
+   "en": "Override: adds the animals' weight (fill type mass per liter times animal count) to the component mass.",
+   "fr": "Surcharge : ajoute le poids des animaux (masse par litre du fill type fois nombre d'animaux) à la masse du composant."
+  },
+  "LivestockTrailer:getSellPrice": {
+   "en": "Override: adds 75 percent of the animals' total sell price to the vehicle sell price.",
+   "fr": "Surcharge : ajoute 75 pour cent du prix de vente total des animaux au prix de vente du véhicule."
+  },
+  "LivestockTrailer:dayChanged": {
+   "en": "Override: after the parent behaviour, calls `onDayChanged` on every cluster.",
+   "fr": "Surcharge : après le comportement parent, appelle `onDayChanged` sur chaque cluster."
+  },
+  "LivestockTrailer:periodChanged": {
+   "en": "Override: after the parent behaviour, calls `onPeriodChanged` on every cluster.",
+   "fr": "Surcharge : après le comportement parent, appelle `onPeriodChanged` sur chaque cluster."
+  },
+  "LivestockTrailer:onAnimalLoadTriggerCallback": {
+   "en": "Trigger callback: tracks rideable animals of a supported sub-type entering or leaving the load trigger, listens for their deletion and notifies the animal screen controller.",
+   "fr": "Callback du déclencheur : suit les animaux montables d'un sous-type géré qui entrent ou sortent du déclencheur, écoute leur suppression et notifie le contrôleur d'écran d'animaux."
+  },
+  "LivestockTrailer:onAnimalRideableDeleted": {
+   "en": "Delete-listener callback: removes the deleted rideable from the trigger list and notifies the animal screen controller.",
+   "fr": "Callback de l'écouteur de suppression : retire la monture supprimée de la liste du déclencheur et notifie le contrôleur d'écran d'animaux."
+  },
+  "LivestockTrailer:getAnimalUnloadPlaces": {
+   "en": "Builds and returns a list of unload place descriptors (start position, rotation, directions, width, unlimited size, y offset 1) from the spawn place nodes.",
+   "fr": "Construit et renvoie une liste de descripteurs de places de déchargement (position de départ, rotation, directions, largeur, taille illimitée, décalage y de 1) à partir des nœuds de spawn place."
+  },
+  "LivestockTrailer.loadSpecValueNumberAnimals": {
+   "en": "Reads the `numSlots` of the first `livestockTrailer.animal` entry matching the given animal type name (case-insensitive) from a store item XML; returns nil if none.",
+   "fr": "Lit le `numSlots` de la première entrée `livestockTrailer.animal` correspondant au nom de type d'animal donné (insensible à la casse) dans le XML d'un article de boutique ; renvoie nil sinon."
+  },
+  "LivestockTrailer.loadSpecValueNumberAnimalsCow": {
+   "en": "Store spec loader for the cow slot count.",
+   "fr": "Chargeur de spec boutique pour le nombre d'emplacements de vaches."
+  },
+  "LivestockTrailer.loadSpecValueNumberAnimalsPig": {
+   "en": "Store spec loader for the pig slot count.",
+   "fr": "Chargeur de spec boutique pour le nombre d'emplacements de porcs."
+  },
+  "LivestockTrailer.loadSpecValueNumberAnimalsSheep": {
+   "en": "Store spec loader for the sheep slot count.",
+   "fr": "Chargeur de spec boutique pour le nombre d'emplacements de moutons."
+  },
+  "LivestockTrailer.loadSpecValueNumberAnimalsHorse": {
+   "en": "Store spec loader for the horse slot count.",
+   "fr": "Chargeur de spec boutique pour le nombre d'emplacements de chevaux."
+  },
+  "LivestockTrailer.getSpecValueNumberAnimals": {
+   "en": "Formats the stored slot count of the named spec as a text with the pieces unit; returns nil if the store item has no such spec.",
+   "fr": "Formate le nombre d'emplacements enregistré pour la spec nommée sous forme de texte avec l'unité de pièces ; renvoie nil si l'article n'a pas cette spec."
+  },
+  "LivestockTrailer.getSpecValueNumberAnimalsCow": {
+   "en": "Store spec getter for the cow slot count text.",
+   "fr": "Getter de spec boutique pour le texte du nombre d'emplacements de vaches."
+  },
+  "LivestockTrailer.getSpecValueNumberAnimalsPig": {
+   "en": "Store spec getter for the pig slot count text.",
+   "fr": "Getter de spec boutique pour le texte du nombre d'emplacements de porcs."
+  },
+  "LivestockTrailer.getSpecValueNumberAnimalsSheep": {
+   "en": "Store spec getter for the sheep slot count text.",
+   "fr": "Getter de spec boutique pour le texte du nombre d'emplacements de moutons."
+  },
+  "LivestockTrailer.getSpecValueNumberAnimalsHorse": {
+   "en": "Store spec getter for the horse slot count text.",
+   "fr": "Getter de spec boutique pour le texte du nombre d'emplacements de chevaux."
+  }
+ }
+}

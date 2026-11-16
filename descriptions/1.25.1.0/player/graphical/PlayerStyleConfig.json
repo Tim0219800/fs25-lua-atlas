@@ -1,0 +1,45 @@
+{
+ "fichier": "player/graphical/PlayerStyleConfig.lua",
+ "module": {
+  "en": "Represents one slot of a PlayerStyle (face, beard, top and so on) with its item list, selected item and colour. It also defines the getter filters that decide which items of a slot are currently usable. Most of the class body (constructor, XML loading, streams) is absent from the SDK dump; only the filters and lookup helpers are documented.",
+  "fr": "Représente un emplacement d'un PlayerStyle (visage, barbe, haut, etc.) avec sa liste d'items, l'item sélectionné et la couleur. Définit aussi les filtres de lecture qui déterminent quels items d'un emplacement sont utilisables. La majeure partie de la classe (constructeur, chargement XML, flux) est absente du dump du SDK ; seuls les filtres et utilitaires de recherche sont documentés."
+ },
+ "fonctions": {
+  "PlayerStyleConfig:ENABLED_GETTER_FILTER": {
+   "en": "Filter: returns true unless the owning style has marked this config as disabled for the current selection.",
+   "fr": "Filtre : retourne true sauf si le style propriétaire a désactivé cette config pour la sélection courante."
+  },
+  "PlayerStyleConfig:NOT_HIDDEN_GETTER_FILTER": {
+   "en": "Filter: accepts an item only if its hidden flag is not set.",
+   "fr": "Filtre : accepte un item seulement si son indicateur hidden n'est pas activé."
+  },
+  "PlayerStyleConfig:NOT_FOR_HAT_GETTER_FILTER": {
+   "en": "Filter: accepts a hair style only if it is not the variant meant to be worn under a hat.",
+   "fr": "Filtre : accepte une coiffure seulement si ce n'est pas la variante prévue pour être portée sous un chapeau."
+  },
+  "PlayerStyleConfig:SELECTED_GETTER_FILTER": {
+   "en": "Filter: accepts only the item whose index equals the currently selected item index.",
+   "fr": "Filtre : n'accepte que l'item dont l'index correspond à l'index d'item actuellement sélectionné."
+  },
+  "PlayerStyleConfig:NO_ONEPIECE_GETTER_FILTER": {
+   "en": "Filter: returns true only when no one-piece outfit is selected (its selected index is 0), used by top and bottom.",
+   "fr": "Filtre : retourne true seulement si aucune combinaison intégrale n'est sélectionnée (son index vaut 0), utilisé par le haut et le bas."
+  },
+  "PlayerStyleConfig:BEARD_FACE_GETTER_FILTER": {
+   "en": "Filter: accepts a beard that has no face restriction, or whose face name matches the currently selected face item.",
+   "fr": "Filtre : accepte une barbe sans restriction de visage, ou dont le nom de visage correspond à l'item de visage actuellement sélectionné."
+  },
+  "PlayerStyleConfig:getItemNameIndex": {
+   "en": "Looks up an item by its name and returns its position in this config, or nil if the name is nil, blank or unknown.",
+   "fr": "Retourne l'index de l'item portant le nom donné, ou nil si le nom est nil, vide ou inconnu."
+  },
+  "PlayerStyleConfig:getItemIndex": {
+   "en": "Gives the position of an item within this config, or nil when no item is passed or it is not found. The empty item at index 0 is handled as a special case.",
+   "fr": "Retourne l'index de l'item donné dans cette config, ou nil s'il est nil ou absent. L'item vide d'index 0 est traité comme cas particulier."
+  },
+  "PlayerStyleConfig:getSelectedItem": {
+   "en": "Returns the currently selected item, or nil if the selected index has no item.",
+   "fr": "Retourne l'item actuellement sélectionné, ou nil si l'index sélectionné ne correspond à aucun item."
+  }
+ }
+}

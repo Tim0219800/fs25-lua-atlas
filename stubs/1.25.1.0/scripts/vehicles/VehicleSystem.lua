@@ -1,102 +1,102 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/VehicleSystem.lua (generated stub, FS25 Lua Atlas)
 
---- Classe de gestion (pas une spécialisation) : registre global de tous les véhicules de la partie (vehicles, vehicleByUniqueId, enterables, interactiveVehicles, joints d'attache), chargement/sauvegarde des véhicules en XML et commandes console de débogage. Instance créée par la mission (accès exact, par ex. g_currentMission.vehicleSystem, dans FSBaseMission/Mission00 absents du dump : NON VÉRIFIÉ). POINT CLÉ MÉTÉO : VehicleSystem:update(dt) (VehicleSystem.lua:~137-175) est le SEUL endroit du vanilla (parmi les fichiers lus) qui pilote l'HUMIDITÉ des véhicules : côté serveur seulement (g_server ~= nil), il lit weather:getRainFallScale(), puis, si > 0.1, weather:getTimeSinceLastRain() et weather:getCurrentTemperature() ; si temps depuis la dernière pluie < 30 et température > 0, il appelle pour chaque véhicule présent (hors showroom, avec updateWetness) vehicle:updateWetness(true, dt x échelle de temps effective) quand le véhicule est à l'extérieur (indoorMask:getIsIndoorAtWorldPosition(x, z) à la position de rootNode) et updateWetness(false, ...) quand il est à l'intérieur (donc séchage sous abri), en tenant à jour la table wetVehicles. Quand rainScale <= 0.1 et que wetVehicles n'est pas vide, tous les véhicules mouillés sèchent (updateWetness(false)) jusqu'à ne plus l'être. À noter : si rainScale > 0.1 mais que la condition (temps depuis la pluie < 30 ET température > 0) est fausse, aucun branchement ne sèche ni ne mouille (apparent trou de logique ; non vérifié en jeu). L'échelle de temps vient de g_currentMission:getEffectiveTimeScale() (corps absent du dump : NON VÉRIFIÉ) : c'est donc ici que la pause/l'accélération du temps est prise en compte pour l'humidité. Unités et plages des valeurs météo : implémentation Weather absente du dump, NON VÉRIFIÉ. Aucune lecture du vent ici. RÉSEAU : le registre existe sur toutes les machines ; la mise à jour d'humidité et la sauvegarde/le chargement sont côté serveur (le chargement exige un serveur pour la plupart des commandes console). Les valeurs d'humidité résultantes sont ensuite synchronisées par Washable. Chargement : asynchrone via g_asyncTaskManager et VehicleLoadingData ; les véhicules sont ajoutés à la physique seulement quand tous sont chargés (loadVehicleFinished). Points d'extension pour un moddeur : surcharger VehicleSystem:update (global, non enregistré par SpecializationUtil) pour modifier la règle de mouillage ou prendre en compte d'autres sources ; lire vehicles / wetVehicles / enterables pour énumérer les véhicules sans scan global ; s'abonner aux messages MessageType.VEHICLE_ADDED / VEHICLE_REMOVED publiés par addVehicle / removeVehicle.
+--- Management class (not a specialization): global registry of all vehicles in the game (vehicles, vehicleByUniqueId, enterables, interactiveVehicles, attacher joints), XML loading/saving of vehicles and debug console commands. Instance created by the mission (exact access, e.g. g_currentMission.vehicleSystem, lives in FSBaseMission/Mission00, absent from the dump: UNVERIFIED). WEATHER KEY POINT: VehicleSystem:update(dt) (VehicleSystem.lua:~137-175) is the ONLY place in vanilla (among the files read) that drives vehicle WETNESS: server side only (g_server ~= nil), it reads weather:getRainFallScale(), then, if > 0.1, weather:getTimeSinceLastRain() and weather:getCurrentTemperature(); if time since last rain < 30 and temperature > 0, it calls for each present vehicle (outside the showroom, with updateWetness) vehicle:updateWetness(true, dt x effective time scale) when the vehicle is outdoors (indoorMask:getIsIndoorAtWorldPosition(x, z) at the rootNode position) and updateWetness(false, ...) when it is indoors (hence drying under shelter), keeping the wetVehicles table up to date. When rainScale <= 0.1 and wetVehicles is not empty, all wet vehicles dry (updateWetness(false)) until none is wet. Note: if rainScale > 0.1 but the condition (time since rain < 30 AND temperature > 0) is false, no branch dries or wets anything (apparent logic gap; not verified in game). The time scale comes from g_currentMission:getEffectiveTimeScale() (body absent from the dump: UNVERIFIED): this is therefore where pause/time acceleration is taken into account for wetness. Units and ranges of the weather values: Weather implementation absent from the dump, UNVERIFIED. No wind reading here. NETWORK: the registry exists on every machine; the wetness update and the save/load are server side (loading requires a server for most console commands). The resulting wetness values are then synchronised by Washable. Loading: asynchronous via g_asyncTaskManager and VehicleLoadingData; vehicles are added to the physics only once all are loaded (loadVehicleFinished). Extension points for a modder: override VehicleSystem:update (global, not registered via SpecializationUtil) to change the wetting rule or take other sources into account; read vehicles / wetVehicles / enterables to enumerate vehicles without a global scan; subscribe to the MessageType.VEHICLE_ADDED / VEHICLE_REMOVED messages published by addVehicle / removeVehicle.
 ---@class VehicleSystem
 VehicleSystem = {}
 
---- Crée le registre (tables vehicles, wetVehicles, enterables, interactiveVehicles, joints, chargements en attente), déclare les commandes console (certaines seulement serveur ou avec g_addCheatCommands / g_addTestCommands) et s'abonne à BuyVehicleEvent.
+--- Creates the registry (tables vehicles, wetVehicles, enterables, interactiveVehicles, joints, pending loads), declares the console commands (some server-only or with g_addCheatCommands / g_addTestCommands) and subscribes to BuyVehicleEvent.
 ---@param mission any
 ---@param customMt any
 function VehicleSystem.new(mission, customMt) end
 
---- Annule les chargements en attente, supprime tous les véhicules, vide les tables, désabonne les messages et retire les commandes console.
+--- Cancels pending loads, deletes all vehicles, empties the tables, unsubscribes the messages and removes the console commands.
 function VehicleSystem:delete() end
 
---- Supprime tous les véhicules enregistrés et renvoie leur nombre.
+--- Deletes all registered vehicles and returns their count.
 function VehicleSystem:deleteAll() end
 
---- Par frame. Charge éventuellement le prochain véhicule de débogage ; côté serveur, applique la logique d'humidité décrite dans le module : lecture de la pluie, de la durée depuis la dernière pluie et de la température, mouillage des véhicules extérieurs, séchage des véhicules sous abri ou une fois la pluie finie, avec dt x échelle de temps effective.
+--- Per frame. Optionally loads the next debug vehicle; on the server, applies the wetness logic described in the module: reading rain, time since last rain and temperature, wetting outdoor vehicles, drying vehicles under shelter or once the rain is over, with dt x effective time scale.
 ---@param dt any
 function VehicleSystem:update(dt) end
 
---- Appelle drawUIInfo pour chaque véhicule entrable (informations d'interface).
+--- Calls drawUIInfo for each enterable vehicle (interface information).
 function VehicleSystem:draw() end
 
---- Enregistre un véhicule (vérifie le type et l'unicité de l'identifiant unique, en génère un au besoin), l'ajoute à wetVehicles s'il est déjà mouillé et publie VEHICLE_ADDED.
+--- Registers a vehicle (checks the type and the uniqueness of the unique id, generating one if needed), adds it to wetVehicles if it is already wet and publishes VEHICLE_ADDED.
 ---@param vehicle any
 function VehicleSystem:addVehicle(vehicle) end
 
---- Retire un véhicule des tables (dont wetVehicles) et publie VEHICLE_REMOVED.
+--- Removes a vehicle from the tables (including wetVehicles) and publishes VEHICLE_REMOVED.
 ---@param vehicle any
 function VehicleSystem:removeVehicle(vehicle) end
 
---- Renvoie le véhicule associé à un identifiant unique.
+--- Returns the vehicle associated with a unique id.
 ---@param uniqueId any
 function VehicleSystem:getVehicleByUniqueId(uniqueId) end
 
---- Mémorise un chargement de véhicule en cours.
+--- Records a vehicle load in progress.
 ---@param vehicleLoadingData any
 function VehicleSystem:addPendingVehicleLoad(vehicleLoadingData) end
 
---- Retire un chargement de véhicule terminé.
+--- Removes a finished vehicle load.
 ---@param vehicleLoadingData any
 function VehicleSystem:removePendingVehicleLoad(vehicleLoadingData) end
 
---- Vrai si tous les véhicules sont synchronisés et qu'aucun chargement n'est en attente.
+--- True if all vehicles are synchronised and no load is pending.
 function VehicleSystem:canStartMission() end
 
---- Ajoute un véhicule à la liste des véhicules entrables.
+--- Adds a vehicle to the list of enterable vehicles.
 ---@param vehicle any
 function VehicleSystem:addEnterableVehicle(vehicle) end
 
---- Retire un véhicule entrable et recale l'indice du dernier véhicule utilisé (pour la touche de changement).
+--- Removes an enterable vehicle and readjusts the index of the last used vehicle (for the switch key).
 ---@param vehicle any
 function VehicleSystem:removeEnterableVehicle(vehicle) end
 
---- Mémorise l'indice du véhicule dans lequel le joueur est entré.
+--- Records the index of the vehicle the player entered.
 ---@param vehicle any
 function VehicleSystem:setEnteredVehicle(vehicle) end
 
---- Trouve le prochain véhicule entrable et utilisable (tabbable) selon un pas (+1 ou -1) : le dernier véhicule utilisé quand le joueur est à pied avec un pas positif, le dernier de la liste avec un pas négatif.
+--- Finds the next enterable and usable (tabbable) vehicle for a step (+1 or -1): the last used vehicle when the player is on foot with a positive step, the last in the list with a negative step.
 ---@param currentVehicle any
 ---@param delta any
 function VehicleSystem:getNextEnterableVehicle(currentVehicle, delta) end
 
---- Enregistre un joint d'attache avec sa position monde et renvoie la structure d'info.
+--- Registers an attacher joint with its world position and returns the info structure.
 ---@param vehicle any
 ---@param inputAttacherJointIndex any
 ---@param inputAttacherJoint any
 function VehicleSystem:registerInputAttacherJoint(vehicle, inputAttacherJointIndex, inputAttacherJoint) end
 
---- Met à jour la position monde d'un joint d'attache enregistré.
+--- Updates the world position of a registered attacher joint.
 ---@param inputAttacherJointInfo any
 function VehicleSystem:updateInputAttacherJoint(inputAttacherJointInfo) end
 
---- Retire un joint d'attache enregistré.
+--- Removes a registered attacher joint.
 ---@param inputAttacherJointInfo any
 function VehicleSystem:removeInputAttacherJoint(inputAttacherJointInfo) end
 
---- Marque un véhicule comme interactif.
+--- Marks a vehicle as interactive.
 ---@param vehicle any
 function VehicleSystem:addInteractiveVehicle(vehicle) end
 
---- Retire un véhicule des véhicules interactifs.
+--- Removes a vehicle from the interactive vehicles.
 ---@param vehicle any
 function VehicleSystem:removeInteractiveVehicle(vehicle) end
 
---- Crée le fichier XML de sauvegarde des véhicules et y écrit tous ceux qui doivent l'être.
+--- Creates the vehicles save XML file and writes into it all vehicles that must be saved.
 ---@param xmlFilename any
 ---@param usedModNames any
 function VehicleSystem:save(xmlFilename, usedModNames) end
 
---- Écrit dans le fichier les véhicules dont getNeedsSaving est vrai.
+--- Writes to the file the vehicles for which getNeedsSaving is true.
 ---@param vehicles any
 ---@param xmlFile any
 ---@param usedModNames any
 function VehicleSystem:saveToXML(vehicles, xmlFile, usedModNames) end
 
---- Écrit un véhicule (nom de mod, nom de fichier réseau) puis délègue à vehicle:saveToXMLFile (donc aux spécialisations, dont Washable).
+--- Writes a vehicle (mod name, network filename) then delegates to vehicle:saveToXMLFile (hence to the specializations, including Washable).
 ---@param vehicle any
 ---@param xmlFile any
 ---@param index any
@@ -104,7 +104,7 @@ function VehicleSystem:saveToXML(vehicles, xmlFile, usedModNames) end
 ---@param usedModNames any
 function VehicleSystem:saveVehicleToXML(vehicle, xmlFile, index, i, usedModNames) end
 
---- Ouvre le XML de sauvegarde des véhicules et lance le chargement ; en cas d'absence, rappelle le callback avec une erreur.
+--- Opens the vehicles save XML and starts loading; if it is missing, calls the callback again with an error.
 ---@param xmlFilename any
 ---@param asyncCallbackFunction any
 ---@param asyncCallbackObject any
@@ -112,7 +112,7 @@ function VehicleSystem:saveVehicleToXML(vehicle, xmlFile, index, i, usedModNames
 ---@param resetVehicles any
 function VehicleSystem:load(xmlFilename, asyncCallbackFunction, asyncCallbackObject, asyncCallbackArguments, resetVehicles) end
 
---- Planifie le chargement asynchrone de chaque véhicule d'un fichier XML (mise en file si un chargement est en cours).
+--- Schedules the asynchronous loading of each vehicle of an XML file (queued if a load is in progress).
 ---@param xmlFile any
 ---@param asyncCallbackFunction any
 ---@param asyncCallbackObject any
@@ -121,7 +121,7 @@ function VehicleSystem:load(xmlFilename, asyncCallbackFunction, asyncCallbackObj
 ---@param keepPosition any
 function VehicleSystem:loadFromXMLFile(xmlFile, asyncCallbackFunction, asyncCallbackObject, asyncCallbackArguments, resetVehicles, keepPosition) end
 
---- Charge un véhicule : vérifie s'il est autorisé (propriété par défaut, compétitif, solo), retrouve l'élément de magasin, gère les emplacements disponibles (rembourse sinon) et lance VehicleLoadingData.
+--- Loads a vehicle: checks it is allowed (default ownership, competitive, solo), finds the store item, handles available slots (refunds otherwise) and starts VehicleLoadingData.
 ---@param xmlFile any
 ---@param key any
 ---@param defaultItemsToSPFarm any
@@ -129,90 +129,90 @@ function VehicleSystem:loadFromXMLFile(xmlFile, asyncCallbackFunction, asyncCall
 ---@param keepPosition any
 function VehicleSystem:loadVehicleFromXML(xmlFile, key, defaultItemsToSPFarm, resetVehicles, keepPosition) end
 
---- À chaque fin de chargement : accumule les véhicules ; quand tous sont terminés, les ajoute à la physique, appelle le callback et passe à la file de chargements en attente.
+--- On each load end: accumulates the vehicles; when all are done, adds them to the physics, calls the callback and moves on to the queue of pending loads.
 ---@param vehicles any
 ---@param loadingState any
 function VehicleSystem:loadVehicleFinished(vehicles, loadingState) end
 
---- Lance le prochain chargement de sauvegarde en attente, le cas échéant.
+--- Starts the next pending savegame load, if any.
 function VehicleSystem:updatePendingSavegameLoadings() end
 
---- Après un achat : compte les véhicules motorisés et attachables de la ferme locale (hors big bags) pour débloquer des succès.
+--- After a purchase: counts the motorized and attachable vehicles of the local farm (excluding big bags) to unlock achievements.
 ---@param errorCode any
 ---@param leaseVehicle any
 ---@param price any
 function VehicleSystem:onVehicleBuyEvent(errorCode, leaseVehicle, price) end
 
---- Retrouve le véhicule à partir d'un nœud physique et de son sous-nœud (gère les composés) via g_currentMission.nodeToObject ; nil si ce n'est pas un Vehicle.
+--- Finds the vehicle from a physics node and its sub-node (handles compounds) via g_currentMission.nodeToObject; nil if it is not a Vehicle.
 ---@param nodeId any
 ---@param subShapeId any
 function VehicleSystem:getVehicleByNodeId(nodeId, subShapeId) end
 
---- Commande console : active ou bascule l'affichage de la distance véhicule-caméra (g_showVehicleDistance).
+--- Console command: enables or toggles the display of the vehicle-camera distance (g_showVehicleDistance).
 ---@param active any
 function VehicleSystem:consoleCommandShowVehicleDistance(active) end
 
---- Commande console (serveur) : recharge le véhicule contrôlé ou ceux d'un rayon donné. Non relu en détail.
+--- Console command (server): reloads the controlled vehicle or those within a given radius. Not read in detail.
 ---@param resetVehicle any
 ---@param radius any
 function VehicleSystem:consoleCommandReloadVehicle(resetVehicle, radius) end
 
---- Commande console (triche) : ajoute une palette d'un type de remplissage donné. Non relu en détail.
+--- Console command (cheat): adds a pallet of a given fill type. Not read in detail.
 ---@param palletFillTypeName any
 ---@param amount any
 ---@param worldX any
 ---@param worldZ any
 function VehicleSystem:consoleCommandAddPallet(palletFillTypeName, amount, worldX, worldZ) end
 
---- Commande console (triche) : fixe le carburant du véhicule contrôlé. Non relu en détail.
+--- Console command (cheat): sets the fuel of the controlled vehicle. Not read in detail.
 ---@param fuelLevel any
 function VehicleSystem:consoleCommandSetFuel(fuelLevel) end
 
---- Commande console (triche) : fixe la température du moteur. Non relu en détail.
+--- Console command (cheat): sets the engine temperature. Not read in detail.
 ---@param temperature any
 function VehicleSystem:consoleCommandSetMotorTemperature(temperature) end
 
---- Commande console (triche) : ajoute du contenu à une unité de remplissage. Non relu en détail.
+--- Console command (cheat): adds content to a fill unit. Not read in detail.
 ---@param fillUnitIndex any
 ---@param fillTypeName any
 ---@param amount any
 function VehicleSystem:consoleCommandFillUnitAdd(fillUnitIndex, fillTypeName, amount) end
 
---- Commande console (triche) : fixe la durée de fonctionnement. Non relu en détail.
+--- Console command (cheat): sets the operating time. Not read in detail.
 ---@param operatingTime any
 function VehicleSystem:consoleCommandSetOperatingTime(operatingTime) end
 
---- Commande console (triche, serveur) : ajoute une quantité de saleté à tous les véhicules de la chaîne du véhicule contrôlé via setDirtAmount. Utile pour tester la boue.
+--- Console command (cheat, server): adds an amount of dirt to all vehicles of the controlled vehicle's chain via setDirtAmount. Useful for testing mud.
 ---@param amount any
 function VehicleSystem:consoleCommandAddDirtAmount(amount) end
 
---- Commande console (triche) : ajoute de l'usure. Non relu en détail.
+--- Console command (cheat): adds wear. Not read in detail.
 ---@param amount any
 function VehicleSystem:consoleCommandAddWearAmount(amount) end
 
---- Commande console (triche, serveur) : ajoute une quantité d'humidité (addWetnessAmount) à tous les véhicules de la chaîne du véhicule contrôlé. Utile pour tester le rendu d'humidité sans pluie.
+--- Console command (cheat, server): adds an amount of wetness (addWetnessAmount) to all vehicles of the controlled vehicle's chain. Useful for testing the wetness rendering without rain.
 ---@param amount any
 function VehicleSystem:consoleCommandAddWetnessAmount(amount) end
 
---- Commande console (triche) : ajoute des dégâts. Non relu en détail.
+--- Console command (cheat): adds damage. Not read in detail.
 ---@param amount any
 function VehicleSystem:consoleCommandAddDamageAmount(amount) end
 
---- Commande console (triche) : charge tous les véhicules du magasin pour test. Non relu en détail.
+--- Console command (cheat): loads all store vehicles for testing. Not read in detail.
 ---@param loadConfigs any
 ---@param modsOnly any
 ---@param palletsOnly any
 ---@param verbose any
 function VehicleSystem:consoleCommandLoadAllVehicles(loadConfigs, modsOnly, palletsOnly, verbose) end
 
---- Passe au prochain véhicule du chargement de test (appelée depuis update). Non relu en détail.
+--- Moves on to the next vehicle of the test load (called from update). Not read in detail.
 function VehicleSystem:consoleCommandLoadAllVehiclesNext() end
 
---- Commande console (test) : supprime tous les véhicules. Non relu en détail.
+--- Console command (test): removes all vehicles. Not read in detail.
 function VehicleSystem:consoleCommandVehicleRemoveAll() end
 
---- Commande console (test) : active ou désactive l'échec aléatoire de chargement. Non relu en détail.
+--- Console command (test): enables or disables random load failure. Not read in detail.
 function VehicleSystem:consoleCommandVehicleToggleRandomFail() end
 
---- Commande console (test) : exporte des ensembles de véhicules. Non relu en détail.
+--- Console command (test): exports vehicle sets. Not read in detail.
 function VehicleSystem:consoleCommandExportVehicleSets() end

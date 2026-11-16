@@ -1,0 +1,421 @@
+{
+ "fichier": "vehicles/specializations/Attachable.lua",
+ "module": {
+  "en": "Vehicle specialization for any implement or trailer that can be hooked to another vehicle. It loads the input attacher joints (the implement side of a hitch), support legs, steering axle behaviour, tool cameras, brakes and lowering animation from the vehicle XML, and keeps the link to the attacher vehicle once attached. It raises events such as onPreAttach, onPostAttach, onPreDetach, onPostDetach and onSetLowered, and overrides many base Vehicle functions so that an attached tool inherits state (active, powered, farm, root vehicle) from its tractor. It works with the AttacherJoints specialization on the tractor side and registers joints with the vehicle system. Note: setIsDetachingBlocked and getCanImplementBeUsedForAI are registered here but no function body with those names exists in this dump, and constants such as the XML keys are not visible (UNVERIFIED).",
+  "fr": "Spécialisation de véhicule pour tout outil ou remorque pouvant être attelé à un autre véhicule. Elle charge depuis le XML du véhicule les attaches d'entrée (côté outil de l'attelage), les béquilles, le comportement de l'essieu directeur, les caméras d'outil, les freins et l'animation de descente, puis garde le lien avec le véhicule porteur une fois attelé. Elle déclenche des événements comme onPreAttach, onPostAttach, onPreDetach, onPostDetach et onSetLowered, et surcharge de nombreuses fonctions de base de Vehicle pour qu'un outil attelé hérite de l'état de son tracteur (actif, alimenté, ferme, véhicule racine). Elle travaille avec la spécialisation AttacherJoints côté tracteur et enregistre les attaches auprès du système de véhicules. À noter : setIsDetachingBlocked et getCanImplementBeUsedForAI sont enregistrées ici mais aucun corps de fonction de ce nom n'existe dans ce dump, et les constantes comme les clés XML ne sont pas visibles (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "Attachable.prerequisitesPresent": {
+   "en": "Prerequisite check for the specialization. Always returns true, so Attachable can be added to any vehicle type without requiring other specializations.",
+   "fr": "Vérification des prérequis de la spécialisation. Retourne toujours true : Attachable peut être ajoutée à n'importe quel type de véhicule sans autre spécialisation requise."
+  },
+  "Attachable.registerEvents": {
+   "en": "Declares the events this specialization can raise: onPreAttach, onPostAttach, onPreDetach, onPostDetach, onSetLowered, onSetLoweredAll and onLeaveRootVehicle.",
+   "fr": "Déclare les événements que cette spécialisation peut émettre : onPreAttach, onPostAttach, onPreDetach, onPostDetach, onSetLowered, onSetLoweredAll et onLeaveRootVehicle."
+  },
+  "Attachable.registerFunctions": {
+   "en": "Registers the new vehicle functions added by this specialization (joint getters, detach process, lowering, steering axle, tool cameras and so on). It also lists setIsDetachingBlocked, which has no definition in this dump.",
+   "fr": "Enregistre les nouvelles fonctions de véhicule ajoutées par cette spécialisation (accès aux attaches, processus de dételage, descente, essieu directeur, caméras d'outil, etc.). Elle cite aussi setIsDetachingBlocked, sans définition dans ce dump."
+  },
+  "Attachable.registerOverwrittenFunctions": {
+   "en": "Registers the base Vehicle functions this specialization wraps with superFunc, such as findRootVehicle, getIsActive, getBrakeForce, getIsLowered, addToPhysics and removeFromPhysics. The entry for getCanImplementBeUsedForAI points to a function not defined in this dump.",
+   "fr": "Enregistre les fonctions de base de Vehicle que cette spécialisation enveloppe via superFunc, comme findRootVehicle, getIsActive, getBrakeForce, getIsLowered, addToPhysics et removeFromPhysics. L'entrée getCanImplementBeUsedForAI pointe vers une fonction absente de ce dump."
+  },
+  "Attachable.registerEventListeners": {
+   "en": "Subscribes the specialization to vehicle lifecycle and state events: load, delete, streams, updates, select/unselect, state change, root vehicle change, fold state change and animation value type registration.",
+   "fr": "Abonne la spécialisation aux événements de cycle de vie et d'état du véhicule : chargement, suppression, flux réseau, mises à jour, sélection, changement d'état, changement de véhicule racine, état de pliage et enregistrement des types de valeurs d'animation."
+  },
+  "Attachable.initSpecialization": {
+   "en": "Registers the inputAttacherJoint configuration type and declares the XML schema paths under vehicle.attachable (joints, brake force, air usage, steering axle, support, lower animation, tool cameras, sounds) plus two savegame attributes (lowerAnimTime, isDetachingBlocked).",
+   "fr": "Enregistre le type de configuration inputAttacherJoint et déclare les chemins du schéma XML sous vehicle.attachable (attaches, force de freinage, air, essieu directeur, béquilles, animation de descente, caméras, sons) ainsi que deux attributs de sauvegarde (lowerAnimTime, isDetachingBlocked)."
+  },
+  "Attachable.registerInputAttacherJointXMLPaths": {
+   "en": "Declares every XML attribute and child element of an input attacher joint under the given base key: node, joint type, distances to ground, bottom arm data, limit scales, springs, lowering flags, additional attachment and more.",
+   "fr": "Déclare chaque attribut et élément XML d'une attache d'entrée sous la clé de base donnée : nœud, type d'attache, distances au sol, bras inférieurs, échelles de limites, ressorts, options de descente, attelage supplémentaire, etc."
+  },
+  "Attachable.registerSupportXMLPaths": {
+   "en": "Declares the XML attributes of a support (stand) animation entry: animation name, delayed load, delayed attach, detach after animation and the animation time at which detaching happens.",
+   "fr": "Déclare les attributs XML d'une animation de béquille : nom de l'animation, chargement différé, attelage différé, dételage après l'animation et instant de l'animation où le dételage a lieu."
+  },
+  "Attachable:onLoad": {
+   "en": "Reads the vehicle.attachable XML: support animations, input attacher joints (including the selected configuration), brake force, air usage, folding rules, power requirement, steering axle and steering angle nodes, lower animation, tool cameras, client sounds and texts. Also warns about deprecated XML keys.",
+   "fr": "Lit le XML vehicle.attachable : animations de béquille, attaches d'entrée (y compris la configuration choisie), force de freinage, air, règles de pliage, besoin de puissance, essieu directeur et nœuds d'angle, animation de descente, caméras d'outil, sons côté client et textes. Signale aussi les clés XML obsolètes."
+  },
+  "Attachable:onPostLoad": {
+   "en": "Plays non-delayed support animations to their end state, applies the brake force if the vehicle has a brake, decides whether steering axle updates are needed, and removes the update listeners when the vehicle has no input attacher joints.",
+   "fr": "Joue jusqu'à leur état final les animations de béquille non différées, applique la force de freinage si le véhicule a un frein, décide si l'essieu directeur doit être mis à jour, et retire les écouteurs de mise à jour quand le véhicule n'a aucune attache d'entrée."
+  },
+  "Attachable:onLoadFinished": {
+   "en": "Registers each input attacher joint with the mission's vehicle system and stores the returned joint info on the joint.",
+   "fr": "Enregistre chaque attache d'entrée auprès du système de véhicules de la mission et conserve sur l'attache les informations retournées."
+  },
+  "Attachable:onPreInitComponentPlacement": {
+   "en": "Plays delayed support animations, initialises drawbar reference nodes, and restores the lower animation time and detach-blocked flag from the savegame (or applies the default lowered state when there is no savegame).",
+   "fr": "Joue les animations de béquille différées, initialise les nœuds de référence du timon, et restaure depuis la sauvegarde le temps de l'animation de descente et l'état de dételage bloqué (ou applique l'état abaissé par défaut sans sauvegarde)."
+  },
+  "Attachable:onPreDelete": {
+   "en": "Before deletion, detaches this implement from its attacher vehicle if attached and unregisters its input attacher joints from the vehicle system.",
+   "fr": "Avant la suppression, dételle cet outil de son véhicule porteur s'il est attelé et désenregistre ses attaches d'entrée du système de véhicules."
+  },
+  "Attachable:onDelete": {
+   "en": "Cleans up resources: deletes tool cameras, releases the shared i3d file of the lower link balls and deletes the active sound samples.",
+   "fr": "Libère les ressources : supprime les caméras d'outil, libère le fichier i3d partagé des rotules de bras inférieurs et supprime les échantillons sonores actifs."
+  },
+  "Attachable:saveToXMLFile": {
+   "en": "Writes the lower animation time (when a lower animation exists) and the detach-blocked flag to the savegame XML.",
+   "fr": "Écrit dans le XML de sauvegarde le temps de l'animation de descente (si elle existe) et l'indicateur de dételage bloqué."
+  },
+  "Attachable:onReadStream": {
+   "en": "Client side on join: if the server says the implement is attached, reads the attacher vehicle, joint indices and lowered state, then re-attaches the implement locally and sets the joint's move-down state.",
+   "fr": "Côté client lors de la connexion : si le serveur indique que l'outil est attelé, lit le véhicule porteur, les indices d'attaches et l'état abaissé, puis rattache l'outil localement et applique l'état de descente de l'attache."
+  },
+  "Attachable:onWriteStream": {
+   "en": "Server side on join: writes whether the implement is attached and, if so, the attacher vehicle, input and attacher joint indices, move-down state and implement index. Mirrors onReadStream.",
+   "fr": "Côté serveur lors de la connexion : écrit si l'outil est attelé et, le cas échéant, le véhicule porteur, les indices des attaches, l'état de descente et l'indice de l'outil. Miroir de onReadStream."
+  },
+  "Attachable:onUpdateInterpolation": {
+   "en": "While attached and within the attacher vehicle's update distance and same update loop, refreshes the attacher joint graphics on both vehicles each frame.",
+   "fr": "Tant que l'outil est attelé, dans la distance de mise à jour du véhicule porteur et dans la même boucle de mise à jour, rafraîchit à chaque image les graphismes d'attache des deux véhicules."
+  },
+  "Attachable:onUpdate": {
+   "en": "Per-frame update. Computes the steering axle angle from the yaw relative to the base vehicle (speed scaled, optional distance delay), rotates the target node, updates steering angle nodes, and finishes a pending detach once support animations are done.",
+   "fr": "Mise à jour à chaque image. Calcule l'angle de l'essieu directeur d'après le lacet par rapport au véhicule de base (dépendant de la vitesse, délai de distance optionnel), tourne le nœud cible, met à jour les nœuds d'angle de direction et termine un dételage en attente quand les animations de béquille sont finies."
+  },
+  "Attachable:onUpdateTick": {
+   "en": "Updates the vehicle-system info of each input attacher joint and, on the client, starts or stops the looping active sound depending on whether the vehicle's last speed exceeds a small threshold.",
+   "fr": "Met à jour dans le système de véhicules les informations de chaque attache d'entrée et, côté client, démarre ou arrête le son actif en boucle selon que la dernière vitesse du véhicule dépasse un petit seuil."
+  },
+  "Attachable:loadInputAttacherJoint": {
+   "en": "Loads one input attacher joint from XML into the given table and returns true if a node was found. Handles joint type (with fallbacks), distances to ground, bottom arm balls, limit scales, springs, lowering defaults, dependent joints, object changes and additional attachment. Logs XML warnings for invalid values.",
+   "fr": "Charge une attache d'entrée depuis le XML dans la table fournie et retourne true si un nœud a été trouvé. Gère le type d'attache (avec valeurs de repli), les distances au sol, les rotules de bras inférieurs, les échelles de limites, les ressorts, les valeurs par défaut de descente, les attaches dépendantes, les changements d'objets et l'attelage supplémentaire. Émet des avertissements XML pour les valeurs invalides."
+  },
+  "Attachable:loadAttacherJointHeightNode": {
+   "en": "Loads a height node of an input attacher joint from XML (node and owning joint node). Always returns true.",
+   "fr": "Charge depuis le XML un nœud de hauteur d'une attache d'entrée (nœud et nœud d'attache propriétaire). Retourne toujours true."
+  },
+  "Attachable:getIsAttacherJointHeightNodeActive": {
+   "en": "Returns whether a given height node is active. Always true here; other specializations may override it.",
+   "fr": "Indique si un nœud de hauteur donné est actif. Toujours true ici ; d'autres spécialisations peuvent le surcharger."
+  },
+  "Attachable:getInputAttacherJointByJointDescIndex": {
+   "en": "Returns the input attacher joint table at the given 1-based index, or nil if it does not exist.",
+   "fr": "Retourne la table de l'attache d'entrée à l'indice donné (base 1), ou nil si elle n'existe pas."
+  },
+  "Attachable:getInputAttacherJointIndexByNode": {
+   "en": "Returns the index of the input attacher joint whose node matches the given node, or nil when none matches.",
+   "fr": "Retourne l'indice de l'attache d'entrée dont le nœud correspond au nœud donné, ou nil si aucune ne correspond."
+  },
+  "Attachable:getAttacherVehicle": {
+   "en": "Returns the vehicle this implement is currently attached to, or nil if it is not attached.",
+   "fr": "Retourne le véhicule auquel cet outil est actuellement attelé, ou nil s'il n'est pas attelé."
+  },
+  "Attachable:getShowAttachableMapHotspot": {
+   "en": "Returns true when the implement is not attached to anything, meaning its map hotspot may be shown.",
+   "fr": "Retourne true quand l'outil n'est attelé à rien, ce qui signifie que son point d'intérêt sur la carte peut être affiché."
+  },
+  "Attachable:getInputAttacherJoints": {
+   "en": "Returns the list of input attacher joints loaded for this vehicle.",
+   "fr": "Retourne la liste des attaches d'entrée chargées pour ce véhicule."
+  },
+  "Attachable:getIsAttachedTo": {
+   "en": "Returns true if the given vehicle is this vehicle itself or any vehicle further up the attachment chain.",
+   "fr": "Retourne true si le véhicule donné est ce véhicule lui-même ou un véhicule plus haut dans la chaîne d'attelage."
+  },
+  "Attachable:getActiveInputAttacherJointDescIndex": {
+   "en": "Returns the index of the input attacher joint currently used for the attachment, or nil when detached.",
+   "fr": "Retourne l'indice de l'attache d'entrée actuellement utilisée pour l'attelage, ou nil si l'outil est dételé."
+  },
+  "Attachable:getActiveInputAttacherJoint": {
+   "en": "Returns the input attacher joint table currently in use, or nil when the implement is not attached.",
+   "fr": "Retourne la table de l'attache d'entrée actuellement utilisée, ou nil si l'outil n'est pas attelé."
+  },
+  "Attachable:getAllowsLowering": {
+   "en": "Returns true if the tool may be lowered: false for an additional attachment that does not need lowering, or when the active joint does not allow lowering. Second return value is always nil.",
+   "fr": "Retourne true si l'outil peut être abaissé : false pour un attelage supplémentaire sans besoin d'abaissement, ou si l'attache active ne l'autorise pas. La seconde valeur retournée est toujours nil."
+  },
+  "Attachable:loadSupportAnimationFromXML": {
+   "en": "Fills a support animation entry from XML (animation name, delayed load, delayed attach, detach after animation, detach time). Returns true only if an animation name is present.",
+   "fr": "Remplit une entrée d'animation de béquille depuis le XML (nom, chargement différé, attelage différé, dételage après animation, instant de dételage). Retourne true seulement si un nom d'animation est présent."
+  },
+  "Attachable:getIsSupportAnimationAllowed": {
+   "en": "Returns true when the vehicle has an animation system (playAnimation exists), so support animations can be played.",
+   "fr": "Retourne true quand le véhicule dispose d'un système d'animation (playAnimation existe), donc que les animations de béquille peuvent être jouées."
+  },
+  "Attachable:getIsReadyToFinishDetachProcess": {
+   "en": "Returns true when every support animation flagged detach-after-animation has finished or reached its configured detach time, so the final detach can happen.",
+   "fr": "Retourne true quand chaque animation de béquille marquée dételage après animation est terminée ou a atteint son instant de dételage, ce qui permet le dételage final."
+  },
+  "Attachable:startDetachProcess": {
+   "en": "Starts detaching: sends AttachableStartDetachEvent, plays the support animations and, on the server, detaches at once if ready or flags detaching as in progress. Returns whether the detach could be completed now.",
+   "fr": "Lance le dételage : envoie AttachableStartDetachEvent, joue les animations de béquille et, côté serveur, dételle immédiatement si possible ou marque le dételage comme en cours. Retourne si le dételage a pu être terminé maintenant."
+  },
+  "Attachable:getIsImplementChainLowered": {
+   "en": "Returns true if this implement and every attacher vehicle above it that supports lowering are lowered. The parameter is the fallback value when lowering is not allowed.",
+   "fr": "Retourne true si cet outil et chaque véhicule porteur au-dessus de lui qui gère l'abaissement sont abaissés. Le paramètre est la valeur de repli quand l'abaissement n'est pas autorisé."
+  },
+  "Attachable:getIsInWorkPosition": {
+   "en": "Returns whether the implement is in work position. Always true here; other specializations are expected to override it.",
+   "fr": "Indique si l'outil est en position de travail. Toujours true ici ; d'autres spécialisations sont censées le surcharger."
+  },
+  "Attachable:getAttachbleAirConsumerUsage": {
+   "en": "Returns the air consumption value read from the XML (usage while fully braking). The function name keeps the original misspelling Attachble.",
+   "fr": "Retourne la consommation d'air lue dans le XML (usage en freinage complet). Le nom de la fonction conserve la faute d'origine Attachble."
+  },
+  "Attachable:isDetachAllowed": {
+   "en": "Returns whether the implement may be detached, with optional warning text. Refuses when detaching is blocked, the joint forbids it, the parent is lifted and must be lowered first, it is an additional attachment, or attaching is still in progress.",
+   "fr": "Indique si l'outil peut être dételé, avec un texte d'avertissement optionnel. Refuse si le dételage est bloqué, si l'attache l'interdit, si le parent est relevé et doit d'abord être abaissé, si c'est un attelage supplémentaire ou si l'attelage est encore en cours."
+  },
+  "Attachable:isAttachAllowed": {
+   "en": "Returns whether attaching is allowed: the farm must have access to the vehicle and no detach may be in progress. Second return value is always nil.",
+   "fr": "Indique si l'attelage est autorisé : la ferme doit avoir accès au véhicule et aucun dételage ne doit être en cours. La seconde valeur retournée est toujours nil."
+  },
+  "Attachable:getIsInputAttacherActive": {
+   "en": "Returns whether a given input attacher joint can be used for attaching. Always true here; hook for overrides.",
+   "fr": "Indique si une attache d'entrée donnée peut servir à l'attelage. Toujours true ici ; point d'accroche pour des surcharges."
+  },
+  "Attachable:getSteeringAxleBaseVehicle": {
+   "en": "Returns the vehicle used as steering reference: the attacher's own attacher when the super attachable option is set, otherwise the attacher vehicle if forced or if it can steer this attachable. May return nil.",
+   "fr": "Retourne le véhicule servant de référence de direction : le porteur du porteur si l'option super attachable est active, sinon le véhicule porteur s'il est forcé ou s'il peut diriger cet outil. Peut retourner nil."
+  },
+  "Attachable:loadSteeringAxleFromXML": {
+   "en": "Reads steering axle settings from XML into the given table: speed range, rotation limits, target node, direction, forced usage, distance delay and optional reference component. Turn speed is converted from degrees per second to per millisecond.",
+   "fr": "Lit les réglages de l'essieu directeur depuis le XML dans la table donnée : plage de vitesse, limites de rotation, nœud cible, direction, usage forcé, délai de distance et composant de référence optionnel. La vitesse de rotation est convertie de degrés par seconde en par milliseconde."
+  },
+  "Attachable:getIsSteeringAxleAllowed": {
+   "en": "Returns whether steering axle adjustment is allowed. Always true here; hook for overrides.",
+   "fr": "Indique si l'ajustement de l'essieu directeur est autorisé. Toujours true ici ; point d'accroche pour des surcharges."
+  },
+  "Attachable:loadSteeringAngleNodeFromXML": {
+   "en": "Fills a steering angle node entry from XML (node, speed per millisecond, scale, offset, minimum speed) and resets its current angle. Always returns true.",
+   "fr": "Remplit une entrée de nœud d'angle de direction depuis le XML (nœud, vitesse par milliseconde, échelle, décalage, vitesse minimale) et remet son angle courant à zéro. Retourne toujours true."
+  },
+  "Attachable:updateSteeringAngleNode": {
+   "en": "Moves a steering angle node toward the target angle at its configured speed when the vehicle is faster than the node's minimum speed, applies the Y rotation and marks the moving tool dirty.",
+   "fr": "Déplace un nœud d'angle de direction vers l'angle cible à sa vitesse configurée quand le véhicule dépasse la vitesse minimale du nœud, applique la rotation en Y et marque l'outil mobile comme modifié."
+  },
+  "Attachable:attachableAddToolCameras": {
+   "en": "Adds this implement's tool cameras to the root vehicle (if it supports addToolCameras). Does nothing without tool cameras.",
+   "fr": "Ajoute les caméras d'outil de cet outil au véhicule racine (s'il gère addToolCameras). Sans effet si aucune caméra d'outil n'existe."
+  },
+  "Attachable:attachableRemoveToolCameras": {
+   "en": "Removes this implement's tool cameras from the root vehicle (if it supports removeToolCameras). Does nothing without tool cameras.",
+   "fr": "Retire les caméras d'outil de cet outil du véhicule racine (s'il gère removeToolCameras). Sans effet si aucune caméra d'outil n'existe."
+  },
+  "Attachable:preAttach": {
+   "en": "Called before the attachment completes. Stores the attacher vehicle and active joint, picks distances to ground per attacher vehicle file, toggles additional objects and bottom arm balls, plays non-delayed support animations and raises onPreAttach.",
+   "fr": "Appelée avant la fin de l'attelage. Mémorise le véhicule porteur et l'attache active, choisit les distances au sol selon le fichier du porteur, active les objets additionnels et les rotules de bras inférieurs, joue les animations de béquille non différées et émet onPreAttach."
+  },
+  "Attachable:postAttach": {
+   "en": "Called after attaching. Activates the tool if the root vehicle is controlled, copies lights state from the attacher vehicle, plays delayed support animations, adds tool cameras, applies object changes and moving part references, registers the lowering controlled action and raises onPostAttach.",
+   "fr": "Appelée après l'attelage. Active l'outil si le véhicule racine est contrôlé, copie l'état des feux du porteur, joue les animations de béquille différées, ajoute les caméras d'outil, applique les changements d'objets et références de pièces mobiles, enregistre l'action contrôlée d'abaissement et émet onPostAttach."
+  },
+  "Attachable:preDetach": {
+   "en": "Called before detaching. Removes the lowering controlled action from the action controller and raises onPreDetach.",
+   "fr": "Appelée avant le dételage. Retire l'action contrôlée d'abaissement du contrôleur d'actions et émet onPreDetach."
+  },
+  "Attachable:postDetach": {
+   "en": "Called after detaching. Deactivates the vehicle, reverts object changes and moving part references, plays the reverse support animations and lower animation, removes tool cameras, hides additional objects, clears the attacher references and raises onPostDetach.",
+   "fr": "Appelée après le dételage. Désactive le véhicule, annule les changements d'objets et références de pièces mobiles, joue les animations de béquille et de descente en sens inverse, retire les caméras d'outil, masque les objets additionnels, efface les références du porteur et émet onPostDetach."
+  },
+  "Attachable:setLowered": {
+   "en": "Sets the lowered state: plays the lower animation forward or backward, propagates the state to dependent attacher joints (with warnings if missing) and raises onSetLowered.",
+   "fr": "Définit l'état abaissé : joue l'animation de descente en avant ou en arrière, propage l'état aux attaches dépendantes (avec avertissements si elles manquent) et émet onSetLowered."
+  },
+  "Attachable:setLoweredAll": {
+   "en": "Asks the attacher vehicle to lower or lift the whole implement at the given joint index, then raises onSetLoweredAll. Assumes the implement is attached.",
+   "fr": "Demande au véhicule porteur d'abaisser ou de relever tout l'outil à l'indice d'attache donné, puis émet onSetLoweredAll. Suppose que l'outil est attelé."
+  },
+  "Attachable:setToolBottomArmWidthByIndex": {
+   "en": "Moves the left and right bottom arm ball nodes of an input attacher joint to the width chosen by index (0.5 if the index is unknown). The ball size computation is not applied to the mesh.",
+   "fr": "Déplace les nœuds de rotules gauche et droite des bras inférieurs d'une attache d'entrée selon la largeur choisie par indice (0,5 si l'indice est inconnu). Le calcul de taille de rotule n'est pas appliqué au maillage."
+  },
+  "Attachable:updateInputAttacherJointGraphics": {
+   "en": "While the attachment is not in progress, updates the moving parts for the steering bar nodes and drawbar node of the active input joint.",
+   "fr": "Tant que l'attelage n'est pas en cours, met à jour les pièces mobiles des nœuds de barre de direction et du timon de l'attache d'entrée active."
+  },
+  "Attachable:setIsAdditionalAttachment": {
+   "en": "Marks the vehicle as an additional attachment (cannot be detached or lowered by itself) and stores whether it needs lowering. If already loaded, refreshes action events and removes the lowering action when lowering is not needed.",
+   "fr": "Marque le véhicule comme attelage supplémentaire (ne peut être ni dételé ni abaissé seul) et mémorise s'il nécessite un abaissement. Si déjà chargé, rafraîchit les événements d'action et retire l'action d'abaissement quand elle est inutile."
+  },
+  "Attachable:getIsAdditionalAttachment": {
+   "en": "Returns true if the vehicle was marked as an additional attachment.",
+   "fr": "Retourne true si le véhicule a été marqué comme attelage supplémentaire."
+  },
+  "Attachable:setIsSupportVehicle": {
+   "en": "Flags the vehicle as a support vehicle; the state defaults to true when nil is passed. Support vehicles are excluded from reset and map hotspots.",
+   "fr": "Marque le véhicule comme véhicule de support ; l'état vaut true par défaut si nil est passé. Les véhicules de support sont exclus de la réinitialisation et des points d'intérêt de la carte."
+  },
+  "Attachable:getIsSupportVehicle": {
+   "en": "Returns the support vehicle flag (nil if it was never set).",
+   "fr": "Retourne l'indicateur de véhicule de support (nil s'il n'a jamais été défini)."
+  },
+  "Attachable:registerLoweringActionEvent": {
+   "en": "Registers an input action event for lowering by forwarding all parameters to addPoweredActionEvent (the event is tied to the vehicle being powered). Returns what that function returns.",
+   "fr": "Enregistre un événement d'action d'entrée pour l'abaissement en transmettant tous les paramètres à addPoweredActionEvent (l'événement dépend de l'alimentation du véhicule). Retourne ce que cette fonction retourne."
+  },
+  "Attachable:getLoweringActionEventState": {
+   "en": "Returns whether the lower/lift action should be shown (both attacher and input joints allow lowering) and the matching display text with the vehicle type, depending on the current lowered state.",
+   "fr": "Retourne si l'action abaisser/relever doit être affichée (les attaches du porteur et de l'outil autorisent l'abaissement) et le texte correspondant avec le type de véhicule, selon l'état abaissé actuel."
+  },
+  "Attachable:getAllowMultipleAttachments": {
+   "en": "Returns false here: the attachment dialog is not offered for an already attached implement. Overridable.",
+   "fr": "Retourne false ici : la boîte de dialogue d'attelage n'est pas proposée pour un outil déjà attelé. Surchargeable."
+  },
+  "Attachable:resolveMultipleAttachments": {
+   "en": "Empty hook called before attaching to a second vehicle; does nothing in this specialization.",
+   "fr": "Point d'accroche vide appelé avant un attelage à un second véhicule ; sans effet dans cette spécialisation."
+  },
+  "Attachable:getBlockFoliageDestruction": {
+   "en": "Returns the blockFoliageDestruction XML flag: when true the implement blocks foliage destruction for its whole vehicle chain.",
+   "fr": "Retourne l'indicateur XML blockFoliageDestruction : à true, l'outil bloque la destruction du feuillage pour toute sa chaîne de véhicules."
+  },
+  "Attachable:onDeactivate": {
+   "en": "On deactivation, re-applies the brake force if the vehicle has a brake and, on the client, stops the active sound if it is playing.",
+   "fr": "À la désactivation, réapplique la force de freinage si le véhicule a un frein et, côté client, arrête le son actif s'il joue."
+  },
+  "Attachable:onSelect": {
+   "en": "When the implement is selected, tells the attacher vehicle to mark it as the selected implement.",
+   "fr": "Quand l'outil est sélectionné, demande au véhicule porteur de le marquer comme outil sélectionné."
+  },
+  "Attachable:onUnselect": {
+   "en": "When the implement is unselected, tells the attacher vehicle to clear its selected implement (passes nil).",
+   "fr": "Quand l'outil est désélectionné, demande au véhicule porteur d'effacer son outil sélectionné (passe nil)."
+  },
+  "Attachable:findRootVehicle": {
+   "en": "Override: returns the root vehicle of the attacher vehicle when attached, otherwise defers to the base implementation.",
+   "fr": "Surcharge : retourne le véhicule racine du véhicule porteur quand l'outil est attelé, sinon délègue à l'implémentation de base."
+  },
+  "Attachable:getIsActive": {
+   "en": "Override: active if the base says so or if the attacher vehicle is active.",
+   "fr": "Surcharge : actif si la base le dit ou si le véhicule porteur est actif."
+  },
+  "Attachable:getIsOperating": {
+   "en": "Override: operating if the base says so or if the attacher vehicle is operating.",
+   "fr": "Surcharge : en fonctionnement si la base le dit ou si le véhicule porteur est en fonctionnement."
+  },
+  "Attachable:getBrakeForce": {
+   "en": "Override: returns the larger of the base brake force and this tool's own force. The force can be interpolated by mass between the default and maximum values, and a separate force applies while lowered.",
+   "fr": "Surcharge : retourne la plus grande valeur entre la force de freinage de base et celle propre à l'outil. La force peut être interpolée selon la masse entre valeurs par défaut et maximale, et une force distincte s'applique quand l'outil est abaissé."
+  },
+  "Attachable:getIsFoldAllowed": {
+   "en": "Override: refuses folding (with a warning text) when attached and folding while attached is disabled, when lowered and folding while lowered is disabled, or when the active joint forbids folding. Otherwise defers to the base.",
+   "fr": "Surcharge : refuse le pliage (avec un texte d'avertissement) quand l'outil est attelé et que le pliage attelé est désactivé, quand il est abaissé et que le pliage abaissé est désactivé, ou quand l'attache active l'interdit. Sinon délègue à la base."
+  },
+  "Attachable:getCanToggleTurnedOn": {
+   "en": "Override: returns false if the attacher joint of the tractor or the active input joint forbids turning the implement on; otherwise defers to the base.",
+   "fr": "Surcharge : retourne false si l'attache du tracteur ou l'attache d'entrée active interdit la mise en marche de l'outil ; sinon délègue à la base."
+  },
+  "Attachable:getDeactivateOnLeave": {
+   "en": "Override: returns false if the attacher vehicle does not deactivate on leave; otherwise defers to the base.",
+   "fr": "Surcharge : retourne false si le véhicule porteur ne se désactive pas à la sortie ; sinon délègue à la base."
+  },
+  "Attachable:getCanAIImplementContinueWork": {
+   "en": "Override: after the base check, requires the lower animation to be at an end (or lifting) and, if the AI needs lowering, the joint to have finished moving. Returns the base's stop values when the base refuses.",
+   "fr": "Surcharge : après la vérification de base, exige que l'animation de descente soit à une extrémité (ou en remontée) et, si l'IA a besoin d'abaissement, que l'attache ait fini de bouger. Retourne les valeurs d'arrêt de la base si celle-ci refuse."
+  },
+  "Attachable:getAreControlledActionsAllowed": {
+   "en": "Override: returns false while any support animation is playing; otherwise defers to the base.",
+   "fr": "Surcharge : retourne false tant qu'une animation de béquille est en cours ; sinon délègue à la base."
+  },
+  "Attachable:getActiveFarm": {
+   "en": "Override: for an attached tool returns the attacher vehicle's farm, unless the vehicle is itself entered by a controller (enterable with a controller farm), in which case the base value is used.",
+   "fr": "Surcharge : pour un outil attelé retourne la ferme du véhicule porteur, sauf si le véhicule est lui-même occupé par un conducteur (enterable avec une ferme de contrôle), auquel cas la valeur de base est utilisée."
+  },
+  "Attachable:getCanBeSelected": {
+   "en": "Override: attachable vehicles can always be selected; returns true.",
+   "fr": "Surcharge : les véhicules attelables peuvent toujours être sélectionnés ; retourne true."
+  },
+  "Attachable:getIsLowered": {
+   "en": "Override: when attached, returns the joint's move-down state if lowering is allowed or default-lowered, otherwise the provided default; when detached defers to the base.",
+   "fr": "Surcharge : quand l'outil est attelé, retourne l'état de descente de l'attache si l'abaissement est autorisé ou par défaut, sinon la valeur par défaut fournie ; dételé, délègue à la base."
+  },
+  "Attachable:mountDynamic": {
+   "en": "Override: refuses dynamic mounting of objects (returns false) while this vehicle is attached; otherwise defers to the base.",
+   "fr": "Surcharge : refuse le montage dynamique d'objets (retourne false) tant que ce véhicule est attelé ; sinon délègue à la base."
+  },
+  "Attachable:getOwnerConnection": {
+   "en": "Override: when attached, returns the attacher vehicle's owner connection (multiplayer); otherwise defers to the base.",
+   "fr": "Surcharge : quand l'outil est attelé, retourne la connexion propriétaire du véhicule porteur (multijoueur) ; sinon délègue à la base."
+  },
+  "Attachable:getIsInUse": {
+   "en": "Override: when attached, in-use status for a connection comes from the attacher vehicle; otherwise from the base.",
+   "fr": "Surcharge : quand l'outil est attelé, l'état d'utilisation pour une connexion vient du véhicule porteur ; sinon de la base."
+  },
+  "Attachable:getUpdatePriority": {
+   "en": "Override: when attached, the network update priority is taken from the attacher vehicle; otherwise the base value is used (the base call omits the GUI visibility argument).",
+   "fr": "Surcharge : quand l'outil est attelé, la priorité de mise à jour réseau vient du véhicule porteur ; sinon la valeur de base est utilisée (l'appel de base omet l'argument de visibilité GUI)."
+  },
+  "Attachable:getCanBeReset": {
+   "en": "Override: returns false for additional attachments and support vehicles; otherwise defers to the base.",
+   "fr": "Surcharge : retourne false pour les attelages supplémentaires et les véhicules de support ; sinon délègue à la base."
+  },
+  "Attachable:loadAdditionalLightAttributesFromXML": {
+   "en": "Override: after the base loads a light, also reads the optional inputAttacherJointIndex attribute that restricts the light to one input joint. Returns false if the base fails.",
+   "fr": "Surcharge : après le chargement d'un feu par la base, lit aussi l'attribut optionnel inputAttacherJointIndex qui limite le feu à une attache d'entrée. Retourne false si la base échoue."
+  },
+  "Attachable:getIsLightActive": {
+   "en": "Override: a light tied to an input attacher joint index is inactive unless that joint is the active one; otherwise defers to the base.",
+   "fr": "Surcharge : un feu lié à un indice d'attache d'entrée est inactif sauf si cette attache est l'attache active ; sinon délègue à la base."
+  },
+  "Attachable:getIsPowered": {
+   "en": "Override: attached, powered state comes from the attacher vehicle (its warning is passed on). Detached, the vehicle is unpowered with a warning if it needs external power and has no Motorized specialization.",
+   "fr": "Surcharge : attelé, l'état alimenté vient du véhicule porteur (son avertissement est transmis). Dételé, le véhicule n'est pas alimenté, avec un avertissement, s'il exige une puissance externe et n'a pas la spécialisation Motorized."
+  },
+  "Attachable:getConnectionHoseConfigIndex": {
+   "en": "Override: returns the connection hose configuration index from the XML, with the inputAttacherJoint configuration value taking priority, falling back to the base value.",
+   "fr": "Surcharge : retourne l'indice de configuration des flexibles de connexion lu dans le XML, la valeur de la configuration d'attache d'entrée étant prioritaire, avec repli sur la valeur de base."
+  },
+  "Attachable:getIsMapHotspotVisible": {
+   "en": "Override: the map hotspot is visible only if the base allows it, the vehicle is neither an additional attachment nor a support vehicle, and it is not attached.",
+   "fr": "Surcharge : le point d'intérêt de la carte est visible seulement si la base l'autorise, si le véhicule n'est ni un attelage supplémentaire ni un véhicule de support, et s'il n'est pas attelé."
+  },
+  "Attachable:getPowerTakeOffConfigIndex": {
+   "en": "Override: returns the power take off configuration index from the XML, with the inputAttacherJoint configuration value taking priority, falling back to the base value.",
+   "fr": "Surcharge : retourne l'indice de configuration de la prise de force lu dans le XML, la valeur de la configuration d'attache d'entrée étant prioritaire, avec repli sur la valeur de base."
+  },
+  "Attachable:loadDashboardGroupFromXML": {
+   "en": "Override: after the base loads a dashboard group, also reads the optional isAttached condition. Returns false if the base fails.",
+   "fr": "Surcharge : après le chargement d'un groupe de tableau de bord par la base, lit aussi la condition optionnelle isAttached. Retourne false si la base échoue."
+  },
+  "Attachable:getIsDashboardGroupActive": {
+   "en": "Override: a dashboard group with an isAttached condition is inactive when it does not match the current attached state; otherwise defers to the base.",
+   "fr": "Surcharge : un groupe de tableau de bord ayant une condition isAttached est inactif quand elle ne correspond pas à l'état d'attelage actuel ; sinon délègue à la base."
+  },
+  "Attachable:setWorldPositionQuaternion": {
+   "en": "Override: on a client, ignores positions received from the network while the implement is hard attached (its position follows the attacher vehicle); on the server and otherwise defers to the base.",
+   "fr": "Surcharge : sur un client, ignore les positions reçues du réseau tant que l'outil est attelé en dur (sa position suit le véhicule porteur) ; sur le serveur et sinon délègue à la base."
+  },
+  "Attachable:addToPhysics": {
+   "en": "Override: after the base adds the vehicle to physics, creates the attachment joint if the attacher vehicle is in physics (unless hard attached). If a hard-attached parent is not yet in physics, resets the flag so the call can be repeated.",
+   "fr": "Surcharge : après l'ajout du véhicule à la physique par la base, crée le joint d'attelage si le véhicule porteur est dans la physique (sauf attelage en dur). Si un parent attelé en dur n'y est pas encore, réinitialise l'indicateur pour permettre un nouvel appel."
+  },
+  "Attachable:removeFromPhysics": {
+   "en": "Override: before the base removes the vehicle from physics, clears the stored joint index of the attachment (unless hard attached) when the attacher vehicle is in physics.",
+   "fr": "Surcharge : avant le retrait du véhicule de la physique par la base, remet à zéro l'indice de joint d'attelage mémorisé (sauf attelage en dur) quand le véhicule porteur est dans la physique."
+  },
+  "Attachable:actionControllerLowerImplementEvent": {
+   "en": "Callback of the lowering controlled action: if lowering is allowed, sets the joint move-down state from the direction sign (negative lifts) when it differs. Returns true if handled.",
+   "fr": "Rappel de l'action contrôlée d'abaissement : si l'abaissement est autorisé, définit l'état de descente de l'attache d'après le signe de la direction (négatif = relever) quand il diffère. Retourne true si traité."
+  },
+  "Attachable:onStateChange": {
+   "en": "On AI start-line and end-line state changes, lowers or lifts the implement through the controlled action when it is set to lower if any implement is lowered.",
+   "fr": "Lors des changements d'état IA début et fin de ligne, abaisse ou relève l'outil via l'action contrôlée quand il est configuré pour s'abaisser si un outil l'est."
+  },
+  "Attachable:onRootVehicleChanged": {
+   "en": "When the root vehicle changes, re-parents the lowering controlled action to the new root's action controller if both exist.",
+   "fr": "Quand le véhicule racine change, rattache l'action contrôlée d'abaissement au contrôleur d'actions de la nouvelle racine si les deux existent."
+  },
+  "Attachable:onFoldStateChanged": {
+   "en": "While folding changes, raises onSetLowered with true or false depending on the fold direction relative to the turn-on direction, only if a fold middle time exists. Note: reads spec_foldable without checking that the Foldable specialization is present.",
+   "fr": "Pendant un changement de pliage, émet onSetLowered avec true ou false selon la direction de pliage par rapport à la direction de mise en marche, seulement si un temps de pliage intermédiaire existe. À noter : lit spec_foldable sans vérifier que la spécialisation Foldable est présente."
+  },
+  "Attachable:onRegisterAnimationValueTypes": {
+   "en": "Registers animation value types that let AnimatedVehicle parts drive input joint settings: lower/upper rotation and translation limit scales, rotation offsets and distances to ground. On the server each change updates the attacher vehicle's joint settings.",
+   "fr": "Enregistre des types de valeurs d'animation permettant aux pièces d'AnimatedVehicle de piloter les réglages d'une attache d'entrée : échelles de limites de rotation et de translation, décalages de rotation et distances au sol (basses/hautes). Côté serveur, chaque changement met à jour les réglages d'attache du véhicule porteur."
+  },
+  "Attachable:onBottomArmBallsI3DLoaded": {
+   "en": "Callback for the lower link balls i3d: if it has exactly three ball nodes, links them to the input joint, sets the widest width and visibility, and links the top ball to the top reference node. Otherwise logs a warning. Deletes the loaded node.",
+   "fr": "Rappel du chargement de l'i3d des rotules de bras inférieurs : s'il contient exactement trois nœuds de rotule, les lie à l'attache d'entrée, règle la plus grande largeur et la visibilité, et lie la rotule du haut au nœud de référence supérieur. Sinon émet un avertissement. Supprime le nœud chargé."
+  }
+ }
+}

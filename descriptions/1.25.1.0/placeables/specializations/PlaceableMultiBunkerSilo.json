@@ -1,0 +1,105 @@
+{
+ "fichier": "placeables/specializations/PlaceableMultiBunkerSilo.lua",
+ "module": {
+  "en": "Placeable specialization for bunker silos that may contain several BunkerSilo objects chosen by a configuration, with optional side walls. Extendable silos of the same type and owner snap next to each other when being placed and hide the walls between them. It registers a bunkerSilo configuration type and registers itself with the mission placeable system; BunkerSilo itself is defined elsewhere.",
+  "fr": "Spécialisation de placeable pour les silos-couloirs pouvant contenir plusieurs objets BunkerSilo choisis par une configuration, avec parois latérales optionnelles. Les silos extensibles de même type et de même propriétaire s'alignent lors du placement et masquent les parois qui les séparent. Elle déclare un type de configuration bunkerSilo et s'enregistre dans le système de placeables de la mission ; BunkerSilo est défini ailleurs."
+ },
+ "fonctions": {
+  "PlaceableMultiBunkerSilo.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is required.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableMultiBunkerSilo.initSpecialization": {
+   "en": "Registers the placeable configuration type bunkerSilo (with its localised label) in the placeable configuration manager.",
+   "fr": "Enregistre le type de configuration de placeable bunkerSilo (avec son libellé localisé) dans le gestionnaire de configurations."
+  },
+  "PlaceableMultiBunkerSilo.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onFinalizePlacement, onReadStream, onWriteStream and onSell.",
+   "fr": "S'abonne à onLoad, onDelete, onFinalizePlacement, onReadStream, onWriteStream et onSell."
+  },
+  "PlaceableMultiBunkerSilo.registerFunctions": {
+   "en": "Registers updateBunkerSiloWalls, setWallVisibility and getIsBunkerSiloExtendable on the placeable type.",
+   "fr": "Enregistre updateBunkerSiloWalls, setWallVisibility et getIsBunkerSiloExtendable sur le type de placeable."
+  },
+  "PlaceableMultiBunkerSilo.registerOverwrittenFunctions": {
+   "en": "Overrides getPlacementPosition, getPlacementRotation, getHasOverlap, startPlacementCheck, canBeSold and setOwnerFarmId.",
+   "fr": "Surcharge getPlacementPosition, getPlacementRotation, getHasOverlap, startPlacementCheck, canBeSold et setOwnerFarmId."
+  },
+  "PlaceableMultiBunkerSilo.registerXMLPaths": {
+   "en": "Declares the bunkerSilo XML keys: isExtendable, siloToSiloDistance, snapDistance (default 1.1 times the distance), sell warning text, wallLeft/wallBack/wallRight node and collision, and per-configuration BunkerSilo entries.",
+   "fr": "Déclare les clés XML bunkerSilo : isExtendable, siloToSiloDistance, snapDistance (défaut 1,1 fois la distance), texte d'avertissement de vente, nœud et collision de wallLeft/wallBack/wallRight, et entrées BunkerSilo par configuration."
+  },
+  "PlaceableMultiBunkerSilo.registerSavegameXMLPaths": {
+   "en": "Registers savegame keys for each bunkerSilo entry by delegating to BunkerSilo.registerSavegameXMLPaths.",
+   "fr": "Enregistre les clés de sauvegarde de chaque entrée bunkerSilo en déléguant à BunkerSilo.registerSavegameXMLPaths."
+  },
+  "PlaceableMultiBunkerSilo:onLoad": {
+   "en": "Loads wall nodes, the sell warning text and one BunkerSilo per entry of the selected configuration, then reads isExtendable and the spacing values (error and ERROR loading state if siloToSiloDistance is missing). Note: the back wall is read from wallRight and then overwrites spec.wallRight from wallBack, so spec.wallBack is never set.",
+   "fr": "Charge les nœuds de parois, le texte d'avertissement de vente et un BunkerSilo par entrée de la configuration choisie, puis lit isExtendable et les distances (erreur et état de chargement ERROR si siloToSiloDistance manque). À noter : la paroi arrière est lue depuis wallRight puis écrase spec.wallRight avec wallBack, donc spec.wallBack n'est jamais défini."
+  },
+  "PlaceableMultiBunkerSilo:onDelete": {
+   "en": "Restores walls of neighbouring silos, deletes all BunkerSilo objects and removes this placeable from the placeable system's bunker silo list.",
+   "fr": "Rétablit les parois des silos voisins, supprime tous les objets BunkerSilo et retire ce placeable de la liste des silos du système de placeables."
+  },
+  "PlaceableMultiBunkerSilo:onFinalizePlacement": {
+   "en": "Hides walls shared with neighbouring silos, registers each BunkerSilo as a network object with the owner farm, and adds the placeable to the placeable system's bunker silo list.",
+   "fr": "Masque les parois partagées avec les silos voisins, enregistre chaque BunkerSilo comme objet réseau avec la ferme propriétaire et ajoute le placeable à la liste des silos du système de placeables."
+  },
+  "PlaceableMultiBunkerSilo:onReadStream": {
+   "en": "Client side on join: reads object id and stream data of each BunkerSilo and finishes its client registration.",
+   "fr": "Côté client à la connexion : lit l'identifiant d'objet et les données de flux de chaque BunkerSilo et termine son enregistrement client."
+  },
+  "PlaceableMultiBunkerSilo:onWriteStream": {
+   "en": "Server side on join: writes object id and stream data of each BunkerSilo and registers it in the connection stream.",
+   "fr": "Côté serveur à la connexion : écrit l'identifiant d'objet et les données de flux de chaque BunkerSilo et l'enregistre dans le flux de la connexion."
+  },
+  "PlaceableMultiBunkerSilo:loadFromXMLFile": {
+   "en": "Savegame loading: loads each BunkerSilo from its indexed bunkerSilo key; returns false if any of them fails.",
+   "fr": "Chargement de sauvegarde : charge chaque BunkerSilo depuis sa clé bunkerSilo indexée ; renvoie false si l'un d'eux échoue."
+  },
+  "PlaceableMultiBunkerSilo:saveToXMLFile": {
+   "en": "Savegame saving: writes each BunkerSilo under an indexed bunkerSilo key.",
+   "fr": "Écriture de sauvegarde : écrit chaque BunkerSilo sous une clé bunkerSilo indexée."
+  },
+  "PlaceableMultiBunkerSilo:setWallVisibility": {
+   "en": "Shows or hides the left, back and right walls (node visibility and static/none collision body). Note: each flag is combined with the current state by 'or', so a wall that is visible cannot be hidden this way, and the right wall uses the left flag.",
+   "fr": "Affiche ou masque les parois gauche, arrière et droite (visibilité du nœud et corps de collision statique/aucun). À noter : chaque indicateur est combiné à l'état actuel par un 'ou', donc une paroi visible ne peut pas être masquée ainsi, et la paroi droite utilise l'indicateur gauche."
+  },
+  "PlaceableMultiBunkerSilo:getIsBunkerSiloExtendable": {
+   "en": "Returns whether this silo was declared extendable in the XML.",
+   "fr": "Indique si ce silo est déclaré extensible dans le XML."
+  },
+  "PlaceableMultiBunkerSilo:updateBunkerSiloWalls": {
+   "en": "For other extendable silos of the same config file and farm within siloToSiloDistance + 0.5 m, calls setWallVisibility on the neighbour: hides the facing wall on placement, shows it when deleting.",
+   "fr": "Pour les autres silos extensibles de même fichier de config et de même ferme à moins de siloToSiloDistance + 0,5 m, appelle setWallVisibility sur le voisin : masque la paroi en regard au placement, l'affiche à la suppression."
+  },
+  "PlaceableMultiBunkerSilo:setOwnerFarmId": {
+   "en": "Override: calls the parent, then sets the same owner farm on every BunkerSilo without sending an event.",
+   "fr": "Surcharge : appelle le parent puis applique la même ferme propriétaire à chaque BunkerSilo sans envoyer d'événement."
+  },
+  "PlaceableMultiBunkerSilo:onSell": {
+   "en": "When sold, clears the silo area of each BunkerSilo.",
+   "fr": "À la vente, vide la zone de chaque BunkerSilo."
+  },
+  "PlaceableMultiBunkerSilo:canBeSold": {
+   "en": "Override: always returns true, plus the sell warning text if any BunkerSilo still has fill level above zero, else nil.",
+   "fr": "Surcharge : renvoie toujours true, avec le texte d'avertissement de vente si un BunkerSilo a un niveau de remplissage supérieur à zéro, sinon nil."
+  },
+  "PlaceableMultiBunkerSilo:startPlacementCheck": {
+   "en": "Override: after the parent, for extendable silos finds the nearest silo of the local farm and same config within snapDistance, storing it and the side (sign of local x) for snapping.",
+   "fr": "Surcharge : après le parent, pour les silos extensibles, cherche le silo le plus proche de la ferme locale et de même config à moins de snapDistance et mémorise celui-ci ainsi que le côté (signe du x local) pour l'alignement."
+  },
+  "PlaceableMultiBunkerSilo:getHasOverlap": {
+   "en": "Override: when a snapping silo was found, wraps the overlap check so that hits on that silo are ignored; otherwise passes the check through to the parent.",
+   "fr": "Surcharge : si un silo d'alignement a été trouvé, enveloppe le test de chevauchement pour ignorer les collisions avec ce silo ; sinon transmet le test au parent."
+  },
+  "PlaceableMultiBunkerSilo:getPlacementRotation": {
+   "en": "Override: returns the parent rotation, replaced by the snapping silo's Y orientation when one was found.",
+   "fr": "Surcharge : renvoie la rotation du parent, remplacée par l'orientation Y du silo d'alignement s'il y en a un."
+  },
+  "PlaceableMultiBunkerSilo:getPlacementPosition": {
+   "en": "Override: returns the parent position, replaced by a point at siloToSiloDistance to the side of the snapping silo when one was found.",
+   "fr": "Surcharge : renvoie la position du parent, remplacée par un point à siloToSiloDistance sur le côté du silo d'alignement s'il y en a un."
+  }
+ }
+}

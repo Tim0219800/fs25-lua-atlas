@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/RideableStableNotificationEvent.lua",
+ "module": {
+  "en": "Network event class `RideableStableNotificationEvent` (extends `Event`) that tells a client whether a horse is in its stable. It carries an isInStable boolean and the horse name. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `RideableStableNotificationEvent` (hérite de `Event`) qui indique à un client si un cheval est dans son écurie. Elle transporte un booléen isInStable et le nom du cheval. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "RideableStableNotificationEvent.emptyNew": {
+   "en": "Creates an empty `RideableStableNotificationEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `RideableStableNotificationEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "RideableStableNotificationEvent.new": {
+   "en": "Creates the event with its data: an isInStable boolean and the horse name.",
+   "fr": "Crée l'événement avec ses données : un booléen isInStable et le nom du cheval."
+  },
+  "RideableStableNotificationEvent:readStream": {
+   "en": "Reads the event data from the network stream (an isInStable boolean and the horse name), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (un booléen isInStable et le nom du cheval), puis appelle `run`."
+  },
+  "RideableStableNotificationEvent:writeStream": {
+   "en": "Writes the event data to the network stream (an isInStable boolean and the horse name).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (un booléen isInStable et le nom du cheval)."
+  },
+  "RideableStableNotificationEvent:run": {
+   "en": "Executes the event on the receiving side: shows an in-game notification (OK or critical) formatted with the horse name.",
+   "fr": "Exécute l'événement côté réception : affiche une notification en jeu (OK ou critique) formatée avec le nom du cheval."
+  }
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/elements/BreadcrumbsElement.lua",
+ "module": {
+  "en": "Breadcrumb trail layout used in deeper menus (shop, ModHub), derived from BoxLayoutElement. At setup it detaches the first TextBackdropElement and the first BitmapElement child as templates for crumb text and separator arrow. Only template handling is in this file; adding crumbs is UNVERIFIED here.",
+  "fr": "Fil d'Ariane pour les menus profonds (boutique, ModHub), dérivé de BoxLayoutElement. À l'initialisation, il détache le premier TextBackdropElement et le premier BitmapElement enfants pour servir de modèles de texte et de flèche de séparation. Seule la gestion des modèles est dans ce fichier ; l'ajout de miettes est NON VÉRIFIÉ ici."
+ },
+ "fonctions": {
+  "BreadcrumbsElement.new": {
+   "en": "Constructor; creates the box layout and an empty `crumbs` table.",
+   "fr": "Constructeur ; crée la boîte de mise en page et une table `crumbs` vide."
+  },
+  "BreadcrumbsElement:copyAttributes": {
+   "en": "Copies the text and arrow templates from the source element by reference and marks this copy as not owning them, so it will not delete them.",
+   "fr": "Copie par référence les modèles de texte et de flèche de l'élément source et marque cette copie comme non propriétaire, elle ne les supprimera donc pas."
+  },
+  "BreadcrumbsElement:onGuiSetupFinished": {
+   "en": "When no templates were inherited, takes the first TextBackdropElement and first BitmapElement descendants as templates, unlinks them from the layout and takes ownership of them.",
+   "fr": "Si aucun modèle n'a été hérité, prend les premiers descendants TextBackdropElement et BitmapElement comme modèles, les détache de la mise en page et en devient propriétaire."
+  },
+  "BreadcrumbsElement:delete": {
+   "en": "Deletes the text and arrow templates when this element owns them, then runs the parent delete.",
+   "fr": "Supprime les modèles de texte et de flèche si cet élément en est propriétaire, puis exécute la suppression du parent."
+  }
+ }
+}

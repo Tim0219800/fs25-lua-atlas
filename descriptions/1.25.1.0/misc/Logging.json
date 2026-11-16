@@ -1,0 +1,49 @@
+{
+ "fichier": "misc/Logging.lua",
+ "module": {
+  "en": "Global `Logging` table that prints prefixed messages to the console and log file. Variants exist for plain messages, XML files and i3d nodes. All bodies are stripped from the SDK dump, so behaviour is taken from the doc lines only and is UNVERIFIED.",
+  "fr": "Table globale `Logging` qui écrit des messages préfixés dans la console et le fichier de log, avec des variantes pour les messages simples, les fichiers XML et les noeuds i3d. Tous les corps sont retirés du dump du SDK : le comportement vient des seules lignes de documentation et reste NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "Logging.xmlWarning": {
+   "en": "Signature only (no body in the SDK dump): prints a warning prefixed with the XML file name; accepts an XML file object, handle or string, plus a format message and its arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit un avertissement préfixé du nom du fichier XML ; accepte un objet fichier XML, un handle ou une chaîne, plus un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.xmlError": {
+   "en": "Signature only (no body in the SDK dump): prints an error prefixed with the XML file name, with a format message and arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit une erreur préfixée du nom du fichier XML, avec un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.xmlInfo": {
+   "en": "Signature only (no body in the SDK dump): prints an info line prefixed with the XML file name, with a format message and arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit une ligne d'information préfixée du nom du fichier XML, avec un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.i3dWarning": {
+   "en": "Signature only (no body in the SDK dump): prints a warning prefixed with the name path and index path of an i3d node, with a format message and arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit un avertissement préfixé du chemin de noms et du chemin d'indices d'un noeud i3d, avec un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.i3dError": {
+   "en": "Signature only (no body in the SDK dump): prints an error prefixed with the name path and index path of an i3d node, with a format message and arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit une erreur préfixée du chemin de noms et du chemin d'indices d'un noeud i3d, avec un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.i3dInfo": {
+   "en": "Signature only (no body in the SDK dump): prints an info line prefixed with the name path and index path of an i3d node, with a format message and arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit une ligne d'information préfixée du chemin de noms et du chemin d'indices d'un noeud i3d, avec un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.warning": {
+   "en": "Signature only (no body in the SDK dump): prints a message prefixed with Warning:, with a format message and arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit un message préfixé par Warning:, avec un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.error": {
+   "en": "Signature only (no body in the SDK dump): prints a message prefixed with Error:, with a format message and arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit un message préfixé par Error:, avec un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.info": {
+   "en": "Signature only (no body in the SDK dump): prints a message prefixed with Info:, with a format message and arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit un message préfixé par Info:, avec un message de format et ses arguments. NON VÉRIFIÉ."
+  },
+  "Logging.fatal": {
+   "en": "Signature only (no body in the SDK dump): prints a fatal error and stops the game; documented for unrecoverable errors only. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : écrit une erreur fatale et arrête le jeu ; documenté pour les erreurs irrécupérables uniquement. NON VÉRIFIÉ."
+  }
+ }
+}

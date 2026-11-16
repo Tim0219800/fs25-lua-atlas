@@ -1,0 +1,121 @@
+{
+ "fichier": "vehicles/VehicleActionController.lua",
+ "module": {
+  "en": "Per-vehicle controller for \"controlled actions\": a set of prioritized actions (fold, lower, turn on...) that the player triggers together with one key (`InputAction.VEHICLE_ACTION_CONTROL`). It keeps the list of `VehicleActionControllerAction` objects, runs them as an ordered sequence (reversed when going back), saves/restores the last direction in the savegame and offers a debug overlay. Only the root vehicle of a vehicle chain registers the input.",
+  "fr": "Contrôleur par véhicule des « actions contrôlées » : un ensemble d'actions priorisées (plier, abaisser, allumer...) que le joueur déclenche ensemble avec une seule touche (`InputAction.VEHICLE_ACTION_CONTROL`). Il tient la liste des objets `VehicleActionControllerAction`, les exécute en séquence ordonnée (inversée au retour), sauvegarde/restaure la dernière direction dans la sauvegarde et propose un affichage de débogage. Seul le véhicule racine d'une chaîne enregistre l'entrée."
+ },
+ "fonctions": {
+  "VehicleActionController.new": {
+   "en": "Creates the controller for a vehicle with empty action lists, `lastDirection` = -1 and no pending reactivation. Accepts an optional custom metatable.",
+   "fr": "Crée le contrôleur d'un véhicule avec des listes d'actions vides, `lastDirection` = -1 et sans réactivation en attente. Accepte une métatable personnalisée optionnelle."
+  },
+  "VehicleActionController:saveToXMLFile": {
+   "en": "Writes `#lastDirection`, `#numActions` and, for each action whose `getIsSaved()` is true, its name, identifier and last direction under `action(i)`. Writes nothing when there are no actions.",
+   "fr": "Écrit `#lastDirection`, `#numActions` puis, pour chaque action dont `getIsSaved()` est vrai, son nom, son identifiant et sa dernière direction sous `action(i)`. N'écrit rien s'il n'y a aucune action."
+  },
+  "VehicleActionController:load": {
+   "en": "Reads the saved direction and action list from the savegame XML (skipped if `resetVehicles`) and stores the load time. If no saved action has a positive direction, the loaded list is discarded.",
+   "fr": "Lit la direction et la liste d'actions sauvegardées dans le XML de sauvegarde (ignoré si `resetVehicles`) et mémorise l'heure de chargement. Si aucune action sauvegardée n'a une direction positive, la liste chargée est abandonnée."
+  },
+  "VehicleActionController:registerAction": {
+   "en": "Creates a `VehicleActionControllerAction` with name, input action and priority, adds it to the controller and returns it so the caller can configure callbacks.",
+   "fr": "Crée un `VehicleActionControllerAction` avec nom, action d'entrée et priorité, l'ajoute au contrôleur et le renvoie pour que l'appelant configure ses rappels."
+  },
+  "VehicleActionController:addAction": {
+   "en": "Appends an action, rebuilds the priority-sorted lists, flags the actions as dirty (so they get aligned with the controller direction in `update`) and requests an action-event refresh on the vehicle.",
+   "fr": "Ajoute une action, reconstruit les listes triées par priorité, marque les actions comme « sales » (alignées sur la direction du contrôleur dans `update`) et demande une mise à jour des événements d'action du véhicule."
+  },
+  "VehicleActionController:removeAction": {
+   "en": "Removes an action. If automatic vehicle control is enabled on the platform and the action was on, it is first toggled back when it resets on deactivation. Resets the direction when the last action is gone.",
+   "fr": "Retire une action. Si le contrôle automatique des véhicules est activé sur la plateforme et que l'action était active, elle est d'abord rebasculée quand elle se réinitialise à la désactivation. Réinitialise la direction quand la dernière action disparaît."
+  },
+  "VehicleActionController:updateSortedActions": {
+   "en": "Groups actions into buckets by identical priority and builds two sorted copies: highest priority first (`sortedActions`) and lowest first (`sortedActionsRev`).",
+   "fr": "Regroupe les actions par priorité identique et construit deux copies triées : priorité la plus haute d'abord (`sortedActions`) et la plus basse d'abord (`sortedActionsRev`)."
+  },
+  "VehicleActionController:activate": {
+   "en": "Called when the vehicle becomes active. For the root vehicle with a pending reactivation, flips the direction and replays the sequence so actions switched off by deactivation (e.g. turn on) are restored.",
+   "fr": "Appelé quand le véhicule devient actif. Pour le véhicule racine avec une réactivation en attente, inverse la direction et rejoue la séquence afin de restaurer les actions coupées par la désactivation (par exemple la mise en marche)."
+  },
+  "VehicleActionController:deactivate": {
+   "en": "Called when the vehicle is deactivated. For the root vehicle, if the last direction was positive it marks a pending reactivation instead of undoing the actions, to keep folding and lowered states.",
+   "fr": "Appelé à la désactivation du véhicule. Pour le véhicule racine, si la dernière direction était positive, il note une réactivation en attente au lieu de défaire les actions, afin de conserver les états plié et abaissé."
+  },
+  "VehicleActionController:registerActionEvents": {
+   "en": "For the root vehicle with actions, clears and re-registers the per-action events and registers the `VEHICLE_ACTION_CONTROL` input event with `actionSequenceEvent`, replacing any previous one.",
+   "fr": "Pour le véhicule racine ayant des actions, vide et ré-enregistre les événements par action et enregistre l'événement d'entrée `VEHICLE_ACTION_CONTROL` avec `actionSequenceEvent`, en remplaçant le précédent."
+  },
+  "VehicleActionController:actionEvent": {
+   "en": "Input callback that triggers the actions at index `actionIndex` through `doAction`. Other parameters are unused.",
+   "fr": "Rappel d'entrée qui déclenche les actions d'indice `actionIndex` via `doAction`. Les autres paramètres sont inutilisés."
+  },
+  "VehicleActionController:doAction": {
+   "en": "Executes every action in one priority bucket (from the optional custom table or the default one) with the given direction. Returns true if at least one succeeded.",
+   "fr": "Exécute toutes les actions d'un groupe de priorité (de la table personnalisée optionnelle ou de celle par défaut) avec la direction donnée. Renvoie vrai si au moins une a réussi."
+  },
+  "VehicleActionController:actionSequenceEvent": {
+   "en": "Input handler for the controlled-actions key. Does nothing right after loading, when actions are not accessible, not available or not allowed (a blinking warning may be shown); otherwise starts the sequence.",
+   "fr": "Gestionnaire de la touche des actions contrôlées. Ne fait rien juste après le chargement, si les actions ne sont pas accessibles, disponibles ou autorisées (un avertissement clignotant peut s'afficher) ; sinon lance la séquence."
+  },
+  "VehicleActionController:startActionSequence": {
+   "en": "Starts a sequence in the direction opposite to the last one (high to low priority when positive). Unless `force`, if all actions already sit in the target state it flips direction. Mid-sequence calls reverse the index. Stops if nothing could run.",
+   "fr": "Lance une séquence dans la direction opposée à la dernière (de la priorité haute à basse si positive). Sans `force`, si toutes les actions sont déjà dans l'état cible, la direction est inversée. Un appel en cours de séquence inverse l'indice. S'arrête si rien n'a pu s'exécuter."
+  },
+  "VehicleActionController:continueActionSequence": {
+   "en": "Advances to the next priority bucket and executes it; ends the sequence after the last one, and recurses immediately if the bucket executed nothing.",
+   "fr": "Passe au groupe de priorité suivant et l'exécute ; termine la séquence après le dernier et se rappelle aussitôt si le groupe n'a rien exécuté."
+  },
+  "VehicleActionController:stopActionSequence": {
+   "en": "Clears the current sequence state (actions list, index and max index).",
+   "fr": "Efface l'état de la séquence en cours (liste d'actions, indice et indice maximal)."
+  },
+  "VehicleActionController:getActionsByIndex": {
+   "en": "Returns the action bucket at the given index, from the custom table if provided, otherwise from the controller's priority list.",
+   "fr": "Renvoie le groupe d'actions à l'indice donné, dans la table personnalisée si fournie, sinon dans la liste par priorité du contrôleur."
+  },
+  "VehicleActionController:getAreControlledActionsAvailable": {
+   "en": "True only if there is at least one action and every action reports `isAvailable()`.",
+   "fr": "Vrai seulement s'il y a au moins une action et que chaque action renvoie `isAvailable()`."
+  },
+  "VehicleActionController:getAreControlledActionsAccessible": {
+   "en": "True only if there is at least one action and every action reports `isAccessible()`. Note: `VehicleActionControllerAction:isAccessible` is not defined in this dump (only the setter exists), UNVERIFIED elsewhere.",
+   "fr": "Vrai seulement s'il y a au moins une action et que chaque action renvoie `isAccessible()`. À noter : `VehicleActionControllerAction:isAccessible` n'est pas défini dans ce dump (seul le setter existe), NON VÉRIFIÉ ailleurs."
+  },
+  "VehicleActionController:getControlledActionIcons": {
+   "en": "Returns the icons (positive, negative, change-colour flag) of the first action that defines them, or nil.",
+   "fr": "Renvoie les icônes (positive, négative, indicateur de changement de couleur) de la première action qui en définit, ou nil."
+  },
+  "VehicleActionController:playControlledActions": {
+   "en": "Starts the action sequence, unless savegame actions are still being re-applied.",
+   "fr": "Lance la séquence d'actions, sauf si les actions de la sauvegarde sont encore en cours de réapplication."
+  },
+  "VehicleActionController:resetCurrentState": {
+   "en": "Resets the stored direction to -1 (off state) without running any action.",
+   "fr": "Remet la direction mémorisée à -1 (état éteint) sans exécuter d'action."
+  },
+  "VehicleActionController:getActionControllerDirection": {
+   "en": "Returns the direction the next sequence would take, i.e. the negation of the last direction.",
+   "fr": "Renvoie la direction que prendrait la prochaine séquence, c'est-à-dire l'opposé de la dernière direction."
+  },
+  "VehicleActionController:update": {
+   "en": "Per-frame update: advances the running sequence when the current bucket is finished, updates each action, re-applies the savegame state about 500 ms after load once the motor is started, and aligns newly added actions with the controller direction.",
+   "fr": "Mise à jour par image : fait avancer la séquence en cours quand le groupe courant est terminé, met à jour chaque action, réapplique l'état de la sauvegarde environ 500 ms après le chargement une fois le moteur démarré, et aligne les actions nouvellement ajoutées sur la direction du contrôleur."
+  },
+  "VehicleActionController:updateForAI": {
+   "en": "Forwards the AI update to every action.",
+   "fr": "Transmet la mise à jour IA à chaque action."
+  },
+  "VehicleActionController:onAIEvent": {
+   "en": "Forwards an AI event name to the actions whose source vehicle matches `sourceVehicle`.",
+   "fr": "Transmet un nom d'événement IA aux actions dont le véhicule source correspond à `sourceVehicle`."
+  },
+  "VehicleActionController:drawDebugRendering": {
+   "en": "Draws debug text lists of all actions and of the current sequence, highlighting the running step (green done, orange current). Uses `renderText` directly.",
+   "fr": "Dessine des listes de texte de débogage pour toutes les actions et pour la séquence en cours, avec l'étape active en évidence (vert terminé, orange courant). Utilise `renderText` directement."
+  },
+  "VehicleActionController.registerXMLPaths": {
+   "en": "Registers the savegame XML schema paths: `#lastDirection`, `#numActions` and `action(?)` with `#name`, `#identifier`, `#lastDirection` under the given base path.",
+   "fr": "Enregistre les chemins XML de sauvegarde : `#lastDirection`, `#numActions` et `action(?)` avec `#name`, `#identifier`, `#lastDirection` sous le chemin de base donné."
+  }
+ }
+}

@@ -1,306 +1,306 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Enterable.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation de véhicule (pas de prérequis déclaré dans les lignes relues) pour tout véhicule dans lequel un joueur peut monter : état d'occupation (isEntered = ce client conduit ; isControlled = quelqu'un conduit, y compris un autre joueur), caméras du véhicule (VehicleCamera), miroirs, personnage au volant, sons de pluie/grêle dans la cabine, tableau de bord (heure, température extérieure), actions d'entrée/sortie, changement de caméra. ANGLE CAMÉRA / CABINE : les caméras sont chargées depuis vehicle.enterable.cameras.camera(i) (loadCamerasFromXML) et la caméra active est spec.activeCamera (accessible via getActiveCamera). setActiveCameraIndex est le point central d'un changement de vue : il fait passer en mode « intérieur » trois systèmes selon le drapeau useOutdoorSounds de la caméra (g_soundManager:setIsIndoor, ambientSoundSystem:setIsIndoor, g_currentMission.environment.environmentMaskSystem:setIsIndoor : sens exact des effets sur la météo visuelle NON VÉRIFIÉ, classes absentes du dump), règle g_currentMission.environmentAreaSystem:setReferenceNode(activeCamera.cameraNode) (la caméra du véhicule sert de point de référence aux zones d'environnement : NON VÉRIFIÉ), gère la visibilité des miroirs et lève l'événement onCameraChanged(camera, index). Un mod qui doit savoir si le joueur est en vue cabine peut lire spec.activeCamera.isInside (champ lu aussi pour l'activation du suivi de tête) ou écouter onCameraChanged ; à la sortie du véhicule les trois indicateurs « indoor » sont remis à faux. Aussi : la mise à jour de la caméra est faite dans onPostUpdate avec dt (ms) seulement si le véhicule est entré par ce client ; la mise à jour du personnage et des miroirs est dans onPostUpdate. DONNÉES MÉTÉO LUES : spec.weatherObject = g_currentMission.environment.weather (Enterable.lua:340) ; onUpdate (client, véhicule contrôlé) lit weather:getRainFallScale() > 0 pour lancer ou arrêter les échantillons sonores « rain » (XML vehicle.enterable.sounds) et weather:getIsHailing() pour « hail » ; le tableau de bord enregistre les valeurs « time », « timeHours », « timeMinutes » (environment:getEnvironmentTime) et « outsideTemperature » (weather:getCurrentTemperature). Unités/plages : Weather et Environment absents du dump, NON VÉRIFIÉ. Pas de lecture de l'humidité du sol, du vent ni de la saleté ici. Note : onUpdate teste le son de pluie selon une pluie > 0 sans tenir compte du seuil 0.1 utilisé par Washable/VehicleSystem, et ne tient pas compte de l'indoor mask ; cet écart entre systèmes est une observation du code. RÉSEAU : le flux initial transmet isTabbable, l'état « contrôlé » et l'identifiant du joueur au client qui rejoint (onReadStream/onWriteStream) ; pas de flux de mise à jour continu dans cette spécialisation ; l'entrée/sortie est pilotée par la logique joueur (player:requestToEnterVehicle, g_localPlayer:leaveVehicle), qui appelle onPlayerEnterVehicle / onPlayerLeaveVehicle sur toutes les machines. onUpdate appelle rootVehicle:raiseActive() tant que le véhicule est contrôlé pour qu'il reste actif. Particularité : onLoad met self.needWaterInfo = true (champ lu ailleurs, usage NON VÉRIFIÉ). Événements déclarés : onEnterVehicle(isControlling), onLeaveVehicle(wasEntered), onCameraChanged, onVehicleCharacterChanged. Points d'extension pour un moddeur : écouter ces événements (par ex. pour activer un effet seulement quand la vue est intérieure), ou surcharger getIsActive / getIsActiveForInput / getDistanceToNode / interact (déclarés comme surcharges). À noter : Enterable.getIsInteractive est enregistrée comme surcharge (ligne 154) mais n'est pas définie dans ce fichier (non vérifié en jeu : fonction nil ou définie ailleurs). Parties non relues en détail : modificateurs de cibles du personnage (IK), sections XML d'initSpecialization, actions de saisie.
+--- Vehicle specialization (no prerequisite declared in the lines re-read) for any vehicle a player can get into: occupation state (isEntered = this client drives; isControlled = someone drives, including another player), vehicle cameras (VehicleCamera), mirrors, character at the wheel, rain/hail sounds in the cab, dashboard (time, outside temperature), enter/leave actions, camera switching. CAMERA / CAB VIEW: cameras are loaded from vehicle.enterable.cameras.camera(i) (loadCamerasFromXML) and the active camera is spec.activeCamera (accessible via getActiveCamera). setActiveCameraIndex is the central point of a view change: it switches three systems to "indoor" mode depending on the camera's useOutdoorSounds flag (g_soundManager:setIsIndoor, ambientSoundSystem:setIsIndoor, g_currentMission.environment.environmentMaskSystem:setIsIndoor: exact effect on the visual weather UNVERIFIED, classes absent from the dump), sets g_currentMission.environmentAreaSystem:setReferenceNode(activeCamera.cameraNode) (the vehicle camera serves as reference point for the environment areas: UNVERIFIED), handles mirror visibility and raises the event onCameraChanged(camera, index). A mod that needs to know whether the player is in cab view can read spec.activeCamera.isInside (a field also read to enable head tracking) or listen to onCameraChanged; on leaving the vehicle the three "indoor" flags are reset to false. Also: the camera update is done in onPostUpdate with dt (ms) only if the vehicle is entered by this client; the update of the character and mirrors is in onPostUpdate. WEATHER DATA READ: spec.weatherObject = g_currentMission.environment.weather (Enterable.lua:340); onUpdate (client, controlled vehicle) reads weather:getRainFallScale() > 0 to start or stop the "rain" sound samples (XML vehicle.enterable.sounds) and weather:getIsHailing() for "hail"; the dashboard registers the values "time", "timeHours", "timeMinutes" (environment:getEnvironmentTime) and "outsideTemperature" (weather:getCurrentTemperature). Units/ranges: Weather and Environment absent from the dump, UNVERIFIED. No reading of soil moisture, wind or dirt here. Note: onUpdate tests the rain sound on rain > 0 without the 0.1 threshold used by Washable/VehicleSystem, and ignores the indoor mask; this discrepancy between systems is an observation of the code. NETWORK: the initial stream sends isTabbable, the "controlled" state and the player id to the joining client (onReadStream/onWriteStream); no continuous update stream in this specialization; entering/leaving is driven by the player logic (player:requestToEnterVehicle, g_localPlayer:leaveVehicle), which calls onPlayerEnterVehicle / onPlayerLeaveVehicle on all machines. onUpdate calls rootVehicle:raiseActive() while the vehicle is controlled so that it stays active. Peculiarity: onLoad sets self.needWaterInfo = true (field read elsewhere, usage UNVERIFIED). Declared events: onEnterVehicle(isControlling), onLeaveVehicle(wasEntered), onCameraChanged, onVehicleCharacterChanged. Extension points for a modder: listen to these events (e.g. to enable an effect only when the view is interior), or override getIsActive / getIsActiveForInput / getDistanceToNode / interact (declared as overrides). Note: Enterable.getIsInteractive is registered as an override (line 154) but is not defined in this file (not verified in game: nil function or defined elsewhere). Parts not re-read in detail: character target modifiers (IK), XML sections of initSpecialization, input actions.
 ---@class Enterable
 Enterable = {}
 
---- Vérifie les spécialisations requises (non relu en détail).
+--- Checks the required specializations (not re-read in detail).
 ---@param specializations any
 function Enterable.prerequisitesPresent(specializations) end
 
---- Enregistre le schéma XML de la spécialisation (caméras, miroirs, nœuds d'entrée/sortie, personnage, sons, tableaux de bord) et les clés de sauvegarde. Non relu en détail.
+--- Registers the XML schema of the specialization (cameras, mirrors, enter/exit nodes, character, sounds, dashboards) and the savegame keys. Not re-read in detail.
 function Enterable.initSpecialization() end
 
---- Déclare les événements onEnterVehicle, onLeaveVehicle, onCameraChanged, onVehicleCharacterChanged.
+--- Declares the events onEnterVehicle, onLeaveVehicle, onCameraChanged, onVehicleCharacterChanged.
 ---@param vehicleType any
 function Enterable.registerEvents(vehicleType) end
 
---- Enregistre les fonctions de la spécialisation (caméras, personnage, état d'entrée, sortie, miroirs...). Elles sont remplaçables par un mod.
+--- Registers the functions of the specialization (cameras, character, enter state, leaving, mirrors...). They can be replaced by a mod.
 ---@param vehicleType any
 function Enterable.registerFunctions(vehicleType) end
 
---- Déclare les surcharges : getIsActive, getIsActiveForInput, getDistanceToNode, getInteractionHelp, interact, getIsInteractive (non définie ici), getCanToggleSelectable, getCanToggleAttach, getActiveFarm, loadDashboardGroupFromXML, getIsDashboardGroupActive, mountDynamic, getIsInUse, loadExtraDependentParts, updateExtraDependentParts, getIsMapHotspotVisible.
+--- Declares the overrides: getIsActive, getIsActiveForInput, getDistanceToNode, getInteractionHelp, interact, getIsInteractive (not defined here), getCanToggleSelectable, getCanToggleAttach, getActiveFarm, loadDashboardGroupFromXML, getIsDashboardGroupActive, mountDynamic, getIsInUse, loadExtraDependentParts, updateExtraDependentParts, getIsMapHotspotVisible.
 ---@param vehicleType any
 function Enterable.registerOverwrittenFunctions(vehicleType) end
 
---- Abonne la spécialisation à onLoad, onPostLoad, onLoadFinished, onRegisterDashboardValueTypes, onDelete, flux réseau initial, onPreUpdate, onUpdate, onPostUpdate, onDrawUIInfo, actions de saisie et onSetBroken.
+--- Subscribes the specialization to onLoad, onPostLoad, onLoadFinished, onRegisterDashboardValueTypes, onDelete, initial network stream, onPreUpdate, onUpdate, onPostUpdate, onDrawUIInfo, input actions and onSetBroken.
 ---@param vehicleType any
 function Enterable.registerEventListeners(vehicleType) end
 
---- Charge les cartes de miroirs, caméras, personnage, nœuds d'entrée/sortie, hotspot, rayon d'interaction ; mémorise le monde météo (spec.weatherObject), charge les sons de pluie et de grêle (client), crée un nœud de référence de réverbération par défaut à 2 m au-dessus du véhicule, active needWaterInfo, et enregistre le véhicule dans VehicleSystem (interactifs et entrables). Non relu intégralement.
+--- Loads the mirror maps, cameras, character, enter/exit nodes, hotspot, interaction radius; stores the weather world (spec.weatherObject), loads the rain and hail sounds (client), creates a default reverb reference node 2 m above the vehicle, enables needWaterInfo, and registers the vehicle in VehicleSystem (interactive and enterable lists). Not fully re-read.
 ---@param savegame any
 function Enterable:onLoad(savegame) end
 
---- Post-chargement des caméras ; restaure depuis la sauvegarde l'indice de caméra active, isTabbable et isLeavingAllowed (sauf réinitialisation).
+--- Camera post-load; restores from the savegame the active camera index, isTabbable and isLeavingAllowed (unless reset).
 ---@param savegame any
 function Enterable:onPostLoad(savegame) end
 
---- Si le véhicule est déjà contrôlé (client qui rejoint), ajoute le hotspot de carte du joueur.
+--- If the vehicle is already controlled (joining client), adds the player's map hotspot.
 ---@param savegame any
 function Enterable:onLoadFinished(savegame) end
 
---- Déclare les valeurs de tableau de bord time, timeHours, timeMinutes (environment:getEnvironmentTime), operatingTime et outsideTemperature (weather:getCurrentTemperature).
+--- Declares the dashboard values time, timeHours, timeMinutes (environment:getEnvironmentTime), operatingTime and outsideTemperature (weather:getCurrentTemperature).
 function Enterable:onRegisterDashboardValueTypes() end
 
---- Fait quitter le joueur si le véhicule est contrôlé, libère personnage, caméras, hotspot, sons, oublie weatherObject et se retire des listes de VehicleSystem.
+--- Makes the player leave if the vehicle is controlled, frees character, cameras, hotspot, sounds, forgets weatherObject and removes itself from the VehicleSystem lists.
 function Enterable:onDelete() end
 
---- Client qui rejoint : lit isTabbable et, si le véhicule est contrôlé, l'identifiant du joueur pour le faire entrer (player:onEnterVehicle).
+--- Joining client: reads isTabbable and, if the vehicle is controlled, the player id to make it enter (player:onEnterVehicle).
 ---@param streamId integer
 ---@param connection Connection
 function Enterable:onReadStream(streamId, connection) end
 
---- Serveur : écrit isTabbable, l'état contrôlé et l'identifiant du joueur contrôleur.
+--- Server: writes isTabbable, the controlled state and the id of the controlling player.
 ---@param streamId integer
 ---@param connection Connection
 function Enterable:onWriteStream(streamId, connection) end
 
---- Sauvegarde chaque caméra, l'indice de caméra active, isTabbable et isLeavingAllowed.
+--- Saves each camera, the active camera index, isTabbable and isLeavingAllowed.
 ---@param xmlFile any
 ---@param key any
 ---@param usedModNames any
 function Enterable:saveToXMLFile(xmlFile, key, usedModNames) end
 
---- Écrit le nom du contrôleur dans les statistiques de partie si le véhicule est contrôlé.
+--- Writes the controller name into the game statistics if the vehicle is controlled.
 ---@param xmlFile any
 ---@param key any
 ---@return string
 function Enterable:saveStatsToXMLFile(xmlFile, key) end
 
---- Fait décompter, image par image, les états sales des modificateurs de cibles du personnage et les relance.
+--- Counts down, frame by frame, the dirty states of the character target modifiers and re-triggers them.
 ---@param dt number
 ---@param isActiveForInput boolean
 ---@param isActiveForInputIgnoreSelection boolean
 ---@param isSelected boolean
 function Enterable:onPreUpdate(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Par frame, seulement si le véhicule est contrôlé. Client : met à jour les modificateurs de cibles du personnage, bascule le personnage additionnel, démarre/arrête les sons de pluie (weather:getRainFallScale() > 0) et de grêle (weather:getIsHailing()) selon le changement d'état, renseigne la position et la direction du véhicule à activatableObjectsSystem si actif pour la saisie. Dans tous les cas, appelle rootVehicle:raiseActive().
+--- Per frame, only if the vehicle is controlled. Client: updates the character target modifiers, toggles the additional character, starts/stops the rain (weather:getRainFallScale() > 0) and hail (weather:getIsHailing()) sounds on state change, gives the vehicle position and direction to activatableObjectsSystem if active for input. In all cases, calls rootVehicle:raiseActive().
 ---@param dt number
 ---@param isActiveForInput boolean
 ---@param isActiveForInputIgnoreSelection boolean
 ---@param isSelected boolean
 function Enterable:onUpdate(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Client : met à jour la spine du personnage (selon l'accélération), la caméra active (dt, seulement si le véhicule est entré localement et après la première mise à jour), la visibilité du personnage, l'animation du personnage et rend visibles les miroirs si la caméra les utilise.
+--- Client: updates the character spine (depending on acceleration), the active camera (dt, only if the vehicle is entered locally and after the first update), the character visibility, the character animation and shows the mirrors if the camera uses them.
 ---@param dt number
 ---@param isActiveForInput boolean
 ---@param isActiveForInputIgnoreSelection boolean
 ---@param isSelected boolean
 function Enterable:onPostUpdate(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Affiche le pseudo du conducteur au-dessus du véhicule en multijoueur si l'interface est visible, le réglage SHOW_MULTIPLAYER_NAMES actif, et la caméra à moins de Enterable.NICKNAME_RENDER_DISTANCE (constante hors fichier : NON VÉRIFIÉ).
+--- Displays the driver's nickname above the vehicle in multiplayer if the UI is visible, the SHOW_MULTIPLAYER_NAMES setting is on, and the camera is within Enterable.NICKNAME_RENDER_DISTANCE (constant outside the file: UNVERIFIED).
 function Enterable:onDrawUIInfo() end
 
---- Charge toutes les caméras (VehicleCamera) du XML vehicle.enterable.cameras.camera(i) et mémorise leur nombre.
+--- Loads all the cameras (VehicleCamera) of the XML vehicle.enterable.cameras.camera(i) and stores their count.
 ---@param xmlFile any
 ---@param savegame any
 function Enterable:loadCamerasFromXML(xmlFile, savegame) end
 
---- Charge les cibles et le nœud d'un personnage additionnel (non relu en détail).
+--- Loads the targets and node of an additional character (not re-read in detail).
 ---@param xmlFile any
 function Enterable:loadAdditionalCharacterFromXML(xmlFile) end
 
---- Indique si le personnage additionnel est actif (non relu en détail).
+--- Tells whether the additional character is active (not re-read in detail).
 function Enterable:getIsAdditionalCharacterActive() end
 
---- Charge un modificateur de position de cibles IK du personnage (non relu en détail).
+--- Loads a position modifier for the character's IK targets (not re-read in detail).
 ---@param entry any
 ---@param xmlFile any
 ---@param xmlKey any
 function Enterable:loadCharacterTargetNodeModifier(entry, xmlFile, xmlKey) end
 
---- Met à jour un modificateur de cibles IK du personnage avec dt (non relu en détail).
+--- Updates an IK target modifier of the character with dt (not re-read in detail).
 ---@param dt any
 ---@param modifier any
 function Enterable:updateCharacterTargetNodeModifier(dt, modifier) end
 
---- Marque l'état d'un nœud cible du personnage comme à recalculer (non relu en détail).
+--- Marks the state of a character target node as needing recomputation (not re-read in detail).
 ---@param referenceNode any
 ---@param forceActive any
 function Enterable:setCharacterTargetNodeStateDirty(referenceNode, forceActive) end
 
---- Remet les états par défaut des nœuds cibles du personnage (non relu en détail).
+--- Resets the default states of the character target nodes (not re-read in detail).
 ---@param referenceNode any
 function Enterable:resetCharacterTargetNodeStateDefaults(referenceNode) end
 
---- Entrée d'un joueur (appelée sur toutes les machines) : marque le véhicule contrôlé/entré, mémorise farm et utilisateur, force la sélection, choisit la caméra (première caméra intérieure si suivi de tête, caméra 1 si RESET_CAMERA, sinon la dernière), appelle setActiveCameraIndex, informe VehicleSystem, hotspot de carte, personnage et animation d'entrée, lève onEnterVehicle et la notification d'état ENTER_VEHICLE, active les actions de saisie, enregistre le véhicule dans le système de trafic côté serveur si non contrôlé localement.
+--- A player enters (called on all machines): marks the vehicle controlled/entered, stores farm and user, forces selection, chooses the camera (first interior camera if head tracking, camera 1 if RESET_CAMERA, otherwise the last one), calls setActiveCameraIndex, informs VehicleSystem, map hotspot, character and enter animation, raises onEnterVehicle and the ENTER_VEHICLE state notification, enables the input actions, registers the vehicle in the traffic system server side if not controlled locally.
 ---@param isControlling boolean
 ---@param playerStyle integer
 ---@param farmId integer
 ---@param userId any
 function Enterable:onPlayerEnterVehicle(isControlling, playerStyle, farmId, userId) end
 
---- Vrai si le véhicule est entré par ce client.
+--- True if the vehicle is entered by this client.
 function Enterable:getCanLeave() end
 
---- Vrai si on peut quitter un véhicule (non monture).
+--- True if one can leave a vehicle (not a mount).
 function Enterable:getCanLeaveVehicle() end
 
---- Vrai si on peut quitter une monture (spécialisation rideable).
+--- True if one can leave a mount (rideable specialization).
 function Enterable:getCanLeaveRideable() end
 
---- Indique si la sortie est autorisée.
+--- Tells whether leaving is allowed.
 function Enterable:getIsLeavingAllowed() end
 
---- Autorise ou interdit la sortie du véhicule.
+--- Allows or forbids leaving the vehicle.
 ---@param isAllowed any
 function Enterable:setIsLeavingAllowed(isAllowed) end
 
---- Réagit au changement du réglage du nombre maximal de miroirs en recalculant les miroirs visibles (corps non relu).
+--- Reacts to a change of the maximum mirror count setting by recomputing the visible mirrors (body not re-read).
 function Enterable:onEnterableMirrorSettingChanged() end
 
---- Demande au joueur local de quitter le véhicule si la sortie est possible et autorisée.
+--- Asks the local player to leave the vehicle if leaving is possible and allowed.
 function Enterable:doLeaveVehicle() end
 
---- Sortie du joueur : désactive la caméra active, remet à faux les indicateurs « indoor » du son, de l'ambiance et du système de masque d'environnement, coupe les sons de pluie/grêle, retire le hotspot, remet l'état (contrôlé, entré) à zéro, joue l'animation de sortie à l'envers, cache les miroirs, lève onLeaveVehicle et la notification LEAVE_VEHICLE, désactive les actions de saisie et le trafic, désactive le véhicule si getDeactivateOnLeave.
+--- Player leaves: deactivates the active camera, resets to false the "indoor" flags of sound, ambience and the environment mask system, stops the rain/hail sounds, removes the hotspot, resets the state (controlled, entered), plays the leave animation in reverse, hides the mirrors, raises onLeaveVehicle and the LEAVE_VEHICLE notification, disables the input actions and the traffic, deactivates the vehicle if getDeactivateOnLeave.
 function Enterable:onPlayerLeaveVehicle() end
 
---- Surcharge : le hotspot de carte du véhicule n'est visible que s'il n'est pas contrôlé.
+--- Override: the vehicle's map hotspot is visible only if it is not controlled.
 ---@param superFunc any
 function Enterable:getIsMapHotspotVisible(superFunc) end
 
---- Change la caméra active (retour à 1 si hors limites) : désactive l'ancienne, active la nouvelle, règle les indicateurs indoor (son, ambiance, environmentMaskSystem) selon useOutdoorSounds, met à jour les miroirs, règle le nœud de référence de environmentAreaSystem sur la caméra, lève onCameraChanged. Ne fait rien si la caméra demandée est déjà active.
+--- Changes the active camera (back to 1 if out of range): deactivates the old one, activates the new one, sets the indoor flags (sound, ambience, environmentMaskSystem) according to useOutdoorSounds, updates the mirrors, sets the environmentAreaSystem reference node to the camera, raises onCameraChanged. Does nothing if the requested camera is already active.
 ---@param index integer
 function Enterable:setActiveCameraIndex(index) end
 
---- Ajoute à la liste des caméras celles d'un outil attelé.
+--- Adds to the camera list those of an attached tool.
 ---@param cameras table
 function Enterable:addToolCameras(cameras) end
 
---- Retire des caméras d'outil et, si l'une était active, revient à la caméra 1.
+--- Removes tool cameras and, if one was active, goes back to camera 1.
 ---@param cameras table
 function Enterable:removeToolCameras(cameras) end
 
---- Renvoie le nœud de sortie du véhicule (exitPoint).
+--- Returns the vehicle's exit node (exitPoint).
 ---@param player any
 function Enterable:getExitNode(player) end
 
---- Renvoie le style du joueur mémorisé à l'entrée.
+--- Returns the player style stored on entering.
 function Enterable:getUserPlayerStyle() end
 
---- Renvoie le style du personnage actuellement affiché, ou nil.
+--- Returns the style of the character currently displayed, or nil.
 function Enterable:getCurrentPlayerStyle() end
 
---- Supprime puis recharge le personnage du véhicule avec un style de joueur, éventuellement adapté par un préréglage personnalisé du véhicule.
+--- Deletes then reloads the vehicle character with a player style, possibly adapted by a custom vehicle preset.
 ---@param playerStyle any
 function Enterable:setVehicleCharacter(playerStyle) end
 
---- Rappel de fin de chargement du personnage (non relu en détail).
+--- Callback at the end of character loading (not re-read in detail).
 ---@param loadingState any
 ---@param arguments any
 function Enterable:vehicleCharacterLoaded(loadingState, arguments) end
 
---- Réagit à un changement de style de joueur (non relu en détail).
+--- Reacts to a player style change (not re-read in detail).
 ---@param style any
 ---@param userId any
 function Enterable:onPlayerStyleChanged(style, userId) end
 
---- Charge un personnage aléatoire (IA/assistants, non relu en détail).
+--- Loads a random character (AI/helpers, not re-read in detail).
 ---@param helper any
 function Enterable:setRandomVehicleCharacter(helper) end
 
---- Restaure le personnage du véhicule (non relu en détail).
+--- Restores the vehicle character (not re-read in detail).
 function Enterable:restoreVehicleCharacter() end
 
---- Supprime le personnage du véhicule (non relu en détail).
+--- Deletes the vehicle character (not re-read in detail).
 function Enterable:deleteVehicleCharacter() end
 
---- Renvoie la durée de fonctionnement en heures décimales (dizaines de minutes) pour le tableau de bord.
+--- Returns the operating time in decimal hours (tens of minutes) for the dashboard.
 function Enterable:getFormattedOperatingTime() end
 
---- Surcharge : un véhicule entré ou contrôlé est toujours actif.
+--- Override: an entered or controlled vehicle is always active.
 ---@param superFunc any
 function Enterable:getIsActive(superFunc) end
 
---- Surcharge : actif pour la saisie seulement si le parent l'accepte, que le joueur n'est pas figé, et que ce véhicule ou un autre de la chaîne attelée est entré.
+--- Override: active for input only if the parent accepts it, the player is not frozen, and this vehicle or another one in the attached chain is entered.
 ---@param superFunc any
 ---@param ignoreSelection any
 ---@param activeForAI any
 function Enterable:getIsActiveForInput(superFunc, ignoreSelection, activeForAI) end
 
---- Surcharge : si le véhicule n'est pas contrôlé et qu'un nœud est plus proche que le rayon d'interaction du point d'entrée, renvoie cette distance et positionne l'indicateur d'interaction « entrable ».
+--- Override: if the vehicle is not controlled and a node is closer than the interaction radius of the entry point, returns that distance and sets the "enterable" interaction indicator.
 ---@param superFunc integer
 ---@param node any
 ---@return number
 function Enterable:getDistanceToNode(superFunc, node) end
 
---- Surcharge : renvoie le texte d'entrée si l'interaction courante est « entrable ».
+--- Override: returns the enter text if the current interaction is "enterable".
 ---@param superFunc any
 ---@return string
 function Enterable:getInteractionHelp(superFunc) end
 
---- Surcharge : demande au joueur d'entrer dans le véhicule si l'interaction courante est « entrable ».
+--- Override: asks the player to enter the vehicle if the current interaction is "enterable".
 ---@param superFunc any
 ---@param player any
 function Enterable:interact(superFunc, player) end
 
---- Affiche ou masque les miroirs : en affichage, trie par priorité puis par angle par rapport à la caméra (seulement miroirs dans le champ de vision) et n'en montre que le nombre maximal défini par le réglage MAX_NUM_MIRRORS.
+--- Shows or hides the mirrors: when showing, sorts by priority then by angle relative to the camera (only mirrors in the field of view) and shows only the maximum number set by the MAX_NUM_MIRRORS setting.
 ---@param visible any
 function Enterable:setMirrorVisible(visible) end
 
---- Indique si le véhicule participe au changement par touche tabulation.
+--- Tells whether the vehicle takes part in switching with the tab key.
 function Enterable:getIsTabbable() end
 
---- Règle isTabbable (nil vaut faux).
+--- Sets isTabbable (nil counts as false).
 ---@param isTabbable any
 function Enterable:setIsTabbable(isTabbable) end
 
---- Vrai (client) si le véhicule a un point d'entrée et de sortie, n'est pas cassé ni contrôlé et si le joueur a accès (accessHandler).
+--- True (client) if the vehicle has an entry and exit point, is neither broken nor controlled and the player has access (accessHandler).
 function Enterable:getIsEnterable() end
 
---- Vrai si enterable et autorisé à être sélectionné depuis le menu.
+--- True if enterable and allowed to be selected from the menu.
 function Enterable:getIsEnterableFromMenu() end
 
---- Vrai si ce client est entré dans le véhicule.
+--- True if this client is in the vehicle.
 function Enterable:getIsEntered() end
 
---- Vrai si un joueur (quelconque) contrôle le véhicule.
+--- True if a player (any) controls the vehicle.
 function Enterable:getIsControlled() end
 
---- Vrai si entré et contrôlé.
+--- True if entered and controlled.
 function Enterable:getIsEnteredForInput() end
 
---- Pseudo du conducteur, par connexion côté serveur ou par identifiant côté client ; chaîne vide sinon.
+--- Driver's nickname, by connection server side or by id client side; empty string otherwise.
 function Enterable:getControllerName() end
 
---- Renvoie la caméra active du véhicule (VehicleCamera).
+--- Returns the active camera of the vehicle (VehicleCamera).
 function Enterable:getActiveCamera() end
 
---- Renvoie le personnage du véhicule.
+--- Returns the vehicle character.
 function Enterable:getVehicleCharacter() end
 
---- Renvoie vrai : autorise la mise à jour de visibilité du personnage (remplaçable).
+--- Returns true: allows the character visibility update (replaceable).
 function Enterable:getAllowCharacterVisibilityUpdate() end
 
---- Indique si le personnage doit être supprimé à la sortie.
+--- Tells whether the character must be deleted on leaving.
 function Enterable:getDisableVehicleCharacterOnLeave() end
 
---- Surcharge : vrai si entré, sinon valeur du parent.
+--- Override: true if entered, otherwise the parent value.
 ---@param superFunc any
 function Enterable:getCanToggleSelectable(superFunc) end
 
---- Surcharge : faux si non entré, sinon valeur du parent.
+--- Override: false if not entered, otherwise the parent value.
 ---@param superFunc any
 function Enterable:getCanToggleAttach(superFunc) end
 
---- Surcharge : renvoie la ferme du contrôleur si non nulle, sinon celle du parent.
+--- Override: returns the controller's farm if non-null, otherwise the parent's.
 ---@param superFunc any
 function Enterable:getActiveFarm(superFunc) end
 
---- Surcharge : lit en plus #isEntered sur un groupe de tableau de bord.
+--- Override: additionally reads #isEntered on a dashboard group.
 ---@param superFunc any
 ---@param xmlFile any
 ---@param key any
 ---@param group any
 function Enterable:loadDashboardGroupFromXML(superFunc, xmlFile, key, group) end
 
---- Surcharge : un groupe de tableau de bord avec #isEntered n'est actif que si l'état d'entrée correspond.
+--- Override: a dashboard group with #isEntered is active only if the entered state matches.
 ---@param superFunc any
 ---@param group any
 function Enterable:getIsDashboardGroupActive(superFunc, group) end
 
---- Surcharge : refuse le montage dynamique d'un objet tant que le véhicule est contrôlé.
+--- Override: refuses dynamic mounting of an object while the vehicle is controlled.
 ---@param superFunc any
 ---@param object any
 ---@param objectActorId any
@@ -309,38 +309,38 @@ function Enterable:getIsDashboardGroupActive(superFunc, group) end
 ---@param forceAcceleration any
 function Enterable:mountDynamic(superFunc, object, objectActorId, jointNode, mountType, forceAcceleration) end
 
---- Surcharge : en usage si contrôlé par une autre connexion que celle donnée.
+--- Override: in use if controlled by a connection other than the one given.
 ---@param superFunc any
 ---@param connection any
 function Enterable:getIsInUse(superFunc, connection) end
 
---- Surcharge : lit #updateCharacterTargetModifier sur une pièce dépendante.
+--- Override: reads #updateCharacterTargetModifier on a dependent part.
 ---@param superFunc any
 ---@param xmlFile any
 ---@param baseName any
 ---@param entry any
 function Enterable:loadExtraDependentParts(superFunc, xmlFile, baseName, entry) end
 
---- Surcharge : après le parent, marque l'état du personnage à recalculer pour la pièce si demandé.
+--- Override: after the parent, marks the character state for recomputation for the part if requested.
 ---@param superFunc any
 ---@param part any
 ---@param dt any
 function Enterable:updateExtraDependentParts(superFunc, part, dt) end
 
---- Prépare l'enregistrement des actions de saisie (non relu).
+--- Prepares the registration of input actions (not re-read).
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 function Enterable:onPreRegisterActionEvents(isActiveForInput, isActiveForInputIgnoreSelection) end
 
---- Enregistre les actions de sortie, de changement de caméra et de recentrage du suivi de tête (non relu en détail).
+--- Registers the leave, camera switch and head tracking recentering actions (not re-read in detail).
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 function Enterable:onRegisterActionEvents(isActiveForInput, isActiveForInputIgnoreSelection) end
 
---- Si le véhicule tombe en panne définitive pendant qu'il est entré, fait quitter le joueur local.
+--- If the vehicle breaks down permanently while entered, makes the local player leave.
 function Enterable:onSetBroken() end
 
---- Action de saisie : quitte le véhicule (doLeaveVehicle).
+--- Input action: leaves the vehicle (doLeaveVehicle).
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -348,7 +348,7 @@ function Enterable:onSetBroken() end
 ---@param isAnalog any
 function Enterable.actionEventLeave(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Action de saisie : passe à la caméra suivante (hors menu, véhicule entré) via setActiveCameraIndex.
+--- Input action: goes to the next camera (outside menus, vehicle entered) via setActiveCameraIndex.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -356,7 +356,7 @@ function Enterable.actionEventLeave(self, actionName, inputValue, callbackState,
 ---@param isAnalog any
 function Enterable.actionEventCameraSwitch(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Action de saisie : recentre le suivi de tête (centerHeadTracking).
+--- Input action: recenters head tracking (centerHeadTracking).
 ---@param self any
 ---@param actionName any
 ---@param inputValue any

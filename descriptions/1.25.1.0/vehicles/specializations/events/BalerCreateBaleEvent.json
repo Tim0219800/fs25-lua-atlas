@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/BalerCreateBaleEvent.lua",
+ "module": {
+  "en": "Network event class `BalerCreateBaleEvent` (extends `Event`) that tells clients that a baler created a bale. It carries the vehicle, the bale time (float32), the bale fill type, and optionally the network id of the bale object. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `BalerCreateBaleEvent` (hérite de `Event`) qui indique aux clients qu'une presse a créé une balle. Elle transporte le véhicule, le temps de la balle (float32), le type de matière et, en option, l'id réseau de l'objet balle. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "BalerCreateBaleEvent.emptyNew": {
+   "en": "Creates an empty `BalerCreateBaleEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `BalerCreateBaleEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "BalerCreateBaleEvent.new": {
+   "en": "Creates the event with its data: the vehicle, the bale time (float32), the bale fill type, and optionally the network id of the bale object.",
+   "fr": "Crée l'événement avec ses données : le véhicule, le temps de la balle (float32), le type de matière et, en option, l'id réseau de l'objet balle."
+  },
+  "BalerCreateBaleEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, the bale time (float32), the bale fill type, and optionally the network id of the bale object), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, le temps de la balle (float32), le type de matière et, en option, l'id réseau de l'objet balle), puis appelle `run`."
+  },
+  "BalerCreateBaleEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, the bale time (float32), the bale fill type, and optionally the network id of the bale object).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, le temps de la balle (float32), le type de matière et, en option, l'id réseau de l'objet balle)."
+  },
+  "BalerCreateBaleEvent:run": {
+   "en": "Executes the event on the receiving side: calls `createBale(fillType, nil, baleServerId)`, then sets the time of the last entry of `spec_baler.bales` (no rebroadcast in `run`).",
+   "fr": "Exécute l'événement côté réception : appelle `createBale(fillType, nil, baleServerId)`, puis règle le temps de la dernière entrée de `spec_baler.bales` (pas de retransmission dans `run`)."
+  }
+ }
+}

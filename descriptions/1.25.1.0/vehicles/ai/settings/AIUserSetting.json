@@ -1,0 +1,13 @@
+{
+ "fichier": "vehicles/ai/settings/AIUserSetting.lua",
+ "module": {
+  "en": "Base class for user-adjustable AI settings. It only holds a few default fields (unit text, default postfix, vineyard flag) that concrete settings classes are expected to extend.",
+  "fr": "Classe de base pour les réglages IA modifiables par l'utilisateur. Elle ne contient que quelques champs par défaut (texte d'unité, suffixe par défaut, indicateur de vigne) que les classes de réglages concrètes sont censées étendre."
+ },
+ "fonctions": {
+  "AIUserSetting.new": {
+   "en": "Constructor. Creates the object with unitText and defaultPostFix as nil and isVineyardSetting as false.",
+   "fr": "Constructeur. Crée l'objet avec unitText et defaultPostFix à nil et isVineyardSetting à false."
+  }
+ }
+}

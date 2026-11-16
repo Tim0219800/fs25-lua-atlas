@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/VehiclePlayerStyleChangedEvent.lua",
+  "module": {
+    "en": "Network event used to synchronize the player style (character look) displayed in a vehicle. The data is applied directly while reading, so `run` is empty. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau servant à synchroniser le style du joueur (apparence du personnage) affiché dans un véhicule. Les données sont appliquées directement à la lecture, donc `run` est vide. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "VehiclePlayerStyleChangedEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "VehiclePlayerStyleChangedEvent.new": {
+      "en": "Builds the event with the data to send (a node object followed by a serialized PlayerStyle); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud suivi d'un PlayerStyle sérialisé) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "VehiclePlayerStyleChangedEvent:readStream": {
+      "en": "Reads a node object followed by a serialized PlayerStyle from the stream and applies it directly when the object is synchronized; does not call `run`.",
+      "fr": "Lit un objet nœud suivi d'un PlayerStyle sérialisé depuis le flux et l'applique directement si l'objet est synchronisé ; n'appelle pas `run`."
+    },
+    "VehiclePlayerStyleChangedEvent:writeStream": {
+      "en": "Writes a node object followed by a serialized PlayerStyle to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud suivi d'un PlayerStyle sérialisé dans le flux (même ordre que `readStream`)."
+    },
+    "VehiclePlayerStyleChangedEvent:run": {
+      "en": "Applies the event on the receiving side: empty; the work is done in `readStream`.",
+      "fr": "Applique l'événement côté récepteur : vide ; le travail est fait dans `readStream`."
+    }
+  }
+}

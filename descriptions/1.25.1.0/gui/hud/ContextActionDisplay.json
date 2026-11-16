@@ -1,0 +1,33 @@
+{
+ "fichier": "gui/hud/ContextActionDisplay.lua",
+ "module": {
+  "en": "HUD display for the context action prompt (attach, fuel, tip, fill animal food) shown near the bottom centre with a key or gamepad glyph, an icon, an action title and a description. A context must be set again every frame; the highest priority wins and it stays visible for ContextActionDisplay.MIN_DISPLAY_DURATION after the last call. Derived from HUDDisplay; hidden while the in-game message is visible. updateControls is called but not defined here (UNVERIFIED, probably in HUDDisplay).",
+  "fr": "Affichage HUD de l'invite d'action contextuelle (atteler, carburant, déverser, nourriture animale), montré en bas au centre avec un glyphe de touche ou de manette, une icône, un titre d'action et une description. Le contexte doit être redéfini à chaque frame ; la plus haute priorité l'emporte et il reste visible pendant ContextActionDisplay.MIN_DISPLAY_DURATION après le dernier appel. Dérivé de HUDDisplay ; masqué tant que le message en jeu est visible. updateControls est appelée mais non définie ici (NON VÉRIFIÉ, probablement dans HUDDisplay)."
+ },
+ "fonctions": {
+  "ContextActionDisplay.new": {
+   "en": "Constructor. Maps the CONTEXT_ICON values (ATTACH, FUEL, TIP, FILL_BOWL) to GUI slice ids and creates the glyph/key button overlays and the tinted icon overlay. No context is set initially.",
+   "fr": "Constructeur. Associe les valeurs CONTEXT_ICON (ATTACH, FUEL, TIP, FILL_BOWL) à des identifiants de tranches GUI et crée les overlays de boutons glyphe/touche et l'overlay d'icône teinté. Aucun contexte n'est défini au départ."
+  },
+  "ContextActionDisplay:storeScaledValues": {
+   "en": "Computes the scaled position (bottom centre), icon size, text sizes, offsets, max text width, button height and minimum button widths.",
+   "fr": "Calcule la position à l'échelle (bas centre), la taille de l'icône, les tailles de texte, les décalages, la largeur max du texte, la hauteur des boutons et leurs largeurs minimales."
+  },
+  "ContextActionDisplay:update": {
+   "en": "Counts the display time down by dt (ms) while visible; at zero it hides the display and resets the context.",
+   "fr": "Décompte le temps d'affichage de dt (ms) tant qu'il est visible ; à zéro, il masque l'affichage et réinitialise le contexte."
+  },
+  "ContextActionDisplay:draw": {
+   "en": "Draws the prompt: key or gamepad buttons, the icon, a bold coloured title and the wrapped description, centred as a group. Skipped when the in-game message (g_currentMission.hud.ingameMessage) is visible or no controls are set.",
+   "fr": "Dessine l'invite : boutons clavier ou manette, icône, titre gras coloré et description à retour à la ligne, centrés en groupe. Ignoré si le message en jeu (g_currentMission.hud.ingameMessage) est visible ou si aucun contrôle n'est défini."
+  },
+  "ContextActionDisplay:setContext": {
+   "en": "Registers the context for this frame: action name, icon id, text, optional priority (default 0) and optional action title. Accepted if its priority is at least the current one and the icon is known (texts uppercased); otherwise only refreshes the timer if it is the same action. Must be called each frame.",
+   "fr": "Enregistre le contexte pour cette frame : nom d'action, icône, texte, priorité optionnelle (0 par défaut) et titre d'action optionnel. Accepté si sa priorité est au moins égale à l'actuelle et si l'icône est connue (textes en majuscules) ; sinon rafraîchit seulement le minuteur s'il s'agit de la même action. À appeler à chaque frame."
+  },
+  "ContextActionDisplay:resetContext": {
+   "en": "Clears the controls, text and priority so the next frame can set a new context.",
+   "fr": "Efface les contrôles, le texte et la priorité pour que la frame suivante puisse définir un nouveau contexte."
+  }
+ }
+}

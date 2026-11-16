@@ -1,0 +1,13 @@
+{
+ "fichier": "missions/field/SowMission.lua",
+ "module": {
+  "en": "Sowing contract, a subclass of AbstractFieldMission. In this file it only provides the partition completion query; everything else is inherited.",
+  "fr": "Contrat de semis, sous-classe de AbstractFieldMission. Ce fichier ne fournit que la requête d'avancement par partition ; le reste est hérité."
+ },
+ "fonctions": {
+  "SowMission:getPartitionCompletion": {
+   "en": "Sets the region of the given partition, then runs the completion modifier with its filter and returns summed pixels, area and total area. Returns 0, 0, 0 if no completion modifier exists.",
+   "fr": "Définit la région de la partition donnée puis exécute le modificateur d'achèvement avec son filtre et renvoie pixels cumulés, surface et surface totale. Renvoie 0, 0, 0 sans modificateur d'achèvement."
+  }
+ }
+}

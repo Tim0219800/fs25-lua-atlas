@@ -1,0 +1,133 @@
+{
+ "fichier": "handTools/specializations/HandToolChainsaw.lua",
+ "module": {
+  "en": "Hand tool specialization for the chainsaw. It requires HandToolMotorized. The owning player aims at a tree (split shape); a ring indicator shows whether a cut is valid, and holding the activate input cuts through the trunk over a time proportional to its section, then slices it (directly on the server, or via ChainsawCutEvent from a client). With no tree targeted it revs up and delimbs, removing split shape attachments on the server. State is synchronised in the update stream. Constants such as distances and thresholds are defined elsewhere (UNVERIFIED values).",
+  "fr": "Spécialisation d'outil à main pour la tronçonneuse. Elle exige HandToolMotorized. Le joueur propriétaire vise un arbre (split shape) ; un anneau indique si la coupe est valide, et maintenir l'entrée d'activation tranche le tronc pendant une durée proportionnelle à sa section, puis le découpe (directement sur le serveur, ou via ChainsawCutEvent depuis un client). Sans arbre visé, elle monte en régime et ébranche, ce qui retire les attachements du split shape sur le serveur. L'état est synchronisé dans le flux de mise à jour. Les constantes (distances, seuils) sont définies ailleurs (valeurs NON VÉRIFIÉES)."
+ },
+ "fonctions": {
+  "HandToolChainsaw.registerXMLPaths": {
+   "en": "Registers the `handTool.chainsaw` XML keys: work style preset, maximum cut and delimb diameter, cut time per square metre, ring selector i3d, cut and hand nodes, chain animation, effects and cut sounds.",
+   "fr": "Enregistre les clés XML `handTool.chainsaw` : préréglage de posture de travail, diamètres maximaux de coupe et d'ébranchage, durée de coupe par mètre carré, i3d de l'anneau, nœuds de coupe et de main, animation de chaîne, effets et sons de coupe."
+  },
+  "HandToolChainsaw.registerFunctions": {
+   "en": "Registers the cut plane, validity test, cutting, delimbing, state, animation, split plane and ring selector functions on the hand tool type.",
+   "fr": "Enregistre sur le type d'outil à main les fonctions de plan de coupe, de test de validité, de coupe, d'ébranchage, d'état, d'animation, de plan de séparation et d'anneau de sélection."
+  },
+  "HandToolChainsaw.registerEventListeners": {
+   "en": "Subscribes to load, post-load, delete, update, draw, update stream read/write, held start/end and action events registration.",
+   "fr": "Abonne la spécialisation au chargement, post-chargement, suppression, mise à jour, affichage, lecture/écriture du flux de mise à jour, début/fin de prise en main et enregistrement des actions."
+  },
+  "HandToolChainsaw.prerequisitesPresent": {
+   "en": "Returns true only if HandToolMotorized is among the specializations.",
+   "fr": "Renvoie true uniquement si HandToolMotorized fait partie des spécialisations."
+  },
+  "HandToolChainsaw:onLoad": {
+   "en": "Creates shared compression parameters on first use, reads limits, cut time (stored in ms), nodes and optional ring i3d (async load), creates guide, camera rotation and split plane nodes, and loads effects, chain animation, cut sounds and crosshair on clients. Sets `walkMultiplier` to 0.5.",
+   "fr": "Crée au premier appel les paramètres de compression partagés, lit les limites, la durée de coupe (stockée en ms), les nœuds et l'i3d de l'anneau éventuel (chargement asynchrone), crée les nœuds de guidage, de rotation de caméra et de plan de séparation, et charge effets, animation de chaîne, sons et réticule sur les clients. Fixe `walkMultiplier` à 0,5."
+  },
+  "HandToolChainsaw:onPostLoad": {
+   "en": "Sets the motor's RPM gain rate so that full RPM is reached over the startup time, and the loss rate to 1.2 times that.",
+   "fr": "Règle la vitesse de gain de régime du moteur pour atteindre le plein régime pendant le temps de démarrage, et la vitesse de perte à 1,2 fois celle-ci."
+  },
+  "HandToolChainsaw:onRingLoadFinished": {
+   "en": "Async load callback: finishes the loading task, takes the first child of the loaded i3d as the ring indicator, hides it and links it under the camera rotation node. Logs an error on failure.",
+   "fr": "Rappel de chargement asynchrone : termine la tâche de chargement, prend le premier enfant de l'i3d chargé comme anneau indicateur, le masque et le relie sous le nœud de rotation de caméra. Journalise une erreur en cas d'échec."
+  },
+  "HandToolChainsaw:onDelete": {
+   "en": "Releases the shared ring i3d, animations, effects, sounds, helper nodes and crosshair, and removes this target type from the carrying player's targeter.",
+   "fr": "Libère l'i3d partagé de l'anneau, les animations, effets, sons, nœuds auxiliaires et le réticule, et retire ce type de cible du ciblage du joueur porteur."
+  },
+  "HandToolChainsaw:onWriteUpdateStream": {
+   "en": "When the dirty flag is set, writes the cut state (and vertical flag when cutting). From a client to the server during delimbing it writes the compressed plane position, normal and up vectors; the server writes whether attachments were removed.",
+   "fr": "Quand l'indicateur de modification est actif, écrit l'état de coupe (et l'indicateur vertical en coupe). D'un client vers le serveur pendant l'ébranchage, écrit position, normale et vecteur haut du plan compressés ; le serveur écrit si des attachements ont été retirés."
+  },
+  "HandToolChainsaw:onReadUpdateStream": {
+   "en": "Reads the cut state and applies it unless the local player owns the tool. The server reads the delimb plane data; a client reads the removed-attachment flag and, for the owner, triggers the delimb effect timing.",
+   "fr": "Lit l'état de coupe et l'applique sauf si le joueur local est propriétaire de l'outil. Le serveur lit les données du plan d'ébranchage ; un client lit l'indicateur d'attachement retiré et, pour le propriétaire, déclenche la durée de l'effet d'ébranchage."
+  },
+  "HandToolChainsaw:onUpdate": {
+   "en": "Main loop. For the owner: updates target tree, split plane, roll and tool orientation, checks cut validity, updates action text and ring, and runs the cutting update. While delimbing, computes the plane; the server removes split shape attachments in it. Clients start or stop effects, sounds and chain animation.",
+   "fr": "Boucle principale. Pour le propriétaire : met à jour l'arbre visé, le plan de séparation, le roulis et l'orientation de l'outil, vérifie la validité de la coupe, met à jour le texte d'action et l'anneau, et exécute la coupe. En ébranchage, calcule le plan ; le serveur y retire les attachements du split shape. Les clients démarrent ou arrêtent effets, sons et animation de chaîne."
+  },
+  "HandToolChainsaw:onDraw": {
+   "en": "Draws the crosshair only while idle.",
+   "fr": "Affiche le réticule uniquement au repos."
+  },
+  "HandToolChainsaw:onHeldStart": {
+   "en": "For the owner, adds a tree target type with a filter for split-shape meshes; for others resets the graphical node. Applies the work style preset and the chainsaw flag to the carrying player.",
+   "fr": "Pour le propriétaire, ajoute un type de cible arbre avec un filtre sur les maillages split shape ; pour les autres, réinitialise le nœud graphique. Applique le préréglage de posture et l'indicateur de tronçonneuse au joueur porteur."
+  },
+  "HandToolChainsaw:onHeldEnd": {
+   "en": "Removes the target type, restores the player work style, stops any delimbing or cutting, stops chain animation, hides the ring and clears roll input.",
+   "fr": "Retire le type de cible, restaure la posture du joueur, arrête ébranchage ou coupe en cours, arrête l'animation de chaîne, masque l'anneau et remet à zéro l'entrée de roulis."
+  },
+  "HandToolChainsaw:onRegisterActionEvents": {
+   "en": "Registers AXIS_ROTATE_HANDTOOL (roll the cut plane) and ACTIVATE_HANDTOOL (cut or rev), with texts and priority. Skipped if the tool is not active for input.",
+   "fr": "Enregistre AXIS_ROTATE_HANDTOOL (roulis du plan de coupe) et ACTIVATE_HANDTOOL (couper ou accélérer), avec textes et priorité. Ignoré si l'outil n'est pas actif pour les entrées."
+  },
+  "HandToolChainsaw:onRollAction": {
+   "en": "Input callback: accumulates the roll input applied in the next update.",
+   "fr": "Rappel d'entrée : cumule l'entrée de roulis appliquée à la prochaine mise à jour."
+  },
+  "HandToolChainsaw:onCutAction": {
+   "en": "Input callback. On release it stops cutting or delimbing and returns to idle. On press it starts cutting if a tree is targeted, falling back to delimbing (revving) when the cut cannot start, or delimbing when no tree is targeted.",
+   "fr": "Rappel d'entrée. Au relâchement, arrête la coupe ou l'ébranchage et revient au repos. À l'appui, lance la coupe si un arbre est visé, avec repli sur l'ébranchage (montée en régime) si la coupe ne peut démarrer, ou ébranche si aucun arbre n'est visé."
+  },
+  "HandToolChainsaw:setCurrentCutState": {
+   "en": "Stores the cut state and vertical flag, flags a network update on the server or the owning player, and tells the carrying player whether a cut is in progress.",
+   "fr": "Mémorise l'état de coupe et l'indicateur vertical, signale une mise à jour réseau sur le serveur ou le joueur propriétaire, et indique au joueur porteur si une coupe est en cours."
+  },
+  "HandToolChainsaw:testIfCutAllowed": {
+   "en": "Returns true only if a player carries the tool, has the CUT_TREES farm permission and the split shape manager allows cutting that shape at the position.",
+   "fr": "Renvoie true uniquement si un joueur porte l'outil, possède la permission de ferme CUT_TREES et que le gestionnaire de split shapes autorise la coupe de cette forme à cette position."
+  },
+  "HandToolChainsaw:testIfCutValid": {
+   "en": "Returns true if the cut is not too low (`testIfTooLow`) and the plane bounds are below the maximum cut diameter on both axes.",
+   "fr": "Renvoie true si la coupe n'est pas trop basse (`testIfTooLow`) et si les bornes du plan restent sous le diamètre de coupe maximal sur les deux axes."
+  },
+  "HandToolChainsaw:testIfTooLow": {
+   "en": "Checks the four corners of the cut bounds. For a still rooted (static) tree each must be above a roots height threshold and a ground distance threshold; felled trees always pass. Returns false for missing tree or bounds; draws debug when enabled.",
+   "fr": "Vérifie les quatre coins des bornes de coupe. Pour un arbre encore enraciné (statique), chacun doit dépasser un seuil de hauteur des racines et un seuil de distance au sol ; un arbre abattu passe toujours. Renvoie false si l'arbre ou les bornes manquent ; dessine du debug si activé."
+  },
+  "HandToolChainsaw:getChainSpeedFactor": {
+   "en": "Returns a 0..1 factor from the current RPM, remapped between 0.3 and 1 of the RPM range.",
+   "fr": "Renvoie un facteur 0..1 dérivé du régime courant, remappé entre 0,3 et 1 de la plage de régime."
+  },
+  "HandToolChainsaw:beginDelimbing": {
+   "en": "Owner only: enters the DELIMBING state, resets load, targets max RPM and hides the action text.",
+   "fr": "Propriétaire seulement : passe à l'état DELIMBING, remet la charge à zéro, vise le régime max et masque le texte d'action."
+  },
+  "HandToolChainsaw:stopDelimbing": {
+   "en": "Returns to IDLE, ends the effect timer, resets load and sets target RPM to idle.",
+   "fr": "Revient à IDLE, termine la minuterie d'effet, remet la charge à zéro et fixe le régime cible au ralenti."
+  },
+  "HandToolChainsaw:beginCutting": {
+   "en": "Owner only. Checks a possible tree and permission (else shows a warning), enters CUTTING, computes the cut duration from the oval section area plus spin-up, sets start/end positions, links the tool to the cut guide and locks player input.",
+   "fr": "Propriétaire seulement. Vérifie un arbre possible et la permission (sinon avertissement), passe à CUTTING, calcule la durée de coupe depuis l'aire de section ovale plus la montée en régime, fixe les positions de début et de fin, relie l'outil au guide de coupe et verrouille les entrées du joueur."
+  },
+  "HandToolChainsaw:stopCutting": {
+   "en": "Owner only. Returns to IDLE, resets load and RPM, unlocks input and relinks the tool. If `sliceTree` is true, slices the shape: directly on the server, or by sending a ChainsawCutEvent from a client.",
+   "fr": "Propriétaire seulement. Revient à IDLE, remet charge et régime à zéro, déverrouille les entrées et relie de nouveau l'outil. Si `sliceTree` est true, tranche la forme : directement sur le serveur, ou en envoyant un ChainsawCutEvent depuis un client."
+  },
+  "HandToolChainsaw:updateCutting": {
+   "en": "Per-frame cutting step: animates the tool, targets max RPM, advances cut time, aborts if the player's look point is too far from the cut, and slices the tree when the target time is reached.",
+   "fr": "Étape de coupe par image : anime l'outil, vise le régime max, avance le temps de coupe, abandonne si le point visé par le joueur est trop loin de la coupe, et tranche l'arbre à l'atteinte de la durée cible."
+  },
+  "HandToolChainsaw:updateCuttingAnimation": {
+   "en": "Moves the cut guide node. During spin-up it approaches the cut start at zero load; afterwards it follows the cut line with a bezier-smoothed progress, derives the load from smoothed versus linear speed and keeps the effects alive.",
+   "fr": "Déplace le nœud de guidage de coupe. Pendant la montée en régime, il approche le début de coupe à charge nulle ; ensuite il suit la ligne de coupe avec une progression lissée par courbe de Bézier, déduit la charge de la vitesse lissée comparée à la linéaire et maintient les effets."
+  },
+  "HandToolChainsaw:updateSplitPlane": {
+   "en": "Orients the camera rotation node (camera-based while delimbing, yaw-only otherwise), applies the roll, then recomputes the cut bounds with `testSplitShape` for the current or targeted tree.",
+   "fr": "Oriente le nœud de rotation de caméra (selon la caméra en ébranchage, seulement le lacet sinon), applique le roulis, puis recalcule les bornes de coupe avec `testSplitShape` pour l'arbre en cours ou visé."
+  },
+  "HandToolChainsaw:updateRingSelector": {
+   "en": "Shows or hides the ring indicator, colours it valid or invalid, scales it to the trunk section and centres it on the cut bounds.",
+   "fr": "Affiche ou masque l'anneau indicateur, le colore selon la validité, l'adapte à la section du tronc et le centre sur les bornes de coupe."
+  },
+  "HandToolChainsaw:calculateCutPlane": {
+   "en": "Returns the split plane position, its down and left directions, and the plane width and depth (maximum cut diameter plus an offset constant).",
+   "fr": "Renvoie la position du plan de séparation, ses directions bas et gauche, ainsi que sa largeur et sa profondeur (diamètre de coupe maximal plus une constante de décalage)."
+  }
+ }
+}

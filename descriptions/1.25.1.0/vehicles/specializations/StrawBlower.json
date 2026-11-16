@@ -1,0 +1,69 @@
+{
+ "fichier": "vehicles/specializations/StrawBlower.lua",
+ "module": {
+  "en": "Specialization for straw blowers that shred a bale by treating it as a temporary fill level. It requires FillUnit and Trailer. A server-side trigger detects bales; the fill unit capacity is resized to the bale content and the bale is deleted once emptied. Client side it plays start/work/stop sounds and animation nodes depending on the discharge state.",
+  "fr": "Spécialisation des souffleuses à paille, qui dissipent une balle en la traitant comme un niveau de remplissage temporaire. Elle exige FillUnit et Trailer. Un trigger côté serveur détecte les balles ; la capacité de l'unité de remplissage est ajustée au contenu de la balle, puis la balle est supprimée une fois vidée. Côté client, elle joue les sons start/work/stop et les animations selon l'état de déchargement."
+ },
+ "fonctions": {
+  "StrawBlower.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type also has the FillUnit and Trailer specializations.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède aussi les spécialisations FillUnit et Trailer."
+  },
+  "StrawBlower.initSpecialization": {
+   "en": "Registers the XML schema paths: bale trigger node, fill unit index (default 1), animation nodes and the start, stop and work sound samples under vehicle.strawBlower.",
+   "fr": "Enregistre les chemins du schéma XML : node du trigger de balles, index de l'unité de remplissage (1 par défaut), animation nodes et échantillons sonores start, stop et work sous vehicle.strawBlower."
+  },
+  "StrawBlower.registerFunctions": {
+   "en": "Registers the vehicle functions strawBlowerBaleTriggerCallback and onDeleteStrawBlowerObject.",
+   "fr": "Enregistre les fonctions de véhicule strawBlowerBaleTriggerCallback et onDeleteStrawBlowerObject."
+  },
+  "StrawBlower.registerOverwrittenFunctions": {
+   "en": "Overrides getDrawFirstFillText, getAllowDynamicMountFillLevelInfo and addFillUnitFillLevel on the vehicle type.",
+   "fr": "Surcharge getDrawFirstFillText, getAllowDynamicMountFillLevelInfo et addFillUnitFillLevel sur le type de véhicule."
+  },
+  "StrawBlower.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdateTick, onFillUnitFillLevelChanged and onDischargeStateChanged.",
+   "fr": "S'abonne à onLoad, onDelete, onUpdateTick, onFillUnitFillLevelChanged et onDischargeStateChanged."
+  },
+  "StrawBlower:onLoad": {
+   "en": "Server: creates the bale trigger from XML. Client: loads animations and sounds. Marks the fill unit as fully synchronized and unsaved, resets its level on savegame load, and drops the update listener on clients.",
+   "fr": "Serveur : crée le trigger de balles depuis le XML. Client : charge animations et sons. Marque l'unité de remplissage comme synchronisée en valeur absolue et non sauvegardée, remet son niveau à zéro au chargement d'une sauvegarde et retire l'écouteur d'update sur les clients."
+  },
+  "StrawBlower:onDelete": {
+   "en": "Removes the trigger, releases every tracked bale (wakes its physics, allows pickup again, removes the delete listener), clears the table and deletes sounds and animations.",
+   "fr": "Retire le trigger, libère chaque balle suivie (réveille sa physique, autorise de nouveau le ramassage, retire l'écouteur de suppression), vide la table et supprime sons et animations."
+  },
+  "StrawBlower:onUpdateTick": {
+   "en": "Server only. If no bale is current and the fill unit accepts the BALE tool type, takes the first triggered bale, sets the capacity to its fill level and fills the unit with its content.",
+   "fr": "Serveur uniquement. Sans balle courante et si l'unité accepte le type d'outil BALE, prend la première balle dans le trigger, règle la capacité sur son niveau et remplit l'unité avec son contenu."
+  },
+  "StrawBlower:addFillUnitFillLevel": {
+   "en": "Override that grows the capacity of the straw fill unit when needed so the requested change fits, then calls the parent implementation.",
+   "fr": "Surcharge qui agrandit au besoin la capacité de l'unité de paille pour que la variation demandée tienne, puis appelle l'implémentation parente."
+  },
+  "StrawBlower:strawBlowerBaleTriggerCallback": {
+   "en": "Trigger callback. On enter, accepts a Bale the active farm can access, pickable and of a supported fill type: counts it and blocks pickup. On leave, decrements the count and, at zero, releases the bale and empties the fill unit if it was current.",
+   "fr": "Callback du trigger. À l'entrée, accepte une Bale accessible à la ferme active, ramassable et d'un type supporté : la compte et bloque son ramassage. À la sortie, décrémente le compteur et, à zéro, libère la balle et vide l'unité si elle était courante."
+  },
+  "StrawBlower:onDeleteStrawBlowerObject": {
+   "en": "Delete listener for a tracked bale: forgets it and, if it was the current bale, clears the current bale and empties the fill unit.",
+   "fr": "Écouteur de suppression d'une balle suivie : l'oublie et, s'il s'agissait de la balle courante, la réinitialise et vide l'unité de remplissage."
+  },
+  "StrawBlower:getDrawFirstFillText": {
+   "en": "Override: also returns true when the straw fill unit is empty, in addition to the parent result.",
+   "fr": "Surcharge : renvoie aussi true quand l'unité de paille est vide, en plus du résultat parent."
+  },
+  "StrawBlower:getAllowDynamicMountFillLevelInfo": {
+   "en": "Override that always returns false.",
+   "fr": "Surcharge qui renvoie toujours false."
+  },
+  "StrawBlower:onFillUnitFillLevelChanged": {
+   "en": "Server: when the unit reaches about zero, unmounts and deletes the current bale and resets capacity to 1; otherwise shrinks the bale fill level to follow the unit. Client: resets capacity to 1 when emptied.",
+   "fr": "Serveur : quand l'unité atteint environ zéro, démonte et supprime la balle courante et remet la capacité à 1 ; sinon réduit le niveau de la balle pour suivre l'unité. Client : remet la capacité à 1 une fois vide."
+  },
+  "StrawBlower:onDischargeStateChanged": {
+   "en": "Client only. When discharge starts it plays the start then work sounds and starts the animations; when it stops it stops them and plays the stop sound.",
+   "fr": "Client uniquement. Au début du déchargement, joue les sons start puis work et lance les animations ; à l'arrêt, les coupe et joue le son stop."
+  }
+ }
+}

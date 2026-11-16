@@ -1,0 +1,29 @@
+{
+ "fichier": "player/networking/PlayerServerNetworkComponent.lua",
+ "module": {
+  "en": "Server-side network component that receives each client's movement input, queues it in the physics system and sends authoritative state back, with the controlling client getting its acknowledged tick index. The tick bookkeeping is skipped for the player who owns the server process.",
+  "fr": "Composant réseau côté serveur qui reçoit les déplacements de chaque client, les met en file dans le système physique et renvoie l'état faisant autorité, le client contrôlant recevant son index de tick acquitté. Le suivi des ticks est ignoré pour le joueur qui héberge le processus serveur."
+ },
+ "fonctions": {
+  "PlayerServerNetworkComponent.new": {
+   "en": "Constructor. Creates the component and, for non-owner players, a tick history and next-send tick counter. Initialises the skip and first-person flags to false.",
+   "fr": "Constructeur. Crée le composant et, pour les joueurs non propriétaires, un historique de ticks et un compteur du prochain tick à envoyer. Initialise les indicateurs skip et première personne à false."
+  },
+  "PlayerServerNetworkComponent:update": {
+   "en": "Empty per-frame hook.",
+   "fr": "Point d'entrée vide appelé à chaque frame."
+  },
+  "PlayerServerNetworkComponent:updateTick": {
+   "en": "Per-tick step: for non-owners, removes history entries whose physics index is already simulated, records the latest one as the tick to send and raises the default dirty flag so clients get an update.",
+   "fr": "Étape par tick : pour les non-propriétaires, retire les entrées d'historique dont l'index physique est déjà simulé, mémorise la dernière comme tick à envoyer et lève le dirty flag par défaut pour que les clients reçoivent une mise à jour."
+  },
+  "PlayerServerNetworkComponent:writeUpdateStream": {
+   "en": "Writes the state to a client: the acknowledged tick (controlling client only), flags, and the position. Other clients also get yaw, grounded (from the capsule), first-person, crouch and graphics visibility.",
+   "fr": "Écrit l'état vers un client : le tick acquitté (client contrôlant seulement), les indicateurs et la position. Les autres clients reçoivent aussi le lacet, grounded (calculé par la capsule), la vue première personne, l'accroupissement et la visibilité graphique."
+  },
+  "PlayerServerNetworkComponent:readUpdateStream": {
+   "en": "Reads a client's tick, movement, yaw, first-person and crouch flags (ignored for the host's own player). Queues the move in the capsule controller, sets yaw and crouch, and records the physics index in the tick history.",
+   "fr": "Lit le tick, le mouvement, le lacet et les indicateurs première personne et accroupi d'un client (ignoré pour le joueur de l'hôte). Met le déplacement en file dans le contrôleur capsule, fixe lacet et accroupissement et enregistre l'index physique dans l'historique."
+  }
+ }
+}

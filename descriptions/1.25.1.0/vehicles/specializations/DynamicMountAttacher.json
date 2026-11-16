@@ -1,0 +1,173 @@
+{
+ "fichier": "vehicles/specializations/DynamicMountAttacher.lua",
+ "module": {
+  "en": "Vehicle specialization with no prerequisites that lets a vehicle automatically grab loose objects (bales, pallets, mountable vehicles such as cutter trailers) through a trigger and a physics joint, without a normal attacher joint. Objects stay pending until they have been motionless for a delay, then get mounted; optional lock positions snap known vehicles to fixed places. The server does the mounting and sends the mounted and pending object lists to clients through the update stream; it is configured under vehicle.dynamicMountAttacher in the XML.",
+  "fr": "Spécialisation de véhicule sans prérequis qui permet à un véhicule de saisir automatiquement des objets libres (balles, palettes, véhicules montables comme les remorques de coupe) via un trigger et un joint physique, sans point d'attelage classique. Les objets restent en attente jusqu'à ce qu'ils soient immobiles un certain temps, puis sont montés ; des positions de verrouillage optionnelles calent des véhicules connus à des emplacements fixes. Le serveur effectue le montage et envoie aux clients les listes d'objets montés et en attente via le flux de mise à jour ; configurée sous vehicle.dynamicMountAttacher dans le XML."
+ },
+ "fonctions": {
+  "DynamicMountAttacher.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is needed.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "DynamicMountAttacher.initSpecialization": {
+   "en": "Registers the XML schema keys under vehicle.dynamicMountAttacher (node, trigger, joint, mount types, forks, grab, lock positions, animation, folding) and the dynamicMountAttacher entries on Cylindered moving tools and parts.",
+   "fr": "Enregistre dans le schéma XML les clés sous vehicle.dynamicMountAttacher (nœud, trigger, joint, types de montage, fourches, pince, positions de verrouillage, animation, repliage) ainsi que les entrées dynamicMountAttacher des outils et pièces mobiles de Cylindered."
+  },
+  "DynamicMountAttacher.registerFunctions": {
+   "en": "Registers the vehicle-level functions of this specialization (lock position loading, mount/unmount, stream read/write, grab state, forced mount/unmount, trigger and overlap callbacks).",
+   "fr": "Enregistre les fonctions de niveau véhicule de cette spécialisation (chargement des positions de verrouillage, montage/démontage, lecture/écriture de flux, état de la pince, montage/démontage forcés, rappels de trigger et de chevauchement)."
+  },
+  "DynamicMountAttacher.registerOverwrittenFunctions": {
+   "en": "Overrides getFillLevelInformation, loadExtraDependentParts, updateExtraDependentParts, getIsAttachedTo, getAdditionalComponentMass, getIsFoldAllowed, loadMovingToolFromXML and getIsMovingToolActive. Note: getHasObjectMounted is defined in the file but not registered here.",
+   "fr": "Surcharge getFillLevelInformation, loadExtraDependentParts, updateExtraDependentParts, getIsAttachedTo, getAdditionalComponentMass, getIsFoldAllowed, loadMovingToolFromXML et getIsMovingToolActive. À noter : getHasObjectMounted est définie dans le fichier mais n'est pas enregistrée ici."
+  },
+  "DynamicMountAttacher.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onReadUpdateStream, onWriteUpdateStream, onUpdateTick and onPreAttachImplement.",
+   "fr": "S'abonne à onLoad, onDelete, onReadUpdateStream, onWriteUpdateStream, onUpdateTick et onPreAttachImplement."
+  },
+  "DynamicMountAttacher:onLoad": {
+   "en": "Reads the XML settings; on the server also loads fork nodes (checking their collision group), the mount trigger with its collision-mask checks, transfer-mass option and lock positions. Starts the optional animation and creates the dirty flag for the mounted-object lists.",
+   "fr": "Lit les réglages XML ; sur le serveur, charge aussi les nœuds de fourche (en contrôlant leur groupe de collision), le trigger de montage avec ses contrôles de masque de collision, l'option de transfert de masse et les positions de verrouillage. Démarre l'animation optionnelle et crée le drapeau de modification pour les listes d'objets montés."
+  },
+  "DynamicMountAttacher:onDelete": {
+   "en": "On the server, unmounts every mounted object; then removes the mount trigger and its node-to-object registration.",
+   "fr": "Sur le serveur, démonte tous les objets montés ; puis retire le trigger de montage et son enregistrement nœud-vers-objet."
+  },
+  "DynamicMountAttacher:onReadUpdateStream": {
+   "en": "Client side: when the dirty bit is set, reads the mounted objects and the pending objects, and updates the mount animation state according to whether anything is mounted.",
+   "fr": "Côté client : quand le bit de modification est présent, lit les objets montés et en attente, et met à jour l'état d'animation de montage selon qu'un objet est monté ou non."
+  },
+  "DynamicMountAttacher:onWriteUpdateStream": {
+   "en": "Server side: when the object-list dirty flag is set, writes the mounted objects and the pending objects to the stream.",
+   "fr": "Côté serveur : quand le drapeau de modification des listes d'objets est actif, écrit les objets montés et les objets en attente dans le flux."
+  },
+  "DynamicMountAttacher:onUpdateTick": {
+   "en": "Server only. When mounting is allowed, mounts pending objects once they have been still for the mount delay (via mountDynamic and a joint node), drops pending ones that cannot be mounted, and unmounts all objects when mounting becomes disallowed. Also switches joint limits when the grab opens or closes.",
+   "fr": "Serveur uniquement. Quand le montage est autorisé, monte les objets en attente une fois immobiles pendant le délai de montage (via mountDynamic et un nœud de joint), écarte ceux qui ne peuvent pas l'être, et démonte tous les objets si le montage devient interdit. Change aussi les limites du joint quand la pince s'ouvre ou se ferme."
+  },
+  "DynamicMountAttacher:lockDynamicMountedObject": {
+   "en": "Unmounts the object, moves it to the given world position and rotation (removing and re-adding it to physics) and mounts it again on the trigger joint. Returns false and removes the object from the mounted list if the mount fails.",
+   "fr": "Démonte l'objet, le déplace à la position et à la rotation monde données (en le retirant puis le rajoutant à la physique) et le remonte sur le joint du trigger. Renvoie false et retire l'objet de la liste des montés si le montage échoue."
+  },
+  "DynamicMountAttacher:addDynamicMountedObject": {
+   "en": "Registers an object as mounted: tries to snap it to a lock position (from the object's own positions or this vehicle's matching ones, with an optional overlap-box collision test), applies mass transfer, disables collisions between mounted objects if configured, starts the animation and flags a network update.",
+   "fr": "Enregistre un objet comme monté : tente de le caler sur une position de verrouillage (celles de l'objet ou celles correspondantes de ce véhicule, avec un test de collision par boîte de chevauchement optionnel), applique le transfert de masse, désactive les collisions entre objets montés si configuré, lance l'animation et signale une mise à jour réseau."
+  },
+  "DynamicMountAttacher:removeDynamicMountedObject": {
+   "en": "Removes an object from the mounted list (and from the pending list when it is being deleted), frees its lock position and its object changes, restores pair collisions, reverses the animation and flags a network update.",
+   "fr": "Retire un objet de la liste des montés (et de celle des en attente s'il est supprimé), libère sa position de verrouillage et ses changements d'objets, rétablit les collisions entre paires, inverse l'animation et signale une mise à jour réseau."
+  },
+  "DynamicMountAttacher:onUnmountObject": {
+   "en": "Callback used when an object gets unmounted from outside: removes it from the mounted list if it was there.",
+   "fr": "Rappel utilisé quand un objet est démonté de l'extérieur : le retire de la liste des montés s'il y figurait."
+  },
+  "DynamicMountAttacher:setDynamicMountAnimationState": {
+   "en": "Plays the configured animation forward (true) or backward (false) from its current time. The code does not guard against a missing animation name here (UNVERIFIED whether playAnimation tolerates nil).",
+   "fr": "Joue l'animation configurée vers l'avant (true) ou l'arrière (false) depuis son temps courant. Le code ne protège pas ici contre un nom d'animation absent (tolérance de playAnimation envers nil NON VÉRIFIÉE)."
+  },
+  "DynamicMountAttacher:loadDynamicLockPositionFromXML": {
+   "en": "Loads one lock position: xmlFilename (with $data replaced), joint node, optional configuration filters, optional width/length/height for collision checks and object changes. Returns false with a warning when filename or joint node is missing.",
+   "fr": "Charge une position de verrouillage : xmlFilename (avec $data remplacé), nœud de joint, filtres de configuration optionnels, largeur/longueur/hauteur optionnelles pour les tests de collision et changements d'objets. Renvoie false avec un avertissement si le nom de fichier ou le nœud de joint manque."
+  },
+  "DynamicMountAttacher:getIsDynamicLockPositionActive": {
+   "en": "Returns true when the given lock position is free (not currently holding an object).",
+   "fr": "Renvoie true quand la position de verrouillage donnée est libre (elle ne tient aucun objet)."
+  },
+  "DynamicMountAttacher:writeDynamicMountObjectsToStream": {
+   "en": "Writes the number of objects (capped by the configured bit count) then each object by network node id. Logs a warning if there are too many to send; raise numObjectBits in that case.",
+   "fr": "Écrit le nombre d'objets (plafonné par le nombre de bits configuré) puis chaque objet par identifiant réseau de nœud. Journalise un avertissement s'il y en a trop ; il faut alors augmenter numObjectBits."
+  },
+  "DynamicMountAttacher:readDynamicMountObjectsFromStream": {
+   "en": "Clears the given table, reads the count and the objects from the stream and refills the table. Returns the count read.",
+   "fr": "Vide la table donnée, lit le nombre et les objets depuis le flux et remplit à nouveau la table. Renvoie le nombre lu."
+  },
+  "DynamicMountAttacher:getAllowDynamicMountObjects": {
+   "en": "Returns true by default; other specializations override it to forbid mounting in some states.",
+   "fr": "Renvoie true par défaut ; d'autres spécialisations la surchargent pour interdire le montage dans certains états."
+  },
+  "DynamicMountAttacher:dynamicMountTriggerCallback": {
+   "en": "Trigger callback. For dynamic rigid bodies it counts overlaps: on enter, mountable objects (bales, tension-belt vehicles) become pending, ignoring the root and attacher vehicles; on leave, the object is dropped from pending and unmounted when its count reaches zero. With limitToKnownObjects, only vehicles matching a free lock position qualify.",
+   "fr": "Rappel de trigger. Pour les corps rigides dynamiques il compte les chevauchements : à l'entrée, les objets montables (balles, véhicules à sangles) passent en attente, en ignorant le véhicule racine et le véhicule d'attelage ; à la sortie, l'objet quitte l'attente et est démonté quand son compteur atteint zéro. Avec limitToKnownObjects, seuls les véhicules correspondant à une position libre sont retenus."
+  },
+  "DynamicMountAttacher:getAllowDynamicMountFillLevelInfo": {
+   "en": "Returns true by default: fill levels of mounted objects are included in this vehicle's fill level information.",
+   "fr": "Renvoie true par défaut : les niveaux de remplissage des objets montés sont inclus dans les informations de remplissage de ce véhicule."
+  },
+  "DynamicMountAttacher:loadDynamicMountGrabFromXML": {
+   "en": "Fills a grab entry from the XML: open and closed mount types (defaults fork and auto-attach XYZ, via DynamicMountUtil) and the current type, initialised to open. Always returns true.",
+   "fr": "Remplit une entrée de pince depuis le XML : types de montage ouvert et fermé (fourche et auto-attache XYZ par défaut, via DynamicMountUtil) et type courant, initialisé à ouvert. Renvoie toujours true."
+  },
+  "DynamicMountAttacher:getIsDynamicMountGrabOpened": {
+   "en": "Returns true by default (grab open); meant to be overridden by specializations that implement a real grab.",
+   "fr": "Renvoie true par défaut (pince ouverte) ; destinée à être surchargée par les spécialisations qui implémentent une vraie pince."
+  },
+  "DynamicMountAttacher:getDynamicMountTimeToMount": {
+   "en": "Returns the delay in milliseconds an object must stay motionless before being mounted (timeToMount, default 1000).",
+   "fr": "Renvoie le délai en millisecondes pendant lequel un objet doit rester immobile avant d'être monté (timeToMount, 1000 par défaut)."
+  },
+  "DynamicMountAttacher:getHasDynamicMountedObjects": {
+   "en": "Returns true if at least one object is currently mounted.",
+   "fr": "Renvoie true si au moins un objet est actuellement monté."
+  },
+  "DynamicMountAttacher:forceDynamicMountPendingObjects": {
+   "en": "If mounting is allowed, immediately mounts pending objects without waiting for the delay; with onlyBales set, only Bale objects are affected.",
+   "fr": "Si le montage est autorisé, monte immédiatement les objets en attente sans attendre le délai ; avec onlyBales, seuls les objets Bale sont concernés."
+  },
+  "DynamicMountAttacher:forceUnmountDynamicMountedObjects": {
+   "en": "Unmounts every mounted object and deletes its additional joint node.",
+   "fr": "Démonte tous les objets montés et supprime leur nœud de joint additionnel."
+  },
+  "DynamicMountAttacher:getDynamicMountAttacherSettingsByNode": {
+   "en": "Returns the mount type and force limit scale of the fork configured for a node, or fork type and 1 if no fork matches. Fork data exists on the server only.",
+   "fr": "Renvoie le type de montage et l'échelle de limite de force de la fourche configurée pour un nœud, ou le type fourche et 1 si aucune ne correspond. Les données de fourche n'existent que sur le serveur."
+  },
+  "DynamicMountAttacher:dynamicMountLockPositionOverlapCallback": {
+   "en": "Overlap-box callback: sets a collision flag when the hit node belongs to a known object or player other than this vehicle and the vehicle being mounted.",
+   "fr": "Rappel de la boîte de chevauchement : lève un indicateur de collision quand le nœud touché appartient à un objet ou joueur connu autre que ce véhicule et le véhicule en cours de montage."
+  },
+  "DynamicMountAttacher:getFillLevelInformation": {
+   "en": "Override: after the parent, adds the fill levels of mounted objects to the display, using their own getFillLevelInformation or else fill type, level and capacity. Skipped if getAllowDynamicMountFillLevelInfo returns false.",
+   "fr": "Surcharge : après le parent, ajoute à l'affichage les niveaux de remplissage des objets montés, via leur propre getFillLevelInformation ou sinon type, niveau et capacité. Ignorée si getAllowDynamicMountFillLevelInfo renvoie false."
+  },
+  "DynamicMountAttacher:getHasObjectMounted": {
+   "en": "Intended override: true if the parent says so or the object is mounted here, directly or through a mounted object. Note: it is not registered in registerOverwrittenFunctions, so it is likely not called through the override chain (UNVERIFIED).",
+   "fr": "Surcharge prévue : true si le parent le dit ou si l'objet est monté ici, directement ou via un objet monté. À noter : elle n'est pas enregistrée dans registerOverwrittenFunctions, elle n'est donc probablement pas appelée par la chaîne de surcharge (NON VÉRIFIÉ)."
+  },
+  "DynamicMountAttacher:loadExtraDependentParts": {
+   "en": "Override: after the parent loads, reads the dynamicMountAttacher#value flag of a dependent part, telling whether it must update the mount joints.",
+   "fr": "Surcharge : après le chargement du parent, lit l'indicateur dynamicMountAttacher#value d'une pièce dépendante, qui indique si elle doit mettre à jour les joints de montage."
+  },
+  "DynamicMountAttacher:updateExtraDependentParts": {
+   "en": "Override, server only: for parts flagged to update the attacher, resets the joint frame of every mounted object to its mount joint node.",
+   "fr": "Surcharge, serveur uniquement : pour les pièces marquées, remet le repère du joint de chaque objet monté sur son nœud de joint de montage."
+  },
+  "DynamicMountAttacher:getIsAttachedTo": {
+   "en": "Override: also returns true when the given vehicle is mounted or pending on this vehicle.",
+   "fr": "Surcharge : renvoie aussi true quand le véhicule donné est monté ou en attente sur ce véhicule."
+  },
+  "DynamicMountAttacher:getAdditionalComponentMass": {
+   "en": "Override: when transferMass is on, adds the default mass (minus 0.1) of mounted objects that allow mass reduction to the component holding the trigger.",
+   "fr": "Surcharge : quand transferMass est actif, ajoute la masse par défaut (moins 0,1) des objets montés qui acceptent la réduction de masse au composant portant le trigger."
+  },
+  "DynamicMountAttacher:getIsFoldAllowed": {
+   "en": "Override: refuses folding with a 'tool is full' warning if allowFoldingWhileMounted is false and something is mounted; otherwise defers to the parent.",
+   "fr": "Surcharge : refuse le repliage avec l'avertissement « outil plein » si allowFoldingWhileMounted vaut false et qu'un objet est monté ; sinon délègue au parent."
+  },
+  "DynamicMountAttacher:loadMovingToolFromXML": {
+   "en": "Override: after the parent, reads dynamicMountAttacher#allowedMounted (default true) for the moving tool.",
+   "fr": "Surcharge : après le parent, lit dynamicMountAttacher#allowedMounted (true par défaut) pour l'outil mobile."
+  },
+  "DynamicMountAttacher:getIsMovingToolActive": {
+   "en": "Override: a moving tool that is not allowed while mounted is inactive whenever an object is mounted; otherwise defers to the parent.",
+   "fr": "Surcharge : un outil mobile non autorisé pendant le montage est inactif dès qu'un objet est monté ; sinon délègue au parent."
+  },
+  "DynamicMountAttacher:onPreAttachImplement": {
+   "en": "Server only: when this vehicle is about to be attached to another that has this specialization, removes it from that vehicle's pending list and unmounts it if it was dynamically mounted there.",
+   "fr": "Serveur uniquement : quand ce véhicule va être attelé à un autre doté de cette spécialisation, le retire de la liste d'attente de ce dernier et le démonte s'il y était monté dynamiquement."
+  },
+  "DynamicMountAttacher:updateDebugValues": {
+   "en": "Debug helper: appends to the debug value list the remaining mount time, pending and mounted objects (with joint info and a debug point on the server), the allow-mount state and the grab state.",
+   "fr": "Aide au débogage : ajoute à la liste des valeurs de débogage le temps de montage restant, les objets en attente et montés (avec infos de joint et un point de debug sur le serveur), l'état d'autorisation de montage et l'état de la pince."
+  }
+ }
+}

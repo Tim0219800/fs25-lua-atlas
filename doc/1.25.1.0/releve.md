@@ -1,5 +1,7 @@
 # In-game scan — FS25 1.25.1.0
 
+*[Version française](fr/releve.md)*
+
 `# atlas_releve	version=1.25.1.0	debug=false`
 
 4308 globals found, 2651 of them missing from the SDK sources (1353 functions, probably engine).

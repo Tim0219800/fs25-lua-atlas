@@ -1,0 +1,41 @@
+{
+ "fichier": "ai/AIJobTypeManager.lua",
+ "module": {
+  "en": "Registry of AI job types. On map load it registers GOTO, FIELDWORK, CONVEYOR, DELIVER and LOAD_AND_DELIVER with a localised title and a job class, publishes the name-to-index table as the global AIJobType, and creates job instances from a type index. The job classes themselves are not in this file.",
+  "fr": "Registre des types de jobs IA. Au chargement de la map il enregistre GOTO, FIELDWORK, CONVEYOR, DELIVER et LOAD_AND_DELIVER avec un titre localisé et une classe de job, publie la table nom vers index comme global AIJobType et crée des instances de job à partir d'un index de type. Les classes de job elles-mêmes ne sont pas dans ce fichier."
+ },
+ "fonctions": {
+  "AIJobTypeManager.new": {
+   "en": "Constructor. Stores whether this instance runs on the server; the job type tables are filled later in loadMapData.",
+   "fr": "Constructeur. Mémorise si cette instance tourne sur le serveur ; les tables de types de jobs sont remplies plus tard dans loadMapData."
+  },
+  "AIJobTypeManager:loadMapData": {
+   "en": "Resets the job type tables, rebinds the global AIJobType to the name-to-index table and registers the five built-in job types. The XML and mission arguments are not used. Always returns nil despite its doc comment (no explicit return in the code).",
+   "fr": "Réinitialise les tables de types de jobs, relie le global AIJobType à la table nom vers index et enregistre les cinq types de jobs intégrés. Les arguments XML et mission ne sont pas utilisés. Retourne toujours nil malgré son commentaire (aucun return explicite dans le code)."
+  },
+  "AIJobTypeManager:delete": {
+   "en": "Clears all job type tables and resets the global AIJobType to the now empty name-to-index table.",
+   "fr": "Vide toutes les tables de types de jobs et réinitialise le global AIJobType sur la table nom vers index désormais vide."
+  },
+  "AIJobTypeManager:registerJobType": {
+   "en": "Registers a job type under an upper-cased valid name with a localised title and class, returning its record (name, title, classObject, index). Returns nil with a warning if the name is invalid or already used.",
+   "fr": "Enregistre un type de job sous un nom valide mis en majuscules avec un titre localisé et une classe, et retourne son enregistrement (name, title, classObject, index). Retourne nil avec un avertissement si le nom est invalide ou déjà utilisé."
+  },
+  "AIJobTypeManager:getJobTypeIndex": {
+   "en": "Returns the type index of a job instance, found from its class, or nil if the class is unknown or not registered.",
+   "fr": "Retourne l'index de type d'une instance de job, retrouvé à partir de sa classe, ou nil si la classe est inconnue ou non enregistrée."
+  },
+  "AIJobTypeManager:createJob": {
+   "en": "Creates a job of the given type index by calling the registered class's new with the server flag, and stores the type index on it. Returns nil for a nil or unknown index.",
+   "fr": "Crée un job du type donné en appelant le new de la classe enregistrée avec l'indicateur serveur, et lui attribue l'index de type. Retourne nil pour un index nil ou inconnu."
+  },
+  "AIJobTypeManager:getJobTypeByIndex": {
+   "en": "Returns the job type record for an index, or nil.",
+   "fr": "Retourne l'enregistrement de type de job pour un index, ou nil."
+  },
+  "AIJobTypeManager:getJobTypeIndexByName": {
+   "en": "Returns the job type index for a name (case-insensitive), or nil if the name is nil or unknown.",
+   "fr": "Retourne l'index de type de job pour un nom (insensible à la casse), ou nil si le nom est nil ou inconnu."
+  }
+ }
+}

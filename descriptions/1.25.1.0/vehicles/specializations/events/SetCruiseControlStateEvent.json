@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/SetCruiseControlStateEvent.lua",
+ "module": {
+  "en": "Network event class `SetCruiseControlStateEvent` (extends `Event`) that replicates the cruise control state. It carries the vehicle and a state (2 bits). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `SetCruiseControlStateEvent` (hérite de `Event`) qui réplique l'état du régulateur de vitesse. Elle transporte le véhicule et un état (2 bits). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "SetCruiseControlStateEvent.emptyNew": {
+   "en": "Creates an empty `SetCruiseControlStateEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `SetCruiseControlStateEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "SetCruiseControlStateEvent.new": {
+   "en": "Creates the event with its data: the vehicle and a state (2 bits).",
+   "fr": "Crée l'événement avec ses données : le véhicule et un état (2 bits)."
+  },
+  "SetCruiseControlStateEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle and a state (2 bits)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule et un état (2 bits)), puis appelle `run`."
+  },
+  "SetCruiseControlStateEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle and a state (2 bits)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule et un état (2 bits))."
+  },
+  "SetCruiseControlStateEvent:run": {
+   "en": "Executes the event on the receiving side: calls `setCruiseControlState(state, true)` on the vehicle (no rebroadcast in `run`).",
+   "fr": "Exécute l'événement côté réception : appelle `setCruiseControlState(state, true)` sur le véhicule (pas de retransmission dans `run`)."
+  }
+ }
+}

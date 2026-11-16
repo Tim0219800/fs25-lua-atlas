@@ -1,0 +1,13 @@
+{
+ "fichier": "AnimCurve.lua",
+ "module": {
+  "en": "Animation curve class holding keyframes and a current/max time. This dump contains only `reset`; the constructor and interpolation code are absent, so the rest is UNVERIFIED.",
+  "fr": "Classe de courbe d'animation contenant des keyframes et un temps courant/maximal. Ce dump ne contient que `reset` ; le constructeur et le code d'interpolation sont absents, le reste est donc NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "AnimCurve:reset": {
+   "en": "Clears all keyframes and sets the keyframe count, current time and max time back to 0. The interpolator is kept.",
+   "fr": "Supprime tous les keyframes et remet à 0 le nombre de keyframes, le temps courant et le temps maximal. L'interpolateur est conservé."
+  }
+ }
+}

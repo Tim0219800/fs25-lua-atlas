@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/HighPressureWasher.lua",
+ "module": {
+  "en": "Vehicle specialization for a high pressure washer station that provides animation nodes, effects and start, stop and work sounds on the client. It reacts to the events of HandToolHolders (hand tool stored in or taken from a holder), but this file defines no handler for them. The actual washing behaviour is not in this file (UNVERIFIED).",
+  "fr": "Spécialisation de véhicule pour un poste de nettoyeur haute pression qui fournit côté client des nœuds d'animation, des effets et des sons de démarrage, d'arrêt et de travail. Elle écoute les événements de HandToolHolders (outil à main rangé ou pris), mais ce fichier ne définit aucun gestionnaire pour eux. Le comportement réel de lavage n'est pas dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HighPressureWasher.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite on other specializations.",
+   "fr": "Renvoie toujours true : aucun prérequis envers d'autres spécialisations."
+  },
+  "HighPressureWasher.initSpecialization": {
+   "en": "Registers the XML paths under vehicle.highPressureWasher for animation nodes, effects and the start, stop and work sound samples.",
+   "fr": "Enregistre les chemins XML sous vehicle.highPressureWasher pour les nœuds d'animation, les effets et les échantillons sonores de démarrage, d'arrêt et de travail."
+  },
+  "HighPressureWasher.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onHandToolStoredInHolder and onHandToolTakenFromHolder. Note: the two hand tool handlers are not defined in this file (UNVERIFIED).",
+   "fr": "Abonne à onLoad, onDelete, onHandToolStoredInHolder et onHandToolTakenFromHolder. À noter : les deux gestionnaires d'outil à main ne sont pas définis dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "HighPressureWasher:onLoad": {
+   "en": "Client only: loads animation nodes, effects and the three sound samples from the XML. On a dedicated server it removes the onDelete and onUpdate listeners.",
+   "fr": "Client uniquement : charge les nœuds d'animation, les effets et les trois échantillons sonores depuis le XML. Sur un serveur dédié, retire les écouteurs onDelete et onUpdate."
+  },
+  "HighPressureWasher:onDelete": {
+   "en": "Client only: deletes the sound samples, animation nodes and effects created in onLoad.",
+   "fr": "Client uniquement : supprime les échantillons sonores, nœuds d'animation et effets créés dans onLoad."
+  }
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "fichier": "placement/PalletSpawner.lua",
+ "module": {
+  "en": "Helper owned by a production point, shop or similar placeable that spawns pallet vehicles on defined spawn places. It loads spawn places and pallet definitions from XML, maps fill types to pallet files, queues spawn requests and processes them one at a time via the PlacementManager and VehicleLoadingData. Spawning runs on the authority (server); result codes such as PALLET_LIMITED_REACHED and RESULT_SUCCESS are defined outside this file (UNVERIFIED).",
+  "fr": "Assistant détenu par un point de production, une boutique ou un placeable similaire, qui fait apparaître des véhicules palettes sur des emplacements définis. Il charge emplacements et palettes depuis le XML, associe les types de remplissage aux fichiers de palettes, met les demandes en file et les traite une à une via le PlacementManager et VehicleLoadingData. L'apparition se fait côté autorité (serveur) ; les codes de résultat comme PALLET_LIMITED_REACHED et RESULT_SUCCESS sont définis hors de ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PalletSpawner.new": {
+   "en": "Creates a spawner with an empty queue and the mod/base directory used to resolve pallet paths. Sets a vertical spawn offset of 0.2 when the platform has dynamic pallets, otherwise 0.",
+   "fr": "Crée un spawner avec une file vide et le répertoire de base servant à résoudre les chemins de palettes. Fixe un décalage vertical d'apparition de 0,2 si la plateforme a des palettes dynamiques, sinon 0."
+  },
+  "PalletSpawner:load": {
+   "en": "Reads `spawnPlaces.spawnPlace` entries (optionally restricted by `#fillTypes` or `#fillTypeCategories`, not both) and the pallets: first every fill type's default pallet file, then `pallets.pallet#filename` entries, which override. Returns false with an XML error if no spawn place exists.",
+   "fr": "Lit les entrées `spawnPlaces.spawnPlace` (éventuellement limitées par `#fillTypes` ou `#fillTypeCategories`, pas les deux) et les palettes : d'abord la palette par défaut de chaque type de remplissage, puis les entrées `pallets.pallet#filename`, qui la remplacent. Renvoie false avec une erreur XML s'il n'y a aucun emplacement."
+  },
+  "PalletSpawner:delete": {
+   "en": "Empty cleanup hook; nothing is released here.",
+   "fr": "Point de nettoyage vide ; rien n'est libéré ici."
+  },
+  "PalletSpawner:loadPalletFromFilename": {
+   "en": "Loads a pallet vehicle XML, reads its size, capacity and supported fill types, and registers it for those fill types (or only `limitFillTypeId`). Returns the pallet table, or nil if the file fails to load or no fill type matches.",
+   "fr": "Charge le XML d'un véhicule palette, lit sa taille, sa capacité et ses types de remplissage pris en charge, et l'enregistre pour ces types (ou seulement `limitFillTypeId`). Renvoie la table de la palette, ou nil si le fichier ne se charge pas ou si aucun type ne correspond."
+  },
+  "PalletSpawner:getSupportedFillTypes": {
+   "en": "Returns the table mapping fill type ids to their pallet definitions.",
+   "fr": "Renvoie la table associant les identifiants de types de remplissage à leur définition de palette."
+  },
+  "PalletSpawner:spawnPallet": {
+   "en": "Queues a pallet for the farm and fill type and registers the spawner as updateable. Calls the callback immediately with an error code if the pallet slot limit is reached or no pallet exists for the fill type.",
+   "fr": "Met en file une palette pour la ferme et le type de remplissage et enregistre le spawner comme updateable. Appelle aussitôt le callback avec un code d'erreur si la limite d'emplacements de palettes est atteinte ou si aucune palette n'existe pour ce type."
+  },
+  "PalletSpawner:getOrSpawnPallet": {
+   "en": "Looks for an existing non-full pallet of the fill type on the spawn places (physics overlap test) and reports it with PALLET_ALREADY_PRESENT; otherwise falls back to spawnPallet. Result goes through the callback.",
+   "fr": "Cherche sur les emplacements une palette existante non pleine du type de remplissage (test de chevauchement physique) et la signale avec PALLET_ALREADY_PRESENT ; sinon bascule sur spawnPallet. Le résultat passe par le callback."
+  },
+  "PalletSpawner:getAllPallets": {
+   "en": "Overlap-tests the spawn places for pallets currently holding the given fill type and passes them as a list, with the fill type id, to the callback synchronously.",
+   "fr": "Teste par chevauchement les emplacements pour trouver les palettes contenant actuellement le type de remplissage donné et les passe en liste, avec l'identifiant du type, au callback de façon synchrone."
+  },
+  "PalletSpawner:update": {
+   "en": "Per-frame step: when idle, takes the first queued request and asks the placement manager asynchronously for a free place. Removes the spawner from the updateables once the queue is empty.",
+   "fr": "Étape par image : au repos, prend la première demande en file et demande de façon asynchrone au gestionnaire de placement un emplacement libre. Retire le spawner des updateables quand la file est vide."
+  },
+  "PalletSpawner:onSpawnSearchFinished": {
+   "en": "Placement callback. If a place was found, clamps its Y to at least terrain height plus the offset and loads the pallet as an owned vehicle (spawnEmpty parameter). If not, reports RESULT_NO_SPACE and pops the request.",
+   "fr": "Callback de placement. Si un emplacement est trouvé, impose un Y au moins égal à la hauteur du terrain plus le décalage et charge la palette comme véhicule possédé (paramètre spawnEmpty). Sinon, signale RESULT_NO_SPACE et retire la demande."
+  },
+  "PalletSpawner:onFinishLoadingPallet": {
+   "en": "Vehicle-load callback: reports the first loaded vehicle with success, or an error code if the load state is not OK, then pops the current request so the next one can start.",
+   "fr": "Callback de chargement du véhicule : signale le premier véhicule chargé avec succès, ou un code d'erreur si l'état n'est pas OK, puis retire la demande en cours pour que la suivante démarre."
+  },
+  "PalletSpawner:onFindExistingPallet": {
+   "en": "Overlap callback: accepts a pallet vehicle that supports the wanted fill type and still has free capacity in unit 1, stores it and returns false to stop further reports.",
+   "fr": "Callback de chevauchement : retient une palette qui prend en charge le type voulu et a encore de la capacité libre dans l'unité 1, la stocke et renvoie false pour arrêter les notifications suivantes."
+  },
+  "PalletSpawner:onFindPallet": {
+   "en": "Overlap callback: collects pallet vehicles whose pallet fill unit currently holds the wanted fill type into a set keyed by the vehicle.",
+   "fr": "Callback de chevauchement : collecte dans un ensemble indexé par véhicule les palettes dont l'unité de remplissage contient actuellement le type voulu."
+  },
+  "PalletSpawner.registerXMLPaths": {
+   "en": "Registers `spawnPlaces.spawnPlace(?)#fillTypes` and `#fillTypeCategories`, the PlacementUtil place keys, and `pallets.pallet(?)#filename` under the base path.",
+   "fr": "Enregistre `spawnPlaces.spawnPlace(?)#fillTypes` et `#fillTypeCategories`, les clés de place de PlacementUtil, et `pallets.pallet(?)#filename` sous le chemin de base."
+  }
+ }
+}

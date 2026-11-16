@@ -1,0 +1,177 @@
+{
+ "fichier": "vehicles/specializations/YarderCarriage.lua",
+ "module": {
+  "en": "Specialization for the carriage of a forestry yarder (cable crane): a vehicle that runs on the cable, hooks one or more trees with ropes, lifts them and carries them. It has no prerequisites. The server creates physics joints between the carriage and each attached tree, handles lift/lower input and detaches trees that are cut, mounted elsewhere, deleted or stretched too far. Clients see ropes and hooks, play sounds and aim at trees with an asynchronous raycast. It cooperates with YarderTower through `setYarderTowerVehicle`; attachments are synchronized by TreeAttachEvent/TreeDetachEvent and saved through split-shape ids.",
+  "fr": "Spécialisation pour le chariot d'un téléphérique forestier (yarder) : un véhicule qui roule sur le câble, accroche un ou plusieurs arbres avec des cordes, les soulève et les transporte. Elle n'a aucun prérequis. Le serveur crée les joints physiques entre le chariot et chaque arbre, gère l'entrée de levage/descente et détache les arbres coupés, montés ailleurs, supprimés ou trop éloignés. Les clients voient cordes et crochets, jouent les sons et visent les arbres par un raycast asynchrone. Elle coopère avec YarderTower via `setYarderTowerVehicle` ; les attaches sont synchronisées par TreeAttachEvent/TreeDetachEvent et sauvegardées via les ids de split shape."
+ },
+ "fonctions": {
+  "YarderCarriage.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisite.",
+   "fr": "Retourne toujours true : cette spécialisation n'a aucun prérequis."
+  },
+  "YarderCarriage.initSpecialization": {
+   "en": "Registers the `vehicle.yarderCarriage` XML schema: tree count and mass limits, carriage dimensions, lift speed and acceleration, rope target nodes, attach joint, main and additional ropes, tree hook, object changes and sounds. Note: the schema default for `joint#maxDistance` is 10 but onLoad actually uses 20.",
+   "fr": "Enregistre le schéma XML `vehicle.yarderCarriage` : limites de nombre et de masse d'arbres, dimensions du chariot, vitesse et accélération de levage, noeuds cibles des cordes, joint d'attache, cordes principale et additionnelles, crochet d'arbre, object changes et sons. À noter : la valeur par défaut du schéma pour `joint#maxDistance` est 10 mais onLoad utilise réellement 20."
+  },
+  "YarderCarriage.registerFunctions": {
+   "en": "Adds the carriage API to the vehicle type: dimensions, rope target nodes, tree attach/detach, mass and count queries, lift input, raycast callback, savegame helpers and the tree cut/mounted handlers.",
+   "fr": "Ajoute l'API du chariot au type de véhicule : dimensions, noeuds cibles des cordes, attache/détache d'arbres, requêtes de masse et de nombre, entrée de levage, callback de raycast, aides de sauvegarde et gestionnaires de coupe/montage d'arbre."
+  },
+  "YarderCarriage.registerOverwrittenFunctions": {
+   "en": "Overrides getDirtMultiplier and getWearMultiplier.",
+   "fr": "Surcharge getDirtMultiplier et getWearMultiplier."
+  },
+  "YarderCarriage.registerEventListeners": {
+   "en": "Subscribes to load, load-finished, delete, network streams (join and update) and post-update.",
+   "fr": "S'abonne aux événements de chargement, fin de chargement, suppression, flux réseau (connexion et mise à jour) et post-update."
+  },
+  "YarderCarriage:onLoad": {
+   "en": "Loads all carriage settings from XML, builds the rope, hook and attach-marker objects, creates the sounds on clients, allocates the dirty flag and subscribes to the TREE_SHAPE_CUT and TREE_SHAPE_MOUNTED messages. Lift speed is converted to meters per millisecond. Also sets `isVehicleSaved` to false.",
+   "fr": "Charge tous les réglages du chariot depuis le XML, construit les objets corde, crochet et marqueur d'attache, crée les sons côté client, alloue le dirty flag et s'abonne aux messages TREE_SHAPE_CUT et TREE_SHAPE_MOUNTED. La vitesse de levage est convertie en mètres par milliseconde. Met aussi `isVehicleSaved` à false."
+  },
+  "YarderCarriage:onLoadFinished": {
+   "en": "Connects the main rope to its origin node and clones it as the short rope between the root hook and the tree, with the configured length.",
+   "fr": "Relie la corde principale à son noeud d'origine et la clone comme courte corde entre le crochet racine et l'arbre, avec la longueur configurée."
+  },
+  "YarderCarriage:onDelete": {
+   "en": "Clears the tower's reference to this carriage, detaches any attached trees, and deletes sounds, hook, marker and all ropes.",
+   "fr": "Efface la référence de la tour vers ce chariot, détache les arbres attachés, et supprime sons, crochet, marqueur et toutes les cordes."
+  },
+  "YarderCarriage:onReadStream": {
+   "en": "Client on join: reads the linked yarder tower vehicle and the attached trees (hook position and split-shape id). Trees whose shape cannot be resolved yet are queued in `splitShapesToAttach`.",
+   "fr": "Client à la connexion : lit le véhicule tour associé et les arbres attachés (position du crochet et id de split shape). Les arbres dont la shape n'est pas encore résolue sont mis en file dans `splitShapesToAttach`."
+  },
+  "YarderCarriage:onWriteStream": {
+   "en": "Server on join: writes the linked tower vehicle, the number of attached trees, and for each one the hook position in tree space and the split-shape id.",
+   "fr": "Serveur à la connexion : écrit le véhicule tour associé, le nombre d'arbres attachés et, pour chacun, la position du crochet dans le repère de l'arbre et l'id de split shape."
+  },
+  "YarderCarriage:onReadUpdateStream": {
+   "en": "Client only: reads three flags sent by the server (lift, lift limit reached, lower) and plays or stops the matching sound samples.",
+   "fr": "Client uniquement : lit trois indicateurs envoyés par le serveur (levage, limite de levage atteinte, descente) et joue ou arrête les sons correspondants."
+  },
+  "YarderCarriage:onWriteUpdateStream": {
+   "en": "Server only: when the dirty flag is set, writes the three sound flags (lift, lift limit, lower) and resets them.",
+   "fr": "Serveur uniquement : si le dirty flag est actif, écrit les trois indicateurs sonores (levage, limite, descente) puis les remet à zéro."
+  },
+  "YarderCarriage:onPostUpdate": {
+   "en": "Server: shrinks the joint translation limits right after attachment, and detaches the trees if one disappeared or the rope is stretched beyond its limit. Client: resolves queued split shapes. Both: updates ropes, aim marker and visibility, stops lift sounds after a short delay, and keeps the vehicle active while trees are attached or aimed at.",
+   "fr": "Serveur : réduit les limites de translation du joint juste après l'attache, et détache les arbres si l'un a disparu ou si la corde est trop tendue. Client : résout les split shapes en attente. Les deux : met à jour cordes, marqueur de visée et visibilité, arrête les sons de levage après un court délai, et garde le véhicule actif tant que des arbres sont attachés ou visés."
+  },
+  "YarderCarriage:getCarriageDimensions": {
+   "en": "Returns the carriage length and the roll spacing.",
+   "fr": "Retourne la longueur du chariot et l'espacement des galets."
+  },
+  "YarderCarriage:getCarriagePullRopeTargetNode": {
+   "en": "Returns the node where the pull rope connects.",
+   "fr": "Retourne le noeud où se connecte la corde de traction."
+  },
+  "YarderCarriage:getCarriagePushRopeTargetNode": {
+   "en": "Returns the node where the push rope connects.",
+   "fr": "Retourne le noeud où se connecte la corde de poussée."
+  },
+  "YarderCarriage:setYarderTowerVehicle": {
+   "en": "Stores the yarder tower vehicle this carriage belongs to.",
+   "fr": "Mémorise le véhicule tour auquel ce chariot appartient."
+  },
+  "YarderCarriage:updateRopeAlignmentNodes": {
+   "en": "Moves each rope alignment node sideways and vertically along a sine curve so that nodes follow the sag of a rope between a rope node and a target point; `maxOffset` is the sag amplitude.",
+   "fr": "Déplace chaque noeud d'alignement de corde latéralement et verticalement selon une courbe sinusoïdale pour suivre l'affaissement d'une corde entre un noeud de corde et un point cible ; `maxOffset` est l'amplitude de l'affaissement."
+  },
+  "YarderCarriage:updateCarriageInRange": {
+   "en": "Local player only: if the player is within range, has no hand tool and free tree slots, starts an asynchronous raycast from the camera against trees; otherwise clears the valid target tree.",
+   "fr": "Joueur local uniquement : si le joueur est à portée, sans outil à la main et qu'il reste des emplacements d'arbre, lance un raycast asynchrone depuis la caméra contre les arbres ; sinon efface l'arbre cible valide."
+  },
+  "YarderCarriage:onYarderCarriageUpdateEnd": {
+   "en": "Resets the raycast state (valid tree and started flag) and keeps the vehicle active; called by the tower when the player's range update ends.",
+   "fr": "Réinitialise l'état du raycast (arbre valide et indicateur de démarrage) et garde le véhicule actif ; appelée par la tour à la fin de la mise à jour de portée du joueur."
+  },
+  "YarderCarriage:updateTreeAttachRopes": {
+   "en": "Orients the main rope from its origin to the first tree hook, positions the root hook and sets the main rope length, then aligns hook nodes and target nodes of the additional ropes toward the other attached trees.",
+   "fr": "Oriente la corde principale de son origine vers le crochet du premier arbre, place le crochet racine et règle la longueur de la corde principale, puis aligne les noeuds de crochet et les cibles des cordes additionnelles vers les autres arbres attachés."
+  },
+  "YarderCarriage:onCarriageTreeRaycastCallback": {
+   "en": "Raycast callback: accepts a split tree within range (and within 2 m of the first hooked tree when one exists), computes the hook position and marker data, and stores it as the valid target tree. Resets the state if nothing valid is hit.",
+   "fr": "Callback de raycast : accepte un arbre fendu à portée (et à moins de 2 m du premier arbre accroché s'il y en a un), calcule la position du crochet et les données du marqueur, et le mémorise comme arbre cible valide. Réinitialise l'état si rien de valide n'est touché."
+  },
+  "YarderCarriage:onAttachTreeAction": {
+   "en": "Input handler for attaching the aimed tree. The server checks permission and attaches directly (showing a warning on failure); a client sends TreeAttachRequestEvent.",
+   "fr": "Gestionnaire d'entrée pour attacher l'arbre visé. Le serveur vérifie l'autorisation et attache directement (avec un avertissement en cas d'échec) ; un client envoie TreeAttachRequestEvent."
+  },
+  "YarderCarriage:attachTreeToCarriage": {
+   "en": "Mounts a hook on the tree at the given world position and registers the tree. The server creates the physics joint; both sides update ropes, play the attach sound, apply the active component-joint limits, notify the tower (`onYarderCarriageTreeAttached`), publish TREE_SHAPE_MOUNTED and send TreeAttachEvent unless `noEventSend`. Returns early if the hook cannot be mounted.",
+   "fr": "Monte un crochet sur l'arbre à la position monde donnée et enregistre l'arbre. Le serveur crée le joint physique ; les deux côtés mettent à jour les cordes, jouent le son d'attache, appliquent les limites actives du joint de composant, notifient la tour (`onYarderCarriageTreeAttached`), publient TREE_SHAPE_MOUNTED et envoient TreeAttachEvent sauf si `noEventSend`. Retourne tôt si le crochet ne peut pas être monté."
+  },
+  "YarderCarriage:createJoint": {
+   "en": "Builds a spring-limited physics joint between the carriage component and the tree shape using the carriage joint node and the hook. Returns the joint index and the initial distance used as translation limit.",
+   "fr": "Construit un joint physique à ressort entre le composant du chariot et la shape de l'arbre, à partir du noeud de joint du chariot et du crochet. Retourne l'indice du joint et la distance initiale utilisée comme limite de translation."
+  },
+  "YarderCarriage:onDetachTreeAction": {
+   "en": "Input handler that detaches all trees from the carriage.",
+   "fr": "Gestionnaire d'entrée qui détache tous les arbres du chariot."
+  },
+  "YarderCarriage:detachTreeFromCarriage": {
+   "en": "Detaches every attached tree (the `ropeIndex` argument is not used): plays the detach sound, removes joints on the server, deletes hooks, hides additional ropes, restores inactive component-joint limits and sends TreeDetachEvent unless `noEventSend`.",
+   "fr": "Détache tous les arbres attachés (l'argument `ropeIndex` n'est pas utilisé) : joue le son de détache, supprime les joints côté serveur, supprime les crochets, masque les cordes additionnelles, restaure les limites inactives du joint de composant et envoie TreeDetachEvent sauf si `noEventSend`."
+  },
+  "YarderCarriage:getNumAttachedTrees": {
+   "en": "Returns how many trees are currently attached.",
+   "fr": "Retourne le nombre d'arbres actuellement attachés."
+  },
+  "YarderCarriage:getMaxNumAttachedTrees": {
+   "en": "Returns the maximum number of trees allowed (`maxNumTrees`).",
+   "fr": "Retourne le nombre maximal d'arbres autorisés (`maxNumTrees`)."
+  },
+  "YarderCarriage:getAttachedTreeMass": {
+   "en": "Returns the summed mass of all attached trees, using the engine `getMass` (unit UNVERIFIED, presumably tonnes).",
+   "fr": "Retourne la masse cumulée de tous les arbres attachés, via `getMass` du moteur (unité NON VÉRIFIÉE, probablement des tonnes)."
+  },
+  "YarderCarriage:getIsCarriageTreeAttachAllowed": {
+   "en": "Checks whether a tree may be attached: it must exist, a slot must be free, total mass must stay under `maxTreeMass` and the tree must not be mounted on a tension belt. Returns a boolean and a failure reason (default or too heavy).",
+   "fr": "Vérifie si un arbre peut être attaché : il doit exister, un emplacement doit être libre, la masse totale doit rester sous `maxTreeMass` et l'arbre ne doit pas être monté sur une sangle. Retourne un booléen et une raison d'échec (par défaut ou trop lourd)."
+  },
+  "YarderCarriage:getIsTreeInMountRange": {
+   "en": "Returns true if a valid aimed tree exists and still exists in the world and a tree slot is free.",
+   "fr": "Retourne true s'il existe un arbre visé valide qui existe toujours dans le monde et si un emplacement d'arbre est libre."
+  },
+  "YarderCarriage:showCarriageTreeMountFailedWarning": {
+   "en": "Shows a blinking warning with the mass limit when the failure reason is that the tree is too heavy; other reasons show nothing. `ropeIndex` is unused.",
+   "fr": "Affiche un avertissement clignotant avec la limite de masse quand la raison est un arbre trop lourd ; les autres raisons n'affichent rien. `ropeIndex` n'est pas utilisé."
+  },
+  "YarderCarriage:setCarriageLiftInput": {
+   "en": "Server only: applies lift or lower input in a direction, with acceleration, by moving each tree's vertical translation limit within min and max distances. Triggers lift/lower sounds and raises the dirty flag so clients play them.",
+   "fr": "Serveur uniquement : applique l'entrée de levage ou de descente dans une direction, avec accélération, en déplaçant la limite de translation verticale de chaque arbre entre des distances minimale et maximale. Déclenche les sons de levage/descente et lève le dirty flag pour que les clients les jouent."
+  },
+  "YarderCarriage.registerSavegameXMLPaths": {
+   "en": "Registers the savegame attributes of each attached tree: hook translation and three split-shape id parts. Note: the translation attribute is described with unrelated text in the schema.",
+   "fr": "Enregistre les attributs de sauvegarde de chaque arbre attaché : translation du crochet et trois parties d'id de split shape. À noter : l'attribut de translation reçoit une description sans rapport dans le schéma."
+  },
+  "YarderCarriage:saveAttachedTreesToXML": {
+   "en": "Writes each attached tree's hook world position and saveable split-shape id parts under the given key.",
+   "fr": "Écrit pour chaque arbre attaché la position monde du crochet et les parties d'id de split shape sauvegardables sous la clé donnée."
+  },
+  "YarderCarriage.loadAttachedTreesFromXML": {
+   "en": "Static helper: reads the saved attached-tree entries (translation and split-shape parts) and returns them as a list; entries lacking data are skipped.",
+   "fr": "Aide statique : lit les entrées d'arbres attachés sauvegardées (translation et parties de split shape) et les retourne sous forme de liste ; les entrées incomplètes sont ignorées."
+  },
+  "YarderCarriage:resolveLoadedAttachedTrees": {
+   "en": "Resolves loaded data into real tree shapes; if all can be resolved, attaches each without sending events and returns true, otherwise returns false and attaches nothing.",
+   "fr": "Résout les données chargées en shapes d'arbres réelles ; si toutes sont résolues, attache chacune sans envoyer d'événement et retourne true, sinon retourne false sans rien attacher."
+  },
+  "YarderCarriage:onYarderCarriageTreeShapeCut": {
+   "en": "Message handler (server only): if a cut tree shape was attached, detaches all trees from the carriage.",
+   "fr": "Gestionnaire de message (serveur uniquement) : si une shape d'arbre coupée était attachée, détache tous les arbres du chariot."
+  },
+  "YarderCarriage:onYarderCarriageTreeShapeMounted": {
+   "en": "Message handler (server only): if an attached tree is mounted by another vehicle, detaches all trees from this carriage.",
+   "fr": "Gestionnaire de message (serveur uniquement) : si un arbre attaché est monté par un autre véhicule, détache tous les arbres de ce chariot."
+  },
+  "YarderCarriage:getDirtMultiplier": {
+   "en": "Returns the tower vehicle's dirt multiplier when a tower is linked, otherwise the parent value.",
+   "fr": "Retourne le multiplicateur de salissure du véhicule tour s'il est lié, sinon la valeur parente."
+  },
+  "YarderCarriage:getWearMultiplier": {
+   "en": "Returns the linked tower's value, otherwise the parent value. Note: it calls the tower's getDirtMultiplier, not getWearMultiplier, which looks like a copy-paste bug.",
+   "fr": "Retourne la valeur de la tour liée, sinon la valeur parente. À noter : elle appelle getDirtMultiplier de la tour et non getWearMultiplier, ce qui ressemble à une erreur de copier-coller."
+  }
+ }
+}

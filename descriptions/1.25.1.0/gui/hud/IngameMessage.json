@@ -1,0 +1,21 @@
+{
+ "fichier": "gui/hud/IngameMessage.lua",
+ "module": {
+  "en": "HUD message dialog (extends HUDDisplay) shown at the bottom center, with a title, text, a list of control rows and a skip (OK) button. The constructor sets up a pending-message queue, button overlays and input-mode tracking. Only construction, scaled layout and drawing are in this file; queue handling, updateControls and drawControl are not defined here (UNVERIFIED where they live). Client-side only.",
+  "fr": "Boîte de message HUD (étend HUDDisplay) affichée en bas au centre, avec titre, texte, lignes de commandes et un bouton de saut (OK). Le constructeur prépare une file de messages en attente, des overlays de boutons et le suivi du mode de saisie. Ce fichier ne contient que la construction, la mise en page à l'échelle et le dessin ; la gestion de la file, updateControls et drawControl n'y sont pas définis (NON VÉRIFIÉ pour leur emplacement). Côté client uniquement."
+ },
+ "fonctions": {
+  "IngameMessage.new": {
+   "en": "Creates the message display with empty queue, glyph and keyboard button overlays, the localized button_ok text as skip label, no skip control, not paused, and a next-message timer of -1.",
+   "fr": "Crée l'affichage de message avec une file vide, des overlays de boutons manette et clavier, le texte localisé button_ok comme libellé de saut, aucun contrôle de saut, hors pause, et un minuteur de message suivant à -1."
+  },
+  "IngameMessage:storeScaledValues": {
+   "en": "Converts the reference-pixel layout (640 wide box, text and title sizes, offsets, control row height, minimum button widths) to screen units, positions the box at the bottom center and calls updateControls.",
+   "fr": "Convertit la mise en page en pixels de référence (boîte de 640 de large, tailles de texte et de titre, décalages, hauteur des lignes de commandes, largeurs minimales de boutons) en unités écran, place la boîte en bas au centre et appelle updateControls."
+  },
+  "IngameMessage:draw": {
+   "en": "Draws the current message: rounded dark panel sized from title, text and control count, wrapped title and text, a separator line, each control with its text truncated with an ellipsis, and the skip label with its button. Skipped when hidden, when a GUI is visible, or without a message.",
+   "fr": "Dessine le message courant : panneau sombre arrondi dimensionné d'après titre, texte et nombre de commandes, titre et texte renvoyés à la ligne, ligne de séparation, chaque commande avec son texte tronqué par des points de suspension, et le libellé de saut avec son bouton. Ignoré si masqué, si une interface est visible ou sans message."
+  }
+ }
+}

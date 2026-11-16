@@ -1,0 +1,8 @@
+{"fichier": "placeables/PlaceablePreplacedInfoEvent.lua",
+ "module": {"en": "Network event used when a client joins, to transfer information about preplaced placeables. It holds no data itself and delegates entirely to the placeable system's stream functions.", "fr": "Événement réseau utilisé lorsqu'un client rejoint la partie, pour transférer les informations sur les placeables préplacés. Il ne contient aucune donnée et délègue entièrement aux fonctions de flux du système de placeables."},
+ "fonctions": {
+  "PlaceablePreplacedInfoEvent.emptyNew": {"en": "Creates an empty event instance for the network layer.", "fr": "Crée une instance d'événement vide pour la couche réseau."},
+  "PlaceablePreplacedInfoEvent.new": {"en": "Creates the event; it takes no arguments and stores nothing.", "fr": "Crée l'événement ; il ne prend aucun argument et ne stocke rien."},
+  "PlaceablePreplacedInfoEvent:readStream": {"en": "Forwards the stream to `g_currentMission.placeableSystem:readStreamPreplacedInfo`, which reads the preplaced placeable info.", "fr": "Transmet le flux à `g_currentMission.placeableSystem:readStreamPreplacedInfo`, qui lit les informations des placeables préplacés."},
+  "PlaceablePreplacedInfoEvent:writeStream": {"en": "Forwards the stream to `g_currentMission.placeableSystem:writeStreamPreplacedInfo`, which writes the preplaced placeable info.", "fr": "Transmet le flux à `g_currentMission.placeableSystem:writeStreamPreplacedInfo`, qui écrit les informations des placeables préplacés."}
+ }}

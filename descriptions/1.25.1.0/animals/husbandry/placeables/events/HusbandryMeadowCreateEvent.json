@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/husbandry/placeables/events/HusbandryMeadowCreateEvent.lua",
+ "module": {
+  "en": "Network event telling that a husbandry meadow is created or not, chosen by a boolean. A client sends it to the server, which rebroadcasts it to the other clients and applies it locally.",
+  "fr": "Événement réseau indiquant si la prairie d'un élevage est créée ou non, selon un booléen. Un client l'envoie au serveur, qui le rediffuse aux autres clients et l'applique localement."
+ },
+ "fonctions": {
+  "HusbandryMeadowCreateEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "HusbandryMeadowCreateEvent.new": {
+   "en": "Creates the event for a placeable and a boolean saying whether the meadow should be created.",
+   "fr": "Crée l'événement pour un placeable et un booléen indiquant si la prairie doit être créée."
+  },
+  "HusbandryMeadowCreateEvent:readStream": {
+   "en": "Reads the placeable (node object) and the create bool from the stream, then runs the event.",
+   "fr": "Lit le placeable (objet-noeud) et le booléen de création dans le flux, puis exécute l'événement."
+  },
+  "HusbandryMeadowCreateEvent:writeStream": {
+   "en": "Writes the placeable as a node object and the create bool to the stream.",
+   "fr": "Écrit le placeable comme objet-noeud et le booléen de création dans le flux."
+  },
+  "HusbandryMeadowCreateEvent:run": {
+   "en": "If received by the server, rebroadcasts it to other clients. When the placeable is synchronized, calls `createMeadow(createMeadow, true)` on it.",
+   "fr": "Si le serveur le reçoit, le rediffuse aux autres clients. Quand le placeable est synchronisé, appelle `createMeadow(createMeadow, true)` dessus."
+  }
+ }
+}

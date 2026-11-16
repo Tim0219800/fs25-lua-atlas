@@ -1,0 +1,85 @@
+{
+ "fichier": "objects/ForestryLog.lua",
+ "module": {
+  "en": "A felled tree log as an item the player can handle. It extends MountableObject, loads a random child of an i3d file (log variant) asynchronously, registers itself in the item system and as an AI obstacle while free, and is saved and loaded from the savegame XML with uniqueId, filename, position, rotation and farmId. Mounting hides it from the item system and AI.",
+  "fr": "Un tronc d'arbre abattu sous forme d'objet manipulable. Il étend MountableObject, charge de façon asynchrone un enfant aléatoire d'un fichier i3d (variante de tronc), s'enregistre dans le système d'objets et comme obstacle IA tant qu'il est libre, et se sauvegarde dans le XML de la partie (uniqueId, filename, position, rotation, farmId). Quand il est monté, il sort du système d'objets et des obstacles IA."
+ },
+ "fonctions": {
+  "ForestryLog.new": {
+   "en": "Constructor. Calls the MountableObject constructor, registers the class name ForestryLog and sets uniqueId to nil. Returns the instance.",
+   "fr": "Constructeur. Appelle celui de MountableObject, enregistre le nom de classe ForestryLog et met uniqueId à nil. Retourne l'instance."
+  },
+  "ForestryLog:delete": {
+   "en": "Releases the shared i3d request, removes the AI obstacle, unregisters the class name, removes the log from the item system and calls the parent delete.",
+   "fr": "Libère la requête i3d partagée, retire l'obstacle IA, désenregistre le nom de classe, retire le tronc du système d'objets et appelle le delete du parent."
+  },
+  "ForestryLog:readStream": {
+   "en": "On join, reads the i3d filename and loads the log if it has no node yet. The connection is not checked and no parent readStream is called.",
+   "fr": "À la connexion, lit le nom du fichier i3d et charge le tronc s'il n'a pas encore de nœud. La connexion n'est pas vérifiée et le readStream du parent n'est pas appelé."
+  },
+  "ForestryLog:writeStream": {
+   "en": "Writes the i3d filename in network form. No parent writeStream is called.",
+   "fr": "Écrit le nom du fichier i3d au format réseau. Le writeStream du parent n'est pas appelé."
+  },
+  "ForestryLog:loadFromFilename": {
+   "en": "Starts an asynchronous load of the i3d file (after checking the file exists) and keeps position, rotation and an optional callback for onForestryLogLoaded. Returns false if the name is nil or the file is missing, true once loading started.",
+   "fr": "Lance le chargement asynchrone du fichier i3d (après avoir vérifié qu'il existe) et conserve position, rotation et un callback optionnel pour onForestryLogLoaded. Retourne false si le nom est nil ou le fichier absent, true une fois le chargement lancé."
+  },
+  "ForestryLog:onForestryLogLoaded": {
+   "en": "Async load callback. On success it clones a random child of the loaded file, links it to the root, applies the given pose if complete, sets it as node, registers the item and AI obstacle and deletes the loaded root. Then calls the optional callback with a success flag.",
+   "fr": "Callback du chargement asynchrone. En cas de succès, clone un enfant aléatoire du fichier chargé, le rattache à la racine, applique la pose donnée si elle est complète, le définit comme nœud, enregistre l'objet et l'obstacle IA et supprime la racine chargée. Appelle ensuite le callback optionnel avec un indicateur de succès."
+  },
+  "ForestryLog:loadAsyncFromXMLFile": {
+   "en": "Reads position, rotation, uniqueId and filename from the savegame XML and starts the async load. Calls the callback with false if the pose is missing or loading cannot start.",
+   "fr": "Lit position, rotation, uniqueId et filename dans le XML de la partie et lance le chargement asynchrone. Appelle le callback avec false si la pose manque ou si le chargement ne peut pas démarrer."
+  },
+  "ForestryLog:saveToXMLFile": {
+   "en": "Writes uniqueId, HTML-encoded network filename, position, rotation and owner farmId of the log to the savegame XML under the given key.",
+   "fr": "Écrit dans le XML de la partie, sous la clé donnée, uniqueId, nom de fichier réseau encodé en HTML, position, rotation et farmId propriétaire du tronc."
+  },
+  "ForestryLog:mount": {
+   "en": "Calls the parent mount, then removes the log from the item system and disables its AI obstacle.",
+   "fr": "Appelle le mount du parent, puis retire le tronc du système d'objets et désactive son obstacle IA."
+  },
+  "ForestryLog:unmount": {
+   "en": "Calls the parent unmount. If it succeeds, puts the log back in the item system and re-enables the AI obstacle. Returns true on success, otherwise false.",
+   "fr": "Appelle l'unmount du parent. En cas de succès, remet le tronc dans le système d'objets et réactive l'obstacle IA. Retourne true en cas de succès, sinon false."
+  },
+  "ForestryLog:mountKinematic": {
+   "en": "Calls the parent mountKinematic, then removes the log from the item system and disables the AI obstacle.",
+   "fr": "Appelle le mountKinematic du parent, puis retire le tronc du système d'objets et désactive l'obstacle IA."
+  },
+  "ForestryLog:unmountKinematic": {
+   "en": "Calls the parent unmountKinematic. On success restores the item system entry and the AI obstacle and returns true, otherwise false.",
+   "fr": "Appelle l'unmountKinematic du parent. En cas de succès, restaure l'entrée dans le système d'objets et l'obstacle IA et retourne true, sinon false."
+  },
+  "ForestryLog:mountDynamic": {
+   "en": "Calls the parent mountDynamic and disables the AI obstacle. Unlike the other mount variants it does not touch the item system.",
+   "fr": "Appelle le mountDynamic du parent et désactive l'obstacle IA. Contrairement aux autres variantes de montage, il ne touche pas au système d'objets."
+  },
+  "ForestryLog:unmountDynamic": {
+   "en": "Calls the parent unmountDynamic, then re-enables the AI obstacle.",
+   "fr": "Appelle l'unmountDynamic du parent, puis réactive l'obstacle IA."
+  },
+  "ForestryLog:setForestryLogAIObstacle": {
+   "en": "Adds the log node as an obstacle to aiSystem when enabling (if none yet) or removes it when disabling. Keeps the obstacle node in obstacleNodeId.",
+   "fr": "Ajoute le nœud du tronc comme obstacle à aiSystem à l'activation (s'il n'y en a pas) ou le retire à la désactivation. Garde le nœud d'obstacle dans obstacleNodeId."
+  },
+  "ForestryLog:getMeshNodes": {
+   "en": "Returns the tensionBeltMeshes table, which is set empty when loading.",
+   "fr": "Retourne la table tensionBeltMeshes, initialisée vide au chargement."
+  },
+  "ForestryLog:getSupportsTensionBelts": {
+   "en": "Returns true: logs can be strapped with tension belts.",
+   "fr": "Retourne true : les troncs peuvent être sanglés avec des sangles de tension."
+  },
+  "ForestryLog:getAllowPickup": {
+   "en": "Returns false: logs cannot be picked up by hand.",
+   "fr": "Retourne false : les troncs ne peuvent pas être ramassés à la main."
+  },
+  "ForestryLog:getDefaultRigidBodyType": {
+   "en": "Returns RigidBodyType.KINEMATIC as the default body type of a free log.",
+   "fr": "Retourne RigidBodyType.KINEMATIC comme type de corps rigide par défaut d'un tronc libre."
+  }
+ }
+}

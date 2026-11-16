@@ -1,0 +1,61 @@
+{
+ "fichier": "vehicles/specializations/Honk.lua",
+ "module": {
+  "en": "Vehicle specialization that adds a horn to drivable vehicles (requires Drivable). It loads one sound from vehicle.honk, binds the HONK input action while the vehicle is active for input, and plays or stops the sound while the key is held. Honk state changes are broadcast through HonkEvent so other clients hear it.",
+  "fr": "Spécialisation de véhicule qui ajoute un klaxon aux véhicules conduisibles (nécessite Drivable). Elle charge un son depuis vehicle.honk, lie l'action d'entrée HONK tant que le véhicule est actif pour les entrées, et joue ou arrête le son tant que la touche est maintenue. Les changements d'état du klaxon sont diffusés via HonkEvent pour que les autres clients l'entendent."
+ },
+ "fonctions": {
+  "Honk.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the Drivable specialization.",
+   "fr": "Renvoie true seulement si le type de véhicule possède la spécialisation Drivable."
+  },
+  "Honk.initSpecialization": {
+   "en": "Registers the sound sample XML paths under vehicle.honk (key \"sound\").",
+   "fr": "Enregistre les chemins XML d'échantillon sonore sous vehicle.honk (clé « sound »)."
+  },
+  "Honk.registerFunctions": {
+   "en": "Registers getIsHonkAvailable, setHonkInput and playHonk on the vehicle type.",
+   "fr": "Enregistre getIsHonkAvailable, setHonkInput et playHonk sur le type de véhicule."
+  },
+  "Honk.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdate, onLeaveVehicle and onRegisterActionEvents.",
+   "fr": "Abonne à onLoad, onDelete, onUpdate, onLeaveVehicle et onRegisterActionEvents."
+  },
+  "Honk:onLoad": {
+   "en": "Resets the input and playing flags and, on clients, loads the horn sample. On a dedicated server removes the onUpdate listener.",
+   "fr": "Réinitialise les indicateurs d'entrée et de lecture et, côté client, charge l'échantillon du klaxon. Sur un serveur dédié, retire l'écouteur onUpdate."
+  },
+  "Honk:onDelete": {
+   "en": "Deletes the horn sound sample.",
+   "fr": "Supprime l'échantillon sonore du klaxon."
+  },
+  "Honk:onUpdate": {
+   "en": "Client only, for the controlled vehicle: starts the horn while the input is pressed and the sample is not already playing, stops it once released, and clears the pressed flag each frame.",
+   "fr": "Client uniquement, pour le véhicule contrôlé : démarre le klaxon tant que l'entrée est pressée et que l'échantillon ne joue pas déjà, l'arrête au relâchement et efface l'indicateur d'appui à chaque frame."
+  },
+  "Honk:onLeaveVehicle": {
+   "en": "Stops the horn when the player leaves the vehicle, without sending a network event.",
+   "fr": "Arrête le klaxon quand le joueur quitte le véhicule, sans envoyer d'événement réseau."
+  },
+  "Honk:getIsHonkAvailable": {
+   "en": "Returns true by default; can be overridden by other specializations to disable the horn.",
+   "fr": "Renvoie true par défaut ; peut être surchargée par d'autres spécialisations pour désactiver le klaxon."
+  },
+  "Honk:setHonkInput": {
+   "en": "Marks the horn input as pressed for the current frame.",
+   "fr": "Marque l'entrée du klaxon comme pressée pour la frame courante."
+  },
+  "Honk:playHonk": {
+   "en": "Sends HonkEvent, stores the playing state, then plays the sample on clients if the vehicle is active, or stops it. Pass noEventSend to avoid re-broadcasting.",
+   "fr": "Envoie HonkEvent, mémorise l'état de lecture, puis joue l'échantillon côté client si le véhicule est actif, ou l'arrête. Passer noEventSend évite de rediffuser."
+  },
+  "Honk:onRegisterActionEvents": {
+   "en": "Client only: rebuilds the action events and, when the vehicle is active for input and has a horn sample, binds InputAction.HONK with a low-priority help text.",
+   "fr": "Client uniquement : reconstruit les événements d'action et, si le véhicule est actif pour les entrées et possède un échantillon de klaxon, lie InputAction.HONK avec un texte d'aide de faible priorité."
+  },
+  "Honk.actionEventHonk": {
+   "en": "Input callback for the HONK action: calls setHonkInput on the vehicle.",
+   "fr": "Callback d'entrée de l'action HONK : appelle setHonkInput sur le véhicule."
+  }
+ }
+}

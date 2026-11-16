@@ -1,0 +1,81 @@
+{
+ "fichier": "gui/hud/ControlBarDisplay.lua",
+ "module": {
+  "en": "HUD control bar with touch/gamepad buttons, derived from HUDDisplayElement. It declares tables of vehicle controls (attach, turn on, AI, leave, unload fork, leave horse), player controls (enter vehicle/horse, ride) and a custom activatable-object control, each naming the vehicle or player methods it calls (availableFunc, actionFunc, ...). It also shows up to two fill-level buttons with progress bars and slides between touch and controller positions on platforms with touch sliders. updateButtons, updateButtonPositions, updateControls-style helpers and the constants (UV, COLOR, POSITION, SIZE) are not defined in this file (UNVERIFIED).",
+  "fr": "Barre de contrôle HUD avec boutons tactiles/manette, dérivée de HUDDisplayElement. Elle déclare des tables de contrôles de véhicule (atteler, mise en marche, IA, quitter, décharger la fourche, quitter le cheval), de joueur (monter dans un véhicule/cheval, chevaucher) et un contrôle d'objet activable, chacun nommant les méthodes du véhicule ou du joueur appelées (availableFunc, actionFunc, ...). Elle affiche aussi jusqu'à deux boutons de niveau de remplissage avec barres de progression et glisse entre positions tactile et manette sur les plateformes à curseurs tactiles. updateButtons, updateButtonPositions et les constantes (UV, COLOR, POSITION, SIZE) ne sont pas définies dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "ControlBarDisplay.new": {
+   "en": "Constructor taking the HUD, the HUD atlas path and the control atlas path. Builds an empty background frame, initialises state and fills the vehicleControls, playerControls and customControls tables (with priority, input action, icon UVs and colours), then calls createComponents.",
+   "fr": "Constructeur prenant le HUD, le chemin de l'atlas HUD et celui de l'atlas des contrôles. Crée un cadre de fond vide, initialise l'état et remplit les tables vehicleControls, playerControls et customControls (priorité, action d'entrée, UV d'icône et couleurs), puis appelle createComponents."
+  },
+  "ControlBarDisplay:createComponents": {
+   "en": "Creates a HUDButtonElement per control with its icon and input action. Button callbacks ignore input while the sleep manager is sleeping; vehicle buttons check allowedFunc (showing a 2.5 s blinking warning if refused) before calling actionFunc on the vehicle, player buttons call it on the player. Also creates two fill-level controls and stores touch and gamepad positions.",
+   "fr": "Crée un HUDButtonElement par contrôle avec son icône et son action d'entrée. Les callbacks ignorent les entrées pendant que le gestionnaire de sommeil dort ; les boutons de véhicule vérifient allowedFunc (avec un avertissement clignotant de 2,5 s si refusé) avant d'appeler actionFunc sur le véhicule, ceux du joueur l'appellent sur le joueur. Crée aussi deux contrôles de niveau de remplissage et mémorise les positions tactile et manette."
+  },
+  "ControlBarDisplay:setVehicle": {
+   "en": "Sets the controlled vehicle, then refreshes the position state, fill-level buffers and buttons. If a toggle-seeds button exists, its glyph is made visible only when the attached sowing machine has more than one seed type.",
+   "fr": "Définit le véhicule contrôlé, puis rafraîchit l'état de position, les tampons de niveaux de remplissage et les boutons. Si un bouton de changement de semences existe, son glyphe n'est visible que si le semoir attelé propose plus d'un type de semence."
+  },
+  "ControlBarDisplay:setPlayer": {
+   "en": "Stores the current player reference and updates the position state.",
+   "fr": "Mémorise la référence du joueur courant et met à jour l'état de position."
+  },
+  "ControlBarDisplay:update": {
+   "en": "Per-frame update: calls the parent update, then updateButtons and updateButtonPositions (both defined elsewhere, UNVERIFIED).",
+   "fr": "Mise à jour par frame : appelle l'update du parent, puis updateButtons et updateButtonPositions (définies ailleurs, NON VÉRIFIÉ)."
+  },
+  "ControlBarDisplay:onInputHelpModeChange": {
+   "en": "Records the new input help mode (keyboard, gamepad...) and updates the position state, optionally forced.",
+   "fr": "Enregistre le nouveau mode d'aide à la saisie (clavier, manette...) et met à jour l'état de position, éventuellement forcé."
+  },
+  "ControlBarDisplay:onAIVehicleStateChanged": {
+   "en": "Records the AI active state and updates the position state; the vehicle argument is unused.",
+   "fr": "Enregistre l'état d'activité de l'IA et met à jour l'état de position ; l'argument véhicule n'est pas utilisé."
+  },
+  "ControlBarDisplay:onGyroscopeSteeringChanged": {
+   "en": "Records whether gyroscope steering is active and updates the position state.",
+   "fr": "Enregistre si la direction par gyroscope est active et met à jour l'état de position."
+  },
+  "ControlBarDisplay:updatePositionState": {
+   "en": "Chooses touch or controller layout: touch when the platform has touch sliders and the input is not gamepad (or a player is set on foot), controller otherwise or when gyroscope steering is on; then applies it.",
+   "fr": "Choisit la disposition tactile ou manette : tactile si la plateforme a des curseurs tactiles et que l'entrée n'est pas la manette (ou si un joueur est à pied), manette sinon ou si la direction gyroscope est active ; puis l'applique."
+  },
+  "ControlBarDisplay:setPositionState": {
+   "en": "Does nothing without touch sliders. On a state change, starts a tween to the touch or gamepad position (touch moves five times faster, forced changes are near instant).",
+   "fr": "Sans effet sans curseurs tactiles. Lors d'un changement d'état, lance un tween vers la position tactile ou manette (le tactile est cinq fois plus rapide, un changement forcé est quasi instantané)."
+  },
+  "ControlBarDisplay:addFillLevelControl": {
+   "en": "Creates one fill-level control: a toggle-seeds button with an icon, plus a background bar and a fill bar using the atlas UVs. Registers it with a priority and returns the control table.",
+   "fr": "Crée un contrôle de niveau de remplissage : un bouton de changement de semences avec icône, plus une barre de fond et une barre de remplissage utilisant les UV de l'atlas. L'enregistre avec une priorité et renvoie la table du contrôle."
+  },
+  "ControlBarDisplay:addFillLevel": {
+   "en": "Collector called by vehicle:getFillLevelInformation: adds level and capacity to the entry of the same fill type (and stores precision, maxReached) or appends a new entry, tracking insertion order for sorting.",
+   "fr": "Collecteur appelé par vehicle:getFillLevelInformation : ajoute niveau et capacité à l'entrée du même type de remplissage (et mémorise precision, maxReached) ou ajoute une nouvelle entrée, en suivant l'ordre d'insertion pour le tri."
+  },
+  "ControlBarDisplay:updateFillLevelBuffers": {
+   "en": "Hides the fill-level buttons, zeroes the buffer, asks the vehicle for its fill level information, sorts by insertion order if needed and feeds each non-zero-capacity entry to a control (at most as many as controls exist).",
+   "fr": "Masque les boutons de niveau de remplissage, remet le tampon à zéro, demande au véhicule ses informations de remplissage, trie par ordre d'insertion si nécessaire et alimente un contrôle avec chaque entrée de capacité non nulle (au plus autant que de contrôles)."
+  },
+  "ControlBarDisplay.sortFillLevelBuffers": {
+   "en": "Table.sort comparator ordering fill-level entries by their addIndex.",
+   "fr": "Comparateur pour table.sort ordonnant les entrées de remplissage par addIndex."
+  },
+  "ControlBarDisplay:updateFillLevelControl": {
+   "en": "Sets the bar fill percentage (UVs and scale), swaps the button icon to the fill type's HUD overlay, links the sowing machine when its seed fill type matches, and sets the button active/visible state (visible if level above zero or tied to the sowing machine).",
+   "fr": "Règle le pourcentage de la barre (UV et échelle), remplace l'icône du bouton par l'overlay HUD du type de remplissage, lie le semoir si son type de semence correspond, et définit l'état actif/visible du bouton (visible si niveau supérieur à zéro ou lié au semoir)."
+  },
+  "ControlBarDisplay:setScale": {
+   "en": "Applies a uniform UI scale, recomputes background position and touch/gamepad positions, stores the original position and keeps the current visibility and touch position.",
+   "fr": "Applique une échelle d'interface uniforme, recalcule la position du fond et les positions tactile/manette, mémorise la position d'origine et conserve la visibilité et la position tactile actuelles."
+  },
+  "ControlBarDisplay.getBackgroundPosition": {
+   "en": "Returns the background screen position from the POSITION.BACKGROUND constant multiplied by the scale; the width argument is unused.",
+   "fr": "Renvoie la position écran du fond à partir de la constante POSITION.BACKGROUND multipliée par l'échelle ; l'argument largeur n'est pas utilisé."
+  },
+  "ControlBarDisplay.createBackground": {
+   "en": "Creates an image-less overlay with the SIZE.BACKGROUND dimensions, used only as a positioning frame.",
+   "fr": "Crée un overlay sans image aux dimensions SIZE.BACKGROUND, utilisé uniquement comme cadre de positionnement."
+  }
+ }
+}

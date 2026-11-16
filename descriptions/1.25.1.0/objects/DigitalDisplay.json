@@ -1,0 +1,13 @@
+{
+ "fichier": "objects/DigitalDisplay.lua",
+ "module": {
+  "en": "Helper class for digital number displays. This file only declares the class and its XML schema; no behaviour is implemented in the dump.",
+  "fr": "Classe d'aide pour les afficheurs numériques. Ce fichier ne déclare que la classe et son schéma XML ; aucun comportement n'est implémenté dans le dump."
+ },
+ "fonctions": {
+  "DigitalDisplay.registerXMLPaths": {
+   "en": "Registers the XML attributes baseNode (node index), precision (int, default 0) and showZero (bool, default true) at the base path. Their effect is not implemented in this file (UNVERIFIED).",
+   "fr": "Enregistre les attributs XML baseNode (index de nœud), precision (entier, 0 par défaut) et showZero (booléen, true par défaut) au chemin de base. Leur effet n'est pas implémenté dans ce fichier (NON VÉRIFIÉ)."
+  }
+ }
+}

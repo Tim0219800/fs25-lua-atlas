@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/specializations/BunkerSiloCompacter.lua",
+ "module": {
+  "en": "Specialization for vehicles that compact bunker silo contents (rollers, tractors with wheels). It stores a compacting scale and an optional speed-limit flag from XML and, on clients, plays a rolling sound on ground contact and a compacting sound when a wheel touches ground-height (density map) contact. The actual compaction in the silo is not done here: it reads the scale elsewhere. Note: the code uses BunkerSiloCompacter.XML_PATH, which is never assigned in this file (UNVERIFIED where it is set).",
+  "fr": "Spécialisation des véhicules qui tassent le contenu d'un silo-tranchée (rouleaux, tracteurs à roues). Elle lit dans le XML un coefficient de tassement et un indicateur de limite de vitesse et, côté client, joue un son de roulage au contact du sol et un son de tassement quand une roue est en contact de type hauteur de sol (density map). Le tassement lui-même n'est pas fait ici : le coefficient est lu ailleurs. À noter : le code utilise BunkerSiloCompacter.XML_PATH, jamais affecté dans ce fichier (où il est défini : NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "BunkerSiloCompacter.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "BunkerSiloCompacter.initSpecialization": {
+   "en": "Registers the XML schema entries at XML_PATH: compactingScale, useSpeedLimit and the rolling and compacting sound samples. XML_PATH is not defined in this file, UNVERIFIED.",
+   "fr": "Enregistre les entrées de schéma XML sous XML_PATH : compactingScale, useSpeedLimit et les échantillons sonores de roulage et de tassement. XML_PATH n'est pas défini dans ce fichier, NON VÉRIFIÉ."
+  },
+  "BunkerSiloCompacter.registerFunctions": {
+   "en": "Registers loadBunkerSiloCompactorFromXML and getBunkerSiloCompacterScale on the vehicle type.",
+   "fr": "Enregistre loadBunkerSiloCompactorFromXML et getBunkerSiloCompacterScale sur le type de véhicule."
+  },
+  "BunkerSiloCompacter.registerOverwrittenFunctions": {
+   "en": "Overrides doCheckSpeedLimit on the vehicle type.",
+   "fr": "Remplace doCheckSpeedLimit sur le type de véhicule."
+  },
+  "BunkerSiloCompacter.registerEventListeners": {
+   "en": "Registers onLoad, onUpdate and onDelete.",
+   "fr": "Enregistre onLoad, onUpdate et onDelete."
+  },
+  "BunkerSiloCompacter:onLoad": {
+   "en": "Loads the compactor settings from XML and, on clients, the rolling and compacting samples. Removes the onUpdate listener if the vehicle has no getWheels function.",
+   "fr": "Charge les réglages du compacteur depuis le XML et, côté client, les échantillons sonores de roulage et de tassement. Retire l'écouteur onUpdate si le véhicule n'a pas de fonction getWheels."
+  },
+  "BunkerSiloCompacter:onDelete": {
+   "en": "Deletes the loaded sound samples through the sound manager.",
+   "fr": "Supprime les échantillons sonores chargés via le gestionnaire de sons."
+  },
+  "BunkerSiloCompacter:loadBunkerSiloCompactorFromXML": {
+   "en": "Reads compactingScale (default 1) and useSpeedLimit (default false) from the given XML file and key into the specialization.",
+   "fr": "Lit compactingScale (1 par défaut) et useSpeedLimit (false par défaut) depuis le fichier et la clé XML donnés et les stocke dans la spécialisation."
+  },
+  "BunkerSiloCompacter:getBunkerSiloCompacterScale": {
+   "en": "Returns the compacting scale read from XML (the spelling Compacter is in the source).",
+   "fr": "Renvoie le coefficient de tassement lu dans le XML (l'orthographe Compacter est celle de la source)."
+  },
+  "BunkerSiloCompacter:onUpdate": {
+   "en": "Scans the wheels for ground contact and for GROUND_HEIGHT contact (counted as compacting). When either state changes, starts or stops the rolling and compacting sounds accordingly.",
+   "fr": "Parcourt les roues pour détecter un contact avec le sol et un contact GROUND_HEIGHT (considéré comme du tassement). Quand l'un des états change, démarre ou arrête les sons de roulage et de tassement."
+  },
+  "BunkerSiloCompacter:doCheckSpeedLimit": {
+   "en": "When useSpeedLimit is set, returns the parent result or true while compacting, so the speed limit applies during compaction. Otherwise returns the parent result.",
+   "fr": "Si useSpeedLimit est activé, renvoie le résultat parent ou true pendant le tassement, de sorte que la limite de vitesse s'applique. Sinon renvoie le résultat parent."
+  },
+  "BunkerSiloCompacter.getDefaultSpeedLimit": {
+   "en": "Static helper returning the default speed limit, the constant 5 (unit not stated in the code, probably km/h, UNVERIFIED).",
+   "fr": "Fonction statique renvoyant la limite de vitesse par défaut, la constante 5 (unité non indiquée dans le code, probablement km/h, NON VÉRIFIÉ)."
+  }
+ }
+}

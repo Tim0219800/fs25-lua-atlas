@@ -1,0 +1,217 @@
+{
+ "fichier": "vehicles/specializations/Trailer.lua",
+ "module": {
+  "en": "Specialization for tipping trailers. It manages one or more 'tip sides' (discharge node, tip animation, optional back door animation, tipping loop animation), the tip state machine (closed, opening, open, closing), side selection and optional manual tip/door toggles. It requires FillUnit, Dischargeable and AnimatedVehicle, is configured through the `trailer` configuration type, and raises events such as onStartTipping and onEndTipping. Network sync uses streams plus the Trailer*Event classes (defined elsewhere).",
+  "fr": "Spécialisation des remorques à benne basculante. Elle gère un ou plusieurs « côtés de bennage » (nœud de déchargement, animation de bascule, animation de porte arrière facultative, animation de bennage en boucle), la machine à états de bennage (fermé, ouverture, ouvert, fermeture), le choix du côté et des commandes manuelles de benne/porte. Elle exige FillUnit, Dischargeable et AnimatedVehicle, se configure via le type de configuration `trailer` et lève des événements comme onStartTipping et onEndTipping. La synchronisation réseau passe par les flux et les classes Trailer*Event (définies ailleurs)."
+ },
+ "fonctions": {
+  "Trailer.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the FillUnit, Dischargeable and AnimatedVehicle specializations.",
+   "fr": "Renvoie true seulement si le type de véhicule possède les spécialisations FillUnit, Dischargeable et AnimatedVehicle."
+  },
+  "Trailer.initSpecialization": {
+   "en": "Registers the `trailer` configuration type and the XML schema for tip sides (animations, manual tip/door toggles, fill-level limits, sounds, object changes), plus extra keys for animation parts, external vehicle control, pickups and turned-on animations. Also registers the savegame keys.",
+   "fr": "Enregistre le type de configuration `trailer` et le schéma XML des côtés de bennage (animations, commandes manuelles de benne/porte, limites de remplissage, sons, changements d'objets), ainsi que des clés supplémentaires pour les parties d'animation, le contrôle externe, les ramasseurs et les animations de mise en marche. Déclare aussi les clés de sauvegarde."
+  },
+  "Trailer.registerEvents": {
+   "en": "Registers the vehicle events onStartTipping, onOpenBackDoor, onStopTipping, onCloseBackDoor and onEndTipping.",
+   "fr": "Enregistre les événements véhicule onStartTipping, onOpenBackDoor, onStopTipping, onCloseBackDoor et onEndTipping."
+  },
+  "Trailer.registerFunctions": {
+   "en": "Registers the specialization's public vehicle functions (tip side loading and selection, start/stop/end tipping, door state, tip state, automatic redischarge).",
+   "fr": "Enregistre les fonctions publiques de la spécialisation (chargement et choix du côté de bennage, début/arrêt/fin de bennage, état de la porte, état de bennage, redéchargement automatique)."
+  },
+  "Trailer.registerOverwrittenFunctions": {
+   "en": "Registers overrides of functions from other specializations: discharge empty factor, ground/object discharge checks, cover state, selection, AI discharge, pickup state, turned-on animation, power requirement and manual discharge state.",
+   "fr": "Enregistre des surcharges de fonctions d'autres spécialisations : facteur de vidage, tests de déchargement au sol/vers objet, état de la bâche, sélection, déchargement IA, état du ramasseur, animation de mise en marche, besoin de puissance et état de déchargement manuel."
+  },
+  "Trailer.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad, onPostLoad, onLoadFinished, onDelete, stream read/write, onUpdate, action events, onDischargeStateChanged, onDeactivate, animation value types, external action events and fill level changes.",
+   "fr": "Abonne la spécialisation à onLoad, onPostLoad, onLoadFinished, onDelete, la lecture/écriture de flux, onUpdate, les événements d'action, onDischargeStateChanged, onDeactivate, les types de valeurs d'animation, les actions externes et les changements de niveau de remplissage."
+  },
+  "Trailer:onLoad": {
+   "en": "Reads all `tipSide` entries of the selected `trailer` configuration through `loadTipSide`, builds the discharge-node-to-tip-side lookup and initialises tip state (closed), redischarge data and the dirty flag.",
+   "fr": "Lit toutes les entrées `tipSide` de la configuration `trailer` choisie via `loadTipSide`, construit la table nœud de déchargement vers côté de bennage et initialise l'état de bennage (fermé), les données de redéchargement et le drapeau dirty."
+  },
+  "Trailer:onPostLoad": {
+   "en": "Warns about tip sides pointing to unknown discharge nodes. Restores tip side, door state, tip state and tip animation time from the savegame, or selects the default tip side for a new vehicle.",
+   "fr": "Signale les côtés de bennage qui pointent vers un nœud de déchargement inconnu. Restaure depuis la sauvegarde le côté, l'état de la porte, l'état de bennage et le temps d'animation, ou choisit le côté par défaut pour un véhicule neuf."
+  },
+  "Trailer:onLoadFinished": {
+   "en": "With several tip sides, marks the side selection for update when the preferred side is not currently available (fill level out of its range).",
+   "fr": "Avec plusieurs côtés de bennage, demande une mise à jour du choix si le côté préféré n'est pas disponible (niveau de remplissage hors plage)."
+  },
+  "Trailer:onDelete": {
+   "en": "Deletes the animation nodes and unload sound sample of every tip side.",
+   "fr": "Supprime les nœuds d'animation et l'échantillon sonore de déchargement de chaque côté de bennage."
+  },
+  "Trailer:onReadStream": {
+   "en": "Client side on join: reads preferred tip side, tip state, current tip side, door state and the tip/door animation times and playing direction, then applies them to the animations.",
+   "fr": "Côté client à la connexion : lit le côté préféré, l'état de bennage, le côté courant, l'état de la porte ainsi que les temps et le sens des animations de benne/porte, puis les applique."
+  },
+  "Trailer:onWriteStream": {
+   "en": "Server side on join: writes the same data that `onReadStream` expects (tip side, tip state, door state, animation times and playing direction).",
+   "fr": "Côté serveur à la connexion : écrit les données attendues par `onReadStream` (côté de bennage, état, porte, temps et sens des animations)."
+  },
+  "Trailer:onUpdate": {
+   "en": "Per frame: updates the tip-side toggle and manual tip/door input texts, applies a pending side change once closed, advances the tip state machine from animation time, and on the server drives automatic redischarge for uncontrolled vehicles.",
+   "fr": "À chaque image : met à jour les textes des actions de changement de côté et de benne/porte manuelles, applique un changement de côté en attente une fois fermé, fait avancer l'état de bennage selon le temps d'animation, et côté serveur pilote le redéchargement automatique des véhicules non contrôlés."
+  },
+  "Trailer:loadTipSide": {
+   "en": "Loads one tip side from XML (name, discharge node index, manual toggles, tip/door/tipping animations, fill-level range, animation nodes, sound, object changes). Returns false with a warning if the name or an animation is missing or unknown.",
+   "fr": "Charge un côté de bennage depuis le XML (nom, index du nœud de déchargement, commandes manuelles, animations de benne/porte/bennage, plage de remplissage, nœuds d'animation, son, changements d'objets). Renvoie false avec un avertissement si le nom ou une animation manque ou est inconnue."
+  },
+  "Trailer:saveToXMLFile": {
+   "en": "Saves the preferred tip side (if several), door state, tip animation time and tip state to the savegame.",
+   "fr": "Sauvegarde le côté préféré (s'il y en a plusieurs), l'état de la porte, le temps de l'animation de benne et l'état de bennage."
+  },
+  "Trailer:getCanTogglePreferdTipSide": {
+   "en": "Returns true when the tip state is closed and at least one tip side exists, so the preferred side may be changed.",
+   "fr": "Renvoie true si la benne est fermée et qu'au moins un côté existe, donc que le côté préféré peut être changé."
+  },
+  "Trailer:getIsTipSideAvailable": {
+   "en": "Returns true if the given tip side exists and, when it has a fill-level condition, the fill unit percentage lies within its min/max range.",
+   "fr": "Renvoie true si le côté de bennage existe et, s'il a une condition de remplissage, si le pourcentage du fill unit est dans la plage min/max."
+  },
+  "Trailer:getNextAvailableTipSide": {
+   "en": "Cycles from the given index to the next available tip side and returns its index, or the given index if none is available.",
+   "fr": "Parcourt les côtés à partir de l'index donné et renvoie l'index du suivant disponible, ou l'index donné si aucun ne l'est."
+  },
+  "Trailer:setPreferedTipSide": {
+   "en": "Selects the preferred tip side (clamped to the valid range), stopping any tipping in progress. Sends TrailerToggleTipSideEvent unless `noEventSend`, applies object changes, closes the old door if needed and switches the current discharge node.",
+   "fr": "Choisit le côté de bennage préféré (borné à la plage valide) et arrête un bennage en cours. Envoie TrailerToggleTipSideEvent sauf si `noEventSend`, applique les changements d'objets, ferme l'ancienne porte si besoin et change le nœud de déchargement courant."
+  },
+  "Trailer:setTipSideUpdateDirty": {
+   "en": "Flags that the tip side must be re-evaluated once the trailer is closed again.",
+   "fr": "Indique que le côté de bennage devra être réévalué dès que la remorque sera refermée."
+  },
+  "Trailer:startTipping": {
+   "en": "Starts the tip animation (and door/tipping animations, animation nodes and unload sound on the client), sets the state to opening and raises onStartTipping. The `noEventSend` parameter is not used in the body.",
+   "fr": "Démarre l'animation de benne (ainsi que les animations de porte/bennage, nœuds d'animation et son sur le client), passe l'état à ouverture et lève onStartTipping. Le paramètre `noEventSend` n'est pas utilisé dans le corps."
+  },
+  "Trailer:stopTipping": {
+   "en": "Plays the tip animation backwards (or stops it if the close speed is zero), closes the door unless delayed, stops effects, sets the state to closing and raises onStopTipping. `noEventSend` is not used in the body.",
+   "fr": "Joue l'animation de benne en sens inverse (ou l'arrête si la vitesse de fermeture est nulle), ferme la porte sauf fermeture différée, arrête les effets, passe l'état à fermeture et lève onStopTipping. `noEventSend` n'est pas utilisé dans le corps."
+  },
+  "Trailer:endTipping": {
+   "en": "Finishes the closing: applies a delayed door closing if configured, resets the state to closed, clears the current tip side and raises onEndTipping.",
+   "fr": "Termine la fermeture : applique la fermeture différée de la porte si configurée, remet l'état à fermé, efface le côté courant et lève onEndTipping."
+  },
+  "Trailer:setTrailerDoorState": {
+   "en": "Opens or closes the back door of a tip side (toggles if `state` is nil), optionally jumping to the end instantly, raises onOpenBackDoor/onCloseBackDoor for manual doors and sends TrailerToggleManualDoorEvent.",
+   "fr": "Ouvre ou ferme la porte arrière d'un côté de bennage (bascule si `state` est nil), avec saut instantané à la fin en option, lève onOpenBackDoor/onCloseBackDoor pour les portes manuelles et envoie TrailerToggleManualDoorEvent."
+  },
+  "Trailer:getAllowTrailerDoorToggle": {
+   "en": "Returns whether the manual door may be toggled now: refused when the fill unit is filled and not allowed, when closing while tipping, or when reset-while-tipping applies.",
+   "fr": "Indique si la porte manuelle peut être actionnée maintenant : refusé si le fill unit est rempli et que ce n'est pas permis, en cas de fermeture pendant le bennage, ou si la règle de réinitialisation pendant le bennage s'applique."
+  },
+  "Trailer:getTipState": {
+   "en": "Returns the current tip state constant (closed, opening, open or closing).",
+   "fr": "Renvoie la constante d'état de bennage courante (fermé, ouverture, ouvert ou fermeture)."
+  },
+  "Trailer:setTipState": {
+   "en": "Puts the current tip side directly into the open or closed pose (used when loading), playing its animations and fast-forwarding them to the end.",
+   "fr": "Place directement le côté courant en position ouverte ou fermée (utilisé au chargement), en jouant ses animations et en les avançant jusqu'à la fin."
+  },
+  "Trailer:updateTrailerAutomaticRedischarge": {
+   "en": "Server logic that restarts discharge to an object when the trailer stayed within 1.5 m of the last discharge position, still targets the same object, has fill left and the target has enough free capacity. Resets the memory otherwise.",
+   "fr": "Logique serveur qui relance le déchargement vers un objet quand la remorque est restée à moins de 1,5 m de la dernière position, vise le même objet, a encore du contenu et que la cible a assez de place libre. Sinon, la mémoire est réinitialisée."
+  },
+  "Trailer:getDischargeNodeEmptyFactor": {
+   "en": "Override: returns 0 until the tip or door animation passes its configured start time, then the tip side's current empty factor. Falls back to the parent function for nodes without tip side.",
+   "fr": "Surcharge : renvoie 0 tant que l'animation de benne ou de porte n'a pas atteint son temps de départ configuré, puis le facteur de vidage courant du côté. Retombe sur la fonction parente pour les nœuds sans côté de bennage."
+  },
+  "Trailer:getCanDischargeToGround": {
+   "en": "Override: after the parent check, forbids ground discharge when the active tip side has `canTip` false, or is empty while `canTipIfEmpty` is false.",
+   "fr": "Surcharge : après le test parent, interdit le déchargement au sol si le côté actif a `canTip` à false, ou s'il est vide alors que `canTipIfEmpty` est à false."
+  },
+  "Trailer:getCanDischargeToObject": {
+   "en": "Override: after the parent check, forbids discharge to an object when the active tip side has `canTip` set to false.",
+   "fr": "Surcharge : après le test parent, interdit le déchargement vers un objet si le côté actif a `canTip` à false."
+  },
+  "Trailer:getIsNextCoverStateAllowed": {
+   "en": "Override: while a tip side is tipping or its manual door is open, only the cover state matching the discharge node's cover is allowed; otherwise defers to the parent.",
+   "fr": "Surcharge : pendant le bennage ou porte manuelle ouverte, seul l'état de bâche correspondant à celle du nœud de déchargement est autorisé ; sinon, délègue au parent."
+  },
+  "Trailer:getCanBeSelected": {
+   "en": "Override that always returns true, so the trailer can be selected.",
+   "fr": "Surcharge qui renvoie toujours true : la remorque peut être sélectionnée."
+  },
+  "Trailer:onRegisterActionEvents": {
+   "en": "Client only: registers the tip side toggle action (if several sides) and the manual tip and manual door actions of the preferred side.",
+   "fr": "Client uniquement : enregistre l'action de changement de côté (s'il y en a plusieurs) et les actions de benne et de porte manuelles du côté préféré."
+  },
+  "Trailer:onDischargeStateChanged": {
+   "en": "Starts tipping when discharge goes to ground or object and stops it when discharge turns off. Also remembers the target object and node position for automatic redischarge.",
+   "fr": "Démarre le bennage quand le déchargement passe au sol ou vers un objet, et l'arrête quand il s'éteint. Mémorise aussi l'objet cible et la position du nœud pour le redéchargement automatique."
+  },
+  "Trailer:onDeactivate": {
+   "en": "Stops a manually started tipping when the vehicle is deactivated, if the tip side has `stopOnDeactivate` enabled.",
+   "fr": "Arrête un bennage lancé manuellement quand le véhicule est désactivé, si le côté a `stopOnDeactivate` activé."
+  },
+  "Trailer:getAIHasFinishedDischarge": {
+   "en": "Override: returns false while the tip state is not closed, otherwise defers to the parent.",
+   "fr": "Surcharge : renvoie false tant que l'état de bennage n'est pas fermé, sinon délègue au parent."
+  },
+  "Trailer:startAIDischarge": {
+   "en": "Override: selects the tip side linked to the AI's discharge node before calling the parent function.",
+   "fr": "Surcharge : sélectionne le côté de bennage lié au nœud de déchargement de l'IA avant d'appeler la fonction parente."
+  },
+  "Trailer:loadPickupFromXML": {
+   "en": "Override: additionally reads the pickup attribute `allowWhileTipping` (default true) before calling the parent.",
+   "fr": "Surcharge : lit en plus l'attribut de ramasseur `allowWhileTipping` (true par défaut) avant d'appeler le parent."
+  },
+  "Trailer:getCanChangePickupState": {
+   "en": "Override: refuses a pickup state change while tipping when the pickup has `allowWhileTipping` false.",
+   "fr": "Surcharge : refuse un changement d'état du ramasseur pendant le bennage si le ramasseur a `allowWhileTipping` à false."
+  },
+  "Trailer:loadTurnedOnAnimationFromXML": {
+   "en": "Override: additionally reads the turned-on animation attribute `playWhileTipping` (default false).",
+   "fr": "Surcharge : lit en plus l'attribut `playWhileTipping` de l'animation de mise en marche (false par défaut)."
+  },
+  "Trailer:getRequiresPower": {
+   "en": "Override: returns true while the trailer is opening or closing its tip, else the parent's value.",
+   "fr": "Surcharge : renvoie true pendant l'ouverture ou la fermeture de la benne, sinon la valeur du parent."
+  },
+  "Trailer:setManualDischargeState": {
+   "en": "Override: when discharge is switched off manually, clears the stored redischarge target so no automatic redischarge follows, then calls the parent.",
+   "fr": "Surcharge : quand le déchargement est coupé manuellement, efface la cible de redéchargement mémorisée pour éviter un redéchargement automatique, puis appelle le parent."
+  },
+  "Trailer:getIsTurnedOnAnimationActive": {
+   "en": "Override: for animations flagged `playWhileTipping`, also active while tipping and the discharge empty factor is above 0.",
+   "fr": "Surcharge : pour les animations marquées `playWhileTipping`, également active pendant le bennage tant que le facteur de vidage est supérieur à 0."
+  },
+  "Trailer:onRegisterAnimationValueTypes": {
+   "en": "Registers two animation value types usable in AnimatedVehicle parts: `tipSideEmptyFactor` (drives a tip side's empty factor via a discharge node) and `doorAnimationMaxTime` (limits and re-plays the door animation).",
+   "fr": "Enregistre deux types de valeurs d'animation utilisables dans les parties AnimatedVehicle : `tipSideEmptyFactor` (pilote le facteur de vidage d'un côté via un nœud de déchargement) et `doorAnimationMaxTime` (limite et rejoue l'animation de porte)."
+  },
+  "Trailer:onRegisterExternalActionEvents": {
+   "en": "Registers the external action event `trailerDoorToggle` for triggers, storing the tip side index read from the XML (default 1).",
+   "fr": "Enregistre l'action externe `trailerDoorToggle` pour les triggers, en mémorisant l'index de côté lu dans le XML (1 par défaut)."
+  },
+  "Trailer.externalActionEventDoorToggleRegister": {
+   "en": "Registers the input action that toggles the manual door from outside the vehicle; selects the tip side first if available. Does nothing when the side has no manual door.",
+   "fr": "Enregistre l'action d'entrée qui actionne la porte manuelle depuis l'extérieur ; sélectionne d'abord le côté s'il est disponible. Sans effet si le côté n'a pas de porte manuelle."
+  },
+  "Trailer.externalActionEventDoorToggleUpdate": {
+   "en": "Updates the displayed text of the external door action (open or close) according to the door animation state.",
+   "fr": "Met à jour le texte affiché de l'action externe de porte (ouvrir ou fermer) selon l'état de l'animation de la porte."
+  },
+  "Trailer:onFillUnitFillLevelChanged": {
+   "en": "Re-selects the tip side when fill-level-dependent sides become unavailable (deferred if tipping). On the server, closes a manual door when the fill unit receives product and filled opening is disallowed.",
+   "fr": "Resélectionne le côté de bennage quand les côtés dépendant du remplissage deviennent indisponibles (différé si bennage en cours). Côté serveur, ferme une porte manuelle quand le fill unit reçoit du produit et que l'ouverture en charge est interdite."
+  },
+  "Trailer.actionEventToggleTipSide": {
+   "en": "Input callback: switches to the next available tip side when toggling is currently allowed.",
+   "fr": "Callback d'entrée : passe au côté de bennage disponible suivant quand le changement est autorisé."
+  },
+  "Trailer.actionEventManualToggleTip": {
+   "en": "Input callback: starts tipping if closed or closing, otherwise stops it, and sends TrailerToggleManualTipEvent.",
+   "fr": "Callback d'entrée : démarre le bennage si fermé ou en fermeture, sinon l'arrête, et envoie TrailerToggleManualTipEvent."
+  },
+  "Trailer.actionEventManualToggleDoor": {
+   "en": "Input callback: toggles the manual door when allowed, otherwise shows a blinking 'not allowed now' warning for 5 seconds.",
+   "fr": "Callback d'entrée : actionne la porte manuelle si c'est permis, sinon affiche pendant 5 secondes l'avertissement clignotant « action non autorisée »."
+  }
+ }
+}

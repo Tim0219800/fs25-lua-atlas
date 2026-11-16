@@ -1,0 +1,37 @@
+{
+ "fichier": "objects/Basketball.lua",
+ "module": {
+  "en": "Physics object for a basketball placed on a map. It extends PhysicsObject, is created either from a map i3d node (onCreate, user attribute filename) or in code, and loads its model through the shared i3d manager. The server registers it and the stream functions send the i3d filename to joining clients.",
+  "fr": "Objet physique représentant un ballon de basket posé sur une carte. Il étend PhysicsObject, se crée soit depuis un nœud i3d de la carte (onCreate, attribut utilisateur filename), soit par code, et charge son modèle via le gestionnaire i3d partagé. Le serveur l'enregistre et les fonctions de flux envoient le nom du fichier i3d aux clients qui rejoignent."
+ },
+ "fonctions": {
+  "Basketball:onCreate": {
+   "en": "Map callback for an i3d node: reads the node transform and the optional filename user attribute (default basketball i3d), builds a ball, loads it, adds it to onCreateObjectSystem and registers it, or deletes it if loading fails.",
+   "fr": "Callback de carte pour un nœud i3d : lit la transformation du nœud et l'attribut utilisateur filename optionnel (i3d de ballon par défaut), crée un ballon, le charge, l'ajoute à onCreateObjectSystem et l'enregistre, sinon le supprime si le chargement échoue."
+  },
+  "Basketball.new": {
+   "en": "Constructor. Calls the PhysicsObject constructor, sets a forced clip distance of 150 and registers the object under the class name Basketball. Returns the new instance.",
+   "fr": "Constructeur. Appelle celui de PhysicsObject, fixe une distance de clipping forcée de 150 et enregistre l'objet sous le nom de classe Basketball. Retourne la nouvelle instance."
+  },
+  "Basketball:delete": {
+   "en": "Releases the shared i3d load request if any, unregisters the class name and calls the parent delete.",
+   "fr": "Libère la requête de chargement i3d partagée si elle existe, désenregistre le nom de classe puis appelle le delete du parent."
+  },
+  "Basketball:readStream": {
+   "en": "Client side, when joining: reads the i3d filename sent by the server, creates the node if none exists yet, then lets the parent read its own data. Does nothing if the connection is not to a server.",
+   "fr": "Côté client à la connexion : lit le nom du fichier i3d envoyé par le serveur, crée le nœud s'il n'existe pas encore, puis laisse le parent lire ses données. Sans effet si la connexion n'est pas vers un serveur."
+  },
+  "Basketball:writeStream": {
+   "en": "Server side, when a client joins: writes the i3d filename in network form, then the parent data. Does nothing on a connection to a server.",
+   "fr": "Côté serveur quand un client rejoint : écrit le nom du fichier i3d au format réseau, puis les données du parent. Sans effet sur une connexion vers un serveur."
+  },
+  "Basketball:createNode": {
+   "en": "Stores the i3d filename and mod environment, loads the file through the shared i3d manager, takes its first child, links it to the root node, deletes the loaded root and sets it as the object node.",
+   "fr": "Mémorise le nom du fichier i3d et l'environnement du mod, charge le fichier via le gestionnaire i3d partagé, prend son premier enfant, le rattache au nœud racine, supprime la racine chargée et le définit comme nœud de l'objet."
+  },
+  "Basketball:load": {
+   "en": "Creates the node from the i3d file, then places it at the given world position and rotation. Always returns true.",
+   "fr": "Crée le nœud depuis le fichier i3d, puis le place à la position et à la rotation monde données. Retourne toujours true."
+  }
+ }
+}

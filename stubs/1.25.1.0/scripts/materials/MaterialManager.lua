@@ -1,27 +1,27 @@
 ---@meta
 -- FS25 1.25.1.0 : materials/MaterialManager.lua (generated stub, FS25 Lua Atlas)
 
---- Gestionnaire global des matériaux (g_materialManager, dérive d'AbstractManager). Il tient cinq registres : (1) types de matériau (liste de noms), (2) matériaux de base par nom, (3) matériaux par type de remplissage (self.materials), (4) matériaux de particules par type de remplissage (self.particleMaterials), (5) polices (FontMaterial). Les matériaux ne sont pas créés ici : ils sont enregistrés par des rappels « onCreate » de MaterialUtil lors du chargement des I3D « porte-matériaux » (material holders) ; ces I3D et le fichier XML des polices (MaterialManager.DEFAULT_FONT_MATERIAL_XML, constante absente du dump) ne sont pas dans le dump.
+--- Global material manager (g_materialManager, derives from AbstractManager). It keeps five registries: (1) material types (list of names), (2) base materials by name, (3) materials by fill type (self.materials), (4) particle materials by fill type (self.particleMaterials), (5) fonts (FontMaterial). Materials are not created here: they are registered by MaterialUtil "onCreate" callbacks while the "material holder" I3Ds are loaded; those I3Ds and the fonts XML file (MaterialManager.DEFAULT_FONT_MATERIAL_XML, constant absent from the dump) are not in the dump.
 --- 
---- CLÉ DE RECHERCHE. Un matériau se retrouve par (fillTypeIndex, nom de type de matériau, indice). Types déclarés à loadMapData (MaterialManager.lua:60-78) : fillplane, icon, unloading, smoke, straw, chopper, soil, sprayer, sprayerCannonSolid, sprayerCannonBillboard, spreader, pipe, mower, belt, belt_cropDirt, belt_cropClean, leveler, washer, pickup. Les noms sont stockés en majuscules ; la table globale MaterialType pointe vers nameToIndex. Pour ajouter un type propre à un mod : addMaterialType (avant le chargement des porte-matériaux).
+--- LOOKUP KEY. A material is found by (fillTypeIndex, material type name, index). Types declared at loadMapData (MaterialManager.lua:60-78): fillplane, icon, unloading, smoke, straw, chopper, soil, sprayer, sprayerCannonSolid, sprayerCannonBillboard, spreader, pipe, mower, belt, belt_cropDirt, belt_cropClean, leveler, washer, pickup. Names are stored in uppercase; the global MaterialType table points to nameToIndex. To add a mod-specific type: addMaterialType (before the material holders are loaded).
 --- 
---- USAGE EFFETS. getParticleMaterial(fillType, type, indice) fournit le matériau à appliquer à un système de particules selon la matière (ex. grain, terre), via ParticleUtil.setMaterial dans WorkParticles ; getMaterial sert aux autres usages (ex. surfaces de remplissage, tapis, convoyeurs). Les deux renvoient nil si le type de remplissage, le type de matériau ou l'indice n'existe pas, sans journal (les avertissements sont dans des lignes marquées #debug, ignorées en production). Les matériaux déclarés plusieurs fois pour la même clé sont écrasés, avec un avertissement développeur seulement si g_showDevelopmentWarnings.
+--- EFFECT USE. getParticleMaterial(fillType, type, index) provides the material to apply to a particle system according to the matter (e.g. grain, soil), through ParticleUtil.setMaterial in WorkParticles; getMaterial serves other uses (e.g. fill surfaces, belts, conveyors). Both return nil if the fill type, the material type or the index does not exist, without a log (the warnings are in lines marked #debug, ignored in production). Materials declared several times for the same key are overwritten, with a developer warning only if g_showDevelopmentWarnings.
 --- 
---- PARTAGE ET CHARGEMENT. Les porte-matériaux de mods sont mis en file par addModMaterialHolder (nom de fichier = clé : pas de doublon) puis chargés par loadModMaterialHolders en asynchrone (g_i3DManager:loadI3DFileAsync) ; au retour, chaque enfant est détaché de l'arbre et conservé dans loadedMaterialHolderNodes pour que les matériaux restent valides jusqu'à unloadMapData, qui supprime ces nœuds. Aucune des données n'est synchronisée en réseau : le chargement a lieu sur chaque pair (client, serveur) ; l'appelant est probablement l'ensemble mission/mods (NON VÉRIFIÉ : appelant absent du dump).
+--- SHARING AND LOADING. Mod material holders are queued by addModMaterialHolder (file name = key: no duplicates) then loaded by loadModMaterialHolders asynchronously (g_i3DManager:loadI3DFileAsync); on return, each child is detached from the tree and kept in loadedMaterialHolderNodes so the materials stay valid until unloadMapData, which deletes those nodes. None of the data is network-synchronized: loading happens on each peer (client, server); the caller is probably the mission/mods set (UNVERIFIED: caller absent from the dump).
 --- 
---- POINTS D'EXTENSION. Pas de registerFunction ni d'événement : un mod peut appeler g_materialManager:addMaterialType, addParticleMaterial, addBaseMaterial, addModMaterialHolder ou lire les tables. Ces appels doivent précéder la fin du chargement de la carte ; ce moment exact (loadModMaterialHolders) est NON VÉRIFIÉ ici.
+--- EXTENSION POINTS. No registerFunction or event: a mod can call g_materialManager:addMaterialType, addParticleMaterial, addBaseMaterial, addModMaterialHolder or read the tables. These calls must precede the end of map loading; that exact moment (loadModMaterialHolders) is UNVERIFIED here.
 ---@class MaterialManager : AbstractManager
 MaterialManager = {}
 
---- Crée le gestionnaire et prépare le schéma XML des polices (FontMaterial.registerXMLPaths).
+--- Creates the manager and prepares the fonts XML schema (FontMaterial.registerXMLPaths).
 ---@param customMt any
 ---@return MaterialManager
 function MaterialManager.new(customMt) end
 
---- Réinitialise tous les registres : noms, types, matériaux, matériaux de particules, polices, matériaux de base, porte-matériaux de mods et nœuds chargés.
+--- Resets all the registries: names, types, materials, particle materials, fonts, base materials, mod material holders and loaded nodes.
 function MaterialManager:initDataStructures() end
 
---- Déclare les dix-neuf types de matériau vanilla, publie la table globale MaterialType, mémorise le rappel de fin de chargement puis lance le chargement du XML de polices par défaut. Renvoie vrai.
+--- Declares the nineteen vanilla material types, publishes the global MaterialType table, remembers the end-of-loading callback then starts loading the default fonts XML. Returns true.
 ---@param xmlFile any
 ---@param missionInfo any
 ---@param baseDirectory any
@@ -30,43 +30,43 @@ function MaterialManager:initDataStructures() end
 ---@return boolean
 function MaterialManager:loadMapData(xmlFile, missionInfo, baseDirectory, finishedLoadingCallback, callbackTarget) end
 
---- Supprime les nœuds porte-matériaux, le XML courant, les polices (nœuds, matériaux, shared I3D) puis délègue à la classe parente.
+--- Deletes the material holder nodes, the current XML, the fonts (nodes, materials, shared I3D) then delegates to the parent class.
 function MaterialManager:unloadMapData() end
 
---- Ajoute un type de matériau (nom en majuscules) après validation du nom ; sans effet si déjà connu.
+--- Adds a material type (name in uppercase) after validating the name; no effect if already known.
 ---@param name string
 function MaterialManager:addMaterialType(name) end
 
---- Renvoie le nom normalisé (majuscules) du type s'il existe, sinon nil.
+--- Returns the normalized (uppercase) name of the type if it exists, otherwise nil.
 ---@param name string
 ---@return string
 function MaterialManager:getMaterialTypeByName(name) end
 
---- Enregistre un matériau de base sous son nom (majuscules) et dans la liste des matériaux de base.
+--- Registers a base material under its name (uppercase) and in the base materials list.
 ---@param materialName string
 ---@param materialId integer
 function MaterialManager:addBaseMaterial(materialName, materialId) end
 
---- Renvoie l'identifiant du matériau de base par nom (insensible à la casse), nil si absent.
+--- Returns the base material id by name (case-insensitive), nil if absent.
 ---@param materialName string
 ---@return integer
 function MaterialManager:getBaseMaterialByName(materialName) end
 
---- Enregistre un matériau pour un type de remplissage, un type de matériau et un indice, dans le registre des matériaux.
+--- Registers a material for a fill type, a material type and an index, in the materials registry.
 ---@param fillTypeIndex integer
 ---@param materialType string
 ---@param materialIndex integer
 ---@param materialId integer
 function MaterialManager:addMaterial(fillTypeIndex, materialType, materialIndex, materialId) end
 
---- Même chose, dans le registre des matériaux de particules.
+--- Same thing, in the particle materials registry.
 ---@param fillTypeIndex integer
 ---@param materialType string
 ---@param materialIndex integer
 ---@param materialId integer
 function MaterialManager:addParticleMaterial(fillTypeIndex, materialType, materialIndex, materialId) end
 
---- Insère le matériau dans la table cible, à trois niveaux (remplissage, type, indice). Ignore l'appel si un argument vaut nil. L'écrasement d'un matériau existant n'est signalé que par un avertissement développeur.
+--- Inserts the material into the target table, at three levels (fill, type, index). Ignores the call if an argument is nil. Overwriting an existing material is only flagged by a developer warning.
 ---@param target table
 ---@param fillTypeIndex integer
 ---@param materialType string
@@ -74,21 +74,21 @@ function MaterialManager:addParticleMaterial(fillTypeIndex, materialType, materi
 ---@param materialId integer
 function MaterialManager:addMaterialToTarget(target, fillTypeIndex, materialType, materialIndex, materialId) end
 
---- Renvoie le matériau pour (type de remplissage, type de matériau, indice), nil sinon.
+--- Returns the material for (fill type, material type, index), nil otherwise.
 ---@param fillType integer
 ---@param materialTypeName string
 ---@param materialIndex integer
 ---@return integer
 function MaterialManager:getMaterial(fillType, materialTypeName, materialIndex) end
 
---- Renvoie le matériau de particules pour (type de remplissage, type de matériau, indice), nil sinon ; c'est la fonction utilisée pour habiller les particules selon la matière.
+--- Returns the particle material for (fill type, material type, index), nil otherwise; this is the function used to dress particles according to the matter.
 ---@param fillType integer
 ---@param materialTypeName string
 ---@param materialIndex integer
 ---@return integer
 function MaterialManager:getParticleMaterial(fillType, materialTypeName, materialIndex) end
 
---- Recherche générique dans une table cible : valide le nom du type, puis descend dans type de remplissage, type de matériau et indice ; renvoie nil dès qu'un niveau manque ou qu'un argument est nil.
+--- Generic lookup in a target table: validates the type name, then descends into fill type, material type and index; returns nil as soon as a level is missing or an argument is nil.
 ---@param target integer
 ---@param fillType integer
 ---@param materialTypeName string
@@ -96,25 +96,25 @@ function MaterialManager:getParticleMaterial(fillType, materialTypeName, materia
 ---@return integer
 function MaterialManager:getMaterialFromTarget(target, fillType, materialTypeName, materialIndex) end
 
---- Met en file un fichier I3D porte-matériaux fourni par un mod (clé = nom de fichier, donc dédoublonné).
+--- Queues an I3D material holder file provided by a mod (key = file name, hence deduplicated).
 ---@param filename any
 function MaterialManager:addModMaterialHolder(filename) end
 
---- Lance le chargement asynchrone de tous les porte-matériaux de mods en file ; le rappel est materialHolderLoaded.
+--- Starts the asynchronous loading of all the queued mod material holders; the callback is materialHolderLoaded.
 function MaterialManager:loadModMaterialHolders() end
 
---- Rappel de chargement : détache chaque enfant de l'I3D chargé, le garde dans loadedMaterialHolderNodes, puis supprime l'I3D racine. Aucun traitement en cas d'échec (identifiant 0).
+--- Load callback: detaches each child of the loaded I3D, keeps it in loadedMaterialHolderNodes, then deletes the root I3D. No handling on failure (id 0).
 ---@param i3dNode any
 ---@param failedReason any
 ---@param args any
 function MaterialManager:materialHolderLoaded(i3dNode, failedReason, args) end
 
---- Renvoie la police par nom ; essaie d'abord le nom préfixé par l'environnement du mod (« mod.nom »), puis le nom brut.
+--- Returns the font by name; tries first the name prefixed by the mod environment ("mod.name"), then the raw name.
 ---@param materialName any
 ---@param customEnvironment any
 function MaterialManager:getFontMaterial(materialName, customEnvironment) end
 
---- Charge un XML de polices en asynchrone avec un compteur de références ; à la fin du dernier chargement, supprime le XML et appelle le rappel de fin enregistré par loadMapData. S'il n'y a aucune police, le rappel est appelé immédiatement.
+--- Loads a fonts XML asynchronously with a reference counter; at the end of the last load, deletes the XML and calls the end callback registered by loadMapData. If there is no font, the callback is called immediately.
 ---@param xmlFilename any
 ---@param customEnvironment any
 ---@param baseDirectory any

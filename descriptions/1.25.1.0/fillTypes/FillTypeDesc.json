@@ -1,0 +1,17 @@
+{
+ "fichier": "fillTypes/FillTypeDesc.lua",
+ "module": {
+  "en": "Data class describing one fill type (a material such as grain, liquid or bale content): name, title, unit, mass and price per liter, seasonal price factors, ground layer textures and physical parameters, effect and particle settings. It is created and indexed by FillTypeManager and filled from XML.",
+  "fr": "Classe de données décrivant un type de remplissage (une matière comme grain, liquide ou contenu de balle) : nom, titre, unité, masse et prix par litre, facteurs de prix saisonniers, textures et paramètres physiques de couche de sol, réglages d'effets et de particules. Elle est créée et indexée par FillTypeManager et remplie depuis un XML."
+ },
+ "fonctions": {
+  "FillTypeDesc.new": {
+   "en": "Constructor. Creates a fill type named UNKNOWN with defaults (mass 0.001 per liter, max surface angle 30 degrees, empty economy and layer data, default alpha clip values, not finalized). The index is set later by FillTypeManager.",
+   "fr": "Constructeur. Crée un type de remplissage nommé UNKNOWN avec des valeurs par défaut (masse 0,001 par litre, angle de surface max 30 degrés, économie et données de couche vides, valeurs d'alpha clip par défaut, non finalisé). L'index est défini plus tard par FillTypeManager."
+  },
+  "FillTypeDesc:loadFromXMLFile": {
+   "en": "Reads a fill type from XML: name (validated, upper-cased; returns false if invalid), title, unit, bulk/pallet/bale flags, physics, HUD and pallet files, price and per-period economy factors, ground textures and layer parameters, effect type, smoke colors, particles and alpha clip. Existing values are kept as defaults, so repeated loads override selectively. Returns true on success. Note: firmnessWet falls back to the firmness value.",
+   "fr": "Lit un type de remplissage depuis un XML : nom (validé, en majuscules ; retourne false s'il est invalide), titre, unité, indicateurs vrac/palette/balle, physique, fichiers HUD et palette, prix et facteurs économiques par période, textures de sol et paramètres de couche, type d'effet, couleurs de fumée, particules et alpha clip. Les valeurs existantes servent de défauts, donc des chargements répétés remplacent sélectivement. Retourne true en cas de succès. À noter : firmnessWet retombe sur la valeur de firmness."
+  }
+ }
+}

@@ -1,0 +1,73 @@
+{
+ "fichier": "vehicles/specializations/AutoLoaderBales.lua",
+ "module": {
+  "en": "Specialization that automatically picks up bales entering a trigger and either mounts them on a spawn node or drops them there as physics objects. It targets tools such as straw blowers or mixer wagons, on platforms that enable automatic loading. Bale types are defined in XML by size (round or square) and optional fill types. Detection and mounting run on the server only, and mounted bales are saved with the vehicle.",
+  "fr": "Spécialisation qui ramasse automatiquement les balles entrant dans un trigger et les monte sur un noeud d'apparition ou les y dépose comme objets physiques. Elle vise des outils comme les pailleuses ou les mélangeuses, sur les plateformes qui activent le chargement automatique. Les types de balles sont définis dans le XML par leur taille (ronde ou carrée) et des types de remplissage optionnels. La détection et le montage se font uniquement côté serveur, et les balles montées sont sauvegardées avec le véhicule."
+ },
+ "fonctions": {
+  "AutoLoaderBales.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "AutoLoaderBales.initSpecialization": {
+   "en": "Registers the XML keys under `vehicle.autoLoaderBales` (pickup trigger, bale types with fill types, dimensions and spawn place settings) and the savegame bale paths.",
+   "fr": "Enregistre les clés XML sous `vehicle.autoLoaderBales` (trigger de ramassage, types de balles avec types de remplissage, dimensions et réglages de la place d'apparition) et les chemins de sauvegarde des balles."
+  },
+  "AutoLoaderBales.registerFunctions": {
+   "en": "Registers `autoLoaderBalesTriggerCallback`, `getAutoLoadBaleTypeFromBale`, `doAutoLoadBale` and `getIsBaleAutoLoadable`.",
+   "fr": "Enregistre `autoLoaderBalesTriggerCallback`, `getAutoLoadBaleTypeFromBale`, `doAutoLoadBale` et `getIsBaleAutoLoadable`."
+  },
+  "AutoLoaderBales.registerOverwrittenFunctions": {
+   "en": "Empty: this specialization overrides no vehicle function.",
+   "fr": "Vide : cette spécialisation ne surcharge aucune fonction de véhicule."
+  },
+  "AutoLoaderBales.registerEventListeners": {
+   "en": "Subscribes to onLoad, onLoadFinished, onDelete and onUpdate.",
+   "fr": "S'abonne à onLoad, onLoadFinished, onDelete et onUpdate."
+  },
+  "AutoLoaderBales:onLoad": {
+   "en": "Initialises the bale tables. On the server it adds the pickup trigger and reads each bale type; a type needs a spawn node and either diameter and width, or width, height and length, otherwise a warning is logged and it is skipped.",
+   "fr": "Initialise les tables de balles. Sur le serveur, ajoute le trigger de ramassage et lit chaque type de balle ; un type exige un noeud d'apparition et soit diamètre et largeur, soit largeur, hauteur et longueur, sinon un avertissement est journalisé et il est ignoré."
+  },
+  "AutoLoaderBales:onLoadFinished": {
+   "en": "When a non-reset savegame is given, recreates each saved bale, applies its attributes and loads it into a matching bale type; bales without a matching type are deleted.",
+   "fr": "Quand une sauvegarde non réinitialisée est fournie, recrée chaque balle sauvegardée, applique ses attributs et la charge dans un type de balle correspondant ; les balles sans type correspondant sont supprimées."
+  },
+  "AutoLoaderBales:onDelete": {
+   "en": "Removes the trigger and delete listeners, unmounts every mounted bale and flags it as needing to be saved so it persists in the world.",
+   "fr": "Retire le trigger et les écouteurs de suppression, démonte chaque balle montée et la marque comme à sauvegarder pour qu'elle persiste dans le monde."
+  },
+  "AutoLoaderBales:saveToXMLFile": {
+   "en": "Saves each mounted bale through the bale's own save routine under indexed `bale` keys.",
+   "fr": "Sauvegarde chaque balle montée via la routine de sauvegarde propre à la balle, sous des clés `bale` indexées."
+  },
+  "AutoLoaderBales:onUpdate": {
+   "en": "Every update, after a short pickup delay (counted in updates, not time), picks the highest loadable bale in the trigger whose type still has room and loads it, then sets the delay to 10 updates.",
+   "fr": "À chaque mise à jour, après un court délai de ramassage (compté en mises à jour, non en temps), choisit la balle chargeable la plus haute dans le trigger dont le type a encore de la place et la charge, puis fixe le délai à 10 mises à jour."
+  },
+  "AutoLoaderBales.onDeleteAutoLoaderBalesObject": {
+   "en": "Delete listener for mounted bales: forgets the bale, decrements the mounted count and clears the loaded bale type once none remains.",
+   "fr": "Écouteur de suppression des balles montées : oublie la balle, décrémente le compteur et efface le type de balle chargé quand il n'en reste plus."
+  },
+  "AutoLoaderBales.onBaleDeleted": {
+   "en": "Delete listener for bales inside the trigger: removes the bale from the in-trigger table.",
+   "fr": "Écouteur de suppression des balles dans le trigger : retire la balle de la table des balles dans le trigger."
+  },
+  "AutoLoaderBales:autoLoaderBalesTriggerCallback": {
+   "en": "Trigger callback that keeps a per-bale counter of shapes inside the trigger, only for bales the active farm may access and that allow pickup. Any non-enter event, including stay, decrements the counter.",
+   "fr": "Callback de trigger qui tient un compteur par balle des formes dans le trigger, seulement pour les balles accessibles à la ferme active et autorisant le ramassage. Tout événement autre que l'entrée, y compris le maintien, décrémente le compteur."
+  },
+  "AutoLoaderBales:getAutoLoadBaleTypeFromBale": {
+   "en": "Returns the first bale type compatible with the bale (same type as already loaded if any, allowed fill type, matching size), or nil if none fits.",
+   "fr": "Renvoie le premier type de balle compatible avec la balle (le même que celui déjà chargé le cas échéant, type de remplissage autorisé, taille correspondante), ou nil si aucun ne convient."
+  },
+  "AutoLoaderBales:doAutoLoadBale": {
+   "en": "If the type mounts bales, mounts the bale kinematically on the spawn node, offset by the number already mounted, and records it. Otherwise it teleports the bale to the spawn node and gives it the parent component's velocity.",
+   "fr": "Si le type monte les balles, monte la balle de façon cinématique sur le noeud d'apparition, décalée selon le nombre déjà monté, et l'enregistre. Sinon elle téléporte la balle au noeud d'apparition et lui donne la vitesse du composant parent."
+  },
+  "AutoLoaderBales:getIsBaleAutoLoadable": {
+   "en": "Returns true if the bale is not currently mounted on any object.",
+   "fr": "Renvoie true si la balle n'est actuellement montée sur aucun objet."
+  }
+ }
+}

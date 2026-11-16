@@ -1,0 +1,73 @@
+{
+ "fichier": "vehicles/specializations/WoodContainer.lua",
+ "module": {
+  "en": "Specialization for shipping containers that accept logs through a trigger. The server deletes each qualifying tree/log entering the trigger and adds its volume to a fill unit as wood, while tracking a quality-weighted volume used to reduce the paid amount when emptying. It supports a configuration type `woodContainer`, an optional push animation, load sounds and a fold-range limit when combined with a foldable. State is saved as `woodQualityVolume` and `woodQualityTotalVolume`. The class table declaration is absent from the dump lines.",
+  "fr": "Spécialisation pour conteneurs d'expédition qui reçoivent des grumes via un déclencheur. Le serveur supprime chaque arbre/grume admissible entrant dans le déclencheur et ajoute son volume en bois à une unité de remplissage, tout en suivant un volume pondéré par la qualité qui réduit la quantité payée au vidage. Elle gère un type de configuration `woodContainer`, une animation de poussée optionnelle, des sons de chargement et une plage de pliage si le véhicule est aussi pliable. L'état est sauvegardé (`woodQualityVolume`, `woodQualityTotalVolume`). La déclaration de la table de classe est absente des lignes du dump."
+ },
+ "fonctions": {
+  "WoodContainer.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "WoodContainer.initSpecialization": {
+   "en": "Adds the `woodContainer` vehicle configuration type, registers XML paths (base and per configuration), the log-count sound settings, and the two savegame attributes for quality volumes.",
+   "fr": "Ajoute le type de configuration de véhicule `woodContainer`, enregistre les chemins XML (de base et par configuration), les réglages de son selon le nombre de grumes, et les deux attributs de sauvegarde des volumes de qualité."
+  },
+  "WoodContainer.registerXMLPaths": {
+   "en": "Registers under a base key: fold limits, `#fillUnitIndex`, `#targetLength` (ideal log length, default 12), `#triggerNode` and the push animation name and speed scale.",
+   "fr": "Enregistre sous une clé de base : limites de pliage, `#fillUnitIndex`, `#targetLength` (longueur idéale, 12 par défaut), `#triggerNode` et le nom et l'échelle de vitesse de l'animation de poussée."
+  },
+  "WoodContainer.registerFunctions": {
+   "en": "Registers `getPalletUnloadTriggerExtraSellPrice`, `getIsWoodContainerFillingAllowed` and `onWoodContainerTriggerCallback` on the vehicle type.",
+   "fr": "Enregistre `getPalletUnloadTriggerExtraSellPrice`, `getIsWoodContainerFillingAllowed` et `onWoodContainerTriggerCallback` sur le type de véhicule."
+  },
+  "WoodContainer.registerOverwrittenFunctions": {
+   "en": "Overrides `getInfoBoxTitle` and `addFillUnitFillLevel` of the vehicle.",
+   "fr": "Surcharge `getInfoBoxTitle` et `addFillUnitFillLevel` du véhicule."
+  },
+  "WoodContainer.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete and onFillUnitFillLevelChanged.",
+   "fr": "S'abonne à onLoad, onDelete et onFillUnitFillLevelChanged."
+  },
+  "WoodContainer:onLoad": {
+   "en": "Picks the XML section of the selected `woodContainer` configuration (falling back to the base key) and reads limits, fill unit, target length, trigger and push animation. On the server it registers the trigger callback; on the client it loads the load sample. Restores saved quality volumes.",
+   "fr": "Choisit la section XML de la configuration `woodContainer` sélectionnée (repli sur la clé de base) et lit limites, unité de remplissage, longueur cible, déclencheur et animation. Sur le serveur, enregistre le callback du déclencheur ; sur le client, charge le son. Restaure les volumes de qualité sauvegardés."
+  },
+  "WoodContainer:onDelete": {
+   "en": "Removes the trigger node's trigger and deletes the sound samples.",
+   "fr": "Retire le déclencheur du nœud et supprime les échantillons sonores."
+  },
+  "WoodContainer:saveToXMLFile": {
+   "en": "Writes the quality-weighted and total wood volumes to the savegame.",
+   "fr": "Écrit dans la sauvegarde les volumes de bois pondéré par la qualité et total."
+  },
+  "WoodContainer:onFillUnitFillLevelChanged": {
+   "en": "For the container's fill unit: on the client plays the load sound when the apparent log count changes while filling; and plays the push animation forward when the level leaves zero or backward when it returns to zero.",
+   "fr": "Pour l'unité de remplissage du conteneur : côté client, joue le son de chargement quand le nombre apparent de grumes change pendant le remplissage ; joue l'animation de poussée en avant quand le niveau quitte zéro, en arrière quand il y revient."
+  },
+  "WoodContainer:getPalletUnloadTriggerExtraSellPrice": {
+   "en": "Returns the vehicle's price (`getPrice()`), used as an extra sell price by pallet unload triggers.",
+   "fr": "Renvoie le prix du véhicule (`getPrice()`), utilisé comme supplément de prix de vente par les déclencheurs de déchargement de palettes."
+  },
+  "WoodContainer:getIsWoodContainerFillingAllowed": {
+   "en": "Returns false if the vehicle is foldable and its fold animation time lies outside the configured min/max limits; otherwise true.",
+   "fr": "Renvoie false si le véhicule est pliable et que le temps d'animation de pliage sort des limites min/max configurées ; sinon true."
+  },
+  "WoodContainer:getInfoBoxTitle": {
+   "en": "Overrides the info box title with the localized `storeItem_shippingContainer` text, ignoring `superFunc`.",
+   "fr": "Remplace le titre de la boîte d'info par le texte localisé `storeItem_shippingContainer`, sans appeler `superFunc`."
+  },
+  "WoodContainer:addFillUnitFillLevel": {
+   "en": "Wraps the parent call. When removing wood (negative delta) and a total volume is tracked, the returned delta is scaled by the quality-to-total volume ratio, so low-quality wood yields less. The tracked volumes themselves are not reduced here.",
+   "fr": "Enveloppe l'appel parent. Lors d'un retrait de bois (delta négatif) avec un volume total suivi, le delta renvoyé est multiplié par le ratio volume de qualité / volume total, donc un bois de mauvaise qualité rapporte moins. Les volumes suivis ne sont pas diminués ici."
+  },
+  "WoodContainer:onWoodContainerTriggerCallback": {
+   "en": "Server-side trigger handler. If filling is allowed, takes a valid non-transport split shape with a positive price, adds its volume to the fill unit as wood, updates quality volumes, deletes the shape and broadcasts `WoodContainerWrongLengthEvent` if its length is more than 1 m from the target. Transport trees trigger a blinking warning.",
+   "fr": "Gestionnaire de déclencheur côté serveur. Si le remplissage est permis, prend une forme découpable valide, non « transport » et de prix positif, ajoute son volume en bois à l'unité, met à jour les volumes de qualité, supprime la forme et diffuse `WoodContainerWrongLengthEvent` si sa longueur s'écarte de plus d'1 m de la cible. Les arbres de transport déclenchent un avertissement clignotant."
+  },
+  "WoodContainer.getSplitShapeInfo": {
+   "en": "Returns three values for a split shape: volume in liters, a quality scale (from bounding-box ratio, convex parts, length, attached branches, blended toward 1 by economic difficulty) and its longest bounding size.",
+   "fr": "Renvoie trois valeurs pour une forme découpable : volume en litres, échelle de qualité (selon le rapport de boîte englobante, les parties convexes, la longueur, les branches attachées, atténuée vers 1 selon la difficulté économique) et sa plus grande dimension englobante."
+  }
+ }
+}

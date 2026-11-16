@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/PlaceablePalletBuyingStation.lua",
+ "module": {
+  "en": "Placeable specialization for a pallet buying station: a trigger opens a shop of pallets (one per configured fill type, priced from the pallet store item and the economy multiplier) and a PalletSpawner creates the bought pallets. The station registers with the mission storage system. This file declares no registerEventListeners, so how onLoad/onDelete are wired is UNVERIFIED here; PalletBuyingStationActivatable is defined elsewhere.",
+  "fr": "Spécialisation de placeable pour une station d'achat de palettes : un trigger ouvre une boutique de palettes (une par type de remplissage configuré, prix issu de l'objet de magasin de la palette et du multiplicateur d'économie) et un PalletSpawner crée les palettes achetées. La station s'enregistre dans le système de stockage de la mission. Ce fichier ne déclare pas registerEventListeners, le branchement de onLoad/onDelete est donc NON VÉRIFIÉ ici ; PalletBuyingStationActivatable est défini ailleurs."
+ },
+ "fonctions": {
+  "PlaceablePalletBuyingStation.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is required.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceablePalletBuyingStation:onLoad": {
+   "en": "Reads the trigger node (error and early return if missing), optional pallet spawner, and the fillType entries to build the pallet list with price = store price x priceScale x economy multiplier. Creates the activatable and registers the station in the storage system; returns true on success. The trigger callback onActivationTriggerCallback is not defined in this file.",
+   "fr": "Lit le nœud de trigger (erreur et retour anticipé s'il manque), le pallet spawner optionnel et les entrées fillType pour construire la liste de palettes avec prix = prix du magasin x priceScale x multiplicateur d'économie. Crée l'activatable et enregistre la station dans le système de stockage ; renvoie true en cas de succès. Le callback onActivationTriggerCallback n'est pas défini dans ce fichier."
+  },
+  "PlaceablePalletBuyingStation:onDelete": {
+   "en": "Unregisters the station from the storage system, deletes the pallet spawner if any and removes the trigger.",
+   "fr": "Désenregistre la station du système de stockage, supprime le pallet spawner s'il existe et retire le trigger."
+  }
+ }
+}

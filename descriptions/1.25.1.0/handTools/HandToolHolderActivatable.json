@@ -1,0 +1,25 @@
+{
+ "fichier": "handTools/HandToolHolderActivatable.lua",
+ "module": {
+  "en": "Activatable (interaction prompt) object attached to a `HandToolHolder`. It lets the local player take the stored hand tool or store the one currently held, depending on which side is empty. It can optionally require that the holder is the one targeted by the player's targeter.",
+  "fr": "Objet activable (invite d'interaction) associé à un `HandToolHolder`. Il permet au joueur local de prendre l'outil à main rangé ou de ranger celui qu'il tient, selon le côté vide. Il peut exiger que le holder soit celui visé par le targeter du joueur."
+ },
+ "fonctions": {
+  "HandToolHolderActivatable.new": {
+   "en": "Creates the activatable for a holder with its take and store texts (format strings receiving the tool type description) and a flag saying whether targeting is required.",
+   "fr": "Crée l'activable pour un holder avec ses textes de prise et de rangement (chaînes de format recevant la description du type d'outil) et un indicateur précisant si le ciblage est requis."
+  },
+  "HandToolHolderActivatable:getIsActivatable": {
+   "en": "Returns true when the local player can take the holder's tool (hands empty, holder full) or store their held tool (holder empty); sets `activateText` accordingly. With targeting on, the holder must be the targeted one.",
+   "fr": "Renvoie true quand le joueur local peut prendre l'outil du holder (mains vides, holder plein) ou ranger son outil tenu (holder vide) ; met à jour `activateText`. Avec le ciblage, le holder doit être celui visé."
+  },
+  "HandToolHolderActivatable:getDistance": {
+   "en": "Returns 0 if targeting is required and the prompt is currently activatable; otherwise the distance from the given position to the holder node.",
+   "fr": "Renvoie 0 si le ciblage est requis et que l'invite est activable ; sinon la distance entre la position donnée et le noeud du holder."
+  },
+  "HandToolHolderActivatable:run": {
+   "en": "Executes the interaction: either sets the holder's tool to the local player and makes it the current hand tool, or sets the held tool's holder to this holder. Local player only.",
+   "fr": "Exécute l'interaction : soit donne l'outil du holder au joueur local et le rend outil courant, soit range l'outil tenu dans ce holder. Joueur local uniquement."
+  }
+ }
+}

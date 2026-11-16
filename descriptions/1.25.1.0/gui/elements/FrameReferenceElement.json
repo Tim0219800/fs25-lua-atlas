@@ -1,0 +1,7 @@
+{"fichier": "gui/elements/FrameReferenceElement.lua",
+ "module": {"en": "FrameReferenceElement is a placeholder GuiElement that names a frame to display. It stores the name from the XML attribute ref. Resolution and removal of the placeholder happen in the GUI loading code, which is not in this file: UNVERIFIED.", "fr": "FrameReferenceElement est un GuiElement de substitution qui désigne un frame à afficher. Il mémorise le nom issu de l'attribut XML ref. La résolution et le retrait du substitut se font dans le code de chargement du GUI, absent de ce fichier : NON VÉRIFIÉ."},
+ "fonctions": {
+  "FrameReferenceElement.new": {"en": "Constructor. Creates the element with an empty referencedFrameName.", "fr": "Constructeur. Crée l'élément avec un referencedFrameName vide."},
+  "FrameReferenceElement:loadFromXML": {"en": "Loads the base attributes and reads the referenced frame name from the ref attribute (empty string if absent).", "fr": "Charge les attributs de base et lit le nom du frame référencé dans l'attribut ref (chaîne vide si absent)."},
+  "FrameReferenceElement:copyAttributes": {"en": "Copies base attributes and the referenced frame name from a source element.", "fr": "Copie les attributs de base et le nom du frame référencé depuis un élément source."}
+ }}

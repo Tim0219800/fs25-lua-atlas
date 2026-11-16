@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/BalerDropFromPlatformEvent.lua",
+ "module": {
+  "en": "Network event class `BalerDropFromPlatformEvent` (extends `Event`) that replicates dropping a bale from the baler platform. It carries the vehicle and a wait-for-next-bale boolean. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `BalerDropFromPlatformEvent` (hérite de `Event`) qui réplique la dépose d'une balle depuis la plateforme de la presse. Elle transporte le véhicule et un booléen d'attente de la balle suivante. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "BalerDropFromPlatformEvent.emptyNew": {
+   "en": "Creates an empty `BalerDropFromPlatformEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `BalerDropFromPlatformEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "BalerDropFromPlatformEvent.new": {
+   "en": "Creates the event with its data: the vehicle and a wait-for-next-bale boolean.",
+   "fr": "Crée l'événement avec ses données : le véhicule et un booléen d'attente de la balle suivante."
+  },
+  "BalerDropFromPlatformEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle and a wait-for-next-bale boolean), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule et un booléen d'attente de la balle suivante), puis appelle `run`."
+  },
+  "BalerDropFromPlatformEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle and a wait-for-next-bale boolean).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule et un booléen d'attente de la balle suivante)."
+  },
+  "BalerDropFromPlatformEvent:run": {
+   "en": "Executes the event on the receiving side: calls `dropBaleFromPlatform(waitForNextBale, true)` on the vehicle. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `dropBaleFromPlatform(waitForNextBale, true)` sur le véhicule. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  },
+  "BalerDropFromPlatformEvent.sendEvent": {
+   "en": "Helper that sends the event: the server broadcasts it to clients, a client sends it to the server. Skipped when `noEventSend` is set.",
+   "fr": "Fonction utilitaire d'envoi : le serveur diffuse l'événement aux clients, un client l'envoie au serveur. Ignorée si `noEventSend` est activé."
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "fichier": "objects/football/Football.lua",
+ "module": {
+  "en": "Football (soccer ball) physics object, extending PhysicsObject. This file only contains the constructor and the destructor; the ball behaviour is inherited or implemented in the field class.",
+  "fr": "Objet physique de ballon de football, étendant PhysicsObject. Ce fichier ne contient que le constructeur et le destructeur ; le comportement du ballon est hérité ou géré par la classe du terrain."
+ },
+ "fonctions": {
+  "Football.new": {
+   "en": "Constructor: builds the PhysicsObject, sets a forced clip distance of 200 and registers the class name `Football`.",
+   "fr": "Constructeur : construit le PhysicsObject, fixe une distance de clipping forcée de 200 et enregistre le nom de classe `Football`."
+  },
+  "Football:delete": {
+   "en": "Deletes the sound samples, unregisters the class name, removes children from the node object, and calls the grandparent `delete` deliberately so the ball entity itself is not deleted.",
+   "fr": "Supprime les échantillons sonores, désenregistre le nom de classe, retire les enfants de l'objet noeud et appelle volontairement le `delete` du grand-parent pour ne pas supprimer l'entité du ballon."
+  }
+ }
+}

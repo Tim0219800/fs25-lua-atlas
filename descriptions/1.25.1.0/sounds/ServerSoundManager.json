@@ -1,0 +1,17 @@
+{
+ "fichier": "sounds/ServerSoundManager.lua",
+ "module": {
+  "en": "Subclass of SoundManager intended for the dedicated server, where sounds are not played. The file also redefines SoundManager:cloneSample, which is a global override of the parent class rather than a subclass method.",
+  "fr": "Sous-classe de SoundManager destinée au serveur dédié, où les sons ne sont pas joués. Le fichier redéfinit aussi SoundManager:cloneSample, ce qui remplace la méthode de la classe parente et non d'une sous-classe."
+ },
+ "fonctions": {
+  "ServerSoundManager.new": {
+   "en": "Constructor. Note: it calls SoundManager.new with the given metatable or the ServerSoundManager one and returns that object.",
+   "fr": "Constructeur. À noter : appelle SoundManager.new avec la métatable fournie ou celle de ServerSoundManager et renvoie cet objet."
+  },
+  "SoundManager:cloneSample": {
+   "en": "Note: defined on SoundManager, not ServerSoundManager, so it overrides the base method once this file is loaded. Clones the sample table and its modifiers without creating any audio source, registers it and returns it.",
+   "fr": "À noter : définie sur SoundManager et non sur ServerSoundManager, elle remplace donc la méthode de base une fois ce fichier chargé. Clone la table de l'échantillon et ses modificateurs sans créer de source audio, l'enregistre et la renvoie."
+  }
+ }
+}

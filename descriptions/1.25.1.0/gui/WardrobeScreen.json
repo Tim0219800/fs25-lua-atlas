@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/WardrobeScreen.lua",
+ "module": {
+  "en": "Wardrobe (character customisation) screen, built on `TabbedMenuWithDetails`. Only the cleanup of its non-GUI input action event is described here.",
+  "fr": "Écran de garde-robe (personnalisation du personnage), basé sur `TabbedMenuWithDetails`. Seul le nettoyage de son événement d'action d'entrée non-GUI est décrit ici."
+ },
+ "fonctions": {
+  "WardrobeScreen:removeActionEvents": {
+   "en": "Unregisters the left/right controller action event (`eventIdLeftRightController`) from `g_inputBinding` and clears the stored id.",
+   "fr": "Désenregistre de `g_inputBinding` l'événement d'action gauche/droite de la manette (`eventIdLeftRightController`) et efface l'identifiant stocké."
+  }
+ }
+}

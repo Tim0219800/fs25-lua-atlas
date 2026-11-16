@@ -1,0 +1,89 @@
+{
+ "fichier": "vehicles/VehicleCharacter.lua",
+ "module": {
+  "en": "Visible driver/passenger character model of a vehicle seat. It reads a character node and IK or animation settings from the vehicle XML, loads a `HumanModel` from a `PlayerStyle`, links it to the vehicle, drives IK chains (or an animation set, optionally an idle clip), hides the model when the camera is too close and throttles updates by distance. Used by the vehicle specializations that show characters; not a specialization itself.",
+  "fr": "Modèle de personnage visible (conducteur/passager) d'un siège de véhicule. Il lit un noeud de personnage et des réglages IK ou animation dans le XML du véhicule, charge un `HumanModel` depuis un `PlayerStyle`, le lie au véhicule, pilote les chaînes IK (ou un jeu d'animations, éventuellement un clip d'attente), masque le modèle quand la caméra est trop proche et limite les mises à jour selon la distance. Utilisé par les spécialisations de véhicule qui affichent des personnages ; ce n'est pas une spécialisation."
+ },
+ "fonctions": {
+  "VehicleCharacter.new": {
+   "en": "Creates the character holder for a vehicle: no node or model yet, updates allowed, empty IK targets, animation off and invisible. Accepts a custom metatable.",
+   "fr": "Crée le conteneur de personnage d'un véhicule : ni noeud ni modèle, mises à jour autorisées, cibles IK vides, animation désactivée et invisible. Accepte une métatable personnalisée."
+  },
+  "VehicleCharacter:load": {
+   "en": "Reads the character settings from the vehicle XML node (`#node`, `#cameraMinDistance`, `#useAnimation`, spine and distance options, IK targets) and hides the node. Returns true if a character node was found, false otherwise.",
+   "fr": "Lit les réglages du personnage depuis le noeud XML du véhicule (`#node`, `#cameraMinDistance`, `#useAnimation`, options de colonne et de distance, cibles IK) et masque le noeud. Renvoie vrai si un noeud de personnage a été trouvé, faux sinon."
+  },
+  "VehicleCharacter:getParentComponent": {
+   "en": "Returns the vehicle component that contains the character node.",
+   "fr": "Renvoie le composant du véhicule qui contient le noeud du personnage."
+  },
+  "VehicleCharacter:loadCharacter": {
+   "en": "Asynchronously creates and loads a `HumanModel` for the given `PlayerStyle`, deleting any previous model. With a nil style it calls the callback immediately with false. Completion goes through `characterLoaded`, then the supplied callback.",
+   "fr": "Crée et charge de façon asynchrone un `HumanModel` pour le `PlayerStyle` donné, en supprimant l'ancien modèle. Avec un style nil, appelle aussitôt le rappel avec faux. La fin passe par `characterLoaded`, puis par le rappel fourni."
+  },
+  "VehicleCharacter:characterLoaded": {
+   "en": "Callback of the model load. On success links the model to the character node, applies IK targets and spine rotation, sets up the animation set or idle clip, then loads the style asynchronously. On failure deletes the model and logs an error. Always calls the user callback.",
+   "fr": "Rappel de fin de chargement du modèle. En cas de succès, lie le modèle au noeud du personnage, applique cibles IK et rotation de colonne, prépare le jeu d'animations ou le clip d'attente, puis charge le style en asynchrone. En cas d'échec, supprime le modèle et journalise une erreur. Appelle toujours le rappel utilisateur."
+  },
+  "VehicleCharacter:delete": {
+   "en": "Destroys the character by unloading the model.",
+   "fr": "Détruit le personnage en déchargeant le modèle."
+  },
+  "VehicleCharacter:unloadCharacter": {
+   "en": "Deletes the player model and the conditional animation player if present, and restores the distance reference node to the custom or character node.",
+   "fr": "Supprime le modèle du joueur et le lecteur d'animation conditionnelle s'ils existent, et rétablit le noeud de référence de distance (personnalisé ou noeud du personnage)."
+  },
+  "VehicleCharacter:setDirty": {
+   "en": "Marks IK chains as needing recomputation: all when `setAllDirty` is true, otherwise only those whose target is itself flagged dirty. Needs a loaded model.",
+   "fr": "Marque les chaînes IK comme à recalculer : toutes si `setAllDirty` est vrai, sinon seulement celles dont la cible est elle-même marquée sale. Nécessite un modèle chargé."
+  },
+  "VehicleCharacter:updateIKChains": {
+   "en": "Recomputes the IK chains of the player model right away. Errors if no model is loaded.",
+   "fr": "Recalcule immédiatement les chaînes IK du modèle du joueur. Provoque une erreur si aucun modèle n'est chargé."
+  },
+  "VehicleCharacter:setIKChainPoseByTarget": {
+   "en": "Finds the IK chain bound to the given target and applies the pose id to it. Does nothing if no model or no matching chain.",
+   "fr": "Trouve la chaîne IK liée à la cible donnée et lui applique l'identifiant de pose. Ne fait rien sans modèle ou sans chaîne correspondante."
+  },
+  "VehicleCharacter:setSpineDirty": {
+   "en": "Leans the spine according to acceleration: applies a dead zone, maps acceleration to a rotation between the min and max angles, smooths it and marks IK dirty. Note: it uses `self.player.spineNode`, but `self.player` is never set in this file, so it looks unusable as is.",
+   "fr": "Incline la colonne selon l'accélération : applique une zone morte, convertit l'accélération en rotation entre les angles min et max, la lisse et marque l'IK comme sale. À noter : utilise `self.player.spineNode` alors que `self.player` n'est jamais défini dans ce fichier, il semble donc inutilisable tel quel."
+  },
+  "VehicleCharacter:updateVisibility": {
+   "en": "Shows the character only when the style is loaded and the active camera is at least `cameraMinDistance` from the reference node (head by default); skipped if either entity is missing.",
+   "fr": "Affiche le personnage seulement si le style est chargé et que la caméra active est à au moins `cameraMinDistance` du noeud de référence (la tête par défaut) ; ignoré si l'une des entités manque."
+  },
+  "VehicleCharacter:setCharacterVisibility": {
+   "en": "Sets visibility on the character node and on the loaded player model, and remembers the state in `isVisible`.",
+   "fr": "Règle la visibilité du noeud du personnage et du modèle chargé, et mémorise l'état dans `isVisible`."
+  },
+  "VehicleCharacter:setAllowCharacterUpdate": {
+   "en": "Enables or disables the regular IK dirty-flag update of the character.",
+   "fr": "Active ou désactive la mise à jour régulière du drapeau sale de l'IK du personnage."
+  },
+  "VehicleCharacter:getAllowCharacterUpdate": {
+   "en": "Returns whether the character update is allowed.",
+   "fr": "Renvoie si la mise à jour du personnage est autorisée."
+  },
+  "VehicleCharacter:update": {
+   "en": "Per-frame update for a loaded model: when the platform allows it and the vehicle is within `maxUpdateDistance` and the character visible, refreshes IK; also starts or stops the idle animation track depending on that distance.",
+   "fr": "Mise à jour par image pour un modèle chargé : si la plateforme l'autorise, que le véhicule est dans `maxUpdateDistance` et le personnage visible, rafraîchit l'IK ; démarre ou arrête aussi la piste d'animation d'attente selon cette distance."
+  },
+  "VehicleCharacter:getIKChainTargets": {
+   "en": "Returns the table of IK chain targets.",
+   "fr": "Renvoie la table des cibles de chaînes IK."
+  },
+  "VehicleCharacter:setIKChainTargets": {
+   "en": "Replaces the IK targets (if different or forced) and, with a loaded model, applies them to the chains and marks all dirty.",
+   "fr": "Remplace les cibles IK (si différentes ou forcé) et, avec un modèle chargé, les applique aux chaînes et marque tout comme sale."
+  },
+  "VehicleCharacter:getPlayerStyle": {
+   "en": "Returns the style of the loaded player model, or nil if none.",
+   "fr": "Renvoie le style du modèle de joueur chargé, ou nil s'il n'y en a pas."
+  },
+  "VehicleCharacter.registerCharacterXMLPaths": {
+   "en": "Registers the XML schema entries for a character under `basePath`: node, camera and distance options, animation flags, spine settings, update and clip distances, plus the IK chain targets.",
+   "fr": "Enregistre les entrées de schéma XML d'un personnage sous `basePath` : noeud, options de caméra et de distance, indicateurs d'animation, réglages de colonne, distances de mise à jour et de clipping, ainsi que les cibles de chaînes IK."
+  }
+ }
+}

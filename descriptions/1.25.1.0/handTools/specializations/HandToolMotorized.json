@@ -1,0 +1,145 @@
+{
+ "fichier": "handTools/specializations/HandToolMotorized.lua",
+ "module": {
+  "en": "Hand tool specialization for any tool with a motor (such as the chainsaw): it simulates RPM that rises or falls toward a target at configurable rates, a load value, start/idle/stop sounds, exhaust effects and optional vibration of a node. RPM and load are synchronised in the update stream, and it can combine its vibration with HandToolBob. XML keys are under `handTool.motorized`. Note: `startTime` is read but not used in this file.",
+  "fr": "Spécialisation d'outil à main pour tout outil motorisé (comme la tronçonneuse) : elle simule un régime qui monte ou descend vers une cible à des vitesses configurables, une charge, les sons de démarrage, de ralenti et d'arrêt, des effets d'échappement et une vibration optionnelle d'un nœud. Le régime et la charge sont synchronisés dans le flux de mise à jour, et la vibration peut se combiner avec HandToolBob. Les clés XML sont sous `handTool.motorized`. À noter : `startTime` est lu mais n'est pas utilisé dans ce fichier."
+ },
+ "fonctions": {
+  "HandToolMotorized.registerXMLPaths": {
+   "en": "Registers the motor attributes (min/max RPM, gain and loss speed, variability), vibration node and amount, the start/stop/idle sounds and the exhaust effects.",
+   "fr": "Enregistre les attributs du moteur (régime min/max, vitesses de gain et de perte, variabilité), le nœud et l'amplitude de vibration, les sons de démarrage/arrêt/ralenti et les effets d'échappement."
+  },
+  "HandToolMotorized.registerFunctions": {
+   "en": "Registers the RPM, load, target RPM, sound and vibration functions on the hand tool type.",
+   "fr": "Enregistre sur le type d'outil à main les fonctions de régime, de charge, de régime cible, de son et de vibration."
+  },
+  "HandToolMotorized.registerOverwrittenFunctions": {
+   "en": "Overrides `updateBobNode` so vibration can be applied on top of the bob (see HandToolBob).",
+   "fr": "Surcharge `updateBobNode` pour appliquer la vibration en plus du balancement (voir HandToolBob)."
+  },
+  "HandToolMotorized.registerEventListeners": {
+   "en": "Subscribes to load, post-load, delete, update, update stream read/write, held start/end and debug draw.",
+   "fr": "Abonne la spécialisation au chargement, post-chargement, suppression, mise à jour, lecture/écriture du flux de mise à jour, début/fin de prise en main et affichage de debug."
+  },
+  "HandToolMotorized.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "HandToolMotorized:onLoad": {
+   "en": "Reads min RPM (default 10), max RPM (default 100), gain/loss speeds (default max minus min per second), variability and vibration settings. Starts at min RPM with zero load. On clients loads sounds and exhaust effects; sound keys use the base path `sounds.motorized.sounds`, which differs from the registered `handTool.motorized.sounds` (UNVERIFIED which one is intended).",
+   "fr": "Lit le régime min (10 par défaut), le régime max (100), les vitesses de gain et de perte (max moins min par seconde par défaut), la variabilité et la vibration. Démarre au régime min avec une charge nulle. Sur les clients, charge les sons et effets d'échappement ; les sons utilisent le chemin `sounds.motorized.sounds`, différent de `handTool.motorized.sounds` enregistré (NON VÉRIFIÉ lequel est voulu)."
+  },
+  "HandToolMotorized:onPostLoad": {
+   "en": "Detects whether a bob node of HandToolBob is the same node as the vibration node, and records it so `updateVibrations` can skip it.",
+   "fr": "Détecte si un nœud de balancement de HandToolBob est le même que le nœud de vibration, et l'enregistre pour que `updateVibrations` l'ignore."
+  },
+  "HandToolMotorized:onDelete": {
+   "en": "On clients frees the samples and tries to delete `fillEffects`, which this file never sets; the exhaust effects are not deleted here. Note: likely a leftover name.",
+   "fr": "Sur les clients, libère les échantillons et tente de supprimer `fillEffects`, que ce fichier ne définit jamais ; les effets d'échappement ne sont pas supprimés ici. À noter : probable nom résiduel."
+  },
+  "HandToolMotorized:onWriteUpdateStream": {
+   "en": "Writes, when the dirty flag is set, the RPM as a fraction between min and max and the load, each compressed to 8 bits.",
+   "fr": "Écrit, quand l'indicateur de modification est actif, le régime en fraction entre min et max et la charge, chacun compressé sur 8 bits."
+  },
+  "HandToolMotorized:onReadUpdateStream": {
+   "en": "Reads RPM and load. Applies them on the server, or on a client when the player carrying the tool is not the owner.",
+   "fr": "Lit le régime et la charge. Les applique sur le serveur, ou sur un client lorsque le joueur porteur n'est pas le propriétaire."
+  },
+  "HandToolMotorized:onHeldStart": {
+   "en": "On clients, plays the start sound followed by the idle loop (if idle is not already playing), stops the stop sound and starts exhaust effects.",
+   "fr": "Sur les clients, joue le son de démarrage puis la boucle de ralenti (si elle ne joue pas déjà), arrête le son d'arrêt et démarre les effets d'échappement."
+  },
+  "HandToolMotorized:onHeldEnd": {
+   "en": "On clients, stops start and idle sounds, plays the stop sound and stops exhaust effects.",
+   "fr": "Sur les clients, arrête les sons de démarrage et de ralenti, joue le son d'arrêt et arrête les effets d'échappement."
+  },
+  "HandToolMotorized:onUpdate": {
+   "en": "Updates RPM every frame, and on clients also updates sound parameters and vibrations.",
+   "fr": "Met à jour le régime à chaque image et, sur les clients, les paramètres sonores et les vibrations."
+  },
+  "HandToolMotorized:updateRPM": {
+   "en": "Moves current RPM toward the target at the gain or loss rate per second. With variability set, the target is lowered by a time-based pseudo-random offset that grows with load.",
+   "fr": "Fait évoluer le régime courant vers la cible à la vitesse de gain ou de perte par seconde. Avec la variabilité activée, la cible est abaissée d'un décalage pseudo-aléatoire dépendant du temps et croissant avec la charge."
+  },
+  "HandToolMotorized:updateSounds": {
+   "en": "Feeds the idle loop synthesis sound with the RPM fraction and the current load.",
+   "fr": "Fournit à la boucle sonore de ralenti la fraction de régime et la charge courante."
+  },
+  "HandToolMotorized:updateVibrations": {
+   "en": "Sets the vibration node translation to a random offset, unless the bob specialization drives that same node.",
+   "fr": "Place le nœud de vibration sur un décalage aléatoire, sauf si la spécialisation de balancement pilote ce même nœud."
+  },
+  "HandToolMotorized:getVibrationOffset": {
+   "en": "Returns a random X, Y, Z offset in metres within the configured amount, scaled by low RPM (strongest at idle) and reduced by load.",
+   "fr": "Renvoie un décalage aléatoire X, Y, Z en mètres dans l'amplitude configurée, plus fort à bas régime (maximal au ralenti) et réduit par la charge."
+  },
+  "HandToolMotorized:updateBobNode": {
+   "en": "Overwritten function: calls the original, then, on clients, adds the vibration to the bob node if it is the vibration node.",
+   "fr": "Fonction surchargée : appelle l'originale puis, sur les clients, ajoute la vibration au nœud de balancement s'il s'agit du nœud de vibration."
+  },
+  "HandToolMotorized:getTimeToReachRPM": {
+   "en": "Returns seconds needed to reach the given RPM from the current one, using the gain rate going up and the loss rate going down; 0 if equal.",
+   "fr": "Renvoie les secondes nécessaires pour atteindre le régime donné depuis le régime courant, avec la vitesse de gain en montée et de perte en descente ; 0 si égal."
+  },
+  "HandToolMotorized:getRPMGainPerSecond": {
+   "en": "Returns the RPM gain rate per second.",
+   "fr": "Renvoie la vitesse de gain de régime par seconde."
+  },
+  "HandToolMotorized:setRPMGainPerSecond": {
+   "en": "Sets the RPM gain rate per second.",
+   "fr": "Définit la vitesse de gain de régime par seconde."
+  },
+  "HandToolMotorized:getRPMLossPerSecond": {
+   "en": "Returns the RPM loss rate per second.",
+   "fr": "Renvoie la vitesse de perte de régime par seconde."
+  },
+  "HandToolMotorized:setRPMLossPerSecond": {
+   "en": "Sets the RPM loss rate per second.",
+   "fr": "Définit la vitesse de perte de régime par seconde."
+  },
+  "HandToolMotorized:getCurrentLoad": {
+   "en": "Returns the current load, 0 to 1.",
+   "fr": "Renvoie la charge courante, de 0 à 1."
+  },
+  "HandToolMotorized:setCurrentLoad": {
+   "en": "Clamps load to 0..1 and stores it. If it changed by more than 0.01, flags a network update (server, or owning player).",
+   "fr": "Borne la charge à 0..1 et la stocke. Si elle change de plus de 0,01, signale une mise à jour réseau (serveur ou joueur propriétaire)."
+  },
+  "HandToolMotorized:getCurrentRPM": {
+   "en": "Returns the current RPM.",
+   "fr": "Renvoie le régime courant."
+  },
+  "HandToolMotorized:setCurrentRPM": {
+   "en": "Clamps RPM between min and max and stores it. If it changed by more than 1, flags a network update (server, or owning player).",
+   "fr": "Borne le régime entre min et max et le stocke. S'il change de plus de 1, signale une mise à jour réseau (serveur ou joueur propriétaire)."
+  },
+  "HandToolMotorized:getTargetRPM": {
+   "en": "Returns the target RPM.",
+   "fr": "Renvoie le régime cible."
+  },
+  "HandToolMotorized:getMaxRPM": {
+   "en": "Returns the maximum RPM.",
+   "fr": "Renvoie le régime maximal."
+  },
+  "HandToolMotorized:getMinRPM": {
+   "en": "Returns the minimum (idle) RPM.",
+   "fr": "Renvoie le régime minimal (ralenti)."
+  },
+  "HandToolMotorized:setTargetRPM": {
+   "en": "Sets the target RPM, clamped between min and max.",
+   "fr": "Définit le régime cible, borné entre min et max."
+  },
+  "HandToolMotorized:setTargetRPMToIdle": {
+   "en": "Sets the target RPM to the minimum.",
+   "fr": "Place le régime cible au minimum."
+  },
+  "HandToolMotorized:setTargetRPMToMax": {
+   "en": "Sets the target RPM to the maximum.",
+   "fr": "Place le régime cible au maximum."
+  },
+  "HandToolMotorized:onDebugDraw": {
+   "en": "Adds debug lines for current RPM, target RPM, load and vibration percentage; returns the updated y position.",
+   "fr": "Ajoute des lignes de debug pour le régime courant, le régime cible, la charge et le pourcentage de vibration ; renvoie la position y mise à jour."
+  }
+ }
+}

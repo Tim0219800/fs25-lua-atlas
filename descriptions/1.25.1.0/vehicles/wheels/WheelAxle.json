@@ -1,0 +1,37 @@
+{
+  "fichier": "vehicles/wheels/WheelAxle.lua",
+  "module": {
+    "en": "Describes a pair of wheels forming an axle, with optional load-dependent ('dynamic') suspension: spring and damping multipliers, and optionally a component joint, are blended according to the axle load. Loaded from the vehicle wheel XML; created by the vehicle wheel code with the owning vehicle.",
+    "fr": "Décrit une paire de roues formant un essieu, avec une suspension « dynamique » optionnelle dépendant de la charge : les multiplicateurs de raideur et d'amortissement, et éventuellement d'une articulation de composant, sont mélangés selon la charge de l'essieu. Chargé depuis le XML des roues du véhicule."
+  },
+  "fonctions": {
+    "WheelAxle.new": {
+      "en": "Creates an axle object bound to the given vehicle.",
+      "fr": "Crée un objet essieu lié au véhicule donné."
+    },
+    "WheelAxle:delete": {
+      "en": "Empty cleanup function; the axle owns no resources.",
+      "fr": "Fonction de nettoyage vide ; l'essieu ne possède aucune ressource."
+    },
+    "WheelAxle:loadFromXML": {
+      "en": "Reads the two wheel nodes (`#wheel1`, `#wheel2`), resolves the wheels and loads the optional dynamicSuspension settings. Returns false (with an XML error if a node is missing) when the wheels cannot be found.",
+      "fr": "Lit les deux nœuds de roue (`#wheel1`, `#wheel2`), retrouve les roues et charge les réglages optionnels de dynamicSuspension. Retourne false (avec une erreur XML si un nœud manque) si les roues sont introuvables."
+    },
+    "WheelAxle:update": {
+      "en": "Per-frame update: computes the combined tire load, smooths a 0..1 alpha toward it and, when it changed enough, applies lerped spring/damping multipliers to both wheels and the optional component joint. Note: it reads `self.maxLoad`, which is never set (the XML value is in `dynamicSuspension.maxLoad`), so the XML maxLoad appears ignored here.",
+      "fr": "Mise à jour par frame : calcule la charge cumulée des pneus, lisse un alpha 0..1 vers cette valeur et, s'il a assez changé, applique aux deux roues (et à l'articulation de composant) des multiplicateurs de raideur/amortissement interpolés. À noter : elle lit `self.maxLoad`, jamais défini (la valeur XML est dans `dynamicSuspension.maxLoad`), donc le maxLoad du XML semble ignoré ici."
+    },
+    "WheelAxle.getDebugValueHeader": {
+      "en": "Returns the column headers used by the vehicle wheel debug table for axles.",
+      "fr": "Retourne les en-têtes de colonnes utilisés par le tableau de debug des roues pour les essieux."
+    },
+    "WheelAxle:fillDebugValues": {
+      "en": "Appends this axle's debug values (wheel indices, load, max load, alpha, spring/damping multipliers, joint data) to the given debug table columns; only writes when dynamic suspension exists.",
+      "fr": "Ajoute les valeurs de debug de cet essieu (indices de roues, charge, charge max, alpha, multiplicateurs, données d'articulation) aux colonnes du tableau donné ; n'écrit que si la suspension dynamique existe."
+    },
+    "WheelAxle.registerXMLPaths": {
+      "en": "Registers the XML schema paths for an axle: the two wheel nodes and the dynamicSuspension and componentJoint attributes.",
+      "fr": "Enregistre les chemins du schéma XML d'un essieu : les deux nœuds de roue et les attributs dynamicSuspension et componentJoint."
+    }
+  }
+}

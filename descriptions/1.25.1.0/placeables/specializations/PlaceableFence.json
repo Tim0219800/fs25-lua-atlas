@@ -1,0 +1,261 @@
+{
+ "fichier": "placeables/specializations/PlaceableFence.lua",
+ "module": {
+  "en": "Placeable specialization for player-built fences made of segments (start and end x, z) that are filled with pole and panel clones following the terrain height, with optional gates driven by AnimatedObject. It handles snapping rules, a preview segment, panel-by-panel deletion, an asynchronous one-segment-per-frame rebuild queue, a build lock, and savegame and network sync of segments. Several terrain-change hooks (registerTerrainHeightChangeCallbacks, onTerrainDeformationSyncerUpdate) have no body in the SDK dump: UNVERIFIED.",
+  "fr": "Spécialisation de placeable pour les clôtures construites par le joueur, faites de segments (x, z de début et de fin) remplis de clones de poteaux et de panneaux qui suivent la hauteur du terrain, avec des portails optionnels pilotés par AnimatedObject. Elle gère les règles d'aimantation, un segment d'aperçu, la suppression panneau par panneau, une file de reconstruction asynchrone d'un segment par image, un verrou de construction, ainsi que la sauvegarde et la synchronisation réseau des segments. Plusieurs fonctions liées aux changements de terrain (registerTerrainHeightChangeCallbacks, onTerrainDeformationSyncerUpdate) n'ont pas de corps dans le dump du SDK : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlaceableFence.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableFence.registerEvents": {
+   "en": "Declares the onCreateSegmentPanel event, raised each time a panel is built between two poles (preview or final).",
+   "fr": "Déclare l'événement onCreateSegmentPanel, levé chaque fois qu'un panneau est construit entre deux poteaux (aperçu ou définitif)."
+  },
+  "PlaceableFence.registerFunctions": {
+   "en": "Registers all fence methods on the placeable type: segments, poles, panels, gates, preview, picking nodes, snapping and build-lock getters, and terrain-change callbacks. detachSourceNodes, updatePanelVisuals, getSnapAngle, registerTerrainHeightChangeCallbacks and onTerrainDeformationSyncerUpdate have no body in the SDK dump (UNVERIFIED).",
+   "fr": "Enregistre sur le type de placeable toutes les méthodes de clôture : segments, poteaux, panneaux, portails, aperçu, noeuds de sélection, aimantation, verrou de construction et callbacks de changement de terrain. detachSourceNodes, updatePanelVisuals, getSnapAngle, registerTerrainHeightChangeCallbacks et onTerrainDeformationSyncerUpdate n'ont pas de corps dans le dump du SDK (NON VÉRIFIÉ)."
+  },
+  "PlaceableFence.registerOverwrittenFunctions": {
+   "en": "Overrides canBeSold, collectPickObjects, getDestructionMethod, performNodeDestruction, previewNodeDestructionNodes and setOwnerFarmId on the placeable type.",
+   "fr": "Surcharge canBeSold, collectPickObjects, getDestructionMethod, performNodeDestruction, previewNodeDestructionNodes et setOwnerFarmId sur le type de placeable."
+  },
+  "PlaceableFence.registerEventListeners": {
+   "en": "Subscribes to load, delete, stream read/write and update events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, suppression, lecture/écriture de flux et mise à jour."
+  },
+  "PlaceableFence.registerXMLPaths": {
+   "en": "Declares the fence XML: pole and panel variant groups, panel length and fixed flag, vertical angle limits, bounding width, snap distance/angle/check distance, extending-only, max corner angle, parallel snapping, invisible poles, plus gate entries (node, length, trigger, texts, duration, doors) and the animated-object paths.",
+   "fr": "Déclare le XML de clôture : groupes de variantes de poteaux et de panneaux, longueur et indicateur de longueur fixe, limites d'angle vertical, largeur de contrôle, distance/angle/distance de contrôle d'aimantation, extension seule, angle de coin maximal, aimantation parallèle, poteaux invisibles, ainsi que les portails (noeud, longueur, déclencheur, textes, durée, portes) et les chemins d'objet animé."
+  },
+  "PlaceableFence.registerSavegameXMLPaths": {
+   "en": "Declares the savegame data: for each segment start and end positions, first/last pole visibility, gate index and the animated object state.",
+   "fr": "Déclare les données de sauvegarde : pour chaque segment, positions de début et de fin, visibilité du premier et du dernier poteau, index de portail et état de l'objet animé."
+  },
+  "PlaceableFence:onLoad": {
+   "en": "Reads fence settings with defaults (max vertical angle 35 degrees, gate angle 5, bounding width 0.25), collects the pole and panel variants from the children of their group nodes and loads the gate definitions. Ends with detachSourceNodes (no body in the dump, UNVERIFIED).",
+   "fr": "Lit les réglages de clôture avec valeurs par défaut (angle vertical max 35 degrés, portail 5, largeur de contrôle 0,25), collecte les variantes de poteaux et panneaux parmi les enfants de leurs noeuds et charge les portails. Se termine par detachSourceNodes (sans corps dans le dump, NON VÉRIFIÉ)."
+  },
+  "PlaceableFence:onDelete": {
+   "en": "Cleans up: deletes pending update timers, unregisters from the terrain deformation syncer cells, deletes the gate animated objects and the detached source nodes if they still exist.",
+   "fr": "Nettoie : supprime les minuteurs de mise à jour en attente, se désinscrit des cellules du synchroniseur de déformation du terrain, supprime les objets animés des portails et les noeuds source détachés s'ils existent encore."
+  },
+  "PlaceableFence:onReadStream": {
+   "en": "Client join: reads every segment (start/end coordinates, gate index, first/last pole flags), rebuilds its poles synchronously, reads each gate's animated object and registers terrain height-change callbacks.",
+   "fr": "Connexion client : lit chaque segment (coordonnées de début et de fin, index de portail, indicateurs de premier/dernier poteau), reconstruit ses poteaux de façon synchrone, lit l'objet animé de chaque portail et enregistre les callbacks de changement de hauteur du terrain."
+  },
+  "PlaceableFence:onWriteStream": {
+   "en": "Server side counterpart: writes the segment count and every segment's data, then each gate segment's animated object id and state, registering it in the stream.",
+   "fr": "Pendant serveur : écrit le nombre de segments et les données de chaque segment, puis l'id et l'état de l'objet animé de chaque portail, enregistré dans le flux."
+  },
+  "PlaceableFence:onUpdate": {
+   "en": "Each update call processes the segment shape queue through updateSegmentUpdateQueue.",
+   "fr": "À chaque mise à jour, traite la file des formes de segments via updateSegmentUpdateQueue."
+  },
+  "PlaceableFence:setOwnerFarmId": {
+   "en": "Calls the parent, then propagates the new owner farm id to every gate animated object.",
+   "fr": "Appelle le parent, puis propage le nouvel identifiant de ferme propriétaire à chaque objet animé de portail."
+  },
+  "PlaceableFence:loadFromXMLFile": {
+   "en": "Rebuilds the fence from the savegame: reads each segment, skips and logs an error for invalid positions, regenerates its poles synchronously and restores gate animated-object state.",
+   "fr": "Reconstruit la clôture depuis la sauvegarde : lit chaque segment, ignore et logue une erreur pour les positions invalides, régénère ses poteaux de façon synchrone et restaure l'état des objets animés des portails."
+  },
+  "PlaceableFence:saveToXMLFile": {
+   "en": "Writes all segments (start, end, gate index and animated object for gates). The first/last pole flags are only written when false, since true is the default.",
+   "fr": "Écrit tous les segments (début, fin, index de portail et objet animé pour les portails). Les indicateurs premier/dernier poteau ne sont écrits que s'ils sont faux, vrai étant la valeur par défaut."
+  },
+  "PlaceableFence:getPoleNear": {
+   "en": "Searches for a fence pole within maxDistance of a point using a sphere overlap on static objects. Returns the pole's world x, y, z, its node and its segment, or nil. Gates are ignored.",
+   "fr": "Cherche un poteau de clôture à moins de maxDistance d'un point par un recouvrement sphérique sur les objets statiques. Renvoie x, y, z monde du poteau, son noeud et son segment, ou nil. Les portails sont ignorés."
+  },
+  "PlaceableFence:getPoleNearOverlapCallback": {
+   "en": "Overlap callback for getPoleNear: keeps the closest hit whose group belongs to one of this fence's segments and that has fewer than three children (to skip gates). Returns true to continue the overlap query.",
+   "fr": "Callback de recouvrement de getPoleNear : retient l'impact le plus proche dont le groupe appartient à un segment de cette clôture et qui a moins de trois enfants (pour exclure les portails). Renvoie true pour poursuivre la requête."
+  },
+  "PlaceableFence:getPolePosition": {
+   "en": "Given a collision node, tells whether it belongs to a pole of this fence (or, with allowPanel, to one of its panels) and returns that pole's world x, y, z plus the segment, otherwise nil.",
+   "fr": "À partir d'un noeud de collision, indique s'il appartient à un poteau de cette clôture (ou à un de ses panneaux si allowPanel) et renvoie x, y, z monde du poteau et le segment, sinon nil."
+  },
+  "PlaceableFence:getPoleShapeForPreview": {
+   "en": "Returns a clone of the first pole variant for placement preview, or nil if poles are invisible, absent or empty. The caller must delete the returned clone.",
+   "fr": "Renvoie un clone de la première variante de poteau pour l'aperçu de placement, ou nil si les poteaux sont invisibles, absents ou vides. L'appelant doit supprimer le clone renvoyé."
+  },
+  "PlaceableFence:getMaxVerticalAngleAndYForPreview": {
+   "en": "Runs getMaxVerticalAngleAndYForSegment on the current preview segment and returns its max angle, min height and max height.",
+   "fr": "Applique getMaxVerticalAngleAndYForSegment au segment d'aperçu courant et renvoie l'angle maximal, la hauteur minimale et la hauteur maximale."
+  },
+  "PlaceableFence:getMaxVerticalAngleAndYForSegment": {
+   "en": "Computes, from terrain heights at consecutive poles, the steepest slope angle in radians and the lowest and highest terrain height. Needs the segment's poles to be calculated but no shapes. Initial min/max are 1000 and -1000.",
+   "fr": "Calcule, d'après la hauteur du terrain à des poteaux consécutifs, l'angle de pente maximal en radians ainsi que les hauteurs minimale et maximale. Nécessite les poteaux calculés mais pas les formes. Les bornes initiales sont 1000 et -1000."
+  },
+  "PlaceableFence:getSegmentLength": {
+   "en": "Returns the horizontal distance between a segment's start and end points.",
+   "fr": "Renvoie la distance horizontale entre le début et la fin d'un segment."
+  },
+  "PlaceableFence:getPanelLength": {
+   "en": "Returns the configured panel length.",
+   "fr": "Renvoie la longueur de panneau configurée."
+  },
+  "PlaceableFence:getIsPanelLengthFixed": {
+   "en": "Returns whether the panel length is fixed in the XML.",
+   "fr": "Indique si la longueur de panneau est fixée dans le XML."
+  },
+  "PlaceableFence:canBeSold": {
+   "en": "Refuses the sale with the object-in-use message while a build lock is held, otherwise defers to the parent implementation and returns its result.",
+   "fr": "Refuse la vente avec le message d'objet utilisé tant qu'un verrou de construction est actif, sinon délègue à l'implémentation parente et renvoie son résultat."
+  },
+  "PlaceableFence:getIsBuildLocked": {
+   "en": "Returns true while the build-lock counter is above zero.",
+   "fr": "Renvoie true tant que le compteur de verrou de construction est supérieur à zéro."
+  },
+  "PlaceableFence:setBuildLocked": {
+   "en": "Increments the lock counter when true, decrements it (never below 0) when false, so overlapping build runs do not unlock each other.",
+   "fr": "Incrémente le compteur de verrou si true, le décrémente (jamais sous 0) si false, afin que des constructions simultanées ne se déverrouillent pas mutuellement."
+  },
+  "PlaceableFence:createSegment": {
+   "en": "Returns a new segment table from start and end coordinates, the render-first flag and an optional gate index. The last pole is always rendered; nothing is registered yet (see addSegment).",
+   "fr": "Renvoie une nouvelle table de segment à partir des coordonnées de début et de fin, de l'indicateur de premier poteau et d'un index de portail optionnel. Le dernier poteau est toujours affiché ; rien n'est encore enregistré (voir addSegment)."
+  },
+  "PlaceableFence:addSegment": {
+   "en": "Appends the segment to the fence and generates its poles; the sync flag chooses immediate or queued shape building.",
+   "fr": "Ajoute le segment à la clôture et génère ses poteaux ; l'argument sync choisit une construction immédiate ou différée des formes."
+  },
+  "PlaceableFence:deleteSegment": {
+   "en": "Removes a segment: deletes its gate animated object, node group and pending timer, drops its terrain-change listeners, removes it from the list and flags the covered area dirty.",
+   "fr": "Retire un segment : supprime son objet animé de portail, son groupe de noeuds et son minuteur en attente, retire ses écouteurs de changement de terrain, l'ôte de la liste et marque la zone couverte comme modifiée."
+  },
+  "PlaceableFence:updateDirtyAreas": {
+   "en": "Marks the bounding box of the line as dirty in the density-map height collision map and in the AI navigation system.",
+   "fr": "Marque la boîte englobante de la ligne comme modifiée dans la carte de collision des hauteurs et dans le système de navigation IA."
+  },
+  "PlaceableFence:setPreviewSegment": {
+   "en": "Replaces the preview segment: deletes the previous preview's node group and generates poles for the new one without synchronous shape building (queued).",
+   "fr": "Remplace le segment d'aperçu : supprime le groupe de noeuds de l'ancien aperçu et génère les poteaux du nouveau, avec construction des formes différée."
+  },
+  "PlaceableFence:getPreviewSegment": {
+   "en": "Returns the current preview segment, or nil.",
+   "fr": "Renvoie le segment d'aperçu courant, ou nil."
+  },
+  "PlaceableFence:getGate": {
+   "en": "Returns the gate definition at the given 1-based index.",
+   "fr": "Renvoie la définition de portail à l'index donné (base 1)."
+  },
+  "PlaceableFence:getSegment": {
+   "en": "Returns the segment at the given 1-based index.",
+   "fr": "Renvoie le segment à l'index donné (base 1)."
+  },
+  "PlaceableFence:getNumSequments": {
+   "en": "Returns the number of segments (the name contains a typo for 'segments').",
+   "fr": "Renvoie le nombre de segments (le nom contient une faute de frappe pour « segments »)."
+  },
+  "PlaceableFence:getMaxVerticalAngle": {
+   "en": "Returns the maximum allowed terrain angle for normal segments.",
+   "fr": "Renvoie l'angle de terrain maximal autorisé pour les segments normaux."
+  },
+  "PlaceableFence:getMaxVerticalGateAngle": {
+   "en": "Returns the maximum allowed terrain angle for gate segments.",
+   "fr": "Renvoie l'angle de terrain maximal autorisé pour les segments de portail."
+  },
+  "PlaceableFence:getBoundingCheckWidth": {
+   "en": "Returns the width of the box used for collision checks when placing.",
+   "fr": "Renvoie la largeur de la boîte utilisée pour les contrôles de collision lors du placement."
+  },
+  "PlaceableFence:getSnapDistance": {
+   "en": "Returns the snap distance from the XML, or nil if not set.",
+   "fr": "Renvoie la distance d'aimantation du XML, ou nil si non définie."
+  },
+  "PlaceableFence:getSnapCheckDistance": {
+   "en": "Returns the distance used to detect snap targets (default 0.25).",
+   "fr": "Renvoie la distance utilisée pour détecter les cibles d'aimantation (0,25 par défaut)."
+  },
+  "PlaceableFence:getAllowExtendingOnly": {
+   "en": "Returns whether new segments may only extend existing ones instead of attaching mid-segment.",
+   "fr": "Indique si les nouveaux segments peuvent seulement prolonger les existants au lieu de se fixer en milieu de segment."
+  },
+  "PlaceableFence:getMaxCornerAngle": {
+   "en": "Returns the maximum allowed angle between two connected segments.",
+   "fr": "Renvoie l'angle maximal autorisé entre deux segments connectés."
+  },
+  "PlaceableFence:getHasParallelSnapping": {
+   "en": "Always returns false in this specialization; overridable by other code.",
+   "fr": "Renvoie toujours false dans cette spécialisation ; peut être surchargé ailleurs."
+  },
+  "PlaceableFence:getSupportsParallelSnapping": {
+   "en": "Returns the XML flag saying whether parallel snapping is offered.",
+   "fr": "Renvoie l'indicateur XML précisant si l'aimantation parallèle est proposée."
+  },
+  "PlaceableFence:deletePanel": {
+   "en": "Removes the panel hit by a node. On the server it applies doDeletePanel and broadcasts PlaceableFenceRemoveSegmentEvent; on a client it clears the node's collision mask and sends the event to the server. Returns true if a panel was found.",
+   "fr": "Supprime le panneau touché par un noeud. Sur le serveur, applique doDeletePanel et diffuse PlaceableFenceRemoveSegmentEvent ; sur un client, vide le masque de collision du noeud et envoie l'événement au serveur. Renvoie true si un panneau est trouvé."
+  },
+  "PlaceableFence:doDeletePanel": {
+   "en": "Applies a panel removal on the segment: shortens it, moves its start, deletes it, or splits it in two. Re-renders poles that neighbours need, regenerates shapes and marks the old area dirty. Called on the server and by the removal event on clients.",
+   "fr": "Applique la suppression d'un panneau sur le segment : le raccourcit, déplace son début, le supprime ou le scinde en deux. Réaffiche les poteaux utiles aux voisins, régénère les formes et marque l'ancienne zone comme modifiée. Appelé sur le serveur et par l'événement de suppression sur les clients."
+  },
+  "PlaceableFence:findRaycastInfo": {
+   "en": "From a raycast collision node, walks the node hierarchy to find the panel, its visuals, the segment, the pole and the pole index (2*child+1 into the poles list). Handles gate cases; if the node is a pole only, returns nil for panel. Returns nil if no segment matches.",
+   "fr": "À partir d'un noeud de collision de raycast, remonte la hiérarchie pour trouver le panneau, son visuel, le segment, le poteau et l'index du poteau (2*enfant+1 dans la liste des poteaux). Gère les portails ; si le noeud est un simple poteau, le panneau est nil. Renvoie nil si aucun segment ne correspond."
+  },
+  "PlaceableFence:getNodesToDeleteForPanel": {
+   "en": "For a destruction preview, returns the visual nodes that removing the panel would delete: the panel or the gate doors, plus an end pole that would be left alone. Returns nil if no panel is found.",
+   "fr": "Pour l'aperçu de destruction, renvoie les noeuds visuels que supprimerait le retrait du panneau : le panneau ou les portes du portail, plus un poteau d'extrémité qui resterait isolé. Renvoie nil si aucun panneau n'est trouvé."
+  },
+  "PlaceableFence:isPoleInAnySegment": {
+   "en": "Finds another segment whose start or end coincides with the given x, z (within PlaceableFence.EPSILON). Returns the segment and two flags: matches start, matches end; nil if none. The ignored segment is skipped.",
+   "fr": "Cherche un autre segment dont le début ou la fin coïncide avec x, z (à PlaceableFence.EPSILON près). Renvoie le segment et deux indicateurs : correspond au début, correspond à la fin ; nil sinon. Le segment ignoré est écarté."
+  },
+  "PlaceableFence:fakeRandomValueForPosition": {
+   "en": "Deterministic pseudo-random value from x and z only: a fraction in [0,1), or with n an integer from 1 to n. Used so pole and panel variants stay identical on every client.",
+   "fr": "Valeur pseudo-aléatoire déterministe calculée à partir de x et z seulement : une fraction dans [0,1) ou, avec n, un entier de 1 à n. Sert à garder les mêmes variantes de poteaux et de panneaux sur tous les clients."
+  },
+  "PlaceableFence:generateSegmentPoles": {
+   "en": "Recomputes the segment's poles, then rebuilds its shapes immediately (sync) or queues them, and updates picking nodes. Marks the area dirty unless it is the preview segment. Does nothing if the segment is too short.",
+   "fr": "Recalcule les poteaux du segment, puis reconstruit ses formes immédiatement (sync) ou les met en file, et met à jour les noeuds de sélection. Marque la zone comme modifiée sauf pour le segment d'aperçu. Sans effet si le segment est trop court."
+  },
+  "PlaceableFence:calculateSegmentPoles": {
+   "en": "Fills the segment's pole coordinate list (x, z pairs) without touching shapes: whole panel lengths first, then one or two evenly sized end panels; gates only get two poles. Returns false if the segment is shorter than 0.01.",
+   "fr": "Remplit la liste des coordonnées de poteaux du segment (paires x, z) sans toucher aux formes : d'abord des panneaux de longueur entière, puis un ou deux panneaux finaux de taille égale ; un portail n'a que deux poteaux. Renvoie false si le segment fait moins de 0,01."
+  },
+  "PlaceableFence:updateSegmentShapes": {
+   "en": "Rebuilds a segment's scene nodes: deletes the old group, clones poles and panels on the terrain height, rotates and sizes them, adds physics unless it is the preview, and raises onCreateSegmentPanel. For gates, builds the gate and a synced AnimatedObject (broadcast by the server). Note: the AnimatedObject save id uses x2 twice, where the comment suggests z2 was meant.",
+   "fr": "Reconstruit les noeuds de scène d'un segment : supprime l'ancien groupe, clone poteaux et panneaux à la hauteur du terrain, les oriente et les dimensionne, ajoute la physique sauf en aperçu, et lève onCreateSegmentPanel. Pour un portail, construit le portail et un AnimatedObject synchronisé (diffusé par le serveur). À noter : l'identifiant de sauvegarde de l'AnimatedObject utilise x2 deux fois, alors que le commentaire laisse penser que z2 était voulu."
+  },
+  "PlaceableFence:addSegmentShapesToUpdate": {
+   "en": "Queues a segment for shape rebuilding and wakes the placeable's update loop.",
+   "fr": "Met un segment en file pour la reconstruction de ses formes et réveille la boucle de mise à jour du placeable."
+  },
+  "PlaceableFence:updateSegmentUpdateQueue": {
+   "en": "Takes the first queued segment per call and rebuilds its shapes (picking nodes removed and re-added), then keeps the update loop active, so only one segment is rebuilt per frame.",
+   "fr": "Prend le premier segment en file à chaque appel et reconstruit ses formes (noeuds de sélection retirés puis rajoutés), puis maintient la boucle active : un seul segment est reconstruit par image."
+  },
+  "PlaceableFence:addPickingNodesForSegment": {
+   "en": "Registers every node of the segment group that has a rigid body with the mission's node-object table so it can be picked, and resets the overlay color cache. Skipped for the preview segment.",
+   "fr": "Enregistre chaque noeud du groupe du segment qui possède un corps rigide dans la table des noeuds-objets de la mission pour qu'il soit sélectionnable, et réinitialise le cache des couleurs de surbrillance. Ignoré pour le segment d'aperçu."
+  },
+  "PlaceableFence:removePickingNodesForSegment": {
+   "en": "Reverse of addPickingNodesForSegment: unregisters the segment's rigid-body nodes from the mission's node-object table. Skipped for the preview segment.",
+   "fr": "Inverse de addPickingNodesForSegment : retire les noeuds à corps rigide du segment de la table des noeuds-objets de la mission. Ignoré pour le segment d'aperçu."
+  },
+  "PlaceableFence:recursivelyAddPickingNodes": {
+   "en": "Recursively appends to the given list every node under a node whose rigid body type is not NONE.",
+   "fr": "Ajoute récursivement à la liste donnée chaque noeud sous un noeud dont le type de corps rigide n'est pas NONE."
+  },
+  "PlaceableFence:getDestructionMethod": {
+   "en": "Returns Placeable.DESTRUCTION.PER_NODE, so the fence is destroyed piece by piece.",
+   "fr": "Renvoie Placeable.DESTRUCTION.PER_NODE : la clôture est détruite morceau par morceau."
+  },
+  "PlaceableFence:previewNodeDestructionNodes": {
+   "en": "Returns the nodes to highlight for a node-destruction preview, delegating to getNodesToDeleteForPanel.",
+   "fr": "Renvoie les noeuds à surligner pour l'aperçu de destruction, en déléguant à getNodesToDeleteForPanel."
+  },
+  "PlaceableFence:performNodeDestruction": {
+   "en": "Deletes the panel for a node through deletePanel and returns whether something was deleted plus whether the whole placeable should be destroyed (no segments left).",
+   "fr": "Supprime le panneau d'un noeud via deletePanel et renvoie si quelque chose a été supprimé ainsi que si tout le placeable doit être détruit (plus aucun segment)."
+  },
+  "PlaceableFence:collectPickObjects": {
+   "en": "Empty override: the fence adds no default picking objects at placeable level, since segment nodes are registered separately. The parent implementation is not called.",
+   "fr": "Surcharge vide : la clôture n'ajoute pas d'objets de sélection par défaut au niveau du placeable, les noeuds des segments étant enregistrés à part. L'implémentation parente n'est pas appelée."
+  }
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "fichier": "placeables/specializations/PlaceableBeehivePalletSpawner.lua",
+ "module": {
+  "en": "Placeable specialization for the farm's honey pallet location. It wraps a `PalletSpawner`, accumulates honey liters on the server and spawns or refills a HONEY pallet once enough is pending, and syncs a 'too many pallets' flag to clients. It registers itself with `beehiveSystem`, and only one may be bought per farm.",
+  "fr": "Spécialisation de placeable pour l'emplacement de palettes de miel de la ferme. Elle encapsule un `PalletSpawner`, accumule du miel côté serveur et crée ou remplit une palette de HONEY dès qu'assez de litres sont en attente, et synchronise vers les clients un indicateur de trop de palettes. Elle s'enregistre auprès de `beehiveSystem` ; un seul exemplaire est achetable par ferme."
+ },
+ "fonctions": {
+  "PlaceableBeehivePalletSpawner.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableBeehivePalletSpawner.registerFunctions": {
+   "en": "Registers `addFillLevel`, `updatePallets` and `getPalletCallback` on the placeable type.",
+   "fr": "Enregistre `addFillLevel`, `updatePallets` et `getPalletCallback` sur le type de placeable."
+  },
+  "PlaceableBeehivePalletSpawner.registerOverwrittenFunctions": {
+   "en": "Overrides `canBuy` and `updateInfo`.",
+   "fr": "Surcharge `canBuy` et `updateInfo`."
+  },
+  "PlaceableBeehivePalletSpawner.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete`, `onFinalizePlacement` and the four network stream events (read/write stream and update stream).",
+   "fr": "S'abonne à `onLoad`, `onDelete`, `onFinalizePlacement` et aux quatre événements de flux réseau (flux initial et flux de mise à jour, lecture et écriture)."
+  },
+  "PlaceableBeehivePalletSpawner.registerXMLPaths": {
+   "en": "Declares the pallet spawner XML keys under `beehivePalletSpawner` by delegating to `PalletSpawner.registerXMLPaths`.",
+   "fr": "Déclare les clés XML du générateur de palettes sous `beehivePalletSpawner` en déléguant à `PalletSpawner.registerXMLPaths`."
+  },
+  "PlaceableBeehivePalletSpawner.registerSavegameXMLPaths": {
+   "en": "Declares the savegame key `beehivePalletSpawner#pendingLiters`.",
+   "fr": "Déclare la clé de sauvegarde `beehivePalletSpawner#pendingLiters`."
+  },
+  "PlaceableBeehivePalletSpawner:onLoad": {
+   "en": "Creates and loads the `PalletSpawner`; on failure logs an XML error and sets the loading state to ERROR. Also initializes pending liters, flags, the HONEY fill type and a dirty flag.",
+   "fr": "Crée et charge le `PalletSpawner` ; en cas d'échec, journalise une erreur XML et passe l'état de chargement en ERROR. Initialise aussi les litres en attente, les indicateurs, le type de remplissage HONEY et un drapeau de modification."
+  },
+  "PlaceableBeehivePalletSpawner:onDelete": {
+   "en": "Deletes the pallet spawner (if loaded) and unregisters this spawner from `beehiveSystem`.",
+   "fr": "Supprime le générateur de palettes (s'il est chargé) et désenregistre ce générateur de `beehiveSystem`."
+  },
+  "PlaceableBeehivePalletSpawner:onFinalizePlacement": {
+   "en": "Registers this pallet spawner with `beehiveSystem`.",
+   "fr": "Enregistre ce générateur de palettes auprès de `beehiveSystem`."
+  },
+  "PlaceableBeehivePalletSpawner:onReadStream": {
+   "en": "Client side: reads the pallet limit flag from the initial join stream.",
+   "fr": "Côté client : lit l'indicateur de limite de palettes dans le flux initial de connexion."
+  },
+  "PlaceableBeehivePalletSpawner:onWriteStream": {
+   "en": "Server side: writes the pallet limit flag to the initial join stream.",
+   "fr": "Côté serveur : écrit l'indicateur de limite de palettes dans le flux initial de connexion."
+  },
+  "PlaceableBeehivePalletSpawner:onReadUpdateStream": {
+   "en": "Client side: reads the pallet limit flag from an update stream. The flag is read unconditionally, without a dirty mask check.",
+   "fr": "Côté client : lit l'indicateur de limite de palettes dans un flux de mise à jour, sans test de masque de modification."
+  },
+  "PlaceableBeehivePalletSpawner:onWriteUpdateStream": {
+   "en": "Server side: writes the pallet limit flag to an update stream, without testing the dirty mask.",
+   "fr": "Côté serveur : écrit l'indicateur de limite de palettes dans un flux de mise à jour, sans tester le masque de modification."
+  },
+  "PlaceableBeehivePalletSpawner:loadFromXMLFile": {
+   "en": "Restores the pending honey liters from the savegame, keeping the current value if absent.",
+   "fr": "Restaure les litres de miel en attente depuis la sauvegarde, en conservant la valeur actuelle si elle est absente."
+  },
+  "PlaceableBeehivePalletSpawner:saveToXMLFile": {
+   "en": "Saves the pending liters to the savegame, only when greater than zero.",
+   "fr": "Sauvegarde les litres en attente, seulement s'ils sont supérieurs à zéro."
+  },
+  "PlaceableBeehivePalletSpawner:addFillLevel": {
+   "en": "Server only: adds the given liters to the pending honey amount; ignored when nil.",
+   "fr": "Serveur uniquement : ajoute les litres donnés à la quantité de miel en attente ; ignoré si nil."
+  },
+  "PlaceableBeehivePalletSpawner:updatePallets": {
+   "en": "Server only: when more than 10 liters are pending and no spawn is in progress, asks the pallet spawner for a pallet, with `getPalletCallback` as callback.",
+   "fr": "Serveur uniquement : quand plus de 10 litres sont en attente et qu'aucune création n'est en cours, demande une palette au générateur, avec `getPalletCallback` comme rappel."
+  },
+  "PlaceableBeehivePalletSpawner:getPalletCallback": {
+   "en": "Spawn result handler: for a new pallet it empties it, then fills it with the pending liters and subtracts what fit. On a pallet limit it sets the synced limit flag; on no space nothing happens (a TODO in code).",
+   "fr": "Gestionnaire du résultat de création : pour une nouvelle palette, la vide puis la remplit avec les litres en attente et retranche ce qui a été accepté. En cas de limite de palettes, il active l'indicateur synchronisé ; sans place, rien n'est fait (TODO dans le code)."
+  },
+  "PlaceableBeehivePalletSpawner:updateInfo": {
+   "en": "Calls the parent `updateInfo`, then adds a 'too many pallets' line when the pallet limit flag is set.",
+   "fr": "Appelle `updateInfo` du parent, puis ajoute une ligne « trop de palettes » quand l'indicateur de limite est actif."
+  },
+  "PlaceableBeehivePalletSpawner:canBuy": {
+   "en": "Extends the parent check: refuses the purchase with a one-per-farm warning if the local farm already has a beehive pallet spawner.",
+   "fr": "Complète la vérification du parent : refuse l'achat avec un avertissement « un seul par ferme » si la ferme locale possède déjà un générateur de palettes de ruches."
+  }
+ }
+}

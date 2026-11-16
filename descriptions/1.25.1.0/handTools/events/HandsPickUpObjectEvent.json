@@ -1,0 +1,37 @@
+{
+ "fichier": "handTools/events/HandsPickUpObjectEvent.lua",
+ "module": {
+  "en": "Network event for the hands hand tool picking up an object or a split shape (log). A client sends the request to the server; the server runs `pickUpTarget` and rebroadcasts to the clients, and answers with `HandsPickUpFailedEvent` if the pickup fails. Targets are sent as a compressed distance plus a split shape id or a node object.",
+  "fr": "Événement réseau pour l'outil à main « mains » qui ramasse un objet ou un split shape (tronc). Un client envoie la demande au serveur ; le serveur exécute `pickUpTarget` et rediffuse aux clients, et répond par `HandsPickUpFailedEvent` en cas d'échec. Les cibles sont envoyées sous forme de distance compressée plus un identifiant de split shape ou un objet-noeud."
+ },
+ "fonctions": {
+  "HandsPickUpObjectEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "HandsPickUpObjectEvent.new": {
+   "en": "Creates the event for a hands hand tool and a target table (with `node` and `distance`).",
+   "fr": "Crée l'événement pour un outil mains et une table cible (avec `node` et `distance`)."
+  },
+  "HandsPickUpObjectEvent:readStream": {
+   "en": "Reads the hands, the pickup distance (compressed 0 to `HandToolHands.PICKUP_DISTANCE`, 10 bits), a split shape flag, then either a split shape id or a node object, to rebuild `target.node`. Logs errors if the shape or object cannot be resolved. Then runs the event.",
+   "fr": "Lit les mains, la distance de ramassage (compressée de 0 à `HandToolHands.PICKUP_DISTANCE`, 10 bits), un indicateur de split shape, puis un identifiant de split shape ou un objet-noeud pour reconstruire `target.node`. Journalise une erreur si la forme ou l'objet est introuvable. Puis exécute l'événement."
+  },
+  "HandsPickUpObjectEvent:writeStream": {
+   "en": "Writes the hands, the compressed distance, a split shape flag and the split shape id or the node object of the target; logs an error if the target is neither.",
+   "fr": "Écrit les mains, la distance compressée, un indicateur de split shape puis l'identifiant du split shape ou l'objet-noeud de la cible ; journalise une erreur si la cible n'est ni l'un ni l'autre."
+  },
+  "HandsPickUpObjectEvent:run": {
+   "en": "If received by the server, rebroadcasts it (gated on the target object, or on the hands if the target is a split shape). When the hands are synchronized, calls `pickUpTarget(target, true)`; if it fails on the server, sends `HandsPickUpFailedEvent` back to the requester.",
+   "fr": "Si le serveur le reçoit, le rediffuse (filtré sur l'objet cible, ou sur les mains si la cible est un split shape). Quand les mains sont synchronisées, appelle `pickUpTarget(target, true)` ; en cas d'échec sur le serveur, renvoie `HandsPickUpFailedEvent` au demandeur."
+  },
+  "HandsPickUpObjectEvent.sendEvent": {
+   "en": "Helper unless `noEventSend` is true: a server broadcasts the event (with the same ghost-object gating as `run`), a client sends it to the server.",
+   "fr": "Aide, sauf si `noEventSend` est vrai : un serveur diffuse l'événement (avec le même filtrage par objet fantôme que `run`), un client l'envoie au serveur."
+  },
+  "HandsPickUpObjectEvent.getTargetGhostObject": {
+   "en": "Returns the networked object for the target node, used as the gate for broadcasting, or nil if the target is missing, 0, or a split shape (which has no network object).",
+   "fr": "Renvoie l'objet réseau du noeud cible, utilisé comme filtre de diffusion, ou nil si la cible est absente, 0 ou un split shape (qui n'a pas d'objet réseau)."
+  }
+ }
+}

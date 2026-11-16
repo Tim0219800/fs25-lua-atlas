@@ -1,0 +1,85 @@
+{
+ "fichier": "vehicles/specializations/SaltSpreader.lua",
+ "module": {
+  "en": "Specialization for road salt spreaders. It requires WorkArea and TurnOnVehicle, registers the \"saltSpreader\" work area type and consumes salt from a fill unit while turned on (usage in liters per second, optionally scaled by a work area width). On the server the work area calls the SnowSystem (`g_currentMission.snowSystem:saltArea`); effects are played on the client through the EffectManager.",
+  "fr": "Spécialisation pour les épandeurs de sel routier. Elle exige WorkArea et TurnOnVehicle, enregistre le type de zone de travail \"saltSpreader\" et consomme du sel dans une unité de remplissage tant qu'elle est allumée (usage en litres par seconde, éventuellement multiplié par la largeur d'une zone de travail). Côté serveur, la zone de travail appelle le SnowSystem (`g_currentMission.snowSystem:saltArea`) ; les effets sont joués côté client via l'EffectManager."
+ },
+ "fonctions": {
+  "SaltSpreader.initSpecialization": {
+   "en": "Registers the \"saltSpreader\" work area type and declares the XML schema: fill unit index, unload info index, usage work area, usage in liters per second, and the effects.",
+   "fr": "Enregistre le type de zone de travail \"saltSpreader\" et déclare le schéma XML : index d'unité de remplissage, index d'unload info, zone de travail d'usage, usage en litres par seconde, et effets."
+  },
+  "SaltSpreader.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has WorkArea and TurnOnVehicle.",
+   "fr": "Retourne vrai uniquement si le type de véhicule possède WorkArea et TurnOnVehicle."
+  },
+  "SaltSpreader.registerFunctions": {
+   "en": "Registers `processSaltSpreaderArea` on the vehicle type.",
+   "fr": "Enregistre `processSaltSpreaderArea` sur le type de véhicule."
+  },
+  "SaltSpreader.registerOverwrittenFunctions": {
+   "en": "Overrides `doCheckSpeedLimit`, `getDirtMultiplier`, `getWearMultiplier`, `getAreControlledActionsAllowed`, `getCanBeTurnedOn`, `getTurnedOnNotAllowedWarning` and `getVariableWorkWidthUsage`.",
+   "fr": "Surcharge `doCheckSpeedLimit`, `getDirtMultiplier`, `getWearMultiplier`, `getAreControlledActionsAllowed`, `getCanBeTurnedOn`, `getTurnedOnNotAllowedWarning` et `getVariableWorkWidthUsage`."
+  },
+  "SaltSpreader.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdateTick, onTurnedOn and onTurnedOff.",
+   "fr": "S'abonne à onLoad, onDelete, onUpdateTick, onTurnedOn et onTurnedOff."
+  },
+  "SaltSpreader:onLoad": {
+   "en": "Reads the fill unit, unload info, usage work area and usage (converted from l/s to l/ms), loads the effects on the client and caches the SnowSystem and the \"fill the tool first\" text. Removes onUpdateTick on non-servers.",
+   "fr": "Lit l'unité de remplissage, l'unload info, la zone de travail d'usage et l'usage (converti de l/s en l/ms), charge les effets côté client et met en cache le SnowSystem et le texte « remplir d'abord l'outil ». Retire onUpdateTick hors serveur."
+  },
+  "SaltSpreader:onDelete": {
+   "en": "Deletes the effects through the EffectManager.",
+   "fr": "Supprime les effets via l'EffectManager."
+  },
+  "SaltSpreader:onUpdateTick": {
+   "en": "Server tick: while turned on and the tank is not empty, removes salt from the fill unit proportionally to dt and the usage width; when the fill level reaches 0 it turns the spreader off.",
+   "fr": "Tick serveur : tant que l'épandeur est allumé et que le réservoir n'est pas vide, retire du sel de l'unité de remplissage proportionnellement à dt et à la largeur d'usage ; à 0 il l'éteint."
+  },
+  "SaltSpreader:onTurnedOn": {
+   "en": "Client side: if the fill unit contains a known fill type, sets that type on the effects and starts them.",
+   "fr": "Côté client : si l'unité de remplissage contient un type de remplissage connu, applique ce type aux effets et les démarre."
+  },
+  "SaltSpreader:onTurnedOff": {
+   "en": "Client side: stops the effects.",
+   "fr": "Côté client : arrête les effets."
+  },
+  "SaltSpreader:doCheckSpeedLimit": {
+   "en": "Returns true if the parent does or if the spreader is turned on, so the speed limit applies while spreading.",
+   "fr": "Retourne true si le parent le fait ou si l'épandeur est allumé, la limite de vitesse s'applique donc pendant l'épandage."
+  },
+  "SaltSpreader:getDirtMultiplier": {
+   "en": "Adds the work dirt multiplier to the parent value while turned on.",
+   "fr": "Ajoute le multiplicateur de salissure de travail à la valeur du parent tant que l'épandeur est allumé."
+  },
+  "SaltSpreader:getWearMultiplier": {
+   "en": "Adds the work wear multiplier to the parent value while turned on.",
+   "fr": "Ajoute le multiplicateur d'usure de travail à la valeur du parent tant que l'épandeur est allumé."
+  },
+  "SaltSpreader:getAreControlledActionsAllowed": {
+   "en": "Returns false plus the \"fill the tool first\" warning when the tank is empty; otherwise defers to the parent.",
+   "fr": "Retourne false et l'avertissement « remplir d'abord l'outil » quand le réservoir est vide ; sinon délègue au parent."
+  },
+  "SaltSpreader:getCanBeTurnedOn": {
+   "en": "Returns false when the fill unit is empty; otherwise defers to the parent.",
+   "fr": "Retourne false quand l'unité de remplissage est vide ; sinon délègue au parent."
+  },
+  "SaltSpreader:getTurnedOnNotAllowedWarning": {
+   "en": "Returns the \"fill the tool first\" warning when the tank is empty; otherwise defers to the parent.",
+   "fr": "Retourne l'avertissement « remplir d'abord l'outil » quand le réservoir est vide ; sinon délègue au parent."
+  },
+  "SaltSpreader:getVariableWorkWidthUsage": {
+   "en": "If the parent gives no usage, returns the salt usage in liters per minute (usage times work width times 1000 times 60) while turned on, else 0; otherwise returns the parent value.",
+   "fr": "Si le parent ne fournit pas d'usage, retourne l'usage de sel en litres par minute (usage fois largeur de travail fois 1000 fois 60) quand l'épandeur est allumé, sinon 0 ; sinon retourne la valeur du parent."
+  },
+  "SaltSpreader.getDefaultSpeedLimit": {
+   "en": "Static function returning the default speed limit, 20 (km/h presumably; unit not stated in this file).",
+   "fr": "Fonction statique retournant la limite de vitesse par défaut, 20 (probablement km/h ; unité non précisée dans ce fichier)."
+  },
+  "SaltSpreader:processSaltSpreaderArea": {
+   "en": "Work area callback: on the server, calls `snowSystem:saltArea` with the area corners and returns its two results; on clients returns 0, 0. The SnowSystem class is not in the dump, so its return values are UNVERIFIED.",
+   "fr": "Callback de zone de travail : sur le serveur, appelle `snowSystem:saltArea` avec les coins de la zone et retourne ses deux résultats ; sur les clients retourne 0, 0. La classe SnowSystem n'est pas dans le dump, ses valeurs de retour sont donc NON VÉRIFIÉES."
+  }
+ }
+}

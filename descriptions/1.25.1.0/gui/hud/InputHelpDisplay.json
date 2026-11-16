@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/hud/InputHelpDisplay.lua",
+ "module": {
+  "en": "Top-left HUD panel (extends HUDDisplay) that lists the currently active input actions with key or gamepad glyphs, plus a combo-key row and vehicle schema icons. Each frame it queries g_inputDisplayManager and g_inputBinding, sorts registered help and info extensions by priority, draws them and then clears them, so extensions must re-register every frame. Client-side only. Several helpers (drawVehicleSchema, drawInputHelpElement, drawExtraText, updateGamepadComboButtons) are not defined in this file (UNVERIFIED where they live).",
+  "fr": "Panneau HUD en haut à gauche (étend HUDDisplay) qui liste les actions de saisie actives avec glyphes clavier ou manette, plus une ligne de touches de combinaison et des icônes de schéma de véhicule. À chaque frame il interroge g_inputDisplayManager et g_inputBinding, trie les extensions d'aide et d'info enregistrées par priorité, les dessine puis les vide : les extensions doivent donc se réenregistrer à chaque frame. Côté client uniquement. Plusieurs aides (drawVehicleSchema, drawInputHelpElement, drawExtraText, updateGamepadComboButtons) ne sont pas définies dans ce fichier (NON VÉRIFIÉ pour leur emplacement)."
+ },
+ "fonctions": {
+  "InputHelpDisplay.new": {
+   "en": "Creates the panel: background and separator overlays, localized combo and control-group labels, button overlays, mouse combo overlays from InputBinding.ORDERED_MOUSE_COMBOS, gamepad combo buttons, and a subscription to INPUT_DEVICES_CHANGED.",
+   "fr": "Crée le panneau : overlays de fond et de séparation, libellés localisés de combinaison et de groupe de contrôle, overlays de boutons, overlays de combinaisons souris issus de InputBinding.ORDERED_MOUSE_COMBOS, boutons de combinaison manette, et abonnement à INPUT_DEVICES_CHANGED."
+  },
+  "InputHelpDisplay:delete": {
+   "en": "Deletes all overlays and cached vehicle schema overlays, unsubscribes from INPUT_DEVICES_CHANGED and runs the parent delete.",
+   "fr": "Supprime tous les overlays et les overlays de schéma de véhicule en cache, se désabonne de INPUT_DEVICES_CHANGED et exécute le delete du parent."
+  },
+  "InputHelpDisplay:storeScaledValues": {
+   "en": "Anchors the panel at the HUD left/top anchor and converts the reference-pixel layout (line 330x25, combo box 330x50, margins, text and icon sizes) to screen units; also rescales cached vehicle schema overlays.",
+   "fr": "Ancre le panneau au point d'ancrage gauche/haut du HUD et convertit la mise en page en pixels de référence (ligne 330x25, boîte de combinaison 330x50, marges, tailles de texte et d'icônes) en unités écran ; remet aussi à l'échelle les overlays de schéma de véhicule en cache."
+  },
+  "InputHelpDisplay:draw": {
+   "en": "Draws the vehicle schema, then, when visible, the combo row and the help lines for the pressed combo mask, capped by element count (higher cap for high priority). It draws then empties the help extensions, info extensions and extra texts.",
+   "fr": "Dessine le schéma du véhicule puis, si visible, la ligne de combinaisons et les lignes d'aide pour le masque de combinaison pressé, plafonnées en nombre (plafond plus haut pour les hautes priorités). Dessine puis vide les extensions d'aide, les extensions d'info et les textes supplémentaires."
+  }
+ }
+}

@@ -1,0 +1,25 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/AdditionalFieldBuyInfoEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that carries the extra field buy information (Precision Farming data shown when buying a farmland) from server to a requesting client. It is sent in reply to RequestFieldBuyInfoEvent.",
+    "fr": "Événement réseau (sous-classe de Event) qui transporte les informations supplémentaires d'achat de champ (données Precision Farming affichées à l'achat d'une parcelle) du serveur vers un client demandeur. Il est envoyé en réponse à RequestFieldBuyInfoEvent."
+  },
+  "fonctions": {
+    "AdditionalFieldBuyInfoEvent.emptyNew": {
+      "en": "Creates an empty AdditionalFieldBuyInfoEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de AdditionalFieldBuyInfoEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "AdditionalFieldBuyInfoEvent.new": {
+      "en": "Creates the event for a farmland id.",
+      "fr": "Crée l'événement pour un id de parcelle."
+    },
+    "AdditionalFieldBuyInfoEvent:readStream": {
+      "en": "Client side: reads the farmland id, then lets g_precisionFarming.additionalFieldBuyInfo read the data with readInfoFromStream, if that object exists.",
+      "fr": "Côté client : lit l'id de parcelle, puis laisse g_precisionFarming.additionalFieldBuyInfo lire les données avec readInfoFromStream, si cet objet existe."
+    },
+    "AdditionalFieldBuyInfoEvent:writeStream": {
+      "en": "Server side: writes the farmland id, then lets g_precisionFarming.additionalFieldBuyInfo write the data with writeInfoToStream, if that object exists.",
+      "fr": "Côté serveur : écrit l'id de parcelle, puis laisse g_precisionFarming.additionalFieldBuyInfo écrire les données avec writeInfoToStream, si cet objet existe."
+    }
+  }
+}

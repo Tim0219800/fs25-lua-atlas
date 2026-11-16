@@ -1,0 +1,37 @@
+{
+ "fichier": "handTools/HandToolLoadingData.lua",
+ "module": {
+  "en": "Container of everything needed to load a hand tool: store item or XML filename, owner farm, savegame data, registration, drop and save flags. It resolves the hand tool type and class through `g_handToolTypeManager`, then delegates to `loadHandTool`, which is not defined in this file (UNVERIFIED, probably added elsewhere).",
+  "fr": "Conteneur de tout ce qu'il faut pour charger un outil à main : item de boutique ou nom de fichier XML, ferme propriétaire, données de sauvegarde, enregistrement, indicateurs de dépôt et de sauvegarde. Il résout le type et la classe de l'outil via `g_handToolTypeManager`, puis délègue à `loadHandTool`, absente de ce fichier (NON VÉRIFIÉ, probablement ajoutée ailleurs)."
+ },
+ "fonctions": {
+  "HandToolLoadingData.new": {
+   "en": "Creates a loading data object with defaults: invalid, owner `AccessHandler.EVERYONE`, saved, droppable, registered, not forced to server.",
+   "fr": "Crée un objet de données de chargement avec des valeurs par défaut : invalide, propriétaire `AccessHandler.EVERYONE`, sauvegardé, déposable, enregistré, non forcé au serveur."
+  },
+  "HandToolLoadingData:setFilename": {
+   "en": "Sets the hand tool XML file to load, if the file exists; otherwise logs an error with a call stack. Does not touch `isValid`.",
+   "fr": "Définit le fichier XML d'outil à charger s'il existe ; sinon journalise une erreur avec la pile d'appels. Ne modifie pas `isValid`."
+  },
+  "HandToolLoadingData:setStoreItem": {
+   "en": "Sets the store item and takes its XML filename; marks the data valid only if a store item is given, else logs an error.",
+   "fr": "Définit l'item de boutique et reprend son nom de fichier XML ; ne valide les données que si un item est fourni, sinon journalise une erreur."
+  },
+  "HandToolLoadingData:setOwnerFarmId": {
+   "en": "Sets the owner farm id for the loaded hand tool.",
+   "fr": "Définit l'identifiant de ferme propriétaire de l'outil chargé."
+  },
+  "HandToolLoadingData:setIsRegistered": {
+   "en": "Sets whether the hand tool is registered after loading.",
+   "fr": "Définit si l'outil est enregistré après le chargement."
+  },
+  "HandToolLoadingData:setSavegameData": {
+   "en": "Sets the savegame data (table with `xmlFile` and `key`) used when loading from a savegame.",
+   "fr": "Définit les données de sauvegarde (table avec `xmlFile` et `key`) utilisées lors d'un chargement depuis une sauvegarde."
+  },
+  "HandToolLoadingData:load": {
+   "en": "Stores the callback, resolves type and class from the XML; on failure calls the callback with nil and `HandToolLoadingState.ERROR`, otherwise calls `loadHandTool` (loading is probably asynchronous, UNVERIFIED). Callback signature: target, handTool, loadingState, arguments.",
+   "fr": "Mémorise le callback, résout type et classe depuis le XML ; en cas d'échec appelle le callback avec nil et `HandToolLoadingState.ERROR`, sinon appelle `loadHandTool` (chargement probablement asynchrone, NON VÉRIFIÉ). Signature du callback : cible, handTool, état, arguments."
+  }
+ }
+}

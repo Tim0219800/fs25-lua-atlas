@@ -1,0 +1,85 @@
+{
+ "fichier": "vehicles/specializations/AIJobVehicle.lua",
+ "module": {
+  "en": "Vehicle specialization that lets a vehicle be driven by an AI helper job. It requires the AIVehicle and Drivable specializations. It stores the current and last job, reads the AI steering and reverser nodes and the supported job types from the vehicle XML, and saves the last job and the start/stop permissions in the savegame. Many of its registered functions (job start/stop, helper lookup, hotspot handling) have their bodies stripped from this SDK dump, so only the parts present are described.",
+  "fr": "Spécialisation de véhicule qui permet de faire conduire un véhicule par un job d'assistant IA. Elle exige les spécialisations AIVehicle et Drivable. Elle conserve le job courant et le dernier job, lit depuis le XML du véhicule les nœuds de direction et de marche arrière IA ainsi que les types de jobs gérés, et sauvegarde le dernier job et les autorisations de démarrage/arrêt. Beaucoup de fonctions enregistrées (démarrage/arrêt de job, recherche de l'assistant, points d'intérêt) n'ont pas leur corps dans ce dump du SDK : seules les parties présentes sont décrites."
+ },
+ "fonctions": {
+  "AIJobVehicle.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type also has the AIVehicle and Drivable specializations.",
+   "fr": "Renvoie vrai seulement si le type de véhicule possède aussi les spécialisations AIVehicle et Drivable."
+  },
+  "AIJobVehicle.initSpecialization": {
+   "en": "Registers the XML schema keys under vehicle.ai (steering node, reverser node, steering speed, supportsAIJobs, supportedJobTypes) and the savegame keys for start/stop permission and the last job type.",
+   "fr": "Déclare dans le schéma XML les clés vehicle.ai (nœud de direction, nœud de marche arrière, vitesse de direction, supportsAIJobs, supportedJobTypes) et les clés de sauvegarde pour les autorisations de démarrage/arrêt et le type du dernier job."
+  },
+  "AIJobVehicle.registerEvents": {
+   "en": "Registers the vehicle events onAIJobStarted, onAIJobFinished, onAIJobVehicleBlock and onAIJobVehicleContinue.",
+   "fr": "Enregistre les événements de véhicule onAIJobStarted, onAIJobFinished, onAIJobVehicleBlock et onAIJobVehicleContinue."
+  },
+  "AIJobVehicle.registerFunctions": {
+   "en": "Registers the specialization's public vehicle functions (toggle, can-start/stop checks, job and helper accessors, AI nodes, block/continue and others). Several of the registered bodies are absent from the dump.",
+   "fr": "Enregistre les fonctions publiques de la spécialisation (bascule, tests de démarrage/arrêt, accès au job et à l'assistant, nœuds IA, blocage/reprise, etc.). Plusieurs des corps enregistrés sont absents du dump."
+  },
+  "AIJobVehicle.registerOverwrittenFunctions": {
+   "en": "Overrides a set of base vehicle functions, including getIsActive, getIsAIActive, getFullName, getActiveFarm, map hotspot functions and the leave-related getters. Only some of the overriding bodies are present in the dump.",
+   "fr": "Surcharge un ensemble de fonctions de base du véhicule, dont getIsActive, getIsAIActive, getFullName, getActiveFarm, les fonctions de point d'intérêt de carte et les getters liés à la sortie du véhicule. Seuls certains corps de surcharge sont présents dans le dump."
+  },
+  "AIJobVehicle.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad, onDelete, onUpdate, onSetBroken, onReadStream, onWriteStream and onAIModeChanged.",
+   "fr": "Abonne la spécialisation à onLoad, onDelete, onUpdate, onSetBroken, onReadStream, onWriteStream et onAIModeChanged."
+  },
+  "AIJobVehicle:onLoad": {
+   "en": "Initialises spec state, reads steering speed (scaled by 0.001), nodes, supportsAIJobs and supportedJobTypes from the XML, and caches HUD texts. When loading a savegame it recreates the last job through aiJobTypeManager and restores the start/stop flags.",
+   "fr": "Initialise l'état de la spec, lit depuis le XML la vitesse de direction (multipliée par 0,001), les nœuds, supportsAIJobs et supportedJobTypes, et met en cache les textes du HUD. Lors du chargement d'une sauvegarde, recrée le dernier job via aiJobTypeManager et restaure les indicateurs de démarrage/arrêt."
+  },
+  "AIJobVehicle:onReadStream": {
+   "en": "Client side on join: reads whether a job is running and, if so, its id, farm and helper index, then calls aiJobStarted with the job found by id. Then reads the last job type and rebuilds it from the stream.",
+   "fr": "Côté client à la connexion : lit si un job est actif et, si oui, son id, sa ferme et l'index de l'assistant, puis appelle aiJobStarted avec le job retrouvé par id. Lit ensuite le type du dernier job et le reconstruit depuis le flux."
+  },
+  "AIJobVehicle:onWriteStream": {
+   "en": "Server side on join: writes the running job id, the starting farm and the helper index when a job exists, then the last job type and its data. Mirror of onReadStream.",
+   "fr": "Côté serveur à la connexion : écrit l'id du job actif, la ferme initiatrice et l'index de l'assistant si un job existe, puis le type du dernier job et ses données. Symétrique de onReadStream."
+  },
+  "AIJobVehicle:onAIModeChanged": {
+   "en": "When the AI mode becomes anything other than AIModeSelection.MODE.WORKER, stops the current job (if any) with a stopped-by-user message.",
+   "fr": "Quand le mode IA devient autre chose que AIModeSelection.MODE.WORKER, arrête le job en cours (s'il existe) avec un message d'arrêt par l'utilisateur."
+  },
+  "AIJobVehicle:getShowAIToggleActionEvent": {
+   "en": "Returns whether the AI toggle input should be shown: false without an AI direction node, when AI is disabled, without the hireAssistant permission, or when the AI limit is reached while the AI is inactive.",
+   "fr": "Indique si l'action de bascule de l'IA doit être affichée : faux sans nœud de direction IA, si l'IA est désactivée, sans la permission hireAssistant, ou si la limite d'IA est atteinte alors que l'IA est inactive."
+  },
+  "AIJobVehicle:getIsInUse": {
+   "en": "Override: returns true while the AI is active, otherwise defers to the parent implementation.",
+   "fr": "Surcharge : renvoie vrai tant que l'IA est active, sinon délègue à l'implémentation parente."
+  },
+  "AIJobVehicle:getIsActive": {
+   "en": "Override: the vehicle counts as active whenever the AI is active, otherwise the parent result is used.",
+   "fr": "Surcharge : le véhicule est considéré actif dès que l'IA est active, sinon le résultat du parent est utilisé."
+  },
+  "AIJobVehicle:getIsAIActive": {
+   "en": "Override: true if the parent says so or if a job is currently assigned to this vehicle.",
+   "fr": "Surcharge : vrai si le parent le dit ou si un job est actuellement assigné à ce véhicule."
+  },
+  "AIJobVehicle:toggleAIVehicle": {
+   "en": "If the AI runs, stops the job as if the user did it. Otherwise sends an AIJobStartRequestEvent to the server for a startable job, or opens the in-game menu AI screen (mobile has its own path), unless a guided tour is running.",
+   "fr": "Si l'IA tourne, arrête le job comme si l'utilisateur l'avait fait. Sinon envoie un AIJobStartRequestEvent au serveur pour un job démarrable, ou ouvre l'écran IA du menu en jeu (chemin dédié sur mobile), sauf si une visite guidée est en cours."
+  },
+  "AIJobVehicle:getCanToggleAIVehicle": {
+   "en": "Returns getCanStopAIVehicle when the AI is active, else getCanStartAIVehicle. The stop-check body is not in the dump (UNVERIFIED).",
+   "fr": "Renvoie getCanStopAIVehicle quand l'IA est active, sinon getCanStartAIVehicle. Le corps du test d'arrêt n'est pas dans le dump (NON VÉRIFIÉ)."
+  },
+  "AIJobVehicle:getCanStartAIVehicle": {
+   "en": "True only if AI is not disabled, the owner farm is not EVERYONE, jobs are supported and start is allowed, a direction node exists, the AI limit is not reached, the AI is idle and the vehicle is not broken.",
+   "fr": "Vrai seulement si l'IA n'est pas désactivée, la ferme propriétaire n'est pas EVERYONE, les jobs sont gérés et le démarrage autorisé, un nœud de direction existe, la limite d'IA n'est pas atteinte, l'IA est inactive et le véhicule n'est pas en panne."
+  },
+  "AIJobVehicle:getIsAIJobSupported": {
+   "en": "Checks a job name against supportedJobTypes from the XML, case-insensitively. Returns true when no list is defined.",
+   "fr": "Compare un nom de job à supportedJobTypes du XML, sans tenir compte de la casse. Renvoie vrai si aucune liste n'est définie."
+  },
+  "AIJobVehicle:getDeactivateLightsOnLeave": {
+   "en": "Override: lights are turned off on leave only if the parent allows it and the AI is not active.",
+   "fr": "Surcharge : les lumières ne sont éteintes à la sortie que si le parent l'autorise et que l'IA n'est pas active."
+  }
+ }
+}

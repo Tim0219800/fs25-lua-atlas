@@ -1,116 +1,449 @@
 {
  "fichier": "vehicles/specializations/Motorized.lua",
- "module": "Spécialisation des véhicules à moteur (table spec_motorized). Prérequis : FillUnit et VehicleSettings. Elle porte le moteur de simulation (objet VehicleMotor, hors périmètre), les différentiels, les boîtes de vitesses, les consommables (diesel, DEF, électricité, méthane, air), la température moteur, les sons, les tableaux de bord et les effets d'échappement.\n\nEFFETS D'ÉCHAPPEMENT (client uniquement : loadExhaustEffects n'est appelée que si self.isClient, Motorized.lua:410-412). Trois mécanismes coexistent. (1) exhaustParticleSystems : systèmes de particules chargés par ParticleUtil.loadParticleSystem depuis vehicle.motorized.exhaustParticleSystems.exhaustParticleSystem(?), avec minScale (0.5 par défaut) et maxScale (1). (2) exhaustEffects : mesh I3D partagé chargé en asynchrone, qui doit exposer le paramètre de shader « param » (sinon ignoré) ; à chaque tick client, onUpdateTick calcule l'inclinaison du panache d'après le déplacement du point d'émission (effet « traîné » par la vitesse du véhicule, pas par le vent : aucune lecture de vent dans ce fichier), lisse avec un facteur 0.95/0.05, puis envoie via setShaderParameter la taille (interpolée minRpmScale 0.25 / maxRpmScale 0.95 selon le régime) et la couleur « exhaustColor » (interpolée minRpmColor / maxRpmColor). (3) effects : système d'effets générique (g_effectManager, classes d'effets ABSENTES du dump : comportement NON VÉRIFIÉ) dont la densité est réglée sur le ratio de régime. Les volets d'échappement (exhaustFlap) sont des nœuds pivotés avec un bruit aléatoire de ±0.1 sur le ratio de régime.\n\nDONNÉES MOTEUR POUR UN MOD. getMotorRpmReal (tr/min modulés), getMotorRpmPercentage (0..1), getMotorLoadPercentage (charge lissée, de -1 à 1 environ ; la valeur brute est spec.actualLoadPercentage, bornée 0..1, calculée côté serveur), getMotorState (MotorState.OFF / IGNITION / STARTING / ON). Côté réseau : le serveur envoie au client, dans le flux de mise à jour, le régime (11 bits), la charge (7 bits) et l'embrayage ; le client reconstitue donc régime et charge, d'où les effets d'échappement corrects en multijoueur. En revanche la température moteur (spec_motorized.motorTemperature, 20 à 120 °C, ventilateur entre 85 et 95 °C) n'est mise à jour que sur le serveur (updateMotorTemperature appelée dans le bloc isServer d'onUpdateTick) et aucun envoi réseau n'apparaît dans ce fichier (le champ valueSend n'est jamais utilisé) : à noter, la température lue sur un client pur semble donc figée à 20 °C (non vérifié en jeu). Aucun lien code entre cette température et les particules d'échappement n'existe dans ce fichier.\n\nDT ET TEMPS : onUpdate et onUpdateTick reçoivent dt en ms ; la température et les consommations sont proportionnelles à dt (heatingPerMS, coolingByWindPerMS, coolingPerMS). Le lissage du panache d'échappement (0.95/0.05) est par tick et non par dt : sa vitesse dépend donc de la fréquence des ticks (à noter, non vérifié en jeu).\n\nPOINTS D'EXTENSION. Événements déclarés (SpecializationUtil.registerEvent) : onStartMotor, onStopMotor, onGearDirectionChanged, onGearChanged, onGearGroupChanged, onMotorBlowOffValveChanged, onClutchCreaking. Fonctions surchargeables par registerOverwrittenFunction (déjà surchargées ici) : getBrakeForce, addToPhysics, removeFromPhysics, getIsOperating, getDeactivateOnLeave, getDeactivateLightsOnLeave, loadDashboardGroupFromXML, getIsDashboardGroupActive, getIsActiveForInteriorLights, getIsActiveForWipers, getUsageCausesDamage, getName, getCanBeSelected, getIsPowered. Pour réagir au démarrage/arrêt, écouter onStartMotor / onStopMotor (émis ailleurs, dans setMotorState dont le corps est absent du dump).\n\nLIMITE DU DUMP : les fonctions setMotorState et getMotorState sont enregistrées (lignes 281-282) mais leurs définitions n'apparaissent pas ; les lignes 2012 à 2150 du fichier sont vides. Leur comportement est donc NON VÉRIFIÉ ici. La table VehicleMotor, MotorState, MotorSetTurnedOnEvent et g_effectManager ne sont pas dans ce fichier.",
+ "module": {
+  "en": "Specialization for motorized vehicles (table spec_motorized). Prerequisites: FillUnit and VehicleSettings. It carries the simulation engine (VehicleMotor object, out of scope), the differentials, the gearboxes, the consumables (diesel, DEF, electricity, methane, air), the engine temperature, the sounds, the dashboards and the exhaust effects.\n\nEXHAUST EFFECTS (client only: loadExhaustEffects is only called if self.isClient, Motorized.lua:410-412). Three mechanisms coexist. (1) exhaustParticleSystems: particle systems loaded by ParticleUtil.loadParticleSystem from vehicle.motorized.exhaustParticleSystems.exhaustParticleSystem(?), with minScale (0.5 by default) and maxScale (1). (2) exhaustEffects: a shared I3D mesh loaded asynchronously, which must expose the shader parameter \"param\" (otherwise ignored); on every client tick, onUpdateTick computes the plume tilt from the displacement of the emission point (a \"trailing\" effect due to the vehicle speed, not to the wind: there is no wind reading in this file), smooths it with a 0.95/0.05 factor, then sends through setShaderParameter the size (interpolated minRpmScale 0.25 / maxRpmScale 0.95 according to engine speed) and the colour \"exhaustColor\" (interpolated minRpmColor / maxRpmColor). (3) effects: a generic effect system (g_effectManager, effect classes ABSENT from the dump: behaviour UNVERIFIED) whose density is set to the RPM ratio. The exhaust flaps (exhaustFlap) are nodes rotated with a random noise of +/-0.1 on the RPM ratio.\n\nENGINE DATA FOR A MOD. getMotorRpmReal (modulated rpm), getMotorRpmPercentage (0..1), getMotorLoadPercentage (smoothed load, roughly -1 to 1; the raw value is spec.actualLoadPercentage, clamped 0..1, computed server side), getMotorState (MotorState.OFF / IGNITION / STARTING / ON). Network side: the server sends the client, in the update stream, the engine speed (11 bits), the load (7 bits) and the clutch; the client therefore rebuilds speed and load, hence correct exhaust effects in multiplayer. By contrast the engine temperature (spec_motorized.motorTemperature, 20 to 120 °C, fan between 85 and 95 °C) is only updated on the server (updateMotorTemperature called in the isServer block of onUpdateTick) and no network send appears in this file (the valueSend field is never used): note, the temperature read on a pure client therefore seems frozen at 20 °C (not verified in game). No code link between this temperature and the exhaust particles exists in this file.\n\nDT AND TIME: onUpdate and onUpdateTick receive dt in ms; temperature and consumption are proportional to dt (heatingPerMS, coolingByWindPerMS, coolingPerMS). The exhaust plume smoothing (0.95/0.05) is per tick and not per dt: its speed therefore depends on the tick rate (note, not verified in game).\n\nEXTENSION POINTS. Declared events (SpecializationUtil.registerEvent): onStartMotor, onStopMotor, onGearDirectionChanged, onGearChanged, onGearGroupChanged, onMotorBlowOffValveChanged, onClutchCreaking. Functions that can be overwritten with registerOverwrittenFunction (already overwritten here): getBrakeForce, addToPhysics, removeFromPhysics, getIsOperating, getDeactivateOnLeave, getDeactivateLightsOnLeave, loadDashboardGroupFromXML, getIsDashboardGroupActive, getIsActiveForInteriorLights, getIsActiveForWipers, getUsageCausesDamage, getName, getCanBeSelected, getIsPowered. To react to start/stop, listen to onStartMotor / onStopMotor (raised elsewhere, in setMotorState whose body is absent from the dump).\n\nDUMP LIMIT: the functions setMotorState and getMotorState are registered (lines 281-282) but their definitions do not appear; lines 2012 to 2150 of the file are empty. Their behaviour is therefore UNVERIFIED here. The VehicleMotor table, MotorState, MotorSetTurnedOnEvent and g_effectManager are not in this file.",
+  "fr": "Spécialisation des véhicules à moteur (table spec_motorized). Prérequis : FillUnit et VehicleSettings. Elle porte le moteur de simulation (objet VehicleMotor, hors périmètre), les différentiels, les boîtes de vitesses, les consommables (diesel, DEF, électricité, méthane, air), la température moteur, les sons, les tableaux de bord et les effets d'échappement.\n\nEFFETS D'ÉCHAPPEMENT (client uniquement : loadExhaustEffects n'est appelée que si self.isClient, Motorized.lua:410-412). Trois mécanismes coexistent. (1) exhaustParticleSystems : systèmes de particules chargés par ParticleUtil.loadParticleSystem depuis vehicle.motorized.exhaustParticleSystems.exhaustParticleSystem(?), avec minScale (0.5 par défaut) et maxScale (1). (2) exhaustEffects : mesh I3D partagé chargé en asynchrone, qui doit exposer le paramètre de shader « param » (sinon ignoré) ; à chaque tick client, onUpdateTick calcule l'inclinaison du panache d'après le déplacement du point d'émission (effet « traîné » par la vitesse du véhicule, pas par le vent : aucune lecture de vent dans ce fichier), lisse avec un facteur 0.95/0.05, puis envoie via setShaderParameter la taille (interpolée minRpmScale 0.25 / maxRpmScale 0.95 selon le régime) et la couleur « exhaustColor » (interpolée minRpmColor / maxRpmColor). (3) effects : système d'effets générique (g_effectManager, classes d'effets ABSENTES du dump : comportement NON VÉRIFIÉ) dont la densité est réglée sur le ratio de régime. Les volets d'échappement (exhaustFlap) sont des nœuds pivotés avec un bruit aléatoire de ±0.1 sur le ratio de régime.\n\nDONNÉES MOTEUR POUR UN MOD. getMotorRpmReal (tr/min modulés), getMotorRpmPercentage (0..1), getMotorLoadPercentage (charge lissée, de -1 à 1 environ ; la valeur brute est spec.actualLoadPercentage, bornée 0..1, calculée côté serveur), getMotorState (MotorState.OFF / IGNITION / STARTING / ON). Côté réseau : le serveur envoie au client, dans le flux de mise à jour, le régime (11 bits), la charge (7 bits) et l'embrayage ; le client reconstitue donc régime et charge, d'où les effets d'échappement corrects en multijoueur. En revanche la température moteur (spec_motorized.motorTemperature, 20 à 120 °C, ventilateur entre 85 et 95 °C) n'est mise à jour que sur le serveur (updateMotorTemperature appelée dans le bloc isServer d'onUpdateTick) et aucun envoi réseau n'apparaît dans ce fichier (le champ valueSend n'est jamais utilisé) : à noter, la température lue sur un client pur semble donc figée à 20 °C (non vérifié en jeu). Aucun lien code entre cette température et les particules d'échappement n'existe dans ce fichier.\n\nDT ET TEMPS : onUpdate et onUpdateTick reçoivent dt en ms ; la température et les consommations sont proportionnelles à dt (heatingPerMS, coolingByWindPerMS, coolingPerMS). Le lissage du panache d'échappement (0.95/0.05) est par tick et non par dt : sa vitesse dépend donc de la fréquence des ticks (à noter, non vérifié en jeu).\n\nPOINTS D'EXTENSION. Événements déclarés (SpecializationUtil.registerEvent) : onStartMotor, onStopMotor, onGearDirectionChanged, onGearChanged, onGearGroupChanged, onMotorBlowOffValveChanged, onClutchCreaking. Fonctions surchargeables par registerOverwrittenFunction (déjà surchargées ici) : getBrakeForce, addToPhysics, removeFromPhysics, getIsOperating, getDeactivateOnLeave, getDeactivateLightsOnLeave, loadDashboardGroupFromXML, getIsDashboardGroupActive, getIsActiveForInteriorLights, getIsActiveForWipers, getUsageCausesDamage, getName, getCanBeSelected, getIsPowered. Pour réagir au démarrage/arrêt, écouter onStartMotor / onStopMotor (émis ailleurs, dans setMotorState dont le corps est absent du dump).\n\nLIMITE DU DUMP : les fonctions setMotorState et getMotorState sont enregistrées (lignes 281-282) mais leurs définitions n'apparaissent pas ; les lignes 2012 à 2150 du fichier sont vides. Leur comportement est donc NON VÉRIFIÉ ici. La table VehicleMotor, MotorState, MotorSetTurnedOnEvent et g_effectManager ne sont pas dans ce fichier."
+ },
  "fonctions": {
-  "Motorized.initSpecialization": "Déclare les schémas XML de la spécialisation : chemins moteur, différentiels, consommables, sons, boîtes, configurations de moteur, effets d'échappement (exhaustParticleSystems, exhaustEffects, exhaustFlap, effects), tableaux de bord et valeurs de store. Réservé à l'initialisation des types de véhicules.",
-  "Motorized.registerMotorXMLPaths": "Enregistre dans le schéma XML les clés d'une configuration de moteur (régimes, vitesses max, couple, freinage, courbes, etc.). Non relu ligne à ligne.",
-  "Motorized.registerDifferentialXMLPaths": "Enregistre les clés XML des différentiels (indices, rapport de couple, rapport de vitesse max).",
-  "Motorized.registerConsumerXMLPaths": "Enregistre les clés XML d'un consommable (type de remplissage, usage, capacité, recharge pour l'air).",
-  "Motorized.registerSoundXMLPaths": "Enregistre les clés XML des sons moteur, boîte, compresseur d'air, clutch, soupape de décharge, marche arrière, etc.",
-  "Motorized.prerequisitesPresent": "Exige les spécialisations FillUnit et VehicleSettings sur le type de véhicule.",
-  "Motorized.registerEvents": "Déclare les événements onStartMotor, onStopMotor, onGearDirectionChanged, onGearChanged, onGearGroupChanged, onMotorBlowOffValveChanged et onClutchCreaking, que d'autres spécialisations ou mods peuvent écouter.",
-  "Motorized.registerFunctions": "Enregistre les fonctions publiques du véhicule (chargement, getters moteur, régime, charge, température, boîte, start/stop). Note : y figurent setMotorState et getMotorState dont les définitions sont absentes du dump.",
-  "Motorized.registerOverwrittenFunctions": "Surcharge quatorze fonctions de base du véhicule (frein, physique, état opérationnel, tableau de bord, essuie-glaces, éclairage intérieur, usure, nom, sélection, alimentation).",
-  "Motorized.registerEventListeners": "Abonne la spécialisation aux événements du véhicule : cycle de vie (onLoad, onPostLoad, onDelete), flux réseau, onUpdate / onUpdateTick, onStateChange (entrée/sortie du véhicule), niveau des réservoirs, panne (onSetBroken), IA, réglages de boîte et événements propres de boîte.",
-  "Motorized:onLoad": "Chargement du véhicule : lit différentiels, moteur, sons, consommables, puis, côté client seulement, les effets d'échappement. Initialise l'état moteur (arrêté), la durée de démarrage (motorStartDuration), les paramètres de freinage, les leviers de vitesses, et la structure de température moteur (20 °C initial, 120 °C max, échauffement 1.5 °C/s à pleine charge, refroidissement par le vent 1 °C/s, ventilateur 85/95 °C, 3 °C/s).",
-  "Motorized:onPostLoad": "Côté serveur : recharge les consommables sous 10 % de capacité en facturant le coût au joueur (prix du litre multiplié par 2). Constitue la liste des réservoirs indispensables au fonctionnement (diesel, DEF, électricité, méthane) puis termine le chargement du moteur.",
-  "Motorized:onRegisterDashboardValueTypes": "Enregistre les valeurs de tableau de bord : régime (rpm), charge (load, en pourcentage), vitesse, consommation, température moteur et alerte de température, embrayage, rapport, groupe, etc. Utile pour savoir quelles grandeurs moteur sont déjà exposées et leurs plages.",
-  "Motorized:onDelete": "Libère le moteur, les fichiers I3D partagés des effets d'échappement, les systèmes de particules d'échappement (ParticleUtil.deleteParticleSystems), les sons, les animations et le système d'effets (g_effectManager:deleteEffects).",
-  "Motorized:onReadStream": "Lecture réseau à la connexion : reçoit l'état moteur initial et l'applique par setMotorState sans renvoi.",
-  "Motorized:onWriteStream": "Écriture réseau à la connexion : envoie l'état moteur courant.",
-  "Motorized:onReadUpdateStream": "Lecture du flux de mise à jour. Côté client (flux venant du serveur) : régime égalisé en 11 bits, charge brute en 7 bits, état du compresseur et position de l'embrayage en 5 bits, puis données de boîte. Côté serveur (flux venant d'un client) : état d'embrayage seulement.",
-  "Motorized:onWriteUpdateStream": "Écriture du flux de mise à jour, symétrique de la lecture. Le serveur écrit régime, charge, compresseur, embrayage (uniquement si le moteur tourne ou démarre) et, si le drapeau sale est levé, les données de boîte. À noter : la température moteur n'est pas envoyée.",
-  "Motorized:onUpdate": "Chaque frame, si le moteur démarre ou tourne : passe en ON après motorStartTime (serveur), met à jour le moteur (spec.motor:update(dt)), la charge brute (serveur) et la charge lissée (tous), met à jour consommables et propriétés moteur selon les dégâts (serveur), et côté client les paramètres de son (régime et charge normalisés), compresseur, freins, bip de marche arrière et leviers de vitesses animés avec dt. Cumule aussi la distance parcourue pour les statistiques (serveur).",
-  "Motorized:onUpdateTick": "Tick de simulation. Serveur : arrêt automatique du moteur si aucun joueur ou véhicule occupé à moins de 250 m (quand le démarrage automatique est désactivé), appel d'updateMotorTemperature, logique de démarrage/arrêt automatique. Client, moteur en marche : met à l'échelle émission et durée de vie des particules d'échappement d'après le ratio de régime, anime les volets d'échappement, règle la densité du système d'effets, oriente et colore les mesh d'échappement via shader (voir module), puis gère l'affichage de la consommation, les sons d'embrayage et la serrure de contact. À noter : pour les particules, le code lit minScale/maxScale sur la liste spec.exhaustParticleSystems et appelle ParticleUtil.setEmitCountScale avec cette liste plutôt qu'avec le système courant, alors que minScale/maxScale sont stockés par système (lignes 1216-1219, loadExhaustEffects:1721-1722) ; apparent défaut, effet réel NON VÉRIFIÉ en jeu et le corps de ParticleUtil est absent du dump.",
-  "Motorized:loadDifferentials": "Charge les différentiels de la configuration choisie (indices d'essieux ou de roues, rapport de couple et de vitesse maximale) pour l'ajout ultérieur à la physique. Non relu en détail.",
-  "Motorized:loadMotor": "Charge la configuration de moteur choisie : nom, type, consommables, régimes min/max, vitesses, accélération, freinage, courbes de couple/puissance, boîte de vitesses, groupes, rapports et amortissements, avec repli sur la configuration 0. Instancie le VehicleMotor. Non relu en détail (hors angle prioritaire).",
-  "Motorized:loadGears": "Charge une série de rapports de boîte depuis le XML (rapports, rapports max/min, vitesses), en tenant compte du régime max et du rapport de pont. Non relu en détail.",
-  "Motorized:loadGearGroups": "Charge les groupes de rapports (gammes) de la boîte depuis le XML. Non relu en détail.",
-  "Motorized:loadExhaustEffects": "Charge, côté client, les trois familles d'effets d'échappement : systèmes de particules (avec minScale/maxScale), volets (exhaustFlap : nœud, rotation max, axe), mesh d'échappement I3D partagés (chargés en asynchrone, rappel onExhaustEffectI3DLoaded) et effets génériques via g_effectManager (type de remplissage inconnu). Conserve spec.exhaustEffectMaxSteeringSpeed = 0.001, qui n'est pas utilisé ailleurs dans ce fichier.",
-  "Motorized:onExhaustEffectI3DLoaded": "Rappel de chargement d'un mesh d'échappement : prend le premier enfant du I3D, ne le conserve que s'il possède le paramètre de shader « param », le relie au nœud d'ancrage du véhicule, le masque (visibilité faux au départ) et lit minRpmColor, maxRpmColor, minRpmScale, maxRpmScale et upFactor (valeurs par défaut dans le schéma : couleurs 0 0 0 1 et 0.0384 0.0359 0.0627 2.0 ; échelles 0.25 et 0.95 ; upFactor 0.75). À noter : le nœud est masqué ici et l'endroit où il est rendu visible n'est pas dans ce fichier (non vérifié).",
-  "Motorized:loadSounds": "Charge les échantillons sonores moteur, boîte, compresseur d'air, soupape de décharge, freins, marche arrière, et les paramètres de synthèse sonore. Non relu en détail.",
-  "Motorized:loadConsumerConfiguration": "Charge la configuration de consommables (clé consumerConfiguration) : liste des consommables avec type de remplissage, usage, consommation permanente, recharge d'air, et index par nom et par type.",
-  "Motorized:getIsMotorStarted": "Vrai uniquement si l'état moteur est ON (pas pendant STARTING).",
-  "Motorized:getIsMotorInNeutral": "Interroge le VehicleMotor pour savoir si la boîte est au point mort.",
-  "Motorized:getCanMotorRun": "Faux si un réservoir indispensable est vide ou si le VehicleMotor refuse de tourner (embrayage non enclenché par exemple).",
-  "Motorized:getStopMotorOnLeave": "Indique si le moteur doit s'arrêter à la sortie du véhicule : option de la configuration et aucune demande de puissance externe (getRequiresPower).",
-  "Motorized:getMotorNotAllowedWarning": "Renvoie le texte d'avertissement à afficher (réservoir vide ou embrayage non enclenché), sinon nil.",
-  "Motorized:startMotor": "Si le moteur est OFF ou IGNITION : envoie MotorSetTurnedOnEvent(vrai) sauf si noEventSend, puis passe à STARTING.",
-  "Motorized:stopMotor": "Si le moteur est ON ou STARTING : envoie MotorSetTurnedOnEvent(faux) sauf si noEventSend, puis passe à OFF.",
-  "Motorized:updateConsumers": "Serveur uniquement. Calcule un facteur de consommation à partir du régime, de la charge lissée, du réglage de consommation de la sauvegarde (bas 1.0, moyen 1.5, haut 2.5) et des dégâts, retire du carburant (stat « fuelUsage », rachat automatique pour l'IA si l'option est active), expose la consommation horaire (spec.lastFuelUsage) et gère la consommation et la recharge d'air des freins.",
-  "Motorized:updateMotorTemperature": "Serveur uniquement. Échauffement proportionnel à dt, modulé par la charge brute et le régime ; refroidissement par le vent proportionnel au carré de min(1, vitesse/30) ; ventilateur qui s'active au-dessus de 95 °C et se coupe sous 85 °C. Température bornée entre 20 et 120 °C. Appelée seulement moteur démarrant ou en marche : aucune décroissance à l'arrêt n'est codée ici (le moteur éteint ne refroidit pas, d'après ce fichier).",
-  "Motorized:onGearDirectionChanged": "Serveur : lève le drapeau réseau de boîte. Client : met à jour les valeurs de tableau de bord « gear » et « gearIndex ».",
-  "Motorized:onGearChanged": "Anime les leviers de vitesses vers le rapport cible et met à jour sons et tableau de bord côté client. Non relu en détail.",
-  "Motorized:onGearGroupChanged": "Équivalent d'onGearChanged pour les groupes de rapports. Non relu en détail.",
-  "Motorized:onMotorBlowOffValveChanged": "Joue ou arrête le son de soupape de décharge (turbo) selon l'état transmis par le moteur ; mémorise cet état.",
-  "Motorized:onClutchCreaking": "Gère le craquement d'embrayage : son, avertissement et animation des leviers vers la position neutre. Non relu en détail.",
-  "Motorized:onReverseDirectionChanged": "En mode d'inversion manuel, envoie un MotorGearShiftEvent de type changement de direction au serveur.",
-  "Motorized:onVehicleSettingChanged": "Répercute les réglages de jeu (mode de changement de direction, mode de boîte) sur le moteur ; le mode de boîte est ignoré pour un véhicule conduit par l'IA.",
-  "Motorized:onAIJobStarted": "Démarre le moteur sans événement réseau et force la boîte en mode automatique pour l'IA.",
-  "Motorized:onAIJobFinished": "Arrête le moteur sans événement réseau si personne n'est dans le véhicule, puis restaure le mode de boîte choisi.",
-  "Motorized:getMotor": "Renvoie l'objet VehicleMotor.",
-  "Motorized:getMotorStartTime": "Renvoie l'instant (temps de jeu en ms) où le moteur passera de STARTING à ON.",
-  "Motorized:getMotorType": "Renvoie le type de moteur lu dans le XML (#type de la configuration).",
-  "Motorized:getMotorRpmPercentage": "Régime normalisé de 0 à 1 entre régime mini et maxi, d'après le régime modulé du moteur.",
-  "Motorized:getMotorRpmReal": "Régime modulé courant en tr/min (getLastModulatedMotorRpm du moteur).",
-  "Motorized:getMotorLoadPercentage": "Charge lissée du moteur (spec.smoothedLoadPercentage), calculée à chaque onUpdate sur tous les pairs.",
-  "Motorized:getMotorBrakeTime": "Durée en secondes du dernier freinage utile au son d'air comprimé, 0 s'il n'y a pas d'échantillon correspondant.",
-  "Motorized:getMotorBlowOffValveState": "Renvoie l'état de la soupape de décharge mémorisé.",
-  "Motorized:getMotorDifferentialSpeed": "Vitesse du différentiel en km/h (valeur absolue), utilisée par un modificateur de son ; journalise une erreur si le véhicule n'est pas motorisé.",
-  "Motorized:getConsumerFillUnitIndex": "Renvoie l'index d'unité de remplissage du consommable pour un type de remplissage donné (nil si absent).",
-  "Motorized:getAirConsumerUsage": "Renvoie le champ usage du consommable AIR, ou 0 s'il n'existe pas (unité : litres par seconde, d'après l'usage dans updateConsumers ; non vérifié en jeu).",
-  "Motorized:getBrakeForce": "Surcharge : prend le maximum entre la force de frein du véhicule et celle du moteur ; si maxBrakeForceMass est défini, interpole entre force min et max selon la masse totale.",
-  "Motorized:loadDashboardGroupFromXML": "Surcharge : lit en plus les attributs de groupe de tableau de bord isMotorStarting, isMotorRunning, electronicsStarting, electronicsStartingTime (2 par défaut) et electronicsRunning.",
-  "Motorized:getIsDashboardGroupActive": "Surcharge : active ou non un groupe de tableau de bord selon l'état du moteur et l'instant d'allumage de l'électronique.",
-  "Motorized:getIsActiveForInteriorLights": "Surcharge : l'éclairage intérieur est actif dès que le moteur est en IGNITION, STARTING ou ON.",
-  "Motorized:getIsActiveForWipers": "Surcharge : essuie-glaces inactifs quand le moteur est OFF.",
-  "Motorized:getUsageCausesDamage": "Surcharge : pas d'usure si le moteur ne tourne pas ni ne démarre.",
-  "Motorized:addToPhysics": "Surcharge : après l'ajout de base, côté serveur, déclare chaque différentiel au moteur physique du moteur, met à jour les propriétés moteur et remet les commandes à zéro.",
-  "Motorized:removeFromPhysics": "Surcharge : côté serveur, retire tous les différentiels avant le retrait de base.",
-  "Motorized:updateMotorProperties": "Envoie au moteur physique (setMotorProperties) les régimes min/max en rad/s, l'inertie, les amortissements et les courbes de couple de la simulation Lua.",
-  "Motorized:controlVehicle": "Transmet à la physique (controlVehicle) pédale, vitesse max, accélération, bornes de régime, rapports et couple d'embrayage ; réveille l'objet physique endormi si l'un des paramètres a changé.",
-  "Motorized:getIsOperating": "Surcharge : un véhicule moteur est considéré en fonctionnement si le moteur est ON, en plus du résultat de base.",
-  "Motorized:getDeactivateOnLeave": "Surcharge : désactivation à la sortie seulement si le démarrage automatique est actif.",
-  "Motorized:getDeactivateLightsOnLeave": "Surcharge : renvoie le résultat de base seulement si le démarrage automatique est actif et si le véhicule n'a pas de demande de puissance (getRequiresPower) ; sinon faux.",
-  "Motorized:onRegisterActionEvents": "Enregistre les actions d'entrée (démarrage moteur, changement de rapport, groupe, direction, embrayage) pour le véhicule actif.",
-  "Motorized.actionEventShiftGear": "Rappel d'entrée : monte ou descend un rapport (boîte manuelle).",
-  "Motorized.actionEventSelectGear": "Rappel d'entrée : sélection directe d'un rapport.",
-  "Motorized.actionEventShiftGroup": "Rappel d'entrée : change de groupe de rapports.",
-  "Motorized.actionEventSelectGroup": "Rappel d'entrée : sélection directe d'un groupe.",
-  "Motorized.actionEventDirectionChange": "Rappel d'entrée : inversion du sens de marche.",
-  "Motorized.actionEventClutch": "Rappel d'entrée : pédale d'embrayage (analogique).",
-  "Motorized.updateActionEvents": "Met à jour l'activité et le texte des actions d'entrée selon l'état moteur et le mode de boîte.",
-  "Motorized:getTraveledDistanceStatsActive": "Indique si la distance parcourue doit être comptée dans les statistiques de ferme.",
-  "Motorized:setGearLeversState": "Lance l'animation des leviers de vitesses vers un rapport et/ou un groupe sur la durée donnée.",
-  "Motorized:generateShiftAnimation": "Construit la séquence d'interpolations de rotation d'un levier de vitesses vers un état cible.",
-  "Motorized:getGearInfoToDisplay": "Renvoie le texte du rapport, du groupe et la direction à afficher dans l'interface.",
-  "Motorized:setTransmissionDirection": "Change le sens de marche de la boîte (avant/arrière).",
-  "Motorized:getDirectionChangeMode": "Renvoie le mode de changement de direction (automatique ou manuel).",
-  "Motorized:getIsManualDirectionChangeAllowed": "Indique si l'inversion manuelle est autorisée.",
-  "Motorized:getIsManualDirectionChangeActive": "Indique si l'inversion manuelle est en vigueur.",
-  "Motorized:getGearShiftMode": "Renvoie le mode de changement de vitesse (automatique, manuel).",
-  "Motorized:onStateChange": "Entrée dans le véhicule : démarre le moteur si le démarrage automatique est actif et si aucune serrure de contact n'est utilisée. Sortie : arrête le moteur si requis, puis immobilise le véhicule (stopVehicle).",
-  "Motorized:stopVehicle": "Serveur : envoie à la physique des commandes nulles (pédale 0, vitesse 0).",
-  "Motorized:onFillUnitFillLevelChanged": "Quand du diesel est ajouté, recharge proportionnellement le réservoir de DEF s'il existe.",
-  "Motorized:onSetBroken": "Arrête le moteur sans événement réseau lorsque le véhicule est déclaré en panne.",
-  "Motorized:getName": "Surcharge : renvoie le nom lié à la configuration moteur (vehicleName) s'il est défini, sinon le nom de base.",
-  "Motorized:getCanBeSelected": "Surcharge : si le démarrage automatique est désactivé, un véhicule est sélectionnable dès qu'un véhicule motorisé existe dans la chaîne attelée (pour pouvoir allumer ou éteindre ce moteur) ; sinon résultat de base.",
-  "Motorized:getIsPowered": "Surcharge : un outil est alimenté si ce véhicule ou un autre véhicule de la chaîne attelée a un moteur en STARTING/ON ; sinon renvoie l'avertissement correspondant.",
-  "Motorized.tryStartMotor": "Tente de démarrer chaque moteur capable de tourner dans la chaîne de véhicules attelés.",
-  "Motorized.actionEventToggleMotorState": "Rappel d'entrée : démarre ou arrête le moteur (basculement).",
-  "Motorized.actionEventSetMotorStateIgnition": "Rappel d'entrée : met le contact (IGNITION) sans démarrer.",
-  "Motorized.actionEventSetMotorStateOn": "Rappel d'entrée : démarre le moteur.",
-  "Motorized.actionEventSetMotorStateOff": "Rappel d'entrée : arrête le moteur.",
-  "Motorized.loadSpecValueFuel": "Lit les données de carburant du store (type, capacité) depuis le XML du véhicule. Non relu en détail.",
-  "Motorized.getSpecValueFuelDiesel": "Valeur de spécification du store : diesel.",
-  "Motorized.getSpecValueFuelElectricCharge": "Valeur de spécification du store : charge électrique.",
-  "Motorized.getSpecValueFuelMethane": "Valeur de spécification du store : méthane.",
-  "Motorized.getSpecValueFuel": "Calcule le texte/valeur de carburant pour le store selon le type de remplissage demandé.",
-  "Motorized.loadSpecValueMaxSpeed": "Lit la vitesse maximale du store depuis le XML. Non relu en détail.",
-  "Motorized.getSpecValueMaxSpeed": "Calcule la vitesse maximale pour le store selon la configuration (bornes ou valeur).",
-  "Motorized.loadSpecValuePower": "Lit la puissance indiquée dans vehicle.storeData.specs.power.",
-  "Motorized.getSpecValuePower": "Calcule la puissance min/max pour le store en fonction de la configuration de moteur choisie.",
-  "Motorized.loadSpecValueTransmission": "Lit les informations de transmission du store. Non relu en détail.",
-  "Motorized.getSpecValueTransmission": "Calcule le texte de transmission pour le store. Non relu en détail."
+  "Motorized.initSpecialization": {
+   "en": "Declares the XML schemas of the specialization: engine paths, differentials, consumables, sounds, gearboxes, engine configurations, exhaust effects (exhaustParticleSystems, exhaustEffects, exhaustFlap, effects), dashboards and store values. Reserved for vehicle type initialisation.",
+   "fr": "Déclare les schémas XML de la spécialisation : chemins moteur, différentiels, consommables, sons, boîtes, configurations de moteur, effets d'échappement (exhaustParticleSystems, exhaustEffects, exhaustFlap, effects), tableaux de bord et valeurs de store. Réservé à l'initialisation des types de véhicules."
+  },
+  "Motorized.registerMotorXMLPaths": {
+   "en": "Registers in the XML schema the keys of an engine configuration (speeds, max speeds, torque, braking, curves, etc.). Not read line by line.",
+   "fr": "Enregistre dans le schéma XML les clés d'une configuration de moteur (régimes, vitesses max, couple, freinage, courbes, etc.). Non relu ligne à ligne."
+  },
+  "Motorized.registerDifferentialXMLPaths": {
+   "en": "Registers the XML keys of the differentials (indices, torque ratio, max speed ratio).",
+   "fr": "Enregistre les clés XML des différentiels (indices, rapport de couple, rapport de vitesse max)."
+  },
+  "Motorized.registerConsumerXMLPaths": {
+   "en": "Registers the XML keys of a consumable (fill type, usage, capacity, refill for air).",
+   "fr": "Enregistre les clés XML d'un consommable (type de remplissage, usage, capacité, recharge pour l'air)."
+  },
+  "Motorized.registerSoundXMLPaths": {
+   "en": "Registers the XML keys of the engine, gearbox, air compressor, clutch, blow-off valve, reverse sounds, etc.",
+   "fr": "Enregistre les clés XML des sons moteur, boîte, compresseur d'air, clutch, soupape de décharge, marche arrière, etc."
+  },
+  "Motorized.prerequisitesPresent": {
+   "en": "Requires the FillUnit and VehicleSettings specializations on the vehicle type.",
+   "fr": "Exige les spécialisations FillUnit et VehicleSettings sur le type de véhicule."
+  },
+  "Motorized.registerEvents": {
+   "en": "Declares the events onStartMotor, onStopMotor, onGearDirectionChanged, onGearChanged, onGearGroupChanged, onMotorBlowOffValveChanged and onClutchCreaking, which other specializations or mods can listen to.",
+   "fr": "Déclare les événements onStartMotor, onStopMotor, onGearDirectionChanged, onGearChanged, onGearGroupChanged, onMotorBlowOffValveChanged et onClutchCreaking, que d'autres spécialisations ou mods peuvent écouter."
+  },
+  "Motorized.registerFunctions": {
+   "en": "Registers the vehicle's public functions (loading, engine getters, rpm, load, temperature, gearbox, start/stop). Note: setMotorState and getMotorState are listed there but their definitions are absent from the dump.",
+   "fr": "Enregistre les fonctions publiques du véhicule (chargement, getters moteur, régime, charge, température, boîte, start/stop). Note : y figurent setMotorState et getMotorState dont les définitions sont absentes du dump."
+  },
+  "Motorized.registerOverwrittenFunctions": {
+   "en": "Overrides fourteen base vehicle functions (brake, physics, operating state, dashboard, wipers, interior lighting, wear, name, selection, power supply).",
+   "fr": "Surcharge quatorze fonctions de base du véhicule (frein, physique, état opérationnel, tableau de bord, essuie-glaces, éclairage intérieur, usure, nom, sélection, alimentation)."
+  },
+  "Motorized.registerEventListeners": {
+   "en": "Subscribes the specialization to vehicle events: lifecycle (onLoad, onPostLoad, onDelete), network streams, onUpdate / onUpdateTick, onStateChange (entering/leaving the vehicle), tank levels, breakdown (onSetBroken), AI, gearbox settings and the gearbox's own events.",
+   "fr": "Abonne la spécialisation aux événements du véhicule : cycle de vie (onLoad, onPostLoad, onDelete), flux réseau, onUpdate / onUpdateTick, onStateChange (entrée/sortie du véhicule), niveau des réservoirs, panne (onSetBroken), IA, réglages de boîte et événements propres de boîte."
+  },
+  "Motorized:onLoad": {
+   "en": "Vehicle loading: reads differentials, engine, sounds, consumables, then, client side only, the exhaust effects. Initialises the engine state (stopped), the start duration (motorStartDuration), the braking parameters, the gear levers, and the engine temperature structure (20 °C initial, 120 °C max, heating 1.5 °C/s at full load, wind cooling 1 °C/s, fan 85/95 °C, 3 °C/s).",
+   "fr": "Chargement du véhicule : lit différentiels, moteur, sons, consommables, puis, côté client seulement, les effets d'échappement. Initialise l'état moteur (arrêté), la durée de démarrage (motorStartDuration), les paramètres de freinage, les leviers de vitesses, et la structure de température moteur (20 °C initial, 120 °C max, échauffement 1.5 °C/s à pleine charge, refroidissement par le vent 1 °C/s, ventilateur 85/95 °C, 3 °C/s)."
+  },
+  "Motorized:onPostLoad": {
+   "en": "Server side: refills consumables under 10 % of capacity, charging the cost to the player (litre price multiplied by 2). Builds the list of tanks required to run (diesel, DEF, electricity, methane) then finishes loading the engine.",
+   "fr": "Côté serveur : recharge les consommables sous 10 % de capacité en facturant le coût au joueur (prix du litre multiplié par 2). Constitue la liste des réservoirs indispensables au fonctionnement (diesel, DEF, électricité, méthane) puis termine le chargement du moteur."
+  },
+  "Motorized:onRegisterDashboardValueTypes": {
+   "en": "Registers the dashboard values: engine speed (rpm), load (load, as a percentage), speed, consumption, engine temperature and temperature warning, clutch, gear, group, etc. Useful to know which engine quantities are already exposed and their ranges.",
+   "fr": "Enregistre les valeurs de tableau de bord : régime (rpm), charge (load, en pourcentage), vitesse, consommation, température moteur et alerte de température, embrayage, rapport, groupe, etc. Utile pour savoir quelles grandeurs moteur sont déjà exposées et leurs plages."
+  },
+  "Motorized:onDelete": {
+   "en": "Releases the engine, the shared I3D files of the exhaust effects, the exhaust particle systems (ParticleUtil.deleteParticleSystems), the sounds, the animations and the effect system (g_effectManager:deleteEffects).",
+   "fr": "Libère le moteur, les fichiers I3D partagés des effets d'échappement, les systèmes de particules d'échappement (ParticleUtil.deleteParticleSystems), les sons, les animations et le système d'effets (g_effectManager:deleteEffects)."
+  },
+  "Motorized:onReadStream": {
+   "en": "Network read on connection: receives the initial engine state and applies it through setMotorState without sending back.",
+   "fr": "Lecture réseau à la connexion : reçoit l'état moteur initial et l'applique par setMotorState sans renvoi."
+  },
+  "Motorized:onWriteStream": {
+   "en": "Network write on connection: sends the current engine state.",
+   "fr": "Écriture réseau à la connexion : envoie l'état moteur courant."
+  },
+  "Motorized:onReadUpdateStream": {
+   "en": "Reads the update stream. Client side (stream coming from the server): equalised engine speed on 11 bits, raw load on 7 bits, compressor state and clutch position on 5 bits, then gearbox data. Server side (stream coming from a client): clutch state only.",
+   "fr": "Lecture du flux de mise à jour. Côté client (flux venant du serveur) : régime égalisé en 11 bits, charge brute en 7 bits, état du compresseur et position de l'embrayage en 5 bits, puis données de boîte. Côté serveur (flux venant d'un client) : état d'embrayage seulement."
+  },
+  "Motorized:onWriteUpdateStream": {
+   "en": "Writes the update stream, symmetric to the read. The server writes speed, load, compressor, clutch (only if the engine is running or starting) and, if the dirty flag is raised, the gearbox data. Note: the engine temperature is not sent.",
+   "fr": "Écriture du flux de mise à jour, symétrique de la lecture. Le serveur écrit régime, charge, compresseur, embrayage (uniquement si le moteur tourne ou démarre) et, si le drapeau sale est levé, les données de boîte. À noter : la température moteur n'est pas envoyée."
+  },
+  "Motorized:onUpdate": {
+   "en": "Every frame, if the engine is starting or running: switches to ON after motorStartTime (server), updates the engine (spec.motor:update(dt)), the raw load (server) and the smoothed load (all), updates consumables and engine properties according to damage (server), and client side the sound parameters (normalised speed and load), compressor, brakes, reverse beeper and gear levers animated with dt. Also accumulates the distance travelled for statistics (server).",
+   "fr": "Chaque frame, si le moteur démarre ou tourne : passe en ON après motorStartTime (serveur), met à jour le moteur (spec.motor:update(dt)), la charge brute (serveur) et la charge lissée (tous), met à jour consommables et propriétés moteur selon les dégâts (serveur), et côté client les paramètres de son (régime et charge normalisés), compresseur, freins, bip de marche arrière et leviers de vitesses animés avec dt. Cumule aussi la distance parcourue pour les statistiques (serveur)."
+  },
+  "Motorized:onUpdateTick": {
+   "en": "Simulation tick. Server: automatic engine shutdown if no player or occupied vehicle within 250 m (when automatic start is disabled), call to updateMotorTemperature, automatic start/stop logic. Client, engine running: scales the emission and lifetime of the exhaust particles from the RPM ratio, animates the exhaust flaps, sets the density of the effect system, orients and colours the exhaust meshes via shader (see module), then handles the consumption display, the clutch sounds and the ignition lock. Note: for the particles, the code reads minScale/maxScale on the spec.exhaustParticleSystems list and calls ParticleUtil.setEmitCountScale with that list rather than with the current system, whereas minScale/maxScale are stored per system (lines 1216-1219, loadExhaustEffects:1721-1722); apparent defect, real effect UNVERIFIED in game and the body of ParticleUtil is absent from the dump.",
+   "fr": "Tick de simulation. Serveur : arrêt automatique du moteur si aucun joueur ou véhicule occupé à moins de 250 m (quand le démarrage automatique est désactivé), appel d'updateMotorTemperature, logique de démarrage/arrêt automatique. Client, moteur en marche : met à l'échelle émission et durée de vie des particules d'échappement d'après le ratio de régime, anime les volets d'échappement, règle la densité du système d'effets, oriente et colore les mesh d'échappement via shader (voir module), puis gère l'affichage de la consommation, les sons d'embrayage et la serrure de contact. À noter : pour les particules, le code lit minScale/maxScale sur la liste spec.exhaustParticleSystems et appelle ParticleUtil.setEmitCountScale avec cette liste plutôt qu'avec le système courant, alors que minScale/maxScale sont stockés par système (lignes 1216-1219, loadExhaustEffects:1721-1722) ; apparent défaut, effet réel NON VÉRIFIÉ en jeu et le corps de ParticleUtil est absent du dump."
+  },
+  "Motorized:loadDifferentials": {
+   "en": "Loads the differentials of the chosen configuration (axle or wheel indices, torque ratio and max speed ratio) for later addition to the physics. Not read in detail.",
+   "fr": "Charge les différentiels de la configuration choisie (indices d'essieux ou de roues, rapport de couple et de vitesse maximale) pour l'ajout ultérieur à la physique. Non relu en détail."
+  },
+  "Motorized:loadMotor": {
+   "en": "Loads the chosen engine configuration: name, type, consumables, min/max speeds, speeds, acceleration, braking, torque/power curves, gearbox, groups, ratios and damping, with fallback to configuration 0. Instantiates the VehicleMotor. Not read in detail (outside the priority angle).",
+   "fr": "Charge la configuration de moteur choisie : nom, type, consommables, régimes min/max, vitesses, accélération, freinage, courbes de couple/puissance, boîte de vitesses, groupes, rapports et amortissements, avec repli sur la configuration 0. Instancie le VehicleMotor. Non relu en détail (hors angle prioritaire)."
+  },
+  "Motorized:loadGears": {
+   "en": "Loads a series of gearbox ratios from the XML (ratios, max/min ratios, speeds), taking the max engine speed and the axle ratio into account. Not read in detail.",
+   "fr": "Charge une série de rapports de boîte depuis le XML (rapports, rapports max/min, vitesses), en tenant compte du régime max et du rapport de pont. Non relu en détail."
+  },
+  "Motorized:loadGearGroups": {
+   "en": "Loads the gearbox's gear groups (ranges) from the XML. Not read in detail.",
+   "fr": "Charge les groupes de rapports (gammes) de la boîte depuis le XML. Non relu en détail."
+  },
+  "Motorized:loadExhaustEffects": {
+   "en": "Loads, client side, the three families of exhaust effects: particle systems (with minScale/maxScale), flaps (exhaustFlap: node, max rotation, axis), shared I3D exhaust meshes (loaded asynchronously, onExhaustEffectI3DLoaded callback) and generic effects via g_effectManager (unknown fill type). Keeps spec.exhaustEffectMaxSteeringSpeed = 0.001, which is not used elsewhere in this file.",
+   "fr": "Charge, côté client, les trois familles d'effets d'échappement : systèmes de particules (avec minScale/maxScale), volets (exhaustFlap : nœud, rotation max, axe), mesh d'échappement I3D partagés (chargés en asynchrone, rappel onExhaustEffectI3DLoaded) et effets génériques via g_effectManager (type de remplissage inconnu). Conserve spec.exhaustEffectMaxSteeringSpeed = 0.001, qui n'est pas utilisé ailleurs dans ce fichier."
+  },
+  "Motorized:onExhaustEffectI3DLoaded": {
+   "en": "Loading callback of an exhaust mesh: takes the first child of the I3D, keeps it only if it has the shader parameter \"param\", links it to the vehicle's anchor node, hides it (visibility false at start) and reads minRpmColor, maxRpmColor, minRpmScale, maxRpmScale and upFactor (schema defaults: colour defaults: black for min, a dark bluish tone with alpha 2.0 for max; scales 0.25 and 0.95; upFactor 0.75). Note: the node is hidden here and the place where it is made visible is not in this file (not verified).",
+   "fr": "Rappel de chargement d'un mesh d'échappement : prend le premier enfant du I3D, ne le conserve que s'il possède le paramètre de shader « param », le relie au nœud d'ancrage du véhicule, le masque (visibilité faux au départ) et lit minRpmColor, maxRpmColor, minRpmScale, maxRpmScale et upFactor (valeurs par défaut dans le schéma : couleurs par défaut : noir pour le min, un bleu sombre avec alpha 2.0 pour le max ; échelles 0.25 et 0.95 ; upFactor 0.75). À noter : le nœud est masqué ici et l'endroit où il est rendu visible n'est pas dans ce fichier (non vérifié)."
+  },
+  "Motorized:loadSounds": {
+   "en": "Loads the sound samples for engine, gearbox, air compressor, blow-off valve, brakes, reverse, and the sound synthesis parameters. Not read in detail.",
+   "fr": "Charge les échantillons sonores moteur, boîte, compresseur d'air, soupape de décharge, freins, marche arrière, et les paramètres de synthèse sonore. Non relu en détail."
+  },
+  "Motorized:loadConsumerConfiguration": {
+   "en": "Loads the consumable configuration (key consumerConfiguration): list of consumables with fill type, usage, permanent consumption, air refill, and index by name and by type.",
+   "fr": "Charge la configuration de consommables (clé consumerConfiguration) : liste des consommables avec type de remplissage, usage, consommation permanente, recharge d'air, et index par nom et par type."
+  },
+  "Motorized:getIsMotorStarted": {
+   "en": "True only if the engine state is ON (not during STARTING).",
+   "fr": "Vrai uniquement si l'état moteur est ON (pas pendant STARTING)."
+  },
+  "Motorized:getIsMotorInNeutral": {
+   "en": "Asks the VehicleMotor whether the gearbox is in neutral.",
+   "fr": "Interroge le VehicleMotor pour savoir si la boîte est au point mort."
+  },
+  "Motorized:getCanMotorRun": {
+   "en": "False if a required tank is empty or if the VehicleMotor refuses to run (clutch not engaged, for example).",
+   "fr": "Faux si un réservoir indispensable est vide ou si le VehicleMotor refuse de tourner (embrayage non enclenché par exemple)."
+  },
+  "Motorized:getStopMotorOnLeave": {
+   "en": "Tells whether the engine must stop when leaving the vehicle: configuration option and no external power request (getRequiresPower).",
+   "fr": "Indique si le moteur doit s'arrêter à la sortie du véhicule : option de la configuration et aucune demande de puissance externe (getRequiresPower)."
+  },
+  "Motorized:getMotorNotAllowedWarning": {
+   "en": "Returns the warning text to display (empty tank or clutch not engaged), otherwise nil.",
+   "fr": "Renvoie le texte d'avertissement à afficher (réservoir vide ou embrayage non enclenché), sinon nil."
+  },
+  "Motorized:startMotor": {
+   "en": "If the engine is OFF or IGNITION: sends MotorSetTurnedOnEvent(true) unless noEventSend, then switches to STARTING.",
+   "fr": "Si le moteur est OFF ou IGNITION : envoie MotorSetTurnedOnEvent(vrai) sauf si noEventSend, puis passe à STARTING."
+  },
+  "Motorized:stopMotor": {
+   "en": "If the engine is ON or STARTING: sends MotorSetTurnedOnEvent(false) unless noEventSend, then switches to OFF.",
+   "fr": "Si le moteur est ON ou STARTING : envoie MotorSetTurnedOnEvent(faux) sauf si noEventSend, puis passe à OFF."
+  },
+  "Motorized:updateConsumers": {
+   "en": "Server only. Computes a consumption factor from engine speed, smoothed load, the savegame consumption setting (low 1.0, medium 1.5, high 2.5) and damage, removes fuel (stat \"fuelUsage\", automatic repurchase for the AI if the option is active), exposes the hourly consumption (spec.lastFuelUsage) and handles the brakes' air consumption and refill.",
+   "fr": "Serveur uniquement. Calcule un facteur de consommation à partir du régime, de la charge lissée, du réglage de consommation de la sauvegarde (bas 1.0, moyen 1.5, haut 2.5) et des dégâts, retire du carburant (stat « fuelUsage », rachat automatique pour l'IA si l'option est active), expose la consommation horaire (spec.lastFuelUsage) et gère la consommation et la recharge d'air des freins."
+  },
+  "Motorized:updateMotorTemperature": {
+   "en": "Server only. Heating proportional to dt, modulated by raw load and engine speed; wind cooling proportional to the square of min(1, speed/30); a fan that switches on above 95 °C and off below 85 °C. Temperature clamped between 20 and 120 °C. Only called while the engine is starting or running: no decay at standstill is coded here (a switched-off engine does not cool, according to this file).",
+   "fr": "Serveur uniquement. Échauffement proportionnel à dt, modulé par la charge brute et le régime ; refroidissement par le vent proportionnel au carré de min(1, vitesse/30) ; ventilateur qui s'active au-dessus de 95 °C et se coupe sous 85 °C. Température bornée entre 20 et 120 °C. Appelée seulement moteur démarrant ou en marche : aucune décroissance à l'arrêt n'est codée ici (le moteur éteint ne refroidit pas, d'après ce fichier)."
+  },
+  "Motorized:onGearDirectionChanged": {
+   "en": "Server: raises the gearbox network flag. Client: updates the dashboard values \"gear\" and \"gearIndex\".",
+   "fr": "Serveur : lève le drapeau réseau de boîte. Client : met à jour les valeurs de tableau de bord « gear » et « gearIndex »."
+  },
+  "Motorized:onGearChanged": {
+   "en": "Animates the gear levers toward the target gear and updates sounds and dashboard client side. Not read in detail.",
+   "fr": "Anime les leviers de vitesses vers le rapport cible et met à jour sons et tableau de bord côté client. Non relu en détail."
+  },
+  "Motorized:onGearGroupChanged": {
+   "en": "Equivalent of onGearChanged for gear groups. Not read in detail.",
+   "fr": "Équivalent d'onGearChanged pour les groupes de rapports. Non relu en détail."
+  },
+  "Motorized:onMotorBlowOffValveChanged": {
+   "en": "Plays or stops the blow-off valve (turbo) sound according to the state passed by the engine; stores that state.",
+   "fr": "Joue ou arrête le son de soupape de décharge (turbo) selon l'état transmis par le moteur ; mémorise cet état."
+  },
+  "Motorized:onClutchCreaking": {
+   "en": "Handles clutch creaking: sound, warning and lever animation toward the neutral position. Not read in detail.",
+   "fr": "Gère le craquement d'embrayage : son, avertissement et animation des leviers vers la position neutre. Non relu en détail."
+  },
+  "Motorized:onReverseDirectionChanged": {
+   "en": "In manual reverser mode, sends a MotorGearShiftEvent of direction-change type to the server.",
+   "fr": "En mode d'inversion manuel, envoie un MotorGearShiftEvent de type changement de direction au serveur."
+  },
+  "Motorized:onVehicleSettingChanged": {
+   "en": "Applies the game settings (direction change mode, gearbox mode) to the engine; the gearbox mode is ignored for an AI-driven vehicle.",
+   "fr": "Répercute les réglages de jeu (mode de changement de direction, mode de boîte) sur le moteur ; le mode de boîte est ignoré pour un véhicule conduit par l'IA."
+  },
+  "Motorized:onAIJobStarted": {
+   "en": "Starts the engine without a network event and forces the gearbox to automatic mode for the AI.",
+   "fr": "Démarre le moteur sans événement réseau et force la boîte en mode automatique pour l'IA."
+  },
+  "Motorized:onAIJobFinished": {
+   "en": "Stops the engine without a network event if nobody is in the vehicle, then restores the chosen gearbox mode.",
+   "fr": "Arrête le moteur sans événement réseau si personne n'est dans le véhicule, puis restaure le mode de boîte choisi."
+  },
+  "Motorized:getMotor": {
+   "en": "Returns the VehicleMotor object.",
+   "fr": "Renvoie l'objet VehicleMotor."
+  },
+  "Motorized:getMotorStartTime": {
+   "en": "Returns the instant (game time in ms) at which the engine will switch from STARTING to ON.",
+   "fr": "Renvoie l'instant (temps de jeu en ms) où le moteur passera de STARTING à ON."
+  },
+  "Motorized:getMotorType": {
+   "en": "Returns the engine type read from the XML (#type of the configuration).",
+   "fr": "Renvoie le type de moteur lu dans le XML (#type de la configuration)."
+  },
+  "Motorized:getMotorRpmPercentage": {
+   "en": "Engine speed normalised from 0 to 1 between min and max rpm, based on the engine's modulated speed.",
+   "fr": "Régime normalisé de 0 à 1 entre régime mini et maxi, d'après le régime modulé du moteur."
+  },
+  "Motorized:getMotorRpmReal": {
+   "en": "Current modulated engine speed in rpm (the engine's getLastModulatedMotorRpm).",
+   "fr": "Régime modulé courant en tr/min (getLastModulatedMotorRpm du moteur)."
+  },
+  "Motorized:getMotorLoadPercentage": {
+   "en": "Smoothed engine load (spec.smoothedLoadPercentage), computed on every onUpdate on all peers.",
+   "fr": "Charge lissée du moteur (spec.smoothedLoadPercentage), calculée à chaque onUpdate sur tous les pairs."
+  },
+  "Motorized:getMotorBrakeTime": {
+   "en": "Duration in seconds of the last braking, used for the compressed-air sound, 0 s if there is no matching sample.",
+   "fr": "Durée en secondes du dernier freinage utile au son d'air comprimé, 0 s'il n'y a pas d'échantillon correspondant."
+  },
+  "Motorized:getMotorBlowOffValveState": {
+   "en": "Returns the stored blow-off valve state.",
+   "fr": "Renvoie l'état de la soupape de décharge mémorisé."
+  },
+  "Motorized:getMotorDifferentialSpeed": {
+   "en": "Differential speed in km/h (absolute value), used by a sound modifier; logs an error if the vehicle is not motorized.",
+   "fr": "Vitesse du différentiel en km/h (valeur absolue), utilisée par un modificateur de son ; journalise une erreur si le véhicule n'est pas motorisé."
+  },
+  "Motorized:getConsumerFillUnitIndex": {
+   "en": "Returns the fill unit index of the consumable for a given fill type (nil if absent).",
+   "fr": "Renvoie l'index d'unité de remplissage du consommable pour un type de remplissage donné (nil si absent)."
+  },
+  "Motorized:getAirConsumerUsage": {
+   "en": "Returns the usage field of the AIR consumable, or 0 if it does not exist (unit: litres per second, from the usage in updateConsumers; not verified in game).",
+   "fr": "Renvoie le champ usage du consommable AIR, ou 0 s'il n'existe pas (unité : litres par seconde, d'après l'usage dans updateConsumers ; non vérifié en jeu)."
+  },
+  "Motorized:getBrakeForce": {
+   "en": "Override: takes the maximum between the vehicle's brake force and the engine's; if maxBrakeForceMass is defined, interpolates between min and max force according to total mass.",
+   "fr": "Surcharge : prend le maximum entre la force de frein du véhicule et celle du moteur ; si maxBrakeForceMass est défini, interpole entre force min et max selon la masse totale."
+  },
+  "Motorized:loadDashboardGroupFromXML": {
+   "en": "Override: additionally reads the dashboard group attributes isMotorStarting, isMotorRunning, electronicsStarting, electronicsStartingTime (2 by default) and electronicsRunning.",
+   "fr": "Surcharge : lit en plus les attributs de groupe de tableau de bord isMotorStarting, isMotorRunning, electronicsStarting, electronicsStartingTime (2 par défaut) et electronicsRunning."
+  },
+  "Motorized:getIsDashboardGroupActive": {
+   "en": "Override: activates or not a dashboard group according to the engine state and the electronics switch-on instant.",
+   "fr": "Surcharge : active ou non un groupe de tableau de bord selon l'état du moteur et l'instant d'allumage de l'électronique."
+  },
+  "Motorized:getIsActiveForInteriorLights": {
+   "en": "Override: the interior lighting is active as soon as the engine is in IGNITION, STARTING or ON.",
+   "fr": "Surcharge : l'éclairage intérieur est actif dès que le moteur est en IGNITION, STARTING ou ON."
+  },
+  "Motorized:getIsActiveForWipers": {
+   "en": "Override: wipers inactive when the engine is OFF.",
+   "fr": "Surcharge : essuie-glaces inactifs quand le moteur est OFF."
+  },
+  "Motorized:getUsageCausesDamage": {
+   "en": "Override: no wear if the engine is neither running nor starting.",
+   "fr": "Surcharge : pas d'usure si le moteur ne tourne pas ni ne démarre."
+  },
+  "Motorized:addToPhysics": {
+   "en": "Override: after the base addition, server side, declares each differential to the engine's physics, updates the engine properties and resets the controls.",
+   "fr": "Surcharge : après l'ajout de base, côté serveur, déclare chaque différentiel au moteur physique du moteur, met à jour les propriétés moteur et remet les commandes à zéro."
+  },
+  "Motorized:removeFromPhysics": {
+   "en": "Override: server side, removes all differentials before the base removal.",
+   "fr": "Surcharge : côté serveur, retire tous les différentiels avant le retrait de base."
+  },
+  "Motorized:updateMotorProperties": {
+   "en": "Sends to the physics engine (setMotorProperties) the min/max speeds in rad/s, the inertia, the damping and the torque curves of the Lua simulation.",
+   "fr": "Envoie au moteur physique (setMotorProperties) les régimes min/max en rad/s, l'inertie, les amortissements et les courbes de couple de la simulation Lua."
+  },
+  "Motorized:controlVehicle": {
+   "en": "Passes to the physics (controlVehicle) pedal, max speed, acceleration, speed bounds, ratios and clutch torque; wakes the sleeping physics object if one of the parameters changed.",
+   "fr": "Transmet à la physique (controlVehicle) pédale, vitesse max, accélération, bornes de régime, rapports et couple d'embrayage ; réveille l'objet physique endormi si l'un des paramètres a changé."
+  },
+  "Motorized:getIsOperating": {
+   "en": "Override: a motorized vehicle is considered operating if the engine is ON, in addition to the base result.",
+   "fr": "Surcharge : un véhicule moteur est considéré en fonctionnement si le moteur est ON, en plus du résultat de base."
+  },
+  "Motorized:getDeactivateOnLeave": {
+   "en": "Override: deactivation on leaving only if automatic start is active.",
+   "fr": "Surcharge : désactivation à la sortie seulement si le démarrage automatique est actif."
+  },
+  "Motorized:getDeactivateLightsOnLeave": {
+   "en": "Override: returns the base result only if automatic start is active and the vehicle has no power request (getRequiresPower); otherwise false.",
+   "fr": "Surcharge : renvoie le résultat de base seulement si le démarrage automatique est actif et si le véhicule n'a pas de demande de puissance (getRequiresPower) ; sinon faux."
+  },
+  "Motorized:onRegisterActionEvents": {
+   "en": "Registers the input actions (engine start, gear change, group, direction, clutch) for the active vehicle.",
+   "fr": "Enregistre les actions d'entrée (démarrage moteur, changement de rapport, groupe, direction, embrayage) pour le véhicule actif."
+  },
+  "Motorized.actionEventShiftGear": {
+   "en": "Input callback: shifts one gear up or down (manual gearbox).",
+   "fr": "Rappel d'entrée : monte ou descend un rapport (boîte manuelle)."
+  },
+  "Motorized.actionEventSelectGear": {
+   "en": "Input callback: direct selection of a gear.",
+   "fr": "Rappel d'entrée : sélection directe d'un rapport."
+  },
+  "Motorized.actionEventShiftGroup": {
+   "en": "Input callback: changes gear group.",
+   "fr": "Rappel d'entrée : change de groupe de rapports."
+  },
+  "Motorized.actionEventSelectGroup": {
+   "en": "Input callback: direct selection of a group.",
+   "fr": "Rappel d'entrée : sélection directe d'un groupe."
+  },
+  "Motorized.actionEventDirectionChange": {
+   "en": "Input callback: reverses the direction of travel.",
+   "fr": "Rappel d'entrée : inversion du sens de marche."
+  },
+  "Motorized.actionEventClutch": {
+   "en": "Input callback: clutch pedal (analogue).",
+   "fr": "Rappel d'entrée : pédale d'embrayage (analogique)."
+  },
+  "Motorized.updateActionEvents": {
+   "en": "Updates the activity and text of the input actions according to the engine state and gearbox mode.",
+   "fr": "Met à jour l'activité et le texte des actions d'entrée selon l'état moteur et le mode de boîte."
+  },
+  "Motorized:getTraveledDistanceStatsActive": {
+   "en": "Tells whether the distance travelled must be counted in the farm statistics.",
+   "fr": "Indique si la distance parcourue doit être comptée dans les statistiques de ferme."
+  },
+  "Motorized:setGearLeversState": {
+   "en": "Starts the gear lever animation toward a gear and/or group over the given duration.",
+   "fr": "Lance l'animation des leviers de vitesses vers un rapport et/ou un groupe sur la durée donnée."
+  },
+  "Motorized:generateShiftAnimation": {
+   "en": "Builds the sequence of rotation interpolations of a gear lever toward a target state.",
+   "fr": "Construit la séquence d'interpolations de rotation d'un levier de vitesses vers un état cible."
+  },
+  "Motorized:getGearInfoToDisplay": {
+   "en": "Returns the gear text, the group and the direction to show in the interface.",
+   "fr": "Renvoie le texte du rapport, du groupe et la direction à afficher dans l'interface."
+  },
+  "Motorized:setTransmissionDirection": {
+   "en": "Changes the gearbox travel direction (forward/reverse).",
+   "fr": "Change le sens de marche de la boîte (avant/arrière)."
+  },
+  "Motorized:getDirectionChangeMode": {
+   "en": "Returns the direction change mode (automatic or manual).",
+   "fr": "Renvoie le mode de changement de direction (automatique ou manuel)."
+  },
+  "Motorized:getIsManualDirectionChangeAllowed": {
+   "en": "Tells whether manual reversing is allowed.",
+   "fr": "Indique si l'inversion manuelle est autorisée."
+  },
+  "Motorized:getIsManualDirectionChangeActive": {
+   "en": "Tells whether manual reversing is in force.",
+   "fr": "Indique si l'inversion manuelle est en vigueur."
+  },
+  "Motorized:getGearShiftMode": {
+   "en": "Returns the gear shift mode (automatic, manual).",
+   "fr": "Renvoie le mode de changement de vitesse (automatique, manuel)."
+  },
+  "Motorized:onStateChange": {
+   "en": "Entering the vehicle: starts the engine if automatic start is active and no ignition lock is used. Leaving: stops the engine if required, then immobilises the vehicle (stopVehicle).",
+   "fr": "Entrée dans le véhicule : démarre le moteur si le démarrage automatique est actif et si aucune serrure de contact n'est utilisée. Sortie : arrête le moteur si requis, puis immobilise le véhicule (stopVehicle)."
+  },
+  "Motorized:stopVehicle": {
+   "en": "Server: sends null commands to the physics (pedal 0, speed 0).",
+   "fr": "Serveur : envoie à la physique des commandes nulles (pédale 0, vitesse 0)."
+  },
+  "Motorized:onFillUnitFillLevelChanged": {
+   "en": "When diesel is added, refills the DEF tank proportionally if it exists.",
+   "fr": "Quand du diesel est ajouté, recharge proportionnellement le réservoir de DEF s'il existe."
+  },
+  "Motorized:onSetBroken": {
+   "en": "Stops the engine without a network event when the vehicle is declared broken.",
+   "fr": "Arrête le moteur sans événement réseau lorsque le véhicule est déclaré en panne."
+  },
+  "Motorized:getName": {
+   "en": "Override: returns the name tied to the engine configuration (vehicleName) if defined, otherwise the base name.",
+   "fr": "Surcharge : renvoie le nom lié à la configuration moteur (vehicleName) s'il est défini, sinon le nom de base."
+  },
+  "Motorized:getCanBeSelected": {
+   "en": "Override: if automatic start is disabled, a vehicle is selectable as soon as a motorized vehicle exists in the attached chain (so that engine can be switched on or off); otherwise base result.",
+   "fr": "Surcharge : si le démarrage automatique est désactivé, un véhicule est sélectionnable dès qu'un véhicule motorisé existe dans la chaîne attelée (pour pouvoir allumer ou éteindre ce moteur) ; sinon résultat de base."
+  },
+  "Motorized:getIsPowered": {
+   "en": "Override: an implement is powered if this vehicle or another vehicle of the attached chain has an engine in STARTING/ON; otherwise returns the matching warning.",
+   "fr": "Surcharge : un outil est alimenté si ce véhicule ou un autre véhicule de la chaîne attelée a un moteur en STARTING/ON ; sinon renvoie l'avertissement correspondant."
+  },
+  "Motorized.tryStartMotor": {
+   "en": "Tries to start each engine able to run in the chain of attached vehicles.",
+   "fr": "Tente de démarrer chaque moteur capable de tourner dans la chaîne de véhicules attelés."
+  },
+  "Motorized.actionEventToggleMotorState": {
+   "en": "Input callback: starts or stops the engine (toggle).",
+   "fr": "Rappel d'entrée : démarre ou arrête le moteur (basculement)."
+  },
+  "Motorized.actionEventSetMotorStateIgnition": {
+   "en": "Input callback: turns the ignition on (IGNITION) without starting.",
+   "fr": "Rappel d'entrée : met le contact (IGNITION) sans démarrer."
+  },
+  "Motorized.actionEventSetMotorStateOn": {
+   "en": "Input callback: starts the engine.",
+   "fr": "Rappel d'entrée : démarre le moteur."
+  },
+  "Motorized.actionEventSetMotorStateOff": {
+   "en": "Input callback: stops the engine.",
+   "fr": "Rappel d'entrée : arrête le moteur."
+  },
+  "Motorized.loadSpecValueFuel": {
+   "en": "Reads the store fuel data (type, capacity) from the vehicle XML. Not read in detail.",
+   "fr": "Lit les données de carburant du store (type, capacité) depuis le XML du véhicule. Non relu en détail."
+  },
+  "Motorized.getSpecValueFuelDiesel": {
+   "en": "Store specification value: diesel.",
+   "fr": "Valeur de spécification du store : diesel."
+  },
+  "Motorized.getSpecValueFuelElectricCharge": {
+   "en": "Store specification value: electric charge.",
+   "fr": "Valeur de spécification du store : charge électrique."
+  },
+  "Motorized.getSpecValueFuelMethane": {
+   "en": "Store specification value: methane.",
+   "fr": "Valeur de spécification du store : méthane."
+  },
+  "Motorized.getSpecValueFuel": {
+   "en": "Computes the fuel text/value for the store according to the requested fill type.",
+   "fr": "Calcule le texte/valeur de carburant pour le store selon le type de remplissage demandé."
+  },
+  "Motorized.loadSpecValueMaxSpeed": {
+   "en": "Reads the store max speed from the XML. Not read in detail.",
+   "fr": "Lit la vitesse maximale du store depuis le XML. Non relu en détail."
+  },
+  "Motorized.getSpecValueMaxSpeed": {
+   "en": "Computes the max speed for the store according to the configuration (bounds or value).",
+   "fr": "Calcule la vitesse maximale pour le store selon la configuration (bornes ou valeur)."
+  },
+  "Motorized.loadSpecValuePower": {
+   "en": "Reads the power given in vehicle.storeData.specs.power.",
+   "fr": "Lit la puissance indiquée dans vehicle.storeData.specs.power."
+  },
+  "Motorized.getSpecValuePower": {
+   "en": "Computes the min/max power for the store according to the chosen engine configuration.",
+   "fr": "Calcule la puissance min/max pour le store en fonction de la configuration de moteur choisie."
+  },
+  "Motorized.loadSpecValueTransmission": {
+   "en": "Reads the store's transmission information. Not read in detail.",
+   "fr": "Lit les informations de transmission du store. Non relu en détail."
+  },
+  "Motorized.getSpecValueTransmission": {
+   "en": "Computes the transmission text for the store. Not read in detail.",
+   "fr": "Calcule le texte de transmission pour le store. Non relu en détail."
+  }
  }
 }

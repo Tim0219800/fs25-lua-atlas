@@ -1,0 +1,29 @@
+{
+ "fichier": "gui/base/IndexChangeSubjectMixin.lua",
+ "module": {
+  "en": "GuiMixin that gives a GuiElement an observer list for index changes (paging, option selectors, lists). Observers register a callback receiving the new index and the item count. Prerequisite: the element must be decorated through the GuiMixin mechanism.",
+  "fr": "Mixin GuiMixin qui donne à un GuiElement une liste d'observateurs pour les changements d'indice (pagination, sélecteurs, listes). Les observateurs enregistrent un callback recevant le nouvel indice et le nombre d'éléments. Prérequis : l'élément doit être décoré via le mécanisme GuiMixin."
+ },
+ "fonctions": {
+  "IndexChangeSubjectMixin.new": {
+   "en": "Creates the mixin with an empty callbacks table keyed by observer. Note: it passes `IndexableElementMixin_mt` to `GuiMixin.new`, apparently a copy-paste slip instead of its own metatable.",
+   "fr": "Crée le mixin avec une table de callbacks vide indexée par observateur. À noter : il passe `IndexableElementMixin_mt` à `GuiMixin.new`, apparemment une erreur de copier-coller au lieu de sa propre métatable."
+  },
+  "IndexChangeSubjectMixin:addTo": {
+   "en": "Attaches the mixin to a GuiElement through the parent `addTo` and, on success, adds `addIndexChangeObserver` and `notifyIndexChange` as methods of the element. Returns whether it was added.",
+   "fr": "Attache le mixin à un GuiElement via le `addTo` parent et, en cas de succès, ajoute les méthodes `addIndexChangeObserver` et `notifyIndexChange` à l'élément. Renvoie si l'ajout a eu lieu."
+  },
+  "IndexChangeSubjectMixin.addIndexChangeObserver": {
+   "en": "Registers or replaces the callback of an observer; it is called as callback(observer, index, count). One callback per observer.",
+   "fr": "Enregistre ou remplace le callback d'un observateur ; il est appelé sous la forme callback(observer, index, count). Un seul callback par observateur."
+  },
+  "IndexChangeSubjectMixin.notifyIndexChange": {
+   "en": "Calls every registered callback with the observer, the new index and the item count. Iteration uses `pairs`, so call order is not defined.",
+   "fr": "Appelle chaque callback enregistré avec l'observateur, le nouvel indice et le nombre d'éléments. L'itération utilise `pairs`, l'ordre d'appel n'est donc pas défini."
+  },
+  "IndexChangeSubjectMixin:clone": {
+   "en": "Copies the callbacks table (shallow clone) from a source GuiElement to its clone when the source has one.",
+   "fr": "Copie (clone superficiel) la table de callbacks d'un GuiElement source vers son clone si la source en possède une."
+  }
+ }
+}

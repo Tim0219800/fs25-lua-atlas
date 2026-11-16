@@ -1,0 +1,145 @@
+{
+ "fichier": "vehicles/specializations/FoldableSteps.lua",
+ "module": {
+  "en": "Specialization for tools with a discrete, multi-step folding animation (for example a header trailer with several positions). It plays one AnimatedVehicle animation up to the time of a chosen state, offers full-fold and next/previous-state inputs with per-state texts and contexts, and can restrict turning on, HUD info and filling per state. State and target are synced with FoldableStepsChangeStateEvent and saved. Requires AnimatedVehicle and relies on Foldable's getIsFoldAllowed.",
+  "fr": "Spécialisation pour les outils à animation de pliage discrète en plusieurs étapes (par exemple une remorque de coupe à plusieurs positions). Elle joue une animation AnimatedVehicle jusqu'au temps d'un état choisi, propose des entrées de pliage complet et d'état suivant/précédent avec textes et contextes par état, et peut restreindre allumage, HUD d'information et remplissage selon l'état. L'état et la cible sont synchronisés par FoldableStepsChangeStateEvent et sauvegardés. Exige AnimatedVehicle et s'appuie sur getIsFoldAllowed de Foldable."
+ },
+ "fonctions": {
+  "FoldableSteps.prerequisitesPresent": {
+   "en": "Requires the AnimatedVehicle specialization on the vehicle type.",
+   "fr": "Exige la spécialisation AnimatedVehicle sur le type de véhicule."
+  },
+  "FoldableSteps.initSpecialization": {
+   "en": "Declares the vehicle.foldableSteps XML keys (animation name and speed, fill unit, controls, state list with texts, contexts and allow flags) and the lock position extension used by DynamicMountAttacher. Also registers the savegame keys animTime, state and targetState.",
+   "fr": "Déclare les clés XML vehicle.foldableSteps (nom et vitesse d'animation, unité de remplissage, commandes, liste d'états avec textes, contextes et indicateurs) et l'extension de position de verrouillage de DynamicMountAttacher. Déclare aussi les clés de sauvegarde animTime, state et targetState."
+  },
+  "FoldableSteps.registerFunctions": {
+   "en": "Registers setFoldableStepsFoldState on the vehicle type.",
+   "fr": "Enregistre setFoldableStepsFoldState sur le type de véhicule."
+  },
+  "FoldableSteps.registerOverwrittenFunctions": {
+   "en": "Registers overrides for turn-on checks, power requirement, HUD info trigger, fill unit tool types, brake force and dynamic lock positions.",
+   "fr": "Enregistre des surcharges pour les contrôles d'allumage, le besoin d'alimentation, le déclencheur d'info HUD, les types d'outils des unités de remplissage, la force de freinage et les positions de verrouillage dynamiques."
+  },
+  "FoldableSteps.registerEventListeners": {
+   "en": "Subscribes to load, post load, network stream, update tick, draw and action event registration events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, post-chargement, flux réseau, mise à jour, affichage et enregistrement des actions."
+  },
+  "FoldableSteps:onLoad": {
+   "en": "Reads the foldableSteps node: animation, input actions and texts, then the list of states (animation time converted from seconds to normalized time, texts, contexts, allow flags). Restores animTime, state and targetState from the savegame. If no animationName exists it removes its listeners.",
+   "fr": "Lit le nœud foldableSteps : animation, actions d'entrée et textes, puis la liste des états (temps d'animation converti de secondes en temps normalisé, textes, contextes, indicateurs). Restaure animTime, state et targetState depuis la sauvegarde. Sans animationName, retire ses écouteurs."
+  },
+  "FoldableSteps:onPostLoad": {
+   "en": "Applies the animation time loaded from the savegame to the animation, if any.",
+   "fr": "Applique à l'animation le temps chargé depuis la sauvegarde, s'il existe."
+  },
+  "FoldableSteps:saveToXMLFile": {
+   "en": "Writes the animation time, current state index and target state index to the savegame when an animation is defined.",
+   "fr": "Écrit le temps d'animation, l'indice d'état courant et l'indice d'état cible dans la sauvegarde quand une animation est définie."
+  },
+  "FoldableSteps:onReadStream": {
+   "en": "Client join: reads animation time, state index and target state index, sets the animation time and calls setFoldableStepsFoldState with noEventSend.",
+   "fr": "Connexion d'un client : lit le temps d'animation, l'indice d'état et l'indice cible, fixe le temps d'animation et appelle setFoldableStepsFoldState sans envoi d'événement."
+  },
+  "FoldableSteps:onWriteStream": {
+   "en": "Writes animation time, state index and target state index for a joining client; counterpart of onReadStream.",
+   "fr": "Écrit le temps d'animation, l'indice d'état et l'indice cible pour un client qui rejoint ; pendant de onReadStream."
+  },
+  "FoldableSteps:onUpdateTick": {
+   "en": "While the state index differs from the target, waits for the animation to stop, then sets the state to the target and refreshes the action texts. Keeps the vehicle active during the movement.",
+   "fr": "Tant que l'état diffère de la cible, attend l'arrêt de l'animation puis aligne l'état sur la cible et rafraîchit les textes d'action. Maintient le véhicule actif pendant le mouvement."
+  },
+  "FoldableSteps:onDraw": {
+   "en": "Displays the extra info text of the target state on screen when that state defines one.",
+   "fr": "Affiche à l'écran le texte d'information supplémentaire de l'état cible quand celui-ci en définit un."
+  },
+  "FoldableSteps:onRegisterActionEvents": {
+   "en": "Client: registers the full fold action (if allowed) and the optional next/previous state actions as powered action events, then updates their texts.",
+   "fr": "Client : enregistre l'action de pliage complet (si permise) et les actions optionnelles d'état suivant/précédent comme actions alimentées, puis met à jour leurs textes."
+  },
+  "FoldableSteps:onRegisterExternalActionEvents": {
+   "en": "Registers external action events for the trigger names foldableStepsFull, foldableStepsNextPos and foldableStepsNextNeg (the last two only if the matching input action is configured).",
+   "fr": "Enregistre des actions externes pour les déclencheurs foldableStepsFull, foldableStepsNextPos et foldableStepsNextNeg (les deux derniers seulement si l'action d'entrée correspondante est configurée)."
+  },
+  "FoldableSteps:setFoldableStepsFoldState": {
+   "en": "Sets the target state index (clamped to 1..maxState), plays the animation toward that state's time at the configured speed, refreshes action texts and sends FoldableStepsChangeStateEvent unless noEventSend is set.",
+   "fr": "Définit l'indice d'état cible (borné à 1..maxState), joue l'animation vers le temps de cet état à la vitesse configurée, rafraîchit les textes d'action et envoie FoldableStepsChangeStateEvent sauf si noEventSend est actif."
+  },
+  "FoldableSteps.updateActionEvents": {
+   "en": "Updates the texts and active flags of the full, next and previous state actions according to the current state and whether the animation is moving.",
+   "fr": "Met à jour les textes et l'état actif des actions de pliage complet, état suivant et état précédent selon l'état courant et le mouvement de l'animation."
+  },
+  "FoldableSteps.actionEventFold": {
+   "en": "Input callback for the full fold action: picks the first or last state depending on the current state and movement, and applies it if updateFoldStateChangeAllowed agrees.",
+   "fr": "Rappel d'entrée de l'action de pliage complet : choisit le premier ou le dernier état selon l'état et le mouvement courants, et l'applique si updateFoldStateChangeAllowed l'autorise."
+  },
+  "FoldableSteps.actionEventFoldPos": {
+   "en": "Input callback moving to the next state (target + 1), checking permission with the current input context.",
+   "fr": "Rappel d'entrée passant à l'état suivant (cible + 1), avec contrôle de l'autorisation selon le contexte d'entrée courant."
+  },
+  "FoldableSteps.actionEventFoldNeg": {
+   "en": "Input callback moving to the previous state (target - 1), checking permission with the current input context.",
+   "fr": "Rappel d'entrée passant à l'état précédent (cible - 1), avec contrôle de l'autorisation selon le contexte d'entrée courant."
+  },
+  "FoldableSteps.updateFoldStateChangeAllowed": {
+   "en": "Checks that a state change is allowed: Foldable's getIsFoldAllowed, vehicle power and, when a context is given, the state's posContext/negContext; shows a blinking warning otherwise. Note: the ternary passed to getIsFoldAllowed returns the same value in both branches.",
+   "fr": "Vérifie qu'un changement d'état est permis : getIsFoldAllowed de Foldable, alimentation du véhicule et, si un contexte est fourni, posContext/negContext de l'état ; affiche sinon un avertissement clignotant. À noter : l'opérateur ternaire passé à getIsFoldAllowed renvoie la même valeur dans ses deux branches."
+  },
+  "FoldableSteps.externalActionEventFoldRegister": {
+   "en": "Registers the external full-fold action: on press it tries to start the motor and then runs actionEventFold.",
+   "fr": "Enregistre l'action externe de pliage complet : à l'appui, tente de démarrer le moteur puis exécute actionEventFold."
+  },
+  "FoldableSteps.externalActionEventFoldUpdate": {
+   "en": "Updates the text and visibility of the external full-fold action from the current state.",
+   "fr": "Met à jour le texte et la visibilité de l'action externe de pliage complet selon l'état courant."
+  },
+  "FoldableSteps.externalActionEventFoldPosRegister": {
+   "en": "Registers the external next-state action: tries to start the motor, then runs actionEventFoldPos.",
+   "fr": "Enregistre l'action externe d'état suivant : tente de démarrer le moteur puis exécute actionEventFoldPos."
+  },
+  "FoldableSteps.externalActionEventFoldPosUpdate": {
+   "en": "Updates the external next-state action text, shown only when the animation is idle and the current state has a positive text.",
+   "fr": "Met à jour le texte de l'action externe d'état suivant, visible seulement quand l'animation est à l'arrêt et que l'état courant a un texte positif."
+  },
+  "FoldableSteps.externalActionEventFoldNegRegister": {
+   "en": "Registers the external previous-state action: tries to start the motor, then runs actionEventFoldNeg.",
+   "fr": "Enregistre l'action externe d'état précédent : tente de démarrer le moteur puis exécute actionEventFoldNeg."
+  },
+  "FoldableSteps.externalActionEventFoldNegUpdate": {
+   "en": "Updates the external previous-state action text, shown only when the animation is idle and the current state has a negative text.",
+   "fr": "Met à jour le texte de l'action externe d'état précédent, visible seulement quand l'animation est à l'arrêt et que l'état courant a un texte négatif."
+  },
+  "FoldableSteps:getCanBeTurnedOn": {
+   "en": "Override returning false while the state is changing or if the current state does not allow turning on; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false pendant un changement d'état ou si l'état courant n'autorise pas l'allumage ; sinon délègue au parent."
+  },
+  "FoldableSteps:getTurnedOnNotAllowedWarning": {
+   "en": "Override returning the \"unfold the tool first\" warning in the same cases as getCanBeTurnedOn; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant l'avertissement « dépliez d'abord l'outil » dans les mêmes cas que getCanBeTurnedOn ; sinon délègue au parent."
+  },
+  "FoldableSteps:getRequiresPower": {
+   "en": "Override returning true while the state is changing, otherwise the parent value.",
+   "fr": "Surcharge renvoyant true pendant un changement d'état, sinon la valeur du parent."
+  },
+  "FoldableSteps:getAllowHudInfoTrigger": {
+   "en": "Override returning false when the current state does not allow the info HUD; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand l'état courant n'autorise pas le HUD d'information ; sinon délègue au parent."
+  },
+  "FoldableSteps:getFillUnitSupportsToolType": {
+   "en": "Override that refuses any defined tool type on the configured fill unit when the current state does not allow filling; otherwise defers to the parent.",
+   "fr": "Surcharge qui refuse tout type d'outil défini sur l'unité de remplissage configurée quand l'état courant n'autorise pas le remplissage ; sinon délègue au parent."
+  },
+  "FoldableSteps:getBrakeForce": {
+   "en": "Override returning 0 while the state is changing if releaseBrakesWhileFolding is set; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant 0 pendant un changement d'état si releaseBrakesWhileFolding est actif ; sinon délègue au parent."
+  },
+  "FoldableSteps:loadDynamicLockPositionFromXML": {
+   "en": "Override that, after the parent succeeds, reads the foldableSteps#states list of a dynamic lock position into a lookup table.",
+   "fr": "Surcharge qui, après le succès du parent, lit la liste foldableSteps#states d'une position de verrouillage dynamique dans une table de consultation."
+  },
+  "FoldableSteps:getIsDynamicLockPositionActive": {
+   "en": "Override returning false when the lock position is restricted to certain states and the current state is not one of them; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand la position de verrouillage est limitée à certains états et que l'état courant n'en fait pas partie ; sinon délègue au parent."
+  }
+ }
+}

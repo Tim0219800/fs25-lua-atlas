@@ -1,80 +1,305 @@
 {
  "fichier": "vehicles/specializations/Wheels.lua",
- "module": "Spécialisation de véhicule (sans prérequis) qui possède la liste des roues (spec_wheels.wheels, objets Wheel), les moyeux, essieux, nœuds de direction (Ackermann), sons de surface et configurations de roues. C'est le point d'entrée de toute la chaîne roue : Wheels -> Wheel -> WheelPhysics / WheelEffects / WheelDestruction. DONNÉES MÉTÉO : lit weather:getGroundWetness() à chaque frame (onUpdate, Wheels.lua:844) et à chaque tick (onUpdateTick, Wheels.lua:935) puis la distribue aux roues ; une valeur numérique unique, dont l'implémentation (Weather) est absente du dump : NON VÉRIFIÉ (plage et unité non confirmées ici). La neige : abonnement au message MessageType.SNOW_HEIGHT_CHANGED (onWheelSnowHeightChanged). La pluie, le vent et la température ne sont pas lus ici ; ils arrivent aux fonctions de saleté (updateWheelDirtAmount, updateWheelMudAmount) comme paramètres rainScale / timeSinceLastRain / temperature fournis par Washable.lua (voir cette spécialisation). CONTACT PNEU/SOL : voir WheelPhysics (contact, densityType, hasSnowContact, hasWaterContact), utilisés ici pour les sons de surface (getCurrentSurfaceSound), la saleté des roues et la pente du véhicule (getVehicleWorldXRot, getVehicleWorldDirection, basés sur hasGroundContact). SALETÉ / BOUE : validateWashableNode détecte, par paramètres de shader dans les enfants de la roue, les nœuds « scratches_dirt_snow_wetness » (saleté + neige + humidité) et « mudAmount » (boue 3D) et leur associe des fonctions de mise à jour de saleté spécifiques aux roues. EFFET SUR LE MONDE : destruction des cultures et neige par les roues (WheelDestruction.update appelé ici, Wheels.lua:865, seulement si le véhicule est actif, option de sauvegarde fruitDestruction active, sans IA, et sans blocage par le véhicule) ; déformation du terrain désactivée pendant le travail d'une IA (onAIFieldWorkerStart/End, onAIImplementStart/End). CADENCE : le compteur currentUpdateIndex cycle de 1 à 4 à chaque frame pour répartir la mesure de contact entre les roues ; dt est en ms. RÉSEAU : seules les roues avec physics.isSynchronized sont envoyées (flux initial et flux de mise à jour, drapeau sale levé en continu côté serveur dès qu'il y a des roues) ; le client interpole (networkTimeInterpolator) et n'exécute pas la physique. Événements déclarés : onBrake, onFinishedWheelLoading, onWheelConfigurationChanged. Points d'extension pour un moddeur : fonctions enregistrées surchargeables par type de véhicule (updateWheelDirtAmount et updateWheelMudAmount sont des registerFunction, donc remplaçables pour changer la logique de boue/saleté de roue ; getCurrentSurfaceSound, getBrakeForce, brake, getWheels), surcharges déclarées (validateWashableNode, addToPhysics, getVehicleWorldXRot...), événements ci-dessus et listeners onUpdate/onUpdateTick. À noter : setCustomBrakeForce est enregistré par registerFunction mais aucune définition de Wheels.setCustomBrakeForce n'existe dans ce fichier (non vérifié en jeu : fonction nil ou définie ailleurs) ; Wheels:getBrakeForce renvoie spec.customBrakeForce (0 par défaut). Le fichier fait 2489 lignes : le chargement XML des roues, des essieux, des moyeux et des valeurs de magasin n'a pas été relu en détail.",
+ "module": {
+  "en": "Vehicle specialization (no prerequisite) that owns the list of wheels (spec_wheels.wheels, Wheel objects), hubs, axles, steering nodes (Ackermann), surface sounds and wheel configurations. It is the entry point of the whole wheel chain: Wheels -> Wheel -> WheelPhysics / WheelEffects / WheelDestruction. WEATHER DATA: reads weather:getGroundWetness() every frame (onUpdate, Wheels.lua:844) and every tick (onUpdateTick, Wheels.lua:935) then distributes it to the wheels; a single numeric value whose implementation (Weather) is absent from the dump: UNVERIFIED (range and unit not confirmed here). Snow: subscription to the message MessageType.SNOW_HEIGHT_CHANGED (onWheelSnowHeightChanged). Rain, wind and temperature are not read here; they reach the dirt functions (updateWheelDirtAmount, updateWheelMudAmount) as parameters rainScale / timeSinceLastRain / temperature supplied by Washable.lua (see that specialization). TIRE/GROUND CONTACT: see WheelPhysics (contact, densityType, hasSnowContact, hasWaterContact), used here for the surface sounds (getCurrentSurfaceSound), wheel dirt and the vehicle slope (getVehicleWorldXRot, getVehicleWorldDirection, based on hasGroundContact). DIRT / MUD: validateWashableNode detects, through shader parameters in the wheel's children, the nodes \"scratches_dirt_snow_wetness\" (dirt + snow + wetness) and \"mudAmount\" (3D mud) and attaches wheel-specific dirt update functions to them. EFFECT ON THE WORLD: crop and snow destruction by the wheels (WheelDestruction.update called here, Wheels.lua:865, only if the vehicle is active, the fruitDestruction savegame option is on, no AI, and no blocking by the vehicle); terrain deformation disabled during AI work (onAIFieldWorkerStart/End, onAIImplementStart/End). CADENCE: the counter currentUpdateIndex cycles from 1 to 4 each frame to spread the contact measurement across the wheels; dt is in ms. NETWORK: only wheels with physics.isSynchronized are sent (initial stream and update stream, dirty flag raised continuously server side as soon as there are wheels); the client interpolates (networkTimeInterpolator) and does not run the physics. Declared events: onBrake, onFinishedWheelLoading, onWheelConfigurationChanged. Extension points for a modder: registered functions that can be overridden per vehicle type (updateWheelDirtAmount and updateWheelMudAmount are registerFunction entries, hence replaceable to change the wheel mud/dirt logic; getCurrentSurfaceSound, getBrakeForce, brake, getWheels), declared overrides (validateWashableNode, addToPhysics, getVehicleWorldXRot...), the events above and the onUpdate/onUpdateTick listeners. Note: setCustomBrakeForce is registered by registerFunction but no definition of Wheels.setCustomBrakeForce exists in this file (not verified in game: nil function or defined elsewhere); Wheels:getBrakeForce returns spec.customBrakeForce (0 by default). The file is 2489 lines long: the XML loading of wheels, axles, hubs and shop values was not re-read in detail.",
+  "fr": "Spécialisation de véhicule (sans prérequis) qui possède la liste des roues (spec_wheels.wheels, objets Wheel), les moyeux, essieux, nœuds de direction (Ackermann), sons de surface et configurations de roues. C'est le point d'entrée de toute la chaîne roue : Wheels -> Wheel -> WheelPhysics / WheelEffects / WheelDestruction. DONNÉES MÉTÉO : lit weather:getGroundWetness() à chaque frame (onUpdate, Wheels.lua:844) et à chaque tick (onUpdateTick, Wheels.lua:935) puis la distribue aux roues ; une valeur numérique unique, dont l'implémentation (Weather) est absente du dump : NON VÉRIFIÉ (plage et unité non confirmées ici). La neige : abonnement au message MessageType.SNOW_HEIGHT_CHANGED (onWheelSnowHeightChanged). La pluie, le vent et la température ne sont pas lus ici ; ils arrivent aux fonctions de saleté (updateWheelDirtAmount, updateWheelMudAmount) comme paramètres rainScale / timeSinceLastRain / temperature fournis par Washable.lua (voir cette spécialisation). CONTACT PNEU/SOL : voir WheelPhysics (contact, densityType, hasSnowContact, hasWaterContact), utilisés ici pour les sons de surface (getCurrentSurfaceSound), la saleté des roues et la pente du véhicule (getVehicleWorldXRot, getVehicleWorldDirection, basés sur hasGroundContact). SALETÉ / BOUE : validateWashableNode détecte, par paramètres de shader dans les enfants de la roue, les nœuds « scratches_dirt_snow_wetness » (saleté + neige + humidité) et « mudAmount » (boue 3D) et leur associe des fonctions de mise à jour de saleté spécifiques aux roues. EFFET SUR LE MONDE : destruction des cultures et neige par les roues (WheelDestruction.update appelé ici, Wheels.lua:865, seulement si le véhicule est actif, option de sauvegarde fruitDestruction active, sans IA, et sans blocage par le véhicule) ; déformation du terrain désactivée pendant le travail d'une IA (onAIFieldWorkerStart/End, onAIImplementStart/End). CADENCE : le compteur currentUpdateIndex cycle de 1 à 4 à chaque frame pour répartir la mesure de contact entre les roues ; dt est en ms. RÉSEAU : seules les roues avec physics.isSynchronized sont envoyées (flux initial et flux de mise à jour, drapeau sale levé en continu côté serveur dès qu'il y a des roues) ; le client interpole (networkTimeInterpolator) et n'exécute pas la physique. Événements déclarés : onBrake, onFinishedWheelLoading, onWheelConfigurationChanged. Points d'extension pour un moddeur : fonctions enregistrées surchargeables par type de véhicule (updateWheelDirtAmount et updateWheelMudAmount sont des registerFunction, donc remplaçables pour changer la logique de boue/saleté de roue ; getCurrentSurfaceSound, getBrakeForce, brake, getWheels), surcharges déclarées (validateWashableNode, addToPhysics, getVehicleWorldXRot...), événements ci-dessus et listeners onUpdate/onUpdateTick. À noter : setCustomBrakeForce est enregistré par registerFunction mais aucune définition de Wheels.setCustomBrakeForce n'existe dans ce fichier (non vérifié en jeu : fonction nil ou définie ailleurs) ; Wheels:getBrakeForce renvoie spec.customBrakeForce (0 par défaut). Le fichier fait 2489 lignes : le chargement XML des roues, des essieux, des moyeux et des valeurs de magasin n'a pas été relu en détail."
+ },
  "fonctions": {
-  "Wheels.prerequisitesPresent": "Aucun prérequis (renvoie toujours vrai).",
-  "Wheels.registerEvents": "Déclare les événements onBrake, onFinishedWheelLoading et onWheelConfigurationChanged.",
-  "Wheels.registerFunctions": "Enregistre les fonctions de la spécialisation (chargement de roues/moyeux, accès, freinage, sons de surface, updateWheelDirtAmount, updateWheelMudAmount, onWheelSnowHeightChanged, direction...). Elles sont donc remplaçables par un mod via les mécanismes de SpecializationUtil. Enregistre aussi setCustomBrakeForce, non définie dans ce fichier.",
-  "Wheels.registerOverwrittenFunctions": "Déclare les surcharges : addToPhysics, removeFromPhysics, getComponentMass, getVehicleWorldXRot, getVehicleWorldDirection, validateWashableNode, getAIDirectionNode, getAIRootNode, getSupportsMountKinematic, loadBendingNodeFromXML.",
-  "Wheels.registerEventListeners": "Abonne la spécialisation à onPreLoad, onLoad, onLoadFinished, onRegisterDashboardValueTypes, onDelete, flux réseau, onUpdate, onPostUpdate, onUpdateTick, onUpdateEnd, onLeaveVehicle, onPreAttach, onPostDetach, onRegisterAnimationValueTypes, onPostAttachImplement et événements IA.",
-  "Wheels.initSpecialization": "Enregistre le schéma XML de la spécialisation (wheels, roues, moyeux, configurations, essieux, sons de surface, Ackermann) et les chemins de sauvegarde. Non relu en détail.",
-  "Wheels.registerAckermannSteeringXMLPaths": "Déclare les clés XML de la direction Ackermann.",
-  "Wheels:onPreLoad": "Lit l'identifiant de configuration de roues et applique une configuration générée si elle existe.",
-  "Wheels:onLoad": "Charge la configuration de roues : matériaux de jante/moyeu, roues (loadWheelsFromXML), moyeux, nœuds de direction, essieux, sons de surface par type de pneu (type wheel_<nom> ou wheel), drapeau réseau, abonnement à SNOW_HEIGHT_CHANGED . Non relu intégralement.",
-  "Wheels:onLoadFinished": "Serveur : ajoute la masse des roues à la masse par défaut du véhicule ; si la configuration de roues sauvegardée a changé, remet à zéro la saleté et la boue des roues et lève onWheelConfigurationChanged ; applique les matériaux de jante, moyeu et boulons ; appelle ensuite Wheel:update une fois avec dt = 99999, groundWetness = 0 et force vrai pour placer les roues visuelles (Wheels.lua:633).",
-  "Wheels:onRegisterDashboardValueTypes": "Déclare des valeurs de tableau de bord liées aux roues. Non relu.",
-  "Wheels:saveToXMLFile": "Sauvegarde l'identifiant de configuration de roues (#lastConfigId).",
-  "Wheels:onDelete": "Libère fichiers I3D partagés, moyeux, roues, roues chargées dynamiquement et sons de surface.",
-  "Wheels:onReadStream": "Client : réinitialise l'interpolateur temporel et lit l'état de chaque roue synchronisée (avec mise à jour directe).",
-  "Wheels:onWriteStream": "Serveur : écrit l'état de chaque roue synchronisée.",
-  "Wheels:onReadUpdateStream": "Client : lit, si le drapeau est présent, l'état de chaque roue synchronisée et le temps de rotation (rotatedTime, 8 bits) comme cibles d'interpolation. Non relu entièrement.",
-  "Wheels:onWriteUpdateStream": "Serveur : écrit l'état des roues synchronisées et rotatedTime (8 bits) quand le drapeau sale est levé.",
-  "Wheels:onUpdate": "Par frame. Client pur : interpolation réseau des roues et de rotatedTime. Après la première mise à jour : lit weather:getGroundWetness() une fois, appelle Wheel:update pour chaque roue (avec le compteur cyclique 1..4), puis, si le véhicule est actif, la destruction des cultures/neige (sauf IA, option de sauvegarde désactivée ou blocage), les essieux (serveur), les sons de surface et les nœuds de direction. Le serveur lève le drapeau réseau à chaque frame s'il y a des roues.",
-  "Wheels:onPostUpdate": "Serveur : appelle postUpdate des roues pour appliquer position/friction en attente.",
-  "Wheels:onUpdateTick": "Par tick : relit weather:getGroundWetness() et appelle Wheel:updateTick avec la distance de mise à jour du véhicule (pilote couleur/saleté de piste et effets de roue).",
-  "Wheels:onUpdateEnd": "Client : appelle onUpdateEnd des roues (arrêt d'effets) et coupe le son de surface en cours.",
-  "Wheels:loadHubsFromXML": "Charge tous les moyeux déclarés dans vehicle.wheels.hubs.hub.",
-  "Wheels.loadHubMaterial": "Charge le matériau d'un moyeu (base, jante ou couleur de design selon les options XML).",
-  "Wheels:loadHubFromXML": "Charge un moyeu : modèle I3D partagé, lien, matériaux. Non relu en détail.",
-  "Wheels:onWheelHubI3DLoaded": "Rappel de chargement I3D d'un moyeu : l'attache au nœud de roue. Non relu en détail.",
-  "Wheels:loadAckermannSteeringFromXML": "Charge un réglage de direction Ackermann. Non relu en détail.",
-  "Wheels:loadWheelsFromXML": "Charge toutes les roues de la configuration donnée en instanciant Wheel.new. Non relu en détail.",
-  "Wheels:loadWheelFromXML": "Charge une roue en appelant wheel:loadFromXML ; renvoie son résultat (fonction enregistrée, donc remplaçable).",
-  "Wheels:onLoadWheelChockFromXML": "Crochet appelé pour chaque cale de roue chargée (corps vide : point d'extension).",
-  "Wheels:getIsWheelChockAllowed": "Indique si une cale de roue est autorisée (renvoie vrai par défaut).",
-  "Wheels:addToPhysics": "Surcharge : après le parent, ajoute chaque roue à la physique avec la force de freinage courante, puis serre le frein à fond côté serveur.",
-  "Wheels:removeFromPhysics": "Surcharge : retire les roues de la physique côté serveur.",
-  "Wheels:getComponentMass": "Surcharge : ajoute la masse des roues portées par le composant.",
-  "Wheels:getVehicleWorldXRot": "Surcharge : estime l'inclinaison longitudinale du véhicule à partir de la hauteur des roues en contact avec le sol (hasGroundContact). Non relu en détail.",
-  "Wheels:getVehicleWorldDirection": "Surcharge : estime la direction du véhicule à partir des roues en contact avec le sol. Non relu en détail.",
-  "Wheels:validateWashableNode": "Surcharge pour Washable : une fois le véhicule chargé, repère dans chaque roue les nœuds de shader « scratches_dirt_snow_wetness » (saleté, neige, humidité) et « mudAmount » (boue) et leur associe des données de saleté propres à la roue (multiplicateurs champ/route, facteur d'eau, vitesse de changement de couleur) et les fonctions updateWheelDirtAmount ou updateWheelMudAmount. Sauvegarde la valeur snowScale de la roue. Pour la boue, fait pivoter aléatoirement le maillage et applique un multiplicateur de nettoyage de 4. Sinon, délègue au parent.",
-  "Wheels:getAIDirectionNode": "Surcharge : renvoie le nœud de centre de direction des roues s'il existe, sinon le résultat du parent.",
-  "Wheels:getAIRootNode": "Surcharge : idem getAIDirectionNode (centre de direction des roues, sinon parent).",
-  "Wheels:getSupportsMountKinematic": "Surcharge : montage cinématique supporté seulement si le véhicule n'a aucune roue et que le parent l'autorise.",
-  "Wheels:loadBendingNodeFromXML": "Surcharge : lit #wheelIndices d'un nœud de déformation de feuillage pour l'associer à des roues. Non relu en détail.",
-  "Wheels:updateWheelDirtAmount": "Fonction de saleté pour un nœud de roue, appelée par Washable avec rainScale, timeSinceLastRain et temperature. Retourne la variation de saleté et d'humidité. N'agit que si la roue touche quelque chose (ou mise à jour forcée). Sur sol de champ, saleté x fieldDirtMultiplier ; hors champ et hors herbage, la saleté diminue proportionnellement à la vitesse (streetDirtMultiplier), multipliée par 0.15 quand rainScale > 0.1 (la boue colle plus par temps de pluie, d'après le commentaire du code). Limite l'écart entre la saleté de la roue et la saleté globale du véhicule. Fait évoluer snowScale (vers 1 avec contact neige et température < 1, sinon retour lent) et la couleur du nœud entre couleur de saleté et couleur de neige (environment:getDirtColors, non vérifié). L'humidité augmente avec waterWetnessFactor en cas de contact avec l'eau, diminue avec la vitesse sinon (séchage par rotation).",
-  "Wheels:updateWheelMudAmount": "Fonction de boue 3D pour les nœuds mudAmount : suit la saleté de la roue associée. Quantité maximale de boue = WheelEffects.MAX_MUD_AMOUNT[type de sol] (table non définie ici : NON VÉRIFIÉ), réduite de moitié quand rainScale <= 0.1 (boue pleine seulement par temps de pluie). Dépose de la boue si la saleté de roue dépasse 0.75 et que le maximum n'est pas atteint, retire sinon, selon la vitesse. L'humidité et la couleur suivent celles du nœud de roue.",
-  "Wheels:forceUpdateWheelPhysics": "Réapplique frein et propriétés physiques à toutes les roues.",
-  "Wheels:onWheelSnowHeightChanged": "Message SNOW_HEIGHT_CHANGED : quand la hauteur de neige tombe à 0 ou moins, remet snowScale des roues à zéro, force la mise à jour de la saleté et réveille le véhicule.",
-  "Wheels:getSteeringNodeByNode": "Retourne le nœud de direction associé à un nœud donné (non relu).",
-  "Wheels:updateSteeringNodes": "Met à jour les nœuds de direction à partir de rotatedTime et de leurs limites (non relu en détail).",
-  "Wheels:updateSteeringNodeBar": "Applique la rotation/translation de la barre de direction visuelle (non relu en détail).",
-  "Wheels:getCurrentSurfaceSound": "Renvoie l'échantillon sonore correspondant à la surface sous la première roue à état de contact synchronisé (ou la dernière roue), d'après WheelPhysics:getSurfaceSoundAttributes.",
-  "Wheels:getAreSurfaceSoundsActive": "Les sons de surface sont actifs si le véhicule est actif pour le son local (isActiveForLocalSound).",
-  "Wheels:getIsVersatileYRotActive": "Renvoie vrai : les roues pivotantes libres sont toujours actives (peut être surchargé).",
-  "Wheels:getWheelFromWheelIndex": "Renvoie la roue d'indice donné (1..n).",
-  "Wheels:getWheelByWheelNode": "Retrouve une roue par nœud (repr, driveNode ou linkNode) ou nom i3dMapping.",
-  "Wheels:getWheels": "Renvoie la liste des roues du véhicule (spec_wheels.wheels). Point d'accès standard pour un mod qui veut lire contact, sol, glissement par roue.",
-  "Wheels:brake": "Fixe la pédale de frein (0..1) sur toutes les roues et lève onBrake si elle change.",
-  "Wheels:getBrakeForce": "Renvoie la force de freinage personnalisée (0 par défaut).",
-  "Wheels:onLeaveVehicle": "Serveur : à la sortie du véhicule, met couple à zéro et applique le freinage courant aux roues.",
-  "Wheels:onPreAttach": "Appelle onPreAttach de chaque roue (cales de roue).",
-  "Wheels:onPostDetach": "Appelle onPostDetach de chaque roue (cales de roue).",
-  "Wheels:getSteeringRotTimeByCurvature": "Convertit une courbure en temps de rotation de volant (Ackermann) ; non relu en détail.",
-  "Wheels:getTurningRadiusByRotTime": "Convertit un temps de rotation du volant en rayon de braquage ; non relu en détail.",
-  "Wheels:onRegisterAnimationValueTypes": "Déclare des valeurs d'animation liées aux roues ; non relu en détail.",
-  "Wheels:onPostAttachImplement": "Relance l'événement onBrake pour que la force de freinage du nouvel outil soit prise en compte.",
-  "Wheels:onAIFieldWorkerStart": "Désactive la déformation du terrain et sa collision pour toutes les roues pendant le travail de l'IA.",
-  "Wheels:onAIImplementStart": "Idem : désactive la déformation du terrain pour l'outil conduit par l'IA.",
-  "Wheels:onAIFieldWorkerEnd": "Réactive la déformation du terrain et sa collision.",
-  "Wheels:onAIImplementEnd": "Réactive la déformation du terrain et sa collision.",
-  "Wheels:getWheelSuspensionModfier": "Mesure la dispersion de compression de suspension entre roues (écart maximal à la moyenne) ; le nom est écrit ainsi dans le code (Modfier).",
-  "Wheels.getTireNames": "Liste les noms de pneus des roues d'une instance de véhicule (utilisé pour la fiche magasin).",
-  "Wheels.getBrands": "Liste les marques de pneus d'après une liste d'éléments (magasin) ; non relu en détail.",
-  "Wheels.getWheelsByBrand": "Filtre des éléments de roue par marque ; non relu en détail.",
-  "Wheels.loadSpecValueWheelWeight": "Valeur de fiche magasin : masse des roues d'après la configuration de roues par défaut ou sélectionnable ; non relu en détail.",
-  "Wheels.loadSpecValueWheels": "Valeur de fiche magasin : liste de roues (non relu en détail).",
-  "Wheels.getSpecValueWheels": "Valeur de fiche magasin : noms de pneus de l'objet réel, séparés par « / »; nil sans objet réel.",
-  "Wheels.createConfigToParentConfigMapping": "Construit la correspondance entre configurations de roues et configuration de base (#baseConfig) ; signale une auto-référence comme erreur XML."
+  "Wheels.prerequisitesPresent": {
+   "en": "No prerequisite (always returns true).",
+   "fr": "Aucun prérequis (renvoie toujours vrai)."
+  },
+  "Wheels.registerEvents": {
+   "en": "Declares the events onBrake, onFinishedWheelLoading and onWheelConfigurationChanged.",
+   "fr": "Déclare les événements onBrake, onFinishedWheelLoading et onWheelConfigurationChanged."
+  },
+  "Wheels.registerFunctions": {
+   "en": "Registers the functions of the specialization (loading of wheels/hubs, access, braking, surface sounds, updateWheelDirtAmount, updateWheelMudAmount, onWheelSnowHeightChanged, steering...). They are therefore replaceable by a mod through the SpecializationUtil mechanisms. Also registers setCustomBrakeForce, not defined in this file.",
+   "fr": "Enregistre les fonctions de la spécialisation (chargement de roues/moyeux, accès, freinage, sons de surface, updateWheelDirtAmount, updateWheelMudAmount, onWheelSnowHeightChanged, direction...). Elles sont donc remplaçables par un mod via les mécanismes de SpecializationUtil. Enregistre aussi setCustomBrakeForce, non définie dans ce fichier."
+  },
+  "Wheels.registerOverwrittenFunctions": {
+   "en": "Declares the overrides: addToPhysics, removeFromPhysics, getComponentMass, getVehicleWorldXRot, getVehicleWorldDirection, validateWashableNode, getAIDirectionNode, getAIRootNode, getSupportsMountKinematic, loadBendingNodeFromXML.",
+   "fr": "Déclare les surcharges : addToPhysics, removeFromPhysics, getComponentMass, getVehicleWorldXRot, getVehicleWorldDirection, validateWashableNode, getAIDirectionNode, getAIRootNode, getSupportsMountKinematic, loadBendingNodeFromXML."
+  },
+  "Wheels.registerEventListeners": {
+   "en": "Subscribes the specialization to onPreLoad, onLoad, onLoadFinished, onRegisterDashboardValueTypes, onDelete, network streams, onUpdate, onPostUpdate, onUpdateTick, onUpdateEnd, onLeaveVehicle, onPreAttach, onPostDetach, onRegisterAnimationValueTypes, onPostAttachImplement and AI events.",
+   "fr": "Abonne la spécialisation à onPreLoad, onLoad, onLoadFinished, onRegisterDashboardValueTypes, onDelete, flux réseau, onUpdate, onPostUpdate, onUpdateTick, onUpdateEnd, onLeaveVehicle, onPreAttach, onPostDetach, onRegisterAnimationValueTypes, onPostAttachImplement et événements IA."
+  },
+  "Wheels.initSpecialization": {
+   "en": "Registers the XML schema of the specialization (wheels, wheel, hubs, configurations, axles, surface sounds, Ackermann) and the savegame paths. Not re-read in detail.",
+   "fr": "Enregistre le schéma XML de la spécialisation (wheels, roues, moyeux, configurations, essieux, sons de surface, Ackermann) et les chemins de sauvegarde. Non relu en détail."
+  },
+  "Wheels.registerAckermannSteeringXMLPaths": {
+   "en": "Declares the XML keys of the Ackermann steering.",
+   "fr": "Déclare les clés XML de la direction Ackermann."
+  },
+  "Wheels:onPreLoad": {
+   "en": "Reads the wheel configuration id and applies a generated configuration if one exists.",
+   "fr": "Lit l'identifiant de configuration de roues et applique une configuration générée si elle existe."
+  },
+  "Wheels:onLoad": {
+   "en": "Loads the wheel configuration: rim/hub materials, wheels (loadWheelsFromXML), hubs, steering nodes, axles, surface sounds per tire type (type wheel_<name> or wheel), network flag, subscription to SNOW_HEIGHT_CHANGED. Not fully re-read.",
+   "fr": "Charge la configuration de roues : matériaux de jante/moyeu, roues (loadWheelsFromXML), moyeux, nœuds de direction, essieux, sons de surface par type de pneu (type wheel_<nom> ou wheel), drapeau réseau, abonnement à SNOW_HEIGHT_CHANGED . Non relu intégralement."
+  },
+  "Wheels:onLoadFinished": {
+   "en": "Server: adds the wheel mass to the vehicle default mass; if the saved wheel configuration changed, resets wheel dirt and mud and raises onWheelConfigurationChanged; applies the rim, hub and bolt materials; then calls Wheel:update once with dt = 99999, groundWetness = 0 and force true to place the visual wheels (Wheels.lua:633).",
+   "fr": "Serveur : ajoute la masse des roues à la masse par défaut du véhicule ; si la configuration de roues sauvegardée a changé, remet à zéro la saleté et la boue des roues et lève onWheelConfigurationChanged ; applique les matériaux de jante, moyeu et boulons ; appelle ensuite Wheel:update une fois avec dt = 99999, groundWetness = 0 et force vrai pour placer les roues visuelles (Wheels.lua:633)."
+  },
+  "Wheels:onRegisterDashboardValueTypes": {
+   "en": "Declares dashboard values related to the wheels. Not re-read.",
+   "fr": "Déclare des valeurs de tableau de bord liées aux roues. Non relu."
+  },
+  "Wheels:saveToXMLFile": {
+   "en": "Saves the wheel configuration id (#lastConfigId).",
+   "fr": "Sauvegarde l'identifiant de configuration de roues (#lastConfigId)."
+  },
+  "Wheels:onDelete": {
+   "en": "Frees shared I3D files, hubs, wheels, dynamically loaded wheels and surface sounds.",
+   "fr": "Libère fichiers I3D partagés, moyeux, roues, roues chargées dynamiquement et sons de surface."
+  },
+  "Wheels:onReadStream": {
+   "en": "Client: resets the time interpolator and reads the state of each synchronized wheel (with direct update).",
+   "fr": "Client : réinitialise l'interpolateur temporel et lit l'état de chaque roue synchronisée (avec mise à jour directe)."
+  },
+  "Wheels:onWriteStream": {
+   "en": "Server: writes the state of each synchronized wheel.",
+   "fr": "Serveur : écrit l'état de chaque roue synchronisée."
+  },
+  "Wheels:onReadUpdateStream": {
+   "en": "Client: reads, if the flag is present, the state of each synchronized wheel and the rotation time (rotatedTime, 8 bits) as interpolation targets. Not fully re-read.",
+   "fr": "Client : lit, si le drapeau est présent, l'état de chaque roue synchronisée et le temps de rotation (rotatedTime, 8 bits) comme cibles d'interpolation. Non relu entièrement."
+  },
+  "Wheels:onWriteUpdateStream": {
+   "en": "Server: writes the state of the synchronized wheels and rotatedTime (8 bits) when the dirty flag is raised.",
+   "fr": "Serveur : écrit l'état des roues synchronisées et rotatedTime (8 bits) quand le drapeau sale est levé."
+  },
+  "Wheels:onUpdate": {
+   "en": "Per frame. Pure client: network interpolation of the wheels and rotatedTime. After the first update: reads weather:getGroundWetness() once, calls Wheel:update for each wheel (with the cyclic counter 1..4), then, if the vehicle is active, crop/snow destruction (except AI, savegame option disabled or blocking), the axles (server), the surface sounds and the steering nodes. The server raises the network flag every frame if there are wheels.",
+   "fr": "Par frame. Client pur : interpolation réseau des roues et de rotatedTime. Après la première mise à jour : lit weather:getGroundWetness() une fois, appelle Wheel:update pour chaque roue (avec le compteur cyclique 1..4), puis, si le véhicule est actif, la destruction des cultures/neige (sauf IA, option de sauvegarde désactivée ou blocage), les essieux (serveur), les sons de surface et les nœuds de direction. Le serveur lève le drapeau réseau à chaque frame s'il y a des roues."
+  },
+  "Wheels:onPostUpdate": {
+   "en": "Server: calls postUpdate of the wheels to apply pending position/friction.",
+   "fr": "Serveur : appelle postUpdate des roues pour appliquer position/friction en attente."
+  },
+  "Wheels:onUpdateTick": {
+   "en": "Per tick: re-reads weather:getGroundWetness() and calls Wheel:updateTick with the vehicle update distance (drives track colour/dirt and wheel effects).",
+   "fr": "Par tick : relit weather:getGroundWetness() et appelle Wheel:updateTick avec la distance de mise à jour du véhicule (pilote couleur/saleté de piste et effets de roue)."
+  },
+  "Wheels:onUpdateEnd": {
+   "en": "Client: calls onUpdateEnd of the wheels (effect stop) and stops the current surface sound.",
+   "fr": "Client : appelle onUpdateEnd des roues (arrêt d'effets) et coupe le son de surface en cours."
+  },
+  "Wheels:loadHubsFromXML": {
+   "en": "Loads all the hubs declared in vehicle.wheels.hubs.hub.",
+   "fr": "Charge tous les moyeux déclarés dans vehicle.wheels.hubs.hub."
+  },
+  "Wheels.loadHubMaterial": {
+   "en": "Loads the material of a hub (base, rim or design colour depending on the XML options).",
+   "fr": "Charge le matériau d'un moyeu (base, jante ou couleur de design selon les options XML)."
+  },
+  "Wheels:loadHubFromXML": {
+   "en": "Loads a hub: shared I3D model, link, materials. Not re-read in detail.",
+   "fr": "Charge un moyeu : modèle I3D partagé, lien, matériaux. Non relu en détail."
+  },
+  "Wheels:onWheelHubI3DLoaded": {
+   "en": "I3D loading callback of a hub: attaches it to the wheel node. Not re-read in detail.",
+   "fr": "Rappel de chargement I3D d'un moyeu : l'attache au nœud de roue. Non relu en détail."
+  },
+  "Wheels:loadAckermannSteeringFromXML": {
+   "en": "Loads an Ackermann steering setting. Not re-read in detail.",
+   "fr": "Charge un réglage de direction Ackermann. Non relu en détail."
+  },
+  "Wheels:loadWheelsFromXML": {
+   "en": "Loads all the wheels of the given configuration by instantiating Wheel.new. Not re-read in detail.",
+   "fr": "Charge toutes les roues de la configuration donnée en instanciant Wheel.new. Non relu en détail."
+  },
+  "Wheels:loadWheelFromXML": {
+   "en": "Loads a wheel by calling wheel:loadFromXML; returns its result (registered function, hence replaceable).",
+   "fr": "Charge une roue en appelant wheel:loadFromXML ; renvoie son résultat (fonction enregistrée, donc remplaçable)."
+  },
+  "Wheels:onLoadWheelChockFromXML": {
+   "en": "Hook called for each loaded wheel chock (empty body: extension point).",
+   "fr": "Crochet appelé pour chaque cale de roue chargée (corps vide : point d'extension)."
+  },
+  "Wheels:getIsWheelChockAllowed": {
+   "en": "Tells whether a wheel chock is allowed (returns true by default).",
+   "fr": "Indique si une cale de roue est autorisée (renvoie vrai par défaut)."
+  },
+  "Wheels:addToPhysics": {
+   "en": "Override: after the parent, adds each wheel to the physics with the current brake force, then applies full brake server side.",
+   "fr": "Surcharge : après le parent, ajoute chaque roue à la physique avec la force de freinage courante, puis serre le frein à fond côté serveur."
+  },
+  "Wheels:removeFromPhysics": {
+   "en": "Override: removes the wheels from the physics server side.",
+   "fr": "Surcharge : retire les roues de la physique côté serveur."
+  },
+  "Wheels:getComponentMass": {
+   "en": "Override: adds the mass of the wheels carried by the component.",
+   "fr": "Surcharge : ajoute la masse des roues portées par le composant."
+  },
+  "Wheels:getVehicleWorldXRot": {
+   "en": "Override: estimates the longitudinal tilt of the vehicle from the height of the wheels in ground contact (hasGroundContact). Not re-read in detail.",
+   "fr": "Surcharge : estime l'inclinaison longitudinale du véhicule à partir de la hauteur des roues en contact avec le sol (hasGroundContact). Non relu en détail."
+  },
+  "Wheels:getVehicleWorldDirection": {
+   "en": "Override: estimates the vehicle direction from the wheels in ground contact. Not re-read in detail.",
+   "fr": "Surcharge : estime la direction du véhicule à partir des roues en contact avec le sol. Non relu en détail."
+  },
+  "Wheels:validateWashableNode": {
+   "en": "Override for Washable: once the vehicle is loaded, finds in each wheel the shader nodes \"scratches_dirt_snow_wetness\" (dirt, snow, wetness) and \"mudAmount\" (mud) and attaches wheel-specific dirt data to them (field/road multipliers, water factor, colour change speed) and the updateWheelDirtAmount or updateWheelMudAmount functions. Saves the wheel's snowScale value. For mud, randomly rotates the mesh and applies a cleaning multiplier of 4. Otherwise delegates to the parent.",
+   "fr": "Surcharge pour Washable : une fois le véhicule chargé, repère dans chaque roue les nœuds de shader « scratches_dirt_snow_wetness » (saleté, neige, humidité) et « mudAmount » (boue) et leur associe des données de saleté propres à la roue (multiplicateurs champ/route, facteur d'eau, vitesse de changement de couleur) et les fonctions updateWheelDirtAmount ou updateWheelMudAmount. Sauvegarde la valeur snowScale de la roue. Pour la boue, fait pivoter aléatoirement le maillage et applique un multiplicateur de nettoyage de 4. Sinon, délègue au parent."
+  },
+  "Wheels:getAIDirectionNode": {
+   "en": "Override: returns the wheels' steering center node if it exists, otherwise the parent's result.",
+   "fr": "Surcharge : renvoie le nœud de centre de direction des roues s'il existe, sinon le résultat du parent."
+  },
+  "Wheels:getAIRootNode": {
+   "en": "Override: same as getAIDirectionNode (wheels' steering center, otherwise parent).",
+   "fr": "Surcharge : idem getAIDirectionNode (centre de direction des roues, sinon parent)."
+  },
+  "Wheels:getSupportsMountKinematic": {
+   "en": "Override: kinematic mounting supported only if the vehicle has no wheels and the parent allows it.",
+   "fr": "Surcharge : montage cinématique supporté seulement si le véhicule n'a aucune roue et que le parent l'autorise."
+  },
+  "Wheels:loadBendingNodeFromXML": {
+   "en": "Override: reads #wheelIndices of a foliage bending node to associate it with wheels. Not re-read in detail.",
+   "fr": "Surcharge : lit #wheelIndices d'un nœud de déformation de feuillage pour l'associer à des roues. Non relu en détail."
+  },
+  "Wheels:updateWheelDirtAmount": {
+   "en": "Dirt function for a wheel node, called by Washable with rainScale, timeSinceLastRain and temperature. Returns the change in dirt and wetness. Acts only if the wheel touches something (or forced update). On field ground, dirt x fieldDirtMultiplier; off-field and off-grassland, dirt decreases in proportion to speed (streetDirtMultiplier), multiplied by 0.15 when rainScale > 0.1 (mud sticks more in rainy weather, per the code comment). Limits the gap between the wheel dirt and the overall vehicle dirt. Evolves snowScale (towards 1 with snow contact and temperature < 1, otherwise slow return) and the node colour between dirt colour and snow colour (environment:getDirtColors, unverified). Wetness increases with waterWetnessFactor on water contact, otherwise decreases with speed (drying by rotation).",
+   "fr": "Fonction de saleté pour un nœud de roue, appelée par Washable avec rainScale, timeSinceLastRain et temperature. Retourne la variation de saleté et d'humidité. N'agit que si la roue touche quelque chose (ou mise à jour forcée). Sur sol de champ, saleté x fieldDirtMultiplier ; hors champ et hors herbage, la saleté diminue proportionnellement à la vitesse (streetDirtMultiplier), multipliée par 0.15 quand rainScale > 0.1 (la boue colle plus par temps de pluie, d'après le commentaire du code). Limite l'écart entre la saleté de la roue et la saleté globale du véhicule. Fait évoluer snowScale (vers 1 avec contact neige et température < 1, sinon retour lent) et la couleur du nœud entre couleur de saleté et couleur de neige (environment:getDirtColors, non vérifié). L'humidité augmente avec waterWetnessFactor en cas de contact avec l'eau, diminue avec la vitesse sinon (séchage par rotation)."
+  },
+  "Wheels:updateWheelMudAmount": {
+   "en": "3D mud function for the mudAmount nodes: follows the dirt of the associated wheel. Maximum mud amount = WheelEffects.MAX_MUD_AMOUNT[ground type] (table not defined here: UNVERIFIED), halved when rainScale <= 0.1 (full mud only in rainy weather). Deposits mud if the wheel dirt exceeds 0.75 and the maximum is not reached, removes it otherwise, depending on speed. Wetness and colour follow those of the wheel node.",
+   "fr": "Fonction de boue 3D pour les nœuds mudAmount : suit la saleté de la roue associée. Quantité maximale de boue = WheelEffects.MAX_MUD_AMOUNT[type de sol] (table non définie ici : NON VÉRIFIÉ), réduite de moitié quand rainScale <= 0.1 (boue pleine seulement par temps de pluie). Dépose de la boue si la saleté de roue dépasse 0.75 et que le maximum n'est pas atteint, retire sinon, selon la vitesse. L'humidité et la couleur suivent celles du nœud de roue."
+  },
+  "Wheels:forceUpdateWheelPhysics": {
+   "en": "Reapplies brake and physical properties to all the wheels.",
+   "fr": "Réapplique frein et propriétés physiques à toutes les roues."
+  },
+  "Wheels:onWheelSnowHeightChanged": {
+   "en": "SNOW_HEIGHT_CHANGED message: when the snow height falls to 0 or less, resets the wheels' snowScale to zero, forces the dirt update and wakes up the vehicle.",
+   "fr": "Message SNOW_HEIGHT_CHANGED : quand la hauteur de neige tombe à 0 ou moins, remet snowScale des roues à zéro, force la mise à jour de la saleté et réveille le véhicule."
+  },
+  "Wheels:getSteeringNodeByNode": {
+   "en": "Returns the steering node associated with a given node (not re-read).",
+   "fr": "Retourne le nœud de direction associé à un nœud donné (non relu)."
+  },
+  "Wheels:updateSteeringNodes": {
+   "en": "Updates the steering nodes from rotatedTime and their limits (not re-read in detail).",
+   "fr": "Met à jour les nœuds de direction à partir de rotatedTime et de leurs limites (non relu en détail)."
+  },
+  "Wheels:updateSteeringNodeBar": {
+   "en": "Applies the rotation/translation of the visual steering bar (not re-read in detail).",
+   "fr": "Applique la rotation/translation de la barre de direction visuelle (non relu en détail)."
+  },
+  "Wheels:getCurrentSurfaceSound": {
+   "en": "Returns the sound sample matching the surface under the first wheel with a synchronized contact state (or the last wheel), based on WheelPhysics:getSurfaceSoundAttributes.",
+   "fr": "Renvoie l'échantillon sonore correspondant à la surface sous la première roue à état de contact synchronisé (ou la dernière roue), d'après WheelPhysics:getSurfaceSoundAttributes."
+  },
+  "Wheels:getAreSurfaceSoundsActive": {
+   "en": "Surface sounds are active if the vehicle is active for local sound (isActiveForLocalSound).",
+   "fr": "Les sons de surface sont actifs si le véhicule est actif pour le son local (isActiveForLocalSound)."
+  },
+  "Wheels:getIsVersatileYRotActive": {
+   "en": "Returns true: free-pivoting wheels are always active (can be overridden).",
+   "fr": "Renvoie vrai : les roues pivotantes libres sont toujours actives (peut être surchargé)."
+  },
+  "Wheels:getWheelFromWheelIndex": {
+   "en": "Returns the wheel of the given index (1..n).",
+   "fr": "Renvoie la roue d'indice donné (1..n)."
+  },
+  "Wheels:getWheelByWheelNode": {
+   "en": "Finds a wheel by node (repr, driveNode or linkNode) or by i3dMapping name.",
+   "fr": "Retrouve une roue par nœud (repr, driveNode ou linkNode) ou nom i3dMapping."
+  },
+  "Wheels:getWheels": {
+   "en": "Returns the vehicle's wheel list (spec_wheels.wheels). Standard access point for a mod that wants to read contact, ground, slip per wheel.",
+   "fr": "Renvoie la liste des roues du véhicule (spec_wheels.wheels). Point d'accès standard pour un mod qui veut lire contact, sol, glissement par roue."
+  },
+  "Wheels:brake": {
+   "en": "Sets the brake pedal (0..1) on all the wheels and raises onBrake if it changes.",
+   "fr": "Fixe la pédale de frein (0..1) sur toutes les roues et lève onBrake si elle change."
+  },
+  "Wheels:getBrakeForce": {
+   "en": "Returns the custom brake force (0 by default).",
+   "fr": "Renvoie la force de freinage personnalisée (0 par défaut)."
+  },
+  "Wheels:onLeaveVehicle": {
+   "en": "Server: when leaving the vehicle, sets torque to zero and applies the current braking to the wheels.",
+   "fr": "Serveur : à la sortie du véhicule, met couple à zéro et applique le freinage courant aux roues."
+  },
+  "Wheels:onPreAttach": {
+   "en": "Calls onPreAttach of each wheel (wheel chocks).",
+   "fr": "Appelle onPreAttach de chaque roue (cales de roue)."
+  },
+  "Wheels:onPostDetach": {
+   "en": "Calls onPostDetach of each wheel (wheel chocks).",
+   "fr": "Appelle onPostDetach de chaque roue (cales de roue)."
+  },
+  "Wheels:getSteeringRotTimeByCurvature": {
+   "en": "Converts a curvature into a steering wheel rotation time (Ackermann); not re-read in detail.",
+   "fr": "Convertit une courbure en temps de rotation de volant (Ackermann) ; non relu en détail."
+  },
+  "Wheels:getTurningRadiusByRotTime": {
+   "en": "Converts a steering wheel rotation time into a turning radius; not re-read in detail.",
+   "fr": "Convertit un temps de rotation du volant en rayon de braquage ; non relu en détail."
+  },
+  "Wheels:onRegisterAnimationValueTypes": {
+   "en": "Declares animation values related to the wheels; not re-read in detail.",
+   "fr": "Déclare des valeurs d'animation liées aux roues ; non relu en détail."
+  },
+  "Wheels:onPostAttachImplement": {
+   "en": "Re-raises the onBrake event so the newly attached implement's braking force is applied.",
+   "fr": "Relance l'événement onBrake pour que la force de freinage du nouvel outil soit prise en compte."
+  },
+  "Wheels:onAIFieldWorkerStart": {
+   "en": "Disables terrain deformation and its collision for all the wheels during AI work.",
+   "fr": "Désactive la déformation du terrain et sa collision pour toutes les roues pendant le travail de l'IA."
+  },
+  "Wheels:onAIImplementStart": {
+   "en": "Same: disables terrain deformation for the implement driven by the AI.",
+   "fr": "Idem : désactive la déformation du terrain pour l'outil conduit par l'IA."
+  },
+  "Wheels:onAIFieldWorkerEnd": {
+   "en": "Re-enables terrain deformation and its collision.",
+   "fr": "Réactive la déformation du terrain et sa collision."
+  },
+  "Wheels:onAIImplementEnd": {
+   "en": "Re-enables terrain deformation and its collision.",
+   "fr": "Réactive la déformation du terrain et sa collision."
+  },
+  "Wheels:getWheelSuspensionModfier": {
+   "en": "Measures the spread of suspension compression between wheels (maximum deviation from the mean); the name is spelled that way in the code (Modfier).",
+   "fr": "Mesure la dispersion de compression de suspension entre roues (écart maximal à la moyenne) ; le nom est écrit ainsi dans le code (Modfier)."
+  },
+  "Wheels.getTireNames": {
+   "en": "Lists the tire names of the wheels of a vehicle instance (used for the shop sheet).",
+   "fr": "Liste les noms de pneus des roues d'une instance de véhicule (utilisé pour la fiche magasin)."
+  },
+  "Wheels.getBrands": {
+   "en": "Lists the tire brands from a list of items (shop); not re-read in detail.",
+   "fr": "Liste les marques de pneus d'après une liste d'éléments (magasin) ; non relu en détail."
+  },
+  "Wheels.getWheelsByBrand": {
+   "en": "Filters wheel items by brand; not re-read in detail.",
+   "fr": "Filtre des éléments de roue par marque ; non relu en détail."
+  },
+  "Wheels.loadSpecValueWheelWeight": {
+   "en": "Shop sheet value: wheel mass from the default or selectable wheel configuration; not re-read in detail.",
+   "fr": "Valeur de fiche magasin : masse des roues d'après la configuration de roues par défaut ou sélectionnable ; non relu en détail."
+  },
+  "Wheels.loadSpecValueWheels": {
+   "en": "Shop sheet value: list of wheels (not re-read in detail).",
+   "fr": "Valeur de fiche magasin : liste de roues (non relu en détail)."
+  },
+  "Wheels.getSpecValueWheels": {
+   "en": "Shop sheet value: tire names of the real object, separated by \" / \"; nil without a real object.",
+   "fr": "Valeur de fiche magasin : noms de pneus de l'objet réel, séparés par « / »; nil sans objet réel."
+  },
+  "Wheels.createConfigToParentConfigMapping": {
+   "en": "Builds the mapping between wheel configurations and the base configuration (#baseConfig); reports a self-reference as an XML error.",
+   "fr": "Construit la correspondance entre configurations de roues et configuration de base (#baseConfig) ; signale une auto-référence comme erreur XML."
+  }
  }
 }

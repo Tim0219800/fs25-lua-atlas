@@ -1,0 +1,21 @@
+{
+ "fichier": "player/stateMachine/PlayerStateSwim.lua",
+ "module": {
+  "en": "On-foot player state used while the player is deep enough in water. It leaves the state by re-determining the best sub-state as soon as it is no longer forced. Speed computation (calculateDesiredSpeed) and the submersion test live outside this file.",
+  "fr": "État à pied du joueur utilisé lorsqu'il est assez profond dans l'eau. Il quitte l'état en redéterminant le meilleur sous-état dès qu'il n'est plus forcé. Le calcul de vitesse (calculateDesiredSpeed) et le test d'immersion se trouvent hors de ce fichier."
+ },
+ "fonctions": {
+  "PlayerStateSwim.new": {
+   "en": "Creates the swimming state for the given player and state machine.",
+   "fr": "Crée l'état de nage pour le joueur et la machine à états donnés."
+  },
+  "PlayerStateSwim:updateAsCurrent": {
+   "en": "Each frame, asks the state machine to determine a new state unless this state is still forced (calculateIfShouldBeForced, defined outside the dump).",
+   "fr": "À chaque frame, demande à la machine à états de déterminer un nouvel état sauf si cet état est encore forcé (calculateIfShouldBeForced, défini hors du dump)."
+  },
+  "PlayerStateSwim:calculateDesiredHorizontalVelocity": {
+   "en": "Returns the input direction multiplied by the speed from calculateDesiredSpeed (defined outside the dump), in m/s.",
+   "fr": "Retourne la direction d'entrée multipliée par la vitesse issue de calculateDesiredSpeed (défini hors du dump), en m/s."
+  }
+ }
+}

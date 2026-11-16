@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/configurations/VehicleConfigurationItemTreeSapling.lua",
+ "module": {
+  "en": "Configuration item (subclass of VehicleConfigurationItem) for tree sapling vehicles (planters). It stores the sapling fill unit, tree type, variation and optional i3d file, and can replace the item list by one entry per plantable tree type of the map (g_treePlantManager).",
+  "fr": "Entrée de configuration (sous-classe de VehicleConfigurationItem) pour les véhicules de plants d'arbres (planteuses). Elle mémorise l'unité de remplissage des plants, le type d'arbre, la variante et un fichier i3d facultatif, et peut remplacer la liste par une entrée par type d'arbre plantable de la carte (g_treePlantManager)."
+ },
+ "fonctions": {
+  "VehicleConfigurationItemTreeSapling.new": {
+   "en": "Constructor, calls the parent constructor. Note: the customMt argument is ignored, the class metatable is always passed to the parent constructor.",
+   "fr": "Constructeur, appelle le constructeur parent. À noter : l'argument customMt est ignoré, la métatable de la classe est toujours transmise au constructeur parent."
+  },
+  "VehicleConfigurationItemTreeSapling:loadFromXML": {
+   "en": "Loads the parent data, then #useMapTreeTypes (reading the capacity from the store data as number of saplings), #fillUnitIndex (default 1), #treeType (default spruce), #variationName and #filename. Returns false if the parent fails.",
+   "fr": "Charge les données parentes, puis #useMapTreeTypes (en lisant la capacité des données de boutique comme nombre de plants), #fillUnitIndex (1 par défaut), #treeType (spruce par défaut), #variationName et #filename. Renvoie false si le parent échoue."
+  },
+  "VehicleConfigurationItemTreeSapling.postLoad": {
+   "en": "Static. After the parent postLoad, if an item uses map tree types it replaces the whole list with generated entries and stops.",
+   "fr": "Statique. Après le postLoad parent, si une entrée utilise les types d'arbres de la carte, elle remplace toute la liste par des entrées générées et s'arrête."
+  },
+  "VehicleConfigurationItemTreeSapling.generateConfigurations": {
+   "en": "Static. Empties the list, then adds one item per tree type with several growth stages that supports planting, priced as sapling price times the number of saplings, saveId set to the tree type name.",
+   "fr": "Statique. Vide la liste, puis ajoute une entrée par type d'arbre ayant plusieurs stades de croissance et supportant la plantation, au prix du plant multiplié par le nombre de plants, avec le nom du type d'arbre comme saveId."
+  },
+  "VehicleConfigurationItemTreeSapling.registerXMLPaths": {
+   "en": "Static. Registers the parent XML paths plus useMapTreeTypes, fillUnitIndex, treeType, variationName and filename.",
+   "fr": "Statique. Enregistre les chemins XML parents ainsi que useMapTreeTypes, fillUnitIndex, treeType, variationName et filename."
+  }
+ }
+}

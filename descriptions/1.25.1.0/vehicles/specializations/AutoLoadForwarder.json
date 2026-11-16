@@ -1,0 +1,85 @@
+{
+ "fichier": "vehicles/specializations/AutoLoadForwarder.lua",
+ "module": {
+  "en": "Specialization for forestry forwarders with an automatic crane: it picks a tree (log) in range, carries it on the crane joint node, then drops it on the next free load place and counts it in a fill unit. It requires AutomaticArmControlForwarder, whose alignment functions drive the arm, and uses the vehicle action controller as a one-button automatic loading action. The loaded log file name is saved so logs can be recreated on load. The automatic part only runs if `Platform.gameplay.automaticVehicleControl` is true.",
+  "fr": "Spécialisation pour les porteurs forestiers à grue automatique : elle saisit un arbre (grume) à portée, le transporte sur le noeud d'articulation de la grue, puis le dépose sur la prochaine place libre et le compte dans une unité de remplissage. Elle exige AutomaticArmControlForwarder, dont les fonctions d'alignement pilotent le bras, et utilise l'action controller du véhicule comme action de chargement automatique à un bouton. Le nom du fichier de la grume chargée est sauvegardé pour la recréer au chargement. La partie automatique ne tourne que si `Platform.gameplay.automaticVehicleControl` est vrai."
+ },
+ "fonctions": {
+  "AutoLoadForwarder.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type includes the AutomaticArmControlForwarder specialization.",
+   "fr": "Renvoie true seulement si le type de véhicule contient la spécialisation AutomaticArmControlForwarder."
+  },
+  "AutoLoadForwarder.initSpecialization": {
+   "en": "Registers the XML keys under `vehicle.autoLoadForwarder` (idle, drop and crane tree joint nodes, load places with fill unit and drop offset, grab animation) and the savegame key for the tree i3d file name.",
+   "fr": "Enregistre les clés XML sous `vehicle.autoLoadForwarder` (noeuds de repos, de dépose et d'articulation de la grue, places de chargement avec unité de remplissage et décalage de dépose, animation de saisie) et la clé de sauvegarde du fichier i3d de l'arbre."
+  },
+  "AutoLoadForwarder.registerEvents": {
+   "en": "Declares the event `onAutoLoadForwaderMountedTree` (spelling as in the source), raised each time a tree is mounted to the crane or a load place.",
+   "fr": "Déclare l'événement `onAutoLoadForwaderMountedTree` (orthographe du code source), levé à chaque montage d'un arbre sur la grue ou sur une place de chargement."
+  },
+  "AutoLoadForwarder.registerFunctions": {
+   "en": "Registers `mountTreeToCrane`, `addTreeToLoadPlaces`, `removeMountedObject` and `sortLoadedTreeObjects` on the vehicle type.",
+   "fr": "Enregistre `mountTreeToCrane`, `addTreeToLoadPlaces`, `removeMountedObject` et `sortLoadedTreeObjects` sur le type de véhicule."
+  },
+  "AutoLoadForwarder.registerOverwrittenFunctions": {
+   "en": "Overrides `getAreControlledActionsAllowed` and `addToPhysics`.",
+   "fr": "Surcharge `getAreControlledActionsAllowed` et `addToPhysics`."
+  },
+  "AutoLoadForwarder.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, onUpdate and onRootVehicleChanged.",
+   "fr": "S'abonne à onLoad, onPostLoad, onDelete, onUpdate et onRootVehicleChanged."
+  },
+  "AutoLoadForwarder:onLoad": {
+   "en": "Reads the nodes, the list of load places (only those with a valid node), the fill unit index, the drop offset and the grab animation settings, and caches the 'no tree in range' warning text.",
+   "fr": "Lit les noeuds, la liste des places de chargement (seulement celles avec un noeud valide), l'index d'unité de remplissage, le décalage de dépose et les réglages de l'animation de saisie, et met en cache le texte d'avertissement « aucun arbre à portée »."
+  },
+  "AutoLoadForwarder:onPostLoad": {
+   "en": "Sets the grab animation to its end, then if the fill unit holds logs and the savegame is not reset, empties it and recreates one ForestryLog per unit from the saved i3d file, adding each to a load place. Note: `savegame` is used without a nil check there.",
+   "fr": "Place l'animation de saisie à sa fin puis, si l'unité de remplissage contient des grumes et que la sauvegarde n'est pas réinitialisée, la vide et recrée un ForestryLog par unité depuis le fichier i3d sauvegardé, ajouté à une place de chargement. À noter : `savegame` est utilisé sans test de nil à cet endroit."
+  },
+  "AutoLoadForwarder:onDelete": {
+   "en": "Deletes every tree object still mounted on a load place.",
+   "fr": "Supprime chaque arbre encore monté sur une place de chargement."
+  },
+  "AutoLoadForwarder:saveToXMLFile": {
+   "en": "If the fill unit is not empty, saves the i3d file name of the first tree found on a load place, converted to a network file name and HTML-encoded.",
+   "fr": "Si l'unité de remplissage n'est pas vide, sauvegarde le nom du fichier i3d du premier arbre trouvé sur une place de chargement, converti en nom de fichier réseau et encodé en HTML."
+  },
+  "AutoLoadForwarder:onUpdate": {
+   "en": "State machine of the automatic loading: moves the arm to the target tree, grabs it, carries it to the next free load place and drops it, or returns to the idle node when no tree is in range or the unit is full. Only active when the platform allows automatic vehicle control.",
+   "fr": "Machine à états du chargement automatique : amène le bras vers l'arbre cible, le saisit, le porte à la prochaine place libre et le dépose, ou retourne au noeud de repos quand aucun arbre n'est à portée ou que l'unité est pleine. Actif seulement si la plateforme autorise le contrôle automatique du véhicule."
+  },
+  "AutoLoadForwarder:onRootVehicleChanged": {
+   "en": "Registers or moves the `forwarderLoading` action in the root vehicle's action controller. It is available only when no tree is grabbed and the fill unit has free space. Removes it when there is no controller.",
+   "fr": "Enregistre ou déplace l'action `forwarderLoading` dans l'action controller du véhicule racine. Elle n'est disponible que si aucun arbre n'est saisi et que l'unité a de la place. La supprime s'il n'y a pas de contrôleur."
+  },
+  "AutoLoadForwarder.actionControllerEvent": {
+   "en": "Action controller callback: a negative direction asks for a return to the idle position and reopens the grab, otherwise it just clears the pending return. Both reset the automatic alignment. Always returns true.",
+   "fr": "Callback de l'action controller : une direction négative demande le retour à la position de repos et rouvre la pince, sinon elle annule simplement le retour en attente. Dans les deux cas l'alignement automatique est réinitialisé. Renvoie toujours true."
+  },
+  "AutoLoadForwarder:getAreControlledActionsAllowed": {
+   "en": "When switching the action on (direction 1), returns false plus the 'no tree in range' warning if there is no target tree; otherwise defers to the parent function. Switching off is always allowed.",
+   "fr": "Quand on active l'action (direction 1), renvoie false avec l'avertissement « aucun arbre à portée » s'il n'y a pas d'arbre cible ; sinon délègue à la fonction parente. La désactivation est toujours permise."
+  },
+  "AutoLoadForwarder:addToPhysics": {
+   "en": "Calls the parent function, then remounts each log on its load place as kinematic so it does not collide with the vehicle, and raises `onAutoLoadForwaderMountedTree` for each. Returns false if the parent failed.",
+   "fr": "Appelle la fonction parente puis remonte chaque grume sur sa place de chargement en mode cinématique pour éviter les collisions avec le véhicule, et lève `onAutoLoadForwaderMountedTree` pour chacune. Renvoie false si le parent a échoué."
+  },
+  "AutoLoadForwarder:mountTreeToCrane": {
+   "en": "Mounts the tree object for a node id kinematically on the crane joint node, offset by its `logRadius` user attribute (default 0.5), and raises the mounted event. Returns true on success, false if no object matches the node.",
+   "fr": "Monte de façon cinématique l'arbre correspondant à un identifiant de noeud sur le noeud d'articulation de la grue, décalé de son attribut utilisateur `logRadius` (0,5 par défaut), et lève l'événement de montage. Renvoie true en cas de succès, false si aucun objet ne correspond."
+  },
+  "AutoLoadForwarder:addTreeToLoadPlaces": {
+   "en": "Adds one unit to the fill unit and mounts the tree on the first free load place, flipping it by 180 degrees if it points the other way. If no place is free, the tree is deleted.",
+   "fr": "Ajoute une unité à l'unité de remplissage et monte l'arbre sur la première place libre, en le retournant de 180 degrés s'il pointe dans l'autre sens. Si aucune place n'est libre, l'arbre est supprimé."
+  },
+  "AutoLoadForwarder:removeMountedObject": {
+   "en": "Frees the load place holding the given object, removes one unit from the fill unit, then compacts the remaining logs. The `isDeleting` argument is not used.",
+   "fr": "Libère la place de chargement contenant l'objet donné, retire une unité de l'unité de remplissage, puis compacte les grumes restantes. L'argument `isDeleting` n'est pas utilisé."
+  },
+  "AutoLoadForwarder:sortLoadedTreeObjects": {
+   "en": "Moves logs toward the first load places so no free place remains between occupied ones, remounting each moved log kinematically.",
+   "fr": "Déplace les grumes vers les premières places de chargement pour qu'aucune place libre ne reste entre des places occupées, en remontant chaque grume déplacée en mode cinématique."
+  }
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "fichier": "handTools/specializations/HandToolTethered.lua",
+ "module": {
+  "en": "Hand tool specialization for tools bound to a holder by a tether, such as a pressure washer lance. It requires HandToolStorable. The tool is forced to mustBeHeld = true and canBeSaved = false, warns the local player when too far from the holder, and returns to the holder when the player goes beyond the maximum range, enters a vehicle or leaves the game.",
+  "fr": "Spécialisation d'outil à main pour les outils reliés à leur support par un lien, comme la lance d'un nettoyeur haute pression. Elle exige HandToolStorable. L'outil est forcé à mustBeHeld = true et canBeSaved = false, avertit le joueur local quand il s'éloigne du support, et retourne au support si le joueur dépasse la portée maximale, monte dans un véhicule ou quitte la partie."
+ },
+ "fonctions": {
+  "HandToolTethered.registerXMLPaths": {
+   "en": "Registers handTool.tethered XML keys: #warningText (l10n text), #actionRange (default 3 m) and #range (default 5 m, the distance at which the tool snaps back).",
+   "fr": "Déclare les clés XML handTool.tethered : #warningText (texte l10n), #actionRange (3 m par défaut) et #range (5 m par défaut, distance à laquelle l'outil revient au support)."
+  },
+  "HandToolTethered.registerFunctions": {
+   "en": "Registers showRangeWarning, returnToHolder and setAttachedHolder on the hand tool type.",
+   "fr": "Enregistre showRangeWarning, returnToHolder et setAttachedHolder sur le type d'outil à main."
+  },
+  "HandToolTethered.registerOverwrittenFunctions": {
+   "en": "Overrides setHolder on the type. Note: the parameter is named vehicleType in the source although it receives a hand tool type.",
+   "fr": "Surcharge setHolder sur le type. À noter : le paramètre s'appelle vehicleType dans le source alors qu'il reçoit un type d'outil à main."
+  },
+  "HandToolTethered.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onCarryingPlayerEnteredVehicle, onCarryingPlayerLeftGame and onPreUpdate.",
+   "fr": "Abonne aux événements onLoad, onDelete, onCarryingPlayerEnteredVehicle, onCarryingPlayerLeftGame et onPreUpdate."
+  },
+  "HandToolTethered.prerequisitesPresent": {
+   "en": "Returns true only if the HandToolStorable specialization is present.",
+   "fr": "Retourne true uniquement si la spécialisation HandToolStorable est présente."
+  },
+  "HandToolTethered:onLoad": {
+   "en": "Reads the warning text and the two ranges, forces mustBeHeld to true and canBeSaved to false (logging a warning if the XML type had other values) and creates an MD5 identifier used for the blinking warning.",
+   "fr": "Lit le texte d'avertissement et les deux portées, force mustBeHeld à true et canBeSaved à false (avec un avertissement dans le log si le type avait d'autres valeurs) et crée un identifiant MD5 pour l'avertissement clignotant."
+  },
+  "HandToolTethered:onDelete": {
+   "en": "Clears the spawnedHandTool reference on the attached holder, if any, so the holder no longer points to this tool.",
+   "fr": "Efface la référence spawnedHandTool du support attaché, s'il y en a un, pour qu'il ne pointe plus vers cet outil."
+  },
+  "HandToolTethered:onPreUpdate": {
+   "en": "While held by a player, measures the distance between the player and the holder node. Beyond the maximum range it calls returnToHolder; beyond the action range, for the local player only, it shows the range warning.",
+   "fr": "Tant que l'outil est tenu par un joueur, mesure la distance entre le joueur et le nœud du support. Au-delà de la portée maximale, appelle returnToHolder ; au-delà de la portée d'action, pour le joueur local uniquement, affiche l'avertissement."
+  },
+  "HandToolTethered:setAttachedHolder": {
+   "en": "Stores the holder this tool is tethered to. It can only be set once; a second call logs a dev warning and is ignored.",
+   "fr": "Mémorise le support auquel l'outil est relié. Ne peut être défini qu'une fois ; un second appel produit un avertissement développeur et est ignoré."
+  },
+  "HandToolTethered:onCarryingPlayerLeftGame": {
+   "en": "Event handler: sends the tool back to its holder when the carrying player leaves the game.",
+   "fr": "Gestionnaire d'événement : renvoie l'outil à son support quand le joueur qui le porte quitte la partie."
+  },
+  "HandToolTethered:onCarryingPlayerEnteredVehicle": {
+   "en": "Event handler: sends the tool back to its holder when the carrying player enters a vehicle.",
+   "fr": "Gestionnaire d'événement : renvoie l'outil à son support quand le joueur qui le porte monte dans un véhicule."
+  },
+  "HandToolTethered:setHolder": {
+   "en": "Override of setHolder. A nil holder is replaced by the attached holder (and ignored if none), so a tethered tool can never be left without a holder. Then it calls the parent implementation.",
+   "fr": "Surcharge de setHolder. Un support nil est remplacé par le support attaché (et ignoré s'il n'y en a pas), donc un outil relié ne reste jamais sans support. Appelle ensuite l'implémentation parente."
+  },
+  "HandToolTethered:returnToHolder": {
+   "en": "Puts the tool back into its attached holder through setHolder; does nothing if no holder is attached. The noEventSend flag is passed through.",
+   "fr": "Remet l'outil dans son support attaché via setHolder ; ne fait rien si aucun support n'est attaché. Le drapeau noEventSend est transmis."
+  },
+  "HandToolTethered:showRangeWarning": {
+   "en": "Shows a blinking on-screen warning with the remaining distance before the tool snaps back. Skipped when a GUI is visible or the warning text is empty.",
+   "fr": "Affiche un avertissement clignotant à l'écran avec la distance restante avant le retour de l'outil. Ignoré si une interface est visible ou si le texte est vide."
+  }
+ }
+}

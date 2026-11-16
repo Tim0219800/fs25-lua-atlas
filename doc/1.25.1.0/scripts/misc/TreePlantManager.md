@@ -1,56 +1,60 @@
 # misc/TreePlantManager.lua
 
+*[Version française](../../fr/scripts/misc/TreePlantManager.md)*
+
 Source: `dataS/scripts/misc/TreePlantManager.lua` — FS25 1.25.1.0
+
+✍ Manager (subclass of AbstractManager) for plantable and cuttable trees. It loads tree types from data/maps/maps_treeTypes.xml and the map XML (name, title, growth time, split type, growth stages with variations), plants and grows trees on the server, tracks cut trees and decaying branch/leaf state, saves and loads the tree list, and sends it to joining clients. Many engine calls (split shapes, physics, shared i3d) are used; engine and some classes are not in the dump. Constants such as MAX_NUM_TYPES, DECAY_INTERVAL and STAGE_NUM_BITS are used but not defined in this file (UNVERIFIED), and several console command handlers and onMissionStarted are also missing here.
 
 - **TreePlantManager** inherits from `AbstractManager` (l.23)
 
 ## Functions
 
-| Function | Line | Description (FR) |
+| Function | Line | Description |
 |---|---|---|
-| `TreePlantManager.new(customMt: any)` | 33 |  |
-| `TreePlantManager:initDataStructures()` | 41 |  |
-| `TreePlantManager:initialize()` | 58 |  |
-| `TreePlantManager:deleteTreesData()` | 74 |  |
-| `TreePlantManager:loadDefaultTypes(missionInfo: any, baseDirectory: any)` | 84 |  |
-| `TreePlantManager:loadMapData(xmlFile: any, missionInfo: any, baseDirectory: any) → boolean` | 93 |  |
-| `TreePlantManager:unloadMapData()` | 119 |  |
-| `TreePlantManager:loadTreeTypes(xmlFile: any, missionInfo: any, baseDirectory: any, isBaseType: any, customEnvironment: any)` | 146 |  |
-| `TreePlantManager:registerTreeType(name: string, title: string, stages: array, growthTimeHours: number, isBaseType: boolean, splitTypeIndex: integer, supportsPlanting: boolean, saplingPrice: number) → table` | 272 |  |
-| `TreePlantManager:getTreeTypeFilename(treeTypeDesc: any, growthStateI: any)` | 311 |  |
-| `TreePlantManager:canPlantTree()` | 323 |  |
-| `TreePlantManager:plantTree(treeTypeIndex: integer, x: number, y: number, z: number, rx: number, ry: number, rz: number, growthStateI: integer, variationIndex: integer, isGrowing: boolean?, nextGrowthTargetHour: number?, existingSplitShapeFileId: integer?) → integer?` | 344 |  |
-| `TreePlantManager:loadTreeNode(treeTypeDesc: any, x: any, y: any, z: any, rx: any, ry: any, rz: any, growthStateI: any, variationIndex: any, splitShapeLoadingFileId: any)` | 397 |  |
-| `TreePlantManager:loadTreeTrunk(treeTypeDesc: any, x: any, y: any, z: any, dirX: any, dirY: any, dirZ: any, length: any, growthStateI: any, variationIndex: any, delimb: any, useOnlyStump: any)` | 472 |  |
-| `TreePlantManager.cutTreeTrunkCallback(loadTreeTrunkData: any, shape: any, isBelow: any, isAbove: any, minY: any, maxY: any, minZ: any, maxZ: any)` | 499 |  |
-| `TreePlantManager:updateTrees(dt: any, dtGame: any)` | 512 |  |
-| `TreePlantManager:addTreeCutJoint(jointIndex: any, shape: any, nx: any, ny: any, nz: any, maxAngle: any, maxLifetime: any)` | 776 |  |
-| `TreePlantManager:getIsTreeDeleted(node: any)` | 785 |  |
-| `TreePlantManager:getTreeRigidBodyType(node: any)` | 802 |  |
-| `TreePlantManager:cleanupDeletedTrees()` | 820 |  |
-| `TreePlantManager:loadFromXMLFile(xmlFilename: any)` | 866 |  |
-| `TreePlantManager:saveToXMLFile(xmlFilename: any)` | 908 |  |
-| `TreePlantManager:readFromServerStream(streamId: any)` | 959 |  |
-| `TreePlantManager:writeToClientStream(streamId: any)` | 986 |  |
-| `TreePlantManager:getTreeTypeDescFromIndex(index: any)` | 1022 |  |
-| `TreePlantManager:getTreeTypeNameFromIndex(index: any)` | 1031 |  |
-| `TreePlantManager:getTreeTypeDescFromName(name: any)` | 1042 |  |
-| `TreePlantManager:getTreeTypeIndexAndVariationFromName(name: any, stageIndex: any, variationName: any)` | 1052 |  |
-| `TreePlantManager:getTreeTypeNameAndVariationByIndex(treeTypeIndex: any, stageIndex: any, variationIndex: any)` | 1077 |  |
-| `TreePlantManager:getPalletStoreItemFilenameByIndex(treeTypeIndex: any, stageIndex: any, variationIndex: any)` | 1096 |  |
-| `TreePlantManager:getTreeTypeDescFromSplitType(splitTypeIndex: any)` | 1115 |  |
-| `TreePlantManager:getTreeTypeIndexFromName(name: any)` | 1125 |  |
-| `TreePlantManager:addClientTree(serverSplitShapeFileId: any, nodeId: any)` | 1138 |  |
-| `TreePlantManager:removeClientTree(serverSplitShapeFileId: any)` | 1146 |  |
-| `TreePlantManager:getClientTree(serverSplitShapeFileId: any)` | 1154 |  |
-| `TreePlantManager:addingSplitShape(shape: any, oldShape: any, fromTree: any)` | 1168 |  |
-| `TreePlantManager:removingSplitShape(shape: any)` | 1200 |  |
-| `TreePlantManager:setSplitShapeLeafScaleAndVariation(shape: any, scale: any, variation: any)` | 1226 |  |
-| `TreePlantManager:consoleCommandCutTrees(radius: string\|number) → string` | 1235 |  |
-| `TreePlantManager:onTreeCutCommandOverlapCallback(objectId: any, ...: any)` | 1249 |  |
-| `TreePlantManager:onTreeCutCommandSplitCallback(shape: any, isBelow: any, isAbove: any, minY: any, maxY: any, minZ: any, maxZ: any)` | 1257 |  |
-| `TreePlantManager:consoleCommandPlantTrees(treeTypeName: any, number: any, growthStateI: any, variationIndex: any, isGrowing: any)` | 1313 |  |
-| `TreePlantManager:consoleCommandLoadAll(treeTypeName: any, number: any, growthStateI: any, variationIndex: any, isGrowing: any)` | 1362 |  |
+| `TreePlantManager.new(customMt: any)` | 33 | ✍ Constructor: creates the manager on top of AbstractManager with the given or default metatable. |
+| `TreePlantManager:initDataStructures()` | 41 | ✍ Resets tree type lists and lookups (by index, name, split type), the i3d file cache, pending trunk loads, the count of trees without split shapes and the decaying split shape table. |
+| `TreePlantManager:initialize()` | 58 | ✍ Creates the "trees" transform group linked to the scene root and the treesData structure (growing trees, split trees, client trees by server file id, cut joints, counters). |
+| `TreePlantManager:deleteTreesData()` | 74 | ✍ Deletes the trees root node, subtracts this data's untracked-split tree count from the manager total and resets the data structures. Does nothing if treesData was never created. |
+| `TreePlantManager:loadDefaultTypes(missionInfo: any, baseDirectory: any)` | 84 | ✍ Loads the base tree types from data/maps/maps_treeTypes.xml as base types, then closes the XML file. |
+| `TreePlantManager:loadMapData(xmlFile: any, missionInfo: any, baseDirectory: any) → boolean` | 93 | ✍ Loads map data: registers the gsTree* console commands (server cheats and debug only), reads map.treeTypes#maxNumTrees (default 8000, clamped 1 to 30000), subscribes once to the mission start message, loads default types and then the map's treeTypes via XMLUtil. Returns the result of that load. |
+| `TreePlantManager:unloadMapData()` | 119 | ✍ Releases cached shared i3d requests, removes the console commands, deletes the trees data, unsubscribes from the mission start message and calls the parent unload. |
+| `TreePlantManager:loadTreeTypes(xmlFile: any, missionInfo: any, baseDirectory: any, isBaseType: any, customEnvironment: any)` | 146 | ✍ Reads map.treeTypes.treeType entries from an XML file (a raw file handle is wrapped first): name, title, growthTimeHours, splitType, supportsPlanting, saplingPrice and the stages with their variations (filename, pallet, planter). Invalid entries are skipped with a warning, stage and variation counts are capped, then registerTreeType is called. Uses g_splitShapeManager:getSplitTypeIndexByName, not defined in SplitShapeManager.lua (UNVERIFIED). Returns true. |
+| `TreePlantManager:registerTreeType(name: string, title: string, stages: array, growthTimeHours: number, isBaseType: boolean, splitTypeIndex: integer, supportsPlanting: boolean, saplingPrice: number) → table` | 272 | ✍ Registers or updates a tree type (name uppercased). Refuses when the type limit is reached, or when a base type name already exists. A later definition of an existing name replaces stages, growth time and planting data; the sapling price is kept only if planting is supported. Returns the type table or nil. |
+| `TreePlantManager:getTreeTypeFilename(treeTypeDesc: any, growthStateI: any)` | 311 | ✍ Returns the i3d filename of a random variation for the given growth stage (capped to the last stage), or nil if no type description is given. |
+| `TreePlantManager:canPlantTree()` | 323 | ✍ Returns true when the number of unsplit trees in the world plus trees without split shapes is below maxNumTrees, using the engine's getNumOfSplitShapes. |
+| `TreePlantManager:plantTree(treeTypeIndex: integer, x: number, y: number, z: number, rx: number, ry: number, rz: number, growthStateI: integer, variationIndex: integer, isGrowing: boolean?, nextGrowthTargetHour: number?, existingSplitShapeFileId: integer?) → integer?` | 344 | ✍ Server side: loads a tree node at a position and rotation for a type, stage and variation, records it as growing (with a target growth hour, if it can still grow) or as a fixed split tree, and broadcasts a TreePlantEvent. Returns the tree node id, or nil if the type is unknown or loading failed. |
+| `TreePlantManager:loadTreeNode(treeTypeDesc: any, x: any, y: any, z: any, rx: any, ry: any, rz: any, growthStateI: any, variationIndex: any, splitShapeLoadingFileId: any)` | 397 | ✍ Loads the i3d of a tree stage and variation, links it under the trees root, positions it, adds it to physics, keeps split shapes kinematic on clients, warns on a wrong split type, and marks the collision map and AI area dirty. Returns the node id and the split shape file id (the node id is 0 on failure). |
+| `TreePlantManager:loadTreeTrunk(treeTypeDesc: any, x: any, y: any, z: any, dirX: any, dirY: any, dirZ: any, length: any, growthStateI: any, variationIndex: any, delimb: any, useOnlyStump: any)` | 472 | ✍ Loads a tree and queues a two-step cut (over two frames processed in updateTrees) to produce a loose trunk of a given length oriented along a direction, optionally delimbed or reduced to a stump. If the file has no split shapes the node is deleted. |
+| `TreePlantManager.cutTreeTrunkCallback(loadTreeTrunkData: any, shape: any, isBelow: any, isAbove: any, minY: any, maxY: any, minZ: any, maxZ: any)` | 499 | ✍ Split callback used by the trunk cut: registers the new shape with addingSplitShape and appends its data (shape, below/above flags, bounds) to the pending trunk's parts list. |
+| `TreePlantManager:updateTrees(dt: any, dtGame: any)` | 512 | ✍ Main per-frame update called with dt and game-time delta. Every 60 in-game minutes it cleans up deleted trees and grows trees whose target hour passed (replace node, broadcast TreeGrowEvent). It also expires cut joints, processes queued trunk cuts, the cut-all console command, and seasonal leaf decay of active split shapes. |
+| `TreePlantManager:addTreeCutJoint(jointIndex: any, shape: any, nx: any, ny: any, nz: any, maxAngle: any, maxLifetime: any)` | 776 | ✍ Records a joint created when a tree is cut, with its direction in the shape's local space, a maximum angle and a lifetime; updateTrees removes it when the tilt exceeds the angle, the lifetime ends or the shape disappears. |
+| `TreePlantManager:getIsTreeDeleted(node: any)` | 785 | ✍ Recursively checks a node's hierarchy and returns true if it no longer contains any split shape or shape. |
+| `TreePlantManager:getTreeRigidBodyType(node: any)` | 802 | ✍ Recursively finds the first mesh split shape under a node and returns its rigid body type, or nil if none exists. |
+| `TreePlantManager:cleanupDeletedTrees()` | 820 | ✍ Removes from the growing and split tree lists every tree whose hierarchy is empty, deleting its node and adjusting the without-splits counters. |
+| `TreePlantManager:loadFromXMLFile(xmlFilename: any)` | 866 | ✍ Loads the saved tree list (treePlant.tree entries with treeType, position, rotation, growthStateI, variationIndex, nextGrowthTargetHour, isGrowing, splitShapeFileId) and replants each via plantTree. Returns false if the filename is nil or the file cannot be opened; entries with an unknown type are skipped. |
+| `TreePlantManager:saveToXMLFile(xmlFilename: any)` | 908 | ✍ Cleans up deleted trees, then writes all growing and split trees to a new treePlant XML file (type name, position, rotation in degrees, stage, variation if not 1, growth target hour, growing flag, split shape file id). Returns false and logs an error if the file cannot be created. |
+| `TreePlantManager:readFromServerStream(streamId: any)` | 959 | ✍ Client side, on join: reads the tree count, then each tree (type, position, rotation, stage, variation, server file id), loads the node locally and maps the local split shape file id to the server's. |
+| `TreePlantManager:writeToClientStream(streamId: any)` | 986 | ✍ Server side, on client join: cleans up deleted trees then writes the number of trees and, for each growing then split tree, its type, position, rotation, stage, variation and split shape file id. |
+| `TreePlantManager:getTreeTypeDescFromIndex(index: any)` | 1022 | ✍ Returns the tree type description at an index, or nil. |
+| `TreePlantManager:getTreeTypeNameFromIndex(index: any)` | 1031 | ✍ Returns the tree type name for an index, or nil if unknown. |
+| `TreePlantManager:getTreeTypeDescFromName(name: any)` | 1042 | ✍ Returns the tree type description for a name (case-insensitive), or nil. |
+| `TreePlantManager:getTreeTypeIndexAndVariationFromName(name: any, stageIndex: any, variationName: any)` | 1052 | ✍ Returns the tree type index and the variation index matching variationName (case-insensitive, "DEFAULT" if absent) in the given stage. Both are nil if the type or stage is unknown; the variation alone is nil if no variation matches. |
+| `TreePlantManager:getTreeTypeNameAndVariationByIndex(treeTypeIndex: any, stageIndex: any, variationIndex: any)` | 1077 | ✍ Returns the tree type name and the variation name ("DEFAULT" if unnamed) for a type, stage (default 1) and variation index, falling back to the first variation. Returns nil, nil if not found. |
+| `TreePlantManager:getPalletStoreItemFilenameByIndex(treeTypeIndex: any, stageIndex: any, variationIndex: any)` | 1096 | ✍ Returns the pallet store item XML filename of a tree type, stage (default 1) and variation (falling back to the first), or nil. |
+| `TreePlantManager:getTreeTypeDescFromSplitType(splitTypeIndex: any)` | 1115 | ✍ Returns the tree type description linked to an engine split type index, or nil. If several tree types share a split type, the last registered wins. |
+| `TreePlantManager:getTreeTypeIndexFromName(name: any)` | 1125 | ✍ Returns the tree type index for a name (case-insensitive), or nil. |
+| `TreePlantManager:addClientTree(serverSplitShapeFileId: any, nodeId: any)` | 1138 | ✍ Stores a tree node in the client trees table under its server split shape file id. |
+| `TreePlantManager:removeClientTree(serverSplitShapeFileId: any)` | 1146 | ✍ Removes the client tree entry for a server split shape file id. |
+| `TreePlantManager:getClientTree(serverSplitShapeFileId: any)` | 1154 | ✍ Returns the client tree node stored for a server split shape file id, or nil. |
+| `TreePlantManager:addingSplitShape(shape: any, oldShape: any, fromTree: any)` | 1168 | ✍ Called when a split shape is created by a cut. Inherits or initialises its decay state (branch leaf scale) and variation, tracks it if it has children and applies the leaf shader values, then publishes MessageType.TREE_SHAPE_CUT with the old and new shapes. |
+| `TreePlantManager:removingSplitShape(shape: any)` | 1200 | ✍ Forgets the decay state of a split shape that is being removed. |
+| `TreePlantManager:setSplitShapeLeafScaleAndVariation(shape: any, scale: any, variation: any)` | 1226 | ✍ Sets the shader parameter windSnowLeafScale recursively on a shape, with the leaf scale in the third component and the variation in the fourth. |
+| `TreePlantManager:consoleCommandCutTrees(radius: string\|number) → string` | 1235 | ✍ Console command gsTreeCut: finds static, uncut tree split shapes within a radius (default 50) of the active camera and queues them for cutting. Returns a feedback string with the count. |
+| `TreePlantManager:onTreeCutCommandOverlapCallback(objectId: any, ...: any)` | 1249 | ✍ Overlap callback of the cut command: keeps mesh split shapes that have a split type, are static and not yet split. |
+| `TreePlantManager:onTreeCutCommandSplitCallback(shape: any, isBelow: any, isAbove: any, minY: any, maxY: any, minZ: any, maxZ: any)` | 1257 | ✍ Split callback of the cut command: tilts the new shape slightly, registers it as a known split shape on the mission and calls addingSplitShape as coming from a tree. |
+| `TreePlantManager:consoleCommandPlantTrees(treeTypeName: any, number: any, growthStateI: any, variationIndex: any, isGrowing: any)` | 1313 | ✍ Console command gsTreePlant: plants a number of trees of a type (default lodgepole pine, aspen or first type) in a line in front of the local player, skipping spots overlapping existing trees. Defaults to the last growth stage and a random variation. Returns a feedback string. |
+| `TreePlantManager:consoleCommandLoadAll(treeTypeName: any, number: any, growthStateI: any, variationIndex: any, isGrowing: any)` | 1362 | ✍ Debug console command gsTreeLoadAll: spawns every tree type, stage and variation in rows in front of the local player with debug planes, circles and text (split type, size, wood harvester support, diameters) and loose stump trunks. Calls g_splitShapeManager:getSplitShapeAllowsHarvester, not defined in SplitShapeManager.lua (UNVERIFIED). Returns the number planted. |
 
 ## Messages
 

@@ -1,0 +1,85 @@
+{
+ "fichier": "placeables/specializations/PlaceableManureHeap.lua",
+ "module": {
+  "en": "Placeable specialization for a manure heap: it creates a LoadingStation and a ManureHeap storage object, registers them with the mission storage system, and optionally requires placement near a barn. Handles network streaming, savegame delegation to the ManureHeap object, shop capacity spec and info HUD fill level. ManureHeap, LoadingStation and the storage system are used but their code is not part of this file.",
+  "fr": "Spécialisation de placeable pour un tas de fumier : elle crée une LoadingStation et un objet de stockage ManureHeap, les enregistre dans le système de stockage de la mission et peut exiger un placement près d'une étable. Gère le streaming réseau, la délégation de la sauvegarde à l'objet ManureHeap, la spec de capacité du magasin et le niveau affiché dans l'info HUD. ManureHeap, LoadingStation et le système de stockage sont utilisés mais leur code n'est pas dans ce fichier."
+ },
+ "fonctions": {
+  "PlaceableManureHeap.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is required.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableManureHeap.registerOverwrittenFunctions": {
+   "en": "Overrides setOwnerFarmId, collectPickObjects, getCanBePlacedAt and updateInfo on the placeable type.",
+   "fr": "Surcharge setOwnerFarmId, collectPickObjects, getCanBePlacedAt et updateInfo sur le type de placeable."
+  },
+  "PlaceableManureHeap.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onFinalizePlacement, onReadStream and onWriteStream.",
+   "fr": "S'abonne à onLoad, onDelete, onFinalizePlacement, onReadStream et onWriteStream."
+  },
+  "PlaceableManureHeap.registerXMLPaths": {
+   "en": "Declares the manureHeap XML keys: those of ManureHeap, the needsBarn flag (schema default true) and the nested loadingStation keys.",
+   "fr": "Déclare les clés XML manureHeap : celles de ManureHeap, le drapeau needsBarn (défaut du schéma : true) et les clés loadingStation imbriquées."
+  },
+  "PlaceableManureHeap.registerSavegameXMLPaths": {
+   "en": "Registers the savegame XML keys by delegating to ManureHeap.registerSavegameXMLPaths.",
+   "fr": "Enregistre les clés XML de sauvegarde en déléguant à ManureHeap.registerSavegameXMLPaths."
+  },
+  "PlaceableManureHeap.initSpecialization": {
+   "en": "Registers the shop spec type manureHeapCapacity (capacity icon, placeable species) with its load and display callbacks.",
+   "fr": "Enregistre dans le magasin le type de spec manureHeapCapacity (icône de capacité, espèce placeable) avec ses callbacks de chargement et d'affichage."
+  },
+  "PlaceableManureHeap:onLoad": {
+   "en": "Creates and loads the loading station, then the ManureHeap, and reads needsBarn from the XML. Returns false (and frees the station) if the loading station fails to load. Note: it passes spec.isServer to ManureHeap.new, a field not set in this file, and needsBarn defaults to false here while the schema default is true.",
+   "fr": "Crée et charge la station de chargement puis le ManureHeap, et lit needsBarn dans le XML. Renvoie false (et libère la station) si le chargement de la station échoue. À noter : spec.isServer est passé à ManureHeap.new alors que ce champ n'est pas défini ici, et needsBarn vaut false par défaut ici alors que le schéma indique true."
+  },
+  "PlaceableManureHeap:onDelete": {
+   "en": "Removes the heap from the storage system and from its loading/unloading stations, deletes it, then unregisters and deletes the loading station (including from the manure loading station list when manure is supported).",
+   "fr": "Retire le tas du système de stockage et de ses stations de chargement/déchargement, le supprime, puis désenregistre et supprime la station de chargement (y compris de la liste des stations de fumier si le fumier est supporté)."
+  },
+  "PlaceableManureHeap:onFinalizePlacement": {
+   "en": "Registers the loading station and heap as network objects, adds them to the storage system with the owner farm, and links the heap and nearby storage extensions to extendable loading and unloading stations in range.",
+   "fr": "Enregistre la station de chargement et le tas comme objets réseau, les ajoute au système de stockage avec la ferme propriétaire, et relie le tas et les extensions de stockage proches aux stations extensibles à portée."
+  },
+  "PlaceableManureHeap:onReadStream": {
+   "en": "Client side on join: reads the object ids and stream data of the loading station and the heap, then finishes their client registration.",
+   "fr": "Côté client à la connexion : lit les identifiants d'objet et les données de flux de la station et du tas, puis termine leur enregistrement côté client."
+  },
+  "PlaceableManureHeap:onWriteStream": {
+   "en": "Server side on join: writes the object ids and stream data of the loading station and the heap and registers both objects in the connection stream.",
+   "fr": "Côté serveur à la connexion : écrit les identifiants d'objet et les données de flux de la station et du tas et enregistre les deux objets dans le flux de la connexion."
+  },
+  "PlaceableManureHeap:loadFromXMLFile": {
+   "en": "Savegame loading: forwards to the ManureHeap object if it exists.",
+   "fr": "Chargement de sauvegarde : transmet à l'objet ManureHeap s'il existe."
+  },
+  "PlaceableManureHeap:saveToXMLFile": {
+   "en": "Savegame saving: forwards to the ManureHeap object if it exists.",
+   "fr": "Écriture de sauvegarde : transmet à l'objet ManureHeap s'il existe."
+  },
+  "PlaceableManureHeap:setOwnerFarmId": {
+   "en": "Override: calls the parent, then on the server sets the heap's owner and re-links storage extensions and extendable loading/unloading stations in range for the new farm.",
+   "fr": "Surcharge : appelle le parent puis, côté serveur, applique le propriétaire au tas et relie à nouveau extensions de stockage et stations extensibles à portée pour la nouvelle ferme."
+  },
+  "PlaceableManureHeap:collectPickObjects": {
+   "en": "Override: skips the loading-station load trigger nodes and the heap's activation trigger so they are not added as pickable objects; other nodes go to the parent.",
+   "fr": "Surcharge : ignore les nœuds de trigger de chargement de la station et le trigger d'activation du tas pour qu'ils ne soient pas sélectionnables ; les autres nœuds passent au parent."
+  },
+  "PlaceableManureHeap:getCanBePlacedAt": {
+   "en": "Override: refuses placement if there is no heap, or if needsBarn is set and no extendable unloading station of the farm is in range (returns false plus a warning text); otherwise defers to the parent.",
+   "fr": "Surcharge : refuse le placement s'il n'y a pas de tas, ou si needsBarn est actif et qu'aucune station de déchargement extensible de la ferme n'est à portée (renvoie false et un texte d'avertissement) ; sinon délègue au parent."
+  },
+  "PlaceableManureHeap:updateInfo": {
+   "en": "Override: after the parent, appends a line to the info table showing the manure heap fill level in liters.",
+   "fr": "Surcharge : après le parent, ajoute à la table d'infos une ligne indiquant le niveau de remplissage du tas en litres."
+  },
+  "PlaceableManureHeap.loadSpecValueCapacity": {
+   "en": "Reads the manureHeap capacity value from the placeable XML for the shop spec.",
+   "fr": "Lit la valeur de capacité manureHeap dans le XML du placeable pour la spec du magasin."
+  },
+  "PlaceableManureHeap.getSpecValueCapacity": {
+   "en": "Returns the capacity formatted as a volume string for the shop, or nil if the store item has none.",
+   "fr": "Renvoie la capacité formatée en volume pour le magasin, ou nil si l'objet n'en a pas."
+  }
+ }
+}

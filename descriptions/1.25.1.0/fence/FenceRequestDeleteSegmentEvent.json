@@ -1,0 +1,25 @@
+{
+ "fichier": "fence/FenceRequestDeleteSegmentEvent.lua",
+ "module": {
+  "en": "Client-to-server request to delete a fence segment, with a server-to-client reply carrying a success flag. The server deletes the segment, replies, and broadcasts a FenceDeleteSegmentEvent to the other clients. Subclass of Event on the main channel.",
+  "fr": "Requête client vers serveur pour supprimer un segment de clôture, avec une réponse serveur vers client portant un indicateur de succès. Le serveur supprime le segment, répond, puis diffuse un FenceDeleteSegmentEvent aux autres clients. Sous-classe d'Event sur le canal principal."
+ },
+ "fonctions": {
+  "FenceRequestDeleteSegmentEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel. The `new`/`newServerToClient` constructors used elsewhere in this file are not defined here (UNVERIFIED where they come from).",
+   "fr": "Crée un événement vide sur le canal réseau principal. Les constructeurs `new`/`newServerToClient` utilisés dans ce fichier n'y sont pas définis (provenance NON VÉRIFIÉE)."
+  },
+  "FenceRequestDeleteSegmentEvent:readStream": {
+   "en": "On the server side reads placeable and UInt16 segment id; on the client side reads the Bool success flag. Then calls run.",
+   "fr": "Côté serveur, lit le placeable et l'identifiant de segment UInt16 ; côté client, lit l'indicateur de succès booléen. Puis appelle run."
+  },
+  "FenceRequestDeleteSegmentEvent:writeStream": {
+   "en": "When sending to the server writes placeable and segment id; when sending to a client writes the success Bool.",
+   "fr": "À l'envoi vers le serveur, écrit le placeable et l'identifiant du segment ; à l'envoi vers un client, écrit le booléen de succès."
+  },
+  "FenceRequestDeleteSegmentEvent:run": {
+   "en": "Client: publishes the success flag on the message center. Server: finds the segment, replies false if missing, otherwise removes and deletes it, replies true, and broadcasts a FenceDeleteSegmentEvent to all other connections.",
+   "fr": "Client : publie l'indicateur de succès sur le message center. Serveur : cherche le segment, répond false s'il n'existe pas, sinon le retire et le supprime, répond true et diffuse un FenceDeleteSegmentEvent à toutes les autres connexions."
+  }
+ }
+}

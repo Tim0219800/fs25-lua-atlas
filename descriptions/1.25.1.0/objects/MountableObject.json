@@ -1,0 +1,25 @@
+{
+ "fichier": "objects/MountableObject.lua",
+ "module": {
+  "en": "Subclass of PhysicsObject for objects that can be mounted (attached with a dynamic joint) to a vehicle or other carrier. Only a few members have bodies in the SDK dump: a periodic upward raycast that counts the mass of other mountable objects stacked above to scale the mount joint force, and a network pose override. Most of the mounting logic (mount types, joint creation, getAdditionalMountingDistance, FORCE_LIMIT_* constants) is not in the dump and is UNVERIFIED.",
+  "fr": "Sous-classe de PhysicsObject pour les objets pouvant être montés (attachés par un joint dynamique) sur un véhicule ou un autre support. Seuls quelques membres ont un corps dans le dump du SDK : un raycast périodique vers le haut qui compte la masse des autres objets montables empilés au-dessus pour adapter la force du joint de montage, et une surcharge de la pose réseau. La plus grande partie de la logique de montage (types de montage, création du joint, getAdditionalMountingDistance, constantes FORCE_LIMIT_*) est absente du dump : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "MountableObject:updateDynamicMountJointForceLimit": {
+   "en": "Called with dt while mounted: counts down a timer and, when it expires and no cast is pending, starts an asynchronous upward raycast against dynamic objects to measure the stacked mass. The result is applied in the raycast callback.",
+   "fr": "Appelée avec dt pendant le montage : décompte un minuteur et, à son expiration sans raycast en attente, lance un raycast asynchrone vers le haut contre les objets dynamiques pour mesurer la masse empilée. Le résultat est appliqué dans le callback du raycast."
+  },
+  "MountableObject:getAdditionalMountingMass": {
+   "en": "Always returns 0; kept only so older callers keep working.",
+   "fr": "Retourne toujours 0 ; conservée uniquement pour la compatibilité avec d'anciens appelants."
+  },
+  "MountableObject:additionalMountingMassRaycastCallback": {
+   "en": "Raycast callback: adds the mass of each other MountableObject found at the expected stacking distance. On the last hit it rescales the mount joint's linear drive force limit by the total mass ratio. Returns true to continue the cast.",
+   "fr": "Callback du raycast : ajoute la masse de chaque autre MountableObject trouvé à la distance d'empilement attendue. Au dernier impact, il remet à l'échelle la limite de force d'entraînement linéaire du joint de montage selon le rapport de masse total. Retourne true pour continuer le raycast."
+  },
+  "MountableObject:setWorldPositionQuaternion": {
+   "en": "Applies the parent's pose setter always on the server, but on a client only when the mount type is neither kinematic nor default, so mounted objects are not moved by network pose updates there.",
+   "fr": "Appelle le setter de pose parent toujours sur le serveur, mais sur un client seulement si le type de montage n'est ni cinématique ni par défaut, afin que les objets montés ne soient pas déplacés par les mises à jour de pose réseau."
+  }
+ }
+}

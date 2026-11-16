@@ -1,0 +1,41 @@
+{
+ "fichier": "gui/AnimalScreen.lua",
+ "module": {
+  "en": "Client-side full-screen GUI for the animal dealer, derived from ScreenElement. It lets the player switch between buying and selling, and walks through three selection steps (source, target husbandry, amount). It uses a controller object, the message center for money changes, and the input binding for its action events. Most of the file is outside the described entries.",
+  "fr": "Écran GUI plein écran côté client pour le marchand d'animaux, dérivé de ScreenElement. Il permet de passer de l'achat à la vente et enchaîne trois étapes de sélection (source, élevage cible, quantité). Il s'appuie sur un objet controller, le message center pour les changements d'argent et l'input binding pour ses événements d'action. L'essentiel du fichier est hors des entrées décrites."
+ },
+ "fonctions": {
+  "AnimalScreen.new": {
+   "en": "Creates the screen instance, starting in buy mode with the source selected, closed, zero balance, no animals and no selection state. Also prepares the table mapping source selector states to animal types.",
+   "fr": "Crée l'instance de l'écran, en mode achat avec la source sélectionnée, fermé, solde nul, sans animaux et sans état de sélection. Prépare aussi la table associant états du sélecteur de source et types d'animaux."
+  },
+  "AnimalScreen:delete": {
+   "en": "Deletes all cloned dot elements in the source dot box, deletes the dot template, then calls the parent delete.",
+   "fr": "Supprime tous les éléments points clonés de la boîte de points source, supprime le modèle de point, puis appelle le delete du parent."
+  },
+  "AnimalScreen:onOpen": {
+   "en": "Sets the game state to the animal shop, opens in buy mode, and falls back to sell mode if the buy list is empty. If nothing can be sold either, it closes the screen and shows an info dialog. Otherwise it subscribes to MONEY_CHANGED and registers action events.",
+   "fr": "Passe l'état de jeu en boutique d'animaux, ouvre en mode achat et bascule en mode vente si la liste d'achat est vide. Si rien n'est vendable non plus, il ferme l'écran et affiche un dialogue d'information. Sinon il s'abonne à MONEY_CHANGED et enregistre les événements d'action."
+  },
+  "AnimalScreen:onClose": {
+   "en": "Resets the controller, removes action events and the custom input context, resets the mission game state, and displays the pending money changes for animal purchases and sales. Unsubscribes from messages and marks the screen as closed.",
+   "fr": "Réinitialise le controller, retire les événements d'action et le contexte d'entrée personnalisé, réinitialise l'état de jeu de la mission et affiche les variations d'argent en attente pour les achats et ventes d'animaux. Se désabonne des messages et marque l'écran comme fermé."
+  },
+  "AnimalScreen:setSelectionState": {
+   "en": "Moves the screen to the source, target or amount step. It skips steps that are unusable (no husbandry, a single non-scrollable husbandry, hidden amount box), updates the highlighted boxes and rebuilds the gamepad focus links. Returns false if the target step is impossible.",
+   "fr": "Place l'écran sur l'étape source, cible ou quantité. Il saute les étapes inutilisables (aucun élevage, un seul élevage non défilant, boîte de quantité masquée), met à jour les cadres en surbrillance et reconstruit les liens de focus manette. Retourne false si l'étape cible est impossible."
+  },
+  "AnimalScreen:onClickBack": {
+   "en": "Back button handler. Closes the screen on mobile or when already on the source step; otherwise goes back one step in buy mode, or two steps in sell mode.",
+   "fr": "Gestionnaire du bouton retour. Ferme l'écran sur mobile ou si l'on est déjà à l'étape source ; sinon recule d'une étape en mode achat, ou de deux étapes en mode vente."
+  },
+  "AnimalScreen:onClickSelect": {
+   "en": "Select button handler. Advances one step in buy mode or two in sell mode, unless the amount step is already reached. Always returns true.",
+   "fr": "Gestionnaire du bouton de sélection. Avance d'une étape en mode achat ou de deux en mode vente, sauf si l'étape de quantité est déjà atteinte. Retourne toujours true."
+  },
+  "AnimalScreen:removeActionEvents": {
+   "en": "Removes every input action event registered by this screen as target through g_inputBinding.",
+   "fr": "Retire tous les événements d'action d'entrée enregistrés par cet écran comme cible via g_inputBinding."
+  }
+ }
+}

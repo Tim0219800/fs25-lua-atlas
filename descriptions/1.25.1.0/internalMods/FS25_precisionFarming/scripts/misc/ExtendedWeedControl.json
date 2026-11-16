@@ -1,0 +1,33 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/misc/ExtendedWeedControl.lua",
+ "module": {
+  "en": "Precision Farming extension of weed handling. It loads a weed noise bitmap (shared/weedNoise.grle) used to keep patchy weed areas, clears weeds on sowing, and overrides herbicide spraying so spot spraying skips preventive stages. It overrides FSDensityMapUtil, Sprayer, FieldUpdateTask and FieldState, and relies on the weedSystem, whose source is not in this dump.",
+  "fr": "Extension de Precision Farming pour la gestion des mauvaises herbes. Elle charge une carte de bruit (shared/weedNoise.grle) servant à garder des zones d'herbes en taches, efface les herbes au semis et surcharge la pulvérisation d'herbicide pour que le traitement localisé ignore les stades préventifs. Elle surcharge FSDensityMapUtil, Sprayer, FieldUpdateTask et FieldState et dépend de weedSystem, dont le code n'est pas dans ce dump."
+ },
+ "fonctions": {
+  "ExtendedWeedControl:loadFromXML": {
+   "en": "Creates and loads the weed noise bit vector map and builds a filter on it. If loading fails it logs an error and returns false. Note: on success it returns nothing (nil), not true.",
+   "fr": "Crée et charge la carte de bits du bruit d'herbes et construit un filtre dessus. En cas d'échec, journalise une erreur et renvoie false. À noter : en cas de succès, la fonction ne renvoie rien (nil) et non true."
+  },
+  "ExtendedWeedControl:unloadMapData": {
+   "en": "Drops the filters, deletes the noise bit vector map and, on the server, removes the pfWeedSetNoiseParameters console command (its registration is not in this file).",
+   "fr": "Libère les filtres, supprime la carte de bits de bruit et, sur le serveur, retire la commande console pfWeedSetNoiseParameters (son enregistrement n'est pas dans ce fichier)."
+  },
+  "ExtendedWeedControl:setWeedNoiseParameters": {
+   "en": "Developer tool: regenerates the noise map from two Perlin noise filters with the given octave and persistence parameters, and saves weedNoise.grle in the user profile folder. Missing parameters keep previous values.",
+   "fr": "Outil de développement : régénère la carte de bruit à partir de deux filtres de bruit de Perlin avec les octaves et persistances données, et enregistre weedNoise.grle dans le dossier du profil utilisateur. Les paramètres manquants gardent leurs valeurs précédentes."
+  },
+  "ExtendedWeedControl:clearWeedArea": {
+   "en": "Sets to 0 the pixels of the modifier's area that match both the noise filter and the given weed filter.",
+   "fr": "Met à 0 les pixels de la zone du modificateur qui correspondent à la fois au filtre de bruit et au filtre d'herbes donné."
+  },
+  "ExtendedWeedControl:getWeedModifier": {
+   "en": "Lazily creates, then returns, the weed density modifier, along with dense and sparse weed filters. Returns nil if the map has no weed.",
+   "fr": "Crée à la demande, puis renvoie, le modificateur de densité des herbes, avec les filtres d'herbes denses et clairsemées. Renvoie nil si la carte n'a pas d'herbes."
+  },
+  "ExtendedWeedControl:overwriteGameFunctions": {
+   "en": "Overrides FSDensityMapUtil.setSowingWeedArea (clears dense and sparse weeds), Sprayer.processSprayerArea (remembers spot spraying), FSDensityMapUtil.updateHerbicideArea (rewrites it, no preventive stages when spot spraying), FieldUpdateTask.prepare and FieldState.update (weed state sampled in a 20 m square).",
+   "fr": "Surcharge FSDensityMapUtil.setSowingWeedArea (efface les herbes denses et clairsemées), Sprayer.processSprayerArea (mémorise le traitement localisé), FSDensityMapUtil.updateHerbicideArea (réécrite, sans stades préventifs en traitement localisé), FieldUpdateTask.prepare et FieldState.update (état des herbes échantillonné sur un carré de 20 m)."
+  }
+ }
+}

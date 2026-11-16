@@ -1,0 +1,129 @@
+{
+ "fichier": "economy/FarmlandManager.lua",
+ "module": {
+  "en": "Manager of land ownership, a subclass of AbstractManager. Reads the farmland info layer or bit vector map and the map farmlands XML, keeps a farmland id to farm id table, saves and loads ownership, and answers ownership queries by world position. Ownership changes publish FARMLAND_OWNER_CHANGED on the message center. Also registers gsFarmland* cheat console commands.",
+  "fr": "Gestionnaire de la propriété des terres, sous-classe de AbstractManager. Lit la couche d'info ou la bit vector map des parcelles et le XML des parcelles de la carte, tient une table id de parcelle vers id de ferme, sauvegarde et charge la propriété et répond aux requêtes de propriété par position monde. Les changements publient FARMLAND_OWNER_CHANGED sur le message center. Enregistre aussi des commandes console gsFarmland* de triche."
+ },
+ "fonctions": {
+  "FarmlandManager.new": {
+   "en": "Constructor. Creates the manager from AbstractManager.new with the given or default metatable.",
+   "fr": "Constructeur. Crée le gestionnaire via AbstractManager.new avec la métatable fournie ou par défaut."
+  },
+  "FarmlandManager:initDataStructures": {
+   "en": "Resets farmland tables, id lists, farmland-to-farm mapping, local map handle and size, and the bit count (8).",
+   "fr": "Réinitialise les tables de parcelles, listes d'ids, la correspondance parcelle-ferme, le handle et la taille de la carte locale et le nombre de bits (8)."
+  },
+  "FarmlandManager:loadMapData": {
+   "en": "Calls the parent, then loads the map farmlands XML section through XMLUtil.loadDataFromMapXML with loadFarmlandData. Returns that result.",
+   "fr": "Appelle le parent puis charge la section farmlands du XML de la carte via XMLUtil.loadDataFromMapXML avec loadFarmlandData. Renvoie ce résultat."
+  },
+  "FarmlandManager:loadFarmlandData": {
+   "en": "Core loader: takes the info layer or loads a bit vector map, scans every pixel to compute area, centre and bounding box per id, creates Farmland objects from XML, gives default farms to a new singleplayer game, subscribes to farm messages and registers cheat commands. Returns false if the density map file is missing or fails to load.",
+   "fr": "Chargeur principal : prend la couche d'info ou charge une bit vector map, parcourt chaque pixel pour calculer surface, centre et boîte englobante par id, crée les Farmland depuis le XML, attribue les parcelles par défaut dans un nouveau jeu solo, s'abonne aux messages de ferme et enregistre les commandes de triche. Renvoie false si le fichier de density map manque ou échoue."
+  },
+  "FarmlandManager:unloadMapData": {
+   "en": "Removes the console commands, unsubscribes from messages, deletes the bit vector map unless it came from the terrain, deletes all farmlands and calls the parent.",
+   "fr": "Retire les commandes console, se désabonne des messages, supprime la bit vector map sauf si elle vient du terrain, supprime toutes les parcelles et appelle le parent."
+  },
+  "FarmlandManager:saveToXMLFile": {
+   "en": "Writes one farmlands.farmland entry per mapping (#id, #farmId) to the given XML file. Returns false if the file cannot be created.",
+   "fr": "Écrit une entrée farmlands.farmland par correspondance (#id, #farmId) dans le fichier XML donné. Renvoie false si le fichier ne peut pas être créé."
+  },
+  "FarmlandManager:loadFromXMLFile": {
+   "en": "Reads saved ownership and applies it with setLandOwnership (marked as loaded from savegame) for farms above the no-owner id, then calls g_farmManager:mergeFarmlandsForSingleplayer. Returns false if no file. Note: a missing #farmId would error on the comparison.",
+   "fr": "Lit la propriété sauvegardée et l'applique via setLandOwnership (marquée comme chargée depuis la sauvegarde) pour les fermes au-dessus de l'id sans propriétaire, puis appelle g_farmManager:mergeFarmlandsForSingleplayer. Renvoie false sans fichier. À noter : un #farmId absent provoquerait une erreur à la comparaison."
+  },
+  "FarmlandManager:delete": {
+   "en": "Empty function; cleanup is done in unloadMapData.",
+   "fr": "Fonction vide ; le nettoyage est fait dans unloadMapData."
+  },
+  "FarmlandManager:getLocalMap": {
+   "en": "Returns the farmland bit vector map handle, or nil if not loaded.",
+   "fr": "Renvoie le handle de la bit vector map des parcelles, ou nil si non chargée."
+  },
+  "FarmlandManager:getIsOwnedByFarmAtWorldPosition": {
+   "en": "Returns true if the given farm owns the farmland at the world X/Z position. False for a nil or no-owner farm id.",
+   "fr": "Renvoie true si la ferme donnée possède la parcelle à la position monde X/Z. False pour un id de ferme nil ou sans propriétaire."
+  },
+  "FarmlandManager:getIsOwnedByFarmAlongLine": {
+   "en": "Samples the farmland map along a world segment and returns true only if the farm owns every sampled point. Sampling is coarse, about every two map pixels, so tiny strips may be missed.",
+   "fr": "Échantillonne la carte des parcelles le long d'un segment monde et renvoie true seulement si la ferme possède tous les points. L'échantillonnage est grossier, environ tous les deux pixels, donc de très fines bandes peuvent échapper."
+  },
+  "FarmlandManager:getCanAccessLandAtWorldPosition": {
+   "en": "Returns true if the farm owns the land at the position or the access handler lets it use the owner farm land. False for nil or no-owner farm.",
+   "fr": "Renvoie true si la ferme possède le terrain à la position ou si l'access handler l'autorise à utiliser celui de la ferme propriétaire. False pour une ferme nil ou sans propriétaire."
+  },
+  "FarmlandManager:getFarmlandOwner": {
+   "en": "Returns the owner farm id of a farmland id, or the no-owner id if the id is nil or unknown. Expects an id, not a farmland object.",
+   "fr": "Renvoie l'id de la ferme propriétaire d'une parcelle, ou l'id sans propriétaire si l'id est nil ou inconnu. Attend un id et non un objet Farmland."
+  },
+  "FarmlandManager:getFarmlandIdAtWorldPosition": {
+   "en": "Returns the farmland id read from the bit vector map at a world X/Z position; 0 means no valid farmland. Returns the no-owner id if no map is loaded.",
+   "fr": "Renvoie l'id de parcelle lu dans la bit vector map à une position monde X/Z ; 0 signifie aucune parcelle valide. Renvoie l'id sans propriétaire si aucune carte n'est chargée."
+  },
+  "FarmlandManager:getFarmlandAtWorldPosition": {
+   "en": "Returns the Farmland object at a world X/Z position, or nil.",
+   "fr": "Renvoie l'objet Farmland à une position monde X/Z, ou nil."
+  },
+  "FarmlandManager:getOwnerIdAtWorldPosition": {
+   "en": "Returns the owner farm id of the farmland at a world X/Z position.",
+   "fr": "Renvoie l'id de la ferme propriétaire de la parcelle à une position monde X/Z."
+  },
+  "FarmlandManager:getIsValidFarmlandId": {
+   "en": "Returns true if the id is a positive number matching a defined farmland.",
+   "fr": "Renvoie true si l'id est un nombre positif correspondant à une parcelle définie."
+  },
+  "FarmlandManager:setLandOwnership": {
+   "en": "Assigns a farmland to a farm (no-owner id to sell), updates the Farmland object and publishes FARMLAND_OWNER_CHANGED with the loadFromSavegame flag. Returns false for invalid ids or the not-buyable farm id. Does not do networking itself.",
+   "fr": "Attribue une parcelle à une ferme (id sans propriétaire pour vendre), met à jour l'objet Farmland et publie FARMLAND_OWNER_CHANGED avec l'indicateur loadFromSavegame. Renvoie false pour des ids invalides ou l'id non achetable. Ne gère pas le réseau lui-même."
+  },
+  "FarmlandManager:getFarmlandById": {
+   "en": "Returns the Farmland object for an id, or nil.",
+   "fr": "Renvoie l'objet Farmland pour un id, ou nil."
+  },
+  "FarmlandManager:getFarmlands": {
+   "en": "Returns the table of all farmlands indexed by id (the internal table, not a copy).",
+   "fr": "Renvoie la table de toutes les parcelles indexée par id (la table interne, pas une copie)."
+  },
+  "FarmlandManager:getPricePerHa": {
+   "en": "Returns the base price per hectare read from the map XML (60000 if not set).",
+   "fr": "Renvoie le prix de base par hectare lu dans le XML de la carte (60000 par défaut)."
+  },
+  "FarmlandManager:getOwnedFarmlandIdsByFarmId": {
+   "en": "Returns a new array of the farmland ids owned by the given farm id.",
+   "fr": "Renvoie un nouveau tableau des ids de parcelles possédées par l'id de ferme donné."
+  },
+  "FarmlandManager:getNumOwnedFarmlandIdsByFarmId": {
+   "en": "Returns how many farmlands the given farm owns.",
+   "fr": "Renvoie le nombre de parcelles possédées par la ferme donnée."
+  },
+  "FarmlandManager:convertWorldToLocalPosition": {
+   "en": "Converts world X/Z to integer pixel coordinates in the farmland map using terrain size and map resolution. Returns two values; no bounds clamping.",
+   "fr": "Convertit des X/Z monde en coordonnées pixel entières dans la carte des parcelles selon la taille du terrain et la résolution. Renvoie deux valeurs ; pas de limitation aux bornes."
+  },
+  "FarmlandManager:farmDestroyed": {
+   "en": "Message handler for a deleted farm: sets every farmland it owned back to the no-owner id.",
+   "fr": "Gestionnaire du message de suppression de ferme : remet toutes les parcelles qu'elle possédait à l'id sans propriétaire."
+  },
+  "FarmlandManager:consoleCommandBuyFarmland": {
+   "en": "Console command gsFarmlandBuy [id]: for server or master user with a client, sends a FarmlandStateEvent to buy the given or current-position farmland for the local player farm.",
+   "fr": "Commande console gsFarmlandBuy [id] : pour le serveur ou l'utilisateur maître avec un client, envoie un FarmlandStateEvent pour acheter la parcelle donnée ou à la position actuelle pour la ferme du joueur local."
+  },
+  "FarmlandManager:consoleCommandBuyAllFarmlands": {
+   "en": "Console command gsFarmlandBuyAll: sends a buy event for every farmland for the local player farm. Same permission condition as the single buy.",
+   "fr": "Commande console gsFarmlandBuyAll : envoie un événement d'achat pour chaque parcelle pour la ferme du joueur local. Même condition d'autorisation que l'achat simple."
+  },
+  "FarmlandManager:consoleCommandSellFarmland": {
+   "en": "Console command gsFarmlandSell [id]: sends an event setting the given or current-position farmland to no owner. Errors if it is already unowned.",
+   "fr": "Commande console gsFarmlandSell [id] : envoie un événement remettant la parcelle donnée ou à la position actuelle sans propriétaire. Erreur si elle n'a déjà pas de propriétaire."
+  },
+  "FarmlandManager:consoleCommandSellAllFarmlands": {
+   "en": "Console command gsFarmlandSellAll: sends a sell event for every farmland.",
+   "fr": "Commande console gsFarmlandSellAll : envoie un événement de vente pour chaque parcelle."
+  },
+  "FarmlandManager:consoleCommandShowFarmlands": {
+   "en": "Console command gsFarmlandShow: toggles registration of this manager as a debug drawable (overlay needs debug mode, F5). The draw code is not in this file.",
+   "fr": "Commande console gsFarmlandShow : active ou désactive l'enregistrement de ce gestionnaire comme élément de debug (l'overlay demande le mode debug, F5). Le code de dessin n'est pas dans ce fichier."
+  }
+ }
+}

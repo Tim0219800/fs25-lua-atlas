@@ -1,0 +1,45 @@
+{
+ "fichier": "gui/base/GuiDataSource.lua",
+ "module": {
+  "en": "Simple observable list that feeds data to GUI elements such as lists and tables. It holds an array, lets listeners register a callback per target table, and notifies them when the data is replaced or modified. NO_DATA and NO_CALLBACK are globals defined elsewhere (UNVERIFIED here).",
+  "fr": "Liste observable simple qui alimente des éléments d'interface comme les listes et tableaux. Elle contient un tableau, permet d'enregistrer un callback par table cible et prévient les écouteurs quand les données sont remplacées ou modifiées. NO_DATA et NO_CALLBACK sont des globales définies ailleurs (NON VÉRIFIÉ ici)."
+ },
+ "fonctions": {
+  "GuiDataSource.new": {
+   "en": "Creates a data source with an empty data array (NO_DATA) and an empty listener table. An optional metatable lets subclasses reuse the constructor.",
+   "fr": "Crée une source de données avec un tableau vide (NO_DATA) et une table d'écouteurs vide. Une métatable optionnelle permet aux sous-classes de réutiliser le constructeur."
+  },
+  "GuiDataSource:setData": {
+   "en": "Replaces the underlying array (nil falls back to NO_DATA) and immediately notifies all listeners. The array is stored by reference, not copied.",
+   "fr": "Remplace le tableau sous-jacent (nil revient à NO_DATA) et prévient aussitôt tous les écouteurs. Le tableau est conservé par référence, pas copié."
+  },
+  "GuiDataSource:addChangeListener": {
+   "en": "Registers a callback keyed by the target table. A second registration for the same target overwrites the first; a nil callback is replaced by NO_CALLBACK.",
+   "fr": "Enregistre un callback indexé par la table cible. Une seconde inscription pour la même cible écrase la première ; un callback nil est remplacé par NO_CALLBACK."
+  },
+  "GuiDataSource:removeChangeListener": {
+   "en": "Removes the listener registered for the given target table.",
+   "fr": "Retire l'écouteur enregistré pour la table cible donnée."
+  },
+  "GuiDataSource:notifyChange": {
+   "en": "Calls every registered callback with its target as the only argument. Call it manually after editing the data array in place. Iteration order is not defined (pairs).",
+   "fr": "Appelle chaque callback enregistré avec sa cible comme seul argument. À appeler à la main après une modification directe du tableau. L'ordre d'itération n'est pas défini (pairs)."
+  },
+  "GuiDataSource:getCount": {
+   "en": "Returns the number of items in the data array (length operator).",
+   "fr": "Retourne le nombre d'éléments du tableau de données (opérateur de longueur)."
+  },
+  "GuiDataSource:getItem": {
+   "en": "Returns the item at the given 1-based index, or nil if absent.",
+   "fr": "Retourne l'élément à l'indice donné (base 1), ou nil s'il n'existe pas."
+  },
+  "GuiDataSource:setItem": {
+   "en": "Stores a value at an existing index only; out-of-range indices are silently ignored. Listeners are notified only when needsNotification is truthy.",
+   "fr": "Stocke une valeur uniquement à un indice existant ; les indices hors limites sont ignorés sans erreur. Les écouteurs ne sont prévenus que si needsNotification est vrai."
+  },
+  "GuiDataSource:iterateRange": {
+   "en": "Returns a generic-for iterator over items from startIndex to endIndex, stopping early at the first nil item. It yields (nextIndex, item), so the first loop variable is the index plus one.",
+   "fr": "Retourne un itérateur de boucle for générique sur les éléments de startIndex à endIndex, qui s'arrête au premier élément nil. Il fournit (indiceSuivant, élément) : la première variable vaut donc l'indice plus un."
+  }
+ }
+}

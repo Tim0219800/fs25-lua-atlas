@@ -1,0 +1,25 @@
+{
+ "fichier": "fence/FenceDeleteSegmentEvent.lua",
+ "module": {
+  "en": "Network event that tells every peer to remove one fence segment, identified by its placeable and a 16-bit segment id. It is broadcast by the server (see FenceRequestDeleteSegmentEvent) and, on receipt, deletes the segment and publishes a message. Subclass of Event on the main channel.",
+  "fr": "Événement réseau qui demande à chaque pair de retirer un segment de clôture, identifié par son placeable et un identifiant de segment sur 16 bits. Il est diffusé par le serveur (voir FenceRequestDeleteSegmentEvent) et, à la réception, supprime le segment et publie un message. Sous-classe d'Event sur le canal principal."
+ },
+ "fonctions": {
+  "FenceDeleteSegmentEvent.emptyNew": {
+   "en": "Creates an empty event instance on the main network channel, used when the event is received from a stream. There is no `new` constructor in this file, so senders must fill `fencePlaceable` and `segmentId` themselves.",
+   "fr": "Crée une instance d'événement vide sur le canal réseau principal, utilisée à la réception depuis un flux. Il n'y a pas de constructeur `new` dans ce fichier : l'émetteur doit renseigner lui-même `fencePlaceable` et `segmentId`."
+  },
+  "FenceDeleteSegmentEvent:readStream": {
+   "en": "Reads the fence placeable (node object) and the UInt16 segment id from the stream, then immediately calls run.",
+   "fr": "Lit le placeable de clôture (objet nœud) et l'identifiant de segment UInt16 depuis le flux, puis appelle aussitôt run."
+  },
+  "FenceDeleteSegmentEvent:writeStream": {
+   "en": "Writes the fence placeable as a node object followed by the segment id as UInt16.",
+   "fr": "Écrit le placeable de clôture comme objet nœud puis l'identifiant de segment en UInt16."
+  },
+  "FenceDeleteSegmentEvent:run": {
+   "en": "If the placeable is synchronized: the server rebroadcasts the event, then the segment is removed from the fence, deleted, and a message is published with the placeable and segment. On the server, the placeable itself is deleted once no segment remains.",
+   "fr": "Si le placeable est synchronisé : le serveur rediffuse l'événement, puis le segment est retiré de la clôture, supprimé, et un message est publié avec le placeable et le segment. Sur le serveur, le placeable est lui-même supprimé quand il ne reste plus de segment."
+  }
+ }
+}

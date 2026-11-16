@@ -1,0 +1,69 @@
+{
+ "fichier": "vehicles/configurations/VehicleConfigurationItem.lua",
+ "module": {
+  "en": "Base class for one entry of a vehicle configuration (for example one color, motor or wheel option). It loads the shared XML attributes (name, description, price, daily upkeep, default and selectable flags, save id, brand, icon, shop offset), then forwards lifecycle calls to every module in VehicleConfigurationItem.GLOBAL_DATA (the VehicleConfigurationData* classes). Subclasses add type-specific data and savegame or network handling.",
+  "fr": "Classe de base d'une entrée de configuration de véhicule (par exemple une couleur, un moteur ou des roues). Elle charge les attributs XML communs (nom, description, prix, coût d'entretien quotidien, indicateurs par défaut et sélectionnable, identifiant de sauvegarde, marque, icône, décalage en boutique), puis transmet les appels de cycle de vie à chaque module de VehicleConfigurationItem.GLOBAL_DATA (les classes VehicleConfigurationData*). Les sous-classes ajoutent les données propres à leur type et la gestion de sauvegarde ou réseau."
+ },
+ "fonctions": {
+  "VehicleConfigurationItem.new": {
+   "en": "Constructor. Sets configName and defaults: empty name, index -1, price and upkeep 0, not default, selectable, no save id, not a yes/no option.",
+   "fr": "Constructeur. Fixe configName et les valeurs par défaut : nom vide, indice -1, prix et entretien à 0, non par défaut, sélectionnable, sans identifiant de sauvegarde, pas une option oui/non."
+  },
+  "VehicleConfigurationItem:loadFromXML": {
+   "en": "Reads the common attributes of the configuration entry from XML (name with optional text params, desc, price, dailyUpkeep, isDefault, isSelectable, saveId, brand, vehicle name and icon, shopOffset), uses the index as name if none, then calls loadConfigItem on every GLOBAL_DATA module. Returns true.",
+   "fr": "Lit depuis le XML les attributs communs de l'entrée (nom avec paramètres de texte facultatifs, desc, price, dailyUpkeep, isDefault, isSelectable, saveId, marque, nom et icône du véhicule, shopOffset), utilise l'indice comme nom s'il n'y en a pas, puis appelle loadConfigItem sur chaque module de GLOBAL_DATA. Renvoie true."
+  },
+  "VehicleConfigurationItem:saveToXMLFile": {
+   "en": "Writes name, save id and active flag of this entry into the savegame XML at the given key. Subclasses extend it with their own data.",
+   "fr": "Écrit le nom, l'identifiant de sauvegarde et l'état actif de cette entrée dans le XML de sauvegarde à la clé donnée. Les sous-classes l'étendent avec leurs propres données."
+  },
+  "VehicleConfigurationItem:loadFromSavegameXMLFile": {
+   "en": "Empty hook called when loading from a savegame; subclasses override it to restore their per-vehicle data.",
+   "fr": "Point d'extension vide appelé au chargement d'une sauvegarde ; les sous-classes le surchargent pour restaurer leurs données par véhicule."
+  },
+  "VehicleConfigurationItem:setIndex": {
+   "en": "Stores the index of this entry in its configuration list and, if no save id is set, uses the index as a string for the save id.",
+   "fr": "Mémorise l'indice de cette entrée dans sa liste de configuration et, si aucun identifiant de sauvegarde n'est défini, utilise l'indice sous forme de texte."
+  },
+  "VehicleConfigurationItem:getNeedsRenaming": {
+   "en": "Returns true if this entry has the same display name as the other one, which postLoad uses to append a number.",
+   "fr": "Renvoie true si cette entrée a le même nom affiché que l'autre, ce que postLoad utilise pour ajouter un numéro."
+  },
+  "VehicleConfigurationItem:onPreLoad": {
+   "en": "Forwards the pre-load stage for a vehicle object to every GLOBAL_DATA module that defines onPreLoad.",
+   "fr": "Transmet l'étape de pré-chargement d'un objet véhicule à chaque module de GLOBAL_DATA qui définit onPreLoad."
+  },
+  "VehicleConfigurationItem:onLoad": {
+   "en": "Forwards the load stage for a vehicle object to every GLOBAL_DATA module that defines onLoad.",
+   "fr": "Transmet l'étape de chargement d'un objet véhicule à chaque module de GLOBAL_DATA qui définit onLoad."
+  },
+  "VehicleConfigurationItem:onPrePostLoad": {
+   "en": "Forwards the stage before post-load to every GLOBAL_DATA module that defines onPrePostLoad.",
+   "fr": "Transmet l'étape précédant le post-chargement à chaque module de GLOBAL_DATA qui définit onPrePostLoad."
+  },
+  "VehicleConfigurationItem:onPostLoad": {
+   "en": "Forwards the post-load stage to every GLOBAL_DATA module that defines onPostLoad.",
+   "fr": "Transmet l'étape de post-chargement à chaque module de GLOBAL_DATA qui définit onPostLoad."
+  },
+  "VehicleConfigurationItem:onLoadFinished": {
+   "en": "Forwards the load-finished stage to every GLOBAL_DATA module that defines onLoadFinished.",
+   "fr": "Transmet l'étape de fin de chargement à chaque module de GLOBAL_DATA qui définit onLoadFinished."
+  },
+  "VehicleConfigurationItem:onSizeLoad": {
+   "en": "Forwards the size computation to every GLOBAL_DATA module that defines onSizeLoad, so configurations can change the vehicle size data.",
+   "fr": "Transmet le calcul de dimensions à chaque module de GLOBAL_DATA qui définit onSizeLoad, afin que les configurations puissent modifier les données de taille du véhicule."
+  },
+  "VehicleConfigurationItem.postLoad": {
+   "en": "Static, runs after all items of a configuration are loaded. Appends a counter to duplicated names via getNeedsRenaming and logs an XML warning for duplicated save ids.",
+   "fr": "Statique, exécutée une fois toutes les entrées d'une configuration chargées. Ajoute un compteur aux noms en double via getNeedsRenaming et journalise un avertissement XML pour les identifiants de sauvegarde en double."
+  },
+  "VehicleConfigurationItem.registerXMLPaths": {
+   "en": "Static. Registers the common configuration XML attributes (title, yes/no option, name, desc, price, upkeep, default, selectable, saveId, brand, vehicle name and icon, shop offsets), then lets each GLOBAL_DATA module register its own.",
+   "fr": "Statique. Enregistre les attributs XML communs de configuration (titre, option oui/non, nom, desc, prix, entretien, défaut, sélectionnable, saveId, marque, nom et icône du véhicule, décalages en boutique), puis laisse chaque module de GLOBAL_DATA enregistrer les siens."
+  },
+  "VehicleConfigurationItem.registerSavegameXMLPaths": {
+   "en": "Static. Registers the savegame XML attributes name, id and isActive for a configuration entry.",
+   "fr": "Statique. Enregistre les attributs XML de sauvegarde name, id et isActive d'une entrée de configuration."
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "fichier": "utils/BitmapUtil.lua",
+ "module": {
+  "en": "Small utility for dumping pixel data to disk as portable anymap (PNM) images, mostly useful for debugging maps and density data. The format table BitmapUtil.FORMAT_TO_PNM used by both functions is not defined in the SDK dump (UNVERIFIED).",
+  "fr": "Petit utilitaire pour écrire des données de pixels sur le disque sous forme d'images portable anymap (PNM), surtout utile pour déboguer des cartes et des données de densité. La table de formats BitmapUtil.FORMAT_TO_PNM utilisée par les deux fonctions n'est pas définie dans le dump du SDK (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "BitmapUtil.writeBitmapToFile": {
+   "en": "Writes a table of pixels to a PNM file, adding the format's extension to the path. Logs an error and returns false on an unknown format or if the file cannot be created; returns true after writing and logging.",
+   "fr": "Écrit une table de pixels dans un fichier PNM en ajoutant l'extension du format au chemin. Journalise une erreur et renvoie false si le format est inconnu ou si le fichier ne peut être créé ; renvoie true après l'écriture et le log."
+  },
+  "BitmapUtil.writeBitmapToFileFromIterator": {
+   "en": "Like writeBitmapToFile but pulls pixels from an iterator function instead of a table, flushing to disk in chunks. Returns false on bad format or file creation failure, true on success.",
+   "fr": "Comme writeBitmapToFile mais récupère les pixels depuis une fonction itératrice plutôt qu'une table, avec écriture par blocs sur le disque. Renvoie false si le format est invalide ou si le fichier n'a pu être créé, true en cas de succès."
+  }
+ }
+}

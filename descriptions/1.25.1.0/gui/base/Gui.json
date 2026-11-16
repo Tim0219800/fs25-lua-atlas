@@ -1,0 +1,197 @@
+{
+ "fichier": "gui/base/Gui.lua",
+ "module": {
+  "en": "Central UI controller (the g_gui instance). It loads GUI profiles, traits and presets, builds screens, dialogs and reusable frames from XML, tracks the current screen and the stack of open dialogs, and routes mouse, touch, key, update, draw and menu-input events to them. It uses FocusManager for focus, GuiSoundPlayer for sounds, g_inputBinding for input contexts, g_messageCenter for open/close messages and g_depthOfFieldManager for dialog blur. It also holds the class mapping that turns XML element names into GuiElement classes (tables and constants defined outside the visible bodies, UNVERIFIED). Client-side UI only.",
+  "fr": "Contrôleur central de l'interface (l'instance g_gui). Il charge profils, traits et préréglages GUI, construit écrans, dialogues et cadres réutilisables depuis le XML, suit l'écran courant et la pile des dialogues ouverts, et aiguille les événements souris, tactile, clavier, update, draw et entrées de menu vers eux. Il s'appuie sur FocusManager pour le focus, GuiSoundPlayer pour les sons, g_inputBinding pour les contextes d'entrée, g_messageCenter pour les messages d'ouverture/fermeture et g_depthOfFieldManager pour le flou des dialogues. Il contient aussi la table qui associe les noms d'éléments XML aux classes GuiElement (tables et constantes définies hors des corps visibles, NON VÉRIFIÉ). Interface côté client uniquement."
+ },
+ "fonctions": {
+  "Gui.new": {
+   "en": "Creates the GUI controller: empty registries for screens, dialogs, profiles, traits and presets, a GuiSoundPlayer registered with FocusManager, the callback closures, and an ads-system occlusion region for the UI (initially inactive).",
+   "fr": "Crée le contrôleur d'interface : registres vides pour écrans, dialogues, profils, traits et préréglages, un GuiSoundPlayer enregistré auprès de FocusManager, les closures de callback, et une région d'occlusion du système de publicité pour l'UI (inactive au départ)."
+  },
+  "Gui:loadPresets": {
+   "en": "Reads Preset name/value pairs below a root key, resolving $preset_ references to earlier presets, and stores them in self.presets. Duplicate names log a dev error unless a reload is in progress. Returns the presets read from this file.",
+   "fr": "Lit les paires nom/valeur des Preset sous une clé racine, en résolvant les références $preset_ vers des préréglages antérieurs, et les stocke dans self.presets. Un nom en double journalise une erreur de dev sauf pendant un rechargement. Retourne les préréglages lus dans ce fichier."
+  },
+  "Gui:loadTraits": {
+   "en": "Loads every Trait element below a root key as a trait GuiProfile and registers it by name; duplicates log a dev error unless reloading.",
+   "fr": "Charge chaque élément Trait sous une clé racine comme GuiProfile de trait et l'enregistre par nom ; les doublons journalisent une erreur de dev sauf pendant un rechargement."
+  },
+  "Gui:loadProfileSet": {
+   "en": "Loads every Profile element below a root key into self.profiles, tagging each with a category, and also loads its Variant children as separate profiles named variantName_profileName that default to the profile as parent. Duplicate names log a dev error.",
+   "fr": "Charge chaque élément Profile sous une clé racine dans self.profiles en lui donnant une catégorie, et charge aussi ses enfants Variant comme profils séparés nommés nomVariante_nomProfil dont le parent par défaut est le profil. Un nom en double journalise une erreur de dev."
+  },
+  "Gui:loadProfiles": {
+   "en": "Opens a profiles XML file and loads presets, traits, top-level profiles and each Category block. Returns true on success, or logs an error and returns false if the file cannot be opened.",
+   "fr": "Ouvre un fichier XML de profils et charge préréglages, traits, profils de premier niveau et chaque bloc Category. Retourne true en cas de succès, ou journalise une erreur et retourne false si le fichier ne peut pas être ouvert."
+  },
+  "Gui:loadGui": {
+   "en": "Builds a screen or frame from a view XML: loads its embedded profiles, creates the root GuiElement under the controller, builds children recursively, exposes controls as fields and raises create callbacks. Registers it as a frame or screen; on failure logs an error, deletes the controller and returns nil. Adjusts size for safe-frame screens.",
+   "fr": "Construit un écran ou un cadre depuis un XML de vue : charge ses profils intégrés, crée l'élément racine sous le contrôleur, construit les enfants récursivement, expose les contrôles comme champs et déclenche les callbacks de création. L'enregistre comme cadre ou écran ; en cas d'échec journalise une erreur, supprime le contrôleur et retourne nil. Ajuste la taille pour les écrans à zone de sécurité."
+  },
+  "Gui:loadGuiRec": {
+   "en": "Recursively instantiates child elements from XML using the element class mapping (uppercase type name), skips profile nodes, warns on unknown types, applies per-type processing functions, then raises the onCreate callback after the children are built.",
+   "fr": "Instancie récursivement les éléments enfants depuis le XML grâce à la table de classes (nom de type en majuscules), ignore les nœuds de profil, avertit pour les types inconnus, applique les fonctions de traitement par type, puis déclenche le callback onCreate une fois les enfants construits."
+  },
+  "Gui:resolveFrameReference": {
+   "en": "Replaces a frame reference element with a clone of the registered frame of that name, resized to the parent, re-targeted, added to the focus system, and deletes the reference element. Returns the original reference if no such frame exists.",
+   "fr": "Remplace un élément de référence de cadre par un clone du cadre enregistré de ce nom, redimensionné au parent, re-ciblé, ajouté au système de focus, et supprime l'élément de référence. Retourne la référence d'origine si aucun cadre de ce nom n'existe."
+  },
+  "Gui:getProfile": {
+   "en": "Returns a profile by name, preferring platform-specific variants (Platform.guiPrefixes, then console_ or mobile_ prefixes). An unknown non-empty name logs a warning and falls back to the base reference profile (Gui.GUI_PROFILE_BASE).",
+   "fr": "Retourne un profil par nom, en préférant les variantes propres à la plateforme (Platform.guiPrefixes, puis préfixes console_ ou mobile_). Un nom inconnu non vide journalise un avertissement et se replie sur le profil de référence de base (Gui.GUI_PROFILE_BASE)."
+  },
+  "Gui:getIsGuiVisible": {
+   "en": "Returns true when a screen is current or any dialog is open.",
+   "fr": "Retourne true quand un écran est courant ou qu'un dialogue est ouvert."
+  },
+  "Gui:getIsDialogVisible": {
+   "en": "Returns true when at least one dialog is open.",
+   "fr": "Retourne true quand au moins un dialogue est ouvert."
+  },
+  "Gui:getIsOverlayGuiVisible": {
+   "en": "Always returns false in this version; a hook for overlay-style views that keep the game display visible.",
+   "fr": "Retourne toujours false dans cette version ; un point d'extension pour les vues en surimpression qui gardent l'affichage du jeu."
+  },
+  "Gui:showGui": {
+   "en": "Opens the screen registered under a name by calling changeScreen with that name's screen class. A nil name is treated as an empty name. Note: it looks up self.guis with the current element rather than a name, which yields nil, so changeScreen falls back to the current GUI as source.",
+   "fr": "Ouvre l'écran enregistré sous un nom en appelant changeScreen avec la classe d'écran de ce nom. Un nom nil est traité comme un nom vide. À noter : il interroge self.guis avec l'élément courant plutôt qu'un nom, ce qui donne nil, donc changeScreen se replie sur le GUI courant comme source."
+  },
+  "Gui:showDialog": {
+   "en": "Opens a dialog by name: optionally closes others, enters the input context (dialog-specific unless the target sets needInput to false), sets focus, pushes it on the stack, calls onOpen, publishes GUI_DIALOG_OPENED and registers a blur area if the target provides one. Returns the root element, or nil for an unknown name.",
+   "fr": "Ouvre un dialogue par nom : ferme éventuellement les autres, entre dans le contexte d'entrée (propre au dialogue sauf si la cible met needInput à false), fixe le focus, l'empile, appelle onOpen, publie GUI_DIALOG_OPENED et enregistre une zone de flou si la cible en fournit une. Retourne l'élément racine, ou nil pour un nom inconnu."
+  },
+  "Gui:closeDialogByName": {
+   "en": "Closes the dialog registered under the given name; does nothing if the name is unknown.",
+   "fr": "Ferme le dialogue enregistré sous le nom donné ; ne fait rien si le nom est inconnu."
+  },
+  "Gui:closeDialog": {
+   "en": "Closes an open dialog: calls onClose, removes it from the stack, pops its blur area, hands listener role and focus back to the previous dialog or screen, reverts the input context and closes the GUI entirely if nothing is visible any more.",
+   "fr": "Ferme un dialogue ouvert : appelle onClose, le retire de la pile, retire sa zone de flou, rend le rôle d'écouteur et le focus au dialogue ou écran précédent, rétablit le contexte d'entrée et ferme entièrement l'interface si plus rien n'est visible."
+  },
+  "Gui:closeAllDialogs": {
+   "en": "Closes every open dialog. Note: it removes entries from the list while iterating it with ipairs, so some dialogs can be skipped when several are open.",
+   "fr": "Ferme tous les dialogues ouverts. À noter : elle retire des entrées de la liste pendant son parcours avec ipairs, donc certains dialogues peuvent être sautés quand plusieurs sont ouverts."
+  },
+  "Gui:registerMenuInput": {
+   "en": "Registers input action events for the menu navigation actions and axes (hidden from the help text), with release handlers for the page and axis actions, and marks the GUI as listening to input.",
+   "fr": "Enregistre des événements d'action d'entrée pour les actions et axes de navigation du menu (masqués dans l'aide), avec des gestionnaires de relâchement pour les actions de page et d'axe, et marque l'interface comme à l'écoute des entrées."
+  },
+  "Gui:mouseEvent": {
+   "en": "Forwards a mouse event to the current listener element, and if it is not consumed, to the listener target's mouseEvent when present.",
+   "fr": "Transmet un événement souris à l'élément écouteur courant et, s'il n'est pas consommé, au mouseEvent de la cible de l'écouteur s'il existe."
+  },
+  "Gui:touchEvent": {
+   "en": "Forwards a touch event to the current listener element, and if it is not consumed, to the listener target's touchEvent when present.",
+   "fr": "Transmet un événement tactile à l'élément écouteur courant et, s'il n'est pas consommé, au touchEvent de la cible de l'écouteur s'il existe."
+  },
+  "Gui:keyEvent": {
+   "en": "Forwards a raw key event to the current listener element, and if it is not consumed, to the target's keyEvent when present. Used by elements that need raw keys such as text input.",
+   "fr": "Transmet un événement clavier brut à l'élément écouteur courant et, s'il n'est pas consommé, au keyEvent de la cible s'il existe. Utilisé par les éléments qui ont besoin des touches brutes, comme la saisie de texte."
+  },
+  "Gui:update": {
+   "en": "Calls update on every open dialog target, then preUpdate and update on the current screen target (checking the screen did not change mid-update), and resets the per-frame input target and handled flag.",
+   "fr": "Appelle update sur la cible de chaque dialogue ouvert, puis preUpdate et update sur la cible de l'écran courant (en vérifiant que l'écran n'a pas changé en cours de route), et réinitialise la cible d'entrée et l'indicateur de traitement de la frame."
+  },
+  "Gui:draw": {
+   "en": "Draws the current screen target, then each dialog target on top. When g_uiDebugEnabled is set, it also renders debug text about the focused element and its neighbours and outlines the focused element.",
+   "fr": "Dessine la cible de l'écran courant, puis celle de chaque dialogue par-dessus. Quand g_uiDebugEnabled est actif, elle affiche aussi un texte de débogage sur l'élément focalisé et ses voisins et entoure l'élément focalisé."
+  },
+  "Gui:notifyControls": {
+   "en": "Dispatches a menu action to one receiver per frame unless FocusManager has it locked: the frame input target element, its target, the focused element if active, then FocusManager itself. Records whether the event was consumed. Returns nothing despite the doc comment.",
+   "fr": "Distribue une action de menu à un seul récepteur par frame sauf si FocusManager la verrouille : l'élément cible d'entrée de la frame, sa cible, l'élément focalisé s'il est actif, puis FocusManager lui-même. Enregistre si l'événement a été consommé. Ne retourne rien malgré le commentaire de doc."
+  },
+  "Gui:onMenuInput": {
+   "en": "Input event callback for menu actions: forwards to notifyControls only when the GUI is listening and no input was handled yet this frame.",
+   "fr": "Callback d'événement d'entrée pour les actions de menu : transmet à notifyControls seulement si l'interface écoute et qu'aucune entrée n'a encore été traitée dans cette frame."
+  },
+  "Gui:onReleaseMovement": {
+   "en": "Callback for the release of a movement axis: handles the release like onReleaseInput and then clears the FocusManager direction locks for that axis.",
+   "fr": "Callback pour le relâchement d'un axe de déplacement : traite le relâchement comme onReleaseInput puis efface les verrous de direction de FocusManager pour cet axe."
+  },
+  "Gui:onReleaseInput": {
+   "en": "Callback for a released menu action: if not locked, calls inputReleaseEvent on the frame input target, its target and the active focused element.",
+   "fr": "Callback pour une action de menu relâchée : si non verrouillée, appelle inputReleaseEvent sur la cible d'entrée de la frame, sur sa cible et sur l'élément focalisé s'il est actif."
+  },
+  "Gui:hasElementInputFocus": {
+   "en": "Returns true if the current listener's target is the given element.",
+   "fr": "Retourne true si la cible de l'écouteur courant est l'élément donné."
+  },
+  "Gui:getScreenInstanceByClass": {
+   "en": "Returns the registered controller instance for a screen class, or nil.",
+   "fr": "Retourne l'instance de contrôleur enregistrée pour une classe d'écran, ou nil."
+  },
+  "Gui:changeScreen": {
+   "en": "Switches to the screen of the given class (nil closes the GUI): closes all dialogs and the previous screen, sets the new current screen, enters the menu input context when opening, sets focus, calls onOpen and publishes GUI_BEFORE/AFTER_OPEN or CLOSE messages. Returns the screen root element, or nil with a dev warning if the class is not registered.",
+   "fr": "Passe à l'écran de la classe donnée (nil ferme l'interface) : ferme tous les dialogues et l'écran précédent, définit le nouvel écran courant, entre dans le contexte d'entrée de menu à l'ouverture, fixe le focus, appelle onOpen et publie les messages GUI_BEFORE/AFTER_OPEN ou CLOSE. Retourne l'élément racine de l'écran, ou nil avec un avertissement de dev si la classe n'est pas enregistrée."
+  },
+  "Gui:makeChangeScreenClosure": {
+   "en": "Returns a function (source, screenClass, returnScreenClass) that calls changeScreen on this instance, so controllers can switch screens without holding g_gui.",
+   "fr": "Retourne une fonction (source, screenClass, returnScreenClass) qui appelle changeScreen sur cette instance, pour que les contrôleurs puissent changer d'écran sans détenir g_gui."
+  },
+  "Gui:toggleCustomInputContext": {
+   "en": "Enters the named custom menu input context when active is true, otherwise leaves the current menu context.",
+   "fr": "Entre dans le contexte d'entrée de menu personnalisé nommé si isActive est vrai, sinon quitte le contexte de menu courant."
+  },
+  "Gui:makeToggleCustomInputContextClosure": {
+   "en": "Returns a function (isActive, contextName) that calls toggleCustomInputContext on this instance.",
+   "fr": "Retourne une fonction (isActive, contextName) qui appelle toggleCustomInputContext sur cette instance."
+  },
+  "Gui:makePlaySampleClosure": {
+   "en": "Returns a function (sampleName) that plays a GUI sample through this instance's GuiSoundPlayer.",
+   "fr": "Retourne une fonction (sampleName) qui joue un échantillon GUI via le GuiSoundPlayer de cette instance."
+  },
+  "Gui:assignPlaySampleCallback": {
+   "en": "If the element includes PlaySampleMixin, gives it the play-sample closure. Returns the same element either way; suitable as an element processing function.",
+   "fr": "Si l'élément inclut PlaySampleMixin, lui donne la closure de lecture de son. Retourne le même élément dans tous les cas ; utilisable comme fonction de traitement d'élément."
+  },
+  "Gui:enterMenuContext": {
+   "en": "Sets the input binding context (default Gui.INPUT_CONTEXT_MENU) as a new level, registers menu input events and marks the GUI as listening.",
+   "fr": "Définit le contexte de liaison des entrées (par défaut Gui.INPUT_CONTEXT_MENU) comme nouveau niveau, enregistre les événements d'entrée de menu et marque l'interface comme à l'écoute."
+  },
+  "Gui:leaveMenuContext": {
+   "en": "Reverts the input context once if the GUI is listening, then keeps listening only while some screen or dialog is still visible.",
+   "fr": "Rétablit une fois le contexte d'entrée si l'interface écoute, puis ne continue d'écouter que tant qu'un écran ou dialogue reste visible."
+  },
+  "Gui:addFrame": {
+   "en": "Registers a loaded frame root element under its controller's name and gives the controller the change-screen, input-context and play-sample callbacks.",
+   "fr": "Enregistre l'élément racine d'un cadre chargé sous le nom de son contrôleur et donne au contrôleur les callbacks de changement d'écran, de contexte d'entrée et de lecture de son."
+  },
+  "Gui:addScreen": {
+   "en": "Registers a screen's root element and controller by class and gives the controller the change-screen, input-context and play-sample callbacks.",
+   "fr": "Enregistre l'élément racine et le contrôleur d'un écran par classe et donne au contrôleur les callbacks de changement d'écran, de contexte d'entrée et de lecture de son."
+  },
+  "Gui:setCurrentMission": {
+   "en": "Passes the current mission to every screen controller that implements setCurrentMission.",
+   "fr": "Transmet la mission courante à chaque contrôleur d'écran qui implémente setCurrentMission."
+  },
+  "Gui:loadMapData": {
+   "en": "Lets the shop config, license plate and color picker screens (not on mobile) and the wardrobe screen (when the platform has one) load map data. Indexes those controllers directly, so each must be registered or this errors.",
+   "fr": "Permet aux écrans de configuration de boutique, de plaques d'immatriculation et de sélecteur de couleur (hors mobile) ainsi qu'à l'écran de garde-robe (si la plateforme en a un) de charger les données de la carte. Elle indexe directement ces contrôleurs, qui doivent donc être enregistrés sinon une erreur survient."
+  },
+  "Gui:unloadMapData": {
+   "en": "Calls unloadMapData on the in-game menu, shop config, license plate and color picker controllers, and on the wardrobe when available. The controllers must be registered or this errors.",
+   "fr": "Appelle unloadMapData sur les contrôleurs du menu en jeu, de configuration de boutique, de plaques et de sélecteur de couleur, ainsi que sur la garde-robe si disponible. Les contrôleurs doivent être enregistrés sinon une erreur survient."
+  },
+  "Gui:setClient": {
+   "en": "Passes the network client object to every screen controller that implements setClient.",
+   "fr": "Transmet l'objet client réseau à chaque contrôleur d'écran qui implémente setClient."
+  },
+  "Gui:setServer": {
+   "en": "Passes the server object to every screen controller that implements setServer. Note: the original doc comment wrongly says client.",
+   "fr": "Transmet l'objet serveur à chaque contrôleur d'écran qui implémente setServer. À noter : le commentaire de doc d'origine dit à tort client."
+  },
+  "Gui.initGuiLibrary": {
+   "en": "Loads the base GUI Lua files with source(): profile, utils, overlay, data source, mixins, tweens and all GuiElement classes, in a fixed order. The argument is the scripts base directory.",
+   "fr": "Charge avec source() les fichiers Lua de base de l'interface : profil, utilitaires, overlay, source de données, mixins, tweens et toutes les classes GuiElement, dans un ordre fixe. L'argument est le répertoire de base des scripts."
+  },
+  "Gui.registerGuiElement": {
+   "en": "Registers a class in Gui.CONFIGURATION_CLASS_MAPPING under the uppercased XML element name, so XML views can instantiate it. Useful for mods adding custom elements.",
+   "fr": "Enregistre une classe dans Gui.CONFIGURATION_CLASS_MAPPING sous le nom d'élément XML en majuscules, pour que les vues XML puissent l'instancier. Utile aux mods qui ajoutent des éléments personnalisés."
+  },
+  "Gui.registerGuiElementProcFunction": {
+   "en": "Registers a processing function in Gui.ELEMENT_PROCESSING_FUNCTIONS under the uppercased element name; loadGuiRec calls it on each newly loaded element of that type and uses its return value as the element.",
+   "fr": "Enregistre une fonction de traitement dans Gui.ELEMENT_PROCESSING_FUNCTIONS sous le nom d'élément en majuscules ; loadGuiRec l'appelle sur chaque élément de ce type nouvellement chargé et utilise sa valeur de retour comme élément."
+  }
+ }
+}

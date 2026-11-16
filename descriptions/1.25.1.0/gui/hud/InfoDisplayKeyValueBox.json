@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/InfoDisplayKeyValueBox.lua",
+ "module": {
+  "en": "Info box (extends InfoDisplayBox) meant to show a title and key/value lines on a three-part background. Only the constructor is in this file: it creates the fieldInfo top/middle/bottom background overlays, colored from HUD.COLOR.BACKGROUND, and a warning icon colored from HUD.COLOR.ACTIVE. Line and title methods are not defined here (UNVERIFIED where they live).",
+  "fr": "Boîte d'information (étend InfoDisplayBox) destinée à afficher un titre et des lignes clé/valeur sur un fond en trois parties. Seul le constructeur figure dans ce fichier : il crée les overlays de fond fieldInfo haut/milieu/bas, colorés d'après HUD.COLOR.BACKGROUND, et une icône d'avertissement colorée d'après HUD.COLOR.ACTIVE. Les méthodes de lignes et de titre ne sont pas définies ici (NON VÉRIFIÉ pour leur emplacement)."
+ },
+ "fonctions": {
+  "InfoDisplayKeyValueBox.new": {
+   "en": "Creates the box with an empty line list, the placeholder title 'Unknown Title', three background overlays and a warning icon overlay created through g_overlayManager.",
+   "fr": "Crée la boîte avec une liste de lignes vide, le titre provisoire 'Unknown Title', trois overlays de fond et une icône d'avertissement créés via g_overlayManager."
+  }
+ }
+}

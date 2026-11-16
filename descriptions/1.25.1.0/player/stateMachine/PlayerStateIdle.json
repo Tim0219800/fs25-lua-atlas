@@ -1,0 +1,25 @@
+{
+ "fichier": "player/stateMachine/PlayerStateIdle.lua",
+ "module": {
+  "en": "On-foot player state used when the player stands still without movement input. It transitions to walking, jumping or crouching.",
+  "fr": "État à pied du joueur utilisé lorsqu'il est immobile sans entrée de déplacement. Il peut passer à walking, jumping ou crouching."
+ },
+ "fonctions": {
+  "PlayerStateIdle.new": {
+   "en": "Creates the idle state for the given player and state machine.",
+   "fr": "Crée l'état idle pour le joueur et la machine à états donnés."
+  },
+  "PlayerStateIdle:createTransitions": {
+   "en": "Adds transitions from idle to walking, jumping and crouching.",
+   "fr": "Ajoute les transitions de idle vers walking, jumping et crouching."
+  },
+  "PlayerStateIdle:calculateIfValidEntryState": {
+   "en": "True if the player is idle and grounded; used to re-enter on foot after a forced state.",
+   "fr": "Vrai si le joueur est inactif et au sol ; sert à revenir à pied après un état forcé."
+  },
+  "PlayerStateIdle:calculateIfIdle": {
+   "en": "True if speed is at most 0.01 and not crouching; for the owner it also requires no movement inputs.",
+   "fr": "Vrai si la vitesse est inférieure ou égale à 0,01 et si le joueur n'est pas accroupi ; pour le propriétaire, exige aussi l'absence d'entrées de déplacement."
+  }
+ }
+}

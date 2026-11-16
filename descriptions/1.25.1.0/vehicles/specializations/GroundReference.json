@@ -1,0 +1,85 @@
+{
+ "fichier": "vehicles/specializations/GroundReference.lua",
+ "module": {
+  "en": "Vehicle specialization for soil-working tools: it declares reference nodes and tracks whether each one is at or below the terrain surface (or the height-map material surface), and optionally only while the tool is lowered. The result drives the power multiplier (load) and lets speed-rotating parts such as wheels or tines turn only while touching the ground. The state is computed on the server and sent to clients in the update stream.",
+  "fr": "Spécialisation de véhicule pour les outils travaillant le sol : elle déclare des nœuds de référence et suit si chacun est au niveau ou sous la surface du terrain (ou de la matière en carte de hauteur), éventuellement seulement quand l'outil est abaissé. Le résultat pilote le multiplicateur de puissance (charge) et permet aux parties tournantes liées à la vitesse (roues, dents) de ne tourner qu'au contact du sol. L'état est calculé côté serveur et envoyé aux clients dans le flux de mise à jour."
+ },
+ "fonctions": {
+  "GroundReference.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite on other specializations.",
+   "fr": "Renvoie toujours true : aucun prérequis envers d'autres spécialisations."
+  },
+  "GroundReference.initSpecialization": {
+   "en": "Registers the XML schema of a ground reference node (node, threshold, only-when-lowered, charge value, force factor, max activation depth) and the groundReferenceNodeIndex attribute on speed rotating parts. The base path constant is defined outside this file (UNVERIFIED).",
+   "fr": "Enregistre le schéma XML d'un nœud de référence au sol (nœud, seuil, actif seulement abaissé, valeur de charge, facteur de force, profondeur maximale d'activation) et l'attribut groundReferenceNodeIndex des parties tournantes. La constante du chemin de base est définie hors de ce fichier (NON VÉRIFIÉ)."
+  },
+  "GroundReference.registerEvents": {
+   "en": "Empty: the specialization registers no custom events.",
+   "fr": "Vide : la spécialisation n'enregistre aucun événement personnalisé."
+  },
+  "GroundReference.registerFunctions": {
+   "en": "Registers the node loading, update and query functions (including forward speed) on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les fonctions de chargement, de mise à jour et d'interrogation des nœuds (dont la vitesse d'avance)."
+  },
+  "GroundReference.registerOverwrittenFunctions": {
+   "en": "Overrides getPowerMultiplier, loadSpeedRotatingPartFromXML and getIsSpeedRotatingPartActive so ground contact influences load and rotating parts.",
+   "fr": "Surcharge getPowerMultiplier, loadSpeedRotatingPartFromXML et getIsSpeedRotatingPartActive pour que le contact au sol influence la charge et les parties tournantes."
+  },
+  "GroundReference.registerEventListeners": {
+   "en": "Subscribes to onLoad, onReadUpdateStream, onWriteUpdateStream and onUpdateTick.",
+   "fr": "Abonne la spécialisation à onLoad, onReadUpdateStream, onWriteUpdateStream et onUpdateTick."
+  },
+  "GroundReference:onLoad": {
+   "en": "Loads all groundReferenceNode entries, then normalizes the charge values and force factors so each set sums to 1. If no node exists, removes the onUpdateTick listener.",
+   "fr": "Charge toutes les entrées groundReferenceNode, puis normalise les valeurs de charge et les facteurs de force pour que chaque ensemble totalise 1. Sans nœud, retire l'écouteur onUpdateTick."
+  },
+  "GroundReference:onReadUpdateStream": {
+   "en": "Client side: reads one boolean per reference node from the stream and stores it as the node's active state.",
+   "fr": "Côté client : lit un booléen par nœud de référence dans le flux et le stocke comme état actif du nœud."
+  },
+  "GroundReference:onWriteUpdateStream": {
+   "en": "Server side: writes the active state of every reference node into the update stream sent to clients.",
+   "fr": "Côté serveur : écrit l'état actif de chaque nœud de référence dans le flux de mise à jour envoyé aux clients."
+  },
+  "GroundReference:onUpdateTick": {
+   "en": "Every tick, refreshes the active state of every ground reference node.",
+   "fr": "À chaque tick, rafraîchit l'état actif de chaque nœud de référence au sol."
+  },
+  "GroundReference:loadGroundReferenceNode": {
+   "en": "Loads one reference node from XML (node, threshold, lowered-only flag, charge value, force factor, max depth). Returns true on success, false when the node is missing. Marks the vehicle as using force factors if any is given.",
+   "fr": "Charge un nœud de référence depuis le XML (nœud, seuil, option abaissé seulement, valeur de charge, facteur de force, profondeur max). Renvoie true en cas de succès, false si le nœud manque. Signale l'usage de facteurs de force si l'un est fourni."
+  },
+  "GroundReference:updateGroundReferenceNode": {
+   "en": "Server only. A node is active when the tool is lowered (if required) and the node lies below terrain height, or below the height-map material height, by the threshold but not deeper than the max activation depth.",
+   "fr": "Serveur uniquement. Un nœud est actif si l'outil est abaissé (si requis) et si le nœud se situe sous la hauteur du terrain, ou de la matière en carte de hauteur, en tenant compte du seuil, sans dépasser la profondeur maximale d'activation."
+  },
+  "GroundReference:getGroundReferenceNodeFromIndex": {
+   "en": "Returns the reference node table at the given 1-based index, or nil.",
+   "fr": "Renvoie la table du nœud de référence à l'indice donné (base 1), ou nil."
+  },
+  "GroundReference:getIsGroundReferenceNodeActive": {
+   "en": "Returns whether the given reference node is currently active (touching the ground).",
+   "fr": "Indique si le nœud de référence donné est actuellement actif (au contact du sol)."
+  },
+  "GroundReference:getIsGroundReferenceNodeThreshold": {
+   "en": "Returns the threshold height of the given reference node, in meters.",
+   "fr": "Renvoie le seuil de hauteur du nœud de référence donné, en mètres."
+  },
+  "GroundReference:getGroundReferenceNodeForwardSpeed": {
+   "en": "Returns the vehicle's last speed if the indexed node is active and the vehicle moves forward, otherwise 0. Used by rotating parts tied to a reference node.",
+   "fr": "Renvoie la dernière vitesse du véhicule si le nœud indexé est actif et que le véhicule avance, sinon 0. Utilisé par les parties tournantes liées à un nœud de référence."
+  },
+  "GroundReference:getPowerMultiplier": {
+   "en": "Scales the parent power multiplier by the ground contact: the sum of force factors of active nodes if any are configured, else the charge value of the last active node. Note: with no active node the factor is 0.",
+   "fr": "Met à l'échelle le multiplicateur de puissance parent selon le contact au sol : somme des facteurs de force des nœuds actifs s'il y en a de configurés, sinon valeur de charge du dernier nœud actif. À noter : sans nœud actif le facteur vaut 0."
+  },
+  "GroundReference:loadSpeedRotatingPartFromXML": {
+   "en": "Extends the parent loader to read groundReferenceNodeIndex for a speed rotating part, warning if the index is 0 since indices start at 1.",
+   "fr": "Étend le chargeur parent pour lire groundReferenceNodeIndex d'une partie tournante, avec un avertissement si l'indice vaut 0 puisque les indices commencent à 1."
+  },
+  "GroundReference:getIsSpeedRotatingPartActive": {
+   "en": "Returns false for a rotating part whose linked reference node is inactive. Warns and clears the link if the index is unknown, then falls back to the parent check.",
+   "fr": "Renvoie false pour une partie tournante dont le nœud de référence lié est inactif. Avertit et supprime le lien si l'indice est inconnu, puis s'en remet au test parent."
+  }
+ }
+}

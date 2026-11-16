@@ -1,56 +1,60 @@
 # gui/elements/SmoothListElement.lua
 
+*[Version française](../../../fr/scripts/gui/elements/SmoothListElement.md)*
+
 Source: `dataS/scripts/gui/elements/SmoothListElement.lua` — FS25 1.25.1.0
+
+✍ Virtualised, smooth-scrolling list element (derived from GuiElement, with IndexChangeSubjectMixin and PlaySampleMixin). A data source supplies sections, item counts, cell type names and cell population, while a delegate receives events. Child ListItemElement cells are moved into a cell database, cloned on demand, recycled through a cache and positioned from computed offsets, so only visible rows exist. It supports vertical or horizontal lists, several items per row, section headers, empty filler cells, mouse, touch and gamepad input. Many members used here (scrollTo, setSelectedItem, setHighlightedItem, updateCellPosition, updateScrollClippers, raiseSliderUpdateEvent, update) are not in the parts of this file described below, so their behaviour is UNVERIFIED.
 
 - **SmoothListElement** inherits from `GuiElement` (l.33)
 
 ## Functions
 
-| Function | Line | Description (FR) |
+| Function | Line | Description |
 |---|---|---|
-| `SmoothListElement.new(target: table?, custom_mt: table?) → table` | 50 |  |
-| `SmoothListElement:loadFromXML(xmlFile: integer, key: string)` | 134 |  |
-| `SmoothListElement:loadProfile(profile: table, applyProfile: any)` | 205 |  |
-| `SmoothListElement:clone(parent: table, includeId: boolean?, suppressOnCreate: boolean?, blockFocusHandlingReload: any) → table` | 254 |  |
-| `SmoothListElement:copyAttributes(src: table)` | 274 |  |
-| `SmoothListElement:onGuiSetupFinished()` | 327 |  |
-| `SmoothListElement:buildCellDatabase()` | 355 |  |
-| `SmoothListElement:iterateOverDatabase(lambda: function)` | 407 |  |
-| `SmoothListElement:delete()` | 425 |  |
-| `SmoothListElement:onOpen()` | 446 |  |
-| `SmoothListElement:onClose()` | 460 |  |
-| `SmoothListElement:setDataSource(dataSource: table)` | 473 |  |
-| `SmoothListElement:setDelegate(delegate: table)` | 484 |  |
-| `SmoothListElement:dequeueReusableCell(name: string) → table` | 500 |  |
-| `SmoothListElement:queueReusableCell(cell: table)` | 526 |  |
-| `SmoothListElement:setTarget(target: table, originalTarget: table?, callOnCreate: boolean?)` | 549 |  |
-| `SmoothListElement:reloadData(forceCellTypeUpdate: boolean)` | 573 |  |
-| `SmoothListElement:reloadSection(section: integer?)` | 600 |  |
-| `SmoothListElement:buildSectionInfo()` | 607 |  |
-| `SmoothListElement:getLengthOfItemFast(section: integer, index: integer) → number` | 791 |  |
-| `SmoothListElement:getWidthOfItemFast(section: integer, index: integer) → number` | 803 |  |
-| `SmoothListElement:updateView(updateSlider: boolean, repopulate: any)` | 814 |  |
-| `SmoothListElement:scrollToStartGamepad()` | 1048 |  |
-| `SmoothListElement:scrollToEndGamepad()` | 1063 |  |
-| `SmoothListElement:scrollToStart()` | 1078 |  |
-| `SmoothListElement:scrollToEnd()` | 1088 |  |
-| `SmoothListElement:scrollToPrevPage()` | 1102 |  |
-| `SmoothListElement:scrollToNextPage()` | 1147 |  |
-| `SmoothListElement:smoothScrollTo(offset: any)` | 1185 |  |
-| `SmoothListElement:applyElementSelection()` | 1279 |  |
-| `SmoothListElement:clearElementSelection()` | 1289 |  |
-| `SmoothListElement:getItemCount() → Number` | 1455 |  |
-| `SmoothListElement:getSelectedIndexInSection()` | 1461 |  |
-| `SmoothListElement:getSelectedPath()` | 1473 |  |
-| `SmoothListElement:getElementAtSectionIndex(section: any, index: any)` | 1479 |  |
-| `SmoothListElement:activateInput()` | 1534 |  |
-| `SmoothListElement:onInputDown()` | 1576 |  |
-| `SmoothListElement:onInputUp()` | 1585 |  |
-| `SmoothListElement:notifyDoubleClick(section: any, index: any, element: any)` | 1598 |  |
-| `SmoothListElement:notifyClick(section: any, index: any, element: any, wasAlreadySelected: any)` | 1604 |  |
-| `SmoothListElement:mouseEvent(posX: any, posY: any, isDown: any, isUp: any, button: any, eventUsed: any)` | 1610 |  |
-| `SmoothListElement:touchEvent(posX: any, posY: any, isDown: any, isUp: any, touchId: any, eventUsed: any) → any` | 1681 |  |
-| `SmoothListElement:canReceiveFocus()` | 1906 |  |
-| `SmoothListElement:onFocusActivate()` | 1912 |  |
-| `SmoothListElement:onFocusEnter()` | 1934 |  |
-| `SmoothListElement:onFocusLeave()` | 1944 |  |
+| `SmoothListElement.new(target: table?, custom_mt: table?) → table` | 50 | ✍ Constructor. Mixes in index-change and sound mixins and sets defaults: vertical, one lateral item, no spacing, selection at 1/1, mouse scrolling on, double-click interval 400 ms, touch scrolling only on touch platforms, empty cache and no sections. |
+| `SmoothListElement:loadFromXML(xmlFile: integer, key: string)` | 134 | ✍ Loads list settings from XML: callbacks (onScroll, onDoubleClick, onClick, onPressed), orientation, spacing, alignment, selection and scroll options, empty indicator id, delegate, data source, section header cell and clipper element names. Note: the listDataSource branch tests delegateName instead of dataSourceName, apparently a typo. |
+| `SmoothListElement:loadProfile(profile: table, applyProfile: any)` | 205 | ✍ Loads the same list settings from a GUI profile (orientation, spacing, alignment, scrolling, selection, focus and empty-row options, empty indicator id). Delegate, data source, callbacks and clipper names are not read from profiles. |
+| `SmoothListElement:clone(parent: table, includeId: boolean?, suppressOnCreate: boolean?, blockFocusHandlingReload: any) → table` | 254 | ✍ Clones the list through the parent class, then clones every cell of the cell database for the copy and creates empty caches with the same names. Returns the new list. |
+| `SmoothListElement:copyAttributes(src: table)` | 274 | ✍ Copies data source, delegate, cell and clipper names, layout, spacing, selection and scroll options, axes, callbacks and loaded flag from a source list, and clones the sound mixin. |
+| `SmoothListElement:onGuiSetupFinished()` | 327 | ✍ Called once the screen is built. Resolves the clipper elements and the empty indicator (made visible), and on first call builds the cell database from the child cells. |
+| `SmoothListElement:buildCellDatabase()` | 355 | ✍ Moves each ListItemElement child into the cell database by name (auto-naming unnamed ones), unlinks it and removes it from the focus manager. Warns and drops an unknown section header name, and records a single cell type when only one exists. |
+| `SmoothListElement:iterateOverDatabase(lambda: function)` | 407 | ✍ Calls the given function on every template cell in the database and every recycled cell in the cache. Does not visit cells currently shown in the list. |
+| `SmoothListElement:delete()` | 425 | ✍ Deletes all cached cells and database cells, then deletes the list through the parent class (which handles the visible children). |
+| `SmoothListElement:onOpen()` | 446 | ✍ When the screen opens, applies a selection stored earlier while the list was hidden (with sound suppressed) and clears the stored indices. |
+| `SmoothListElement:onClose()` | 460 | ✍ When the screen closes, if a smooth scroll is in progress, jumps immediately to its target offset via scrollTo (not defined in the visible code, UNVERIFIED). |
+| `SmoothListElement:setDataSource(dataSource: table)` | 473 | ✍ Sets the object that supplies sections, counts, cell types and cell contents. Also becomes the delegate if none is set yet. |
+| `SmoothListElement:setDelegate(delegate: table)` | 484 | ✍ Sets the object that receives list events such as selection changes. Also becomes the data source if none is set yet. |
+| `SmoothListElement:dequeueReusableCell(name: string) → table` | 500 | ✍ Returns a cell of the given type, taking one from the cache and re-adding it as a child, or cloning the template. Returns nil for an unknown type. Registers the cell with the focus manager. |
+| `SmoothListElement:queueReusableCell(cell: table)` | 526 | ✍ Returns a cell to the cache: clears its slot in its section, resets its section indices, unlinks it and removes it from the focus manager. |
+| `SmoothListElement:setTarget(target: table, originalTarget: table?, callOnCreate: boolean?)` | 549 | ✍ Sets the target through the parent class, replaces the delegate and data source when they equal the original target, and propagates the new target to all template and cached cells. |
+| `SmoothListElement:reloadData(forceCellTypeUpdate: boolean)` | 573 | ✍ Rebuilds section info and refreshes the view with repopulation; call it whenever the data changes. With forceCellTypeUpdate, shown cells are recycled first so their types are re-queried. Does nothing without a data source; sound is suppressed meanwhile. |
+| `SmoothListElement:reloadSection(section: integer?)` | 600 | ✍ Meant to reload one section but currently just calls reloadData for the whole list (marked TODO in the source). The section argument is unused. |
+| `SmoothListElement:buildSectionInfo()` | 607 | ✍ Asks the data source for section and item counts, computes per-item length and lateral offsets, row layout, section bounds, content size, scroll step and alignment offset, clamps the selection and view offset, toggles the empty indicator and updates the clippers. |
+| `SmoothListElement:getLengthOfItemFast(section: integer, index: integer) → number` | 791 | ✍ Returns the cell template length along the list's length axis for the item, using the single cell type if there is one, else the data source's cell type for that item. |
+| `SmoothListElement:getWidthOfItemFast(section: integer, index: integer) → number` | 803 | ✍ Returns the cell template size along the list's width axis for the item, using the single cell type if there is one, else the data source's cell type. |
+| `SmoothListElement:updateView(updateSlider: boolean, repopulate: any)` | 814 | ✍ Works out the first and last visible items from the view offset, recycles cells outside the range, creates and populates missing cells (headers, items, empty fillers), repopulates existing ones if asked, repositions all cells, then raises the slider update unless updateSlider is false. |
+| `SmoothListElement:scrollToStartGamepad()` | 1048 | ✍ Called each frame while the gamepad jump-to-start input is held: starts a hold timer and, once the delay has passed, calls scrollToStart a single time. |
+| `SmoothListElement:scrollToEndGamepad()` | 1063 | ✍ Called each frame while the gamepad jump-to-end input is held: starts a hold timer and, once the delay has passed, calls scrollToEnd a single time. |
+| `SmoothListElement:scrollToStart()` | 1078 | ✍ Selects the first item: of the whole list with a single section, left Ctrl held or a non-keyboard input mode, otherwise the first item of the current section. |
+| `SmoothListElement:scrollToEnd()` | 1088 | ✍ Selects the last item: of the whole list with a single section, left Ctrl held or a non-keyboard input mode, otherwise the last item of the current section. Errors if the list has no sections. |
+| `SmoothListElement:scrollToPrevPage()` | 1102 | ✍ Page up. With one section or Ctrl held, selects the item that starts the previous page of the content; otherwise selects the first item of the previous section. Note: targetOffset can stay nil if no matching cell is found. |
+| `SmoothListElement:scrollToNextPage()` | 1147 | ✍ Page down. With one section or Ctrl held, selects the first item beyond the visible area and smooth-scrolls to it (or selects the last item if at the end); otherwise selects the first item of the next section and scrolls it to the top. |
+| `SmoothListElement:smoothScrollTo(offset: any)` | 1185 | ✍ Sets a target view offset (clamped to the content) that the list moves toward over time. Note: with listSmoothingDisabled it calls scrollTo but does not return, so the smooth target is still set afterwards. |
+| `SmoothListElement:applyElementSelection()` | 1279 | ✍ Marks the visible cell matching the selected section and index as selected and others as not, unless selection is hidden when the list lacks focus. |
+| `SmoothListElement:clearElementSelection()` | 1289 | ✍ Sets every child cell that supports it to not selected, for example when the list loses focus. |
+| `SmoothListElement:getItemCount() → Number` | 1455 | ✍ Returns the total number of items from the last section scan (headers are not counted in the sum computed in buildSectionInfo). |
+| `SmoothListElement:getSelectedIndexInSection()` | 1461 | ✍ Returns the selected index inside its section. |
+| `SmoothListElement:getSelectedPath()` | 1473 | ✍ Returns the selected section index and the selected index within that section. |
+| `SmoothListElement:getElementAtSectionIndex(section: any, index: any)` | 1479 | ✍ Returns the currently shown cell for a section and index, or nil if the section does not exist or the cell is not displayed. |
+| `SmoothListElement:activateInput()` | 1534 | ✍ Handles a click or tap on the hovered cell: detects double clicks within the interval, selects the cell (unless the press was a scroll gesture) and raises click or double-click notifications. Resets the click timer if nothing is hovered. |
+| `SmoothListElement:onInputDown()` | 1576 | ✍ Marks the input as pressed, resets its timer and gives focus to this list. |
+| `SmoothListElement:onInputUp()` | 1585 | ✍ Marks the input as released and resets the accumulated touch movement distance. |
+| `SmoothListElement:notifyDoubleClick(section: any, index: any, element: any)` | 1598 | ✍ Raises onDoubleClickCallback with the list, section, index, cell and a true flag. |
+| `SmoothListElement:notifyClick(section: any, index: any, element: any, wasAlreadySelected: any)` | 1604 | ✍ Raises onClickCallback with the list, section, index, cell and whether the item was already selected. |
+| `SmoothListElement:mouseEvent(posX: any, posY: any, isDown: any, isUp: any, button: any, eventUsed: any)` | 1610 | ✍ Handles mouse input when active and not ignoring the mouse: updates the hovered cell (headers and fillers excluded), starts and activates on left press, scrolls or moves the selection with the wheel, and ends the press on release. Returns whether the event was used. |
+| `SmoothListElement:touchEvent(posX: any, posY: any, isDown: any, isUp: any, touchId: any, eventUsed: any) → any` | 1681 | ✍ Handles touch input: tracks the hovered cell, accumulates drag distance and delta for touch scrolling when supported, keeps the touch id, and activates the cell on release if the gesture was not a scroll. Returns whether the event was used. |
+| `SmoothListElement:canReceiveFocus()` | 1906 | ✍ Returns true if the list is visible, handles focus, is enabled and either has items or canReceiveFocusWhileEmpty is set. |
+| `SmoothListElement:onFocusActivate()` | 1912 | ✍ Called when the focused list is activated (confirm). Does nothing if empty or ignoring activation; otherwise raises the click callback for the selected item, or else the double-click callback, if one is set. |
+| `SmoothListElement:onFocusEnter()` | 1934 | ✍ On gaining focus, applies the selection display and tells the delegate through onListSelectionChanged (if defined) with the selected section and index. |
+| `SmoothListElement:onFocusLeave()` | 1944 | ✍ On losing focus, clears the cell selection display if selection is not shown without focus, then runs the parent handler. |

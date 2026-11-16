@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/VehicleTeleportEvent.lua",
+ "module": {
+  "en": "Network event asking the server to teleport a vehicle to a world position and heading. It is sent on the main channel and the handler only acts when the receiving side is the server. The file has no constructor or stream functions in this dump, only the empty constructor and `run`.",
+  "fr": "Événement réseau demandant au serveur de téléporter un véhicule à une position et un cap du monde. Il utilise le canal principal et le gestionnaire n'agit que si le récepteur est le serveur. Le fichier ne contient ici que le constructeur vide et `run`, pas de fonctions de flux."
+ },
+ "fonctions": {
+  "VehicleTeleportEvent.emptyNew": {
+   "en": "Creates an empty event instance on the main network channel, used before reading a stream.",
+   "fr": "Crée une instance d'événement vide sur le canal réseau principal, utilisée avant la lecture d'un flux."
+  },
+  "VehicleTeleportEvent:run": {
+   "en": "On the server only, if the vehicle exists and is synchronized, calls `g_currentMission:teleportVehicle` with the stored x, z and rotY. Ignored when received by a client.",
+   "fr": "Uniquement côté serveur, si le véhicule existe et est synchronisé, appelle `g_currentMission:teleportVehicle` avec x, z et rotY stockés. Ignoré s'il est reçu par un client."
+  }
+ }
+}

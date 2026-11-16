@@ -1,0 +1,33 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableTrainSystemRentEvent.lua",
+ "module": {
+  "en": "Network event that synchronizes renting or returning the railroad of a PlaceableTrainSystem, along with the renting farm and a spline position. Use `sendEvent` to route it correctly from client or server. Note: the doc comments in the source (ai start, swath) were copied from other events and do not match.",
+  "fr": "Événement réseau qui synchronise la location ou le retour de la voie ferrée d'un PlaceableTrainSystem, avec la ferme locataire et une position sur la spline. Utiliser `sendEvent` pour l'acheminer correctement depuis le client ou le serveur. À noter : les commentaires du source (démarrage IA, andain) viennent d'autres événements et ne correspondent pas."
+ },
+ "fonctions": {
+  "PlaceableTrainSystemRentEvent.emptyNew": {
+   "en": "Creates an empty event using the class metatable, with the default channel.",
+   "fr": "Crée un événement vide avec la métatable de la classe, sur le canal par défaut."
+  },
+  "PlaceableTrainSystemRentEvent.new": {
+   "en": "Builds the event from the train system object, a rented flag, the renting farm id and the spline position. Farm id and position only matter when rented.",
+   "fr": "Construit l'événement à partir de l'objet système ferroviaire, d'un indicateur de location, de l'id de ferme locataire et de la position sur la spline. L'id de ferme et la position ne comptent que si loué."
+  },
+  "PlaceableTrainSystemRentEvent:readStream": {
+   "en": "Reads the object and the rented flag; if rented, also the farm id and the Float32 spline position. Then runs the event.",
+   "fr": "Lit l'objet et l'indicateur de location ; si loué, lit aussi l'id de ferme et la position spline Float32. Puis exécute l'événement."
+  },
+  "PlaceableTrainSystemRentEvent:writeStream": {
+   "en": "Writes the object and the rented flag; if rented, also the farm id and the spline position.",
+   "fr": "Écrit l'objet et l'indicateur de location ; si loué, écrit aussi l'id de ferme et la position spline."
+  },
+  "PlaceableTrainSystemRentEvent:run": {
+   "en": "If the object is synchronized, calls `rentRailroad` or `returnRailroad` (both with a no-send flag). When received by the server, it rebroadcasts a new event to the other clients, skipping the sender connection.",
+   "fr": "Si l'objet est synchronisé, appelle `rentRailroad` ou `returnRailroad` (avec un indicateur sans envoi). Reçu par le serveur, il rediffuse un nouvel événement aux autres clients, sans la connexion expéditrice."
+  },
+  "PlaceableTrainSystemRentEvent.sendEvent": {
+   "en": "Static helper: unless `noEventSend` is true, the server broadcasts the event, while a client sends it to the server connection.",
+   "fr": "Fonction statique : sauf si `noEventSend` est true, le serveur diffuse l'événement, tandis qu'un client l'envoie à la connexion serveur."
+  }
+ }
+}

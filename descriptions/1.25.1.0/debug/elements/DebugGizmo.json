@@ -1,0 +1,17 @@
+{
+ "fichier": "debug/elements/DebugGizmo.lua",
+ "module": {
+  "en": "DebugGizmo is a debug element that draws an axis gizmo (position, direction, up) with optional text, derived from DebugElement. The static renderer `DebugGizmo.renderAtPosition` is absent from this dump (UNVERIFIED).",
+  "fr": "DebugGizmo est un élément de débogage qui dessine un repère d'axes (position, direction, haut) avec texte optionnel, dérivé de DebugElement. Le rendu statique `DebugGizmo.renderAtPosition` est absent de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugGizmo:getShouldBeDrawn": {
+   "en": "Override that hides the gizmo when a GUI is visible (if hiding is on) or when it is beyond the clip distance of the camera, tested with `DebugUtil.isPositionInCameraRange`. Unlike the base class it ignores the visibility flag.",
+   "fr": "Redéfinition qui masque le repère lorsqu'une interface est visible (si le masquage est actif) ou au-delà de la distance de clip de la caméra, testée avec `DebugUtil.isPositionInCameraRange`. Contrairement à la classe de base, elle ignore l'indicateur de visibilité."
+  },
+  "DebugGizmo:draw": {
+   "en": "Forwards position, direction, up, text, solid, scale, text size, text colour and text offsets to `DebugGizmo.renderAtPosition`.",
+   "fr": "Transmet position, direction, haut, texte, option solide, échelle, taille et couleur du texte et décalages du texte à `DebugGizmo.renderAtPosition`."
+  }
+ }
+}

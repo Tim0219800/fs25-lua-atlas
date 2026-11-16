@@ -1,0 +1,41 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatistic.lua",
+ "module": {
+  "en": "Per-farmland statistics holder of Precision Farming. It owns two FarmlandStatisticCounter objects, one for the current period and one for the whole game, and handles XML save/load, network stream sync, reset and increments.",
+  "fr": "Conteneur de statistiques par parcelle de Precision Farming. Il possède deux objets FarmlandStatisticCounter, l'un pour la période en cours et l'autre pour toute la partie, et gère la sauvegarde/chargement XML, la synchronisation réseau, la remise à zéro et les incréments."
+ },
+ "fonctions": {
+  "FarmlandStatistic.new": {
+   "en": "Constructor. Stores the farmland id, a hasChanged flag and creates fresh period and total counters.",
+   "fr": "Constructeur. Mémorise l'id de parcelle, un indicateur hasChanged et crée de nouveaux compteurs de période et total."
+  },
+  "FarmlandStatistic:loadFromItemsXML": {
+   "en": "Loads both counters from the items XML if the stored #farmlandId matches this statistic; otherwise logs a warning and loads nothing.",
+   "fr": "Charge les deux compteurs depuis le XML d'items si #farmlandId correspond à cette statistique ; sinon journalise un avertissement et ne charge rien."
+  },
+  "FarmlandStatistic:saveToXMLFile": {
+   "en": "Writes the farmland id and both counters (periodCounter, totalCounter) under the given XML key.",
+   "fr": "Écrit l'id de parcelle et les deux compteurs (periodCounter, totalCounter) sous la clé XML donnée."
+  },
+  "FarmlandStatistic:onReadStream": {
+   "en": "Client side on join: reads period then total counter from the stream. Order must match onWriteStream.",
+   "fr": "Côté client à la connexion : lit le compteur de période puis le total depuis le flux. L'ordre doit correspondre à onWriteStream."
+  },
+  "FarmlandStatistic:onWriteStream": {
+   "en": "Server side on join: writes period then total counter to the stream.",
+   "fr": "Côté serveur à la connexion : écrit le compteur de période puis le total dans le flux."
+  },
+  "FarmlandStatistic:reset": {
+   "en": "Resets the period counter; also resets the total counter when clearTotal is true.",
+   "fr": "Remet à zéro le compteur de période ; remet aussi le total à zéro si clearTotal est vrai."
+  },
+  "FarmlandStatistic:getValue": {
+   "en": "Returns the named value from the total counter if total is true, otherwise from the period counter. Returns 0 for unknown names.",
+   "fr": "Renvoie la valeur nommée du compteur total si total est vrai, sinon du compteur de période. Renvoie 0 pour un nom inconnu."
+  },
+  "FarmlandStatistic:updateStatistic": {
+   "en": "Adds a value to the named field of both counters (only fields that exist) and sets hasChanged.",
+   "fr": "Ajoute une valeur au champ nommé des deux compteurs (seulement s'il existe) et active hasChanged."
+  }
+ }
+}

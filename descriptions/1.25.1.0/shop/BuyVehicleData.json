@@ -1,0 +1,73 @@
+{
+ "fichier": "shop/BuyVehicleData.lua",
+ "module": {
+  "en": "Data holder for buying a vehicle or changing an existing vehicle's configuration: store item, configurations, lease flag, owner, license plate, sale item and price. It is serialized for multiplayer (using g_vehicleConfigurationManager) and executes the purchase through VehicleLoadingData at given store places. The onBought callback used by buy is not defined in this file (UNVERIFIED).",
+  "fr": "Conteneur de données pour l'achat d'un véhicule ou la modification de la configuration d'un véhicule existant : article de boutique, configurations, drapeau de location, propriétaire, plaque d'immatriculation, article en vente et prix. Il est sérialisé pour le multijoueur (avec g_vehicleConfigurationManager) et exécute l'achat via VehicleLoadingData sur des emplacements de boutique donnés. Le callback onBought utilisé par buy n'est pas défini dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "BuyVehicleData.new": {
+   "en": "Creates empty purchase data: no item, empty configuration tables, not leased, owner EVERYONE, no license plate or sale item, price 0.",
+   "fr": "Crée des données d'achat vides : pas d'article, tables de configuration vides, non loué, propriétaire EVERYONE, pas de plaque ni d'article en vente, prix 0."
+  },
+  "BuyVehicleData:isValid": {
+   "en": "Returns true when a store item is set; on console builds its XML file must also exist.",
+   "fr": "Retourne true quand un article de boutique est défini ; sur les versions console, son fichier XML doit aussi exister."
+  },
+  "BuyVehicleData:setStoreItem": {
+   "en": "Sets the store item to buy.",
+   "fr": "Définit l'article de boutique à acheter."
+  },
+  "BuyVehicleData:setIsFreeOfCharge": {
+   "en": "Sets whether the vehicle is given for free, for example as a reward.",
+   "fr": "Définit si le véhicule est offert gratuitement, par exemple comme récompense."
+  },
+  "BuyVehicleData:setConfigurations": {
+   "en": "Stores the selected and bought configurations (nil keeps the current ones) and marks every selected configuration index as bought.",
+   "fr": "Enregistre les configurations choisies et achetées (nil conserve les actuelles) et marque comme acheté chaque indice de configuration choisi."
+  },
+  "BuyVehicleData:setConfigurationData": {
+   "en": "Stores the per-configuration extra data; nil keeps the current value.",
+   "fr": "Enregistre les données supplémentaires par configuration ; nil conserve la valeur actuelle."
+  },
+  "BuyVehicleData:setLeaseVehicle": {
+   "en": "Sets whether the vehicle is leased instead of bought; this changes the price in updatePrice and the property state in buy.",
+   "fr": "Définit si le véhicule est loué plutôt qu'acheté ; cela modifie le prix dans updatePrice et l'état de propriété dans buy."
+  },
+  "BuyVehicleData:setOwnerFarmId": {
+   "en": "Sets the id of the farm that will own the vehicle.",
+   "fr": "Définit l'id de la ferme qui sera propriétaire du véhicule."
+  },
+  "BuyVehicleData:setLicensePlateData": {
+   "en": "Sets the license plate data transmitted with the purchase.",
+   "fr": "Définit les données de plaque d'immatriculation transmises avec l'achat."
+  },
+  "BuyVehicleData:setSaleItem": {
+   "en": "Sets the used-vehicle sale entry when the purchase comes from the sales list; it also influences the price and is passed to the loading data.",
+   "fr": "Définit l'entrée de vente de véhicule d'occasion quand l'achat provient de la liste des ventes ; elle influence aussi le prix et est transmise aux données de chargement."
+  },
+  "BuyVehicleData:setPrice": {
+   "en": "Sets the purchase price directly, overriding any computed price.",
+   "fr": "Définit directement le prix d'achat, en remplaçant tout prix calculé."
+  },
+  "BuyVehicleData:updatePrice": {
+   "en": "Recomputes the price from the economy manager for the item, configurations and sale item; for a lease it converts that price into the initial leasing price.",
+   "fr": "Recalcule le prix via le gestionnaire d'économie pour l'article, les configurations et l'article en vente ; pour une location, il convertit ce prix en prix de location initial."
+  },
+  "BuyVehicleData:getIsLimitedObjectPurchase": {
+   "en": "Opens the store item's XML and returns two booleans: bale purchase and pallet purchase, from the `vehicle.multipleItemPurchase#isVehicle` attribute. Both are false if the element is absent.",
+   "fr": "Ouvre le XML de l'article de boutique et retourne deux booléens : achat de balles et achat de palettes, d'après l'attribut `vehicle.multipleItemPurchase#isVehicle`. Les deux sont false si l'élément est absent."
+  },
+  "BuyVehicleData:readStream": {
+   "en": "Reads from a network stream the store item, free flag, configurations, lease flag, owner farm, license plate data and a sale id (0 means none, otherwise it looks up the sale via vehicleSaleSystem). The price is not transmitted.",
+   "fr": "Lit depuis un flux réseau l'article, le drapeau de gratuité, les configurations, le drapeau de location, la ferme propriétaire, les données de plaque et un id de vente (0 signifie aucune, sinon recherche via vehicleSaleSystem). Le prix n'est pas transmis."
+  },
+  "BuyVehicleData:writeStream": {
+   "en": "Writes the same fields as readStream, in the same order, to a network stream; the sale item is sent as its id or 0.",
+   "fr": "Écrit dans un flux réseau les mêmes champs que readStream, dans le même ordre ; l'article en vente est envoyé sous forme d'id ou 0."
+  },
+  "BuyVehicleData:buy": {
+   "en": "Starts the purchase by loading the vehicle(s) with a VehicleLoadingData configured with the item, configurations, store places, owned or leased state, owner and sale item. The callback is wrapped and called through self.onBought, not defined here (UNVERIFIED).",
+   "fr": "Lance l'achat en chargeant le ou les véhicules avec un VehicleLoadingData configuré avec l'article, les configurations, les emplacements de boutique, l'état possédé ou loué, le propriétaire et l'article en vente. Le callback est encapsulé et appelé via self.onBought, non défini ici (NON VÉRIFIÉ)."
+  }
+ }
+}

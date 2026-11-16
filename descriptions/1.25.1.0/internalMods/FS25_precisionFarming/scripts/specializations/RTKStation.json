@@ -1,0 +1,37 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/specializations/RTKStation.lua",
+ "module": {
+  "en": "Placeable specialization for RTK base stations of Precision Farming. It has no XML paths or functions of its own and only registers and unregisters the placeable with the precision farming AI extension when placed or deleted.",
+  "fr": "Spécialisation de placeable pour les stations de base RTK de Precision Farming. Elle n'a ni chemin XML ni fonction propre et se contente d'enregistrer ou retirer le placeable auprès de l'extension IA de precision farming à la pose et à la suppression."
+ },
+ "fonctions": {
+  "RTKStation.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is needed.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "RTKStation.registerFunctions": {
+   "en": "Empty: the specialization adds no new placeable functions.",
+   "fr": "Vide : la spécialisation n'ajoute aucune fonction au placeable."
+  },
+  "RTKStation.registerOverwrittenFunctions": {
+   "en": "Empty: no placeable function is overwritten.",
+   "fr": "Vide : aucune fonction du placeable n'est surchargée."
+  },
+  "RTKStation.registerEventListeners": {
+   "en": "Subscribes the placeable type to onFinalizePlacement and onDelete.",
+   "fr": "Abonne le type de placeable à onFinalizePlacement et onDelete."
+  },
+  "RTKStation.registerXMLPaths": {
+   "en": "Empty: no XML keys are registered.",
+   "fr": "Vide : aucune clé XML n'est enregistrée."
+  },
+  "RTKStation:onFinalizePlacement": {
+   "en": "Registers this station with g_precisionFarming.aiExtension via registerRTKStation, if the precision farming object exists. What the extension does with it is UNVERIFIED here.",
+   "fr": "Enregistre cette station auprès de g_precisionFarming.aiExtension via registerRTKStation, si l'objet precision farming existe. Ce que fait l'extension ensuite est NON VÉRIFIÉ ici."
+  },
+  "RTKStation:onDelete": {
+   "en": "Unregisters this station from g_precisionFarming.aiExtension when the placeable is deleted, if precision farming exists.",
+   "fr": "Retire cette station de g_precisionFarming.aiExtension à la suppression du placeable, si precision farming existe."
+  }
+ }
+}

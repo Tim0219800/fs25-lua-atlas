@@ -1,0 +1,73 @@
+{
+ "fichier": "gui/elements/VideoElement.lua",
+ "module": {
+  "en": "GUI element that plays a video overlay (engine functions createVideoOverlay, playVideoOverlay, etc.; their internals are UNVERIFIED), derived from GuiElement. It supports looping, volume, optional subtitles loaded from an XML next to the video, an optional playback bar and a remaining-time label referenced by element id, and an onEndVideo callback. The video can be skipped by mouse or key when allowStop is set.",
+  "fr": "Élément GUI qui lit une vidéo via un overlay vidéo (fonctions moteur createVideoOverlay, playVideoOverlay, etc. ; leur fonctionnement interne est NON VÉRIFIÉ), dérivé de GuiElement. Il gère la boucle, le volume, des sous-titres optionnels chargés depuis un XML placé à côté de la vidéo, une barre de progression et une étiquette de temps restant référencées par id, ainsi qu'un callback onEndVideo. La vidéo peut être interrompue à la souris ou au clavier si allowStop est actif."
+ },
+ "fonctions": {
+  "VideoElement.new": {
+   "en": "Constructor. Initialises video filename, looping off, volume 1, empty subtitles and the optional subtitle/progress-bar/time-left element references.",
+   "fr": "Constructeur. Initialise le nom de fichier vidéo, la boucle désactivée, le volume à 1, des sous-titres vides et les références optionnelles aux éléments de sous-titres/barre de progression/temps restant."
+  },
+  "VideoElement:loadFromXML": {
+   "en": "Reads videoFilename, volume, allowStop, isLooping, the subtitle/playbackBar/timeLeft element ids and the onEndVideo callback from XML, then loads the video through changeVideo.",
+   "fr": "Lit depuis le XML videoFilename, volume, allowStop, isLooping, les ids des éléments sous-titres/barre de progression/temps restant et le callback onEndVideo, puis charge la vidéo via changeVideo."
+  },
+  "VideoElement:loadProfile": {
+   "en": "Reads the same video settings and element ids from a GUI profile; unlike the XML path it does not load the video itself.",
+   "fr": "Lit les mêmes réglages vidéo et ids d'éléments depuis un profil GUI ; contrairement au chemin XML, il ne charge pas la vidéo."
+  },
+  "VideoElement:copyAttributes": {
+   "en": "Copies volume, flags, callback, subtitles and element ids from a source and loads the source video via changeVideo (which resets the subtitles first).",
+   "fr": "Copie le volume, les options, le callback, les sous-titres et les ids d'éléments depuis une source et charge sa vidéo via changeVideo (qui réinitialise d'abord les sous-titres)."
+  },
+  "VideoElement:delete": {
+   "en": "Stops and deletes the video overlay, then calls the parent delete.",
+   "fr": "Arrête et supprime l'overlay vidéo, puis appelle le delete du parent."
+  },
+  "VideoElement:loadSubtitles": {
+   "en": "Looks for an XML named like the video file (without extension) and reads its Subtitles.Subtitle entries (startTime, endTime, text translated via g_i18n). Note: the path comes from self.videoFilename, not from the argument, which is only tested for nil.",
+   "fr": "Cherche un XML nommé comme le fichier vidéo (sans extension) et lit ses entrées Subtitles.Subtitle (startTime, endTime, text traduit via g_i18n). À noter : le chemin vient de self.videoFilename et non de l'argument, qui est seulement testé contre nil."
+  },
+  "VideoElement:mouseEvent": {
+   "en": "When visible, passes the event to the parent; if unused and allowStop is set, a mouse press stops the video and raises the end callback. Returns true in that case.",
+   "fr": "Lorsqu'il est visible, transmet l'événement au parent ; si non utilisé et allowStop actif, un appui souris arrête la vidéo et déclenche le callback de fin. Renvoie true dans ce cas."
+  },
+  "VideoElement:keyEvent": {
+   "en": "When visible, any key press stops and disposes the video and raises the end callback (regardless of allowStop), and the event is reported as consumed.",
+   "fr": "Lorsqu'il est visible, toute touche enfoncée arrête et libère la vidéo et déclenche le callback de fin (sans tenir compte de allowStop), et l'événement est signalé comme consommé."
+  },
+  "VideoElement:update": {
+   "en": "Per-frame: starts a pending play once the video is ready, updates the overlay while playing, advances subtitles, resizes the playback bar and writes the remaining time as -MM:SS. When playback has ended it disposes the video and raises the end callback.",
+   "fr": "Par frame : lance une lecture en attente dès que la vidéo est prête, met à jour l'overlay pendant la lecture, fait avancer les sous-titres, redimensionne la barre de progression et écrit le temps restant au format -MM:SS. À la fin de la lecture, libère la vidéo et déclenche le callback de fin."
+  },
+  "VideoElement:draw": {
+   "en": "Renders the video frame while playing, or a centred bold loading text (l10n ui_loading) until it is ready, then draws the parent.",
+   "fr": "Affiche l'image de la vidéo pendant la lecture, ou un texte de chargement gras centré (l10n ui_loading) tant qu'elle n'est pas prête, puis dessine le parent."
+  },
+  "VideoElement:onEndVideo": {
+   "en": "Calls onEndVideoCallback with the target if one is set, otherwise without arguments.",
+   "fr": "Appelle onEndVideoCallback avec la cible si elle existe, sinon sans argument."
+  },
+  "VideoElement:disposeVideo": {
+   "en": "Stops and deletes the overlay (nil afterwards) and clears the subtitle text element if present.",
+   "fr": "Arrête et supprime l'overlay (nil ensuite) et vide l'élément de texte de sous-titre s'il existe."
+  },
+  "VideoElement:getIsActive": {
+   "en": "Active whenever the element is visible.",
+   "fr": "Actif dès que l'élément est visible."
+  },
+  "VideoElement:playVideo": {
+   "en": "Marks the video to start as soon as it is ready and resets the subtitle index. Does nothing without an overlay.",
+   "fr": "Marque la vidéo pour démarrer dès qu'elle est prête et réinitialise l'index des sous-titres. Sans effet sans overlay."
+  },
+  "VideoElement:stopVideo": {
+   "en": "Cancels any pending play and stops the overlay if it is currently playing.",
+   "fr": "Annule toute lecture en attente et arrête l'overlay s'il est en cours de lecture."
+  },
+  "VideoElement:changeVideo": {
+   "en": "Disposes the current video, replaces $l10nSuffix with g_languageSuffix in the new file name, creates the overlay with the looping flag and given or default volume, stores the duration argument and loads subtitles. Note: duration is nil if not passed, which the progress/time code would divide by.",
+   "fr": "Libère la vidéo actuelle, remplace $l10nSuffix par g_languageSuffix dans le nouveau nom, crée l'overlay avec l'option de boucle et le volume donné ou par défaut, mémorise l'argument de durée et charge les sous-titres. À noter : la durée vaut nil si elle n'est pas fournie, or le code de progression/temps restant l'utilise."
+  }
+ }
+}

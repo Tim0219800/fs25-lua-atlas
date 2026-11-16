@@ -1,0 +1,45 @@
+{
+ "fichier": "ai/NavigationSystem.lua",
+ "module": {
+  "en": "Client-side helper that shows a navigation marker (an I3D marker model plus a `NavigationMarker` object) at a target position, optionally with a direction arrow, and draws it every frame through `g_currentMission:addDrawable`. It can persist the current target to a savegame XML file. `NavigationMarker` and `XMLFile` are not in the dump (UNVERIFIED).",
+  "fr": "Aide côté client qui affiche un marqueur de navigation (un modèle I3D plus un objet `NavigationMarker`) à une position cible, avec éventuellement une flèche de direction, et le dessine à chaque image via `g_currentMission:addDrawable`. Elle peut sauvegarder la cible courante dans un fichier XML. `NavigationMarker` et `XMLFile` ne sont pas dans le dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "NavigationSystem.new": {
+   "en": "Creates the system with a new `NavigationMarker` and empty position/direction nodes.",
+   "fr": "Crée le système avec un nouveau `NavigationMarker` et des noeuds de position/direction vides."
+  },
+  "NavigationSystem:loadMapData": {
+   "en": "Starts the asynchronous load of `$data/shared/assets/marker/navigationMarker.i3d` and keeps the request id. Always returns true.",
+   "fr": "Lance le chargement asynchrone de `$data/shared/assets/marker/navigationMarker.i3d` et garde l'id de requête. Renvoie toujours true."
+  },
+  "NavigationSystem:onNavigationMarkerLoaded": {
+   "en": "Load callback: on success takes the first child as position node and its child as direction node, hides both, links the position node to the root node, refreshes the marker and deletes the loaded I3D root.",
+   "fr": "Callback de chargement : en cas de succès prend le premier enfant comme noeud de position et son enfant comme noeud de direction, les masque, lie le noeud de position au noeud racine, rafraîchit le marqueur et supprime la racine I3D chargée."
+  },
+  "NavigationSystem:delete": {
+   "en": "Cancels a pending I3D load, deletes the position node and deletes the `NavigationMarker`.",
+   "fr": "Annule un chargement I3D en cours, supprime le noeud de position et le `NavigationMarker`."
+  },
+  "NavigationSystem:saveToXMLFile": {
+   "en": "Creates an XML file with the `navigationSystem` schema, stores the target position and, if set, direction, then saves and closes it. Writes nothing for the target when none is active.",
+   "fr": "Crée un fichier XML au schéma `navigationSystem`, y écrit la position cible et, si définie, la direction, puis l'enregistre et le ferme. N'écrit pas de cible si aucune n'est active."
+  },
+  "NavigationSystem:updateMarker": {
+   "en": "Shows or hides the marker and nodes according to whether a target and direction exist, and moves the position node and orients the direction node (up vector 0,1,0) to the target.",
+   "fr": "Affiche ou masque le marqueur et les noeuds selon l'existence d'une cible et d'une direction, et déplace le noeud de position et oriente le noeud de direction (vecteur haut 0,1,0) vers la cible."
+  },
+  "NavigationSystem:draw": {
+   "en": "Draw callback that renders the `NavigationMarker`; registered with the mission while navigating.",
+   "fr": "Callback de dessin qui affiche le `NavigationMarker` ; enregistré auprès de la mission pendant la navigation."
+  },
+  "NavigationSystem:navigateTo": {
+   "en": "Sets the target position (marker drawn 1.4 m above y) and optional direction, shows the marker, registers the system as drawable on `g_currentMission` and refreshes the nodes.",
+   "fr": "Définit la position cible (marqueur dessiné 1,4 m au-dessus de y) et une direction optionnelle, affiche le marqueur, enregistre le système comme dessinable sur `g_currentMission` et rafraîchit les noeuds."
+  },
+  "NavigationSystem:stop": {
+   "en": "Clears the target and direction, unregisters the drawable from `g_currentMission` and hides the marker.",
+   "fr": "Efface la cible et la direction, retire le dessinable de `g_currentMission` et masque le marqueur."
+  }
+ }
+}

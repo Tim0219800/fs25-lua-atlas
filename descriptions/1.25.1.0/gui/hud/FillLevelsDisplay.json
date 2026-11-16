@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/FillLevelsDisplay.lua",
+ "module": {
+  "en": "HUD display for vehicle fill levels, derived from HUDDisplay. This file only defines the constructor: background slices (gui.filltypes_left/middle/right), a max-weight icon, a three-part progress bar and empty vehicle/icon/fill-level tables. Layout and drawing are not in this file (UNVERIFIED).",
+  "fr": "Affichage HUD des niveaux de remplissage du véhicule, dérivé de HUDDisplay. Ce fichier ne définit que le constructeur : tranches de fond (gui.filltypes_left/middle/right), icône de poids maximal, barre de progression en trois parties et tables vides pour le véhicule, les icônes et les niveaux. La mise en page et le dessin ne sont pas dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "FillLevelsDisplay.new": {
+   "en": "Constructor. Creates the tinted background overlays, the max-weight icon overlay and the ThreePartOverlay progress bar; no vehicle is attached and the icon/data tables are empty.",
+   "fr": "Constructeur. Crée les overlays de fond teintés, l'overlay de l'icône de poids max et la barre de progression ThreePartOverlay ; aucun véhicule n'est associé et les tables d'icônes/données sont vides."
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/VehicleEnterResponseEvent.lua",
+ "module": {
+  "en": "Network event sent by the server in answer to a vehicle enter request. It tells every machine which user entered which vehicle, with the player style, farm id and an `isOwner` flag. On receipt it calls `onEnterVehicle` on the matching player. Sent on the main channel.",
+  "fr": "Événement réseau envoyé par le serveur en réponse à une demande d'entrée dans un véhicule. Il indique à chaque machine quel utilisateur est monté dans quel véhicule, avec le style du joueur, la ferme et un indicateur `isOwner`. À la réception il appelle `onEnterVehicle` sur le joueur concerné. Envoyé sur le canal principal."
+ },
+ "fonctions": {
+  "VehicleEnterResponseEvent.emptyNew": {
+   "en": "Creates an empty event instance on the main network channel.",
+   "fr": "Crée une instance d'événement vide sur le canal réseau principal."
+  },
+  "VehicleEnterResponseEvent.new": {
+   "en": "Builds the response from vehicle object id, `isOwner`, `playerStyle`, `farmId` and `userId`.",
+   "fr": "Construit la réponse à partir de l'identifiant d'objet du véhicule, de `isOwner`, `playerStyle`, `farmId` et `userId`."
+  },
+  "VehicleEnterResponseEvent:readStream": {
+   "en": "Reads object id, owner flag, player style (creating a `PlayerStyle` if needed), farm id and user id, then calls `run`.",
+   "fr": "Lit l'identifiant d'objet, l'indicateur propriétaire, le style du joueur (crée un `PlayerStyle` si besoin), la ferme et l'utilisateur, puis appelle `run`."
+  },
+  "VehicleEnterResponseEvent:writeStream": {
+   "en": "Writes object id, owner flag, player style, farm id and user id to the stream.",
+   "fr": "Écrit dans le flux l'identifiant d'objet, l'indicateur propriétaire, le style du joueur, la ferme et l'utilisateur."
+  },
+  "VehicleEnterResponseEvent:run": {
+   "en": "Looks up the vehicle and the player by user id; skips with a dev warning if either is missing or the vehicle is unsynchronized. Otherwise calls `player:onEnterVehicle(vehicle)`. The `isOwner` flag is not used here.",
+   "fr": "Retrouve le véhicule et le joueur par identifiant d'utilisateur ; abandonne avec un avertissement de développement si l'un manque ou si le véhicule n'est pas synchronisé. Sinon appelle `player:onEnterVehicle(vehicle)`. L'indicateur `isOwner` n'est pas utilisé ici."
+  }
+ }
+}

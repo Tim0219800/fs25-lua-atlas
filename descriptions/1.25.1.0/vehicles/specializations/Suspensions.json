@@ -1,0 +1,65 @@
+{
+ "fichier": "vehicles/specializations/Suspensions.lua",
+ "module": {
+  "en": "Specialization for non-wheel suspensions such as cabin, seat or driver character, with no prerequisites. Each suspension node is a client-side spring/damper simulation, per axis, driven by the acceleration of a reference point on the parent component and applied as a rotation or translation to a node. Nodes are read from vehicle.suspensions.suspension in the vehicle XML and are only updated within a configurable distance.",
+  "fr": "Spécialisation des suspensions hors roues (cabine, siège ou personnage conducteur), sans prérequis. Chaque nœud de suspension est une simulation ressort/amortisseur côté client, par axe, pilotée par l'accélération d'un point de référence du composant parent et appliquée comme rotation ou translation à un node. Les nœuds sont lus dans vehicle.suspensions.suspension du XML du véhicule et mis à jour seulement dans une distance configurable."
+ },
+ "fonctions": {
+  "Suspensions.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "Suspensions.initSpecialization": {
+   "en": "Registers the XML schema of a suspension node (node, character torso, weight, rotation/translation limits, velocity difference, X/Y/Z spring parameters, inversion, server-only) and vehicle.suspensions#maxUpdateDistance.",
+   "fr": "Enregistre le schéma XML d'un nœud de suspension (node, torse du personnage, poids, limites de rotation/translation, écart de vitesse, paramètres de ressort X/Y/Z, inversion, serveur seul) et vehicle.suspensions#maxUpdateDistance."
+  },
+  "Suspensions.registerFunctions": {
+   "en": "Registers loadSuspensionNodeFromXML, getSuspensionNodeFromIndex, getIsSuspensionNodeActive and setSuspensionNodeCharacter.",
+   "fr": "Enregistre loadSuspensionNodeFromXML, getSuspensionNodeFromIndex, getIsSuspensionNodeActive et setSuspensionNodeCharacter."
+  },
+  "Suspensions.registerEventListeners": {
+   "en": "Subscribes to onLoad, onUpdate, onEnterVehicle and onVehicleCharacterChanged.",
+   "fr": "S'abonne à onLoad, onUpdate, onEnterVehicle et onVehicleCharacterChanged."
+  },
+  "Suspensions:onLoad": {
+   "en": "Client only: loads every suspension node (skipping server-only ones on pure clients), reads the max update distance and flags suspensions available. Disabled with a warning where the platform forbids suspension nodes. Removes update/enter/character listeners when none are available.",
+   "fr": "Client uniquement : charge chaque nœud de suspension (en ignorant ceux marqués serveur seul sur un client pur), lit la distance max de mise à jour et marque les suspensions disponibles. Désactivé avec un avertissement si la plateforme interdit les suspensions. Retire les écouteurs update/enter/character si aucune n'est disponible."
+  },
+  "Suspensions:onUpdate": {
+   "en": "For vehicles within the max update distance, computes the acceleration of each node's reference point, then integrates a spring/damper per axis with an implicit Euler step (physics dt on the server, frame dt otherwise), clamps to the limits and applies rotation or translation.",
+   "fr": "Pour les véhicules dans la distance max de mise à jour, calcule l'accélération du point de référence de chaque nœud puis intègre un ressort/amortisseur par axe avec un pas d'Euler implicite (dt physique sur le serveur, dt de frame sinon), borne aux limites et applique rotation ou translation."
+  },
+  "Suspensions:loadSuspensionNodeFromXML": {
+   "en": "Fills a suspension node table from XML: node and parent component, weight, limits, spring parameters (multiplied by 1000), flags. Returns false if the node is unusable or has no rotation or translation limits.",
+   "fr": "Remplit une table de nœud de suspension depuis le XML : node et composant parent, poids, limites, paramètres de ressort (multipliés par 1000), indicateurs. Renvoie false si le nœud est inutilisable ou sans limites de rotation ou de translation."
+  },
+  "Suspensions:getSuspensionNodeFromIndex": {
+   "en": "Returns the suspension node table at the given index, or nil if no suspension is available.",
+   "fr": "Renvoie la table du nœud de suspension à l'index donné, ou nil si aucune suspension n'est disponible."
+  },
+  "Suspensions:getIsSuspensionNodeActive": {
+   "en": "Returns true if the suspension node has both a node and a parent component.",
+   "fr": "Renvoie true si le nœud de suspension possède à la fois un node et un composant parent."
+  },
+  "Suspensions:setSuspensionNodeCharacter": {
+   "en": "For nodes using the character torso, points the node to the character model's third-person suspension node and recomputes its parent component and reference offset.",
+   "fr": "Pour les nœuds utilisant le torse du personnage, pointe le node vers le nœud de suspension troisième personne du modèle de personnage et recalcule son composant parent et son décalage de référence."
+  },
+  "Suspensions:onEnterVehicle": {
+   "en": "When someone enters the vehicle, binds the vehicle character (if any) to every suspension node.",
+   "fr": "Quand quelqu'un entre dans le véhicule, associe le personnage du véhicule (s'il existe) à chaque nœud de suspension."
+  },
+  "Suspensions:onVehicleCharacterChanged": {
+   "en": "For character-torso nodes, rebinds the new character or clears the node when the character is removed.",
+   "fr": "Pour les nœuds de torse du personnage, associe le nouveau personnage ou vide le node quand le personnage est retiré."
+  },
+  "Suspensions.subCollisionErrorFunction": {
+   "en": "Debug-time check callback: logs an XML error when a collision shape is a child of a suspension node, which can keep the vehicle from sleeping. It is only referenced from a debug-only block.",
+   "fr": "Callback de vérification en debug : journalise une erreur XML quand une forme de collision est enfant d'un nœud de suspension, ce qui peut empêcher le véhicule de s'endormir. Référencé seulement dans un bloc debug."
+  },
+  "Suspensions:getSuspensionModfier": {
+   "en": "Returns the current vertical translation of the seat suspension (node 2 if it is a non-rotational, non-torso node, else node 1), or 0 if rotational or missing. Note: the name is spelled 'Modfier' in the source.",
+   "fr": "Renvoie la translation verticale courante de la suspension du siège (nœud 2 s'il est non rotatif et sans torse, sinon nœud 1), ou 0 si rotatif ou absent. À noter : le nom est orthographié « Modfier » dans la source."
+  }
+ }
+}

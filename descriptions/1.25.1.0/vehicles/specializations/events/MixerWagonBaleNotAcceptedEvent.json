@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/MixerWagonBaleNotAcceptedEvent.lua",
+ "module": {
+  "en": "Network event class `MixerWagonBaleNotAcceptedEvent` (extends `Event`) that tells a client that a mixer wagon refused a bale. It carries no payload. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `MixerWagonBaleNotAcceptedEvent` (hérite de `Event`) qui indique à un client qu'un mélangeur a refusé une balle. Elle transporte aucune donnée. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "MixerWagonBaleNotAcceptedEvent.emptyNew": {
+   "en": "Creates an empty `MixerWagonBaleNotAcceptedEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `MixerWagonBaleNotAcceptedEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "MixerWagonBaleNotAcceptedEvent.new": {
+   "en": "Creates the event with its data: no payload.",
+   "fr": "Crée l'événement avec ses données : aucune donnée."
+  },
+  "MixerWagonBaleNotAcceptedEvent:readStream": {
+   "en": "Reads the event data from the network stream (no payload), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (aucune donnée), puis appelle `run`."
+  },
+  "MixerWagonBaleNotAcceptedEvent:writeStream": {
+   "en": "Writes the event data to the network stream (no payload).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (aucune donnée)."
+  },
+  "MixerWagonBaleNotAcceptedEvent:run": {
+   "en": "Executes the event on the receiving side: shows a critical in-game notification with the text key `warning_baleNotSupported`.",
+   "fr": "Exécute l'événement côté réception : affiche une notification critique en jeu avec la clé de texte `warning_baleNotSupported`."
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "fichier": "objects/ProductionPointActivatable.lua",
+ "module": {
+  "en": "Activatable shown when the player stands in a production point's interaction trigger. Depending on ownership it offers to buy the production point or to manage it (open the production menu). Created and registered by ProductionPoint's interaction trigger callback.",
+  "fr": "Activatable affiché quand le joueur se trouve dans le déclencheur d'interaction d'un point de production. Selon la propriété, il propose d'acheter le point de production ou de le gérer (ouvrir le menu de production). Il est créé et enregistré par le callback du déclencheur d'interaction de ProductionPoint."
+ },
+ "fonctions": {
+  "ProductionPointActivatable.new": {
+   "en": "Creates the activatable for a production point, keeps its mission and sets the action text.",
+   "fr": "Crée l'activatable d'un point de production, conserve sa mission et définit le texte d'action."
+  },
+  "ProductionPointActivatable:updateText": {
+   "en": "Sets the action text to 'buy' when the point is unowned and buying uses the interaction trigger, otherwise to 'manage'.",
+   "fr": "Définit le texte d'action sur 'acheter' si le point n'a pas de propriétaire et que l'achat passe par le déclencheur d'interaction, sinon sur 'gérer'."
+  },
+  "ProductionPointActivatable:getIsActivatable": {
+   "en": "True if the local farm has access to the production point according to the access handler.",
+   "fr": "True si la ferme locale a accès au point de production selon l'access handler."
+  },
+  "ProductionPointActivatable:run": {
+   "en": "If the point is unowned (EVERYONE) and buyable through the trigger, starts the purchase request; if the local farm owns it, opens the production menu.",
+   "fr": "Si le point n'a pas de propriétaire (EVERYONE) et s'achète via le déclencheur, lance la demande d'achat ; si la ferme locale le possède, ouvre le menu de production."
+  },
+  "ProductionPointActivatable:getDistance": {
+   "en": "Returns the distance from the position to the interaction trigger node for an owned point not bought through the trigger; otherwise math.huge so it is never preferred.",
+   "fr": "Retourne la distance entre la position et le noeud du déclencheur d'interaction pour un point possédé qui ne s'achète pas via le déclencheur ; sinon math.huge, il n'est donc jamais prioritaire."
+  }
+ }
+}

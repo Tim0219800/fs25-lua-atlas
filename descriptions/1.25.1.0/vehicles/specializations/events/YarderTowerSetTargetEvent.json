@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/YarderTowerSetTargetEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the target of a yarder tower main rope: an active flag plus, when active, a world position. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise la cible du câble principal d'une tour de débardage : un indicateur d'activation et, s'il est actif, une position monde. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "YarderTowerSetTargetEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "YarderTowerSetTargetEvent.new": {
+      "en": "Builds the event with the data to send (a node object, a boolean state and, only if true, three float32 coordinates); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud, un booléen d'état et, seulement s'il est vrai, trois coordonnées float32) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "YarderTowerSetTargetEvent:readStream": {
+      "en": "Reads a node object, a boolean state and, only if true, three float32 coordinates from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud, un booléen d'état et, seulement s'il est vrai, trois coordonnées float32 depuis le flux, puis appelle `run(connection)`."
+    },
+    "YarderTowerSetTargetEvent:writeStream": {
+      "en": "Writes a node object, a boolean state and, only if true, three float32 coordinates to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud, un booléen d'état et, seulement s'il est vrai, trois coordonnées float32 dans le flux (même ordre que `readStream`)."
+    },
+    "YarderTowerSetTargetEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself, then stores the coordinates as the main rope target in `spec_yarderTower`, marks it valid and calls `setYarderTargetActive(state, true)`.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet, puis stocke les coordonnées comme cible du câble principal dans `spec_yarderTower`, la marque valide et appelle `setYarderTargetActive(état, true)`."
+    },
+    "YarderTowerSetTargetEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

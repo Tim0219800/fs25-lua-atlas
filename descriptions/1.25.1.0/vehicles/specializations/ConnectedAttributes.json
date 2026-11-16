@@ -1,0 +1,73 @@
+{
+ "fichier": "vehicles/specializations/ConnectedAttributes.lua",
+ "module": {
+  "en": "Specialization that copies values from source nodes (for example a node position, rotation or scale) to target nodes, optionally combining them with sum, average, subtract, multiply or divide. Each vehicle.connectedAttributes.attribute entry declares sources, targets, combine rules, animation or Cylindered prerequisites and update triggers (every frame when isActiveDirty, on animation start/run/stop, or from Cylindered moving parts via connectedAttributeIndices). The source and target type classes (TYPES, TYPES_BY_NAME, COMBINE_OPERATION) are not defined in this dump, which ends with an empty LocalOffset class: their exact contents are UNVERIFIED.",
+  "fr": "Spécialisation qui copie des valeurs de nœuds sources (par exemple position, rotation ou échelle d'un nœud) vers des nœuds cibles, avec combinaison facultative par somme, moyenne, soustraction, multiplication ou division. Chaque entrée vehicle.connectedAttributes.attribute déclare sources, cibles, règles de combinaison, prérequis d'animation et déclencheurs de mise à jour (à chaque image avec isActiveDirty, au début/pendant/à la fin d'une animation, ou depuis les pièces mobiles de Cylindered via connectedAttributeIndices). Les classes de types de source et de cible (TYPES, TYPES_BY_NAME, COMBINE_OPERATION) ne sont pas définies dans ce dump, qui se termine par une classe LocalOffset vide : leur contenu exact est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "ConnectedAttributes.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "ConnectedAttributes.initSpecialization": {
+   "en": "Registers the XML schema for connectedAttributes.attribute: each type class adds its own source and target paths, and Cylindered movingTool/movingPart entries get a connectedAttributeIndices list through delayed registration.",
+   "fr": "Enregistre le schéma XML de connectedAttributes.attribute : chaque classe de type ajoute ses propres chemins de source et de cible, et les entrées movingTool/movingPart de Cylindered reçoivent une liste connectedAttributeIndices par enregistrement différé."
+  },
+  "ConnectedAttributes.registerFunctions": {
+   "en": "Empty hook, registers no new vehicle functions.",
+   "fr": "Point d'entrée vide, n'enregistre aucune nouvelle fonction de véhicule."
+  },
+  "ConnectedAttributes.registerOverwrittenFunctions": {
+   "en": "Overrides loadExtraDependentParts and updateExtraDependentParts (provided by another specialization, UNVERIFIED which one).",
+   "fr": "Remplace loadExtraDependentParts et updateExtraDependentParts (fournies par une autre spécialisation, laquelle : NON VÉRIFIÉ)."
+  },
+  "ConnectedAttributes.registerEventListeners": {
+   "en": "Registers onLoad, onLoadFinished, onUpdate, onUpdateEnd, onPlayAnimation, onUpdateAnimation and onFinishAnimation.",
+   "fr": "Enregistre onLoad, onLoadFinished, onUpdate, onUpdateEnd, onPlayAnimation, onUpdateAnimation et onFinishAnimation."
+  },
+  "ConnectedAttributes:onLoad": {
+   "en": "Parses every attribute from XML: animation triggers, animation-time prerequisites, sources, combine rules and targets, where target values may be scaled (*, /) or offset (+, -) or constant. Invalid entries log XML warnings; an attribute needs at least one source and one target. Unused listeners (update, animation events) are removed afterwards.",
+   "fr": "Analyse chaque attribut du XML : déclencheurs d'animation, prérequis sur le temps d'animation, sources, règles de combinaison et cibles, dont les valeurs peuvent être mises à l'échelle (*, /), décalées (+, -) ou constantes. Les entrées invalides produisent des avertissements XML ; un attribut exige au moins une source et une cible. Les écouteurs inutiles (update, événements d'animation) sont ensuite retirés."
+  },
+  "ConnectedAttributes:onLoadFinished": {
+   "en": "Forces an update of every attribute once, so targets start with the values computed from the sources.",
+   "fr": "Force une mise à jour unique de chaque attribut afin que les cibles démarrent avec les valeurs calculées depuis les sources."
+  },
+  "ConnectedAttributes:onUpdate": {
+   "en": "Each frame, updates the attributes flagged isActiveDirty, skipping those whose maxUpdateDistance is smaller than the vehicle update distance.",
+   "fr": "À chaque image, met à jour les attributs marqués isActiveDirty, en ignorant ceux dont maxUpdateDistance est inférieur à la distance de mise à jour du véhicule."
+  },
+  "ConnectedAttributes:onUpdateEnd": {
+   "en": "Runs onUpdate once with a very large dt, so dirty attributes are refreshed one last time.",
+   "fr": "Exécute une fois onUpdate avec un dt très grand, pour rafraîchir une dernière fois les attributs marqués."
+  },
+  "ConnectedAttributes:onPlayAnimation": {
+   "en": "When an animation starts, forces an update of each attribute that lists that animation with onStart enabled.",
+   "fr": "Au démarrage d'une animation, force la mise à jour de chaque attribut qui la liste avec onStart activé."
+  },
+  "ConnectedAttributes:onUpdateAnimation": {
+   "en": "While an animation runs, forces an update of each attribute that lists that animation with onRun enabled.",
+   "fr": "Pendant l'exécution d'une animation, force la mise à jour de chaque attribut qui la liste avec onRun activé."
+  },
+  "ConnectedAttributes:onFinishAnimation": {
+   "en": "When an animation finishes, forces an update of each attribute that lists that animation with onStop enabled.",
+   "fr": "À la fin d'une animation, force la mise à jour de chaque attribut qui la liste avec onStop activé."
+  },
+  "ConnectedAttributes.updateAttribute": {
+   "en": "Static. Checks the animation prerequisites, reads all sources, evaluates the combine rules (average, sum, subtract, multiply, divide) and, if something changed or forceUpdate is set, writes the scaled values to every target. Divide has no zero check.",
+   "fr": "Statique. Vérifie les prérequis d'animation, lit toutes les sources, évalue les règles de combinaison (moyenne, somme, soustraction, multiplication, division) et, si une valeur a changé ou si forceUpdate est vrai, écrit les valeurs mises à l'échelle dans chaque cible. La division ne vérifie pas le zéro."
+  },
+  "ConnectedAttributes:loadExtraDependentParts": {
+   "en": "Calls the parent, then reads connectedAttributeIndices on the moving part and stores the list on the entry. Returns false if the parent fails.",
+   "fr": "Appelle le parent puis lit connectedAttributeIndices sur la pièce mobile et stocke la liste dans l'entrée. Renvoie false si le parent échoue."
+  },
+  "ConnectedAttributes:updateExtraDependentParts": {
+   "en": "Calls the parent, then updates each attribute whose index is listed on the moving part, ignoring unknown indices.",
+   "fr": "Appelle le parent puis met à jour chaque attribut dont l'indice figure sur la pièce mobile, en ignorant les indices inconnus."
+  },
+  "ConnectedAttributes:updateDebugValues": {
+   "en": "Appends debug rows to the given list: prerequisite results, source data, current named values and target data of every attribute.",
+   "fr": "Ajoute des lignes de débogage à la liste fournie : résultats des prérequis, données des sources, valeurs nommées courantes et données des cibles de chaque attribut."
+  }
+ }
+}

@@ -1,0 +1,73 @@
+{
+ "fichier": "misc/Timer.lua",
+ "module": {
+  "en": "Small countdown timer object driven by the mission update loop: while running it is registered as an updateable on g_currentMission and subtracts the frame delta (optionally scaled) from the time left. Durations are in milliseconds. A finish callback can be set, and the remaining time can be sent over a network stream.",
+  "fr": "Petit objet minuteur piloté par la boucle de mise à jour de la mission : en marche, il est enregistré comme updateable sur g_currentMission et retranche le delta de trame (éventuellement mis à l'échelle) du temps restant. Les durées sont en millisecondes. Un rappel de fin peut être défini, et le temps restant peut être envoyé dans un flux réseau."
+ },
+ "fonctions": {
+  "Timer.new": {
+   "en": "Creates a timer with the given duration (ms), no callback, not running, with the full duration as time left.",
+   "fr": "Crée un minuteur avec la durée donnée (ms), sans rappel, à l'arrêt, avec la durée complète comme temps restant."
+  },
+  "Timer:delete": {
+   "en": "Cleans up the timer by calling reset, which unregisters it from the mission updateables.",
+   "fr": "Nettoie le minuteur en appelant reset, ce qui le retire des updateables de la mission."
+  },
+  "Timer:reset": {
+   "en": "Removes the timer from the mission updateables and marks it as not running. Time left is not restored.",
+   "fr": "Retire le minuteur des updateables de la mission et le marque comme arrêté. Le temps restant n'est pas rétabli."
+  },
+  "Timer:start": {
+   "en": "Starts the timer and registers it for updates. Time left is reset to the full duration unless noReset is true. Logs an error with a callstack and does nothing if no duration is set.",
+   "fr": "Démarre le minuteur et l'enregistre pour les mises à jour. Le temps restant est remis à la durée complète sauf si noReset vaut true. Journalise une erreur avec pile d'appels et ne fait rien si aucune durée n'est définie."
+  },
+  "Timer:startIfNotRunning": {
+   "en": "Calls start only when the timer is not already running, so a running countdown is not restarted.",
+   "fr": "N'appelle start que si le minuteur n'est pas déjà en marche, de sorte qu'un décompte en cours n'est pas relancé."
+  },
+  "Timer:stop": {
+   "en": "Unregisters the timer from the mission updateables and marks it as stopped, keeping the time left (a later start with noReset can resume).",
+   "fr": "Retire le minuteur des updateables de la mission et le marque comme arrêté en conservant le temps restant (un start ultérieur avec noReset peut reprendre)."
+  },
+  "Timer:finish": {
+   "en": "Ends the timer: unregisters it, sets time left to 0, marks it stopped and invokes the finish callback with the timer as argument, if any.",
+   "fr": "Termine le minuteur : le retire des updateables, met le temps restant à 0, l'arrête et invoque le rappel de fin avec le minuteur en argument, s'il existe."
+  },
+  "Timer:getIsRunning": {
+   "en": "Returns whether the timer is currently running.",
+   "fr": "Retourne si le minuteur est actuellement en marche."
+  },
+  "Timer:setFinishCallback": {
+   "en": "Sets the function called when the timer finishes and returns the timer itself for chaining.",
+   "fr": "Définit la fonction appelée à la fin du minuteur et retourne le minuteur lui-même pour le chaînage."
+  },
+  "Timer:getTimePassed": {
+   "en": "Returns the elapsed time in milliseconds, computed as duration minus time left.",
+   "fr": "Retourne le temps écoulé en millisecondes, calculé comme la durée moins le temps restant."
+  },
+  "Timer:update": {
+   "en": "Per-frame update called by the mission while running: subtracts dt multiplied by the optional scaleFunc() result from the time left and calls finish when it reaches 0 or below.",
+   "fr": "Mise à jour par trame appelée par la mission en marche : retranche dt multiplié par le résultat de scaleFunc() (optionnel) du temps restant et appelle finish quand il atteint 0 ou moins."
+  },
+  "Timer.createOneshot": {
+   "en": "Creates and starts a timer that calls callback once after the duration, then deletes itself. Note: it calls timer:setScaleFunction, which is not defined in this file (UNVERIFIED, would error if absent elsewhere); scaleFunc is nominally an optional time-scale getter.",
+   "fr": "Crée et démarre un minuteur qui appelle callback une fois après la durée, puis se supprime. À noter : il appelle timer:setScaleFunction, absent de ce fichier (NON VÉRIFIÉ, provoquerait une erreur s'il n'est défini nulle part ailleurs) ; scaleFunc est censé être un getter d'échelle de temps optionnel."
+  },
+  "Timer:getDuration": {
+   "en": "Returns the configured duration in milliseconds.",
+   "fr": "Retourne la durée configurée en millisecondes."
+  },
+  "Timer:setDuration": {
+   "en": "Sets the duration (ms), effective at the next start, and returns the timer for chaining.",
+   "fr": "Définit la durée (ms), effective au prochain démarrage, et retourne le minuteur pour le chaînage."
+  },
+  "Timer:writeUpdateStream": {
+   "en": "Writes the time left to a network stream as a 32-bit integer (fractional part is not preserved).",
+   "fr": "Écrit le temps restant dans un flux réseau sous forme d'entier 32 bits (la partie fractionnaire n'est pas conservée)."
+  },
+  "Timer:readUpdateStream": {
+   "en": "Reads the time left from a network stream as a 32-bit integer.",
+   "fr": "Lit le temps restant depuis un flux réseau sous forme d'entier 32 bits."
+  }
+ }
+}

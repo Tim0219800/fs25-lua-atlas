@@ -1,0 +1,29 @@
+{
+ "fichier": "objects/WashingStationEvent.lua",
+ "module": {
+  "en": "Network event sent by a client to ask the server to start a wash at a washing station. The server resolves the sender's farm from the connection and calls `startWashing` with that farm id.",
+  "fr": "Événement réseau envoyé par un client pour demander au serveur de lancer un lavage à une station. Le serveur retrouve la ferme de l'expéditeur via la connexion et appelle `startWashing` avec son identifiant."
+ },
+ "fonctions": {
+  "WashingStationEvent.emptyNew": {
+   "en": "Creates an empty event instance, used when reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée lors de la lecture depuis un flux."
+  },
+  "WashingStationEvent.new": {
+   "en": "Creates an event holding the washing station to start.",
+   "fr": "Crée un événement contenant la station de lavage à démarrer."
+  },
+  "WashingStationEvent:readStream": {
+   "en": "Reads the station node object from the stream when received on the server side (sender is a client), then runs the event.",
+   "fr": "Lit l'objet noeud de la station depuis le flux lorsqu'il est reçu côté serveur (expéditeur client), puis exécute l'événement."
+  },
+  "WashingStationEvent:writeStream": {
+   "en": "Writes the station node object to the stream, only when sending from a client to the server.",
+   "fr": "Écrit l'objet noeud de la station dans le flux, uniquement pour un envoi du client vers le serveur."
+  },
+  "WashingStationEvent:run": {
+   "en": "Server side only: finds the user and farm for the connection and calls `startWashing(farmId)` on the station. Does nothing if the user or farm is unknown.",
+   "fr": "Côté serveur uniquement : retrouve l'utilisateur et la ferme de la connexion et appelle `startWashing(farmId)` sur la station. Ne fait rien si l'utilisateur ou la ferme est inconnu."
+  }
+ }
+}

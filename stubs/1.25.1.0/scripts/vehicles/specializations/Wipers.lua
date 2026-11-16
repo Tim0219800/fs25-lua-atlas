@@ -1,52 +1,52 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Wipers.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation d'essuie-glaces (prérequis : Enterable et AnimatedVehicle). Elle ne produit aucun effet de particules ni de goutte : elle joue des animations de véhicule (nom d'animation par essuie-glace, vehicle.wipers.wiper(?)#animName) dont la vitesse (state(?)#animSpeed) et la pause (#animPause, en secondes, converties en ms) dépendent de l'intensité de pluie. Seule donnée météo lue : g_currentMission.environment.weather:getRainFallScale() à chaque onUpdateTick, stockée dans spec.lastRainScale ; la valeur est comparée à un seuil de 0.01 puis répartie sur [0..1] en autant de tranches égales que d'états (state.maxRainValue = k / nombreÉtats), l'état retenu étant la première tranche dont le plafond est >= à la pluie. Le comportement de getRainFallScale (unité, plage, lissage) est dans Weather, absent du dump : NON VÉRIFIÉ. La logique ne s'exécute que si getIsControlled() est vrai (véhicule occupé/contrôlé) et que getIsActiveForWipers() est vrai ; elle n'a pas de garde isServer/isClient propre (les animations passent par AnimatedVehicle ; leur synchronisation est NON VÉRIFIÉE), seule la mise à jour du tableau de bord est limitée au client. La boucle d'animation : lecture jusqu'à la fin, puis retour inverse déclenché par onFinishAnimation, et prochaine passe retardée de 2 x durée/vitesse + pause (g_currentMission.time). Point d'extension : fonctions enregistrées loadWiperFromXML et getIsActiveForWipers (renvoie true ; surchargeable pour désactiver les essuie-glaces, par exemple hors cabine) ; événements écoutés onLoad, onRegisterDashboardValueTypes, onUpdateTick, onFinishAnimation ; commande console de forçage via Wipers.forcedState (global à toutes les instances). Valeur de dashboard exposée : « wipers » / « state » (champ lastState du plus riche des essuie-glaces). Utile pour un mod d'humidité : c'est un consommateur de getRainFallScale, pas une source d'effets visuels.
+--- Windshield wiper specialization (prerequisites: Enterable and AnimatedVehicle). It produces no particle or droplet effect: it plays vehicle animations (one animation name per wiper, vehicle.wipers.wiper(?)#animName) whose speed (state(?)#animSpeed) and pause (#animPause, in seconds, converted to ms) depend on rain intensity. The only weather data read is g_currentMission.environment.weather:getRainFallScale() on every onUpdateTick, stored in spec.lastRainScale; the value is compared to a 0.01 threshold, then spread over [0..1] in as many equal slices as there are states (state.maxRainValue = k / numberOfStates), and the chosen state is the first slice whose ceiling is >= the rain value. The behaviour of getRainFallScale (unit, range, smoothing) lives in Weather, which is absent from the dump: UNVERIFIED. The logic only runs if getIsControlled() is true (vehicle occupied/controlled) and getIsActiveForWipers() is true; it has no isServer/isClient guard of its own (animations go through AnimatedVehicle; their synchronisation is UNVERIFIED), only the dashboard update is restricted to the client. The animation loop: play to the end, then reverse playback triggered by onFinishAnimation, and the next pass is delayed by 2 x duration/speed + pause (g_currentMission.time). Extension points: registered functions loadWiperFromXML and getIsActiveForWipers (returns true; can be overwritten to disable the wipers, for instance outside the cabin); listened events onLoad, onRegisterDashboardValueTypes, onUpdateTick, onFinishAnimation; a console command to force the state through Wipers.forcedState (global to all instances). Exposed dashboard value: "wipers" / "state" (lastState field of the wiper with the most states). Useful for a wetness mod: it is a consumer of getRainFallScale, not a source of visual effects.
 ---@class Wipers
 Wipers = {}
 
---- Exige les spécialisations Enterable et AnimatedVehicle.
+--- Requires the Enterable and AnimatedVehicle specializations.
 ---@param specializations any
 function Wipers.prerequisitesPresent(specializations) end
 
---- Enregistre dans Vehicle.xmlSchema les clés vehicle.wipers.wiper(?)#animName, state(?)#animSpeed et state(?)#animPause, ainsi que les chemins de tableaux de bord vehicle.wipers.dashboards (valeur « state »).
+--- Registers in Vehicle.xmlSchema the keys vehicle.wipers.wiper(?)#animName, state(?)#animSpeed and state(?)#animPause, as well as the dashboard paths vehicle.wipers.dashboards (value "state").
 function Wipers.initSpecialization() end
 
---- Expose au type de véhicule loadWiperFromXML et getIsActiveForWipers.
+--- Exposes loadWiperFromXML and getIsActiveForWipers to the vehicle type.
 ---@param vehicleType any
 function Wipers.registerFunctions(vehicleType) end
 
---- Écoute onLoad, onRegisterDashboardValueTypes, onUpdateTick et onFinishAnimation.
+--- Listens to onLoad, onRegisterDashboardValueTypes, onUpdateTick and onFinishAnimation.
 ---@param vehicleType any
 function Wipers.registerEventListeners(vehicleType) end
 
---- Charge tous les essuie-glaces du XML (chacun avec lastValidState 1 et lastState 0), calcule hasWipers, initialise lastRainScale à 0 et retient l'essuie-glace qui a le plus d'états pour le tableau de bord. Sans essuie-glace valide, retire l'écouteur onUpdateTick.
+--- Loads all wipers from the XML (each with lastValidState 1 and lastState 0), computes hasWipers, initialises lastRainScale to 0 and keeps the wiper with the most states for the dashboard. With no valid wiper, it removes the onUpdateTick listener.
 ---@param savegame any
 function Wipers:onLoad(savegame) end
 
---- Déclare le type de valeur de tableau de bord wipers.state (lu dans lastState de l'essuie-glace principal, sans mise à jour par sondage).
+--- Declares the dashboard value type wipers.state (read from lastState of the main wiper, with no polling update).
 function Wipers:onRegisterDashboardValueTypes() end
 
---- Si le véhicule est contrôlé : lit la pluie via weather:getRainFallScale(), détermine pour chaque essuie-glace l'état (0 si pluie <= 0.01 ou si getIsActiveForWipers est faux), l'écrase par Wipers.forcedState si celui-ci est différent de -1, lance l'animation à la vitesse de l'état quand le délai est écoulé et qu'elle ne joue pas, mémorise lastValidState, puis, côté client, met à jour la valeur de tableau de bord quand l'état change. À noter : Wipers.forcedState n'est pas initialisé dans ce fichier ; sa valeur initiale (attendue -1) vient d'ailleurs ou d'une partie stripée du dump (NON VÉRIFIÉ).
+--- If the vehicle is controlled: reads rain through weather:getRainFallScale(), determines each wiper's state (0 if rain <= 0.01 or if getIsActiveForWipers is false), overrides it with Wipers.forcedState when that is not -1, starts the animation at the state's speed when the delay has elapsed and it is not playing, stores lastValidState, then on the client updates the dashboard value when the state changes. Note: Wipers.forcedState is not initialised in this file; its initial value (expected -1) comes from elsewhere or from a stripped part of the dump (UNVERIFIED).
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function Wipers:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Quand l'animation d'un essuie-glace atteint la fin (temps 1), la rejoue en sens inverse à la vitesse du dernier état valide.
+--- When a wiper animation reaches its end (time 1), plays it again in reverse at the speed of the last valid state.
 ---@param name any
 function Wipers:onFinishAnimation(name) end
 
---- Lit le nom d'animation (doit exister, sinon avertissement et échec), sa durée, et les états (animSpeed et animPause obligatoires ensemble). Calcule pour chaque état un plafond de pluie maxRainValue par tranches égales de 1/N. Renvoie false si l'animation est absente ou s'il n'y a aucun état.
+--- Reads the animation name (it must exist, otherwise a warning and failure), its duration, and the states (animSpeed and animPause required together). Computes for each state a rain ceiling maxRainValue in equal slices of 1/N. Returns false if the animation is missing or there are no states.
 ---@param xmlFile any
 ---@param key any
 ---@param wiper any
 function Wipers:loadWiperFromXML(xmlFile, key, wiper) end
 
---- Renvoie true par défaut ; point de surcharge pour autoriser ou non l'activation automatique selon la pluie.
+--- Returns true by default; override point to allow or forbid automatic activation according to rain.
 function Wipers:getIsActiveForWipers() end
 
---- Commande console gsWiperStateSet : fixe Wipers.forcedState (-1 pour revenir à l'état déduit de la météo, 0..n pour forcer un état, borné à 999) et renvoie un message de confirmation ou d'erreur.
+--- Console command gsWiperStateSet: sets Wipers.forcedState (-1 to go back to the weather-derived state, 0..n to force a state, capped at 999) and returns a confirmation or error message.
 ---@param state any
 function Wipers:consoleSetWiperState(state) end

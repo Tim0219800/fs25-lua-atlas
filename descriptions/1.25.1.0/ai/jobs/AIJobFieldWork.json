@@ -1,0 +1,73 @@
+{
+ "fichier": "ai/jobs/AIJobFieldWork.lua",
+ "module": {
+  "en": "Job in which an AI driver goes to a start position and then works a field with the attached tools: an `AITaskDriveTo` followed by an `AITaskFieldWork`. Parameters are the vehicle and a position/angle. Settings of the AI mode are streamed along with the job, and the vehicle is notified of start and stop (agent creation on the server).",
+  "fr": "Job où un conducteur IA rejoint une position de départ puis travaille un champ avec les outils attelés : une `AITaskDriveTo` suivie d'une `AITaskFieldWork`. Les paramètres sont le véhicule et une position/angle. Les réglages du mode IA sont transmis avec le job, et le véhicule est notifié du démarrage et de l'arrêt (création de l'agent sur le serveur)."
+ },
+ "fonctions": {
+  "AIJobFieldWork.new": {
+   "en": "Creates the drive-to and field-work tasks, the vehicle and position-angle (no snapping) parameters and their groups.",
+   "fr": "Crée les tâches de trajet et de travail du champ, les paramètres véhicule et position-angle (sans pas) et leurs groupes."
+  },
+  "AIJobFieldWork:readStream": {
+   "en": "Base read, then if a flag is set reads the AI mode settings via `AIModeSelection.readAIModeSettingsFromStream` into `pendingData` and sets `pendingVehicle`, to be applied once the vehicle is available.",
+   "fr": "Lecture de base, puis si un drapeau est levé lit les réglages du mode IA via `AIModeSelection.readAIModeSettingsFromStream` dans `pendingData` et active `pendingVehicle`, à appliquer quand le véhicule sera disponible."
+  },
+  "AIJobFieldWork:writeStream": {
+   "en": "Base write, then a flag telling whether a vehicle exists and, if so, the vehicle's AI mode settings through `writeAIModeSettingsToStream`.",
+   "fr": "Écriture de base, puis un drapeau indiquant si un véhicule existe et, le cas échéant, les réglages de mode IA du véhicule via `writeAIModeSettingsToStream`."
+  },
+  "AIJobFieldWork:getStartTaskIndex": {
+   "en": "Returns 2 (field work) for a direct start or when the vehicle is within 3 m of the target position, otherwise 1 (drive first).",
+   "fr": "Renvoie 2 (travail du champ) pour un démarrage direct ou si le véhicule est à moins de 3 m de la position cible, sinon 1 (rouler d'abord)."
+  },
+  "AIJobFieldWork:start": {
+   "en": "Base start, then on the server creates the agent and calls `vehicle:aiJobStarted`.",
+   "fr": "Démarrage de base, puis sur le serveur crée l'agent et appelle `vehicle:aiJobStarted`."
+  },
+  "AIJobFieldWork:stop": {
+   "en": "On the server deletes the agent and calls `vehicle:aiJobFinished`, then runs the base stop.",
+   "fr": "Sur le serveur supprime l'agent et appelle `vehicle:aiJobFinished`, puis exécute l'arrêt de base."
+  },
+  "AIJobFieldWork:applyCurrentState": {
+   "en": "Takes position and angle from the last field-work job of the vehicle (unless direct start), else from the vehicle's pose, and sets the angle snapping to the larger of the vehicle's direction snap angle and a terrain-based angle of at least 45 degrees.",
+   "fr": "Prend position et angle du dernier job de travail du champ du véhicule (sauf démarrage direct), sinon de la pose du véhicule, et règle le pas d'angle au plus grand entre l'angle d'accrochage du véhicule et un angle issu du terrain, d'au moins 45 degrés."
+  },
+  "AIJobFieldWork:getIsAvailableForVehicle": {
+   "en": "True when the vehicle can start field work (`getCanStartFieldWork`) and lists this job class as supported.",
+   "fr": "Vrai si le véhicule peut démarrer un travail des champs (`getCanStartFieldWork`) et déclare cette classe de job comme prise en charge."
+  },
+  "AIJobFieldWork:getTarget": {
+   "en": "Returns the drive task's target x, z and the heading angle derived from its direction (0 if none).",
+   "fr": "Renvoie les x, z cibles de la tâche de trajet et l'angle de cap déduit de sa direction (0 si aucune)."
+  },
+  "AIJobFieldWork:getTitle": {
+   "en": "Returns the vehicle name from the vehicle parameter, or an empty string when there is no vehicle.",
+   "fr": "Renvoie le nom du véhicule du paramètre véhicule, ou une chaîne vide s'il n'y en a pas."
+  },
+  "AIJobFieldWork:setValues": {
+   "en": "Resets tasks, sets the vehicle on both tasks and turns the position-angle parameter into the drive task's target position and direction.",
+   "fr": "Réinitialise les tâches, fixe le véhicule sur les deux tâches et convertit le paramètre position-angle en position et direction cibles de la tâche de trajet."
+  },
+  "AIJobFieldWork:validate": {
+   "en": "Marks parameters valid, then validates the vehicle parameter and flags it invalid on failure. Returns the result and error text.",
+   "fr": "Marque les paramètres comme valides, puis valide le paramètre véhicule et le marque invalide en cas d'échec. Renvoie le résultat et le texte d'erreur."
+  },
+  "AIJobFieldWork:getDescription": {
+   "en": "Appends to the base description a localized text for the current task: driving to the field or field work.",
+   "fr": "Ajoute à la description de base un texte localisé pour la tâche courante : trajet vers le champ ou travail du champ."
+  },
+  "AIJobFieldWork:getIsStartable": {
+   "en": "Server-side check before starting: refuses if the AI limit is reached, the vehicle is gone, the player lacks the `hireAssistant` permission, or the vehicle is in use. Returns true plus `AIJob.START_SUCCESS`, else false plus a `AIJobFieldWork.START_ERROR_*` state.",
+   "fr": "Contrôle côté serveur avant démarrage : refuse si la limite d'IA est atteinte, si le véhicule a disparu, si le joueur n'a pas la permission `hireAssistant` ou si le véhicule est utilisé. Renvoie true plus `AIJob.START_SUCCESS`, sinon false plus un état `AIJobFieldWork.START_ERROR_*`."
+  },
+  "AIJobFieldWork.getIsStartErrorText": {
+   "en": "Maps a start state returned by `getIsStartable` to a localized text: limit reached, vehicle deleted, no permission, vehicle in use, otherwise the success text. The `AIJobFieldWork.START_ERROR_*` constants are not defined in this file (UNVERIFIED).",
+   "fr": "Convertit un état de démarrage renvoyé par `getIsStartable` en texte localisé : limite atteinte, véhicule supprimé, pas de permission, véhicule utilisé, sinon le texte de succès. Les constantes `AIJobFieldWork.START_ERROR_*` ne sont pas définies dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "AIJobFieldWork:getPricePerMs": {
+   "en": "Returns 0.0005 per millisecond.",
+   "fr": "Renvoie 0.0005 par milliseconde."
+  }
+ }
+}

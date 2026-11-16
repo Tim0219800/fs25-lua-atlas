@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/specializations/components/ToolConnectionHoseMount.lua",
+ "module": {
+  "en": "Loads an extra hose-mount asset (XML plus shared i3d) that sits between two connection hose targets of a vehicle, so hoses of an attached tool can be routed through an intermediate mount. After loading it registers new hose targets and tool connector hoses into the vehicle's `spec_connectionHoses` (the ConnectionHoses specialization, defined elsewhere, UNVERIFIED) and can stretch itself to a requested length. Client-side visual/setup helper.",
+  "fr": "Charge un asset de support de flexibles (XML plus i3d partagé) placé entre deux cibles de flexible d'un véhicule, afin que les flexibles d'un outil attelé puissent passer par un support intermédiaire. Après chargement il enregistre de nouvelles cibles de flexible et de connecteurs d'outil dans `spec_connectionHoses` du véhicule (spécialisation ConnectionHoses, définie ailleurs, NON VÉRIFIÉ) et peut s'étirer à une longueur demandée. Aide de mise en place/visuelle côté client."
+ },
+ "fonctions": {
+  "ToolConnectionHoseMount.new": {
+   "en": "Creates a hose mount object for a vehicle with empty component and i3d mapping tables.",
+   "fr": "Crée un objet de support de flexibles pour un véhicule avec des tables de composants et de mappings i3d vides."
+  },
+  "ToolConnectionHoseMount:delete": {
+   "en": "Deletes the pending XML file and the mount node, and releases the shared i3d request.",
+   "fr": "Supprime le fichier XML en attente et le nœud du support, et libère la requête i3d partagée."
+  },
+  "ToolConnectionHoseMount:setCallback": {
+   "en": "Stores a callback (and optional target) called with the success flag after loading.",
+   "fr": "Mémorise un callback (et une cible optionnelle) appelé avec l'indicateur de succès après le chargement."
+  },
+  "ToolConnectionHoseMount:onFinished": {
+   "en": "Invokes the registered callback, with or without target, passing the success flag.",
+   "fr": "Appelle le callback enregistré, avec ou sans cible, en lui passant l'indicateur de succès."
+  },
+  "ToolConnectionHoseMount:setReferenceTargets": {
+   "en": "Stores the start and end hose targets the mount sits between and looks up the parent tool connection hose of the start target in `spec_connectionHoses`.",
+   "fr": "Mémorise les cibles de flexible de début et de fin entre lesquelles se place le support et recherche le flexible de connexion parent de la cible de début dans `spec_connectionHoses`."
+  },
+  "ToolConnectionHoseMount:setLinkNode": {
+   "en": "Stores the node to link under and the local translation and rotation (default 0) of the mount.",
+   "fr": "Mémorise le nœud sous lequel lier le support ainsi que sa translation et rotation locales (0 par défaut)."
+  },
+  "ToolConnectionHoseMount:loadFromXML": {
+   "en": "Loads the mount XML and starts the async shared i3d load. Requires start/end targets and a link node, otherwise logs a warning, calls `onFinished(false)` and returns false.",
+   "fr": "Charge le XML du support et lance le chargement i3d partagé asynchrone. Exige des cibles de début/fin et un nœud d'attache, sinon journalise un avertissement, appelle `onFinished(false)` et renvoie false."
+  },
+  "ToolConnectionHoseMount:onI3DLoaded": {
+   "en": "Async callback: reads default length, hose targets (back/front/mounting nodes, type name, options), extra hoses, adjust nodes and scale nodes; links and places the root, creates the hoses and applies a pending length.",
+   "fr": "Callback asynchrone : lit la longueur par défaut, les cibles de flexible (nœuds arrière/avant/montage, nom de type, options), les flexibles supplémentaires, les nœuds d'ajustement et d'échelle ; lie et place la racine, crée les flexibles et applique une longueur en attente."
+  },
+  "ToolConnectionHoseMount:setLength": {
+   "en": "Stretches the mount to the given length by scaling adjust node z translations and scale node z scales relative to the default length. If not loaded yet, the length is kept and applied after loading.",
+   "fr": "Étire le support à la longueur donnée en mettant à l'échelle les translations z des nœuds d'ajustement et les échelles z des nœuds d'échelle par rapport à la longueur par défaut. Si pas encore chargé, la longueur est conservée et appliquée après le chargement."
+  },
+  "ToolConnectionHoseMount:addHoseTarget": {
+   "en": "Adds a hose target for a node into the vehicle's target list and type index, copying joints, straightening factor and adapter name from a source target. Returns the new target index.",
+   "fr": "Ajoute une cible de flexible pour un nœud dans la liste de cibles du véhicule et l'index par type, en copiant articulations, facteur de redressement et nom d'adaptateur d'une cible source. Renvoie le nouvel indice de cible."
+  },
+  "ToolConnectionHoseMount:createToolConnectionHoses": {
+   "en": "For each configured target, creates front and back hose targets and a new tool connection hose entry linking them (hiding the mounting node) and registers it in `toolConnectorHoses` and `targetNodeToToolConnection`.",
+   "fr": "Pour chaque cible configurée, crée des cibles de flexible avant et arrière et une nouvelle entrée de flexible de connexion d'outil les reliant (en masquant le nœud de montage) et l'enregistre dans `toolConnectorHoses` et `targetNodeToToolConnection`."
+  },
+  "ToolConnectionHoseMount.registerExternalXMLPaths": {
+   "en": "Registers the XML paths of the hose mount asset (i3d mappings under `toolConnectionHoseMount`; other paths registration lines may exist but are not summarised).",
+   "fr": "Enregistre les chemins XML de l'asset de support de flexibles (mappings i3d sous `toolConnectionHoseMount` ; d'autres lignes d'enregistrement peuvent exister mais ne sont pas détaillées)."
+  }
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "fichier": "collections/BaseStateMachineState.lua",
+ "module": {
+  "en": "Abstract base class for a state used with a StateMachine. A state keeps a table of transitions (condition function plus target state), has empty enter/exit hooks and update hooks for the active and inactive cases, and can draw itself as a colored rectangle for debugging. Concrete states are expected to subclass it and pass their own metatable.",
+  "fr": "Classe de base abstraite pour un état utilisé avec un StateMachine. Un état garde une table de transitions (fonction de condition et état cible), possède des crochets d'entrée/sortie vides et des crochets de mise à jour pour les cas actif et inactif, et peut se dessiner sous forme de rectangle coloré pour le débogage. Les états concrets sont censés en hériter et fournir leur propre métatable."
+ },
+ "fonctions": {
+  "BaseStateMachineState.new": {
+   "en": "Creates a state bound to its owning state machine, with an empty transitions table and unset debug bounds. Meant to be called from a derived class constructor.",
+   "fr": "Crée un état lié à sa machine d'états propriétaire, avec une table de transitions vide et des bornes de débogage non définies. Destiné à être appelé depuis le constructeur d'une classe dérivée."
+  },
+  "BaseStateMachineState:trySwitchToValidTransition": {
+   "en": "Evaluates each transition condition (called with its context) in unspecified `pairs` order. On the first true result it calls stateMachine:changeState with the target and returns that state, otherwise nil.",
+   "fr": "Évalue la condition de chaque transition (appelée avec son contexte) dans l'ordre non spécifié de `pairs`. Au premier résultat vrai, appelle stateMachine:changeState avec la cible et retourne cet état, sinon nil."
+  },
+  "BaseStateMachineState:createTransitions": {
+   "en": "Empty hook for subclasses to define transitions once all states exist. The base version does nothing.",
+   "fr": "Crochet vide permettant aux sous-classes de définir leurs transitions une fois tous les états créés. La version de base ne fait rien."
+  },
+  "BaseStateMachineState:addTransition": {
+   "en": "Registers a transition to targetState guarded by conditionFunction; the context passed to the condition defaults to the target state. One transition per target: adding again replaces the earlier one. Returns the transition table.",
+   "fr": "Enregistre une transition vers targetState protégée par conditionFunction ; le contexte passé à la condition est par défaut l'état cible. Une seule transition par cible : en ajouter une autre remplace la précédente. Retourne la table de transition."
+  },
+  "BaseStateMachineState:calculateIfShouldBeForced": {
+   "en": "Hook telling whether this state must be forced as current. Base version always returns false.",
+   "fr": "Crochet indiquant si cet état doit être imposé comme état courant. La version de base retourne toujours false."
+  },
+  "BaseStateMachineState:calculateIfValidEntryState": {
+   "en": "Hook telling whether this state is a valid state to return to after a forced state. Base version always returns false.",
+   "fr": "Crochet indiquant si cet état est valide pour y revenir après un état imposé. La version de base retourne toujours false."
+  },
+  "BaseStateMachineState:onStateEntered": {
+   "en": "Empty hook called when the machine enters this state; receives the previous state.",
+   "fr": "Crochet vide appelé quand la machine entre dans cet état ; reçoit l'état précédent."
+  },
+  "BaseStateMachineState:onStateExited": {
+   "en": "Empty hook called when the machine leaves this state; receives the next state.",
+   "fr": "Crochet vide appelé quand la machine quitte cet état ; reçoit l'état suivant."
+  },
+  "BaseStateMachineState:updateAsCurrent": {
+   "en": "Per-update hook while this is the current state (dt in ms). Unless the machine is passive, it checks the transitions and may switch state.",
+   "fr": "Crochet de mise à jour tant que cet état est l'état courant (dt en ms). Sauf si la machine est passive, il vérifie les transitions et peut changer d'état."
+  },
+  "BaseStateMachineState:updateAsInactive": {
+   "en": "Empty per-update hook for states that are not the current one (dt in ms).",
+   "fr": "Crochet de mise à jour vide pour les états qui ne sont pas l'état courant (dt en ms)."
+  },
+  "BaseStateMachineState:caclulateDebugScreenBounds": {
+   "en": "Converts this state's relative debug position and size into screen-space values scaled by the given area. Returns four nils if any debug bound is unset. Note: the name is misspelled (caclulate) in the source.",
+   "fr": "Convertit la position et la taille relatives de débogage de cet état en valeurs écran mises à l'échelle de la zone donnée. Retourne quatre nil si une borne de débogage n'est pas définie. À noter : le nom est mal orthographié (caclulate) dans la source."
+  },
+  "BaseStateMachineState:debugDraw": {
+   "en": "Draws the state's debug rectangle, green for the current state and gray otherwise unless a color is passed, and returns its bounds. Returns four nils if the state has no debug bounds.",
+   "fr": "Dessine le rectangle de débogage de l'état, vert pour l'état courant et gris sinon sauf si une couleur est passée, et retourne ses bornes. Retourne quatre nil si l'état n'a pas de bornes de débogage."
+  }
+ }
+}

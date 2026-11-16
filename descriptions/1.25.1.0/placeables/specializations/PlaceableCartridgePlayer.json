@@ -1,0 +1,49 @@
+{
+ "fichier": "placeables/specializations/PlaceableCartridgePlayer.lua",
+ "module": {
+  "en": "Placeable specialization for the in-game computer that cycles through game cartridges. Cartridges are the visible children of an items node; activating the player moves the cartridge content onto a connector node and shows the matching monitor child and light. A trigger node with the player collision bit makes it usable by the local player.",
+  "fr": "Spécialisation de placeable pour l'ordinateur de jeu qui fait défiler des cartouches. Les cartouches sont les enfants visibles d'un nœud d'objets ; l'activation déplace le contenu de la cartouche sur un nœud connecteur et affiche l'enfant d'écran et la lumière correspondants. Un nœud de déclencheur avec le bit de collision joueur le rend utilisable par le joueur local."
+ },
+ "fonctions": {
+  "PlaceableCartridgePlayer.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableCartridgePlayer.registerFunctions": {
+   "en": "Registers `cartridgePlayerTriggerCallback` and `activatePlayer`.",
+   "fr": "Enregistre `cartridgePlayerTriggerCallback` et `activatePlayer`."
+  },
+  "PlaceableCartridgePlayer.registerEventListeners": {
+   "en": "Subscribes to `onLoad` and `onDelete`.",
+   "fr": "S'abonne à `onLoad` et `onDelete`."
+  },
+  "PlaceableCartridgePlayer.registerXMLPaths": {
+   "en": "Declares the `cartridgePlayer` node keys `itemsNode`, `monitorNode`, `monitorLightNode`, `connectorNode`, `triggerNode` and a `play` sound sample.",
+   "fr": "Déclare les clés de nœuds `cartridgePlayer` : `itemsNode`, `monitorNode`, `monitorLightNode`, `connectorNode`, `triggerNode`, et un échantillon sonore `play`."
+  },
+  "PlaceableCartridgePlayer:onLoad": {
+   "en": "Loads the nodes and, if a trigger exists, checks it has the player collision bit (logs an error and returns nil otherwise) before registering the trigger and activatable. Loads the play sound on clients. Returns self.",
+   "fr": "Charge les nœuds et, s'il existe un déclencheur, vérifie qu'il porte le bit de collision joueur (sinon journalise une erreur et renvoie nil) avant d'enregistrer le déclencheur et l'activable. Charge le son sur les clients. Renvoie self."
+  },
+  "PlaceableCartridgePlayer:onDelete": {
+   "en": "Removes the activatable and the trigger node, and deletes the sound samples on clients.",
+   "fr": "Retire l'activable et le nœud de déclencheur, et supprime les échantillons sonores côté client."
+  },
+  "PlaceableCartridgePlayer:cartridgePlayerTriggerCallback": {
+   "en": "Trigger callback: when the local player enters, adds the activatable to the activatable system; when leaving, removes it.",
+   "fr": "Rappel du déclencheur : quand le joueur local entre, ajoute l'activable au système d'activables ; quand il sort, le retire."
+  },
+  "PlaceableCartridgePlayer:activatePlayer": {
+   "en": "Puts the current cartridge back, picks the next visible cartridge (wrapping around), then moves its content to the connector and shows its monitor. Shows a message if there are no cartridges and plays a sound on clients when the selection changed.",
+   "fr": "Remet la cartouche actuelle en place, choisit la cartouche visible suivante (avec retour au début), puis déplace son contenu sur le connecteur et affiche son écran. Affiche un message s'il n'y a aucune cartouche et joue un son côté client quand la sélection change."
+  },
+  "PlaceableCartridgePlayerActivatable.new": {
+   "en": "Creates the activatable for a cartridge player placeable, with the 'change cartridge' action text.",
+   "fr": "Crée l'activable pour un placeable lecteur de cartouches, avec le texte d'action « changer de cartouche »."
+  },
+  "PlaceableCartridgePlayerActivatable:run": {
+   "en": "Activation handler: calls `activatePlayer` on the owning placeable.",
+   "fr": "Gestionnaire d'activation : appelle `activatePlayer` sur le placeable propriétaire."
+  }
+ }
+}

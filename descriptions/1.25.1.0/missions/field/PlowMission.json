@@ -1,0 +1,49 @@
+{
+ "fichier": "missions/field/PlowMission.lua",
+ "module": {
+  "en": "Plowing contract, a subclass of AbstractFieldMission using WorkAreaType.PLOW. Completion is the share of field pixels whose ground type is PLOWED. It is offered on fields with a harvested or withered crop whose plow level is not yet at maximum.",
+  "fr": "Contrat de labour, sous-classe de AbstractFieldMission utilisant WorkAreaType.PLOW. L'achèvement est la part des pixels du champ dont le type de sol est PLOWED. Proposé sur les champs avec une culture récoltée ou flétrie dont le niveau de labour n'est pas encore au maximum."
+ },
+ "fonctions": {
+  "PlowMission.new": {
+   "en": "Constructor. Builds the mission with the plow title and description texts and the plow work area type.",
+   "fr": "Constructeur. Crée la mission avec les textes de titre et description du labour et le type de zone de travail charrue."
+  },
+  "PlowMission:createModifier": {
+   "en": "Creates a density map modifier on the ground type map and a filter matching the PLOWED value; used to measure completion.",
+   "fr": "Crée un modificateur de density map sur la carte du type de sol et un filtre sur la valeur PLOWED ; sert à mesurer l'avancement."
+  },
+  "PlowMission:getFieldFinishTask": {
+   "en": "Sets the field state to fruit type unknown and ground type PLOWED, then returns the parent finish task. Unlike StonePickMission, it does not check isServer.",
+   "fr": "Met l'état du champ à culture inconnue et sol PLOWED, puis renvoie la tâche de fin du parent. Contrairement à StonePickMission, ne teste pas isServer."
+  },
+  "PlowMission:getRewardPerHa": {
+   "en": "Returns the reward per hectare stored for the plow mission type in MissionManager.",
+   "fr": "Renvoie la récompense par hectare enregistrée pour le type de mission labour dans MissionManager."
+  },
+  "PlowMission:getMissionTypeName": {
+   "en": "Returns PlowMission.NAME (value defined elsewhere, not in this file).",
+   "fr": "Renvoie PlowMission.NAME (valeur définie ailleurs, pas dans ce fichier)."
+  },
+  "PlowMission:validate": {
+   "en": "Runs the parent validation, then, if not finished, rechecks that the field is still eligible. Returns false if either fails.",
+   "fr": "Exécute la validation du parent puis, si non terminée, revérifie que le champ est toujours éligible. Renvoie false si l'un échoue."
+  },
+  "PlowMission.loadMapData": {
+   "en": "Reads #rewardPerHa from the map XML (default 2800) into the plow mission type data. Returns true.",
+   "fr": "Lit #rewardPerHa dans le XML de la carte (2800 par défaut) vers les données du type de mission labour. Renvoie true."
+  },
+  "PlowMission.tryGenerateMission": {
+   "en": "Server-side generator: if canRun, picks a free eligible field, creates and inits a PlowMission and sets its default end date. Returns the mission or nil.",
+   "fr": "Générateur côté serveur : si canRun, choisit un champ libre et éligible, crée et initialise une PlowMission et fixe sa date de fin par défaut. Renvoie la mission ou nil."
+  },
+  "PlowMission.isAvailableForField": {
+   "en": "For a new mission, requires a valid state, a non-grass-only field, plow level below max, a known fruit not harvest-mission-only, not a fresh catch crop, and a cut or withered growth state. Always true for an existing mission.",
+   "fr": "Pour une nouvelle mission, exige un état valide, un champ non réservé à l'herbe, un niveau de labour inférieur au max, une culture connue non réservée aux missions de récolte, pas une culture dérobée jeune, et un stade coupé ou flétri. Toujours true pour une mission existante."
+  },
+  "PlowMission.canRun": {
+   "en": "Returns true while the number of running plow missions is below the maximum for the type.",
+   "fr": "Renvoie true tant que le nombre de missions de labour en cours est inférieur au maximum du type."
+  }
+ }
+}

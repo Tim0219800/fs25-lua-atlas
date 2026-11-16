@@ -1,0 +1,13 @@
+{
+ "fichier": "utils/ChainsawUtil.lua",
+ "module": {
+  "en": "Signature only (no body in the SDK dump): utility table for chainsaw tree cutting. The only declared function is implemented elsewhere (UNVERIFIED), presumably in the engine or in code not shipped in the dump.",
+  "fr": "Signature seule (pas de corps dans le dump du SDK) : table utilitaire pour la coupe d'arbres à la tronçonneuse. La seule fonction déclarée est implémentée ailleurs (NON VÉRIFIÉ), vraisemblablement dans le moteur ou dans du code absent du dump."
+ },
+ "fonctions": {
+  "ChainsawUtil.cutSplitShape": {
+   "en": "Signature only (no body in the SDK dump): cuts a split shape at a position given by a point, a plane normal and a Y axis, with cut sizes along Y and Z, for a farm id. Exact behaviour and return values UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : coupe une forme découpable en un point, avec une normale de plan et un axe Y, des tailles de coupe en Y et Z, pour un identifiant de ferme. Comportement exact et valeurs de retour NON VÉRIFIÉS."
+  }
+ }
+}

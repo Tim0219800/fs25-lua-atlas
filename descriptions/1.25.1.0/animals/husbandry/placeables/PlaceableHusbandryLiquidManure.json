@@ -1,0 +1,53 @@
+{
+ "fichier": "animals/husbandry/placeables/PlaceableHusbandryLiquidManure.lua",
+ "module": {
+  "en": "Placeable specialization that makes a husbandry produce liquid manure. It has no prerequisites but relies on husbandry storage methods (`addHusbandryFillLevelFromTool`, `getHusbandryFreeCapacity`, ...) provided by another specialization. The hourly output is computed from the animal clusters' `liquidManure` output curve and added to the storage on the server; a full tank slows the husbandry's production.",
+  "fr": "Spécialisation de placeable qui fait produire du lisier à un élevage. Elle n'a pas de prérequis mais s'appuie sur des méthodes de stockage d'élevage (`addHusbandryFillLevelFromTool`, `getHusbandryFreeCapacity`, ...) fournies par une autre spécialisation. La production horaire est calculée d'après la courbe de sortie `liquidManure` des clusters d'animaux et ajoutée au stockage sur le serveur ; un réservoir plein ralentit la production de l'élevage."
+ },
+ "fonctions": {
+  "PlaceableHusbandryLiquidManure.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is required.",
+   "fr": "Renvoie toujours vrai : aucune spécialisation prérequise n'est nécessaire."
+  },
+  "PlaceableHusbandryLiquidManure.registerOverwrittenFunctions": {
+   "en": "Registers overrides of `updateOutput`, `updateProduction`, `updateInfo` and `getConditionInfos`.",
+   "fr": "Enregistre les surcharges de `updateOutput`, `updateProduction`, `updateInfo` et `getConditionInfos`."
+  },
+  "PlaceableHusbandryLiquidManure.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onFinalizePlacement` and `onHusbandryAnimalsUpdate`.",
+   "fr": "S'abonne à `onLoad`, `onFinalizePlacement` et `onHusbandryAnimalsUpdate`."
+  },
+  "PlaceableHusbandryLiquidManure.registerXMLPaths": {
+   "en": "Registers `husbandry.liquidManure.manure#factor` and `#active`. Note: no code in this file reads these two values.",
+   "fr": "Enregistre `husbandry.liquidManure.manure#factor` et `#active`. À noter : aucun code de ce fichier ne lit ces deux valeurs."
+  },
+  "PlaceableHusbandryLiquidManure:onLoad": {
+   "en": "Initializes the hourly output to 0, sets the fill type to liquid manure and prepares the info entry.",
+   "fr": "Initialise la production horaire à 0, fixe le type de remplissage sur le lisier et prépare l'entrée d'information."
+  },
+  "PlaceableHusbandryLiquidManure:onFinalizePlacement": {
+   "en": "Logs an XML warning if the husbandry storage does not support the liquid manure fill type.",
+   "fr": "Journalise un avertissement XML si le stockage de l'élevage ne supporte pas le type de remplissage lisier."
+  },
+  "PlaceableHusbandryLiquidManure:updateOutput": {
+   "en": "Override: on the server adds liquid manure to the husbandry storage (food factor times liters per hour times time adjustment), then calls the parent.",
+   "fr": "Surcharge : sur le serveur ajoute du lisier au stockage de l'élevage (facteur de nourriture fois litres par heure fois ajustement temporel), puis appelle le parent."
+  },
+  "PlaceableHusbandryLiquidManure:updateProduction": {
+   "en": "Override: on the server multiplies the parent's production factor by 0.75 when the liquid manure storage has no free capacity.",
+   "fr": "Surcharge : sur le serveur multiplie le facteur de production du parent par 0,75 quand le stockage de lisier n'a plus de place."
+  },
+  "PlaceableHusbandryLiquidManure:onHusbandryAnimalsUpdate": {
+   "en": "Recomputes `litersPerHour` from the clusters: daily liquid manure per animal for its age times the animal count, divided by 24.",
+   "fr": "Recalcule `litersPerHour` d'après les clusters : lisier quotidien par animal selon son âge fois le nombre d'animaux, divisé par 24."
+  },
+  "PlaceableHusbandryLiquidManure:getConditionInfos": {
+   "en": "Override: appends a liquid manure fill entry (level and clamped ratio, inverted bar); if there is no tank capacity the entry is disabled and labelled with a missing tank message.",
+   "fr": "Surcharge : ajoute une entrée de remplissage du lisier (niveau et ratio borné, barre inversée) ; sans capacité de cuve, l'entrée est désactivée et porte un message de cuve manquante."
+  },
+  "PlaceableHusbandryLiquidManure:updateInfo": {
+   "en": "Override: appends the current liquid manure level in liters to the info list.",
+   "fr": "Surcharge : ajoute à la liste d'informations le niveau actuel de lisier en litres."
+  }
+ }
+}

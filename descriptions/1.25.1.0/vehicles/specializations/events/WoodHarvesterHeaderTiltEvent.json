@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/WoodHarvesterHeaderTiltEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the tilt state of a wood harvester head between server and clients. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise l'état d'inclinaison de la tête d'une abatteuse entre serveur et clients. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "WoodHarvesterHeaderTiltEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "WoodHarvesterHeaderTiltEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a boolean tilt state); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un booléen d'état d'inclinaison) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "WoodHarvesterHeaderTiltEvent:readStream": {
+      "en": "Reads a node object and a boolean tilt state from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un booléen d'état d'inclinaison depuis le flux, puis appelle `run(connection)`."
+    },
+    "WoodHarvesterHeaderTiltEvent:writeStream": {
+      "en": "Writes a node object and a boolean tilt state to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un booléen d'état d'inclinaison dans le flux (même ordre que `readStream`)."
+    },
+    "WoodHarvesterHeaderTiltEvent:run": {
+      "en": "Applies the event on the receiving side: calls `setWoodHarvesterTiltState(state, true)` on the object if synchronized. Unlike most events it does not re-broadcast from `run`.",
+      "fr": "Applique l'événement côté récepteur : appelle `setWoodHarvesterTiltState(état, true)` sur l'objet s'il est synchronisé. Contrairement à la plupart des événements, il ne retransmet pas depuis `run`."
+    },
+    "WoodHarvesterHeaderTiltEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

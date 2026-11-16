@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/activatables/BuyBuildingActivatable.lua",
+ "module": {
+  "en": "Activatable object that shows a buy-building action prompt for an unowned placeable. It is usable when the local farm can access the placeable, and running it asks the placeable to start a purchase if it still has no owner.",
+  "fr": "Objet activable qui affiche l'action d'achat d'un bâtiment pour un placeable sans propriétaire. Il est utilisable si la ferme locale peut accéder au placeable, et son exécution demande au placeable de lancer l'achat s'il n'a toujours pas de propriétaire."
+ },
+ "fonctions": {
+  "BuyBuildingActivatable.new": {
+   "en": "Creates the activatable for a placeable and sets the localized prompt `action_buyBuilding`.",
+   "fr": "Crée l'activable pour un placeable et fixe le texte localisé `action_buyBuilding`."
+  },
+  "BuyBuildingActivatable:getIsActivatable": {
+   "en": "Returns whether the current farm may access the placeable according to the mission access handler.",
+   "fr": "Renvoie si la ferme courante peut accéder au placeable selon le gestionnaire d'accès de la mission."
+  },
+  "BuyBuildingActivatable:run": {
+   "en": "If the placeable owner is the unowned marker (`AccessHandler.EVERYONE`), calls its `buyRequest`; otherwise does nothing.",
+   "fr": "Si le propriétaire du placeable est le marqueur sans propriétaire (`AccessHandler.EVERYONE`), appelle son `buyRequest` ; sinon ne fait rien."
+  }
+ }
+}

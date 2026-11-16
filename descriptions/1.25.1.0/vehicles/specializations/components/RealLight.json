@@ -1,0 +1,85 @@
+{
+ "fichier": "vehicles/specializations/components/RealLight.lua",
+ "module": {
+  "en": "Wrapper around one or more engine light sources used by the vehicle Lights specialization (`spec_lights`). It reads a light node from XML, handles light types and excluded types, IES profile, light scattering and shadow (including a merged-shadow helper spot light) according to the `LIGHTS_PROFILE` setting, and turns the light on or off with a charge-based colour scale. Client-side visual; it calls vehicle methods such as `getIsLightActive` and `getRealLightFromNode` that are defined elsewhere (UNVERIFIED).",
+  "fr": "Enveloppe autour d'une ou plusieurs sources de lumière du moteur, utilisée par la spécialisation Lights du véhicule (`spec_lights`). Elle lit un nœud de lumière depuis le XML, gère types de lumière et types exclus, profil IES, diffusion lumineuse et ombres (dont un spot auxiliaire pour ombres fusionnées) selon le réglage `LIGHTS_PROFILE`, et allume ou éteint la lumière avec une échelle de couleur par charge. Visuel côté client ; elle appelle des méthodes du véhicule comme `getIsLightActive` et `getRealLightFromNode` définies ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "RealLight.new": {
+   "en": "Creates a real light object for a vehicle with no charge function.",
+   "fr": "Crée un objet de lumière réelle pour un véhicule, sans fonction de charge."
+  },
+  "RealLight:loadFromXML": {
+   "en": "Loads a real light from XML: validates the node is a light source, collects child light sources, reads intensity scale, light types, IES profile, scattering and shadow settings (builds a merged shadow spot when several sources and shadows are used). Returns false with a warning if the node is missing or not a light.",
+   "fr": "Charge une lumière réelle depuis le XML : vérifie que le nœud est une source de lumière, collecte les sources enfants, lit échelle d'intensité, types de lumière, profil IES, diffusion et ombres (crée un spot d'ombre fusionnée si plusieurs sources et ombres). Renvoie false avec un avertissement si le nœud manque ou n'est pas une lumière."
+  },
+  "RealLight:merge": {
+   "en": "Appends this light's light types and excluded types to another light on the same node and returns that other light.",
+   "fr": "Ajoute les types de lumière et types exclus de cette lumière à une autre lumière sur le même nœud et renvoie cette autre lumière."
+  },
+  "RealLight:updateIESProfile": {
+   "en": "Enables or disables IES profiles on the sources whose names match `RealLight.DEFAULT_LIGHT_PROFILE`, and sets the current intensity scale from the profile. Note: the scale line runs after the disable branch too, so it overrides the reset done there.",
+   "fr": "Active ou désactive les profils IES sur les sources dont le nom correspond à `RealLight.DEFAULT_LIGHT_PROFILE`, et règle l'échelle d'intensité courante d'après le profil. À noter : la ligne d'échelle s'exécute aussi après la branche de désactivation et écrase donc la réinitialisation qui y est faite."
+  },
+  "RealLight:updateLightScattering": {
+   "en": "Turns engine light scattering on or off per source depending on `useLightScattering`, light types, lights profile (high or very high) and range above 7.5; caps the scattering cone angle to `SCATTERING_MAX_ANGLE`.",
+   "fr": "Active ou désactive la diffusion lumineuse du moteur par source selon `useLightScattering`, les types de lumière, le profil de lumières (élevé ou très élevé) et une portée supérieure à 7.5 ; plafonne l'angle de cône de diffusion à `SCATTERING_MAX_ANGLE`."
+  },
+  "RealLight:updateMergedShadows": {
+   "en": "Applies shadow maps (512) according to the lights profile: only at ultra, merges the shadows of several sources or sets a single shadow with priority, ignoring the vehicle components; otherwise disables shadow maps.",
+   "fr": "Applique les shadow maps (512) selon le profil de lumières : seulement en ultra, fusionne les ombres de plusieurs sources ou règle une ombre unique avec priorité, en ignorant les composants du véhicule ; sinon désactive les shadow maps."
+  },
+  "RealLight:finalize": {
+   "en": "Finishes loading by calling `updateMergedShadows`.",
+   "fr": "Termine le chargement en appelant `updateMergedShadows`."
+  },
+  "RealLight:onLightsProfileChanged": {
+   "en": "Re-applies IES profile, light scattering and shadows after the lights quality profile changed.",
+   "fr": "Ré-applique profil IES, diffusion lumineuse et ombres après un changement du profil de qualité des lumières."
+  },
+  "RealLight:setLightTypesMask": {
+   "en": "Computes from a bit mask of active light types whether this light is on (honouring excluded types and the vehicle's light-active check) and a charge scale, optionally from the charge function, then calls `setState`.",
+   "fr": "Détermine à partir d'un masque de bits de types de lumière actifs si cette lumière est allumée (en tenant compte des types exclus et du test d'activité du véhicule) et une échelle de charge, éventuellement via la fonction de charge, puis appelle `setState`."
+  },
+  "RealLight:setIsBlinking": {
+   "en": "Empty hook; real lights ignore blinking state.",
+   "fr": "Fonction vide ; les lumières réelles ignorent l'état de clignotement."
+  },
+  "RealLight:setState": {
+   "en": "Sets the light colour scale from the charge (or 1/0 by state) and shows or hides the light node.",
+   "fr": "Règle l'échelle de couleur de la lumière d'après la charge (ou 1/0 selon l'état) et affiche ou masque le nœud de lumière."
+  },
+  "RealLight:setCharge": {
+   "en": "Multiplies the default colour by the charge and current intensity scale and applies it to every light source.",
+   "fr": "Multiplie la couleur par défaut par la charge et l'échelle d'intensité courante et l'applique à chaque source de lumière."
+  },
+  "RealLight:setChargeFunction": {
+   "en": "Registers a function (and target) that returns the charge scale used by `setLightTypesMask`.",
+   "fr": "Enregistre une fonction (et sa cible) renvoyant l'échelle de charge utilisée par `setLightTypesMask`."
+  },
+  "RealLight.getAreShadowsMergable": {
+   "en": "Checks pairwise whether the cone edges of the given light sources stay within a half space, i.e. whether their shadows can be merged. Returns a boolean.",
+   "fr": "Vérifie par paires si les bords de cône des sources données restent dans un demi-espace, c'est-à-dire si leurs ombres peuvent être fusionnées. Renvoie un booléen."
+  },
+  "RealLight.getConeAngleContribution": {
+   "en": "Helper that returns the angle reached by one cone edge of `lightSource2` as seen from `lightSource1` (edge angle plus half cone).",
+   "fr": "Aide qui renvoie l'angle atteint par un bord de cône de `lightSource2` vu depuis `lightSource1` (angle du bord plus demi-cône)."
+  },
+  "RealLight.getMergedConeAngleSize": {
+   "en": "Returns the largest cone angle needed to cover all given light sources, taking both edges of each cone pairwise.",
+   "fr": "Renvoie le plus grand angle de cône nécessaire pour couvrir toutes les sources données, en considérant les deux bords de chaque cône par paires."
+  },
+  "RealLight.loadLightsFromXML": {
+   "en": "Loads every real light under an XML base key into `lights` (created if nil), merging with an existing light of the same node via `vehicle:getRealLightFromNode`. Returns the list.",
+   "fr": "Charge chaque lumière réelle sous une clé XML de base dans `lights` (créée si nil), en fusionnant avec une lumière existante du même nœud via `vehicle:getRealLightFromNode`. Renvoie la liste."
+  },
+  "RealLight.registerXMLPaths": {
+   "en": "Registers the XML paths of a real light (node, intensity, types, IES profile, scattering, shadows).",
+   "fr": "Enregistre les chemins XML d'une lumière réelle (nœud, intensité, types, profil IES, diffusion, ombres)."
+  },
+  "RealLight.consoleCommandDebugIES": {
+   "en": "Console command: toggles or sets IES profile usage and re-applies it to the real lights of the current vehicle and its children. Note: `IES_DEBUG_ENABLED` is stored here; whether other code reads it is UNVERIFIED.",
+   "fr": "Commande console : bascule ou définit l'usage des profils IES et le ré-applique aux lumières réelles du véhicule courant et de ses enfants. À noter : `IES_DEBUG_ENABLED` est stocké ici ; son éventuelle lecture ailleurs est NON VÉRIFIÉE."
+  }
+ }
+}

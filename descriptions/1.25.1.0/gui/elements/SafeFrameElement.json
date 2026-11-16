@@ -1,0 +1,17 @@
+{
+ "fichier": "gui/elements/SafeFrameElement.lua",
+ "module": {
+  "en": "Minimal GUI element that fills the whole screen with opaque black. It is meant as a backdrop behind some screens so the game does not show through when the UI is shifted by safe-frame margins. It extends GuiElement and is named safeFrame.",
+  "fr": "Élément d'interface minimal qui remplit tout l'écran de noir opaque. Il sert de toile de fond derrière certains écrans pour que le jeu ne soit pas visible lorsque l'interface est décalée par les marges de zone de sécurité. Il étend GuiElement et s'appelle safeFrame."
+ },
+ "fonctions": {
+  "SafeFrameElement.new": {
+   "en": "Constructor. Creates a GuiElement and sets its name to \"safeFrame\".",
+   "fr": "Constructeur. Crée un GuiElement et fixe son nom à \"safeFrame\"."
+  },
+  "SafeFrameElement:draw": {
+   "en": "Draws a black rectangle covering the whole normalized screen (0,0 to 1,1). It ignores clip bounds and does not draw children.",
+   "fr": "Dessine un rectangle noir couvrant tout l'écran normalisé (0,0 à 1,1). Ignore les limites de clipping et ne dessine pas les enfants."
+  }
+ }
+}

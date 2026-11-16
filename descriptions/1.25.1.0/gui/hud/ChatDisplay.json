@@ -1,0 +1,21 @@
+{
+ "fichier": "gui/hud/ChatDisplay.lua",
+ "module": {
+  "en": "HUD panel for the multiplayer chat history, derived from HUDDisplay. It owns a three-slice background (top, scalable middle, bottom) tinted with the HUD background colour, keeps a reference to the message list owned by the mission and tracks scroll position and auto-close time (10 s duration, up to 50 messages). Drawing code is not in this file.",
+  "fr": "Panneau HUD de l'historique du chat multijoueur, dérivé de HUDDisplay. Il possède un fond en trois tranches (haut, milieu extensible, bas) teinté de la couleur de fond du HUD, garde une référence à la liste de messages détenue par la mission et suit la position de défilement et le délai de fermeture (durée 10 s, jusqu'à 50 messages). Le code de dessin n'est pas dans ce fichier."
+ },
+ "fonctions": {
+  "ChatDisplay.new": {
+   "en": "Constructor. Creates the background overlays from gui.chat_top/middle/bottom, an empty message reference, max 50 messages, scroll offset 0 and a 10 000 ms display duration.",
+   "fr": "Constructeur. Crée les overlays de fond depuis gui.chat_top/middle/bottom, une référence de messages vide, 50 messages maximum, un décalage de défilement 0 et une durée d'affichage de 10 000 ms."
+  },
+  "ChatDisplay:storeScaledValues": {
+   "en": "Computes position (left, bottom anchors with a 300 px offset), 300 px wide background slices and scaled text/title sizes, offsets and the maximum panel height from the current UI scale.",
+   "fr": "Calcule la position (ancres gauche et bas avec un décalage de 300 px), les tranches de fond de 300 px de large et les tailles/décalages du texte et du titre ainsi que la hauteur maximale du panneau, selon l'échelle de l'interface."
+  },
+  "ChatDisplay:scrollChatMessages": {
+   "en": "Adds a delta (in messages, positive or negative) to the scroll offset, clamped between 0 and the message count minus one.",
+   "fr": "Ajoute un delta (en messages, positif ou négatif) au décalage de défilement, borné entre 0 et le nombre de messages moins un."
+  }
+ }
+}

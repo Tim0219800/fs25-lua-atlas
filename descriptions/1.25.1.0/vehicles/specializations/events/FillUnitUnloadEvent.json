@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/FillUnitUnloadEvent.lua",
+ "module": {
+  "en": "Network event class `FillUnitUnloadEvent` (extends `Event`) that is a client request to unload the fill units of a vehicle. It carries the vehicle, written only when the stream goes to the server. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `FillUnitUnloadEvent` (hérite de `Event`) qui est une demande client de décharger les unités de remplissage d'un véhicule. Elle transporte le véhicule, écrit seulement quand le flux part vers le serveur. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "FillUnitUnloadEvent.emptyNew": {
+   "en": "Creates an empty `FillUnitUnloadEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `FillUnitUnloadEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "FillUnitUnloadEvent.new": {
+   "en": "Creates the event with its data: the vehicle, written only when the stream goes to the server.",
+   "fr": "Crée l'événement avec ses données : le véhicule, écrit seulement quand le flux part vers le serveur."
+  },
+  "FillUnitUnloadEvent.newServerToClient": {
+   "en": "Creates the event instance meant to go from the server to clients; it carries no vehicle data.",
+   "fr": "Crée l'instance d'événement destinée à aller du serveur vers les clients ; elle ne porte aucune donnée de véhicule."
+  },
+  "FillUnitUnloadEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, written only when the stream goes to the server), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, écrit seulement quand le flux part vers le serveur), puis appelle `run`."
+  },
+  "FillUnitUnloadEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, written only when the stream goes to the server).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, écrit seulement quand le flux part vers le serveur)."
+  },
+  "FillUnitUnloadEvent:run": {
+   "en": "Executes the event on the receiving side: on the server only, calls `unloadFillUnits(true)` on the vehicle.",
+   "fr": "Exécute l'événement côté réception : uniquement sur le serveur, appelle `unloadFillUnits(true)` sur le véhicule."
+  }
+ }
+}

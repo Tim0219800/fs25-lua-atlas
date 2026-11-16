@@ -1,0 +1,13 @@
+{
+ "fichier": "debug/elements/DebugDensityMap.lua",
+ "module": {
+  "en": "DebugDensityMap is a debug element that visualises the values of a density map as coloured, numbered terrain cells around the camera or a chosen centre, with an on-screen colour legend. It relies on fields set elsewhere (`modifier`, `filter`, `numChannels`, `pixelValueToColor`, resolution, radius) and on `drawDebugAreaRectangleFilled`, none of which are defined in this dump.",
+  "fr": "DebugDensityMap est un élément de débogage qui visualise les valeurs d'une density map sous forme de cellules colorées et numérotées sur le terrain autour de la caméra ou d'un centre choisi, avec une légende de couleurs à l'écran. Il dépend de champs définis ailleurs (`modifier`, `filter`, `numChannels`, `pixelValueToColor`, résolution, rayon) et de `drawDebugAreaRectangleFilled`, aucun n'étant défini dans ce dump."
+ },
+ "fonctions": {
+  "DebugDensityMap:draw": {
+   "en": "Samples the density map cell by cell on a grid snapped to the resolution, finds the first value (0 to 2^numChannels-1) present in each cell, fills it with that value's colour and prints the value on it. It then draws a colour legend at the left of the screen. Costly: one modifier query per value per cell.",
+   "fr": "Échantillonne la density map cellule par cellule sur une grille alignée sur la résolution, trouve la première valeur (0 à 2^numChannels-1) présente dans chaque cellule, la remplit avec la couleur de cette valeur et y affiche la valeur. Elle dessine ensuite une légende de couleurs à gauche de l'écran. Coûteux : une requête du modifier par valeur et par cellule."
+  }
+ }
+}

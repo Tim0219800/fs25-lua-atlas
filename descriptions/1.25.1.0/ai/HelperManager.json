@@ -1,0 +1,65 @@
+{
+ "fichier": "ai/HelperManager.lua",
+ "module": {
+  "en": "Manager (child of AbstractManager) that stores the AI helper characters: name, title, colour and a PlayerStyle for their look. It loads data/maps/maps_helpers.xml and the map's own helpers section (map.helpers.helper entries), and tracks which helpers are available or in use. Part of AbstractManager and PlayerStyle:loadFromXMLFile are not in the dump (UNVERIFIED).",
+  "fr": "Gestionnaire (enfant d'AbstractManager) qui stocke les personnages auxiliaires IA : nom, titre, couleur et un PlayerStyle pour leur apparence. Il charge data/maps/maps_helpers.xml et la section helpers de la map (entrées map.helpers.helper) et suit quels auxiliaires sont disponibles ou utilisés. Une partie d'AbstractManager et PlayerStyle:loadFromXMLFile ne sont pas dans le dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HelperManager.new": {
+   "en": "Constructor. Creates the manager through AbstractManager.new with the given or default metatable.",
+   "fr": "Constructeur. Crée le gestionnaire via AbstractManager.new avec la métatable fournie ou par défaut."
+  },
+  "HelperManager:initDataStructures": {
+   "en": "Resets the helper count and the tables (by name, by name-to-index, by index, available list).",
+   "fr": "Réinitialise le nombre d'auxiliaires et les tables (par nom, nom vers index, par index, liste des disponibles)."
+  },
+  "HelperManager:loadDefaultTypes": {
+   "en": "Loads the base helper definitions from data/maps/maps_helpers.xml as base types, then closes the XML file.",
+   "fr": "Charge les définitions d'auxiliaires de base depuis data/maps/maps_helpers.xml comme types de base, puis ferme le fichier XML."
+  },
+  "HelperManager:loadMapData": {
+   "en": "Calls the parent loadMapData, loads the default helpers, then loads any helpers from the map XML through XMLUtil.loadDataFromMapXML. Returns that result.",
+   "fr": "Appelle le loadMapData parent, charge les auxiliaires par défaut, puis charge ceux du XML de la map via XMLUtil.loadDataFromMapXML. Retourne ce résultat."
+  },
+  "HelperManager:loadHelpers": {
+   "en": "Reads each map.helpers.helper entry (#name, #title, #color, child playerStyle), builds a PlayerStyle and adds the helper. Returns false if the XML cannot be wrapped, true otherwise.",
+   "fr": "Lit chaque entrée map.helpers.helper (#name, #title, #color, sous-noeud playerStyle), construit un PlayerStyle et ajoute l'auxiliaire. Retourne false si le XML ne peut pas être encapsulé, true sinon."
+  },
+  "HelperManager:addHelper": {
+   "en": "Adds a helper under an upper-cased valid name, with a title (defaulting to the name), colour and style, and marks it available. A base type with an existing name is rejected; otherwise an existing helper gets its title and style updated.",
+   "fr": "Ajoute un auxiliaire sous un nom valide en majuscules, avec un titre (par défaut le nom), une couleur et un style, et le marque disponible. Un type de base dont le nom existe déjà est rejeté ; sinon un auxiliaire existant voit son titre et son style mis à jour."
+  },
+  "HelperManager:getRandomHelper": {
+   "en": "Returns a random helper from the currently available list. UNVERIFIED behaviour on an empty list (math.random is called with an upper bound of 0).",
+   "fr": "Retourne un auxiliaire au hasard parmi ceux actuellement disponibles. Comportement NON VÉRIFIÉ sur une liste vide (math.random est appelé avec une borne supérieure de 0)."
+  },
+  "HelperManager:getRandomHelperStyle": {
+   "en": "Returns the PlayerStyle of a random helper chosen among all helpers, whether in use or not.",
+   "fr": "Retourne le PlayerStyle d'un auxiliaire tiré au hasard parmi tous les auxiliaires, utilisés ou non."
+  },
+  "HelperManager:getRandomIndex": {
+   "en": "Returns a random helper index between 1 and the total helper count.",
+   "fr": "Retourne un index d'auxiliaire aléatoire entre 1 et le nombre total d'auxiliaires."
+  },
+  "HelperManager:getHelperByIndex": {
+   "en": "Returns the helper record for an index, or nil if the index is nil or unknown.",
+   "fr": "Retourne l'enregistrement d'auxiliaire pour un index, ou nil si l'index est nil ou inconnu."
+  },
+  "HelperManager:getHelperByName": {
+   "en": "Returns the helper record for a name (case-insensitive), or nil.",
+   "fr": "Retourne l'enregistrement d'auxiliaire pour un nom (insensible à la casse), ou nil."
+  },
+  "HelperManager:useHelper": {
+   "en": "Marks a helper as in use by removing it from the available list. Returns true if it was found there, false otherwise.",
+   "fr": "Marque un auxiliaire comme utilisé en le retirant de la liste des disponibles. Retourne true s'il y figurait, false sinon."
+  },
+  "HelperManager:releaseHelper": {
+   "en": "Marks a helper as free again by appending it to the available list. It does not check for duplicates.",
+   "fr": "Marque un auxiliaire comme libre en l'ajoutant à la liste des disponibles. Ne vérifie pas les doublons."
+  },
+  "HelperManager:getNumOfHelpers": {
+   "en": "Returns the total number of registered helpers.",
+   "fr": "Retourne le nombre total d'auxiliaires enregistrés."
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "fichier": "gui/elements/PictureElement.lua",
+ "module": {
+  "en": "Bitmap element that draws its image with a content mode (no scaling, scale to fill, or scale with aspect fit) based on a declared source image size. It extends BitmapElement and replaces its draw. The helper that computes the adjusted rectangle (getAdjustedPosition) and the CONTENT_MODE constants are not in this dump (UNVERIFIED).",
+  "fr": "Élément bitmap qui dessine son image selon un mode de contenu (sans mise à l'échelle, remplissage, ou mise à l'échelle avec conservation du ratio) à partir d'une taille d'image source déclarée. Il étend BitmapElement et remplace son draw. L'aide qui calcule le rectangle ajusté (getAdjustedPosition) et les constantes CONTENT_MODE ne sont pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PictureElement.new": {
+   "en": "Constructor. Builds a BitmapElement with aspect-fit content mode, a default image size of 2048 by 2048 and aspect ratio 1.",
+   "fr": "Constructeur. Construit un BitmapElement avec le mode de contenu aspect-fit, une taille d'image par défaut de 2048 par 2048 et un ratio de 1."
+  },
+  "PictureElement:loadFromXML": {
+   "en": "Loads the base element, reads the imageSize attribute as normalized screen values and recomputes the aspect ratio.",
+   "fr": "Charge l'élément de base, lit l'attribut imageSize comme valeurs d'écran normalisées et recalcule le ratio."
+  },
+  "PictureElement:loadProfile": {
+   "en": "Loads the base profile, then imageSize (with the aspect ratio) and pictureContentMode, which accepts noScaling, scaleToFill or scaleAspectFit; other values leave the mode unchanged.",
+   "fr": "Charge le profil de base, puis imageSize (avec le ratio) et pictureContentMode, qui accepte noScaling, scaleToFill ou scaleAspectFit ; les autres valeurs laissent le mode inchangé."
+  },
+  "PictureElement:copyAttributes": {
+   "en": "Copies content mode, aspect ratio and image size from a source element after the base copy.",
+   "fr": "Copie le mode de contenu, le ratio et la taille d'image depuis un élément source après la copie de base."
+  },
+  "PictureElement:draw": {
+   "en": "Renders the overlay in the adjusted rectangle with the given clip bounds, draws a yellow debug frame when debug is enabled, and skips BitmapElement's draw by calling the grandparent draw directly.",
+   "fr": "Dessine l'overlay dans le rectangle ajusté avec les limites de clipping données, trace un cadre jaune de débogage si le débogage est actif, et saute le draw de BitmapElement en appelant directement celui du grand-parent."
+  }
+ }
+}

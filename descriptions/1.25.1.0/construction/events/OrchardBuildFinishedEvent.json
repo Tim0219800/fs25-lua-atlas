@@ -1,0 +1,29 @@
+{
+ "fichier": "construction/events/OrchardBuildFinishedEvent.lua",
+ "module": {
+  "en": "Network event sent from the server to the requesting client to close an orchard build run and report the outcome as a status code plus the number of completed steps. On the client it publishes a message through `g_messageCenter`. The `STATUS` table and `STATUS_NUM_BITS` constants are referenced but not present in the dump, so their values are UNVERIFIED.",
+  "fr": "Événement réseau envoyé du serveur au client demandeur pour clore une construction de verger et rapporter le résultat sous forme de code d'état et de nombre d'étapes terminées. Côté client il publie un message via `g_messageCenter`. La table `STATUS` et la constante `STATUS_NUM_BITS` sont référencées mais absentes du dump, leurs valeurs sont NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "OrchardBuildFinishedEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel, used when reading from a stream.",
+   "fr": "Crée un événement vide sur le canal réseau principal, utilisé lors de la lecture d'un flux."
+  },
+  "OrchardBuildFinishedEvent.new": {
+   "en": "Creates the answer with the run id, a status code and the count of completed build steps.",
+   "fr": "Crée la réponse avec l'id de construction, un code d'état et le nombre d'étapes de construction terminées."
+  },
+  "OrchardBuildFinishedEvent:readStream": {
+   "en": "Client side: reads request id (UInt8), status (UIntN of `STATUS_NUM_BITS` bits) and built steps (UInt16), then calls `run`.",
+   "fr": "Côté client : lit l'id de requête (UInt8), l'état (UIntN de `STATUS_NUM_BITS` bits) et les étapes construites (UInt16), puis appelle `run`."
+  },
+  "OrchardBuildFinishedEvent:writeStream": {
+   "en": "Server side: writes request id, status and built steps in the same layout that `readStream` expects.",
+   "fr": "Côté serveur : écrit l'id de requête, l'état et les étapes construites dans la même disposition que celle attendue par `readStream`."
+  },
+  "OrchardBuildFinishedEvent:run": {
+   "en": "Publishes `OrchardBuildFinishedEvent` on `g_messageCenter` with request id, status code and built steps; subscribers (UI, not in this dump) react to it.",
+   "fr": "Publie `OrchardBuildFinishedEvent` sur `g_messageCenter` avec l'id de requête, le code d'état et les étapes construites ; les abonnés (interface, hors dump) y réagissent."
+  }
+ }
+}

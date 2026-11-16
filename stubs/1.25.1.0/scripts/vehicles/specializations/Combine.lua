@@ -1,173 +1,173 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Combine.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation des moissonneuses-batteuses (et ensileuses à tampon) : reçoit les récoltes calculées par les Cutter attachés (addCutterArea), les stocke dans la fill unit, gère un tampon d'entrée (processing.inputBuffer, en créneaux temporisés) qui alimente la paille/le déchiquetage, et pilote les effets visuels côté client. EFFETS (tous via g_effectManager:loadEffect, EffectManager absent du dump : rendu interne NON VÉRIFIÉ) : « chopperEffect » (déchiquetage, clé vehicle.combine.chopperEffect), « strawEffect » (dépôt d'andain), « fillEffect » (remplissage/éjection) et « effect » (effets généraux allumés à l'allumage), plus animationNodes, chopperAnimationNodes, strawDropAnimationNodes et fillingAnimationNodes. Conditions : chopper et paille sont activés par des minuteries serveur (isChopperEffectEnabled / isStrawEffectEnabled, mises à 500 ms quand processCombineChopperArea ou processCombineSwathArea travaille réellement, puis décrémentées dans onUpdateTick) ; le fillEffect suit isFilling (délai spec.processing.toggleTime après les dernières surfaces coupées, fillTimeThreshold sans coupe). Le type de remplissage (setEffectTypeInfo) est getCombineLastValidFillType ; la densité d'effet (g_effectManager:setDensity) vaut cutterLoad x strawRatio x 0.8 + 0.2 (calculée dans addCutterArea, valeur par défaut 0.2). Aucun vent, aucune poussière dédiée n'est piloté ici : la poussière de coupe visible vient des effets XML (cutter.effect et effets ci-dessus) et reste un effet binaire + densité. DONNÉES MÉTÉO : une seule lecture, getIsThreshingDuringRain, qui interroge weather:getRainFallScale() et weather:getTimeSinceLastRain() (seuils : pluie >= 0.1, ou >= 0.02 en mode « alerte précoce », et temps depuis la dernière pluie < 20 ; unités de Weather NON VÉRIFIÉES). Si vrai (et hors mission sur la position, et allowThreshingDuringRain faux), le rendement ajouté dans addCutterArea est multiplié par (1 - Combine.RAIN_YIELD_REDUCTION) (constante non définie dans le dump : NON VÉRIFIÉE) et onDraw affiche l'avertissement « la pluie réduit le rendement ». Pas d'effet visuel lié à la pluie ici. RÉSEAU : le serveur calcule ; les états isFilling, chopperPSenabled, strawPSenabled, effectDensity (5 bits), type de remplissage et fruit sont envoyés via effectDirtyFlag dans onWriteUpdateStream et appliqués côté client par setChopperPSEnabled / setStrawPSEnabled / setCombineIsFilling ; le dirtyFlag sépare le fruit et les hectares travaillés ; onWriteStream/onReadStream envoient l'état complet à la connexion (densité fixée à 1) ; setIsSwathActive passe par CombineStrawEnableEvent. Sur un client, processCombineChopperArea et processCombineSwathArea ne travaillent que si currentUpdateDistance <= Combine.CLIENT_DM_UPDATE_RADIUS (valeur NON VÉRIFIÉE). Points d'extension : événements enregistrés onStartThreshing et onStopThreshing (registerEvents) ; fonctions enregistrées setChopperPSEnabled, setStrawPSEnabled, setCombineIsFilling, setIsSwathActive, getIsThreshingDuringRain, getCombineLastValidFillType, getCombineLoadPercentage, addCutterArea, verifyCombine, processCombineChopperArea/SwathArea, loadCombineEffects ; surcharges (getCanBeTurnedOn, getIsFoldAllowed, getDirtMultiplier, getWearMultiplier, getIsTurnedOnAnimationActive...). Les setters d'effets sont les points d'accroche les plus propres pour observer ou compléter les émissions sans toucher à la logique de récolte. Sauvegarde : isSwathActive, workedHectars, numAttachedCutters.
+--- Specialization of combine harvesters (and buffered forage harvesters): receives the harvests computed by the attached Cutters (addCutterArea), stores them in the fill unit, manages an input buffer (processing.inputBuffer, in timed slots) that feeds straw/chopping, and drives the visual effects client-side. EFFECTS (all through g_effectManager:loadEffect, EffectManager absent from the dump: internal rendering UNVERIFIED): "chopperEffect" (chopping, key vehicle.combine.chopperEffect), "strawEffect" (windrow drop), "fillEffect" (filling/ejection) and "effect" (general effects turned on at start), plus animationNodes, chopperAnimationNodes, strawDropAnimationNodes and fillingAnimationNodes. Conditions: chopper and straw are enabled by server timers (isChopperEffectEnabled / isStrawEffectEnabled, set to 500 ms when processCombineChopperArea or processCombineSwathArea really works, then decremented in onUpdateTick); the fillEffect follows isFilling (delay spec.processing.toggleTime after the last cut areas, fillTimeThreshold without cutting). The fill type (setEffectTypeInfo) is getCombineLastValidFillType; the effect density (g_effectManager:setDensity) equals cutterLoad x strawRatio x 0.8 + 0.2 (computed in addCutterArea, default value 0.2). No wind and no dedicated dust is driven here: the visible cutting dust comes from the XML effects (cutter.effect and the effects above) and remains a binary effect + density. WEATHER DATA: a single reading, getIsThreshingDuringRain, which queries weather:getRainFallScale() and weather:getTimeSinceLastRain() (thresholds: rain >= 0.1, or >= 0.02 in "early warning" mode, and time since last rain < 20; Weather units UNVERIFIED). If true (and not on a mission field, and allowThreshingDuringRain false), the yield added in addCutterArea is multiplied by (1 - Combine.RAIN_YIELD_REDUCTION) (constant not defined in the dump: UNVERIFIED) and onDraw shows the "rain reduces yield" warning. No rain-related visual effect here. NETWORK: the server computes; the states isFilling, chopperPSenabled, strawPSenabled, effectDensity (5 bits), fill type and fruit are sent through effectDirtyFlag in onWriteUpdateStream and applied client-side by setChopperPSEnabled / setStrawPSEnabled / setCombineIsFilling; dirtyFlag separates the fruit and the worked hectares; onWriteStream/onReadStream send the full state on connection (density set to 1); setIsSwathActive goes through CombineStrawEnableEvent. On a client, processCombineChopperArea and processCombineSwathArea only work if currentUpdateDistance <= Combine.CLIENT_DM_UPDATE_RADIUS (value UNVERIFIED). Extension points: registered events onStartThreshing and onStopThreshing (registerEvents); registered functions setChopperPSEnabled, setStrawPSEnabled, setCombineIsFilling, setIsSwathActive, getIsThreshingDuringRain, getCombineLastValidFillType, getCombineLoadPercentage, addCutterArea, verifyCombine, processCombineChopperArea/SwathArea, loadCombineEffects; overrides (getCanBeTurnedOn, getIsFoldAllowed, getDirtMultiplier, getWearMultiplier, getIsTurnedOnAnimationActive...). The effect setters are the cleanest hooks to observe or complement emissions without touching the harvest logic. Savegame: isSwathActive, workedHectars, numAttachedCutters.
 ---@class Combine
 Combine = {}
 
---- Enregistre dans le schéma XML toutes les clés de vehicle.combine (avertissements, tampon, andain/swath, déchiquetage, échelle, échelle d'échelle repliable, additifs, inclinaison automatique, repli, effets chopperEffect / strawEffect / fillEffect / effect, animationNodes, sons, tableaux de bord) et les attributs de sauvegarde isSwathActive, workedHectars et numAttachedCutters. Non relu clé par clé.
+--- Registers in the XML schema all the keys of vehicle.combine (warnings, buffer, windrow/swath, chopping, ladder, foldable ladder, additives, automatic tilt, folding, effects chopperEffect / strawEffect / fillEffect / effect, animationNodes, sounds, dashboards) and the savegame attributes isSwathActive, workedHectars and numAttachedCutters. Not re-read key by key.
 function Combine.initSpecialization() end
 
---- Exige WorkArea, FillUnit, AnimatedVehicle, TurnOnVehicle et (Drivable ou Attachable).
+--- Requires WorkArea, FillUnit, AnimatedVehicle, TurnOnVehicle and (Drivable or Attachable).
 ---@param specializations any
 function Combine.prerequisitesPresent(specializations) end
 
---- Déclare les événements onStartThreshing et onStopThreshing.
+--- Declares the events onStartThreshing and onStopThreshing.
 ---@param vehicleType any
 function Combine.registerEvents(vehicleType) end
 
---- Expose au type de véhicule les fonctions de chargement (loadCombineSetup, loadCombineEffects, loadCombineRotationNodes, loadCombineSamples), de gestion d'effets (setChopperPSEnabled, setStrawPSEnabled, setCombineIsFilling), de traitement (processCombineChopperArea, processCombineSwathArea, setIsSwathActive, startThreshing, stopThreshing, addCutterArea, addCutterToCombine, removeCutterFromCombine, setWorkedHectars) et d'interrogation (getIsThreshingDuringRain, verifyCombine, getFillLevelDependentSpeed, getIsCutterCompatible, getCombineLastValidFillType, getCombineFillLevelPercentage, getCombineLoadPercentage).
+--- Exposes to the vehicle type the loading functions (loadCombineSetup, loadCombineEffects, loadCombineRotationNodes, loadCombineSamples), effect management (setChopperPSEnabled, setStrawPSEnabled, setCombineIsFilling), processing (processCombineChopperArea, processCombineSwathArea, setIsSwathActive, startThreshing, stopThreshing, addCutterArea, addCutterToCombine, removeCutterFromCombine, setWorkedHectars) and query functions (getIsThreshingDuringRain, verifyCombine, getFillLevelDependentSpeed, getIsCutterCompatible, getCombineLastValidFillType, getCombineFillLevelPercentage, getCombineLoadPercentage).
 ---@param vehicleType any
 function Combine.registerFunctions(vehicleType) end
 
---- Surcharge getCanBeTurnedOn, getTurnedOnNotAllowedWarning, getAreControlledActionsAllowed, getIsFoldAllowed, getCanBeSelected, loadWorkAreaFromXML, getDirtMultiplier, getWearMultiplier, loadTurnedOnAnimationFromXML, getIsTurnedOnAnimationActive, loadRandomlyMovingPartFromXML, getIsRandomlyMovingPartActive, getDischargeFillType et getImplementAllowAutomaticSteering.
+--- Overrides getCanBeTurnedOn, getTurnedOnNotAllowedWarning, getAreControlledActionsAllowed, getIsFoldAllowed, getCanBeSelected, loadWorkAreaFromXML, getDirtMultiplier, getWearMultiplier, loadTurnedOnAnimationFromXML, getIsTurnedOnAnimationActive, loadRandomlyMovingPartFromXML, getIsRandomlyMovingPartActive, getDischargeFillType and getImplementAllowAutomaticSteering.
 ---@param vehicleType any
 function Combine.registerOverwrittenFunctions(vehicleType) end
 
---- Écoute notamment onLoad, onPostLoad, onDelete, les événements de flux réseau, onUpdate, onUpdateTick, onDraw, onRegisterActionEvents, onStart/EndWorkAreaProcessing, onChangedFillType, onDeactivate, attache/détache d'implément, onTurnedOn/Off, onEnter/LeaveVehicle, onFoldStateChanged et onFillUnitFillLevelChanged.
+--- Notably listens to onLoad, onPostLoad, onDelete, the network stream events, onUpdate, onUpdateTick, onDraw, onRegisterActionEvents, onStart/EndWorkAreaProcessing, onChangedFillType, onDeactivate, implement attach/detach, onTurnedOn/Off, onEnter/LeaveVehicle, onFoldStateChanged and onFillUnitFillLevelChanged.
 ---@param vehicleType any
 function Combine.registerEventListeners(vehicleType) end
 
---- Charge la configuration (loadCombineSetup, effets, nœuds de rotation, sons) et initialise l'état : cutters attachés, textes d'avertissement (dont « la pluie réduit le rendement »), dernier type de fruit/remplissage, threshingScale (1 par défaut), paramètres de zone de travail (effectDensity 0.2, minuteries d'effets à 0) et deux dirty flags (dirtyFlag, effectDirtyFlag).
+--- Loads the configuration (loadCombineSetup, effects, rotation nodes, sounds) and initializes the state: attached cutters, warning texts (including "rain reduces yield"), last fruit/fill type, threshingScale (1 by default), work area parameters (effectDensity 0.2, effect timers at 0) and two dirty flags (dirtyFlag, effectDirtyFlag).
 ---@param savegame any
 function Combine:onLoad(savegame) end
 
---- Après chargement : restaure l'état d'andain (isSwathActive) et les hectares travaillés depuis la sauvegarde, détecte une moissonneuse à tampon (capacité infinie), lie les fill units pour l'HUD, positionne l'échelle selon le repli et émet des avertissements XML sur une capacité nulle.
+--- After loading: restores the swath state (isSwathActive) and worked hectares from the savegame, detects a buffered harvester (infinite capacity), links the fill units for the HUD, positions the ladder according to the fold state and emits XML warnings on a zero capacity.
 ---@param savegame table
 function Combine:onPostLoad(savegame) end
 
---- Déclare les valeurs de tableau de bord de la moissonneuse (hectares travaillés, session, etc.). Détail non relu.
+--- Declares the harvester dashboard values (worked hectares, session, etc.). Detail not re-read.
 function Combine:onRegisterDashboardValueTypes() end
 
---- Supprime les effets (généraux, remplissage, paille, déchiquetage), animations et sons.
+--- Deletes the effects (general, fill, straw, chopping), animations and sounds.
 function Combine:onDelete() end
 
---- Sauvegarde isSwathActive (si disponible), workedHectars et numAttachedCutters.
+--- Saves isSwathActive (if available), workedHectars and numAttachedCutters.
 ---@param xmlFile any
 ---@param key any
 ---@param usedModNames any
 function Combine:saveToXMLFile(xmlFile, key, usedModNames) end
 
---- Côté client à la connexion : lit fruit, états isFilling / chopper / paille, type de remplissage, andain et hectares, puis applique les effets (densité 1).
+--- Client side on connection: reads fruit, isFilling / chopper / straw states, fill type, swath and hectares, then applies the effects (density 1).
 ---@param streamId integer
 ---@param connection Connection
 function Combine:onReadStream(streamId, connection) end
 
---- Côté serveur à la connexion : écrit le fruit valide, isFilling, chopperPSenabled, strawPSenabled, le type de remplissage valide, isSwathActive et workedHectars.
+--- Server side on connection: writes the valid fruit, isFilling, chopperPSenabled, strawPSenabled, the valid fill type, isSwathActive and workedHectars.
 ---@param streamId integer
 ---@param connection Connection
 function Combine:onWriteStream(streamId, connection) end
 
---- Côté client : lit, selon deux indicateurs, (1) le fruit valide et les hectares travaillés, (2) isFilling, états chopper/paille, densité d'effet sur 5 bits et type de remplissage ; applique setCombineIsFilling, setChopperPSEnabled et setStrawPSEnabled en mode synchronisé.
+--- Client side: reads, according to two indicators, (1) the valid fruit and worked hectares, (2) isFilling, chopper/straw states, effect density on 5 bits and fill type; applies setCombineIsFilling, setChopperPSEnabled and setStrawPSEnabled in synchronized mode.
 ---@param streamId integer
 ---@param timestamp integer
 ---@param connection table
 function Combine:onReadUpdateStream(streamId, timestamp, connection) end
 
---- Côté serveur : écrit le premier bloc si dirtyFlag est levé et le second si effectDirtyFlag est levé (états d'effets, densité x 31, type de remplissage).
+--- Server side: writes the first block if dirtyFlag is raised and the second if effectDirtyFlag is raised (effect states, density x 31, fill type).
 ---@param streamId integer
 ---@param connection table
 ---@param dirtyMask integer
 function Combine:onWriteUpdateStream(streamId, connection, dirtyMask) end
 
---- Par frame : côté serveur, désactive l'andain si le fruit n'a pas d'andain ou le réactive (et vide le tampon d'entrée) si possible, met à jour lastDischargeTime quand la cuve est vide, et pilote l'inclinaison automatique de la table de coupe d'après le Cutter (rotation de nœuds, animation dépendante, repositionnement de l'attelage).
+--- Per frame: server side, disables the swath if the fruit has no windrow or re-enables it (and empties the input buffer) if possible, updates lastDischargeTime when the tank is empty, and drives the automatic tilt of the header from the Cutter (node rotation, dependent animation, hitch repositioning).
 ---@param dt number
 ---@param isActiveForInput boolean
 ---@param isActiveForInputIgnoreSelection boolean
 ---@param isSelected boolean
 function Combine:onUpdate(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Par tick, côté serveur : fait avancer le tampon d'entrée par créneaux, active/désactive isFilling après les délais toggleTime, décrémente les minuteries d'effets, appelle setChopperPSEnabled et setStrawPSEnabled avec la densité courante (et raiseActive tant qu'ils sont actifs), compte le temps de battage (statistiques), vide le tampon intermédiaire, gère les créneaux de chargement différé et lève effectDirtyFlag quand l'état ou la densité (écart > 0.05) a changé.
+--- Per tick, server side: advances the input buffer by slots, enables/disables isFilling after the toggleTime delays, decrements the effect timers, calls setChopperPSEnabled and setStrawPSEnabled with the current density (and raiseActive while they are active), counts threshing time (statistics), empties the intermediate buffer, handles the delayed loading slots and raises effectDirtyFlag when the state or density (difference > 0.05) changed.
 ---@param dt number
 ---@param isActiveForInput boolean
 ---@param isActiveForInputIgnoreSelection boolean
 ---@param isSelected boolean
 function Combine:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Affiche une fois par épisode l'avertissement de rendement réduit si l'outil est allumé et getIsThreshingDuringRain(false) est vrai ; affiche l'avertissement de remorque si showTrailerWarning.
+--- Shows once per episode the reduced yield warning if the tool is turned on and getIsThreshingDuringRain(false) is true; shows the trailer warning if showTrailerWarning.
 ---@param isActiveForInput boolean
 ---@param isActiveForInputIgnoreSelection boolean
 ---@param isSelected boolean
 function Combine:onDraw(isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Lit la configuration de base de vehicle.combine : allowThreshingDuringRain (false par défaut), fill units, tampon, délais, andain (swath), déchiquetage (chopper), échelle, additifs, inclinaison automatique, repli, durées de basculement, animation de démarrage. Détail non relu ligne à ligne.
+--- Reads the base configuration of vehicle.combine: allowThreshingDuringRain (false by default), fill units, buffer, delays, swath, chopping (chopper), ladder, additives, automatic tilt, folding, toggle durations, start animation. Detail not re-read line by line.
 ---@param xmlFile any
 ---@param baseKey any
 ---@param entry any
 function Combine:loadCombineSetup(xmlFile, baseKey, entry) end
 
---- Côté client, charge les groupes d'effets chopperEffect, strawEffect, fillEffect et effect, et initialise leurs états (désactivés, type inconnu).
+--- Client side, loads the effect groups chopperEffect, strawEffect, fillEffect and effect, and initializes their states (disabled, unknown type).
 ---@param xmlFile any
 ---@param baseKey any
 ---@param entry any
 function Combine:loadCombineEffects(xmlFile, baseKey, entry) end
 
---- Charge les animationNodes de la moissonneuse (général, déchiquetage, dépôt de paille, remplissage) avec le paramètre d'inversion selon le niveau de remplissage.
+--- Loads the harvester animationNodes (general, chopping, straw drop, filling) with the inversion parameter according to the fill level.
 ---@param xmlFile any
 ---@param baseKey any
 ---@param entry any
 function Combine:loadCombineRotationNodes(xmlFile, baseKey, entry) end
 
---- Charge les échantillons sonores de la moissonneuse (démarrage, arrêt, travail, déchiquetage, paille, remplissage...).
+--- Loads the harvester sound samples (start, stop, work, chopping, straw, filling...).
 ---@param xmlFile any
 ---@param key any
 ---@param entry any
 function Combine:loadCombineSamples(xmlFile, key, entry) end
 
---- Bascule entre dépôt d'andain et déchiquetage : envoie CombineStrawEnableEvent, joue l'animation du déflecteur, vide les créneaux d'écoulement, et, si allumée côté client, bascule animations et sons correspondants.
+--- Switches between windrow drop and chopping: sends CombineStrawEnableEvent, plays the deflector animation, empties the flow slots, and, if turned on client-side, switches the matching animations and sounds.
 ---@param isSwathActive boolean
 ---@param noEventSend boolean
 ---@param force boolean
 function Combine:setIsSwathActive(isSwathActive, noEventSend, force) end
 
---- Zone de travail de déchiquetage (andain inactif) : si de la paille est à déposer (litersToDrop > 0) et strawRatio > 0.5, écrit dans les cartes de densité (haulm de culture ou type de sol de paille via setGroundTypeLayerArea, effacement des traces de pneus, niveau de chaume haché), puis arme isChopperEffectEnabled à 500 ms. Ignoré au-delà de CLIENT_DM_UPDATE_RADIUS sur un client.
+--- Chopping work area (swath inactive): if straw is to be dropped (litersToDrop > 0) and strawRatio > 0.5, writes into the density maps (crop haulm or straw ground type via setGroundTypeLayerArea, tire track erasure, chopped stubble level), then arms isChopperEffectEnabled to 500 ms. Ignored beyond CLIENT_DM_UPDATE_RADIUS on a client.
 ---@param workArea any
 function Combine:processCombineChopperArea(workArea) end
 
---- Zone de travail d'andain : dépose un andain de paille sur une ligne (DensityMapHeightUtil.tipToGroundAroundLine) avec le type d'andain du fruit ; si des litres sont déposés, arme isStrawEffectEnabled à 500 ms ; le surplus non déposable est perdu plutôt que mis en tampon.
+--- Windrow work area: drops a straw windrow along a line (DensityMapHeightUtil.tipToGroundAroundLine) with the fruit windrow type; if litres are dropped, arms isStrawEffectEnabled to 500 ms; the surplus that cannot be dropped is lost rather than buffered.
 ---@param workArea any
 function Combine:processCombineSwathArea(workArea) end
 
---- Active/désactive l'effet de déchiquetage (g_effectManager start/stop avec le type de remplissage) et le son chopStraw ; applique la densité reçue. En serveur synchronisé, mémorise l'état envoyé. Côté client seulement pour les effets.
+--- Enables/disables the chopping effect (g_effectManager start/stop with the fill type) and the chopStraw sound; applies the received density. On a synchronized server, stores the sent state. Client side only for the effects.
 ---@param chopperPSenabled boolean
 ---@param fruitTypeChanged boolean
 ---@param density number
 ---@param isSynchronized boolean
 function Combine:setChopperPSEnabled(chopperPSenabled, fruitTypeChanged, density, isSynchronized) end
 
---- Même principe pour l'effet de dépôt de paille et le son dropStraw ; remet strawToDrop à 0 à l'arrêt.
+--- Same principle for the straw drop effect and the dropStraw sound; resets strawToDrop to 0 on stop.
 ---@param strawPSenabled boolean
 ---@param fruitTypeChanged boolean
 ---@param density number
 ---@param isSynchronized boolean
 function Combine:setStrawPSEnabled(strawPSenabled, fruitTypeChanged, density, isSynchronized) end
 
---- Active/désactive l'état de remplissage : animations de remplissage, type de remplissage des effets généraux, fillEffect (start/stop) et son de remplissage. Côté client.
+--- Enables/disables the filling state: filling animations, fill type of the general effects, fillEffect (start/stop) and filling sound. Client side.
 ---@param isFilling boolean
 ---@param fruitTypeChanged boolean
 ---@param isSynchronized boolean
 function Combine:setCombineIsFilling(isFilling, fruitTypeChanged, isSynchronized) end
 
---- Si des cutters sont attachés : les allume, joue l'animation de démarrage et les sons, lève onStartThreshing.
+--- If cutters are attached: turns them on, plays the start animation and sounds, raises onStartThreshing.
 function Combine:startThreshing() end
 
---- Joue le son d'arrêt, coupe isFilling, si la cuve est pleine coupe le régulateur de vitesse et relève/replie les cutters, éteint les cutters et lève onStopThreshing.
+--- Plays the stop sound, stops isFilling, if the tank is full turns off the cruise control and raises/folds the cutters, turns the cutters off and raises onStopThreshing.
 function Combine:stopThreshing() end
 
---- Met à jour les hectares travaillés, synchronise via dirtyFlag si l'écart dépasse 0.01 (serveur) et rafraîchit le tableau de bord (client).
+--- Updates the worked hectares, synchronizes via dirtyFlag if the difference exceeds 0.01 (server) and refreshes the dashboard (client).
 ---@param hectars number
 ---@param isInitial any
 function Combine:setWorkedHectars(hectars, isInitial) end
 
---- Enregistre un cutter attaché et déplie l'échelle si configurée.
+--- Registers an attached cutter and unfolds the ladder if configured.
 ---@param cutter any
 function Combine:addCutterToCombine(cutter) end
 
---- Retire un cutter : si c'était le dernier, éteint la machine et vide le tampon invisible d'une moissonneuse à tampon ; replie l'échelle ; relance les actions contrôlées si l'AVC est actif.
+--- Removes a cutter: if it was the last one, turns the machine off and empties the invisible buffer of a buffered harvester; folds the ladder; restarts the controlled actions if the AVC is active.
 ---@param cutter any
 function Combine:removeCutterFromCombine(cutter) end
 
---- Point d'entrée de la récolte : reçoit surface, litres, fruit d'entrée, type de sortie, rapport de paille et charge du cutter. Applique threshingScale, la réduction de rendement par la pluie (si getIsThreshingDuringRain et hors mission) et celle des dégâts, alimente le tampon d'entrée avec la paille (type de sol de chaume ou haulm, effectDensity = charge x ratio x 0.8 + 0.2), programme isFilling, consomme les additifs (+5 % de rendement), met à jour les hectares et ajoute les litres à la cuve (avec tampon, délai de chargement). Renvoie les litres appliqués.
+--- Entry point of the harvest: receives area, litres, input fruit, output type, straw ratio and cutter load. Applies threshingScale, the rain yield reduction (if getIsThreshingDuringRain and not on a mission) and the damage one, feeds the input buffer with the straw (stubble ground type or haulm, effectDensity = load x ratio x 0.8 + 0.2), schedules isFilling, consumes additives (+5 % yield), updates the hectares and adds the litres to the tank (with buffer, loading delay). Returns the litres applied.
 ---@param area any
 ---@param liters any
 ---@param inputFruitType any
@@ -177,161 +177,161 @@ function Combine:removeCutterFromCombine(cutter) end
 ---@param cutterLoad any
 function Combine:addCutterArea(area, liters, inputFruitType, outputFillType, strawRatio, farmId, cutterLoad) end
 
---- Vrai si le battage pendant la pluie est interdit pour ce modèle et que getRainFallScale() atteint 0.1 (0.02 en alerte précoce) alors que getTimeSinceLastRain() est inférieur à 20. Seule dépendance météo du fichier.
+--- True if threshing during rain is forbidden for this model and getRainFallScale() reaches 0.1 (0.02 in early warning) while getTimeSinceLastRain() is below 20. The only weather dependency of the file.
 ---@param earlyWarning boolean
 ---@return boolean
 function Combine:getIsThreshingDuringRain(earlyWarning) end
 
---- Vérifie que la moissonneuse peut recevoir un fruit/type de sortie : refuse si un autre type remplit déjà la cuve au-delà du seuil (ou vide le tampon d'une moissonneuse à tampon) et si la capacité libre est insuffisante ; renvoie la moissonneuse ou nil et une alternative.
+--- Checks that the harvester can receive a fruit/output type: refuses if another type already fills the tank above the threshold (or empties the buffer of a buffered harvester) and if the free capacity is insufficient; returns the harvester or nil and an alternative.
 ---@param fruitType any
 ---@param outputFillType any
 function Combine:verifyCombine(fruitType, outputFillType) end
 
---- Renvoie -1 si le niveau de remplissage dépasse le seuil d'inversion des animationNodes, sinon 1.
+--- Returns -1 if the fill level exceeds the animationNodes inversion threshold, otherwise 1.
 function Combine:getFillLevelDependentSpeed() end
 
---- Vrai si l'un des types de remplissage de sortie du cutter est accepté par la fill unit.
+--- True if one of the cutter output fill types is accepted by the fill unit.
 ---@param fillTypes table
 ---@return boolean
 function Combine:getIsCutterCompatible(fillTypes) end
 
---- Dernier type de remplissage valide : tampon, cuve, créneaux de chargement différé, puis dernier type d'entrée.
+--- Last valid fill type: buffer, tank, delayed loading slots, then last input type.
 ---@return integer
 function Combine:getCombineLastValidFillType() end
 
---- Pourcentage de remplissage réel (borné à 1), y compris les créneaux de chargement différé.
+--- Real fill percentage (capped at 1), including the delayed loading slots.
 ---@return number
 function Combine:getCombineFillLevelPercentage() end
 
---- Moyenne des charges (getCutterLoad) des cutters attachés.
+--- Average of the loads (getCutterLoad) of the attached cutters.
 function Combine:getCombineLoadPercentage() end
 
---- Refuse l'allumage sans cutter attaché ou si un cutter refuse d'être allumé.
+--- Refuses turning on without an attached cutter or if a cutter refuses to be turned on.
 ---@param superFunc any
 ---@return boolean
 function Combine:getCanBeTurnedOn(superFunc) end
 
---- Retourne l'avertissement approprié (aucun cutter, ou celui d'un cutter).
+--- Returns the appropriate warning (no cutter, or that of a cutter).
 ---@param superFunc any
 ---@return string
 function Combine:getTurnedOnNotAllowedWarning(superFunc) end
 
---- Refuse les actions contrôlées sans cutter attaché.
+--- Refuses controlled actions without an attached cutter.
 ---@param superFunc any
 ---@return boolean
 ---@return string
 function Combine:getAreControlledActionsAllowed(superFunc) end
 
---- Interdit le repli pendant le battage (selon allowFoldWhileThreshing) ou cuve remplie au-delà du seuil.
+--- Forbids folding during threshing (according to allowFoldWhileThreshing) or with the tank filled above the threshold.
 ---@param superFunc any
 ---@param direction any
 ---@param onAiTurnOn any
 ---@return boolean
 function Combine:getIsFoldAllowed(superFunc, direction, onAiTurnOn) end
 
---- Renvoie toujours true.
+--- Always returns true.
 ---@param superFunc any
 function Combine:getCanBeSelected(superFunc) end
 
---- Charge une zone de travail et lit les paramètres propres au déchiquetage/andain (suite non relue en détail).
+--- Loads a work area and reads the parameters specific to chopping/swath (rest not re-read in detail).
 ---@param superFunc any
 ---@param workArea any
 ---@param xmlFile any
 ---@param key any
 function Combine:loadWorkAreaFromXML(superFunc, workArea, xmlFile, key) end
 
---- Ajoute le multiplicateur de salissure de travail x (vitesse / limite du cutter) si un cutter attaché travaille.
+--- Adds the work dirt multiplier x (speed / cutter limit) if an attached cutter is working.
 ---@param superFunc any
 function Combine:getDirtMultiplier(superFunc) end
 
---- Même principe pour l'usure, multipliée par le facteur de pierres du cutter.
+--- Same principle for wear, multiplied by the cutter stone factor.
 ---@param superFunc any
 function Combine:getWearMultiplier(superFunc) end
 
---- Ajoute les options activeChopper, activeStrawDrop (true par défaut) et waitForStraw aux animations d'allumage.
+--- Adds the options activeChopper, activeStrawDrop (true by default) and waitForStraw to the turn-on animations.
 ---@param superFunc any
 ---@param xmlFile any
 ---@param key any
 ---@param turnedOnAnimation any
 function Combine:loadTurnedOnAnimationFromXML(superFunc, xmlFile, key, turnedOnAnimation) end
 
---- Désactive l'animation selon le mode andain/déchiquetage ; avec waitForStraw, reste active tant que l'effet de déchiquetage est armé.
+--- Disables the animation according to the swath/chopping mode; with waitForStraw, stays active as long as the chopping effect is armed.
 ---@param superFunc any
 ---@param turnedOnAnimation any
 function Combine:getIsTurnedOnAnimationActive(superFunc, turnedOnAnimation) end
 
---- Ajoute l'option moveOnlyIfCut aux pièces à mouvement aléatoire.
+--- Adds the moveOnlyIfCut option to randomly moving parts.
 ---@param superFunc any
 ---@param part any
 ---@param xmlFile any
 ---@param key any
 function Combine:loadRandomlyMovingPartFromXML(superFunc, part, xmlFile, key) end
 
---- Avec moveOnlyIfCut, n'active la pièce que si un cutter a coupé durant les 150 dernières ms.
+--- With moveOnlyIfCut, only activates the part if a cutter cut during the last 150 ms.
 ---@param superFunc any
 ---@param part any
 function Combine:getIsRandomlyMovingPartActive(superFunc, part) end
 
---- Si la fill unit est vide, utilise le type de remplissage des créneaux de chargement différé pour la décharge.
+--- If the fill unit is empty, uses the fill type of the delayed loading slots for the discharge.
 ---@param superFunc any
 ---@param dischargeNode any
 function Combine:getDischargeFillType(superFunc, dischargeNode) end
 
---- Renvoie toujours true.
+--- Always returns true.
 ---@param superFunc any
 function Combine:getImplementAllowAutomaticSteering(superFunc) end
 
---- Côté client, enregistre l'action TOGGLE_CHOPPER (andain/déchiquetage) si les deux modes existent.
+--- Client side, registers the TOGGLE_CHOPPER action (swath/chopping) if both modes exist.
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 function Combine:onRegisterActionEvents(isActiveForInput, isActiveForInputIgnoreSelection) end
 
---- Avant les zones de travail : prépare litersToDrop (créneau courant du tampon), minLitersToDrop, strawRatio, type de sol de chaume, effectDensity et dropFillType.
+--- Before the work areas: prepares litersToDrop (current buffer slot), minLitersToDrop, strawRatio, stubble ground type, effectDensity and dropFillType.
 ---@param dt any
 function Combine:onStartWorkAreaProcessing(dt) end
 
---- Après les zones : retire du créneau les litres effectivement déposés.
+--- After the areas: removes from the slot the litres actually dropped.
 ---@param dt any
 ---@param hasProcessed any
 function Combine:onEndWorkAreaProcessing(dt, hasProcessed) end
 
---- Quand le type de remplissage change, relance les effets actifs (déchiquetage, paille, remplissage) avec le nouveau type.
+--- When the fill type changes, restarts the active effects (chopping, straw, filling) with the new type.
 ---@param fillUnitIndex any
 ---@param fillTypeIndex any
 function Combine:onChangedFillType(fillUnitIndex, fillTypeIndex) end
 
---- Coupe les effets de déchiquetage, de paille et de remplissage et annule les minuteries.
+--- Stops the chopping, straw and filling effects and cancels the timers.
 function Combine:onDeactivate() end
 
---- Si l'implément attaché est de type cutter, l'ajoute à la moissonneuse.
+--- If the attached implement is of cutter type, adds it to the harvester.
 ---@param attachable table
 ---@param inputJointDescIndex any
 ---@param jointDescIndex any
 ---@param loadFromSavegame any
 function Combine:onPostAttachImplement(attachable, inputJointDescIndex, jointDescIndex, loadFromSavegame) end
 
---- Si l'implément détaché est de type cutter, le retire.
+--- If the detached implement is of cutter type, removes it.
 ---@param implementIndex integer
 function Combine:onPostDetachImplement(implementIndex) end
 
---- Lance le battage (startThreshing), les animations adaptées (andain ou déchiquetage), les sons et les effets généraux avec le type de remplissage (côté client) ; côté serveur, éteint si turnOffWhenFull et cuve pleine.
+--- Starts threshing (startThreshing), the suitable animations (swath or chopping), the sounds and the general effects with the fill type (client side); server side, turns off if turnOffWhenFull and the tank is full.
 function Combine:onTurnedOn() end
 
---- Arrête le battage, animations, effets généraux et son de déchiquetage (côté client).
+--- Stops threshing, animations, general effects and the chopping sound (client side).
 function Combine:onTurnedOff() end
 
---- Replie l'échelle à l'entrée dans le véhicule, sauf conditions de repli ou cutter attaché.
+--- Folds the ladder on entering the vehicle, except for fold conditions or an attached cutter.
 function Combine:onEnterVehicle() end
 
---- Déplie l'échelle à la sortie du véhicule, sous les mêmes conditions.
+--- Unfolds the ladder when leaving the vehicle, under the same conditions.
 function Combine:onLeaveVehicle() end
 
---- Joue l'animation d'échelle selon la direction de repli.
+--- Plays the ladder animation according to the fold direction.
 ---@param direction any
 ---@param moveToMiddle any
 function Combine:onFoldStateChanged(direction, moveToMiddle) end
 
---- Mémorise l'heure de la dernière décharge quand le niveau baisse ; côté serveur, éteint la machine si turnOffWhenFull et cuve pleine.
+--- Stores the time of the last discharge when the level drops; server side, turns the machine off if turnOffWhenFull and the tank is full.
 ---@param fillUnitIndex any
 ---@param fillLevelDelta any
 ---@param fillTypeIndex any
@@ -340,7 +340,7 @@ function Combine:onFoldStateChanged(direction, moveToMiddle) end
 ---@param appliedDelta any
 function Combine:onFillUnitFillLevelChanged(fillUnitIndex, fillLevelDelta, fillTypeIndex, toolType, fillPositionData, appliedDelta) end
 
---- Rappel de l'action TOGGLE_CHOPPER : bascule l'andain si le fruit a un andain, sinon affiche l'avertissement « impossible de basculer ».
+--- TOGGLE_CHOPPER action callback: toggles the swath if the fruit has a windrow, otherwise shows the "cannot toggle" warning.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -348,6 +348,6 @@ function Combine:onFillUnitFillLevelChanged(fillUnitIndex, fillLevelDelta, fillT
 ---@param isAnalog any
 function Combine.actionEventToggleChopper(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Met à jour le texte de l'action selon que l'andain est actif ou non.
+--- Updates the action text according to whether the swath is active or not.
 ---@param self any
 function Combine.updateToggleStrawText(self) end

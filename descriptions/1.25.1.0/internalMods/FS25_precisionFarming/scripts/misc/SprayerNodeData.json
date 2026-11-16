@@ -1,0 +1,57 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/misc/SprayerNodeData.lua",
+ "module": {
+  "en": "Precision Farming data holder for sprayer add-ons (spot spraying, See and Spray, pulse width modulation). It loads SprayerNodeData.xml (config prices, spray sound, sensor types, per-vehicle effect and sensor nodes) plus the nozzle effect and sensor i3d files, and provides cloned nodes and sound samples. It adds weedSpotSpray and pulseWidthModulation yes/no configurations to listed vehicles through ConfigurationUtil.getConfigurationsFromXML.",
+  "fr": "Conteneur de données de Precision Farming pour les options de pulvérisateur (traitement localisé, See and Spray, modulation de largeur d'impulsion). Il charge SprayerNodeData.xml (prix des configurations, son de pulvérisation, types de capteurs, nœuds d'effets et de capteurs par véhicule) ainsi que les i3d de l'effet de buse et des capteurs, et fournit des nœuds et échantillons sonores clonés. Il ajoute les configurations oui/non weedSpotSpray et pulseWidthModulation aux véhicules listés via ConfigurationUtil.getConfigurationsFromXML."
+ },
+ "fonctions": {
+  "SprayerNodeData:delete": {
+   "en": "Deletes the nozzle effect node, every sensor type node, releases their shared i3d requests, deletes the sound samples and clears the linkage data.",
+   "fr": "Supprime le nœud d'effet de buse et chaque nœud de type de capteur, libère leurs requêtes i3d partagées, supprime les échantillons sonores et vide les données de liaison."
+  },
+  "SprayerNodeData:loadFromXML": {
+   "en": "Map load hook: calls loadData once if not already loaded. Arguments are ignored and nothing is returned.",
+   "fr": "Crochet de chargement de la carte : appelle loadData une seule fois si ce n'est pas déjà fait. Les arguments sont ignorés et rien n'est renvoyé."
+  },
+  "SprayerNodeData:getConfigPrices": {
+   "en": "Returns three prices read from the XML (per meter of work width): weed spot spray, See and Spray, pulse width modulation.",
+   "fr": "Renvoie trois prix lus dans le XML (par mètre de largeur de travail) : traitement localisé des herbes, See and Spray, modulation de largeur d'impulsion."
+  },
+  "SprayerNodeData:getClonedSectionSamples": {
+   "en": "Clones the named sample (for example spray) onto the given link node with a modifier target object. Logs a warning and returns nil if the sample does not exist.",
+   "fr": "Clone l'échantillon sonore nommé (par exemple spray) sur le nœud de liaison donné avec un objet cible de modificateurs. Journalise un avertissement et renvoie nil si l'échantillon n'existe pas."
+  },
+  "SprayerNodeData:loadData": {
+   "en": "Reads SprayerNodeData.xml: three config prices, the spray sound, sensor types (async shared i3d load) and per-vehicle configurations of effect nodes and sensor nodes. Also starts loading the nozzle effect i3d. Flags can skip effects or vehicle data. Returns true.",
+   "fr": "Lit SprayerNodeData.xml : trois prix de configuration, le son de pulvérisation, les types de capteurs (chargement i3d partagé asynchrone) et les configurations par véhicule de nœuds d'effets et de capteurs. Lance aussi le chargement de l'i3d de l'effet de buse. Des indicateurs permettent d'ignorer effets ou données de véhicules. Renvoie true."
+  },
+  "SprayerNodeData.onSprayerEffectLoaded": {
+   "en": "Async callback (called with self as first argument): keeps the first child of the loaded i3d as the nozzle effect node, unlinks it and deletes the i3d root.",
+   "fr": "Callback asynchrone (appelé avec self en premier argument) : conserve le premier enfant de l'i3d chargé comme nœud d'effet de buse, le détache et supprime la racine i3d."
+  },
+  "SprayerNodeData.onWeedSensorLoaded": {
+   "en": "Async callback: resolves the sensor node by its path, resets its transform, unlinks it and appends the sensor type to self.sensorTypes, then deletes the i3d root.",
+   "fr": "Callback asynchrone : résout le nœud du capteur par son chemin, réinitialise sa transformation, le détache et ajoute le type de capteur à self.sensorTypes, puis supprime la racine i3d."
+  },
+  "SprayerNodeData:getClonedSprayerEffectNode": {
+   "en": "Returns a clone of the nozzle effect node with the liquid fertilizer sprayer material applied if available, or nil if the effect is not loaded.",
+   "fr": "Renvoie un clone du nœud d'effet de buse avec le matériau de pulvérisateur d'engrais liquide appliqué s'il existe, ou nil si l'effet n'est pas chargé."
+  },
+  "SprayerNodeData:getClonedSprayerWeedSensorNode": {
+   "en": "Returns a clone of the sensor node with the given type id and a boolean telling whether it has a scalable bracket. Returns nil and false if the id is unknown.",
+   "fr": "Renvoie un clone du nœud de capteur du type donné et un booléen indiquant s'il possède un support redimensionnable. Renvoie nil et false si l'identifiant est inconnu."
+  },
+  "SprayerNodeData:getSprayerNodeData": {
+   "en": "Finds the vehicle entry matching the end of the config file name and returns the configuration chosen by the vehicle's configuration name (first one as fallback) plus the vehicle entry, or nil if the vehicle is not listed.",
+   "fr": "Trouve l'entrée de véhicule correspondant à la fin du nom de fichier de configuration et renvoie la configuration choisie selon le nom de configuration du véhicule (la première par défaut) ainsi que l'entrée du véhicule, ou nil si le véhicule n'est pas listé."
+  },
+  "SprayerNodeData:overwriteGameFunctions": {
+   "en": "Overrides VehicleSystem.consoleCommandReloadVehicle (reloads vehicle data first) and ConfigurationUtil.getConfigurationsFromXML (adds weedSpotSpray and pulseWidthModulation yes/no configurations, price 1 for the yes option, to listed vehicles that lack them).",
+   "fr": "Surcharge VehicleSystem.consoleCommandReloadVehicle (recharge d'abord les données de véhicules) et ConfigurationUtil.getConfigurationsFromXML (ajoute les configurations oui/non weedSpotSpray et pulseWidthModulation, prix 1 pour l'option oui, aux véhicules listés qui ne les ont pas)."
+  },
+  "SprayerNodeData:registerXMLPaths": {
+   "en": "Registers the XML schema paths for config prices, spray sound, sensor types, and per-vehicle effect and sensor nodes of SprayerNodeData.xml.",
+   "fr": "Enregistre les chemins de schéma XML des prix de configuration, du son de pulvérisation, des types de capteurs et des nœuds d'effets et de capteurs par véhicule de SprayerNodeData.xml."
+  }
+ }
+}

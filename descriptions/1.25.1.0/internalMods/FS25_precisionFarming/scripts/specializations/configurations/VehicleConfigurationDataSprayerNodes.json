@@ -1,0 +1,17 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/specializations/configurations/VehicleConfigurationDataSprayerNodes.lua",
+ "module": {
+  "en": "Helper for vehicle configuration data in Precision Farming. It reads per-configuration sprayer nozzle nodes and weed spot spray sensor nodes from the vehicle XML and hands them to the ExtendedSprayerEffects and WeedSpotSpray specializations.",
+  "fr": "Aide pour les données de configuration de véhicule de Precision Farming. Elle lit dans le XML du véhicule, par configuration, les noeuds de buses de pulvérisation et de capteurs de pulvérisation ciblée des mauvaises herbes, puis les transmet aux spécialisations ExtendedSprayerEffects et WeedSpotSpray."
+ },
+ "fonctions": {
+  "VehicleConfigurationDataSprayerNodes.registerXMLPaths": {
+   "en": "Registers the configuration XML keys: sprayerNozzles.nozzle (node, translation, rotation) and weedSpotSpraySensors.sensorNode (id, node, translation, rotation, bracketSize, default 1).",
+   "fr": "Enregistre les clés XML de configuration : sprayerNozzles.nozzle (node, translation, rotation) et weedSpotSpraySensors.sensorNode (id, node, translation, rotation, bracketSize, 1 par défaut)."
+  },
+  "VehicleConfigurationDataSprayerNodes.onPrePostLoad": {
+   "en": "Called for a chosen configuration item. For each nozzle, clones a sprayer effect node and adds it through addExtendedSprayerNozzleEffect. If WeedSpotSpray is enabled, collects the sensor nodes and calls addWeedSpotSpraySensorNodes. Does nothing if the config key is empty.",
+   "fr": "Appelée pour un élément de configuration choisi. Pour chaque buse, clone un noeud d'effet de pulvérisation et l'ajoute via addExtendedSprayerNozzleEffect. Si WeedSpotSpray est activé, rassemble les noeuds de capteurs et appelle addWeedSpotSpraySensorNodes. Ne fait rien si la clé de configuration est vide."
+  }
+ }
+}

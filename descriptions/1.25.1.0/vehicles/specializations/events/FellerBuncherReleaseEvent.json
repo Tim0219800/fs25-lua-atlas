@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/FellerBuncherReleaseEvent.lua",
+ "module": {
+  "en": "Network event class `FellerBuncherReleaseEvent` (extends `Event`) that replicates the release of the trees held by a feller buncher. It carries only the vehicle. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `FellerBuncherReleaseEvent` (hérite de `Event`) qui réplique le relâchement des arbres tenus par une abatteuse-empileuse. Elle transporte uniquement le véhicule. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "FellerBuncherReleaseEvent.emptyNew": {
+   "en": "Creates an empty `FellerBuncherReleaseEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `FellerBuncherReleaseEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "FellerBuncherReleaseEvent.new": {
+   "en": "Creates the event with its data: only the vehicle.",
+   "fr": "Crée l'événement avec ses données : uniquement le véhicule."
+  },
+  "FellerBuncherReleaseEvent:readStream": {
+   "en": "Reads the event data from the network stream (only the vehicle), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (uniquement le véhicule), puis appelle `run`."
+  },
+  "FellerBuncherReleaseEvent:writeStream": {
+   "en": "Writes the event data to the network stream (only the vehicle).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (uniquement le véhicule)."
+  },
+  "FellerBuncherReleaseEvent:run": {
+   "en": "Executes the event on the receiving side: calls `releaseMountedTrees(true)` on the vehicle. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `releaseMountedTrees(true)` sur le véhicule. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  },
+  "FellerBuncherReleaseEvent.sendEvent": {
+   "en": "Helper that sends the event: the server broadcasts it to clients, a client sends it to the server. Skipped when `noEventSend` is set.",
+   "fr": "Fonction utilitaire d'envoi : le serveur diffuse l'événement aux clients, un client l'envoie au serveur. Ignorée si `noEventSend` est activé."
+  }
+ }
+}

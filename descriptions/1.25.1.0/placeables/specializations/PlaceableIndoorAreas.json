@@ -1,0 +1,41 @@
+{
+ "fichier": "placeables/specializations/PlaceableIndoorAreas.lua",
+ "module": {
+  "en": "Placeable specialization that marks parallelogram areas as indoor in the mission's indoor mask when the placeable is finalized, and resets them to outdoor on deletion. The mask is used by the game to tell inside from outside (exact consumers are UNVERIFIED). It has no prerequisites.",
+  "fr": "Spécialisation de placeable qui marque des zones en parallélogramme comme intérieures dans le masque d'intérieur de la mission à la finalisation du placement, et les remet en extérieur à la suppression. Le masque sert à distinguer intérieur et extérieur (consommateurs exacts NON VÉRIFIÉS). Aucun prérequis."
+ },
+ "fonctions": {
+  "PlaceableIndoorAreas.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableIndoorAreas.registerFunctions": {
+   "en": "Registers the loadIndoorArea method.",
+   "fr": "Enregistre la méthode loadIndoorArea."
+  },
+  "PlaceableIndoorAreas.registerEventListeners": {
+   "en": "Subscribes to load, delete and finalize-placement events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, suppression et finalisation du placement."
+  },
+  "PlaceableIndoorAreas.registerXMLPaths": {
+   "en": "Declares indoorAreas.indoorArea entries with startNode, widthNode and heightNode.",
+   "fr": "Déclare les entrées indoorAreas.indoorArea avec startNode, widthNode et heightNode."
+  },
+  "PlaceableIndoorAreas:onLoad": {
+   "en": "Loads the indoor areas via loadIndoorArea and logs an XML warning if no indoorAreas block exists.",
+   "fr": "Charge les zones intérieures via loadIndoorArea et logue un avertissement XML si aucun bloc indoorAreas n'existe."
+  },
+  "PlaceableIndoorAreas:onDelete": {
+   "en": "If areas were marked, sets them back to OUTDOOR in the indoor mask, except while the placeable is reloading.",
+   "fr": "Si des zones avaient été marquées, les remet en OUTDOOR dans le masque d'intérieur, sauf pendant un rechargement du placeable."
+  },
+  "PlaceableIndoorAreas:loadIndoorArea": {
+   "en": "Reads one area's three nodes into the table; returns false with a warning if one is missing.",
+   "fr": "Lit les trois noeuds d'une zone dans la table ; renvoie false avec un avertissement si l'un manque."
+  },
+  "PlaceableIndoorAreas:onFinalizePlacement": {
+   "en": "Sets every area to INDOOR in the mission indoor mask and enables the reset to outdoor on deletion.",
+   "fr": "Met chaque zone en INDOOR dans le masque d'intérieur de la mission et active la remise en extérieur à la suppression."
+  }
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "fichier": "vehicles/specializations/SeedTreater.lua",
+ "module": {
+  "en": "Specialization for seed treatment machines. It requires Dischargeable and FillUnit: a dedicated fill unit holds the treatment liquid (LIQUIDSEEDTREATMENT), which is consumed in proportion to the seed discharged through one chosen discharge node, and the discharge speed is slowed while treatment is active. On the server it also starts filling from nearby triggers when the liquid tank has room.",
+  "fr": "Spécialisation pour les machines de traitement de semences. Elle exige Dischargeable et FillUnit : une unité de remplissage dédiée contient le liquide de traitement (LIQUIDSEEDTREATMENT), consommé proportionnellement aux semences déchargées par un nœud de déchargement choisi, et la vitesse de décharge est réduite tant que le traitement est actif. Côté serveur, elle déclenche aussi le remplissage depuis les triggers proches quand le réservoir de liquide a de la place."
+ },
+ "fonctions": {
+  "SeedTreater.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has Dischargeable and FillUnit.",
+   "fr": "Retourne vrai uniquement si le type de véhicule possède Dischargeable et FillUnit."
+  },
+  "SeedTreater.initSpecialization": {
+   "en": "Declares the `vehicle.seedTreater` XML attributes: liquid fill unit index, discharge node index, usage per liter (default 0.1), fill-from-trigger threshold (default 5) and treatment speed factor (default 0.1).",
+   "fr": "Déclare les attributs XML `vehicle.seedTreater` : index de l'unité de liquide, index du nœud de décharge, usage par litre (0,1 par défaut), seuil de remplissage depuis un trigger (5 par défaut) et facteur de vitesse de traitement (0,1 par défaut)."
+  },
+  "SeedTreater.registerFunctions": {
+   "en": "Registers no new function (empty body).",
+   "fr": "N'enregistre aucune nouvelle fonction (corps vide)."
+  },
+  "SeedTreater.registerOverwrittenFunctions": {
+   "en": "Overrides `discharge`, `getDischargeFillType` and `getDischargeNodeEmptyFactor`.",
+   "fr": "Surcharge `discharge`, `getDischargeFillType` et `getDischargeNodeEmptyFactor`."
+  },
+  "SeedTreater.registerEventListeners": {
+   "en": "Subscribes to onLoad and onUpdate.",
+   "fr": "S'abonne à onLoad et onUpdate."
+  },
+  "SeedTreater:onLoad": {
+   "en": "Reads the seedTreater XML values into the spec: fill unit index, discharge node index, usage per liter, trigger threshold and treatment speed factor.",
+   "fr": "Lit les valeurs XML seedTreater dans la spec : index d'unité de remplissage, index du nœud de décharge, usage par litre, seuil de trigger et facteur de vitesse de traitement."
+  },
+  "SeedTreater:onUpdate": {
+   "en": "Server only: if the liquid fill unit has more than 5 liters of free capacity and a nearby fill trigger offers LIQUIDSEEDTREATMENT and is activatable, starts filling; stops filling once it is nearly full while discharging. Note: the 5 is hardcoded, `fillFromTriggerThreshold` is read but not used here.",
+   "fr": "Serveur uniquement : si l'unité de liquide a plus de 5 litres de capacité libre et qu'un trigger de remplissage proche propose du LIQUIDSEEDTREATMENT et est activable, lance le remplissage ; l'arrête quand elle est presque pleine pendant une décharge. À noter : le 5 est codé en dur, `fillFromTriggerThreshold` est lu mais non utilisé ici."
+  },
+  "SeedTreater:discharge": {
+   "en": "Calls the parent discharge, then, for the configured discharge node and only if its fillTypeConverter converts the current fill type, removes treatment liquid (discharged liters times usagePerLiter) from the liquid fill unit. Returns the parent's three values unchanged.",
+   "fr": "Appelle la décharge parente puis, pour le nœud de décharge configuré et seulement si son fillTypeConverter convertit le type de remplissage actuel, retire du liquide de traitement (litres déchargés fois usagePerLiter) de l'unité de liquide. Retourne inchangées les trois valeurs du parent."
+  },
+  "SeedTreater:getDischargeFillType": {
+   "en": "When the liquid fill unit is empty, returns the discharge node's own fill unit type and a second value of 1, bypassing the parent; otherwise defers to the parent.",
+   "fr": "Quand l'unité de liquide est vide, retourne le type de l'unité de remplissage du nœud de décharge avec une seconde valeur 1, sans passer par le parent ; sinon délègue au parent."
+  },
+  "SeedTreater:getDischargeNodeEmptyFactor": {
+   "en": "Returns the parent's empty factor multiplied by `treatmentSpeedFactor` when treatment liquid is available and the current fill type is convertible; otherwise returns the parent's value unchanged.",
+   "fr": "Retourne le facteur de vidage du parent multiplié par `treatmentSpeedFactor` quand du liquide de traitement est disponible et que le type de remplissage est convertible ; sinon retourne la valeur du parent inchangée."
+  }
+ }
+}

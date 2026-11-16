@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/configurations/data/VehicleConfigurationDataDependentConfig.lua",
+ "module": {
+  "en": "Configuration data module that lets a configuration item list other configurations (by name and index) that should be set along with it.",
+  "fr": "Module de données de configuration permettant à une entrée de configuration de lister d'autres configurations (par nom et indice) à définir en même temps qu'elle."
+ },
+ "fonctions": {
+  "VehicleConfigurationDataDependentConfig.registerXMLPaths": {
+   "en": "Static. Registers the .dependentConfiguration entries with #name and #index.",
+   "fr": "Statique. Enregistre les entrées .dependentConfiguration avec #name et #index."
+  },
+  "VehicleConfigurationDataDependentConfig.loadConfigItem": {
+   "en": "Reads the dependent configurations of an item into configItem.dependentConfigurations, keeping only entries with both name and index. How they are applied is not in this file (UNVERIFIED).",
+   "fr": "Lit les configurations dépendantes d'une entrée dans configItem.dependentConfigurations, en ne gardant que celles qui ont nom et indice. Leur application n'est pas dans ce fichier (NON VÉRIFIÉ)."
+  }
+ }
+}

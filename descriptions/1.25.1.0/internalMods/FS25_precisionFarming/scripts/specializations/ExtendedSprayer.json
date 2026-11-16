@@ -1,0 +1,205 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/specializations/ExtendedSprayer.lua",
+ "module": {
+  "en": "Main vehicle specialization of Precision Farming for sprayers, spreaders and related tools (requires Sprayer and PrecisionFarmingStatistic). It adapts lime and fertilizer rates to the soil pH and nitrogen maps, in automatic or manual mode, optionally per nozzle with pulse width modulation. It overrides Sprayer functions, tracks usage statistics, shows the HUD/minimap extension, and syncs the settings over the network (ExtendedSprayerAmountEvent, ExtendedSprayerDefaultFruitTypeEvent). Several helper functions it calls (updateWorkAreaSubSectionData, processWorkAreaSubSectionData, registerFunctions, onLoad) are not in this dump (UNVERIFIED).",
+  "fr": "Spécialisation de véhicule principale de Precision Farming pour pulvérisateurs, épandeurs et outils associés (exige Sprayer et PrecisionFarmingStatistic). Elle adapte les doses de chaux et d'engrais aux cartes de pH et d'azote du sol, en mode automatique ou manuel, éventuellement par buse avec modulation de largeur d'impulsion. Elle surcharge des fonctions de Sprayer, suit les statistiques d'usage, affiche l'extension HUD/minicarte et synchronise les réglages par le réseau (ExtendedSprayerAmountEvent, ExtendedSprayerDefaultFruitTypeEvent). Plusieurs fonctions qu'elle appelle (updateWorkAreaSubSectionData, processWorkAreaSubSectionData, registerFunctions, onLoad) sont absentes de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "ExtendedSprayer.prerequisitesPresent": {
+   "en": "True only if the vehicle has both the Sprayer and PrecisionFarmingStatistic specializations.",
+   "fr": "Vrai uniquement si le véhicule possède les spécialisations Sprayer et PrecisionFarmingStatistic."
+  },
+  "ExtendedSprayer.initSpecialization": {
+   "en": "Registers the 'pulseWidthModulation' configuration type and the XML keys pulseWidthModulationConfigurations#isAlwaysActive (default false) and speedDependentApplication#isSupported.",
+   "fr": "Enregistre le type de configuration 'pulseWidthModulation' et les clés XML pulseWidthModulationConfigurations#isAlwaysActive (false par défaut) et speedDependentApplication#isSupported."
+  },
+  "ExtendedSprayer:onPostLoad": {
+   "en": "Restores the auto-mode flag and manual spray amount from the savegame, unless vehicles are being reset.",
+   "fr": "Restaure l'indicateur de mode auto et la dose manuelle depuis la sauvegarde, sauf si les véhicules sont réinitialisés."
+  },
+  "ExtendedSprayer:onDelete": {
+   "en": "Deletes the HUD extension if one was created.",
+   "fr": "Supprime l'extension HUD si elle existe."
+  },
+  "ExtendedSprayer:saveToXMLFile": {
+   "en": "Saves the auto-mode flag (sprayAmountAutoMode) and the manual amount (sprayAmountManual).",
+   "fr": "Sauvegarde l'indicateur de mode auto (sprayAmountAutoMode) et la dose manuelle (sprayAmountManual)."
+  },
+  "ExtendedSprayer:onReadStream": {
+   "en": "Client side on join: reads the auto-mode flag and the manual amount (NitrogenMap.NUM_BITS bits) and applies them without resending events.",
+   "fr": "Côté client à la connexion : lit l'indicateur du mode auto et la dose manuelle (NitrogenMap.NUM_BITS bits) et les applique sans renvoyer d'événement."
+  },
+  "ExtendedSprayer:onWriteStream": {
+   "en": "Server side on join: writes the auto-mode flag and the manual amount.",
+   "fr": "Côté serveur à la connexion : écrit l'indicateur du mode auto et la dose manuelle."
+  },
+  "ExtendedSprayer:onReadUpdateStream": {
+   "en": "Client side: when the server flagged it, reads pH and nitrogen actual/target values, the last touched soil type (3 bits) and the optional auto-mode fruit type.",
+   "fr": "Côté client : si le serveur l'a signalé, lit les valeurs actuelles/cibles de pH et d'azote, le dernier type de sol touché (3 bits) et le type de culture du mode auto optionnel."
+  },
+  "ExtendedSprayer:onWriteUpdateStream": {
+   "en": "Server side: when the usage-values dirty flag is set, writes the same values that onReadUpdateStream reads, in the same order.",
+   "fr": "Côté serveur : si le drapeau de valeurs d'usage est modifié, écrit les mêmes valeurs que lit onReadUpdateStream, dans le même ordre."
+  },
+  "ExtendedSprayer:onUpdate": {
+   "en": "Server: on the first update reads the liming/fertilizing mode, then after the ground update distance samples soil data for sprayer, sowing machine and cultivator work areas (including Nexat DLC cultivator extensions). Client: adds the HUD extension when it should show.",
+   "fr": "Serveur : à la première update lit le mode chaulage/fertilisation, puis après la distance de mise à jour du sol échantillonne les données de sol des zones de travail pulvérisateur, semoir et cultivateur (y compris les extensions de cultivateur du DLC Nexat). Client : ajoute l'extension HUD quand elle doit s'afficher."
+  },
+  "ExtendedSprayer:onUpdateTick": {
+   "en": "Client: refreshes the spray effect state while turned on. Re-reads the liming/fertilizing mode and updates action events if it changed. For the active vehicle updates minimap state and mission-work state.",
+   "fr": "Client : rafraîchit l'état de l'effet de pulvérisation quand l'outil est allumé. Relit le mode chaulage/fertilisation et met à jour les actions si besoin. Pour le véhicule actif, met à jour l'état de la minicarte et le travail de mission."
+  },
+  "ExtendedSprayer:onChangedFillType": {
+   "en": "Recomputes the maximum manual spray amount from the pH map (solid sprayer with lime) or the nitrogen map (otherwise), minus one.",
+   "fr": "Recalcule la dose manuelle maximale à partir de la carte de pH (épandeur solide avec chaux) ou d'azote (sinon), moins un."
+  },
+  "ExtendedSprayer:onTurnedOn": {
+   "en": "Client side: forces a spray effect state refresh.",
+   "fr": "Côté client : force un rafraîchissement de l'état de l'effet de pulvérisation."
+  },
+  "ExtendedSprayer:onTurnedOff": {
+   "en": "Client side: forces a spray effect state refresh.",
+   "fr": "Côté client : force un rafraîchissement de l'état de l'effet de pulvérisation."
+  },
+  "ExtendedSprayer:onStateChange": {
+   "en": "Flags attachStateChanged when the vehicle is attached or detached.",
+   "fr": "Active attachStateChanged quand le véhicule est attaché ou détaché."
+  },
+  "ExtendedSprayer:onVariableWorkWidthSectionChanged": {
+   "en": "Updates the crop sensor working width of every vehicle in the root vehicle's tree that has CropSensor, and on the client refreshes the spray effect state.",
+   "fr": "Met à jour la largeur de travail du capteur de culture de chaque véhicule de l'arbre du véhicule racine possédant CropSensor et, côté client, rafraîchit l'état de l'effet de pulvérisation."
+  },
+  "ExtendedSprayer:onRegisterActionEvents": {
+   "en": "Client side: on the valid sprayer of the vehicle tree registers auto-mode toggle, spray amount change and (without a sowing machine) default fruit requirement actions, and refreshes their state and the minimap.",
+   "fr": "Côté client : sur le pulvérisateur valide de l'arbre du véhicule, enregistre les actions de bascule auto, de changement de dose et (sans semoir) d'exigence de culture par défaut, et rafraîchit leur état et la minicarte."
+  },
+  "ExtendedSprayer.getValidSprayerToUse": {
+   "en": "Returns the first vehicle in the root vehicle's tree that passes getIsVehicleValid, or nil.",
+   "fr": "Renvoie le premier véhicule de l'arbre du véhicule racine qui passe getIsVehicleValid, ou nil."
+  },
+  "ExtendedSprayer.getIsVehicleValid": {
+   "en": "True if the vehicle has ExtendedSprayer and WorkArea, at least one work area, and is not a manure barrel with an attached tool.",
+   "fr": "Vrai si le véhicule a ExtendedSprayer et WorkArea, au moins une zone de travail, et n'est pas un tonneau à lisier avec outil attaché."
+  },
+  "ExtendedSprayer.actionEventToggleAuto": {
+   "en": "Input callback: toggles the automatic spray amount mode.",
+   "fr": "Rappel d'entrée : bascule le mode de dose automatique."
+  },
+  "ExtendedSprayer.actionEventChangeSprayAmount": {
+   "en": "Input callback: changes the manual spray amount by one step in the direction of the input value.",
+   "fr": "Rappel d'entrée : change la dose manuelle d'un pas dans le sens de la valeur d'entrée."
+  },
+  "ExtendedSprayer.actionEventChangeDefaultFruitRequirement": {
+   "en": "Input callback: moves to the next default fruit requirement of the nitrogen map and applies it.",
+   "fr": "Rappel d'entrée : passe à l'exigence de culture par défaut suivante de la carte d'azote et l'applique."
+  },
+  "ExtendedSprayer.updateActionEventState": {
+   "en": "Enables the auto-toggle action when liming or fertilizing and sets its text by mode. Enables the amount action only in manual mode while liming or fertilizing.",
+   "fr": "Active l'action de bascule auto en chaulage ou fertilisation et règle son texte selon le mode. Active l'action de dose seulement en mode manuel pendant le chaulage ou la fertilisation."
+  },
+  "ExtendedSprayer.updateActionEventAutoModeDefault": {
+   "en": "Enables the default fruit requirement action only when fertilizing in auto mode and no valid auto-mode fruit type is known.",
+   "fr": "Active l'action d'exigence de culture par défaut seulement en fertilisation en mode auto sans type de culture valide connu."
+  },
+  "ExtendedSprayer.getFillTypeSourceVehicle": {
+   "en": "Returns the vehicle and fill unit index to read the product from. If the sprayer is empty it searches its supported fill sources for one with content, or an empty compatible one. An AI-driven sprayer with zero capacity falls back to the first empty source.",
+   "fr": "Renvoie le véhicule et l'indice d'unité de remplissage d'où lire le produit. Si le pulvérisateur est vide, cherche parmi ses sources compatibles une source remplie, ou une source vide compatible. Un pulvérisateur piloté par l'IA sans capacité se rabat sur la première source vide."
+  },
+  "ExtendedSprayer:getCurrentSprayerMode": {
+   "en": "Returns isLiming, isFertilizing from the current fill type: lime gives true, false; a fertilizer type gives false, true; herbicide and others give false, false. With nothing loaded an AI worker counts as fertilizing.",
+   "fr": "Renvoie isLiming, isFertilizing selon le type de remplissage actuel : chaux donne true, false ; un engrais donne false, true ; herbicide et autres donnent false, false. Sans chargement, un ouvrier IA compte comme fertilisant."
+  },
+  "ExtendedSprayer:getCurrentNitrogenLevelOffset": {
+   "en": "Returns 0; hook that other specializations such as ManureSensor override to shift the nitrogen level.",
+   "fr": "Renvoie 0 ; point d'accroche que d'autres spécialisations comme ManureSensor surchargent pour décaler le niveau d'azote."
+  },
+  "ExtendedSprayer:getCurrentNitrogenUsageLevelOffset": {
+   "en": "Returns 0; hook that other specializations such as ManureSensor override to shift the nitrogen used in the rate calculation.",
+   "fr": "Renvoie 0 ; point d'accroche que d'autres spécialisations comme ManureSensor surchargent pour décaler l'azote utilisé dans le calcul de dose."
+  },
+  "ExtendedSprayer:getUseExtendedSprayerHudExtension": {
+   "en": "True if the vehicle has the WorkArea specialization with at least one work area.",
+   "fr": "Vrai si le véhicule a la spécialisation WorkArea avec au moins une zone de travail."
+  },
+  "ExtendedSprayer:getShowExtendedSprayerHudExtension": {
+   "en": "Client only. False when a manure barrel has a tool, or (except slurry tankers and manure spreaders) when the source is empty without AI or the machine is neither liming nor fertilizing.",
+   "fr": "Client uniquement. Faux si un tonneau à lisier a un outil, ou (sauf citernes à lisier et épandeurs à fumier) si la source est vide sans IA ou si la machine ne chaule ni ne fertilise."
+  },
+  "ExtendedSprayer:getIsUsingExactNitrogenAmount": {
+   "en": "Always returns true. ManureSensor overrides it for manure sprayers.",
+   "fr": "Renvoie toujours true. ManureSensor la surcharge pour les épandeurs de lisier."
+  },
+  "ExtendedSprayer.updateMinimapActiveState": {
+   "en": "Shows the pH minimap when liming or the nitrogen minimap when fertilizing, only on a field with product (or AI), and sets the mission-work state for nitrogen.",
+   "fr": "Affiche la minicarte de pH en chaulage ou d'azote en fertilisation, seulement sur un champ avec du produit (ou l'IA), et règle l'état de travail de mission pour l'azote."
+  },
+  "ExtendedSprayer:getIsPrecisionSprayingRequired": {
+   "en": "Returns whether spraying should happen. Always true for missions and manual mode. In auto mode it is false when pH or nitrogen already reaches the target (without PWM) and true when no soil data is uncovered yet.",
+   "fr": "Indique si l'on doit pulvériser. Toujours vrai pour les missions et le mode manuel. En mode auto, faux si le pH ou l'azote atteint déjà la cible (sans PWM) et vrai si aucune donnée de sol n'est encore découverte."
+  },
+  "ExtendedSprayer.updateSprayerEffectState": {
+   "en": "Starts or stops the sprayer's standard effects, animations and sounds, for the fill type and active spray type, when the combined state (precision spraying required, effects visible, turned on) changes or force is set.",
+   "fr": "Démarre ou arrête les effets, animations et sons standard du pulvérisateur, pour le type de remplissage et de pulvérisation actif, quand l'état combiné (pulvérisation requise, effets visibles, allumé) change ou que force est défini."
+  },
+  "ExtendedSprayer:updateWorkAreaWidth": {
+   "en": "Override. After the parent, splits a work area into sub-sections (two halves for central spreaders, with offset tables) and resets its sampled pH, nitrogen, crop and soil values. Forces a ground data refresh.",
+   "fr": "Surcharge. Après le parent, découpe une zone de travail en sous-sections (deux moitiés pour les épandeurs centraux, avec tables de décalage) et réinitialise ses valeurs échantillonnées de pH, d'azote, de culture et de sol. Force un rafraîchissement des données de sol."
+  },
+  "ExtendedSprayer:getSprayerUsage": {
+   "en": "Override. When turned on and liming or fertilizing, computes liters per update from the pH or nitrogen map using work width, speed and the wanted change (auto or manual, scaled by active nozzles). Mission work keeps the default rate, and AI gets a minimum usage. Note: the fertilizing branch reads pHMap.realisticSpreadOutputEnabled rather than a nitrogen map field.",
+   "fr": "Surcharge. Allumé et en chaulage ou fertilisation, calcule les litres par update à partir de la carte de pH ou d'azote avec largeur de travail, vitesse et changement voulu (auto ou manuel, pondéré par les buses actives). Le travail de mission garde la dose par défaut et l'IA a un usage minimal. À noter : la branche fertilisation lit pHMap.realisticSpreadOutputEnabled plutôt qu'un champ de la carte d'azote."
+  },
+  "ExtendedSprayer:processSprayerArea": {
+   "en": "Override. When liming or fertilizing with product left, updates the pH or nitrogen state of the area and sub-section data (server), runs the parent only if precision spraying is required, flags the nitrogen minimap for refresh and sets the spray ground type layer. Otherwise calls the parent.",
+   "fr": "Surcharge. En chaulage ou fertilisation avec du produit, met à jour l'état de pH ou d'azote de la zone et les données de sous-sections (serveur), n'exécute le parent que si la pulvérisation est requise, signale la minicarte d'azote à rafraîchir et règle la couche de type de sol de pulvérisation. Sinon appelle le parent."
+  },
+  "ExtendedSprayer:changeSeedIndex": {
+   "en": "Override. After the parent, forces a ground data refresh so nitrogen requirements update without moving.",
+   "fr": "Surcharge. Après le parent, force un rafraîchissement des données de sol pour que les besoins en azote se mettent à jour sans bouger."
+  },
+  "ExtendedSprayer:getSprayerDoubledAmountActive": {
+   "en": "Override. Always returns false, false: the double application rate is disabled because the amount can be set precisely.",
+   "fr": "Surcharge. Renvoie toujours false, false : le doublement de dose est désactivé car la dose se règle précisément."
+  },
+  "ExtendedSprayer:updateSprayerEffects": {
+   "en": "Override with an empty body: the base sprayer effect update is suppressed. Effects are driven by updateSprayerEffectState instead.",
+   "fr": "Surcharge à corps vide : la mise à jour d'effets de base du pulvérisateur est supprimée. Les effets sont pilotés par updateSprayerEffectState."
+  },
+  "ExtendedSprayer:updateExtendedSprayerNozzleEffectState": {
+   "en": "Override. After the parent, turns a nozzle off if PWM or spot spray is active, the machine limes or fertilizes, and there is no field ground 1 m in front of the nozzle.",
+   "fr": "Surcharge. Après le parent, éteint une buse si PWM ou pulvérisation ciblée est actif, que la machine chaule ou fertilise et qu'il n'y a pas de sol de champ à 1 m devant la buse."
+  },
+  "ExtendedSprayer:setSprayerAITerrainDetailProhibitedRange": {
+   "en": "Override. After the parent, replaces the AI spray level restrictions: forbids already treated ground for fertilizer or lime, and forbids fully grown crops (grass excluded) for herbicide, fertilizer or lime.",
+   "fr": "Surcharge. Après le parent, remplace les restrictions IA liées au niveau de pulvérisation : interdit le sol déjà traité pour engrais ou chaux, et interdit les cultures arrivées à maturité (herbe exclue) pour herbicide, engrais ou chaux."
+  },
+  "ExtendedSprayer:preProcessExtUnderRootFertilizerArea": {
+   "en": "Server only: for under-root fertilizing machines, updates the nitrogen level of the area using the fertilizer spray type, then processes sub-section data.",
+   "fr": "Serveur uniquement : pour les machines de fertilisation sous racine, met à jour le niveau d'azote de la zone avec le type de pulvérisation engrais, puis traite les données de sous-sections."
+  },
+  "ExtendedSprayer:onEndWorkAreaProcessing": {
+   "en": "Server only: when the sprayer is on and working, adds the actual and regular usage to the statistic matching the fill type (lime, mineral or liquid fertilizer, manure, liquid manure/digestate).",
+   "fr": "Serveur uniquement : quand le pulvérisateur est allumé et travaille, ajoute l'usage réel et l'usage régulier à la statistique correspondant au type de remplissage (chaux, engrais minéral ou liquide, fumier, lisier/digestat)."
+  },
+  "ExtendedSprayer:setSprayAmountAutoMode": {
+   "en": "Sets or toggles auto mode (nil toggles), forced to false when changing is not allowed, updates the action events and sends ExtendedSprayerAmountEvent.",
+   "fr": "Définit ou bascule le mode auto (nil bascule), forcé à false si le changement n'est pas autorisé, met à jour les actions et envoie ExtendedSprayerAmountEvent."
+  },
+  "ExtendedSprayer:setSprayAmountManualValue": {
+   "en": "Sets the manual amount clamped between the min and max limits, updates the action events and sends ExtendedSprayerAmountEvent.",
+   "fr": "Définit la dose manuelle bornée entre les limites min et max, met à jour les actions et envoie ExtendedSprayerAmountEvent."
+  },
+  "ExtendedSprayer:setSprayAmountAutoFruitTypeIndex": {
+   "en": "Stores the fruit type used by auto mode, looks up whether it needs the default mode in the nitrogen map and refreshes the action state. Does nothing if unchanged.",
+   "fr": "Mémorise le type de culture utilisé par le mode auto, cherche dans la carte d'azote s'il exige le mode par défaut et rafraîchit l'état des actions. Ne fait rien si inchangé."
+  },
+  "ExtendedSprayer:setSprayAmountDefaultFruitRequirementIndex": {
+   "en": "Stores the default fruit requirement index, forces a ground data refresh and sends ExtendedSprayerDefaultFruitTypeEvent.",
+   "fr": "Mémorise l'indice d'exigence de culture par défaut, force un rafraîchissement des données de sol et envoie ExtendedSprayerDefaultFruitTypeEvent."
+  },
+  "ExtendedSprayer:updateDebugValues": {
+   "en": "Debug output: appends to values a description of the detected N, pH, crop, growth state and soil of each work area (sprayer, sowing machine, cultivator) and its sub-sections.",
+   "fr": "Sortie de débogage : ajoute à values une description de l'azote, du pH, de la culture, du stade de croissance et du sol détectés pour chaque zone de travail (pulvérisateur, semoir, cultivateur) et ses sous-sections."
+  }
+ }
+}

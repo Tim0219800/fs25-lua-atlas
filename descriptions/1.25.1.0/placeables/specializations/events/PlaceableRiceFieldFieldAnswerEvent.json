@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableRiceFieldFieldAnswerEvent.lua",
+ "module": {
+  "en": "Network event sent by the server back to a client to report the outcome (status code) of a rice field creation request made with PlaceableRiceFieldFieldEvent. The client only republishes the code on the message center; the meaning of the codes is defined elsewhere (UNVERIFIED).",
+  "fr": "Événement réseau envoyé par le serveur à un client pour signaler le résultat (code de statut) d'une demande de création de rizière faite avec PlaceableRiceFieldFieldEvent. Le client ne fait que republier le code sur le message center ; la signification des codes est définie ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlaceableRiceFieldFieldAnswerEvent.emptyNew": {
+   "en": "Creates an empty event bound to the main network channel (`NetworkNode.CHANNEL_MAIN`).",
+   "fr": "Crée un événement vide lié au canal réseau principal (`NetworkNode.CHANNEL_MAIN`)."
+  },
+  "PlaceableRiceFieldFieldAnswerEvent.new": {
+   "en": "Builds the answer event from the rice field placeable and a numeric status code.",
+   "fr": "Construit l'événement de réponse à partir du placeable de rizière et d'un code de statut numérique."
+  },
+  "PlaceableRiceFieldFieldAnswerEvent:readStream": {
+   "en": "Reads the rice field object and a UInt8 status code, then runs the event right away.",
+   "fr": "Lit l'objet rizière et un code de statut UInt8, puis exécute l'événement immédiatement."
+  },
+  "PlaceableRiceFieldFieldAnswerEvent:writeStream": {
+   "en": "Writes the rice field object and the UInt8 status code.",
+   "fr": "Écrit l'objet rizière et le code de statut UInt8."
+  },
+  "PlaceableRiceFieldFieldAnswerEvent:run": {
+   "en": "If the rice field exists and is synchronized, publishes the status code on `g_messageCenter` under the event class as topic. The listener that consumes it is not in this file.",
+   "fr": "Si la rizière existe et est synchronisée, publie le code de statut sur `g_messageCenter` avec la classe de l'événement comme sujet. L'écouteur qui le consomme n'est pas dans ce fichier."
+  }
+ }
+}

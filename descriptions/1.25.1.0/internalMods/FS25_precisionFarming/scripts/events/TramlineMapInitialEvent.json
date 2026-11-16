@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/TramlineMapInitialEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that sends all farmland tramline settings (working width, work direction, spacing) from the server to a joining client.",
+    "fr": "Événement réseau (sous-classe de Event) qui envoie tous les réglages de traces de jalonnement par parcelle (largeur de travail, direction de travail, espacement) du serveur vers un client qui rejoint."
+  },
+  "fonctions": {
+    "TramlineMapInitialEvent.emptyNew": {
+      "en": "Creates an empty TramlineMapInitialEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de TramlineMapInitialEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "TramlineMapInitialEvent.new": {
+      "en": "Creates the event with a table of tramline states indexed by farmland id.",
+      "fr": "Crée l'événement avec une table d'états de jalonnement indexée par id de parcelle."
+    },
+    "TramlineMapInitialEvent:readStream": {
+      "en": "Client side: reads a farmland count, then for each farmland its id and three 32 bit floats (workingWidth, workDirection, spacing); then calls run.",
+      "fr": "Côté client : lit un nombre de parcelles, puis pour chacune son id et trois flottants 32 bits (workingWidth, workDirection, spacing) ; puis appelle run."
+    },
+    "TramlineMapInitialEvent:writeStream": {
+      "en": "Server side: writes the farmland count, then each farmland id with its three float values.",
+      "fr": "Côté serveur : écrit le nombre de parcelles, puis chaque id de parcelle avec ses trois valeurs flottantes."
+    },
+    "TramlineMapInitialEvent:run": {
+      "en": "Replaces g_precisionFarming.tramlineMap.farmlandTramlineStates with the received table, if the tramline map exists.",
+      "fr": "Remplace g_precisionFarming.tramlineMap.farmlandTramlineStates par la table reçue, si la carte de jalonnement existe."
+    }
+  }
+}

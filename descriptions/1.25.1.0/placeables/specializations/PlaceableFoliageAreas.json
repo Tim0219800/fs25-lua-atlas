@@ -1,0 +1,37 @@
+{
+ "fichier": "placeables/specializations/PlaceableFoliageAreas.lua",
+ "module": {
+  "en": "Placeable specialization that lets a building define parallelogram areas (start, width, height nodes) painted with a fruit type at a growth state, or with a deco foliage layer, when the placeable is finalized. It only writes to the map on the server. It has no prerequisites.",
+  "fr": "Spécialisation de placeable qui permet à un bâtiment de définir des zones en parallélogramme (noeuds début, largeur, hauteur) peintes avec un type de culture à un stade de croissance, ou avec une couche de feuillage décoratif, à la finalisation du placement. L'écriture sur la carte se fait uniquement sur le serveur. Aucun prérequis."
+ },
+ "fonctions": {
+  "PlaceableFoliageAreas.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableFoliageAreas.registerFunctions": {
+   "en": "Registers the loadFoliageArea method on the placeable type.",
+   "fr": "Enregistre la méthode loadFoliageArea sur le type de placeable."
+  },
+  "PlaceableFoliageAreas.registerEventListeners": {
+   "en": "Subscribes to the load and post-finalize-placement events.",
+   "fr": "Abonne la spécialisation aux événements de chargement et de post-finalisation du placement."
+  },
+  "PlaceableFoliageAreas.registerXMLPaths": {
+   "en": "Declares foliageAreas.foliageArea entries: start, width and height nodes, fruitType, growthStateName, decoFoliage and numeric state.",
+   "fr": "Déclare les entrées foliageAreas.foliageArea : noeuds début, largeur et hauteur, fruitType, growthStateName, decoFoliage et état numérique."
+  },
+  "PlaceableFoliageAreas:onLoad": {
+   "en": "Iterates the foliageArea entries and keeps those that loadFoliageArea accepts in spec.areas.",
+   "fr": "Parcourt les entrées foliageArea et conserve dans spec.areas celles acceptées par loadFoliageArea."
+  },
+  "PlaceableFoliageAreas:loadFoliageArea": {
+   "en": "Reads one area into the given table. If both fruitType and decoFoliage are set, decoFoliage is ignored. Resolves the fruit type and growth state (default is the max harvesting state minus one), checks the deco layer exists on the map, and needs the three nodes. Returns false on any failure.",
+   "fr": "Lit une zone dans la table fournie. Si fruitType et decoFoliage sont tous deux définis, decoFoliage est ignoré. Résout le type de culture et le stade (par défaut l'état maximal de récolte moins un), vérifie que la couche déco existe sur la carte et exige les trois noeuds. Renvoie false en cas d'échec."
+  },
+  "PlaceableFoliageAreas:onPostFinalizePlacement": {
+   "en": "Server only: for fruit areas queues a FieldUpdateTask with the fruit type and growth state on the area; for deco areas calls applyDecoFoliage on the foliage system with the three corner world positions.",
+   "fr": "Serveur uniquement : pour les zones de culture, met en file un FieldUpdateTask avec le type de culture et le stade sur la zone ; pour les zones déco, appelle applyDecoFoliage du système de feuillage avec les positions monde des trois coins."
+  }
+ }
+}

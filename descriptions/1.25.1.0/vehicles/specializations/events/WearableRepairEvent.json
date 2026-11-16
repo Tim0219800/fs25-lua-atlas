@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/WearableRepairEvent.lua",
+  "module": {
+    "en": "Network event requesting a repair of a wearable vehicle, optionally flagged as done at a selling point. The server re-broadcasts it for UI updates and VEHICLE_REPAIRED is published. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau demandant la réparation d'un véhicule soumis à l'usure, éventuellement indiquée comme faite à un point de vente. Le serveur le retransmet pour l'interface et VEHICLE_REPAIRED est publié. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "WearableRepairEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "WearableRepairEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a boolean 'at selling point' flag); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un booléen « au point de vente ») ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "WearableRepairEvent:readStream": {
+      "en": "Reads a node object and a boolean 'at selling point' flag from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un booléen « au point de vente » depuis le flux, puis appelle `run(connection)`."
+    },
+    "WearableRepairEvent:writeStream": {
+      "en": "Writes a node object and a boolean 'at selling point' flag to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un booléen « au point de vente » dans le flux (même ordre que `readStream`)."
+    },
+    "WearableRepairEvent:run": {
+      "en": "Applies the event on the receiving side: calls `repairVehicle(atSellingPoint)` if the vehicle has it; on the server it re-broadcasts the event, and it publishes MessageType.VEHICLE_REPAIRED with the flag.",
+      "fr": "Applique l'événement côté récepteur : appelle `repairVehicle(auPointDeVente)` si le véhicule l'a ; sur le serveur il retransmet l'événement, et publie MessageType.VEHICLE_REPAIRED avec l'indicateur."
+    }
+  }
+}

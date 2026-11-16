@@ -1,0 +1,21 @@
+{
+ "fichier": "gui/hud/SideNotificationMobile.lua",
+ "module": {
+  "en": "Mobile variant of SideNotification (extends SideNotification) anchored to the top-right corner with its own background color, position and size constants. It only overrides construction and background helpers; applyValues is not defined in this file (UNVERIFIED).",
+  "fr": "Variante mobile de SideNotification (étend SideNotification) ancrée au coin haut-droit, avec ses propres constantes de couleur de fond, position et taille. Elle ne surcharge que la construction et les aides de fond ; applyValues n'est pas défini dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "SideNotificationMobile.new": {
+   "en": "Creates the mobile notification display with UI scale 1 and its background color, then calls applyValues.",
+   "fr": "Crée l'affichage de notification mobile avec l'échelle 1 et sa couleur de fond, puis appelle applyValues."
+  },
+  "SideNotificationMobile.getBackgroundPosition": {
+   "en": "Returns the top-right corner position plus the configured offset scaled by uiScale.",
+   "fr": "Retourne la position du coin haut-droit plus le décalage configuré mis à l'échelle par uiScale."
+  },
+  "SideNotificationMobile:createBackground": {
+   "en": "Creates an image-less overlay at the top-right position with the configured size. Note: declared with a colon although it does not use self.",
+   "fr": "Crée un overlay sans image à la position haut-droite avec la taille configurée. À noter : déclarée avec deux-points, bien qu'elle n'utilise pas self."
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/FillUnitUnloadedEvent.lua",
+ "module": {
+  "en": "Network event class `FillUnitUnloadedEvent` (extends `Event`) that is the server result of a fill unit unload, carrying either a created pallet position or a warning/result. It carries the vehicle plus either a pallet with compressed world position and Euler angles, or a show-warning flag and a 2-bit result (0 nil, 1 false, 2 true). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `FillUnitUnloadedEvent` (hérite de `Event`) qui est le résultat serveur d'un déchargement d'unité de remplissage, portant soit la position d'une palette créée, soit un avertissement/résultat. Elle transporte le véhicule plus soit une palette avec position monde compressée et angles d'Euler, soit un indicateur d'avertissement et un résultat sur 2 bits (0 nil, 1 faux, 2 vrai). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "FillUnitUnloadedEvent.emptyNew": {
+   "en": "Creates an empty `FillUnitUnloadedEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `FillUnitUnloadedEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "FillUnitUnloadedEvent.new": {
+   "en": "Creates the event with its data: the vehicle plus either a pallet with compressed world position and Euler angles, or a show-warning flag and a 2-bit result (0 nil, 1 false, 2 true).",
+   "fr": "Crée l'événement avec ses données : le véhicule plus soit une palette avec position monde compressée et angles d'Euler, soit un indicateur d'avertissement et un résultat sur 2 bits (0 nil, 1 faux, 2 vrai)."
+  },
+  "FillUnitUnloadedEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle plus either a pallet with compressed world position and Euler angles, or a show-warning flag and a 2-bit result (0 nil, 1 false, 2 true)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule plus soit une palette avec position monde compressée et angles d'Euler, soit un indicateur d'avertissement et un résultat sur 2 bits (0 nil, 1 faux, 2 vrai)), puis appelle `run`."
+  },
+  "FillUnitUnloadedEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle plus either a pallet with compressed world position and Euler angles, or a show-warning flag and a 2-bit result (0 nil, 1 false, 2 true)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule plus soit une palette avec position monde compressée et angles d'Euler, soit un indicateur d'avertissement et un résultat sur 2 bits (0 nil, 1 faux, 2 vrai))."
+  },
+  "FillUnitUnloadedEvent:run": {
+   "en": "Executes the event on the receiving side: with a pallet, unmounts it if needed, places it with `setWorldPositionQuaternion` and raises `onFillUnitUnloadPallet`; otherwise may show a no-space notification and raises `onFillUnitUnloaded` with the result.",
+   "fr": "Exécute l'événement côté réception : avec une palette, la démonte si besoin, la place via `setWorldPositionQuaternion` et lève `onFillUnitUnloadPallet` ; sinon peut afficher une notification de manque de place et lève `onFillUnitUnloaded` avec le résultat."
+  }
+ }
+}

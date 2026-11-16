@@ -1,0 +1,37 @@
+{
+ "fichier": "placeables/specializations/PlaceableClearAreas.lua",
+ "module": {
+  "en": "Placeable specialization that defines rectangular areas (start, width and height nodes) cleared when the placeable is first built. On the server, for a placeable not loaded from a savegame, it removes fields, weeds, stones, tire tracks, decoration and heap content on the areas.",
+  "fr": "Spécialisation de placeable qui définit des zones rectangulaires (nœuds de départ, de largeur et de hauteur) nettoyées lors de la première construction du placeable. Côté serveur, pour un placeable non chargé depuis une sauvegarde, elle supprime champs, mauvaises herbes, pierres, traces de pneus, décorations et contenu de tas sur ces zones."
+ },
+ "fonctions": {
+  "PlaceableClearAreas.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableClearAreas.registerFunctions": {
+   "en": "Registers `loadClearArea`.",
+   "fr": "Enregistre `loadClearArea`."
+  },
+  "PlaceableClearAreas.registerEventListeners": {
+   "en": "Subscribes to `onLoad` and `onPostFinalizePlacement`.",
+   "fr": "S'abonne à `onLoad` et `onPostFinalizePlacement`."
+  },
+  "PlaceableClearAreas.registerXMLPaths": {
+   "en": "Declares `clearAreas.clearArea(?)` with `startNode`, `widthNode` and `heightNode`.",
+   "fr": "Déclare `clearAreas.clearArea(?)` avec `startNode`, `widthNode` et `heightNode`."
+  },
+  "PlaceableClearAreas:onLoad": {
+   "en": "Loads every `clearArea` entry that is valid and warns when the `clearAreas` section is missing.",
+   "fr": "Charge chaque entrée `clearArea` valide et émet un avertissement si la section `clearAreas` est absente."
+  },
+  "PlaceableClearAreas:loadClearArea": {
+   "en": "Reads the start, width and height nodes into the area table; logs a warning and returns false if any is missing, else true.",
+   "fr": "Lit les nœuds de départ, de largeur et de hauteur dans la table de zone ; journalise un avertissement et renvoie false si l'un manque, sinon true."
+  },
+  "PlaceableClearAreas:onPostFinalizePlacement": {
+   "en": "Server only, and only for new placements: for each area removes field, weed, stone, tire track and deco content via `FSDensityMapUtil` and clears height-map content via `DensityMapHeightUtil.clearArea`.",
+   "fr": "Serveur uniquement et seulement pour un nouveau placement : pour chaque zone, supprime champ, mauvaises herbes, pierres, traces de pneus et décorations via `FSDensityMapUtil`, et vide le contenu de la heightmap via `DensityMapHeightUtil.clearArea`."
+  }
+ }
+}

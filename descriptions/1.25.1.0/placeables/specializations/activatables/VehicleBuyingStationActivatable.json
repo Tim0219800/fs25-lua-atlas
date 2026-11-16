@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/activatables/VehicleBuyingStationActivatable.lua",
+ "module": {
+  "en": "Activatable object for a vehicle buying station placeable. It takes a prompt text and a callback, is available to players who can access the placeable, and running it simply calls the callback (the vehicle shop dialog is opened there).",
+  "fr": "Objet activable pour un placeable de station d'achat de véhicules. Il reçoit un texte d'invite et un callback, est disponible pour les joueurs qui peuvent accéder au placeable, et son exécution appelle simplement le callback (la boîte de dialogue de boutique y est ouverte)."
+ },
+ "fonctions": {
+  "VehicleBuyingStationActivatable.new": {
+   "en": "Creates the activatable for a placeable with a callback function and prompt text.",
+   "fr": "Crée l'activable pour un placeable avec une fonction de callback et un texte d'invite."
+  },
+  "VehicleBuyingStationActivatable:getIsActivatable": {
+   "en": "Returns whether the local player may access the placeable according to the access handler.",
+   "fr": "Renvoie si le joueur local peut accéder au placeable selon le gestionnaire d'accès."
+  },
+  "VehicleBuyingStationActivatable:run": {
+   "en": "Calls the stored callback with no arguments.",
+   "fr": "Appelle le callback mémorisé sans argument."
+  }
+ }
+}

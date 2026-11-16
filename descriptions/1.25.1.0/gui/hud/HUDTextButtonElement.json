@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/HUDTextButtonElement.lua",
+ "module": {
+  "en": "Minimal text button for the HUD. This file only defines setText, which forwards to a textDisplay member; the constructor and the code that creates that member are not in the file (UNVERIFIED). It is not derived from HUDElement here (plain Class).",
+  "fr": "Bouton texte minimal pour le HUD. Ce fichier ne définit que setText, qui délègue à un membre textDisplay ; le constructeur et la création de ce membre ne sont pas dans le fichier (NON VÉRIFIÉ). Il ne dérive pas de HUDElement ici (Class simple)."
+ },
+ "fonctions": {
+  "HUDTextButtonElement:setText": {
+   "en": "Forwards text, size, alignment, color and bold flag to the internal textDisplay:setText. Requires self.textDisplay to exist.",
+   "fr": "Transmet texte, taille, alignement, couleur et gras à textDisplay:setText en interne. Nécessite que self.textDisplay existe."
+  }
+ }
+}

@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/ShallowWaterObstacles.lua",
+ "module": {
+  "en": "Specialization that registers vehicle nodes as obstacles in the shallow water simulation (`g_currentMission.shallowWaterSimulation`), so moving vehicles push water. Event listeners are only registered when `Platform.hasShallowWaterSimulation` is true. The simulation class itself is not in the dump, so what it does with the obstacles is UNVERIFIED. XML entries come from `vehicle.shallowWaterObstacle.obstacleNode`.",
+  "fr": "Spécialisation qui enregistre des nœuds de véhicule comme obstacles dans la simulation d'eau peu profonde (`g_currentMission.shallowWaterSimulation`), pour que les véhicules en mouvement repoussent l'eau. Les écouteurs d'événements ne sont enregistrés que si `Platform.hasShallowWaterSimulation` est vrai. La classe de simulation n'est pas dans le dump : son traitement des obstacles est NON VÉRIFIÉ. Les entrées XML viennent de `vehicle.shallowWaterObstacle.obstacleNode`."
+ },
+ "fonctions": {
+  "ShallowWaterObstacles.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Retourne toujours true : aucune autre spécialisation n'est requise."
+  },
+  "ShallowWaterObstacles.initSpecialization": {
+   "en": "Declares the obstacle node XML schema: node, direction node (defaults to the node), size in meters (default 1 1 1) and local offset.",
+   "fr": "Déclare le schéma XML des nœuds d'obstacle : nœud, nœud de direction (par défaut le nœud), taille en mètres (1 1 1 par défaut) et décalage local."
+  },
+  "ShallowWaterObstacles.registerFunctions": {
+   "en": "Registers `loadObstacleNodeFromXML` on the vehicle type.",
+   "fr": "Enregistre `loadObstacleNodeFromXML` sur le type de véhicule."
+  },
+  "ShallowWaterObstacles.registerEventListeners": {
+   "en": "Subscribes to onPostLoad, onLoadFinished and onDelete, but only if the platform supports shallow water simulation; otherwise registers nothing.",
+   "fr": "S'abonne à onPostLoad, onLoadFinished et onDelete, uniquement si la plateforme gère la simulation d'eau peu profonde ; sinon n'enregistre rien."
+  },
+  "ShallowWaterObstacles:onPostLoad": {
+   "en": "Loads all `obstacleNode` entries from the XML. If none is valid, removes the other listeners and clears the list.",
+   "fr": "Charge toutes les entrées `obstacleNode` du XML. Si aucune n'est valide, retire les autres écouteurs et vide la liste."
+  },
+  "ShallowWaterObstacles:onLoadFinished": {
+   "en": "Registers each obstacle node with the shallow water simulation (`addObstacle` with size, callback and offset). Skipped while the vehicle is in the shop configuration state.",
+   "fr": "Enregistre chaque nœud d'obstacle auprès de la simulation d'eau (`addObstacle` avec taille, callback et décalage). Ignoré tant que le véhicule est dans l'état de configuration en boutique."
+  },
+  "ShallowWaterObstacles:onDelete": {
+   "en": "Removes every registered obstacle from the shallow water simulation.",
+   "fr": "Retire tous les obstacles enregistrés de la simulation d'eau peu profonde."
+  },
+  "ShallowWaterObstacles:loadObstacleNodeFromXML": {
+   "en": "Reads one obstacle (node, direction node, size, offset) and initialises its last position. Returns false with an XML warning if the node is missing.",
+   "fr": "Lit un obstacle (nœud, nœud de direction, taille, décalage) et initialise sa dernière position. Retourne false avec un avertissement XML si le nœud manque."
+  },
+  "ShallowWaterObstacles.getShallowWaterParameters": {
+   "en": "Callback given to the simulation: returns the node's x and z velocity (unit direction of movement since the last call times the vehicle's signed speed times 1000) and the heading angle around Y of the direction node.",
+   "fr": "Callback fourni à la simulation : retourne les vitesses x et z du nœud (direction unitaire du déplacement depuis le dernier appel fois la vitesse signée du véhicule fois 1000) et l'angle de cap autour de Y du nœud de direction."
+  }
+ }
+}

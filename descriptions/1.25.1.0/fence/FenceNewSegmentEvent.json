@@ -1,0 +1,25 @@
+{
+ "fichier": "fence/FenceNewSegmentEvent.lua",
+ "module": {
+  "en": "Client-to-server request to build a new fence segment, with a server-to-client reply giving a status code, the segment id and the end position. The server re-validates, charges the farm, finalizes the segment and broadcasts a FenceSegmentEvent. The status codes come from FenceNewSegmentEvent.STATUS_CODE, which is not defined in this file (UNVERIFIED).",
+  "fr": "Requête client vers serveur pour construire un nouveau segment de clôture, avec une réponse serveur vers client donnant un code de statut, l'identifiant du segment et la position de fin. Le serveur revalide, facture la ferme, finalise le segment et diffuse un FenceSegmentEvent. Les codes de statut viennent de FenceNewSegmentEvent.STATUS_CODE, non défini dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "FenceNewSegmentEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel. The `new`/`newServerToClient` constructors called in run are not defined in this file (UNVERIFIED where they come from).",
+   "fr": "Crée un événement vide sur le canal réseau principal. Les constructeurs `new`/`newServerToClient` appelés dans run ne sont pas définis dans ce fichier (provenance NON VÉRIFIÉE)."
+  },
+  "FenceNewSegmentEvent:readStream": {
+   "en": "Server side: reads placeable, template index and the segment data, builds the segment and calls run. Client side: reads status code, segment id and end position (3 floats) and publishes them on the message center.",
+   "fr": "Côté serveur : lit le placeable, l'index de modèle et les données du segment, construit le segment et appelle run. Côté client : lit le code de statut, l'identifiant du segment et la position de fin (3 flottants) et les publie sur le message center."
+  },
+  "FenceNewSegmentEvent:writeStream": {
+   "en": "Client to server: writes placeable, template index and segment data. Server to client: writes status code, segment id and the end position as three floats.",
+   "fr": "Client vers serveur : écrit le placeable, l'index de modèle et les données du segment. Serveur vers client : écrit le code de statut, l'identifiant du segment et la position de fin en trois flottants."
+  },
+  "FenceNewSegmentEvent:run": {
+   "en": "Server authority: updates meshes, checks the optional getCanBeBuilt restriction, charges the segment price to the player's farm (shop property purchase), finalizes it, broadcasts a FenceSegmentEvent, and replies with status and end position (or publishes locally for a local connection).",
+   "fr": "Autorité serveur : met à jour les maillages, vérifie la restriction optionnelle getCanBeBuilt, débite le prix du segment à la ferme du joueur (achat de propriété), le finalise, diffuse un FenceSegmentEvent et répond avec le statut et la position de fin (ou publie localement pour une connexion locale)."
+  }
+ }
+}

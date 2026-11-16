@@ -1,0 +1,21 @@
+{
+ "fichier": "ai/errors/AIMessageSuccessFinishedJob.lua",
+ "module": {
+  "en": "AI message class for the non-error ending where the job finished successfully. It extends `AIMessage` and reports `AIMessageType.OK`.",
+  "fr": "Classe de message IA pour une fin sans erreur où le travail s'est terminé avec succès. Elle étend `AIMessage` et signale `AIMessageType.OK`."
+ },
+ "fonctions": {
+  "AIMessageSuccessFinishedJob.new": {
+   "en": "Constructor of the success message meaning: the job finished successfully. Inherits from `AIMessage`, no extra state.",
+   "fr": "Constructeur du message de succès signifiant : le travail s'est terminé avec succès. Hérite de `AIMessage`, sans état supplémentaire."
+  },
+  "AIMessageSuccessFinishedJob:getI18NText": {
+   "en": "Returns the localized text for the key `ai_messageSuccessFinishedJob` via `g_i18n`.",
+   "fr": "Renvoie le texte localisé de la clé `ai_messageSuccessFinishedJob` via `g_i18n`."
+  },
+  "AIMessageSuccessFinishedJob:getType": {
+   "en": "Returns `AIMessageType.OK`, marking the message as a non-error outcome.",
+   "fr": "Renvoie `AIMessageType.OK`, ce qui marque le message comme une issue sans erreur."
+  }
+ }
+}

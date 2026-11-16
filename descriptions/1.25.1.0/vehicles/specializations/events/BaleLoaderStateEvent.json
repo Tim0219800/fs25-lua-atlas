@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/BaleLoaderStateEvent.lua",
+ "module": {
+  "en": "Network event class `BaleLoaderStateEvent` (extends `Event`) that replicates a state change of a bale loader. It carries the vehicle, an int8 state id and, only for `BaleLoader.CHANGE_GRAB_BALE`, the network id of the nearest bale. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `BaleLoaderStateEvent` (hérite de `Event`) qui réplique un changement d'état d'un chargeur de balles. Elle transporte le véhicule, un identifiant d'état int8 et, seulement pour `BaleLoader.CHANGE_GRAB_BALE`, l'id réseau de la balle la plus proche. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "BaleLoaderStateEvent.emptyNew": {
+   "en": "Creates an empty `BaleLoaderStateEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `BaleLoaderStateEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "BaleLoaderStateEvent.new": {
+   "en": "Creates the event with its data: the vehicle, an int8 state id and, only for `BaleLoader.CHANGE_GRAB_BALE`, the network id of the nearest bale.",
+   "fr": "Crée l'événement avec ses données : le véhicule, un identifiant d'état int8 et, seulement pour `BaleLoader.CHANGE_GRAB_BALE`, l'id réseau de la balle la plus proche."
+  },
+  "BaleLoaderStateEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, an int8 state id and, only for `BaleLoader.CHANGE_GRAB_BALE`, the network id of the nearest bale), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, un identifiant d'état int8 et, seulement pour `BaleLoader.CHANGE_GRAB_BALE`, l'id réseau de la balle la plus proche), puis appelle `run`."
+  },
+  "BaleLoaderStateEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, an int8 state id and, only for `BaleLoader.CHANGE_GRAB_BALE`, the network id of the nearest bale).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, un identifiant d'état int8 et, seulement pour `BaleLoader.CHANGE_GRAB_BALE`, l'id réseau de la balle la plus proche)."
+  },
+  "BaleLoaderStateEvent:run": {
+   "en": "Executes the event on the receiving side: calls `doStateChange(stateId, nearestBaleServerId)` on the vehicle (no rebroadcast in `run`).",
+   "fr": "Exécute l'événement côté réception : appelle `doStateChange(stateId, nearestBaleServerId)` sur le véhicule (pas de retransmission dans `run`)."
+  }
+ }
+}

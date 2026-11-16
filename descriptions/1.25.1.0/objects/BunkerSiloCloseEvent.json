@@ -1,0 +1,29 @@
+{
+ "fichier": "objects/BunkerSiloCloseEvent.lua",
+ "module": {
+  "en": "Network event asking the server to close a bunker silo. It carries only the silo object. The run step sets the silo state to closed.",
+  "fr": "Événement réseau demandant la fermeture d'un silo-couloir. Il ne transporte que l'objet silo. L'exécution met le silo à l'état fermé."
+ },
+ "fonctions": {
+  "BunkerSiloCloseEvent.emptyNew": {
+   "en": "Creates an empty event instance, used by the network layer before reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée par la couche réseau avant la lecture d'un flux."
+  },
+  "BunkerSiloCloseEvent.new": {
+   "en": "Creates an event for the given bunker silo.",
+   "fr": "Crée un événement pour le silo-couloir donné."
+  },
+  "BunkerSiloCloseEvent:readStream": {
+   "en": "Reads the silo node object from the stream when the connection is not to a server, then runs the event. Note: run is called whatever the connection type.",
+   "fr": "Lit l'objet nœud du silo dans le flux quand la connexion n'est pas vers un serveur, puis exécute l'événement. À noter : run est appelé quel que soit le type de connexion."
+  },
+  "BunkerSiloCloseEvent:writeStream": {
+   "en": "Writes the silo node object to the stream, only when the connection is to a server (client to server direction).",
+   "fr": "Écrit l'objet nœud du silo dans le flux, uniquement quand la connexion est vers un serveur (sens client vers serveur)."
+  },
+  "BunkerSiloCloseEvent:run": {
+   "en": "When the connection is not to a server, sets the silo state to BunkerSilo.STATE_CLOSED.",
+   "fr": "Quand la connexion n'est pas vers un serveur, met le silo à l'état BunkerSilo.STATE_CLOSED."
+  }
+ }
+}

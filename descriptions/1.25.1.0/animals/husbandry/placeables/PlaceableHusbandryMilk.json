@@ -1,0 +1,69 @@
+{
+ "fichier": "animals/husbandry/placeables/PlaceableHusbandryMilk.lua",
+ "module": {
+  "en": "Placeable specialization that makes a husbandry produce milk and optionally hosts milking robots. It requires `PlaceableHusbandry` and `PlaceableHusbandryAnimals`, adds a `milk` placeable configuration type, and reads `husbandry.milk` (or a selected `milkConfiguration`). The output per fill type comes from the animal subtypes' `milk` curve, is added to the husbandry storage on the server, and production stops when any milk tank is full.",
+  "fr": "Spécialisation de placeable qui fait produire du lait à un élevage et peut héberger des robots de traite. Elle exige `PlaceableHusbandry` et `PlaceableHusbandryAnimals`, ajoute un type de configuration de placeable `milk` et lit `husbandry.milk` (ou une `milkConfiguration` choisie). La production par type de remplissage vient de la courbe `milk` des sous-types d'animaux, est ajoutée au stockage de l'élevage sur le serveur, et la production s'arrête dès qu'un réservoir de lait est plein."
+ },
+ "fonctions": {
+  "PlaceableHusbandryMilk.prerequisitesPresent": {
+   "en": "Returns true only if both `PlaceableHusbandry` and `PlaceableHusbandryAnimals` are present.",
+   "fr": "Renvoie vrai uniquement si `PlaceableHusbandry` et `PlaceableHusbandryAnimals` sont tous deux présents."
+  },
+  "PlaceableHusbandryMilk.initSpecialization": {
+   "en": "Registers the `milk` configuration type with the placeable configuration manager.",
+   "fr": "Enregistre le type de configuration `milk` auprès du gestionnaire de configurations de placeables."
+  },
+  "PlaceableHusbandryMilk.registerFunctions": {
+   "en": "Registers the method `onMilkingRobotLoaded`.",
+   "fr": "Enregistre la méthode `onMilkingRobotLoaded`."
+  },
+  "PlaceableHusbandryMilk.registerOverwrittenFunctions": {
+   "en": "Registers overrides of `updateOutput`, `updateProduction`, `updateInfo` and `getConditionInfos`.",
+   "fr": "Enregistre les surcharges de `updateOutput`, `updateProduction`, `updateInfo` et `getConditionInfos`."
+  },
+  "PlaceableHusbandryMilk.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete`, `onFinalizePlacement` and `onHusbandryAnimalsUpdate`.",
+   "fr": "S'abonne à `onLoad`, `onDelete`, `onFinalizePlacement` et `onHusbandryAnimalsUpdate`."
+  },
+  "PlaceableHusbandryMilk.registerXMLPaths": {
+   "en": "Registers the milk XML paths twice, under `husbandry.milk` and under each `milkConfiguration(?)`, through `registerMilkXMLPaths` (not defined in the SDK dump, UNVERIFIED).",
+   "fr": "Enregistre les chemins XML du lait deux fois, sous `husbandry.milk` et sous chaque `milkConfiguration(?)`, via `registerMilkXMLPaths` (non défini dans le dump du SDK, NON VÉRIFIÉ)."
+  },
+  "PlaceableHusbandryMilk:onLoad": {
+   "en": "Picks the milk configuration (falling back to the base node), reads `hasMilkProduction`, collects the milk fill types of the animal type's subtypes, and creates each milking robot from its class, file and link node (skipped with a warning if invalid).",
+   "fr": "Choisit la configuration de lait (retombe sur le noeud de base), lit `hasMilkProduction`, collecte les types de lait des sous-types du type d'animal et crée chaque robot de traite depuis sa classe, son fichier et son noeud d'attache (ignoré avec un avertissement si invalide)."
+  },
+  "PlaceableHusbandryMilk:onMilkingRobotLoaded": {
+   "en": "Callback when a milking robot finishes loading: completes the loading task.",
+   "fr": "Rappel de fin de chargement d'un robot de traite : termine la tâche de chargement."
+  },
+  "PlaceableHusbandryMilk:onDelete": {
+   "en": "Deletes every milking robot.",
+   "fr": "Supprime chaque robot de traite."
+  },
+  "PlaceableHusbandryMilk:onFinalizePlacement": {
+   "en": "If milk production is enabled, warns about milk fill types missing from the husbandry storage and forwards the placement finalization to each milking robot.",
+   "fr": "Si la production de lait est activée, signale les types de lait absents du stockage de l'élevage et transmet la finalisation du placement à chaque robot de traite."
+  },
+  "PlaceableHusbandryMilk:updateOutput": {
+   "en": "Override: on the server adds milk per fill type to the husbandry storage (production factor times global factor times liters per hour times time adjustment), then calls the parent.",
+   "fr": "Surcharge : sur le serveur ajoute du lait par type de remplissage au stockage de l'élevage (facteur de production fois facteur global fois litres par heure fois ajustement temporel), puis appelle le parent."
+  },
+  "PlaceableHusbandryMilk:updateProduction": {
+   "en": "Override: returns the parent's factor, but forced to 0 if any milk fill type has no free capacity left.",
+   "fr": "Surcharge : renvoie le facteur du parent, mais forcé à 0 si un type de lait n'a plus de capacité libre."
+  },
+  "PlaceableHusbandryMilk:onHusbandryAnimalsUpdate": {
+   "en": "Recomputes the liters per hour of each milk fill type from the clusters (milk curve at the animal's age times animal count, divided by 24) and rebuilds the active fill type list.",
+   "fr": "Recalcule les litres par heure de chaque type de lait d'après les clusters (courbe de lait à l'âge de l'animal fois le nombre d'animaux, divisé par 24) et reconstruit la liste des types actifs."
+  },
+  "PlaceableHusbandryMilk:updateInfo": {
+   "en": "Override: appends the stored liters of each active milk fill type to the info list.",
+   "fr": "Surcharge : ajoute à la liste d'informations les litres stockés de chaque type de lait actif."
+  },
+  "PlaceableHusbandryMilk:getConditionInfos": {
+   "en": "Override: appends one fill entry per active milk fill type (level and clamped ratio, inverted bar).",
+   "fr": "Surcharge : ajoute une entrée de remplissage par type de lait actif (niveau et ratio borné, barre inversée)."
+  }
+ }
+}

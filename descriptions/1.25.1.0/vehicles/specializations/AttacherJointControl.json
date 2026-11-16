@@ -1,0 +1,113 @@
+{
+ "fichier": "vehicles/specializations/AttacherJointControl.lua",
+ "module": {
+  "en": "Specialization for implements whose attacher joint height and tilt can be adjusted continuously by the player (analog axis or lift/lower key) instead of a simple up/down toggle. It requires Attachable and reads its settings from vehicle.attacherJointControl in the XML (max tilt angle, optional Y damping, one control entry per axis, hydraulic sound). It changes the tractor-side joint while attached, backs up and restores the joint's values on detach, and synchronises the control values in multiplayer with 0..1 alpha values compressed into a stream. The ALPHA_NUM_BITS and ALPHA_MAX_VALUE constants are not visible in this dump (UNVERIFIED).",
+  "fr": "Spécialisation pour les outils dont la hauteur et l'inclinaison de l'attache peuvent être réglées en continu par le joueur (axe analogique ou touche lever/abaisser) au lieu d'une simple bascule haut/bas. Elle exige Attachable et lit ses réglages dans vehicle.attacherJointControl du XML (angle d'inclinaison maximal, amortissement Y optionnel, une entrée de commande par axe, son hydraulique). Elle modifie l'attache côté tracteur pendant l'attelage, sauvegarde et restaure les valeurs de l'attache au dételage, et synchronise en multijoueur les valeurs de commande (alpha de 0 à 1 compressé dans un flux). Les constantes ALPHA_NUM_BITS et ALPHA_MAX_VALUE ne sont pas visibles dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AttacherJointControl.prerequisitesPresent": {
+   "en": "Prerequisite check: returns true only if the vehicle type already includes the Attachable specialization.",
+   "fr": "Vérification des prérequis : retourne true seulement si le type de véhicule inclut déjà la spécialisation Attachable."
+  },
+  "AttacherJointControl.initSpecialization": {
+   "en": "Declares the XML schema for vehicle.attacherJointControl (tilt angle, damping, control entries with function, axis, icon, invert and mouse factor, hydraulic sound) and the isControllable flag on input attacher joints and their configurations.",
+   "fr": "Déclare le schéma XML de vehicle.attacherJointControl (angle d'inclinaison, amortissement, entrées de commande avec fonction, axe, icône, inversion et facteur souris, son hydraulique) et l'indicateur isControllable sur les attaches d'entrée et leurs configurations."
+  },
+  "AttacherJointControl.registerFunctions": {
+   "en": "Registers the functions added by this specialization: controlAttacherJoint, controlAttacherJointHeight, controlAttacherJointTilt, getControlAttacherJointDirection and getIsAttacherJointControlDampingAllowed.",
+   "fr": "Enregistre les fonctions ajoutées par cette spécialisation : controlAttacherJoint, controlAttacherJointHeight, controlAttacherJointTilt, getControlAttacherJointDirection et getIsAttacherJointControlDampingAllowed."
+  },
+  "AttacherJointControl.registerOverwrittenFunctions": {
+   "en": "Registers overrides of Attachable functions: loadInputAttacherJoint, registerLoweringActionEvent, getLoweringActionEventState and getCanBeSelected.",
+   "fr": "Enregistre les surcharges de fonctions d'Attachable : loadInputAttacherJoint, registerLoweringActionEvent, getLoweringActionEventState et getCanBeSelected."
+  },
+  "AttacherJointControl.registerEventListeners": {
+   "en": "Subscribes to load, delete, stream read/write, update, action event registration, post-attach and pre-detach events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, suppression, lecture/écriture de flux, mise à jour, enregistrement des événements d'action, post-attelage et pré-dételage."
+  },
+  "AttacherJointControl:onLoad": {
+   "en": "Loads the max tilt angle, damping options and each control entry (function name, input action, icon, invert, mouse factor). An unknown function or axis logs a warning and stops loading further controls. Loads the hydraulic sound on the client, creates two dirty flags, and removes most listeners when no control exists.",
+   "fr": "Charge l'angle d'inclinaison maximal, les options d'amortissement et chaque entrée de commande (nom de fonction, action d'entrée, icône, inversion, facteur souris). Une fonction ou un axe inconnu émet un avertissement et arrête le chargement des commandes suivantes. Charge le son hydraulique côté client, crée deux indicateurs de modification et retire la plupart des écouteurs s'il n'y a aucune commande."
+  },
+  "AttacherJointControl:onDelete": {
+   "en": "Deletes the hydraulic sound sample on the client.",
+   "fr": "Supprime l'échantillon sonore hydraulique côté client."
+  },
+  "AttacherJointControl:onReadStream": {
+   "en": "Client side on join: when the server flag is set, reads the stored alpha of every control and applies it with controlAttacherJoint without sending events.",
+   "fr": "Côté client lors de la connexion : quand l'indicateur serveur est vrai, lit l'alpha mémorisé de chaque commande et l'applique via controlAttacherJoint sans envoi d'événement."
+  },
+  "AttacherJointControl:onWriteStream": {
+   "en": "Server side on join: writes whether a joint is currently controlled and, if so, the alpha of each control.",
+   "fr": "Côté serveur lors de la connexion : écrit si une attache est actuellement pilotée et, le cas échéant, l'alpha de chaque commande."
+  },
+  "AttacherJointControl:onReadUpdateStream": {
+   "en": "Reads incoming alpha values of every control from the update stream, from client to server or from server to client, and applies them without re-sending events.",
+   "fr": "Lit dans le flux de mise à jour les valeurs alpha de chaque commande, du client vers le serveur ou du serveur vers le client, et les applique sans renvoyer d'événement."
+  },
+  "AttacherJointControl:onWriteUpdateStream": {
+   "en": "Writes the alpha of every control when the dirty flag matching the direction is set: the client flag when sending to the server, the server flag (damping changes) when sending to clients.",
+   "fr": "Écrit l'alpha de chaque commande quand l'indicateur de modification correspondant à la direction est levé : l'indicateur client en envoi vers le serveur, l'indicateur serveur (changements d'amortissement) en envoi vers les clients."
+  },
+  "AttacherJointControl:onUpdate": {
+   "en": "Per-frame update. Moves the height alpha toward its target at the joint's move speed. On the server, with damping enabled, it also compensates vertical velocity at the damping reference point and can nudge the tilt. Plays the hydraulic sound for a short time after the last move. Note: spec.samples and spec.lastMoveTime are only set on the client, so a server without a client part may fail here (UNVERIFIED).",
+   "fr": "Mise à jour à chaque image. Déplace l'alpha de hauteur vers sa cible à la vitesse de déplacement de l'attache. Côté serveur, avec l'amortissement activé, compense aussi la vitesse verticale au point de référence d'amortissement et peut ajuster l'inclinaison. Joue le son hydraulique peu de temps après le dernier mouvement. À noter : spec.samples et spec.lastMoveTime ne sont définis que côté client, donc un serveur sans partie cliente pourrait échouer ici (NON VÉRIFIÉ)."
+  },
+  "AttacherJointControl:controlAttacherJoint": {
+   "en": "Sets a control's alpha. On the server it calls the control function, updates the joint rotation and joint frame. It stores the clamped 0..1 value, records the manual time for damping, and raises a client or server dirty flag when the change is large enough, unless noEventSend is set.",
+   "fr": "Définit l'alpha d'une commande. Côté serveur, appelle la fonction de commande, met à jour la rotation et le repère du joint. Mémorise la valeur bornée entre 0 et 1, enregistre l'instant manuel pour l'amortissement, et lève un indicateur de modification client ou serveur si le changement est assez grand, sauf si noEventSend est fourni."
+  },
+  "AttacherJointControl:controlAttacherJointHeight": {
+   "en": "Height control function: clamps the alpha between the joint's upper and lower alpha, updates the attacher joint rotation nodes and rotation, and returns the limited alpha. Uses the joint's current alpha when called with nil.",
+   "fr": "Fonction de commande de hauteur : borne l'alpha entre l'alpha haut et l'alpha bas de l'attache, met à jour les nœuds de rotation et la rotation de l'attache, et retourne l'alpha limité. Utilise l'alpha courant de l'attache si appelée avec nil."
+  },
+  "AttacherJointControl:controlAttacherJointTilt": {
+   "en": "Tilt control function: clamps the alpha to 0..1 (0.5 when nil), converts it to an angle around neutral using the max tilt angle, and offsets the joint's upper and lower rotation offsets from their backups. Returns the limited alpha.",
+   "fr": "Fonction de commande d'inclinaison : borne l'alpha entre 0 et 1 (0,5 si nil), le convertit en angle autour du neutre avec l'angle d'inclinaison maximal et décale les décalages de rotation haut et bas de l'attache par rapport à leurs sauvegardes. Retourne l'alpha limité."
+  },
+  "AttacherJointControl:getControlAttacherJointDirection": {
+   "en": "Returns true when the next lift/lower press should lower the implement: based on the current target if one is set, else on whether the height is closer to the upper position.",
+   "fr": "Retourne true quand le prochain appui lever/abaisser doit abaisser l'outil : d'après la cible courante si elle existe, sinon selon que la hauteur est plus proche de la position haute."
+  },
+  "AttacherJointControl:getIsAttacherJointControlDampingAllowed": {
+   "en": "Returns whether Y damping may run: false if the attacher vehicle's last speed is below 0.5 or the implement is not moving forward.",
+   "fr": "Indique si l'amortissement Y peut s'exécuter : false si la dernière vitesse du véhicule porteur est inférieure à 0,5 ou si l'outil n'avance pas."
+  },
+  "AttacherJointControl:loadInputAttacherJoint": {
+   "en": "Override: after the base loads an input attacher joint, also reads its isControllable flag. Returns false if the base fails.",
+   "fr": "Surcharge : après le chargement d'une attache d'entrée par la base, lit aussi son indicateur isControllable. Retourne false si la base échoue."
+  },
+  "AttacherJointControl:registerLoweringActionEvent": {
+   "en": "Override: when a height controller exists, registers the lift/lower action with the set-point callback and high text priority, and stops there if the requested action is the lowering action. Otherwise defers to the base.",
+   "fr": "Surcharge : quand un contrôleur de hauteur existe, enregistre l'action lever/abaisser avec le rappel de point de consigne et une priorité de texte élevée, et s'arrête là si l'action demandée est l'abaissement. Sinon délègue à la base."
+  },
+  "AttacherJointControl:getLoweringActionEventState": {
+   "en": "Override: with a height controller, the action is shown only while a joint is controlled and its text says lower or lift according to the control direction; otherwise defers to the base.",
+   "fr": "Surcharge : avec un contrôleur de hauteur, l'action n'est affichée que tant qu'une attache est pilotée et son texte indique abaisser ou lever selon la direction de commande ; sinon délègue à la base."
+  },
+  "AttacherJointControl:getCanBeSelected": {
+   "en": "Override: the vehicle can always be selected; returns true.",
+   "fr": "Surcharge : le véhicule peut toujours être sélectionné ; retourne true."
+  },
+  "AttacherJointControl:onRegisterActionEvents": {
+   "en": "Client only: clears the action events and, when the vehicle is active for input and a joint is controlled, registers one powered analog action event per control using its input action and axis icon.",
+   "fr": "Côté client uniquement : vide les événements d'action et, quand le véhicule est actif pour la saisie et qu'une attache est pilotée, enregistre un événement d'action analogique alimenté par commande avec son action d'entrée et son icône d'axe."
+  },
+  "AttacherJointControl:onPostAttach": {
+   "en": "If the active input joint is controllable and the tractor joint has a height range, disables its normal lowering, backs up its rotation offsets, stores it as the controlled joint and resets the controls. It then lifts the implement (targets upper alpha, or applies it at once when loaded from a savegame).",
+   "fr": "Si l'attache d'entrée active est pilotable et que l'attache du tracteur a une plage de hauteur, désactive son abaissement normal, sauvegarde ses décalages de rotation, la mémorise comme attache pilotée et réinitialise les commandes. Relève ensuite l'outil (cible l'alpha haut, ou l'applique immédiatement si chargé depuis une sauvegarde)."
+  },
+  "AttacherJointControl:onPreDetach": {
+   "en": "Before detaching, restores the tractor joint's allowsLowering flag and rotation offsets from their backups and clears the controlled joint.",
+   "fr": "Avant le dételage, restaure depuis leurs sauvegardes l'indicateur allowsLowering et les décalages de rotation de l'attache du tracteur, et efface l'attache pilotée."
+  },
+  "AttacherJointControl.actionEventAttacherJointControl": {
+   "en": "Input callback for an analog control axis: scales the input by the mouse factor (and a fixed 0.025), inverts it if configured, applies it to the control's alpha as a manual change and cancels any height target.",
+   "fr": "Rappel d'entrée pour un axe de commande analogique : met l'entrée à l'échelle avec le facteur souris (et un facteur fixe de 0,025), l'inverse si configuré, l'applique à l'alpha de la commande comme changement manuel et annule toute cible de hauteur."
+  },
+  "AttacherJointControl.actionEventAttacherJointControlSetPoint": {
+   "en": "Input callback for the lift/lower key: sets the height target to the lower or upper alpha depending on the current direction and delays damping updates by the joint's move time.",
+   "fr": "Rappel d'entrée pour la touche lever/abaisser : fixe la cible de hauteur à l'alpha bas ou haut selon la direction courante et retarde les mises à jour d'amortissement du temps de déplacement de l'attache."
+  }
+ }
+}

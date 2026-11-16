@@ -1,0 +1,65 @@
+{
+ "fichier": "ai/parameters/AIParameterUnloadingStation.lua",
+ "module": {
+  "en": "AI job parameter that selects an unloading station (for example a sell point or storage) the AI should deliver to. It keeps network object ids, supports cycling through a list of valid stations, and saves the choice by owning placeable unique id plus station index. Related managers are g_currentMission.storageSystem and placeableSystem.",
+  "fr": "Paramètre de job IA qui désigne une station de déchargement (point de vente, stockage, etc.) où l'IA doit livrer. Il conserve des identifiants d'objets réseau, permet de parcourir une liste de stations valides et sauvegarde le choix via l'identifiant unique du placeable propriétaire et l'index de la station. Il s'appuie sur g_currentMission.storageSystem et placeableSystem."
+ },
+ "fonctions": {
+  "AIParameterUnloadingStation.new": {
+   "en": "Creates the parameter with type UNLOADING_STATION, no selected station and an empty list of valid station ids.",
+   "fr": "Crée le paramètre de type UNLOADING_STATION, sans station sélectionnée et avec une liste vide d'identifiants de stations valides."
+  },
+  "AIParameterUnloadingStation:saveToXMLFile": {
+   "en": "Saves the selected station as the unique id of its owning placeable (`#stationUniqueId`) and its index in that placeable (`#stationIndex`). Nothing is written if the station, owner or index cannot be resolved.",
+   "fr": "Sauvegarde la station choisie sous forme de l'identifiant unique du placeable propriétaire (`#stationUniqueId`) et de son index (`#stationIndex`). Rien n'est écrit si la station, le propriétaire ou l'index est introuvable."
+  },
+  "AIParameterUnloadingStation:loadFromXMLFile": {
+   "en": "Reads the station unique id and index. If the placeable is not loaded yet, it subscribes a one-shot callback on the LOADED_ALL_SAVEGAME_PLACEABLES message to retry.",
+   "fr": "Lit l'identifiant unique et l'index de la station. Si le placeable n'est pas encore chargé, il s'abonne une seule fois au message LOADED_ALL_SAVEGAME_PLACEABLES pour réessayer."
+  },
+  "AIParameterUnloadingStation:onPlaceableLoaded": {
+   "en": "Message callback that retries the station lookup using the unique id and index passed in the args table.",
+   "fr": "Callback de message qui retente la recherche de la station avec l'identifiant unique et l'index fournis dans la table args."
+  },
+  "AIParameterUnloadingStation:setUnloadingStationFromUniqueId": {
+   "en": "Finds the placeable by unique id, fetches its unloading station at the given index from the storage system and selects it. Returns true if the placeable exists, false otherwise.",
+   "fr": "Retrouve le placeable par son identifiant unique, récupère sa station de déchargement à l'index donné via le système de stockage et la sélectionne. Retourne true si le placeable existe, sinon false."
+  },
+  "AIParameterUnloadingStation:readStream": {
+   "en": "Reads a presence flag and, if set, the network node object id of the selected station.",
+   "fr": "Lit un indicateur de présence puis, s'il est actif, l'identifiant d'objet réseau de la station sélectionnée."
+  },
+  "AIParameterUnloadingStation:writeStream": {
+   "en": "Writes a presence flag and, if a station is selected, its network node object id.",
+   "fr": "Écrit un indicateur de présence puis, si une station est sélectionnée, son identifiant d'objet réseau."
+  },
+  "AIParameterUnloadingStation:setUnloadingStation": {
+   "en": "Selects the given station by storing its network object id.",
+   "fr": "Sélectionne la station donnée en stockant son identifiant d'objet réseau."
+  },
+  "AIParameterUnloadingStation:getUnloadingStation": {
+   "en": "Resolves the stored id to a station object. Returns it only if its owning placeable exists and is synchronized, otherwise nil.",
+   "fr": "Résout l'identifiant stocké en objet station. Ne le retourne que si son placeable propriétaire existe et est synchronisé, sinon nil."
+  },
+  "AIParameterUnloadingStation:getString": {
+   "en": "Returns the station name for display, or an empty string if it cannot be resolved.",
+   "fr": "Retourne le nom de la station pour l'affichage, ou une chaîne vide si elle est introuvable."
+  },
+  "AIParameterUnloadingStation:setValidUnloadingStations": {
+   "en": "Replaces the list of selectable stations with the ids of the given stations. Keeps the current selection if it is still in the list, otherwise selects the first entry.",
+   "fr": "Remplace la liste des stations sélectionnables par les identifiants des stations données. Conserve la sélection actuelle si elle figure encore dans la liste, sinon choisit la première."
+  },
+  "AIParameterUnloadingStation:setNextItem": {
+   "en": "Selects the next station in the valid list, wrapping around to the first after the last.",
+   "fr": "Sélectionne la station suivante de la liste valide, en revenant à la première après la dernière."
+  },
+  "AIParameterUnloadingStation:setPreviousItem": {
+   "en": "Selects the previous station in the valid list, wrapping around to the last before the first.",
+   "fr": "Sélectionne la station précédente de la liste valide, en passant à la dernière avant la première."
+  },
+  "AIParameterUnloadingStation:validate": {
+   "en": "Fails if no station is selected or it no longer exists. With a fill type, it also requires AI support for that fill type and free capacity for the farm. Returns a boolean and a localized error.",
+   "fr": "Échoue si aucune station n'est sélectionnée ou si elle n'existe plus. Avec un type de remplissage, exige aussi la prise en charge IA de ce type et de la capacité libre pour la ferme. Retourne un booléen et une erreur localisée."
+  }
+ }
+}

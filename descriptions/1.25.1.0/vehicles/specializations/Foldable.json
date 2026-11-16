@@ -1,0 +1,501 @@
+{
+ "fichier": "vehicles/specializations/Foldable.lua",
+ "module": {
+  "en": "Specialization for vehicles and tools with a folding movement defined by one or more animated folding parts (animation clip or AnimatedVehicle animation), optionally with a middle position used for lowering. It tracks foldAnimTime (0 to 1), syncs the direction over the network with FoldableSetFoldDirectionEvent, and overrides many functions of other specializations so work areas, moving tools, spray types, attacher joints and more are enabled only within XML-defined fold limits. It also handles input actions, AI behaviour, the action controller and savegame persistence. No prerequisites on other specializations.",
+  "fr": "Spécialisation pour les véhicules et outils dotés d'un mouvement de pliage défini par un ou plusieurs foldingPart animés (clip d'animation ou animation AnimatedVehicle), avec éventuellement une position intermédiaire servant à l'abaissement. Elle suit foldAnimTime (0 à 1), synchronise la direction sur le réseau via FoldableSetFoldDirectionEvent et surcharge de nombreuses fonctions d'autres spécialisations pour que zones de travail, outils mobiles, types de pulvérisation, attaches, etc. ne soient actifs que dans les limites de pliage définies en XML. Elle gère aussi les entrées, le comportement de l'IA, le contrôleur d'actions et la sauvegarde. Aucun prérequis sur d'autres spécialisations."
+ },
+ "fonctions": {
+  "Foldable.prerequisitesPresent": {
+   "en": "Always returns true: the specialization has no prerequisites on other specializations.",
+   "fr": "Renvoie toujours true : la spécialisation n'exige aucune autre spécialisation."
+  },
+  "Foldable.initSpecialization": {
+   "en": "Registers the \"folding\" vehicle configuration type and declares many XML paths: the foldingConfigurations schema plus the fold limit attributes added to work areas, moving tools, wheels, fill units, sprayers, attacher joints and others. Also registers the two savegame keys foldAnimTime and isAllowed.",
+   "fr": "Enregistre le type de configuration « folding » et déclare de nombreux chemins XML : le schéma foldingConfigurations et les attributs de limites de pliage ajoutés aux zones de travail, outils mobiles, roues, unités de remplissage, pulvérisateurs, attaches, etc. Déclare aussi les deux clés de sauvegarde foldAnimTime et isAllowed."
+  },
+  "Foldable.registerFoldingXMLPaths": {
+   "en": "Registers the XML attributes of one folding configuration under the given base path: texts, start state, fold limits for each action, behaviour flags and the foldingPart children (animation, joint, delayed lowering). Shared so other schemas can reuse it.",
+   "fr": "Déclare les attributs XML d'une configuration de pliage sous le chemin de base donné : textes, état initial, limites de pliage par action, indicateurs de comportement et enfants foldingPart (animation, joint, abaissement différé). Partagé pour être réutilisé par d'autres schémas."
+  },
+  "Foldable.registerEvents": {
+   "en": "Registers the vehicle events onFoldStateChanged (direction, moveToMiddle) and onFoldTimeChanged (animation time), raised by this specialization.",
+   "fr": "Enregistre les événements de véhicule onFoldStateChanged (direction, moveToMiddle) et onFoldTimeChanged (temps d'animation), déclenchés par cette spécialisation."
+  },
+  "Foldable.registerFunctions": {
+   "en": "Registers the public folding API on the vehicle type: setFoldState, setFoldDirection, setFoldMiddleState, getIsUnfolded, getFoldAnimTime, the fold-allowed checks and the toggled-direction helpers.",
+   "fr": "Enregistre l'API publique de pliage sur le type de véhicule : setFoldState, setFoldDirection, setFoldMiddleState, getIsUnfolded, getFoldAnimTime, les contrôles d'autorisation et les aides de direction inversée."
+  },
+  "Foldable.registerOverwrittenFunctions": {
+   "en": "Registers overrides of functions from many other specializations (work areas, moving tools, spray types, attacher joints, fill units, lowering, AI checks, crab steering and more) so they respect the current fold state.",
+   "fr": "Enregistre des surcharges de fonctions d'autres spécialisations (zones de travail, outils mobiles, types de pulvérisation, attaches, unités de remplissage, abaissement, contrôles IA, direction crabe, etc.) pour qu'elles respectent l'état de pliage."
+  },
+  "Foldable.registerEventListeners": {
+   "en": "Subscribes the specialization to load, stream, update, input registration, attach/detach, lowering and root vehicle change events of the vehicle.",
+   "fr": "Abonne la spécialisation aux événements de chargement, flux réseau, mise à jour, enregistrement des entrées, attache/détache, abaissement et changement de véhicule racine."
+  },
+  "Foldable:onLoad": {
+   "en": "Reads the active folding configuration: texts, start animation time, input actions, all fold limits and behaviour flags, then loads each foldingPart. Restores foldAnimTime and isAllowed from the savegame, or applies the foldableInvertFoldState / foldableFoldingTime loading parameters.",
+   "fr": "Lit la configuration de pliage active : textes, temps d'animation initial, actions d'entrée, toutes les limites et indicateurs, puis charge chaque foldingPart. Restaure foldAnimTime et isAllowed depuis la sauvegarde ou applique les paramètres de chargement foldableInvertFoldState / foldableFoldingTime."
+  },
+  "Foldable:onPostLoad": {
+   "en": "Applies the loaded animation time to the model. If there are no folding parts or the parent's fold state is used, it removes the stream, update and input listeners to save work.",
+   "fr": "Applique le temps d'animation chargé au modèle. Sans foldingPart ou avec l'état de pliage du parent, retire les écouteurs de flux, mise à jour et entrées pour économiser du travail."
+  },
+  "Foldable:onRegistered": {
+   "en": "If control during folding is forbidden, registers getIsVehicleControlAllowed as a player-control check on the vehicle when that registration function exists.",
+   "fr": "Si le contrôle pendant le pliage est interdit, enregistre getIsVehicleControlAllowed comme contrôle de conduite du joueur lorsque cette fonction existe sur le véhicule."
+  },
+  "Foldable:saveToXMLFile": {
+   "en": "Writes foldAnimTime and isAllowed into the savegame entry, only when the vehicle has folding parts.",
+   "fr": "Écrit foldAnimTime et isAllowed dans la sauvegarde, uniquement si le véhicule a des foldingPart."
+  },
+  "Foldable:onReadStream": {
+   "en": "Client join: reads direction (2 bits), moveToMiddle and animation time from the stream, applies the animation time without moving components and then calls setFoldState without sending an event.",
+   "fr": "Connexion d'un client : lit direction (2 bits), moveToMiddle et temps d'animation dans le flux, applique le temps sans déplacer les composants puis appelle setFoldState sans envoyer d'événement."
+  },
+  "Foldable:onWriteStream": {
+   "en": "Writes the current fold direction (2 bits), the moveToMiddle flag and the fold animation time for a joining client; counterpart of onReadStream.",
+   "fr": "Écrit la direction de pliage courante (2 bits), l'indicateur moveToMiddle et le temps d'animation pour un client qui rejoint ; pendant de onReadStream."
+  },
+  "Foldable:onUpdate": {
+   "en": "While a fold direction is active, reads the progress of all folding part animations, updates foldAnimTime (raising onFoldTimeChanged), stops at the end or middle target, realigns component joints on the server and syncs sub-vehicles. Also drives distance-delayed lowering of parts and brakes when control is blocked while folding.",
+   "fr": "Tant qu'une direction de pliage est active, lit l'avancement des animations des foldingPart, met à jour foldAnimTime (en déclenchant onFoldTimeChanged), s'arrête à la cible (fin ou milieu), réaligne les joints de composants côté serveur et synchronise les sous-véhicules. Gère aussi l'abaissement différé par distance et le freinage si le contrôle est bloqué pendant le pliage."
+  },
+  "Foldable:onUpdateTick": {
+   "en": "Client: refreshes the fold and fold-middle action event texts. Server: when ignoreFoldMiddleWhileFolded is set and the tool reaches the middle position, folds it back if the attacher joint is lowered so both states stay consistent.",
+   "fr": "Client : actualise les textes des actions de pliage et de pliage intermédiaire. Serveur : avec ignoreFoldMiddleWhileFolded, quand l'outil atteint la position intermédiaire, le replie si l'attache est abaissée pour garder les deux états cohérents."
+  },
+  "Foldable:loadFoldingPartFromXML": {
+   "en": "Loads one foldingPart: speed scale, optional component joint, and an animation either from an animation clip on a root node or by AnimatedVehicle animationName, plus optional distance-delay settings. Returns false (with an XML warning) if invalid.",
+   "fr": "Charge un foldingPart : échelle de vitesse, joint de composants optionnel, et animation soit par clip sur un nœud racine soit par animationName d'AnimatedVehicle, plus réglages optionnels de délai par distance. Renvoie false (avec avertissement XML) si invalide."
+  },
+  "Foldable:setFoldDirection": {
+   "en": "Starts folding in the given direction (-1, 0 or 1) without targeting the middle position; shortcut to setFoldState with moveToMiddle false.",
+   "fr": "Lance le pliage dans la direction donnée (-1, 0 ou 1) sans viser la position intermédiaire ; raccourci vers setFoldState avec moveToMiddle à false."
+  },
+  "Foldable:setFoldState": {
+   "en": "Sets the fold direction and whether to stop at the middle time, sends FoldableSetFoldDirectionEvent unless noEventSend is true, starts or stops each part's animation (or delays it by distance), and raises onFoldStateChanged. Nudges foldAnimTime by 0.0001 so fold limits can trigger.",
+   "fr": "Définit la direction de pliage et l'arrêt éventuel au temps intermédiaire, envoie FoldableSetFoldDirectionEvent sauf si noEventSend vaut true, démarre ou arrête l'animation de chaque partie (ou la retarde par distance) et déclenche onFoldStateChanged. Décale foldAnimTime de 0,0001 pour que les limites puissent s'activer."
+  },
+  "Foldable:setFoldMiddleState": {
+   "en": "Raises or lowers the tool through the fold middle position when one is defined and allowed: lowering unfolds back toward the AI raise direction opposite, raising moves to the middle. Does nothing without foldMiddleAnimTime.",
+   "fr": "Lève ou abaisse l'outil via la position de pliage intermédiaire si elle est définie et autorisée : l'abaissement part dans la direction opposée à la direction de relevage IA, le relevage va jusqu'au milieu. Sans effet sans foldMiddleAnimTime."
+  },
+  "Foldable:getIsUnfolded": {
+   "en": "Returns true if the tool is in its working (unfolded) state, judged by turnOnFoldDirection and the end or middle animation time; always true when there are no folding parts.",
+   "fr": "Renvoie true si l'outil est en position de travail (déplié), jugé selon turnOnFoldDirection et le temps d'animation final ou intermédiaire ; toujours true sans foldingPart."
+  },
+  "Foldable:getFoldAnimTime": {
+   "en": "Returns the fold animation time (0 to 1), preferring the value loaded from the savegame while it is still pending.",
+   "fr": "Renvoie le temps d'animation de pliage (0 à 1), en privilégiant la valeur chargée de la sauvegarde tant qu'elle est en attente."
+  },
+  "Foldable:setIsFoldActionAllowed": {
+   "en": "Enables or disables the folding action, for example from a script that needs to block player folding.",
+   "fr": "Active ou désactive l'action de pliage, par exemple pour qu'un script bloque le pliage par le joueur."
+  },
+  "Foldable:getIsFoldActionAllowed": {
+   "en": "Returns whether the fold action is currently allowed (the isAllowed flag).",
+   "fr": "Renvoie si l'action de pliage est actuellement autorisée (indicateur isAllowed)."
+  },
+  "Foldable:getIsFoldAllowed": {
+   "en": "Returns allowed plus an optional warning (always nil here). Not allowed if the flag is off, if the active input attacher joint's fold limits are violated, or if a fold in progress is outside the toggle limits. The parameters direction and onAiTurnOn are not used in this body.",
+   "fr": "Renvoie l'autorisation et un avertissement optionnel (toujours nil ici). Refusé si l'indicateur est désactivé, si les limites de l'attache d'entrée active sont violées, ou si un pliage en cours est hors des limites de bascule. Les paramètres direction et onAiTurnOn ne sont pas utilisés dans ce corps."
+  },
+  "Foldable:getIsFoldMiddleAllowed": {
+   "en": "Returns true if folding is allowed and a middle fold animation time is defined.",
+   "fr": "Renvoie true si le pliage est autorisé et qu'un temps d'animation intermédiaire est défini."
+  },
+  "Foldable:getToggledFoldDirection": {
+   "en": "Computes the direction a fold button press would take: the reverse of the current movement, or toward the nearer end when idle, with special handling of the middle position and the lowered range.",
+   "fr": "Calcule la direction qu'un appui sur le bouton de pliage prendrait : l'inverse du mouvement en cours, ou vers l'extrémité la plus proche à l'arrêt, avec un traitement particulier de la position intermédiaire et de la plage abaissée."
+  },
+  "Foldable:getToggledFoldMiddleDirection": {
+   "en": "Computes the direction a lowering button press would take for the fold middle state; returns 0 if no middle time is defined.",
+   "fr": "Calcule la direction qu'un appui sur le bouton d'abaissement prendrait pour l'état intermédiaire ; renvoie 0 si aucun temps intermédiaire n'est défini."
+  },
+  "Foldable.getIsVehicleControlAllowed": {
+   "en": "Control check registered when allowControlWhileFolding is false: returns false while a fold movement is in progress, true otherwise.",
+   "fr": "Contrôle enregistré quand allowControlWhileFolding vaut false : renvoie false pendant un mouvement de pliage, true sinon."
+  },
+  "Foldable:allowLoadMovingToolStates": {
+   "en": "Override that forbids loading saved moving tool states while the fold time is outside the configured limits; otherwise defers to the parent.",
+   "fr": "Surcharge qui interdit de charger les états sauvegardés des outils mobiles quand le temps de pliage est hors des limites configurées ; sinon délègue au parent."
+  },
+  "Foldable:loadSpeedRotatingPartFromXML": {
+   "en": "Override that, after the parent succeeds, reads foldLimitedOuterRange and foldMinLimit/foldMaxLimit of a speed rotating part (defaults 0 and 1, or 0.5 and 0.5 when outer range is used).",
+   "fr": "Surcharge qui, après le succès du parent, lit foldLimitedOuterRange et foldMinLimit/foldMaxLimit d'une pièce rotative à vitesse (défauts 0 et 1, ou 0,5 et 0,5 avec la plage extérieure)."
+  },
+  "Foldable:getIsSpeedRotatingPartActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a speed rotating part; otherwise defers to the parent. Supports the inverted outer-range mode.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'une pièce rotative à vitesse ; sinon délègue au parent."
+  },
+  "Foldable:loadSlopeCompensationNodeFromXML": {
+   "en": "Override that reads foldAngleScale and invertFoldAngleScale from a slope compensation node before calling the parent.",
+   "fr": "Surcharge qui lit foldAngleScale et invertFoldAngleScale d'un nœud de compensation de pente avant d'appeler le parent."
+  },
+  "Foldable:getSlopeCompensationAngleScale": {
+   "en": "Override that scales the parent's slope compensation angle by an interpolation between foldAngleScale and 1 depending on the fold time, taking the middle time into account.",
+   "fr": "Surcharge qui met à l'échelle l'angle de compensation de pente du parent par une interpolation entre foldAngleScale et 1 selon le temps de pliage, en tenant compte du temps intermédiaire."
+  },
+  "Foldable:loadWheelFromXML": {
+   "en": "Override that reads versatileFoldMinLimit and versatileFoldMaxLimit of a wheel (defaults 0 and 1) before the parent call.",
+   "fr": "Surcharge qui lit versatileFoldMinLimit et versatileFoldMaxLimit d'une roue (défauts 0 et 1) avant l'appel parent."
+  },
+  "Foldable:getIsVersatileYRotActive": {
+   "en": "Override returning false when the fold time is outside the wheel's versatile fold limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand le temps de pliage est hors des limites de pliage versatiles de la roue ; sinon délègue au parent."
+  },
+  "Foldable:loadWorkAreaFromXML": {
+   "en": "Override that reads foldLimitedOuterRange and the folding#minLimit / folding#maxLimit of a work area (with a deprecation check of the old attribute names) before calling the parent.",
+   "fr": "Surcharge qui lit foldLimitedOuterRange et folding#minLimit / folding#maxLimit d'une zone de travail (avec vérification des anciens noms d'attributs) avant d'appeler le parent."
+  },
+  "Foldable:getIsWorkAreaActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a work area; otherwise defers to the parent. This is how a folded implement stops working with its outer sections.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'une zone de travail ; sinon délègue au parent. C'est ainsi qu'un outil replié cesse de travailler avec ses sections extérieures."
+  },
+  "Foldable:loadGroundReferenceNode": {
+   "en": "Override that, when the parent loads the ground reference node, also reads its folding#minLimit and folding#maxLimit.",
+   "fr": "Surcharge qui, quand le parent charge le nœud de référence au sol, lit aussi ses folding#minLimit et folding#maxLimit."
+  },
+  "Foldable:updateGroundReferenceNode": {
+   "en": "Override that runs the parent update then forces isActive to false on the ground reference node when the fold time is outside its limits.",
+   "fr": "Surcharge qui exécute la mise à jour parente puis force isActive à false sur le nœud de référence au sol quand le temps de pliage est hors de ses limites."
+  },
+  "Foldable:loadLevelerNodeFromXML": {
+   "en": "Override that calls the parent loader for a leveler node (also reads foldLimitedOuterRange), then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour un nœud de niveleur (lit aussi foldLimitedOuterRange), puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getIsLevelerPickupNodeActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a leveler node; otherwise defers to the parent.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'un nœud de niveleur ; sinon délègue au parent."
+  },
+  "Foldable:loadMovingToolFromXML": {
+   "en": "Override that, after the parent succeeds, reads the fold limits of a moving tool and checks foldingConfigurationIndex / foldingConfigurationIndices against the vehicle's folding configuration, storing hasRequiredFoldingConfiguration.",
+   "fr": "Surcharge qui, après le succès du parent, lit les limites de pliage d'un outil mobile et compare foldingConfigurationIndex / foldingConfigurationIndices à la configuration de pliage du véhicule, en stockant hasRequiredFoldingConfiguration."
+  },
+  "Foldable:getIsMovingToolActive": {
+   "en": "Override returning false if the moving tool needs another folding configuration or the fold time is outside its limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false si l'outil mobile exige une autre configuration de pliage ou si le temps de pliage est hors de ses limites ; sinon délègue au parent."
+  },
+  "Foldable:loadMovingPartFromXML": {
+   "en": "Override that calls the parent loader for a moving part, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour une pièce mobile, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getIsMovingPartActive": {
+   "en": "Override returning false if the moving part has non-default fold limits and the fold time is outside them; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false si la pièce mobile a des limites non par défaut et que le temps de pliage est hors de celles-ci ; sinon délègue au parent."
+  },
+  "Foldable:getCanBeTurnedOn": {
+   "en": "Override that blocks turning the implement on when the fold time is outside the turn-on limits.",
+   "fr": "Surcharge qui empêche d'allumer l'outil quand le temps de pliage est hors des limites d'activation."
+  },
+  "Foldable:getIsNextCoverStateAllowed": {
+   "en": "Override that, after the parent allows it, also requires the fold time to be inside the cover toggle limits.",
+   "fr": "Surcharge qui, une fois le parent d'accord, exige aussi que le temps de pliage soit dans les limites de bascule du couvercle."
+  },
+  "Foldable:getIsNextCoverStateAllowedWarning": {
+   "en": "Override returning the unfold warning text when the cover toggle is blocked by the fold time; otherwise defers to the parent warning.",
+   "fr": "Surcharge renvoyant le texte d'avertissement de dépliage quand la bascule du couvercle est bloquée par le temps de pliage ; sinon délègue à l'avertissement parent."
+  },
+  "Foldable:getIsInWorkPosition": {
+   "en": "Override returning false unless the tool is fully in its working fold end (or has no folding parts); otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false sauf si l'outil est complètement à l'extrémité de travail du pliage (ou sans foldingPart) ; sinon délègue au parent."
+  },
+  "Foldable:getTurnedOnNotAllowedWarning": {
+   "en": "Override returning the unfold warning when the fold time prevents turning on; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant l'avertissement de dépliage quand le temps de pliage empêche l'allumage ; sinon délègue au parent."
+  },
+  "Foldable:isDetachAllowed": {
+   "en": "Override returning false plus a warning if the fold time is outside the detach limits, or if the tool is mid-fold and detaching while folding is not allowed. Otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false avec un avertissement si le temps de pliage est hors des limites de détache, ou si l'outil est en cours de pliage et que le détachement pendant le pliage n'est pas permis. Sinon délègue au parent."
+  },
+  "Foldable:isAttachAllowed": {
+   "en": "Override returning false plus the unfold warning when the fold time is outside the attaching limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false avec l'avertissement de dépliage quand le temps de pliage est hors des limites d'attache ; sinon délègue au parent."
+  },
+  "Foldable:getAllowsLowering": {
+   "en": "Override returning false plus the unfold warning when the fold time is outside the lowering limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false avec l'avertissement de dépliage quand le temps de pliage est hors des limites d'abaissement ; sinon délègue au parent."
+  },
+  "Foldable:getIsLowered": {
+   "en": "Override that, when a fold middle position exists, derives the lowered state from the fold animation and direction (taking ignoreFoldMiddleWhileFolded into account); otherwise defers to the parent.",
+   "fr": "Surcharge qui, avec une position intermédiaire de pliage, déduit l'état abaissé de l'animation et de la direction de pliage (en tenant compte de ignoreFoldMiddleWhileFolded) ; sinon délègue au parent."
+  },
+  "Foldable:registerLoweringActionEvent": {
+   "en": "Override that, for tools with a fold middle position, registers the fold-middle input as the lowering action (powered or not). Returns early if that input equals the requested one. Note: the final parent call does not forward ignoreCollisions.",
+   "fr": "Surcharge qui, pour les outils avec position intermédiaire, enregistre l'entrée de pliage intermédiaire comme action d'abaissement (avec ou sans alimentation). Retourne tôt si cette entrée est celle demandée. À noter : l'appel parent final ne transmet pas ignoreCollisions."
+  },
+  "Foldable:registerSelfLoweringActionEvent": {
+   "en": "Override that forwards to the registerLoweringActionEvent override with the same arguments.",
+   "fr": "Surcharge qui renvoie vers la surcharge de registerLoweringActionEvent avec les mêmes arguments."
+  },
+  "Foldable:loadGroundAdjustedNodeFromXML": {
+   "en": "Override that, once the parent succeeds, reads foldable#minLimit and foldable#maxLimit of a ground adjusted node (with a deprecation check of the old attributes).",
+   "fr": "Surcharge qui, après le succès du parent, lit foldable#minLimit et foldable#maxLimit d'un nœud ajusté au sol (avec vérification des anciens attributs)."
+  },
+  "Foldable:getIsGroundAdjustedNodeActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a ground adjusted node; otherwise defers to the parent.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'un nœud ajusté au sol ; sinon délègue au parent."
+  },
+  "Foldable:loadSprayTypeFromXML": {
+   "en": "Override that reads optional fold limits and the required folding configuration indices of a spray type, storing hasRequiredFoldingConfiguration, then defers to the parent.",
+   "fr": "Surcharge qui lit les limites de pliage optionnelles et les indices de configuration de pliage requis d'un type de pulvérisation, stocke hasRequiredFoldingConfiguration, puis délègue au parent."
+  },
+  "Foldable:getIsSprayTypeActive": {
+   "en": "Override returning false if the spray type has fold limits that the current time violates, or if it needs another folding configuration; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false si le type de pulvérisation a des limites de pliage violées par le temps courant, ou s'il exige une autre configuration de pliage ; sinon délègue au parent."
+  },
+  "Foldable:getCanBeSelected": {
+   "en": "Override that always returns true, without calling the parent: a foldable vehicle can always be selected.",
+   "fr": "Surcharge qui renvoie toujours true, sans appeler le parent : un véhicule pliable peut toujours être sélectionné."
+  },
+  "Foldable:loadInputAttacherJoint": {
+   "en": "Override that reads optional foldMinLimit and foldMaxLimit of an input attacher joint (nil if absent) before the parent call.",
+   "fr": "Surcharge qui lit foldMinLimit et foldMaxLimit optionnels d'une attache d'entrée (nil si absents) avant l'appel parent."
+  },
+  "Foldable:getIsInputAttacherActive": {
+   "en": "Override returning false when the joint has fold limits and the fold time is outside them, so the joint cannot be used to attach; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand l'attache a des limites de pliage et que le temps est hors de celles-ci, donc inutilisable pour atteler ; sinon délègue au parent."
+  },
+  "Foldable:loadAdditionalCharacterFromXML": {
+   "en": "Override that reads foldMinLimit and foldMaxLimit from vehicle.enterable.additionalCharacter and stores them in the Enterable spec before the parent call.",
+   "fr": "Surcharge qui lit foldMinLimit et foldMaxLimit de vehicle.enterable.additionalCharacter et les stocke dans le spec Enterable avant l'appel parent."
+  },
+  "Foldable:getIsAdditionalCharacterActive": {
+   "en": "Override returning true when the fold time lies inside the additional character's limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant true quand le temps de pliage est dans les limites du personnage additionnel ; sinon délègue au parent."
+  },
+  "Foldable:getAllowDynamicMountObjects": {
+   "en": "Override returning false when the fold time is outside the dynamic mount limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand le temps de pliage est hors des limites de montage dynamique ; sinon délègue au parent."
+  },
+  "Foldable:loadSupportAnimationFromXML": {
+   "en": "Override that reads folding#minLimit and folding#maxLimit of a support animation (with a deprecation check) before the parent call.",
+   "fr": "Surcharge qui lit folding#minLimit et folding#maxLimit d'une animation de support (avec vérification des anciens noms) avant l'appel parent."
+  },
+  "Foldable:getIsSupportAnimationAllowed": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a support animation; otherwise defers to the parent.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'une animation de support ; sinon délègue au parent."
+  },
+  "Foldable:loadSteeringAxleFromXML": {
+   "en": "Override that reads folding#minLimit and folding#maxLimit of the steering axle into the passed spec (deprecation check included) before the parent call.",
+   "fr": "Surcharge qui lit folding#minLimit et folding#maxLimit de l'essieu directeur dans le spec passé (vérification des anciens noms comprise) avant l'appel parent."
+  },
+  "Foldable:getIsSteeringAxleAllowed": {
+   "en": "Override returning false when the fold time is outside the Attachable steering axle fold limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand le temps de pliage est hors des limites de pliage de l'essieu directeur Attachable ; sinon délègue au parent."
+  },
+  "Foldable:loadFillUnitFromXML": {
+   "en": "Override that calls the parent loader for a fill unit, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour une unité de remplissage, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getFillUnitSupportsToolType": {
+   "en": "Override that rejects any defined tool type on a fill unit whose fold limits are violated by the current fold time; ToolType.UNDEFINED is always passed to the parent.",
+   "fr": "Surcharge qui refuse tout type d'outil défini sur une unité de remplissage dont les limites de pliage sont violées par le temps courant ; ToolType.UNDEFINED est toujours transmis au parent."
+  },
+  "Foldable:loadTurnedOnAnimationFromXML": {
+   "en": "Override that calls the parent loader for a turned-on animation, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour une animation d'allumage, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getIsTurnedOnAnimationActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a turned-on animation; otherwise defers to the parent.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'une animation d'allumage ; sinon délègue au parent."
+  },
+  "Foldable:loadAttacherJointHeightNode": {
+   "en": "Override that calls the parent loader for an attacher joint height node, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour un nœud de hauteur d'attache, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getIsAttacherJointHeightNodeActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of an attacher joint height node; otherwise defers to the parent.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'un nœud de hauteur d'attache ; sinon délègue au parent."
+  },
+  "Foldable:loadPickupFromXML": {
+   "en": "Override that calls the parent loader for a pickup, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour un pickup, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getCanChangePickupState": {
+   "en": "Override returning false when the fold time is outside the pickup's fold limits, so it cannot be raised or lowered; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand le temps de pliage est hors des limites du pickup, qui ne peut alors pas être levé ni abaissé ; sinon délègue au parent."
+  },
+  "Foldable:loadCutterTiltFromXML": {
+   "en": "Override that calls the parent loader for a cutter automatic tilt (returns false if the parent fails), then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour une inclinaison automatique de barre de coupe (renvoie false si le parent échoue), puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getCutterTiltIsActive": {
+   "en": "Override that returns the parent's active flag, but when active and the fold time is outside the tilt's limits returns false with doReset true so the header tilt returns to its initial position.",
+   "fr": "Surcharge qui renvoie l'indicateur actif du parent, mais, s'il est actif et que le temps de pliage est hors des limites, renvoie false avec doReset à true pour ramener l'inclinaison à sa position initiale."
+  },
+  "Foldable:loadPreprunerNodeFromXML": {
+   "en": "Override that calls the parent loader for a vine pre-pruner node, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour un nœud de prétailleur de vigne, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getIsPreprunerNodeActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a pre-pruner node; otherwise defers to the parent.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'un nœud de prétailleur ; sinon délègue au parent."
+  },
+  "Foldable:loadShovelNode": {
+   "en": "Override that calls the parent loader for a shovel node (always returns true), then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour un nœud de godet (renvoie toujours true), puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getShovelNodeIsActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a shovel node; otherwise defers to the parent.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'un nœud de godet ; sinon délègue au parent."
+  },
+  "Foldable:loadSteeringAngleNodeFromXML": {
+   "en": "Override that calls the parent loader for a steering angle node, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour un nœud d'angle de braquage, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:updateSteeringAngleNode": {
+   "en": "Override that skips the update entirely when the fold time is outside the node's limits; otherwise calls the parent.",
+   "fr": "Surcharge qui saute totalement la mise à jour quand le temps de pliage est hors des limites du nœud ; sinon appelle le parent."
+  },
+  "Foldable:loadWoodHarvesterHeaderTiltFromXML": {
+   "en": "Override that calls the parent loader for a wood harvester header tilt, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour une inclinaison de tête d'abatteuse, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getIsWoodHarvesterTiltStateAllowed": {
+   "en": "Override returning false when the fold time is outside the header tilt's limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand le temps de pliage est hors des limites d'inclinaison de la tête ; sinon délègue au parent."
+  },
+  "Foldable:loadSuspensionNodeFromXML": {
+   "en": "Override that calls the parent loader for a suspension node, then reads foldMinLimit/foldMaxLimit from its XML node and stores them on the entry (defaults 0 and 1, i.e. always active).",
+   "fr": "Surcharge qui appelle le chargeur parent pour un nœud de suspension, puis lit foldMinLimit/foldMaxLimit dans son nœud XML et les stocke sur l'entrée (défauts 0 et 1, donc toujours actif)."
+  },
+  "Foldable:getIsSuspensionNodeActive": {
+   "en": "Override returning false when the fold animation time is outside the stored limits of a suspension node; otherwise defers to the parent.",
+   "fr": "Surcharge qui renvoie false quand le temps d'animation de pliage est hors des limites stockées de d'un nœud de suspension ; sinon délègue au parent."
+  },
+  "Foldable:loadCrabSteeringModeFromXML": {
+   "en": "Override that, after the parent succeeds, reads folding#minLimit and folding#maxLimit of a crab steering mode.",
+   "fr": "Surcharge qui, après le succès du parent, lit folding#minLimit et folding#maxLimit d'un mode de direction crabe."
+  },
+  "Foldable:getCrabSteeringModeAvailable": {
+   "en": "Override returning false when the fold time is outside the crab steering mode's limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand le temps de pliage est hors des limites du mode de direction crabe ; sinon délègue au parent."
+  },
+  "Foldable:getCanToggleCrabSteering": {
+   "en": "Override returning false plus the unfold warning when the fold time is outside the crab steering limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false avec l'avertissement de dépliage quand le temps de pliage est hors des limites de direction crabe ; sinon délègue au parent."
+  },
+  "Foldable:onLoadWheelChockFromXML": {
+   "en": "Override that calls the parent (without extra arguments) and reads foldMinLimit and foldMaxLimit of a wheel chock. Does not return the parent result.",
+   "fr": "Surcharge qui appelle le parent (sans arguments supplémentaires) et lit foldMinLimit et foldMaxLimit d'une cale de roue. Ne renvoie pas le résultat du parent."
+  },
+  "Foldable:getIsWheelChockAllowed": {
+   "en": "Override returning false when the fold time is outside the wheel chock's limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false quand le temps de pliage est hors des limites de la cale de roue ; sinon délègue au parent."
+  },
+  "Foldable:loadCraneShovelFromXML": {
+   "en": "Override that, after the parent succeeds, reads foldable#minLimit and foldable#maxLimit of a crane shovel.",
+   "fr": "Surcharge qui, après le succès du parent, lit foldable#minLimit et foldable#maxLimit d'un godet de grue."
+  },
+  "Foldable:getCraneShovelStateChangedAllowed": {
+   "en": "Override returning false plus the unfold warning when the fold time is outside the crane shovel's limits; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false avec l'avertissement de dépliage quand le temps de pliage est hors des limites du godet de grue ; sinon délègue au parent."
+  },
+  "Foldable:getBrakeForce": {
+   "en": "Override returning 0 while folding if releaseBrakesWhileFolding is set; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant 0 pendant le pliage si releaseBrakesWhileFolding est activé ; sinon délègue au parent."
+  },
+  "Foldable:getRequiresPower": {
+   "en": "Override returning true while a fold movement is in progress, otherwise the parent value.",
+   "fr": "Surcharge renvoyant true pendant un mouvement de pliage, sinon la valeur du parent."
+  },
+  "Foldable:onRegisterActionEvents": {
+   "en": "Client: registers the fold input action (powered or not, depending on requiresPower) and the hidden fold-all action, unless the middle position is the only movement. Only when the vehicle is active for input.",
+   "fr": "Client : enregistre l'action de pliage (avec ou sans alimentation selon requiresPower) et l'action masquée de pliage global, sauf si le milieu est le seul mouvement. Uniquement quand le véhicule est actif pour les entrées."
+  },
+  "Foldable:onRegisterExternalActionEvents": {
+   "en": "Registers an external action event (trigger based) for the trigger named \"folding\", when the vehicle has folding parts.",
+   "fr": "Enregistre une action externe (par déclencheur) pour le déclencheur nommé « folding », si le véhicule a des foldingPart."
+  },
+  "Foldable:getCanAIImplementContinueWork": {
+   "en": "Override that stops the AI from continuing when the tool is mid-fold (except while lifting toward the middle), if AI unfolding is allowed. Returns the parent's three values otherwise.",
+   "fr": "Surcharge qui empêche l'IA de continuer quand l'outil est en cours de pliage (sauf pendant la remontée vers le milieu), si le dépliage par l'IA est permis. Sinon renvoie les trois valeurs du parent."
+  },
+  "Foldable:getIsAIReadyToDrive": {
+   "en": "Override returning false if AI unfolding is allowed and the tool is not fully in its folded transport end; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant false si le dépliage par l'IA est permis et que l'outil n'est pas complètement à l'extrémité repliée de transport ; sinon délègue au parent."
+  },
+  "Foldable:getIsAIPreparingToDrive": {
+   "en": "Override returning true while the tool is at an intermediate fold position (neither end nor middle) with AI unfolding allowed; otherwise defers to the parent.",
+   "fr": "Surcharge renvoyant true quand l'outil est à une position de pliage intermédiaire (ni extrémité ni milieu) avec dépliage IA permis ; sinon délègue au parent."
+  },
+  "Foldable:onDeactivate": {
+   "en": "Stops the folding movement (direction 0, no event) when the vehicle is deactivated, unless keepFoldingWhileDetached, lowerWhileDetach or foldWhileDetach is set.",
+   "fr": "Arrête le mouvement de pliage (direction 0, sans événement) à la désactivation du véhicule, sauf si keepFoldingWhileDetached, lowerWhileDetach ou foldWhileDetach est activé."
+  },
+  "Foldable:onSetLoweredAll": {
+   "en": "Handler for the all-lowered event: calls setFoldMiddleState with the lowering flag.",
+   "fr": "Gestionnaire de l'événement d'abaissement global : appelle setFoldMiddleState avec l'indicateur d'abaissement."
+  },
+  "Foldable:onPostAttach": {
+   "en": "With lowerWhileDetach, when attached to a raised joint and fully folded, moves the tool to the middle position (local only, no event).",
+   "fr": "Avec lowerWhileDetach, lorsqu'attaché à une attache relevée et complètement replié, amène l'outil à la position intermédiaire (local, sans événement)."
+  },
+  "Foldable:onRootVehicleChanged": {
+   "en": "Registers or updates the fold, lowering and AI-start actions in the root vehicle's action controller, including AI event listeners and finished checks; removes them when there is no controller. Uses Platform.gameplay.foldAfterAIFinished.",
+   "fr": "Enregistre ou met à jour les actions de pliage, d'abaissement et de démarrage IA dans le contrôleur d'actions du véhicule racine, avec écouteurs d'événements IA et tests de fin ; les retire s'il n'y a pas de contrôleur. Utilise Platform.gameplay.foldAfterAIFinished."
+  },
+  "Foldable:actionControllerFoldEvent": {
+   "en": "Action controller callback for folding: converts the direction using turnOnFoldDirection and calls setFoldState if the fold is allowed. Returns true when handled, false when blocked.",
+   "fr": "Rappel du contrôleur d'actions pour le pliage : convertit la direction avec turnOnFoldDirection et appelle setFoldState si le pliage est autorisé. Renvoie true si traité, false si bloqué."
+  },
+  "Foldable:actionControllerLowerEvent": {
+   "en": "Action controller callback to lower or raise via the fold middle state, moving to the middle position from either side. Returns true if a middle position is allowed.",
+   "fr": "Rappel du contrôleur d'actions pour abaisser ou relever via l'état intermédiaire, en rejoignant la position intermédiaire de part ou d'autre. Renvoie true si une position intermédiaire est permise."
+  },
+  "Foldable:actionControllerLowerEventAIStart": {
+   "en": "Action controller callback used when the AI starts working: moves the tool to the middle position unless it is already past it. Always returns true.",
+   "fr": "Rappel du contrôleur d'actions utilisé au démarrage du travail de l'IA : amène l'outil à la position intermédiaire sauf s'il l'a déjà dépassée. Renvoie toujours true."
+  },
+  "Foldable:onPreDetach": {
+   "en": "Before detaching, with lowerWhileDetach and the tool at the middle position it unfolds away, or with foldWhileDetach it folds the tool; both local only (no event).",
+   "fr": "Avant le détachement, avec lowerWhileDetach et l'outil en position intermédiaire il le déplie dans l'autre sens, ou avec foldWhileDetach il le replie ; local uniquement (sans événement)."
+  },
+  "Foldable:onPreAttachImplement": {
+   "en": "When an implement using the parent's folding state is attached, tracks it in subFoldingStateVehicles and copies the current fold time to it.",
+   "fr": "Quand un outil utilisant l'état de pliage du parent est attelé, le suit dans subFoldingStateVehicles et lui copie le temps de pliage courant."
+  },
+  "Foldable:onPreDetachImplement": {
+   "en": "Removes a detaching implement that used the parent fold state from subFoldingStateVehicles.",
+   "fr": "Retire des subFoldingStateVehicles un outil détaché qui utilisait l'état de pliage du parent."
+  },
+  "Foldable:onDynamicMountTypeChanged": {
+   "en": "Stops any folding movement (direction 0, no event) when the vehicle gets dynamically mounted on something.",
+   "fr": "Arrête tout mouvement de pliage (direction 0, sans événement) quand le véhicule est monté dynamiquement sur quelque chose."
+  },
+  "Foldable.setAnimTime": {
+   "en": "Sets foldAnimTime directly: positions every folding part animation, updates the Cylindered initial state, and on the server (if placeComponents) re-places the component joints. Propagates to sub-vehicles and raises onFoldTimeChanged.",
+   "fr": "Fixe directement foldAnimTime : positionne l'animation de chaque foldingPart, met à jour l'état initial de Cylindered et, côté serveur (si placeComponents), replace les joints de composants. Se propage aux sous-véhicules et déclenche onFoldTimeChanged."
+  },
+  "Foldable.updateActionEventFold": {
+   "en": "Updates the fold action text (fold or unfold, from the toggled direction) and its active state from getIsFoldActionAllowed.",
+   "fr": "Met à jour le texte de l'action de pliage (plier ou déplier, selon la direction inversée) et son état actif depuis getIsFoldActionAllowed."
+  },
+  "Foldable.updateActionEventFoldMiddle": {
+   "en": "Updates the lowering action text (lift or lower) and active state from getIsFoldMiddleAllowed, honouring ignoreFoldMiddleWhileFolded.",
+   "fr": "Met à jour le texte de l'action d'abaissement (lever ou abaisser) et son état actif depuis getIsFoldMiddleAllowed, en respectant ignoreFoldMiddleWhileFolded."
+  },
+  "Foldable.actionEventFold": {
+   "en": "Input callback for folding: toggles the fold direction if allowed (targeting the middle when it matches turnOnFoldDirection) and syncs the attacher joint lowering state. Otherwise shows a blinking warning for 2000 ms.",
+   "fr": "Rappel d'entrée du pliage : inverse la direction de pliage si permis (visant le milieu si elle correspond à turnOnFoldDirection) et synchronise l'abaissement de l'attache. Sinon affiche un avertissement clignotant pendant 2000 ms."
+  },
+  "Foldable.actionEventFoldMiddle": {
+   "en": "Input callback for the lowering key: toggles the fold middle state and aligns the attacher joint move-down state, or delegates to the attacher vehicle's lower implement handler when the middle state is ignored.",
+   "fr": "Rappel d'entrée de la touche d'abaissement : bascule l'état intermédiaire et aligne l'état d'abaissement de l'attache, ou délègue au gestionnaire d'abaissement du véhicule porteur quand l'état intermédiaire est ignoré."
+  },
+  "Foldable.actionEventFoldAll": {
+   "en": "Input callback that folds or unfolds this tool and every foldable vehicle in the same root vehicle that moves in a matching sense, with a blinking warning if none could move. Note: child vehicles are checked with the direction computed for this vehicle, not their own toggled one.",
+   "fr": "Rappel d'entrée qui plie ou déplie cet outil et tous les véhicules pliables du même véhicule racine dont le sens correspond, avec un avertissement clignotant si aucun n'a pu bouger. À noter : les véhicules enfants sont contrôlés avec la direction calculée pour ce véhicule, pas la leur."
+  },
+  "Foldable.externalActionEventRegister": {
+   "en": "Registers the external (trigger) fold action; on press it tries to start the motor, then folds if the vehicle is powered or needs no power, otherwise shows the power warning.",
+   "fr": "Enregistre l'action de pliage externe (par déclencheur) ; à l'appui, tente de démarrer le moteur puis plie si le véhicule est alimenté ou n'en a pas besoin, sinon affiche l'avertissement d'alimentation."
+  },
+  "Foldable.externalActionEventUpdate": {
+   "en": "Updates the text of the external fold action to the fold or unfold label matching the toggled direction.",
+   "fr": "Met à jour le texte de l'action de pliage externe avec le libellé de pliage ou dépliage correspondant à la direction inversée."
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/TensionBeltsEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the tension belts of a vehicle: activating or releasing either one belt (by id) or all of them (belt id nil). Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise les sangles de tension d'un véhicule : activation ou relâchement d'une sangle précise (par identifiant) ou de toutes (identifiant nil). Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "TensionBeltsEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "TensionBeltsEvent.new": {
+      "en": "Builds the event with the data to send (a node object, a flag telling whether the belt id is absent, the optional belt id (sent as id-1 on TensionBelts.NUM_SEND_BITS bits) and the active flag); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud, un indicateur d'absence d'identifiant de sangle, l'identifiant optionnel (envoyé comme id-1 sur TensionBelts.NUM_SEND_BITS bits) et l'indicateur actif) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "TensionBeltsEvent:readStream": {
+      "en": "Reads a node object, a flag telling whether the belt id is absent, the optional belt id (sent as id-1 on TensionBelts.NUM_SEND_BITS bits) and the active flag from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud, un indicateur d'absence d'identifiant de sangle, l'identifiant optionnel (envoyé comme id-1 sur TensionBelts.NUM_SEND_BITS bits) et l'indicateur actif depuis le flux, puis appelle `run(connection)`."
+    },
+    "TensionBeltsEvent:writeStream": {
+      "en": "Writes a node object, a flag telling whether the belt id is absent, the optional belt id (sent as id-1 on TensionBelts.NUM_SEND_BITS bits) and the active flag to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud, un indicateur d'absence d'identifiant de sangle, l'identifiant optionnel (envoyé comme id-1 sur TensionBelts.NUM_SEND_BITS bits) et l'indicateur actif dans le flux (même ordre que `readStream`)."
+    },
+    "TensionBeltsEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself, then calls `setTensionBeltsActive(active, beltId, true)` on the object if synchronized.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet, puis appelle `setTensionBeltsActive(actif, idSangle, true)` sur l'objet s'il est synchronisé."
+    },
+    "TensionBeltsEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

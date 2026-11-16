@@ -1,0 +1,41 @@
+{
+ "fichier": "ai/tasks/AITaskWaitForFilling.lua",
+ "module": {
+  "en": "AI task that waits on the server until a set of fill units is full, then waits a short extra delay (3 seconds) before finishing. If a unit holds a non-allowed fill type, the job is stopped with a no-valid-fill-type error. It prepares and releases loading on each unit via aiPrepareLoading and aiFinishLoading.",
+  "fr": "Tâche IA qui attend sur le serveur que plusieurs unités de remplissage soient pleines, puis ajoute un court délai (3 secondes) avant de se terminer. Si une unité contient un type non autorisé, le job est arrêté avec une erreur de type de remplissage invalide. Elle prépare et libère le chargement de chaque unité via aiPrepareLoading et aiFinishLoading."
+ },
+ "fonctions": {
+  "AITaskWaitForFilling.new": {
+   "en": "Creates the task with empty allowed fill types and fill unit list, a wait duration of 3000 ms and the not-fully-loaded state.",
+   "fr": "Crée la tâche avec des types de remplissage autorisés et une liste d'unités vides, une durée d'attente de 3000 ms et l'état non chargé complètement."
+  },
+  "AITaskWaitForFilling:reset": {
+   "en": "Clears the vehicle, allowed fill types, fill units and wait state, then runs the parent reset.",
+   "fr": "Efface le véhicule, les types autorisés, les unités de remplissage et l'état d'attente, puis exécute le reset du parent."
+  },
+  "AITaskWaitForFilling:addAllowedFillType": {
+   "en": "Adds a fill type to the set of types considered valid in the watched units.",
+   "fr": "Ajoute un type de remplissage à l'ensemble des types considérés valides dans les unités surveillées."
+  },
+  "AITaskWaitForFilling:update": {
+   "en": "Server only. A unit is valid if empty or holding an allowed type; if none is valid, the job stops with an error. Once every unit has no free capacity, it waits waitDuration (g_time based) and then finishes.",
+   "fr": "Serveur seulement. Une unité est valide si elle est vide ou contient un type autorisé ; si aucune ne l'est, le job s'arrête avec une erreur. Quand toutes les unités n'ont plus de capacité libre, il attend waitDuration (basé sur g_time) puis se termine."
+  },
+  "AITaskWaitForFilling:start": {
+   "en": "Runs the parent start; on the server resets the fully-loaded flag and calls aiPrepareLoading on every registered fill unit.",
+   "fr": "Exécute le start du parent ; sur le serveur, remet à zéro l'indicateur de remplissage complet et appelle aiPrepareLoading sur chaque unité enregistrée."
+  },
+  "AITaskWaitForFilling:stop": {
+   "en": "Runs the parent stop; on the server calls aiFinishLoading on every registered fill unit.",
+   "fr": "Exécute le stop du parent ; sur le serveur, appelle aiFinishLoading sur chaque unité enregistrée."
+  },
+  "AITaskWaitForFilling:setVehicle": {
+   "en": "Stores the vehicle reference. It is not used by the update logic, which relies on the registered fill units.",
+   "fr": "Mémorise la référence au véhicule. Elle n'est pas utilisée par la logique de mise à jour, qui s'appuie sur les unités enregistrées."
+  },
+  "AITaskWaitForFilling:addFillUnits": {
+   "en": "Registers a vehicle and fill unit index to be watched. Despite the plural name it adds a single unit per call.",
+   "fr": "Enregistre un véhicule et un index d'unité de remplissage à surveiller. Malgré le pluriel du nom, une seule unité est ajoutée par appel."
+  }
+ }
+}

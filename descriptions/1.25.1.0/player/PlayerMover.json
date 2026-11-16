@@ -1,0 +1,85 @@
+{
+ "fichier": "player/PlayerMover.lua",
+ "module": {
+  "en": "Turns movement requests into actual on-foot player motion: accumulates forces, applies them through the player's capsule controller (CCT), and tracks speed, velocity, grounded/air/fall timers, water submersion (swimming) and a debug flight mode. It exposes an `onPositionTeleport` listener list and marks the player's dirty flag so the changes get synchronized. Helpers such as `getPosition`, `updateDeltas`, `updateRotation`, `updateFlightCollision`, `getIsPhysicsEnabled` and `calculateWadeScalar` are not in this dump (UNVERIFIED).",
+  "fr": "Transforme les demandes de déplacement en mouvement réel du joueur à pied : accumule les forces, les applique via le contrôleur capsule (CCT) du joueur, et suit la vitesse, la vélocité, les chronomètres au sol/en l'air/en chute, l'immersion dans l'eau (nage) et un mode vol de debug. Il expose une liste d'écouteurs `onPositionTeleport` et lève le dirty flag du joueur pour que les changements soient synchronisés. Des aides comme `getPosition`, `updateDeltas`, `updateRotation`, `updateFlightCollision`, `getIsPhysicsEnabled` et `calculateWadeScalar` ne figurent pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlayerMover.new": {
+   "en": "Creates the mover for a player with zeroed forces, velocity and timers, reserves a dirty flag from the player, and creates the `onPositionTeleport` listener list. A TODO in the code about the dirty flag is left unresolved.",
+   "fr": "Crée le mover d'un joueur avec forces, vélocité et chronomètres à zéro, réserve un dirty flag auprès du joueur et crée la liste d'écouteurs `onPositionTeleport`. Un TODO du code sur le dirty flag reste non résolu."
+  },
+  "PlayerMover:initialise": {
+   "en": "Called when the player first loads: creates a transform group in the scene root that marks the movement direction.",
+   "fr": "Appelée au premier chargement du joueur : crée dans la racine de la scène un groupe de transformation qui marque la direction du mouvement."
+  },
+  "PlayerMover:calculateSmoothSpeed": {
+   "en": "Returns a speed interpolated between minimum and maximum by the move scalar. With wading enabled it returns 0 for a zero scalar, uses the swim speed as minimum when deeply submerged, and slows the scalar by the submersion depth.",
+   "fr": "Renvoie une vitesse interpolée entre le minimum et le maximum selon le scalaire de mouvement. Avec le pataugeage activé, renvoie 0 pour un scalaire nul, prend la vitesse de nage comme minimum en cas de forte immersion et ralentit le scalaire selon la profondeur."
+  },
+  "PlayerMover:toggleFlightActive": {
+   "en": "Inverts the flight mode through `setFlightActive`. Has no effect unless the flight command is turned on.",
+   "fr": "Inverse le mode vol via `setFlightActive`. Sans effet si la commande de vol n'est pas activée."
+  },
+  "PlayerMover:setFlightActive": {
+   "en": "Turns flight on or off and then refreshes the player's collision. Unless `isForced` is set, it is ignored when the player's flight command is missing or its value is false.",
+   "fr": "Active ou désactive le vol puis rafraîchit la collision du joueur. Sauf si `isForced` est vrai, l'appel est ignoré quand la commande de vol du joueur est absente ou à false."
+  },
+  "PlayerMover:getIsFlightCollisionDisabled": {
+   "en": "Returns whether player collision is configured to be off while flying.",
+   "fr": "Renvoie si la collision du joueur est configurée pour être désactivée pendant le vol."
+  },
+  "PlayerMover:setIsFlightCollisionDisabled": {
+   "en": "Sets whether collision is disabled while flying and immediately refreshes the collision state through `updateFlightCollision`.",
+   "fr": "Définit si la collision est désactivée pendant le vol et rafraîchit immédiatement l'état de collision via `updateFlightCollision`."
+  },
+  "PlayerMover:getMovementYaw": {
+   "en": "Returns the yaw of the movement direction in world space; the visual model follows it smoothly.",
+   "fr": "Renvoie le lacet de la direction de mouvement dans l'espace monde ; le modèle visuel le suit en douceur."
+  },
+  "PlayerMover:setPosition": {
+   "en": "Moves the player's capsule controller to the given position (optionally also setting the node translation) and raises the default dirty flag.",
+   "fr": "Déplace le contrôleur capsule du joueur à la position donnée (en réglant aussi éventuellement la translation du noeud) et lève le dirty flag par défaut."
+  },
+  "PlayerMover:getSpeed": {
+   "en": "Returns the stored horizontal speed of the player (m/s).",
+   "fr": "Renvoie la vitesse horizontale enregistrée du joueur (m/s)."
+  },
+  "PlayerMover:teleportTo": {
+   "en": "Publishes `PLAYER_PRE_TELEPORT`, tells the server through a `PlayerTeleportEvent` when called by an owning client (unless `noEventSend`), remembers the old position, sets the new one and invokes `onPositionTeleport`.",
+   "fr": "Publie `PLAYER_PRE_TELEPORT`, prévient le serveur par un `PlayerTeleportEvent` quand l'appel vient d'un client propriétaire (sauf `noEventSend`), mémorise l'ancienne position, applique la nouvelle et invoque `onPositionTeleport`."
+  },
+  "PlayerMover:moveHorizontally": {
+   "en": "Adds an x/z movement to this frame's accumulated force and raises the dirty flag. The position itself is not changed until the next update.",
+   "fr": "Ajoute un mouvement x/z à la force accumulée de cette image et lève le dirty flag. La position elle-même ne change qu'à la mise à jour suivante."
+  },
+  "PlayerMover:moveVertically": {
+   "en": "Adds a y movement to this frame's accumulated force and raises the dirty flag. The position itself is not changed until the next update.",
+   "fr": "Ajoute un mouvement y à la force accumulée de cette image et lève le dirty flag. La position elle-même ne change qu'à la mise à jour suivante."
+  },
+  "PlayerMover:updateFloorDistance": {
+   "en": "Updates grounded state, ground distance, close-to-ground flag and the ground, air and fall timers. When airborne it raycasts down (up to 200 m, from 10 m above the player) against terrain, static objects and roads, and falls back to y = 0 if nothing is hit.",
+   "fr": "Met à jour l'état au sol, la distance au sol, l'indicateur de proximité du sol et les chronomètres de sol, d'air et de chute. En l'air, lance un rayon vers le bas (jusqu'à 200 m, depuis 10 m au-dessus du joueur) contre le terrain, les objets statiques et les routes, et se rabat sur y = 0 en l'absence d'impact."
+  },
+  "PlayerMover:onGroundRaycastCallback": {
+   "en": "Raycast callback for the ground check: stores the hit height as ground level when an object was hit.",
+   "fr": "Callback du raycast de contrôle du sol : enregistre la hauteur de l'impact comme niveau du sol quand un objet est touché."
+  },
+  "PlayerMover:updateWaterSubmergeDistance": {
+   "en": "Starts an asynchronous downward raycast (6 m, from 3 m above the player) against the water collision group; the result is handled in `onWaterRaycastCallback`.",
+   "fr": "Lance un raycast asynchrone vers le bas (6 m, depuis 3 m au-dessus du joueur) contre le groupe de collision de l'eau ; le résultat est traité dans `onWaterRaycastCallback`."
+  },
+  "PlayerMover:onWaterRaycastCallback": {
+   "en": "Computes submersion depth from the water hit height and the player y position stored when the ray was cast, then sets `isInWater`, `needSwimming` and `isSwimming` (the latter with a 0.2 lower threshold than `needSwimming`).",
+   "fr": "Calcule la profondeur d'immersion à partir de la hauteur de l'impact sur l'eau et de la position y du joueur enregistrée au lancer du rayon, puis définit `isInWater`, `needSwimming` et `isSwimming` (ce dernier avec un seuil inférieur de 0,2 à `needSwimming`)."
+  },
+  "PlayerMover:update": {
+   "en": "Per-frame update: if physics are enabled, computes the position deltas and moves the capsule controller. It then checks ground contact (server or physics-enabled only), refreshes water and floor data, and updates the movement yaw and rotation velocity.",
+   "fr": "Mise à jour à chaque image : si la physique est active, calcule les deltas de position et déplace le contrôleur capsule. Vérifie ensuite le contact avec le sol (serveur ou physique active seulement), rafraîchit les données d'eau et de sol, puis met à jour le lacet de mouvement et la vitesse de rotation."
+  },
+  "PlayerMover:debugDraw": {
+   "en": "Draws the movement direction node and debug text lines for position, velocity, yaw, speed, water and ground data. Returns the next y position.",
+   "fr": "Dessine le noeud de direction de mouvement et des lignes de texte de debug pour la position, la vélocité, le lacet, la vitesse et les données d'eau et de sol. Renvoie la position y suivante."
+  }
+ }
+}

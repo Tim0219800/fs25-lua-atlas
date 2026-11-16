@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/ManureBarrel.lua",
+ "module": {
+  "en": "Specialization for liquid manure barrels that can carry a spreading tool on one attacher joint. Requires Sprayer and AttacherJoints. While a tool is attached on the configured joint (`vehicle.manureBarrel#attacherJointIndex`), the barrel's own spreading effects and work areas are disabled so the attached tool does the work. No network code of its own.",
+  "fr": "Spécialisation pour les tonnes à lisier pouvant porter un outil d'épandage sur une attache. Requiert Sprayer et AttacherJoints. Tant qu'un outil est attelé sur l'attache configurée (`vehicle.manureBarrel#attacherJointIndex`), les effets d'épandage et les zones de travail de la tonne sont désactivés pour que l'outil attelé fasse le travail. Pas de code réseau propre."
+ },
+ "fonctions": {
+  "ManureBarrel.prerequisitesPresent": {
+   "en": "Returns true only if both Sprayer and AttacherJoints specializations are present.",
+   "fr": "Renvoie vrai seulement si les spécialisations Sprayer et AttacherJoints sont présentes."
+  },
+  "ManureBarrel.initSpecialization": {
+   "en": "Registers the XML path `vehicle.manureBarrel#attacherJointIndex`.",
+   "fr": "Enregistre le chemin XML `vehicle.manureBarrel#attacherJointIndex`."
+  },
+  "ManureBarrel.registerOverwrittenFunctions": {
+   "en": "Overrides `getAreEffectsVisible` and `getIsWorkAreaActive`.",
+   "fr": "Surcharge `getAreEffectsVisible` et `getIsWorkAreaActive`."
+  },
+  "ManureBarrel.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostAttachImplement and onPostDetachImplement.",
+   "fr": "S'abonne aux événements onLoad, onPostAttachImplement et onPostDetachImplement."
+  },
+  "ManureBarrel:onLoad": {
+   "en": "Reads the attacher joint index of the tool joint and warns about the deprecated `toolAttachAnimName` element.",
+   "fr": "Lit l'index d'attache de l'outil et signale l'élément obsolète `toolAttachAnimName`."
+  },
+  "ManureBarrel:onPostAttachImplement": {
+   "en": "Remembers the attached implement when it is attached to the configured tool joint.",
+   "fr": "Mémorise l'outil attelé lorsqu'il est attelé sur l'attache d'outil configurée."
+  },
+  "ManureBarrel:onPostDetachImplement": {
+   "en": "Clears the remembered tool when the implement on the configured tool joint is detached.",
+   "fr": "Oublie l'outil mémorisé lorsque l'outil sur l'attache configurée est dételé."
+  },
+  "ManureBarrel:getAreEffectsVisible": {
+   "en": "Override: returns false while a tool is attached on the tool joint, otherwise defers to the parent.",
+   "fr": "Surcharge : renvoie faux tant qu'un outil est attelé sur l'attache d'outil, sinon s'en remet au parent."
+  },
+  "ManureBarrel:getIsWorkAreaActive": {
+   "en": "Override: returns false while a tool is attached on the tool joint, otherwise defers to the parent.",
+   "fr": "Surcharge : renvoie faux tant qu'un outil est attelé sur l'attache d'outil, sinon s'en remet au parent."
+  }
+ }
+}

@@ -1,0 +1,165 @@
+{
+ "fichier": "gui/elements/ButtonElement.lua",
+ "module": {
+  "en": "Clickable GUI button, derived from TextElement with the PlaySampleMixin for click sounds. It draws a background (layer \"image\") and an icon (layer \"icon\") or, when `inputAction` is set, a keyboard key glyph or gamepad glyph; it also supports touch-button rendering on mobile, fit-to-content sizing, focus/highlight/press states and callbacks (onClick, onFocus, onLeave, onHighlight, onHighlightRemove, onSizeChanged). Mouse, touch and key events are handled here; `sendAction`, `loadInputGlyph`, `setPressed` and similar are defined in other files (UNVERIFIED). Client-side GUI.",
+  "fr": "Bouton GUI cliquable, dérivé de TextElement avec le PlaySampleMixin pour les sons de clic. Il dessine un fond (couche \"image\") et une icône (couche \"icon\") ou, si `inputAction` est défini, un glyphe de touche clavier ou manette ; il gère aussi l'affichage de bouton tactile sur mobile, le dimensionnement selon le contenu, les états focus/survol/pressé et les callbacks (onClick, onFocus, onLeave, onHighlight, onHighlightRemove, onSizeChanged). Les événements souris, tactile et clavier sont traités ici ; `sendAction`, `loadInputGlyph`, `setPressed` et similaires sont définis dans d'autres fichiers (NON VÉRIFIÉ). Interface côté client."
+ },
+ "fonctions": {
+  "ButtonElement.new": {
+   "en": "Constructor: builds the text element, mixes in sample playing and sets defaults (empty overlays and icons, centered text, send action on release, default click sound, no fit-to-content, keyboard/touch flags off).",
+   "fr": "Constructeur : construit l'élément de texte, ajoute le mixin de sons et définit les valeurs par défaut (overlays et icônes vides, texte centré, action envoyée au relâchement, son de clic par défaut, pas d'ajustement au contenu, indicateurs clavier/tactile désactivés)."
+  },
+  "ButtonElement:delete": {
+   "en": "Deletes the touch icon, background and icon overlays, then runs the parent delete.",
+   "fr": "Supprime les overlays d'icône tactile, de fond et d'icône, puis exécute la suppression du parent."
+  },
+  "ButtonElement:loadFromXML": {
+   "en": "Reads the callbacks, icon sizes, behavior flags (forceFocus, fitToContent, touch options, sendActionOnRelease, drawChildrenLast...), textSeparator, `inputAction` (a valid InputAction name) or the icon overlay, the touch icon on mobile and `clickSound`, then creates the overlay and updates size.",
+   "fr": "Lit les callbacks, les tailles d'icône, les indicateurs de comportement (forceFocus, fitToContent, options tactiles, sendActionOnRelease, drawChildrenLast...), textSeparator, `inputAction` (nom d'InputAction valide) ou l'overlay d'icône, l'icône tactile sur mobile et `clickSound`, puis crée l'overlay et met à jour la taille."
+  },
+  "ButtonElement:loadProfile": {
+   "en": "Same settings as the XML loader but from a GUI profile (without callbacks); updates size only when the profile is applied.",
+   "fr": "Mêmes réglages que le chargeur XML mais depuis un profil GUI (sans callbacks) ; ne met à jour la taille que lorsque le profil est appliqué."
+  },
+  "ButtonElement:copyAttributes": {
+   "en": "Copies overlays, icon settings, behavior flags, input action, click sound, pressed state and the callbacks from a source button, and clones the sound mixin.",
+   "fr": "Copie les overlays, les réglages d'icône, les indicateurs de comportement, l'action d'entrée, le son de clic, l'état pressé et les callbacks depuis un bouton source, et clone le mixin de son."
+  },
+  "ButtonElement:loadInputGlyphColors": {
+   "en": "Loads the glyph colors (icon and \"iconBg\") either from XML or from a profile, depending on which argument is given.",
+   "fr": "Charge les couleurs du glyphe (icône et \"iconBg\") depuis le XML ou depuis un profil, selon l'argument fourni."
+  },
+  "ButtonElement:setInputMode": {
+   "en": "Records whether the keyboard, touch or gamepad glyph mode is active, loads the input glyph the first time, and recomputes the size when any mode changed.",
+   "fr": "Enregistre quel mode de glyphe (clavier, tactile ou manette) est actif, charge le glyphe d'entrée la première fois et recalcule la taille si un mode a changé."
+  },
+  "ButtonElement:setAlpha": {
+   "en": "Sets the element alpha and mirrors it onto the background and icon overlays.",
+   "fr": "Définit l'alpha de l'élément et le répercute sur les overlays de fond et d'icône."
+  },
+  "ButtonElement:setDisabled": {
+   "en": "Applies the disabled flag; when disabling, removes focus, clears input state and raises the onLeave callback.",
+   "fr": "Applique l'indicateur désactivé ; en cas de désactivation, retire le focus, efface l'état d'entrée et déclenche le callback onLeave."
+  },
+  "ButtonElement:setInputAction": {
+   "en": "Changes the input action shown as glyph by name (ignored if the name is not a valid InputAction) and forces the glyph to reload.",
+   "fr": "Change par son nom l'action d'entrée affichée en glyphe (ignoré si le nom n'est pas une InputAction valide) et force le rechargement du glyphe."
+  },
+  "ButtonElement:onOpen": {
+   "en": "When an input action is set, reloads the glyph on open, deferred so a missing controller does not break loading.",
+   "fr": "Si une action d'entrée est définie, recharge le glyphe à l'ouverture, de façon différée pour qu'une manette absente ne casse pas le chargement."
+  },
+  "ButtonElement:onClose": {
+   "en": "Runs the parent handler then resets the button state.",
+   "fr": "Exécute le gestionnaire du parent puis réinitialise l'état du bouton."
+  },
+  "ButtonElement:reset": {
+   "en": "Clears the pressed, focused and highlighted states and the input-down flag.",
+   "fr": "Efface les états pressé, focalisé et survolé ainsi que l'indicateur d'appui."
+  },
+  "ButtonElement:setImageFilename": {
+   "en": "Recreates the background overlay and/or icon overlay from the given file names (each only if not nil).",
+   "fr": "Recrée l'overlay de fond et/ou d'icône à partir des noms de fichier donnés (chacun seulement s'il n'est pas nil)."
+  },
+  "ButtonElement:setImageUVs": {
+   "en": "Replaces the UV table of the background and/or icon overlay when provided.",
+   "fr": "Remplace la table UV de l'overlay de fond et/ou d'icône lorsqu'elle est fournie."
+  },
+  "ButtonElement:setImageSlice": {
+   "en": "Resolves a background slice id and an icon slice id through `g_overlayManager` and applies their UVs and image files.",
+   "fr": "Résout un identifiant de tranche pour le fond et un pour l'icône via `g_overlayManager` et applique leurs UV et fichiers image."
+  },
+  "ButtonElement:getIsActive": {
+   "en": "The button is active only when the parent condition holds and an onClick callback exists.",
+   "fr": "Le bouton n'est actif que si la condition du parent est remplie et qu'un callback onClick existe."
+  },
+  "ButtonElement:mouseEvent": {
+   "en": "Handles mouse input when active: tracks hover (highlight) even if the event was consumed, focuses on left mouse down, sends the action on press or release depending on `sendActionOnRelease`, updates the pressed state, and returns whether the event was used.",
+   "fr": "Gère la souris lorsque le bouton est actif : suit le survol (surbrillance) même si l'événement est consommé, donne le focus au clic gauche enfoncé, envoie l'action à l'appui ou au relâchement selon `sendActionOnRelease`, met à jour l'état pressé et retourne si l'événement a été utilisé."
+  },
+  "ButtonElement:touchEvent": {
+   "en": "Touch equivalent of the mouse handler: highlight, focus on touch down, send action on touch or release, pressed state, and returns whether the event was consumed.",
+   "fr": "Équivalent tactile du gestionnaire souris : surbrillance, focus au toucher, envoi de l'action au toucher ou au relâchement, état pressé, et retourne si l'événement a été consommé."
+  },
+  "ButtonElement:keyEvent": {
+   "en": "Forwards key events to the parent only when the button is active; otherwise returns false.",
+   "fr": "Transmet les événements clavier au parent seulement si le bouton est actif ; sinon retourne false."
+  },
+  "ButtonElement:getIconOffset": {
+   "en": "Computes the icon position relative to the text, from icon size, text alignment, text size and `iconTextOffset`. Returns an x and y offset in screen units.",
+   "fr": "Calcule la position de l'icône par rapport au texte, d'après la taille de l'icône, l'alignement du texte, sa taille et `iconTextOffset`. Retourne un décalage x et y en unités d'écran."
+  },
+  "ButtonElement:draw": {
+   "en": "Draws children first (unless drawChildrenLast), syncs the input mode from `g_inputBinding`, renders the background, then the keyboard key glyph, the touch button and touch/gamepad icon, or the normal icon, plus a debug outline when enabled. Children are drawn last when drawChildrenLast is true.",
+   "fr": "Dessine d'abord les enfants (sauf si drawChildrenLast), synchronise le mode d'entrée depuis `g_inputBinding`, affiche le fond, puis le glyphe de touche clavier, le bouton tactile et l'icône tactile/manette, ou l'icône normale, plus un contour de debug si activé. Les enfants sont dessinés en dernier si drawChildrenLast vaut true."
+  },
+  "ButtonElement:getIconModifiedTextOffset": {
+   "en": "Shifts the given text offset to make room for the icon, depending on left or center alignment. Returns the modified x and y offsets.",
+   "fr": "Décale le décalage de texte donné pour laisser la place à l'icône, selon l'alignement gauche ou centré. Retourne les décalages x et y modifiés."
+  },
+  "ButtonElement:getTextOffset": {
+   "en": "Returns the parent text offset plus a fixed touch-area margin in touch mode, adjusted for the icon.",
+   "fr": "Retourne le décalage de texte du parent plus une marge fixe de zone tactile en mode tactile, ajusté pour l'icône."
+  },
+  "ButtonElement:getText2Offset": {
+   "en": "Returns the shadow/second text offset adjusted for the icon.",
+   "fr": "Retourne le décalage du second texte (ombre) ajusté pour l'icône."
+  },
+  "ButtonElement:getIconSize": {
+   "en": "Returns the icon size: the key glyph size in keyboard mode, otherwise the configured icon size.",
+   "fr": "Retourne la taille de l'icône : celle du glyphe de touche en mode clavier, sinon la taille d'icône configurée."
+  },
+  "ButtonElement:setIconSize": {
+   "en": "Sets the icon width and/or height (nil keeps the current value) and updates the element size.",
+   "fr": "Définit la largeur et/ou la hauteur de l'icône (nil conserve la valeur actuelle) et met à jour la taille de l'élément."
+  },
+  "ButtonElement:canReceiveFocus": {
+   "en": "True when the button is enabled, visible and handles focus.",
+   "fr": "Vrai lorsque le bouton est activé, visible et gère le focus."
+  },
+  "ButtonElement:onFocusLeave": {
+   "en": "Runs the parent handler and raises the onLeave callback.",
+   "fr": "Exécute le gestionnaire du parent et déclenche le callback onLeave."
+  },
+  "ButtonElement:onFocusEnter": {
+   "en": "Runs the parent handler and raises the onFocus callback.",
+   "fr": "Exécute le gestionnaire du parent et déclenche le callback onFocus."
+  },
+  "ButtonElement:onHighlight": {
+   "en": "Runs the parent handler and raises the onHighlight callback.",
+   "fr": "Exécute le gestionnaire du parent et déclenche le callback onHighlight."
+  },
+  "ButtonElement:onHighlightRemove": {
+   "en": "Runs the parent handler and raises the onHighlightRemove callback.",
+   "fr": "Exécute le gestionnaire du parent et déclenche le callback onHighlightRemove."
+  },
+  "ButtonElement:onFocusActivate": {
+   "en": "When active, sends the button action (activation from the focus system, for example gamepad accept).",
+   "fr": "Lorsque actif, envoie l'action du bouton (activation par le système de focus, par exemple la validation à la manette)."
+  },
+  "ButtonElement:getIsPressed": {
+   "en": "Returns whether the button is currently pressed.",
+   "fr": "Retourne si le bouton est actuellement pressé."
+  },
+  "ButtonElement:getOverlayState": {
+   "en": "Returns the overlay state by priority: disabled, pressed (unless ignored), selected, focused, highlighted, else normal.",
+   "fr": "Retourne l'état d'overlay par ordre de priorité : désactivé, pressé (sauf s'il est ignoré), sélectionné, focalisé, survol, sinon normal."
+  },
+  "ButtonElement:updateSize": {
+   "en": "When fit-to-content or auto text width/height is on, resizes the button to its icon plus text (with extra width, touch padding on mobile). If the size changed it raises onSizeChanged for touch sizing and invalidates an auto-validating parent layout.",
+   "fr": "Si l'ajustement au contenu ou la largeur/hauteur automatique du texte est actif, redimensionne le bouton selon icône plus texte (largeur supplémentaire, marge tactile sur mobile). Si la taille change, déclenche onSizeChanged pour le mode tactile et invalide la mise en page du parent si elle se valide automatiquement."
+  },
+  "ButtonElement:setText": {
+   "en": "Prefixes the text with `textSeparator` when set, applies it through the parent, then updates the size.",
+   "fr": "Préfixe le texte avec `textSeparator` s'il est défini, l'applique via le parent, puis met à jour la taille."
+  },
+  "ButtonElement:setTextSize": {
+   "en": "Sets the text size through the parent and updates the button size.",
+   "fr": "Définit la taille du texte via le parent et met à jour la taille du bouton."
+  },
+  "ButtonElement:setClickSound": {
+   "en": "Sets the sample name played on click.",
+   "fr": "Définit le nom de l'échantillon sonore joué au clic."
+  }
+ }
+}

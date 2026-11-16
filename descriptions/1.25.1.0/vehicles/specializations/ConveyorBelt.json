@@ -1,0 +1,105 @@
+{
+ "fichier": "vehicles/specializations/ConveyorBelt.lua",
+ "module": {
+  "en": "Vehicle specialization for conveyor belts that carry material from a discharge node to another object. It requires `Dischargeable`, delays the actual discharge until a visual morph effect has travelled along the belt, and drives belt animations, sounds and effects. The server computes the filling and scrolling state and syncs it to clients through the update stream. Optional offsets bound to `Cylindered` moving tools change the belt effect length. EffectManager, AnimationManager and SoundManager internals are UNVERIFIED (not in the dump).",
+  "fr": "Spécialisation de véhicule pour les tapis roulants qui transportent la matière d'un point de déchargement vers un autre objet. Elle exige `Dischargeable`, retarde le déchargement réel jusqu'à ce qu'un effet de morphing visuel ait parcouru le tapis, et pilote animations, sons et effets du tapis. Le serveur calcule l'état de remplissage et de défilement et le synchronise aux clients via le flux de mise à jour. Des décalages optionnels liés aux outils mobiles de `Cylindered` modifient la longueur de l'effet. Le fonctionnement interne d'EffectManager, AnimationManager et SoundManager est NON VÉRIFIÉ (absent du dump)."
+ },
+ "fonctions": {
+  "ConveyorBelt.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the `Dischargeable` specialization.",
+   "fr": "Renvoie vrai uniquement si le type de véhicule possède la spécialisation `Dischargeable`."
+  },
+  "ConveyorBelt.initSpecialization": {
+   "en": "Registers the XML schema entries under `vehicle.conveyorBelt`: discharge node index, start percentage (default 0.9), offsets with moving tool node and effect ranges, animation nodes, effects and belt sounds.",
+   "fr": "Enregistre dans le schéma XML les entrées de `vehicle.conveyorBelt` : index du point de déchargement, pourcentage de départ (0,9 par défaut), décalages avec outil mobile et plages d'effets, animations, effets et sons du tapis."
+  },
+  "ConveyorBelt.registerFunctions": {
+   "en": "Registers the vehicle functions `getConveyorBeltFillLevel`, `getConveyorBeltTargetObject` and `getLoadTriggerMaxFillSpeed`.",
+   "fr": "Enregistre les fonctions de véhicule `getConveyorBeltFillLevel`, `getConveyorBeltTargetObject` et `getLoadTriggerMaxFillSpeed`."
+  },
+  "ConveyorBelt.registerOverwrittenFunctions": {
+   "en": "Overrides six existing vehicle functions: discharge empty factor, discharge on empty, discharge handling, enterable check, fill type acceptance and free capacity of a fill unit.",
+   "fr": "Surcharge six fonctions de véhicule existantes : facteur de vidage du déchargement, déchargement à vide, gestion du déchargement, possibilité d'entrer, acceptation d'un type de remplissage et capacité libre d'une unité."
+  },
+  "ConveyorBelt.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, the two update stream events, onUpdateTick, onFillUnitFillLevelChanged and onMovingToolChanged.",
+   "fr": "S'abonne à onLoad, onPostLoad, onDelete, aux deux événements de flux de mise à jour, à onUpdateTick, onFillUnitFillLevelChanged et onMovingToolChanged."
+  },
+  "ConveyorBelt:onLoad": {
+   "en": "Loads effects (sorted by start delay), plus animations and the belt sound on clients. It selects the discharge node, computes the start fill level from the capacity and reads the moving tool offsets, warning about invalid effect indices.",
+   "fr": "Charge les effets (triés par délai de départ), ainsi que les animations et le son du tapis côté client. Sélectionne le point de déchargement, calcule le niveau de départ à partir de la capacité et lit les décalages d'outils mobiles, avec avertissement si un index d'effet est invalide."
+  },
+  "ConveyorBelt:onPostLoad": {
+   "en": "Resolves each offset's moving tool once all specializations are loaded and applies its initial state. Offsets with no matching tool are removed with a warning. Without `Cylindered`, offsets are disabled and an XML error is logged.",
+   "fr": "Résout l'outil mobile de chaque décalage une fois toutes les spécialisations chargées et applique son état initial. Les décalages sans outil correspondant sont supprimés avec un avertissement. Sans `Cylindered`, les décalages sont désactivés et une erreur XML est journalisée."
+  },
+  "ConveyorBelt:onDelete": {
+   "en": "Deletes the effects, animation nodes and sound samples owned by the belt.",
+   "fr": "Supprime les effets, les nœuds d'animation et les échantillons sonores appartenant au tapis."
+  },
+  "ConveyorBelt:onReadUpdateStream": {
+   "en": "Client side only: when the dirty bit is set, reads the `isFilling` and `isScrolling` booleans sent by the server.",
+   "fr": "Côté client uniquement : lorsque le bit de modification est présent, lit les booléens `isFilling` et `isScrolling` envoyés par le serveur."
+  },
+  "ConveyorBelt:onWriteUpdateStream": {
+   "en": "Server side only: writes a dirty-flag bool, then `isFilling` and `isScrolling` when the belt's dirty flag is set.",
+   "fr": "Côté serveur uniquement : écrit un booléen de drapeau de modification puis `isFilling` et `isScrolling` si le drapeau du tapis est levé."
+  },
+  "ConveyorBelt:onUpdateTick": {
+   "en": "Main per-tick logic. Clients derive morph and scrolling from synced flags. While discharging, it advances the morph start and end positions by `dt`/delay and updates the empty factor. It starts or stops animations, sound and effect scrolling, and pushes the morph values to the effects.",
+   "fr": "Logique principale à chaque tick. Les clients déduisent morphing et défilement des drapeaux synchronisés. Pendant le déchargement, elle avance les positions de début et de fin du morphing selon `dt`/délai et met à jour le facteur de vidage. Elle démarre ou arrête animations, son et défilement des effets, et transmet les valeurs aux effets."
+  },
+  "ConveyorBelt:getConveyorBeltFillLevel": {
+   "en": "Returns the fill level of the belt's fill unit plus, recursively, the level of the next belt in the chain it is discharging onto.",
+   "fr": "Renvoie le niveau de remplissage de l'unité du tapis, auquel s'ajoute, de façon récursive, celui du tapis suivant de la chaîne sur lequel il décharge."
+  },
+  "ConveyorBelt:getConveyorBeltTargetObject": {
+   "en": "Follows the chain of belts from the current discharge node and returns the final target object and its fill unit index, or nil if nothing is hit.",
+   "fr": "Suit la chaîne de tapis depuis le point de déchargement courant et renvoie l'objet cible final et l'index de son unité de remplissage, ou nil si rien n'est touché."
+  },
+  "ConveyorBelt:getLoadTriggerMaxFillSpeed": {
+   "en": "Returns the maximum fill speed allowed by the chain: the minimum of this node's empty speed and that of downstream objects, or infinity without a discharge node.",
+   "fr": "Renvoie la vitesse de remplissage maximale autorisée par la chaîne : le minimum entre la vitesse de vidage de ce point et celle des objets en aval, ou l'infini sans point de déchargement."
+  },
+  "ConveyorBelt:getDischargeNodeEmptyFactor": {
+   "en": "Override. For the belt's discharge node, returns 0 until the morph end reaches 1, then the computed empty factor, which delays real discharge. Other nodes use the parent value.",
+   "fr": "Surcharge. Pour le point de déchargement du tapis, renvoie 0 tant que la fin du morphing n'a pas atteint 1, puis le facteur de vidage calculé, ce qui retarde le déchargement réel. Les autres points utilisent la valeur parente."
+  },
+  "ConveyorBelt:handleDischargeOnEmpty": {
+   "en": "Override. Calls the parent behaviour only for discharge nodes other than the belt's own, which is therefore ignored.",
+   "fr": "Surcharge. N'appelle le comportement parent que pour les points de déchargement autres que celui du tapis, qui est donc ignoré."
+  },
+  "ConveyorBelt:handleDischarge": {
+   "en": "Override. Skips discharge handling for the belt's own discharge node and delegates to the parent for all others.",
+   "fr": "Surcharge. Ignore la gestion du déchargement pour le point de déchargement propre au tapis et délègue au parent pour les autres."
+  },
+  "ConveyorBelt:getIsEnterable": {
+   "en": "Override. The vehicle can be entered only if it is not attached to another vehicle and the parent check also passes.",
+   "fr": "Surcharge. Le véhicule ne peut être occupé que s'il n'est pas attelé à un autre véhicule et que le contrôle parent est également satisfait."
+  },
+  "ConveyorBelt.getHasConveyorBeltLoop": {
+   "en": "Walks the belt chain from a vehicle and returns true if it leads back to the root vehicle, meaning a loop. Used to avoid endless recursion in fill type and capacity queries.",
+   "fr": "Parcourt la chaîne de tapis à partir d'un véhicule et renvoie vrai si elle revient au véhicule racine, c'est-à-dire une boucle. Sert à éviter une récursion infinie dans les requêtes de type de remplissage et de capacité."
+  },
+  "ConveyorBelt:getFillUnitAllowsFillType": {
+   "en": "Override. After the parent check, if there is no loop, it also asks the target object whether it accepts the fill type, including through the node's fill type converter.",
+   "fr": "Surcharge. Après le contrôle parent, s'il n'y a pas de boucle, interroge aussi l'objet cible pour savoir s'il accepte le type de remplissage, y compris via le convertisseur de type du point de déchargement."
+  },
+  "ConveyorBelt:getFillUnitFreeCapacity": {
+   "en": "Override. Without a loop, adds the free capacity of the downstream target object to the parent value, so the belt reports the combined room of the chain.",
+   "fr": "Surcharge. Sans boucle, ajoute la capacité libre de l'objet cible en aval à la valeur parente, de sorte que le tapis annonce la place cumulée de la chaîne."
+  },
+  "ConveyorBelt:onFillUnitFillLevelChanged": {
+   "en": "On the belt's fill unit: the server updates morph positions and the filling and scrolling flags, raising a dirty flag on change. At empty it stops effects and resets the morph; otherwise it sets the fill type info and starts effects.",
+   "fr": "Sur l'unité du tapis : le serveur met à jour les positions de morphing et les drapeaux de remplissage et de défilement, et lève un drapeau de modification en cas de changement. À vide, il arrête les effets et réinitialise le morphing ; sinon il règle le type de remplissage et démarre les effets."
+  },
+  "ConveyorBelt:onMovingToolChanged": {
+   "en": "When a linked moving tool changes state, sets the offsets of its effects by interpolation, honouring inversion, then recomputes the total belt delay.",
+   "fr": "Quand l'état d'un outil mobile lié change, règle par interpolation les décalages de ses effets, en tenant compte de l'inversion, puis recalcule le délai total du tapis."
+  },
+  "ConveyorBelt:updateDebugValues": {
+   "en": "Adds debug entries to the given list: fill factor, visual factor, current delay, offset and the morph start and end positions.",
+   "fr": "Ajoute des entrées de débogage à la liste fournie : facteur de remplissage, facteur visuel, délai courant, décalage et positions de début et de fin du morphing."
+  }
+ }
+}

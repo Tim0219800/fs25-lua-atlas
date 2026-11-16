@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/AutoLoadable.lua",
+ "module": {
+  "en": "Marker specialization for vehicles that an AutoLoader vehicle may pick up and mount on its load area. It reports the object's size and bounding box from `self.size` and mounts the object kinematically at a grid position. It has no prerequisite and only sets its flag on the server.",
+  "fr": "Spécialisation marqueur pour les véhicules qu'un véhicule AutoLoader peut ramasser et monter sur sa zone de chargement. Elle fournit la taille et la boîte englobante de l'objet d'après `self.size` et le monte de façon cinématique à une position de la grille. Elle n'a aucun prérequis et ne positionne son indicateur que sur le serveur."
+ },
+ "fonctions": {
+  "AutoLoadable.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "AutoLoadable.registerFunctions": {
+   "en": "Registers `getAutoLoadIsSupported`, `getAutoLoadIsAllowed`, `getAutoLoadBoundingBox`, `getAutoLoadSize` and `autoLoad` on the vehicle type.",
+   "fr": "Enregistre `getAutoLoadIsSupported`, `getAutoLoadIsAllowed`, `getAutoLoadBoundingBox`, `getAutoLoadSize` et `autoLoad` sur le type de véhicule."
+  },
+  "AutoLoadable.registerEventListeners": {
+   "en": "Subscribes the vehicle to `onLoad`.",
+   "fr": "Abonne le véhicule à `onLoad`."
+  },
+  "AutoLoadable:onLoad": {
+   "en": "On the server only, marks the vehicle as supported for auto loading. On clients the flag stays unset.",
+   "fr": "Sur le serveur uniquement, marque le véhicule comme compatible avec le chargement automatique. Sur les clients l'indicateur reste non défini."
+  },
+  "AutoLoadable:getAutoLoadIsSupported": {
+   "en": "Returns the supported flag set at load time (true on the server, nil elsewhere).",
+   "fr": "Renvoie l'indicateur de compatibilité défini au chargement (true sur le serveur, nil ailleurs)."
+  },
+  "AutoLoadable:getAutoLoadIsAllowed": {
+   "en": "Always returns true; other specializations can override it to refuse loading.",
+   "fr": "Renvoie toujours true ; d'autres spécialisations peuvent la surcharger pour refuser le chargement."
+  },
+  "AutoLoadable:getAutoLoadSize": {
+   "en": "Returns the vehicle size as width, height and length, taken from `self.size`.",
+   "fr": "Renvoie la taille du véhicule sous la forme largeur, hauteur, longueur, tirée de `self.size`."
+  },
+  "AutoLoadable:getAutoLoadBoundingBox": {
+   "en": "Returns an oriented bounding box in world space: centre, forward and up directions, then half extents. The centre uses the size offsets relative to the root node.",
+   "fr": "Renvoie une boîte englobante orientée en espace monde : centre, directions avant et haut, puis demi-étendues. Le centre utilise les décalages de taille relatifs au noeud racine."
+  },
+  "AutoLoadable:autoLoad": {
+   "en": "Mounts the vehicle kinematically on the loader's node at the given grid position with zero rotation, and returns true. Note: the Z mount offset adds half of the size height, not the length, which looks like a slip.",
+   "fr": "Monte le véhicule de façon cinématique sur le noeud du chargeur à la position de grille donnée, sans rotation, et renvoie true. À noter : le décalage Z ajoute la moitié de la hauteur et non de la longueur, ce qui ressemble à une erreur."
+  }
+ }
+}

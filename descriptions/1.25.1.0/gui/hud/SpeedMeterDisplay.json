@@ -1,0 +1,33 @@
+{
+ "fichier": "gui/hud/SpeedMeterDisplay.lua",
+ "module": {
+  "en": "HUD display for the vehicle speedometer, built on HUDDisplay. For a motorized vehicle it draws the speed gauge, fuel (or electric charge / methane) bar, damage bar, gear selector, working hours, cruise control and AI/steering-assist status. Client-side drawing only; it reads data from the vehicle specializations (motorized, AI mode selection, damage) and must receive one update after setVehicle before drawing.",
+  "fr": "Affichage HUD du compteur de vitesse du véhicule, basé sur HUDDisplay. Pour un véhicule motorisé il dessine la jauge de vitesse, la barre de carburant (ou charge électrique / méthane), la barre de dégâts, le sélecteur de rapports, les heures de travail, le régulateur et l'état IA/assistance à la conduite. Dessin côté client uniquement ; il lit les spécialisations du véhicule (motorized, sélection du mode IA, dégâts) et doit recevoir une mise à jour après setVehicle avant de dessiner."
+ },
+ "fonctions": {
+  "SpeedMeterDisplay.new": {
+   "en": "Creates the display and its overlays (backgrounds, gauge, working hours, cruise control, AI and steering icons, fuel and repair icons). Starts without a vehicle and with the draw-safe flag off.",
+   "fr": "Crée l'affichage et ses overlays (fonds, jauge, heures de travail, régulateur, icônes IA et direction, carburant et réparation). Démarre sans véhicule et avec le drapeau de dessin sûr désactivé."
+  },
+  "SpeedMeterDisplay:storeScaledValues": {
+   "en": "Recomputes every pixel-based position, size and offset (gauge, bars, gear box, AI block, texts) for the current UI scale and applies the dimensions to the overlays. Called again when the scale changes.",
+   "fr": "Recalcule toutes les positions, tailles et décalages en pixels (jauge, barres, boîte de rapports, bloc IA, textes) pour l'échelle d'interface courante et applique les dimensions aux overlays. Rappelé lors d'un changement d'échelle."
+  },
+  "SpeedMeterDisplay:draw": {
+   "en": "Draws the whole speedometer for the current vehicle: backgrounds sized to the active bars, gauge, AI mode or status block, then the fuel, damage and gear sections. Does nothing without a vehicle or before the draw-safe flag is set.",
+   "fr": "Dessine tout le compteur pour le véhicule courant : fonds dimensionnés selon les barres actives, jauge, bloc de mode ou d'état IA, puis sections carburant, dégâts et rapports. Ne fait rien sans véhicule ou avant que le drapeau de dessin sûr soit levé."
+  },
+  "SpeedMeterDisplay:drawGearText": {
+   "en": "Draws the three-slot gear selector at x, y using getGearInfoToDisplay of the vehicle: manual gears with neighbours, or R/N/D for automatic. Highlights the current gear, dims it while shifting and blinks the middle slot on a neutral warning.",
+   "fr": "Dessine le sélecteur de rapports à trois emplacements en x, y via getGearInfoToDisplay du véhicule : rapports manuels avec voisins, ou R/N/D en automatique. Met en évidence le rapport courant, l'atténue pendant le changement et fait clignoter l'emplacement central en cas d'avertissement de point mort."
+  },
+  "SpeedMeterDisplay:setVehicle": {
+   "en": "Sets the vehicle to display (only kept if it is motorized), selects the fuel icon for electric charge or methane, toggles visibility and clears the draw-safe flag so drawing waits for the next update.",
+   "fr": "Définit le véhicule à afficher (conservé seulement s'il est motorisé), choisit l'icône de carburant pour la charge électrique ou le méthane, bascule la visibilité et efface le drapeau de dessin sûr pour attendre la prochaine mise à jour."
+  },
+  "SpeedMeterDisplay.getVehicleFuelLevelAndCapacity": {
+   "en": "Looks up the vehicle fill unit consuming diesel, then electric charge, then methane, and returns level, capacity and fuel type. Note: with no matching unit the index is nil, which is then passed to the fill unit getters (behaviour UNVERIFIED).",
+   "fr": "Cherche l'unité de remplissage consommant du diesel, puis de la charge électrique, puis du méthane, et renvoie niveau, capacité et type de carburant. À noter : sans unité correspondante l'indice est nil et il est transmis aux accesseurs d'unité de remplissage (comportement NON VÉRIFIÉ)."
+  }
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "fichier": "gui/dialogs/ColorPickerDialog.lua",
+ "module": {
+  "en": "Dialog letting the player pick a color from a list of preset colors, optionally with a custom color and material choice, derived from MessageDialog. Only `show` and two analog cursor input handlers survive in this dump; most of the 887-line file is empty, so other behaviour is UNVERIFIED. Client-side GUI.",
+  "fr": "Boîte de dialogue permettant au joueur de choisir une couleur parmi des préréglages, avec en option une couleur personnalisée et un choix de matériau, dérivée de MessageDialog. Seuls `show` et deux gestionnaires d'entrée de curseur analogique subsistent dans ce dump ; l'essentiel du fichier de 887 lignes est vide, le reste du comportement est donc NON VÉRIFIÉ. Interface côté client."
+ },
+ "fonctions": {
+  "ColorPickerDialog.show": {
+   "en": "Stores the color list, default color index, default material and custom color on the shared instance, sets custom/material options, callback and open sound, then opens the dialog. Does nothing without the instance.",
+   "fr": "Mémorise sur l'instance partagée la liste de couleurs, l'indice et le matériau par défaut et la couleur personnalisée, règle les options personnalisées/matériau, le callback et le son d'ouverture, puis ouvre la boîte. Sans instance, ne fait rien."
+  },
+  "ColorPickerDialog:onHorizontalCursorInput": {
+   "en": "Input event for horizontal cursor movement (bound to the pick-color left/right axis); adds the input value to `accumHorizontalInput`. Where that accumulator is consumed is not visible in the dump.",
+   "fr": "Événement d'entrée du déplacement horizontal du curseur (axe gauche/droite de choix de couleur) ; ajoute la valeur reçue à `accumHorizontalInput`. L'endroit où cet accumulateur est consommé n'est pas visible dans le dump."
+  },
+  "ColorPickerDialog:onVerticalCursorInput": {
+   "en": "Input event for vertical cursor movement (pick-color up/down axis); adds the input value to `accumVerticalInput`. Where that accumulator is consumed is not visible in the dump.",
+   "fr": "Événement d'entrée du déplacement vertical du curseur (axe haut/bas de choix de couleur) ; ajoute la valeur reçue à `accumVerticalInput`. L'endroit où cet accumulateur est consommé n'est pas visible dans le dump."
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "fichier": "placeables/specializations/PlaceablePointOfInterest.lua",
+ "module": {
+  "en": "Placeable specialization with no prerequisites that attaches one or more PointOfInterest objects to a placeable. Each point is read from placeable.pointOfInterest.point, instantiated from the class named in the XML (default PointOfInterest) and deleted with the placeable. The farm owner is forwarded to every point. What a PointOfInterest does is defined in another class, not in this file.",
+  "fr": "Spécialisation de placeable sans prérequis qui attache un ou plusieurs objets PointOfInterest à un placeable. Chaque point est lu sous placeable.pointOfInterest.point, instancié depuis la classe nommée dans le XML (PointOfInterest par défaut) et supprimé avec le placeable. Le propriétaire est transmis à chaque point. Le comportement d'un PointOfInterest est défini dans une autre classe, pas dans ce fichier."
+ },
+ "fonctions": {
+  "PlaceablePointOfInterest.prerequisitesPresent": {
+   "en": "Always returns true; no other specialization is required.",
+   "fr": "Retourne toujours true ; aucune autre spécialisation n'est requise."
+  },
+  "PlaceablePointOfInterest.registerXMLPaths": {
+   "en": "Declares the XML schema for placeable.pointOfInterest.point(?): a class attribute plus whatever PointOfInterest.registerXMLPaths adds.",
+   "fr": "Déclare le schéma XML de placeable.pointOfInterest.point(?) : un attribut class plus ce que PointOfInterest.registerXMLPaths ajoute."
+  },
+  "PlaceablePointOfInterest.registerOverwrittenFunctions": {
+   "en": "Overrides the placeable's setOwnerFarmId.",
+   "fr": "Surcharge setOwnerFarmId du placeable."
+  },
+  "PlaceablePointOfInterest.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad and onDelete.",
+   "fr": "Abonne la spécialisation à onLoad et onDelete."
+  },
+  "PlaceablePointOfInterest:onLoad": {
+   "en": "Creates a point object for each XML entry using ClassUtil.getClassObject on the class name, then calls its load. Unknown classes log an error; points whose load fails are deleted and skipped.",
+   "fr": "Crée un objet point pour chaque entrée XML via ClassUtil.getClassObject sur le nom de classe, puis appelle son load. Une classe inconnue journalise une erreur ; les points dont le load échoue sont supprimés et ignorés."
+  },
+  "PlaceablePointOfInterest:onDelete": {
+   "en": "Deletes every point of interest held by the placeable.",
+   "fr": "Supprime tous les points d'intérêt détenus par le placeable."
+  },
+  "PlaceablePointOfInterest:setOwnerFarmId": {
+   "en": "Calls the parent setOwnerFarmId, then sets the same farm id on each point of interest.",
+   "fr": "Appelle le setOwnerFarmId parent, puis applique le même identifiant de ferme à chaque point d'intérêt."
+  }
+ }
+}

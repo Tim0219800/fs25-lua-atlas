@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/wheels/WheelSteering.lua",
+  "module": {
+    "en": "Visual steering helper of a wheel: moves or rotates a steering node and rotates fenders according to the wheel steering angle, using limits from XML. Also supports a steering axle scale that reuses the limits. Purely visual; created per wheel.",
+    "fr": "Aide visuelle au braquage d'une roue : déplace ou fait pivoter un nœud de direction et fait tourner les garde-boue selon l'angle de braquage de la roue, avec des limites issues du XML. Gère aussi une échelle d'essieu directeur réutilisant ces limites. Purement visuel ; créé par roue."
+  },
+  "fonctions": {
+    "WheelSteering.new": {
+      "en": "Creates the steering helper for a wheel with default min/max rotation limits of -1 and 1.",
+      "fr": "Crée l'aide au braquage d'une roue avec des limites de rotation par défaut de -1 et 1."
+    },
+    "WheelSteering:loadFromXML": {
+      "en": "Reads the steering node, rotation node, min/max translation and rotation values, the list of fenders with their limits and the steering axle values from the wheel XML. Always returns true.",
+      "fr": "Lit le nœud de direction, le nœud de rotation, les valeurs min/max de translation et de rotation, la liste des garde-boue avec leurs limites et les valeurs d'essieu directeur depuis le XML. Retourne toujours true."
+    },
+    "WheelSteering:setSteeringValues": {
+      "en": "Receives the wheel's physical steering range and fills in missing fender limits and the overall steering node limits. If a steering axle scale is set, it is negated when inverted and takes the range as its limits. The speed arguments are unused.",
+      "fr": "Reçoit la plage de braquage physique de la roue et complète les limites de garde-boue manquantes ainsi que les limites globales du nœud de direction. Si une échelle d'essieu directeur est définie, elle est inversée si demandé et prend la plage comme limites. Les arguments de vitesse sont inutilisés."
+    },
+    "WheelSteering:update": {
+      "en": "Applies the steering angle visually: translates and/or rotates the steering node proportionally to the min/max limits, and rotates each fender around Y by the amount the angle exceeds its limits. Other arguments are unused.",
+      "fr": "Applique visuellement l'angle de braquage : translate et/ou fait pivoter le nœud de direction proportionnellement aux limites min/max, et fait tourner chaque garde-boue autour de Y du dépassement de l'angle par rapport à ses limites. Les autres arguments sont inutilisés."
+    },
+    "WheelSteering.registerXMLPaths": {
+      "en": "Registers the XML schema paths for steering node, rotation node, translation/rotation limits, fenders and steering axle.",
+      "fr": "Enregistre les chemins du schéma XML du nœud de direction, du nœud de rotation, des limites de translation/rotation, des garde-boue et de l'essieu directeur."
+    }
+  }
+}

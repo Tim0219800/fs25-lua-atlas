@@ -1,0 +1,85 @@
+{
+ "fichier": "vehicles/specializations/CraneShovel.lua",
+ "module": {
+  "en": "Specialization for a crane grab/shovel that opens and closes through an animation, toggled by an input action. The state is saved, synchronized (CraneShovelEvent) and can auto-close when the crane folds; the discharge node and shovel node are only active in the matching state. No prerequisites; reads the 'vehicle.craneShovel' XML block and does nothing if no animation name is set.",
+  "fr": "Spécialisation pour une benne/pelle de grue qui s'ouvre et se ferme par une animation, basculée par une action d'entrée. L'état est sauvegardé, synchronisé (CraneShovelEvent) et peut se fermer automatiquement au repliage de la grue ; le noeud de déversement et le noeud de pelle ne sont actifs que dans l'état correspondant. Aucun prérequis ; lit le bloc XML 'vehicle.craneShovel' et ne fait rien sans nom d'animation."
+ },
+ "fonctions": {
+  "CraneShovel.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "CraneShovel.initSpecialization": {
+   "en": "Registers the 'vehicle.craneShovel' XML schema (input action, animation name and speed, default open, close while folding, fill unit and discharge node indices, texts) and the savegame state key.",
+   "fr": "Enregistre le schéma XML 'vehicle.craneShovel' (action d'entrée, nom et vitesse d'animation, ouvert par défaut, fermeture au repliage, indices d'unité de remplissage et de noeud de déversement, textes) et la clé de sauvegarde de l'état."
+  },
+  "CraneShovel.registerFunctions": {
+   "en": "Registers loadCraneShovelFromXML, setCraneShovelState and getCraneShovelStateChangedAllowed on the vehicle type.",
+   "fr": "Enregistre loadCraneShovelFromXML, setCraneShovelState et getCraneShovelStateChangedAllowed sur le type de véhicule."
+  },
+  "CraneShovel.registerOverwrittenFunctions": {
+   "en": "Registers overrides of getIsDischargeNodeActive and getShovelNodeIsActive.",
+   "fr": "Enregistre des surcharges de getIsDischargeNodeActive et getShovelNodeIsActive."
+  },
+  "CraneShovel.registerEventListeners": {
+   "en": "Subscribes to load, post-load, stream read/write, fold state change and action event registration.",
+   "fr": "S'abonne aux événements de chargement, post-chargement, lecture/écriture de flux, changement d'état de repliage et enregistrement des actions."
+  },
+  "CraneShovel:onLoad": {
+   "en": "Loads the shovel settings and starts in the default open/closed state. If loading fails (no animation name), removes all other listeners; keeps the fold listener only on the server with 'closeWhileFolding'.",
+   "fr": "Charge les réglages de la pelle et démarre dans l'état ouvert/fermé par défaut. Si le chargement échoue (pas d'animation), retire tous les autres écouteurs ; ne garde l'écouteur de repliage que sur le serveur avec 'closeWhileFolding'."
+  },
+  "CraneShovel:onPostLoad": {
+   "en": "Takes the saved state from the savegame (unless vehicles are reset) and applies it instantly, without animation and without sending an event.",
+   "fr": "Reprend l'état sauvegardé (sauf réinitialisation des véhicules) et l'applique instantanément, sans animation et sans envoyer d'événement."
+  },
+  "CraneShovel:saveToXMLFile": {
+   "en": "Writes the open/closed state to the savegame if an animation is configured.",
+   "fr": "Écrit l'état ouvert/fermé dans la sauvegarde si une animation est configurée."
+  },
+  "CraneShovel:onReadStream": {
+   "en": "Client on join: reads the open/closed boolean and applies it instantly without sending an event.",
+   "fr": "Client à la connexion : lit le booléen ouvert/fermé et l'applique instantanément sans envoyer d'événement."
+  },
+  "CraneShovel:onWriteStream": {
+   "en": "Server on join: writes the open/closed boolean into the stream.",
+   "fr": "Serveur à la connexion : écrit le booléen ouvert/fermé dans le flux."
+  },
+  "CraneShovel:onFoldStateChanged": {
+   "en": "When the fold direction is not the work-ready direction and the shovel is open, closes it (this listener is only kept on the server with 'closeWhileFolding').",
+   "fr": "Quand le sens de repliage n'est pas celui de mise au travail et que la pelle est ouverte, la ferme (écouteur conservé seulement sur le serveur avec 'closeWhileFolding')."
+  },
+  "CraneShovel:onRegisterActionEvents": {
+   "en": "Registers the configured input action to toggle the shovel when the vehicle is active for input, with high text priority, and sets its label. Does not check isClient.",
+   "fr": "Enregistre l'action d'entrée configurée pour basculer la pelle quand le véhicule est actif pour les entrées, avec priorité de texte haute, et définit son libellé. Ne vérifie pas isClient."
+  },
+  "CraneShovel.actionEvent": {
+   "en": "Input callback: toggles the shovel state if getCraneShovelStateChangedAllowed permits; otherwise shows the returned warning for 5 s.",
+   "fr": "Rappel d'entrée : bascule l'état de la pelle si getCraneShovelStateChangedAllowed l'autorise ; sinon affiche l'avertissement renvoyé pendant 5 s."
+  },
+  "CraneShovel.updateActionEvents": {
+   "en": "Sets the input label to the close text when the shovel is open, the open text otherwise.",
+   "fr": "Définit le libellé de l'entrée sur le texte de fermeture si la pelle est ouverte, sinon sur le texte d'ouverture."
+  },
+  "CraneShovel:loadCraneShovelFromXML": {
+   "en": "Reads the shovel configuration into the given spec table (input action, animation, speed, defaults, fill unit and discharge node indices, texts). Returns false if no animation name is defined.",
+   "fr": "Lit la configuration de la pelle dans la table de spec fournie (action, animation, vitesse, valeurs par défaut, indices d'unité de remplissage et de noeud de déversement, textes). Renvoie false si aucun nom d'animation n'est défini."
+  },
+  "CraneShovel:setCraneShovelState": {
+   "en": "Sets the open (true) or closed (false) state, plays the animation in the matching direction (or finishes it instantly with skipAnimation) and updates the label. Always sends CraneShovelEvent afterwards unless noEventSend, even when unchanged.",
+   "fr": "Définit l'état ouvert (true) ou fermé (false), joue l'animation dans le sens correspondant (ou la termine instantanément avec skipAnimation) et met à jour le libellé. Envoie toujours CraneShovelEvent ensuite sauf noEventSend, même si l'état est inchangé."
+  },
+  "CraneShovel:getCraneShovelStateChangedAllowed": {
+   "en": "Returns whether toggling is allowed plus an optional warning; the default returns true, nil. Override point.",
+   "fr": "Renvoie si la bascule est autorisée et un avertissement optionnel ; par défaut true, nil. Point d'extension."
+  },
+  "CraneShovel:getIsDischargeNodeActive": {
+   "en": "Makes the configured discharge node inactive while the shovel is closed; otherwise defers to the parent.",
+   "fr": "Rend le noeud de déversement configuré inactif tant que la pelle est fermée ; sinon délègue au parent."
+  },
+  "CraneShovel:getShovelNodeIsActive": {
+   "en": "Makes shovel nodes inactive unless the animation is playing in the closing (negative speed) direction; otherwise defers to the parent.",
+   "fr": "Rend les noeuds de pelle inactifs sauf si l'animation tourne dans le sens de fermeture (vitesse négative) ; sinon délègue au parent."
+  }
+ }
+}

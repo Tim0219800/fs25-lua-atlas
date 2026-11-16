@@ -1,0 +1,29 @@
+{
+ "fichier": "objects/BunkerSiloOpenEvent.lua",
+ "module": {
+  "en": "Network event asking the server to open a bunker silo at a given world position. It carries the silo and three floats. The run step calls openSilo with that position.",
+  "fr": "Événement réseau demandant l'ouverture d'un silo-couloir à une position monde donnée. Il transporte le silo et trois flottants. L'exécution appelle openSilo avec cette position."
+ },
+ "fonctions": {
+  "BunkerSiloOpenEvent.emptyNew": {
+   "en": "Creates an empty event instance, used by the network layer before reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée par la couche réseau avant la lecture d'un flux."
+  },
+  "BunkerSiloOpenEvent.new": {
+   "en": "Creates an event for the given bunker silo and the x, y, z opening position.",
+   "fr": "Crée un événement pour le silo-couloir donné et la position d'ouverture x, y, z."
+  },
+  "BunkerSiloOpenEvent:readStream": {
+   "en": "Reads the silo node object and three float32 coordinates when the connection is not to a server, then runs the event. Note: run is called whatever the connection type.",
+   "fr": "Lit l'objet nœud du silo et trois coordonnées float32 quand la connexion n'est pas vers un serveur, puis exécute l'événement. À noter : run est appelé quel que soit le type de connexion."
+  },
+  "BunkerSiloOpenEvent:writeStream": {
+   "en": "Writes the silo node object and the three float32 coordinates, only when the connection is to a server (client to server direction).",
+   "fr": "Écrit l'objet nœud du silo et les trois coordonnées float32, uniquement quand la connexion est vers un serveur (sens client vers serveur)."
+  },
+  "BunkerSiloOpenEvent:run": {
+   "en": "When the connection is not to a server, calls openSilo on the silo with the stored x, y, z.",
+   "fr": "Quand la connexion n'est pas vers un serveur, appelle openSilo sur le silo avec les x, y, z mémorisés."
+  }
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "fichier": "vehicles/specializations/ExternalVehicleControl.lua",
+ "module": {
+  "en": "Vehicle specialization that lets an on-foot player operate vehicle functions from outside the vehicle. Player triggers are declared under vehicle.externalVehicleControl; other specializations answer the onRegisterExternalActionEvents event to add actions per trigger. A helper class, ExternalVehicleControlActivatable, plugs each trigger into the activatable-objects system and handles input registration. Note: the file does not create the ExternalVehicleControl table or FUNCTION_XML_PATH itself (UNVERIFIED where they are defined).",
+  "fr": "Spécialisation de véhicule qui permet à un joueur à pied de commander des fonctions du véhicule depuis l'extérieur. Les triggers joueur sont déclarés sous vehicle.externalVehicleControl ; les autres spécialisations répondent à l'événement onRegisterExternalActionEvents pour ajouter des actions par trigger. Une classe auxiliaire, ExternalVehicleControlActivatable, branche chaque trigger sur le système d'objets activables et gère l'enregistrement des entrées. À noter : le fichier ne crée pas lui-même la table ExternalVehicleControl ni FUNCTION_XML_PATH (origine NON VÉRIFIÉE)."
+ },
+ "fonctions": {
+  "ExternalVehicleControl.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is needed.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "ExternalVehicleControl.initSpecialization": {
+   "en": "Registers the trigger node XML key (vehicle.externalVehicleControl.trigger(?)#node) and the delayed function path with its name attribute, so other specializations can add their own sub-keys.",
+   "fr": "Enregistre la clé XML du nœud de trigger (vehicle.externalVehicleControl.trigger(?)#node) et le chemin différé des fonctions avec son attribut name, afin que d'autres spécialisations ajoutent leurs propres sous-clés."
+  },
+  "ExternalVehicleControl.registerEvents": {
+   "en": "Declares the custom vehicle event onRegisterExternalActionEvents.",
+   "fr": "Déclare l'événement de véhicule personnalisé onRegisterExternalActionEvents."
+  },
+  "ExternalVehicleControl.registerFunctions": {
+   "en": "Registers the vehicle function registerExternalActionEvent.",
+   "fr": "Enregistre la fonction de véhicule registerExternalActionEvent."
+  },
+  "ExternalVehicleControl.registerOverwrittenFunctions": {
+   "en": "Empty: this specialization overrides no vehicle function.",
+   "fr": "Vide : cette spécialisation ne surcharge aucune fonction de véhicule."
+  },
+  "ExternalVehicleControl.registerEventListeners": {
+   "en": "Subscribes to onLoadFinished, onDelete and onUpdateTick.",
+   "fr": "S'abonne à onLoadFinished, onDelete et onUpdateTick."
+  },
+  "ExternalVehicleControl:onLoadFinished": {
+   "en": "Builds the trigger list from XML (warns if the node lacks the PLAYER collision bit), adds each trigger, raises onRegisterExternalActionEvents for every named function and creates its activatable. With no trigger, it removes the onDelete and onUpdateTick listeners.",
+   "fr": "Construit la liste des triggers depuis le XML (avertit si le nœud n'a pas le bit de collision PLAYER), ajoute chaque trigger, déclenche onRegisterExternalActionEvents pour chaque fonction nommée et crée son objet activable. Sans trigger, retire les écouteurs onDelete et onUpdateTick."
+  },
+  "ExternalVehicleControl:onDelete": {
+   "en": "Removes each trigger from the engine and its activatable from the activatable-objects system.",
+   "fr": "Retire chaque trigger du moteur et son objet activable du système d'objets activables."
+  },
+  "ExternalVehicleControl:onUpdateTick": {
+   "en": "For every trigger with the player in range, refreshes the activatable text and keeps the vehicle awake with raiseActive.",
+   "fr": "Pour chaque trigger dont le joueur est à portée, rafraîchit le texte de l'objet activable et garde le véhicule actif avec raiseActive."
+  },
+  "ExternalVehicleControl:registerExternalActionEvent": {
+   "en": "Adds an action entry (registration callback and optional text-update callback) to a trigger's control function list and returns that entry. Meant to be called from onRegisterExternalActionEvents listeners.",
+   "fr": "Ajoute une entrée d'action (rappel d'enregistrement et rappel optionnel de mise à jour du texte) à la liste des fonctions de contrôle d'un trigger et renvoie cette entrée. Prévue pour être appelée depuis les écouteurs de onRegisterExternalActionEvents."
+  },
+  "ExternalVehicleControl.onExternalVehicleControlTriggerCallback": {
+   "en": "Trigger callback: only reacts to the local player's root node. On enter it marks the player in range and adds the activatable; on any other state it clears the flag and removes it.",
+   "fr": "Rappel de trigger : ne réagit qu'au nœud racine du joueur local. À l'entrée il marque le joueur à portée et ajoute l'objet activable ; dans les autres cas il efface l'indicateur et le retire."
+  },
+  "ExternalVehicleControlActivatable.new": {
+   "en": "Constructor: stores the vehicle and trigger, initializes an empty activate text and calls updateText once.",
+   "fr": "Constructeur : mémorise le véhicule et le trigger, initialise un texte d'activation vide et appelle updateText une fois."
+  },
+  "ExternalVehicleControlActivatable:registerCustomInput": {
+   "en": "Calls each registered control function's registration callback with the vehicle, but only in the on-foot player input context, to avoid failed registrations when tabbing into the vehicle.",
+   "fr": "Appelle le rappel d'enregistrement de chaque fonction de contrôle avec le véhicule, uniquement dans le contexte d'entrée du joueur à pied, pour éviter des enregistrements ratés en passant dans le véhicule."
+  },
+  "ExternalVehicleControlActivatable:removeCustomInput": {
+   "en": "Removes the input action events registered for each control function of the trigger.",
+   "fr": "Retire les événements d'action d'entrée enregistrés pour chaque fonction de contrôle du trigger."
+  },
+  "ExternalVehicleControlActivatable:getIsActivatable": {
+   "en": "Returns true if the player may access the vehicle (access handler) and is inside the trigger.",
+   "fr": "Renvoie true si le joueur peut accéder au véhicule (gestionnaire d'accès) et se trouve dans le trigger."
+  },
+  "ExternalVehicleControlActivatable:run": {
+   "en": "Empty: activation does nothing by itself, actions come from the registered input events.",
+   "fr": "Vide : l'activation ne fait rien en soi, les actions viennent des événements d'entrée enregistrés."
+  },
+  "ExternalVehicleControlActivatable:getDistance": {
+   "en": "Returns the distance from the given world position to the trigger node.",
+   "fr": "Renvoie la distance entre la position monde donnée et le nœud du trigger."
+  },
+  "ExternalVehicleControlActivatable:updateText": {
+   "en": "Calls each control function's update callback (if any) with the vehicle so action texts and states stay current.",
+   "fr": "Appelle le rappel de mise à jour de chaque fonction de contrôle (s'il existe) avec le véhicule afin que textes et états d'action restent à jour."
+  }
+ }
+}

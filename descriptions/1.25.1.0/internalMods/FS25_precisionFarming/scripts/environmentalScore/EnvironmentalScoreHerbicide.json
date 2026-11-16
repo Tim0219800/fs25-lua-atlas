@@ -1,0 +1,53 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/environmentalScore/EnvironmentalScoreHerbicide.lua",
+  "module": {
+    "en": "Environmental score criterion for weed control. It accumulates treated area per method on each farmland (spot spraying, full spraying, mechanical weeding) and converts the proportions into a 0 to 1 score. Server hooks on Sprayer, Weeder and HarvestExtension feed the data; clients receive only a compressed score. Subclass of EnvironmentalScoreValue.",
+    "fr": "Critère du score environnemental pour le désherbage. Il cumule par parcelle la surface traitée selon la méthode (pulvérisation localisée, pulvérisation totale, désherbage mécanique) et convertit les proportions en un score de 0 à 1. Des hooks serveur sur Sprayer, Weeder et HarvestExtension alimentent les données ; les clients ne reçoivent qu'un score compressé. Sous-classe de EnvironmentalScoreValue."
+  },
+  "fonctions": {
+    "EnvironmentalScoreHerbicide:loadFromXML": {
+      "en": "Calls the parent loadFromXML (through EnvironmentalScoreTillage:superClass(), which is the same parent class) and returns its result. Note: no Herbicide.new is defined in this file; it relies on the inherited constructor.",
+      "fr": "Appelle le loadFromXML parent (via EnvironmentalScoreTillage:superClass(), qui est la même classe parente) et retourne son résultat. À noter : aucun Herbicide.new n'est défini dans ce fichier ; il repose sur le constructeur hérité."
+    },
+    "EnvironmentalScoreHerbicide:update": {
+      "en": "Empty update hook.",
+      "fr": "Hook de mise à jour vide."
+    },
+    "EnvironmentalScoreHerbicide:getScore": {
+      "en": "Returns the weed control score for a farmland. It uses the client score if present, 0.5 when nothing was treated, else a weighted share: spot spray 1, mechanical 0.75, full spray 0.6.",
+      "fr": "Retourne le score de désherbage d'une parcelle. Utilise le score client s'il existe, 0.5 si rien n'a été traité, sinon une part pondérée : pulvérisation localisée 1, mécanique 0.75, totale 0.6."
+    },
+    "EnvironmentalScoreHerbicide:initFarmlandData": {
+      "en": "Creates the per-farmland record: area by treatment type (all 0) and a pendingReset flag set to false.",
+      "fr": "Crée l'enregistrement par parcelle : surface par type de traitement (toutes à 0) et un indicateur pendingReset à false."
+    },
+    "EnvironmentalScoreHerbicide:loadFarmlandData": {
+      "en": "Reads the three treated areas and pendingReset from the savegame XML attributes.",
+      "fr": "Lit depuis les attributs XML de la sauvegarde les trois surfaces traitées et pendingReset."
+    },
+    "EnvironmentalScoreHerbicide:saveFarmlandData": {
+      "en": "Writes the three treated areas and pendingReset as XML attributes.",
+      "fr": "Écrit les trois surfaces traitées et pendingReset comme attributs XML."
+    },
+    "EnvironmentalScoreHerbicide:readFarmlandDataFromStream": {
+      "en": "Client side: reads the score sent as an 8 bit value (0 to 255) and keeps it as clientScore, rounded to two decimals.",
+      "fr": "Côté client : lit le score envoyé sur 8 bits (0 à 255) et le garde comme clientScore, arrondi à deux décimales."
+    },
+    "EnvironmentalScoreHerbicide:writeFarmlandDataToStream": {
+      "en": "Server side: writes the current score of the farmland as an 8 bit value (score times 255).",
+      "fr": "Côté serveur : écrit le score actuel de la parcelle sur 8 bits (score fois 255)."
+    },
+    "EnvironmentalScoreHerbicide:onHarvestScoreReset": {
+      "en": "Flags the farmland so its treated areas are cleared at the next treatment instead of immediately.",
+      "fr": "Marque la parcelle afin que ses surfaces traitées soient effacées au prochain traitement et non immédiatement."
+    },
+    "EnvironmentalScoreHerbicide:addWorkedArea": {
+      "en": "Adds treated area of a given type to a farmland, first clearing all three areas if a reset is pending.",
+      "fr": "Ajoute une surface traitée d'un type donné à une parcelle, en effaçant d'abord les trois surfaces si une réinitialisation est en attente."
+    },
+    "EnvironmentalScoreHerbicide:overwriteGameFunctions": {
+      "en": "Server only. Hooks Sprayer.processSprayerArea (herbicide counts as spot or full spray depending on getIsSpotSprayEnabled), Weeder.processWeederArea (mechanical) and HarvestExtension.setLastScoringValues (grass harvests count as spot-spray area).",
+      "fr": "Serveur uniquement. Accroche Sprayer.processSprayerArea (l'herbicide compte en localisé ou en total selon getIsSpotSprayEnabled), Weeder.processWeederArea (mécanique) et HarvestExtension.setLastScoringValues (les récoltes d'herbe comptent comme surface en pulvérisation localisée)."
+    }
+  }
+}

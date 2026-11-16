@@ -1,0 +1,137 @@
+{
+ "fichier": "handTools/HandToolHolder.lua",
+ "module": {
+  "en": "Networked object (child of `Object`) that can store one hand tool, for example a rack on a vehicle or building. It is loaded from `handToolHolder(?)` XML (holder type and node, dummy i3d, click boxes, activation trigger, optional spawned hand tool, take/store texts), registers itself in `g_currentMission.handToolSystem` and uses a `HandToolHolderActivatable` for the player prompt. If a spawned tool filename is set, only that tool can be stored.",
+  "fr": "Objet réseau (fille de `Object`) pouvant ranger un outil à main, par exemple un support sur un véhicule ou un bâtiment. Il est chargé depuis le XML `handToolHolder(?)` (type et noeud du holder, i3d factice, click boxes, déclencheur d'activation, outil généré optionnel, textes de prise/rangement), s'enregistre dans `g_currentMission.handToolSystem` et utilise un `HandToolHolderActivatable` pour l'invite du joueur. Si un nom d'outil généré est défini, seul cet outil peut y être rangé."
+ },
+ "fonctions": {
+  "HandToolHolder.registerXMLPaths": {
+   "en": "Declares the shared XML registration `HandToolHolder`: holder type, node and dummy filename, click box nodes, trigger node, spawned hand tool filename, and take and store texts.",
+   "fr": "Déclare l'enregistrement XML partagé `HandToolHolder` : type, noeud et fichier factice du holder, noeuds de click boxes, noeud de déclencheur, fichier de l'outil généré, textes de prise et de rangement."
+  },
+  "HandToolHolder.registerSavegameXMLPaths": {
+   "en": "Declares the savegame attribute `#uniqueId`.",
+   "fr": "Déclare l'attribut de sauvegarde `#uniqueId`."
+  },
+  "HandToolHolder.new": {
+   "en": "Creates the holder object with its parent, an empty name, no hand tool and the player marked out of range.",
+   "fr": "Crée l'objet holder avec son parent, un nom vide, aucun outil et le joueur marqué hors de portée."
+  },
+  "HandToolHolder:load": {
+   "en": "Reads the XML: holder type and node, optional dummy i3d (async shared load), click boxes, activation trigger (`onPlayerCallback`), texts, and the optional spawned hand tool, loaded through `HandToolLoadingData` (unregistered). Builds the activatable (targeting required when there is no trigger). Calls `onFinishedLoading` at once unless a spawned tool is still loading.",
+   "fr": "Lit le XML : type et noeud du holder, i3d factice optionnel (chargement partagé asynchrone), click boxes, déclencheur d'activation (`onPlayerCallback`), textes et outil généré optionnel, chargé via `HandToolLoadingData` (non enregistré). Crée l'activable (ciblage requis sans déclencheur). Appelle `onFinishedLoading` tout de suite sauf si un outil généré est encore en chargement."
+  },
+  "HandToolHolder:onDummyHandToolI3DLoaded": {
+   "en": "Callback of the dummy i3d load: links the first child under the holder node, deletes the loaded root and refreshes dummy visibility. Does nothing if loading failed (node 0).",
+   "fr": "Callback du chargement de l'i3d factice : lie le premier enfant sous le noeud du holder, supprime la racine chargée et rafraîchit la visibilité du factice. Ne fait rien si le chargement a échoué (noeud 0)."
+  },
+  "HandToolHolder:onSpawnedHandToolLoaded": {
+   "en": "Callback when the spawned tool is loaded: on failure logs an error and calls the load callback with nil; otherwise attaches the tool to this holder, sets it as holder, registers it if the holder is registered, fills `spawnedHandToolFilename` if empty and finishes loading.",
+   "fr": "Callback quand l'outil généré est chargé : en cas d'échec, journalise une erreur et appelle le callback avec nil ; sinon rattache l'outil à ce holder, le range dedans, l'enregistre si le holder l'est, renseigne `spawnedHandToolFilename` s'il est vide et termine le chargement. "
+  },
+  "HandToolHolder:onFinishedLoading": {
+   "en": "Calls the load callback with the holder, adds it to the hand tool system and, when there is no trigger, registers the activatable with the activatable objects system.",
+   "fr": "Appelle le callback de chargement avec le holder, l'ajoute au système d'outils à main et, sans déclencheur, enregistre l'activable auprès du système d'objets activables."
+  },
+  "HandToolHolder:delete": {
+   "en": "Cancels a pending tool load, releases a stored non-spawned tool, deletes the spawned tool, removes the trigger, releases the shared dummy i3d, unregisters from the hand tool system and activatable system, then calls the parent delete.",
+   "fr": "Annule un chargement d'outil en attente, libère un outil rangé non généré, supprime l'outil généré, retire le déclencheur, libère l'i3d factice partagé, se désinscrit du système d'outils à main et des activables, puis appelle le delete parent."
+  },
+  "HandToolHolder:saveToXMLFile": {
+   "en": "Writes the holder unique id to `key#uniqueId`.",
+   "fr": "Écrit l'identifiant unique du holder dans `key#uniqueId`."
+  },
+  "HandToolHolder:loadFromXMLFile": {
+   "en": "Reads `#uniqueId` and applies it if present.",
+   "fr": "Lit `#uniqueId` et l'applique s'il est présent."
+  },
+  "HandToolHolder:writeStream": {
+   "en": "Server to client: writes whether a spawned hand tool exists and, if so, its object id and post-write data, and registers it in the stream.",
+   "fr": "Serveur vers client : écrit si un outil généré existe et, le cas échéant, son identifiant d'objet et ses données `postWriteStream`, et l'enregistre dans le flux."
+  },
+  "HandToolHolder:readStream": {
+   "en": "Client from server: if a spawned tool is flagged, reads its object id, calls `postReadStream` on the local spawned tool and finishes its object registration.",
+   "fr": "Client depuis le serveur : si un outil généré est signalé, lit son identifiant d'objet, appelle `postReadStream` sur l'outil généré local et termine son enregistrement d'objet."
+  },
+  "HandToolHolder:register": {
+   "en": "Calls the parent register, then registers the spawned hand tool too if it is not registered yet.",
+   "fr": "Appelle le register parent, puis enregistre aussi l'outil généré s'il ne l'est pas encore."
+  },
+  "HandToolHolder:getUniqueId": {
+   "en": "Returns the holder unique id.",
+   "fr": "Renvoie l'identifiant unique du holder."
+  },
+  "HandToolHolder:setUniqueId": {
+   "en": "Sets the unique id; it should not be changed after the first assignment (only debug assertions check it).",
+   "fr": "Définit l'identifiant unique ; il ne doit plus changer après la première affectation (seules des assertions de debug le vérifient)."
+  },
+  "HandToolHolder:getHolderName": {
+   "en": "Returns the holder name.",
+   "fr": "Renvoie le nom du holder."
+  },
+  "HandToolHolder:setHolderName": {
+   "en": "Sets the holder name.",
+   "fr": "Définit le nom du holder."
+  },
+  "HandToolHolder:getHandTool": {
+   "en": "Returns the hand tool currently stored, or nil.",
+   "fr": "Renvoie l'outil à main actuellement rangé, ou nil."
+  },
+  "HandToolHolder:getSpawnedHandTool": {
+   "en": "Returns the hand tool spawned by this holder, or nil.",
+   "fr": "Renvoie l'outil à main généré par ce holder, ou nil."
+  },
+  "HandToolHolder:getSpawnsHandTool": {
+   "en": "Returns true if a spawned hand tool filename is configured.",
+   "fr": "Renvoie true si un nom d'outil à main généré est configuré."
+  },
+  "HandToolHolder:getHolderNodePair": {
+   "en": "Returns the holder node and the tool's holster node of this holder's type, to be aligned; returns nil, nil if the tool has no `getHolsterNodeByType` or no matching node.",
+   "fr": "Renvoie le noeud du holder et le noeud d'étui de l'outil pour le type de ce holder, à aligner ; renvoie nil, nil si l'outil n'a pas `getHolsterNodeByType` ou pas de noeud correspondant."
+  },
+  "HandToolHolder:getCanPickupHandToolFromMenu": {
+   "en": "Always returns true.",
+   "fr": "Renvoie toujours true."
+  },
+  "HandToolHolder:getCanPickupHandTool": {
+   "en": "Returns true if the holder is empty and the tool is storable (`spec_storable`); with a spawned tool it must be that tool, otherwise the tool needs a holster node of this type and the same owner farm.",
+   "fr": "Renvoie true si le holder est vide et que l'outil est rangeable (`spec_storable`) ; avec un outil généré ce doit être cet outil, sinon l'outil doit avoir un noeud d'étui de ce type et la même ferme propriétaire."
+  },
+  "HandToolHolder:onPickupHandTool": {
+   "en": "Stores a hand tool if allowed: records it, calls the store callback, links its root node to the holder node aligned through `HandToolUtil.linkAndTransformRelativeToParent`, resets the graphical node, and updates the dummy. Returns true on success.",
+   "fr": "Range un outil s'il est autorisé : le mémorise, appelle le callback de rangement, lie son noeud racine au noeud du holder aligné via `HandToolUtil.linkAndTransformRelativeToParent`, remet à zéro le noeud graphique et met à jour le factice. Renvoie true en cas de succès."
+  },
+  "HandToolHolder:setPlayerInRange": {
+   "en": "Stores whether the local player is in range and updates the dummy visibility.",
+   "fr": "Mémorise si le joueur local est à portée et met à jour la visibilité du factice."
+  },
+  "HandToolHolder:updateDummyHandTool": {
+   "en": "Shows the dummy tool only when the player is in range and the holder is empty.",
+   "fr": "N'affiche l'outil factice que si le joueur est à portée et le holder vide."
+  },
+  "HandToolHolder:onDropHandTool": {
+   "en": "If the given tool is the stored one, unlinks it, clears the holder, calls the pickup callback, updates the dummy and returns the tool; otherwise does nothing.",
+   "fr": "Si l'outil donné est celui rangé, le délie, vide le holder, appelle le callback de retrait, met à jour le factice et renvoie l'outil ; sinon ne fait rien."
+  },
+  "HandToolHolder:drawDebug": {
+   "en": "Debug: draws gizmos at the holder node and, if a tool is stored, at the tool's holster node.",
+   "fr": "Debug : dessine des gizmos au noeud du holder et, si un outil est rangé, à son noeud d'étui."
+  },
+  "HandToolHolder:setOwnerFarmId": {
+   "en": "Calls the parent and propagates the owner farm id to the spawned hand tool (no event sent).",
+   "fr": "Appelle le parent et propage l'identifiant de ferme propriétaire à l'outil généré (sans envoi d'événement)."
+  },
+  "HandToolHolder:setStoreCallback": {
+   "en": "Sets the function called with the hand tool when it is stored.",
+   "fr": "Définit la fonction appelée avec l'outil quand il est rangé."
+  },
+  "HandToolHolder:setPickupCallback": {
+   "en": "Sets the function called with the hand tool when it is taken out.",
+   "fr": "Définit la fonction appelée avec l'outil quand il est retiré."
+  },
+  "HandToolHolder:onPlayerCallback": {
+   "en": "Trigger callback: for the local player root node, enter adds the activatable and sets in range, leave removes it and clears in range.",
+   "fr": "Callback du déclencheur : pour le noeud racine du joueur local, l'entrée ajoute l'activable et passe en portée, la sortie le retire et quitte la portée."
+  }
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "fichier": "i3d/I3DManager.lua",
+ "module": {
+  "en": "Manager reachable as `g_i3DManager` that wraps the engine functions for loading i3d files: synchronous or asynchronous, shared (reference-counted cache) or not. It also offers cache pinning and clearing, artificial loading delays for testing, and three console commands (`gsI3DLoadingDelaySet`, `gsI3DCacheShow`, `gsI3DPrintActiveLoadings`). Engine functions it calls (`loadSharedI3DFile`, `streamI3DFile`, ...) are not in the dump, so their internals are UNVERIFIED.",
+  "fr": "Manager accessible via `g_i3DManager` qui enveloppe les fonctions moteur de chargement de fichiers i3d : synchrone ou asynchrone, partagé (cache à comptage de références) ou non. Il propose aussi l'épinglage et le vidage du cache, des délais de chargement artificiels pour les tests et trois commandes console (`gsI3DLoadingDelaySet`, `gsI3DCacheShow`, `gsI3DPrintActiveLoadings`). Les fonctions moteur appelées (`loadSharedI3DFile`, `streamI3DFile`, ...) ne sont pas dans le dump, leur fonctionnement interne est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "I3DManager.new": {
+   "en": "Creates the manager and registers the three console commands for loading delay, cache display and active loadings listing.",
+   "fr": "Crée le manager et enregistre les trois commandes console : délai de chargement, affichage du cache et liste des chargements actifs."
+  },
+  "I3DManager:init": {
+   "en": "Reads the `i3dLoadingDelay` start parameter (milliseconds) and, if positive, applies it as a loading delay and adds a caption. With the `scriptDebug` start parameter it calls `setupDebugLoading`, which is not in this file (UNVERIFIED).",
+   "fr": "Lit le paramètre de démarrage `i3dLoadingDelay` (millisecondes) et, s'il est positif, l'applique comme délai de chargement et ajoute un texte à l'écran. Avec le paramètre `scriptDebug` il appelle `setupDebugLoading`, absent de ce fichier (NON VÉRIFIÉ)."
+  },
+  "I3DManager:loadSharedI3DFile": {
+   "en": "Synchronously loads an i3d through the shared cache. `callOnCreate` and `addToPhysics` default to false. Returns the root node, the shared load request id (to pass to `releaseSharedI3DFile`) and a failure reason.",
+   "fr": "Charge un i3d de façon synchrone via le cache partagé. `callOnCreate` et `addToPhysics` valent false par défaut. Retourne le node racine, l'id de requête de chargement partagé (à passer à `releaseSharedI3DFile`) et une raison d'échec."
+  },
+  "I3DManager:loadSharedI3DFileAsync": {
+   "en": "Starts an asynchronous shared load; the callback is invoked as (target, node, failedReason, arguments) once done. Asserts that the filename and a function callback are given. Returns the shared load request id.",
+   "fr": "Lance un chargement partagé asynchrone ; le callback est appelé avec (cible, node, failedReason, arguments) à la fin. Vérifie par assert que le nom de fichier et un callback fonction sont fournis. Retourne l'id de requête de chargement partagé."
+  },
+  "I3DManager:loadSharedI3DFileAsyncFinished": {
+   "en": "Internal engine callback for the async shared load: unpacks the stored callback data and calls the user callback with node, failure reason and arguments.",
+   "fr": "Callback interne appelé par le moteur pour le chargement partagé asynchrone : extrait les données de callback stockées et appelle le callback utilisateur avec node, raison d'échec et arguments."
+  },
+  "I3DManager:loadI3DFile": {
+   "en": "Synchronous, non-shared load of an i3d file (no cache). Both flags default to false. Returns the node, which is 0 when loading failed.",
+   "fr": "Chargement synchrone et non partagé d'un fichier i3d (sans cache). Les deux options valent false par défaut. Retourne le node, qui vaut 0 en cas d'échec."
+  },
+  "I3DManager:loadI3DFileAsync": {
+   "en": "Starts an asynchronous non-shared load; the callback receives (target, node, failedReason, arguments). Returns a request id usable with `cancelStreamI3DFile`. Asserts on missing filename or callback.",
+   "fr": "Lance un chargement asynchrone non partagé ; le callback reçoit (cible, node, failedReason, arguments). Retourne un id de requête utilisable avec `cancelStreamI3DFile`. Assert si le nom de fichier ou le callback manque."
+  },
+  "I3DManager:loadSharedI3DFileFinished": {
+   "en": "Internal engine callback for `loadI3DFileAsync` (despite its name it handles the non-shared path): forwards node, failure reason and arguments to the stored user callback.",
+   "fr": "Callback interne du moteur pour `loadI3DFileAsync` (malgré son nom, il sert au chemin non partagé) : transmet node, raison d'échec et arguments au callback utilisateur stocké."
+  },
+  "I3DManager:cancelStreamI3DFile": {
+   "en": "Cancels a pending async load by request id. Logs an error with a callstack if the id is nil.",
+   "fr": "Annule un chargement asynchrone en attente via son id de requête. Journalise une erreur avec pile d'appels si l'id est nil."
+  },
+  "I3DManager:releaseSharedI3DFile": {
+   "en": "Releases one reference of a shared i3d; the file leaves the cache when no references remain. Logs an error and callstack if the id is nil.",
+   "fr": "Libère une référence d'un i3d partagé ; le fichier quitte le cache quand il n'y a plus de références. Journalise une erreur et la pile d'appels si l'id est nil."
+  },
+  "I3DManager:pinSharedI3DFileInCache": {
+   "en": "Pins a filename in the shared cache, but only when its reference count is below zero according to the engine (the exact meaning of that value is UNVERIFIED). Logs an error if the filename is nil.",
+   "fr": "Épingle un nom de fichier dans le cache partagé, mais seulement si son compteur de références est négatif selon le moteur (sens exact de cette valeur NON VÉRIFIÉ). Journalise une erreur si le nom est nil."
+  },
+  "I3DManager:unpinSharedI3DFileInCache": {
+   "en": "Removes the cache pin for a filename. Logs an error and callstack if the filename is nil.",
+   "fr": "Retire l'épinglage du cache pour un nom de fichier. Journalise une erreur et la pile d'appels si le nom est nil."
+  },
+  "I3DManager:clearEntireSharedI3DFileCache": {
+   "en": "Empties the whole shared i3d cache. With `verbose` true it first lists each cached file and its reference count in dev warnings.",
+   "fr": "Vide tout le cache d'i3d partagés. Avec `verbose` à true, il liste d'abord chaque fichier en cache et son nombre de références dans des avertissements de développement."
+  },
+  "I3DManager:setLoadingDelay": {
+   "en": "Sets artificial min/max delays (seconds) for async loads, separately for cached and uncached shared files, for testing. Missing values fall back to the previous ones; logs the result.",
+   "fr": "Définit des délais min/max artificiels (secondes) pour les chargements asynchrones, séparément pour les fichiers partagés en cache ou non, à des fins de test. Les valeurs absentes reprennent les précédentes ; journalise le résultat."
+  },
+  "I3DManager:consoleCommandSetLoadingDelay": {
+   "en": "Console handler for `gsI3DLoadingDelaySet`: parses up to four numeric arguments (defaulting to 0 or the earlier ones) and calls `setLoadingDelay`.",
+   "fr": "Gestionnaire de la commande console `gsI3DLoadingDelaySet` : analyse jusqu'à quatre arguments numériques (0 ou les précédents par défaut) et appelle `setLoadingDelay`."
+  },
+  "I3DManager:consoleCommandShowCache": {
+   "en": "Console handler for `gsI3DCacheShow`: toggles the cache overlay by adding or removing the manager from `g_debugManager` drawables and prints the new state.",
+   "fr": "Gestionnaire de la commande console `gsI3DCacheShow` : active ou désactive l'affichage du cache en ajoutant ou retirant le manager des éléments dessinés de `g_debugManager`, et affiche le nouvel état."
+  },
+  "I3DManager:consoleCommandPrintActiveLoadings": {
+   "en": "Console handler for `gsI3DPrintActiveLoadings`: prints progress, elapsed time, file and callback of every pending non-shared and shared async loading, or none.",
+   "fr": "Gestionnaire de la commande console `gsI3DPrintActiveLoadings` : affiche progression, temps écoulé, fichier et callback de chaque chargement asynchrone en cours, partagé ou non, ou « none »."
+  }
+ }
+}

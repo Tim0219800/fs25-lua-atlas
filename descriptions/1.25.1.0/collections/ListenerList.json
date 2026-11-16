@@ -1,0 +1,25 @@
+{
+ "fichier": "collections/ListenerList.lua",
+ "module": {
+  "en": "Small observer helper holding an ordered list of listeners, each resolved through TargetedFunction.resolveListener (class defined elsewhere, UNVERIFIED). Calling the list, or invoke, runs every listener in registration order. There is no unregister function in this file.",
+  "fr": "Petit assistant d'observateurs contenant une liste ordonnée d'écouteurs, chacun résolu via TargetedFunction.resolveListener (classe définie ailleurs, NON VÉRIFIÉ). Appeler la liste, ou invoke, exécute chaque écouteur dans l'ordre d'enregistrement. Ce fichier ne contient aucune fonction de désinscription."
+ },
+ "fonctions": {
+  "ListenerList.new": {
+   "en": "Creates an empty listener list. With ignoreFirstArgument true, invoke drops its first argument (typically the owning table) before calling listeners.",
+   "fr": "Crée une liste d'écouteurs vide. Avec ignoreFirstArgument à true, invoke retire son premier argument (typiquement la table propriétaire) avant d'appeler les écouteurs."
+  },
+  "ListenerList:registerListener": {
+   "en": "Resolves a function or TargetedFunction with an optional target object and appends it to the list. The same listener can be added more than once.",
+   "fr": "Résout une fonction ou un TargetedFunction avec un objet cible optionnel et l'ajoute à la fin de la liste. Un même écouteur peut être ajouté plusieurs fois."
+  },
+  "ListenerList:invoke": {
+   "en": "Calls every listener in order with the given arguments; the first argument is skipped when the list was created with ignoreFirstArgument. Return values are discarded.",
+   "fr": "Appelle chaque écouteur dans l'ordre avec les arguments donnés ; le premier argument est ignoré si la liste a été créée avec ignoreFirstArgument. Les valeurs de retour sont ignorées."
+  },
+  "ListenerList_mt.__call": {
+   "en": "Metamethod that lets the list be called like a function, forwarding to invoke with the same arguments.",
+   "fr": "Métaméthode permettant d'appeler la liste comme une fonction, en transmettant à invoke les mêmes arguments."
+  }
+ }
+}

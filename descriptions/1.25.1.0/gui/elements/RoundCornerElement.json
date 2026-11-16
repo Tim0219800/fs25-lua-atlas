@@ -1,0 +1,33 @@
+{
+ "fichier": "gui/elements/RoundCornerElement.lua",
+ "module": {
+  "en": "GUI element that draws a filled rectangle with rounded corners in a state-dependent color (normal, disabled, pressed, selected, focused, highlighted). It extends GuiElement and is used for rounded backgrounds and sliders, for example created by MultiTextOptionElement default profiles. Corner size is in units where 1 equals 20 px according to the source.",
+  "fr": "Élément d'interface qui dessine un rectangle plein à coins arrondis dans une couleur dépendant de l'état (normal, désactivé, pressé, sélectionné, focalisé, survolé). Il étend GuiElement et sert aux fonds et curseurs arrondis, par exemple créés par les profils par défaut de MultiTextOptionElement. La taille des coins est en unités où 1 vaut 20 px d'après la source."
+ },
+ "fonctions": {
+  "RoundCornerElement.new": {
+   "en": "Constructor. Creates the element with opaque white as base color and a corner size of 1.",
+   "fr": "Constructeur. Crée l'élément avec le blanc opaque comme couleur de base et une taille de coin de 1."
+  },
+  "RoundCornerElement:loadFromXML": {
+   "en": "Loads the base element, then reads the color attributes (color, colorDisabled, colorHighlighted, colorSelected, colorFocused, colorPressed) and cornerSize from the XML.",
+   "fr": "Charge l'élément de base, puis lit les attributs de couleur (color, colorDisabled, colorHighlighted, colorSelected, colorFocused, colorPressed) et cornerSize depuis le XML."
+  },
+  "RoundCornerElement:loadProfile": {
+   "en": "Loads the base profile, then the six colors as gradient-capable color arrays and cornerSize (converted to a number) from the profile.",
+   "fr": "Charge le profil de base, puis les six couleurs sous forme de tableaux de couleurs (dégradés possibles) et cornerSize (converti en nombre) depuis le profil."
+  },
+  "RoundCornerElement:copyAttributes": {
+   "en": "Copies the base color and any state colors defined on the source (as new tables), plus the corner size.",
+   "fr": "Copie la couleur de base et les couleurs d'état définies sur la source (en nouvelles tables), ainsi que la taille des coins."
+  },
+  "RoundCornerElement:getColor": {
+   "en": "Returns the color for the current state, checked in the order disabled, pressed, selected, focused, highlighted; falls back to the base color when that state color is not defined.",
+   "fr": "Retourne la couleur de l'état courant, testé dans l'ordre désactivé, pressé, sélectionné, focalisé, survolé ; retombe sur la couleur de base si la couleur d'état n'est pas définie."
+  },
+  "RoundCornerElement:draw": {
+   "en": "Draws a rounded filled rectangle at the absolute position and size with the state color and clip bounds, then runs the parent draw (children).",
+   "fr": "Dessine un rectangle plein arrondi à la position et taille absolues avec la couleur d'état et les limites de clipping, puis exécute le draw du parent (enfants)."
+  }
+ }
+}

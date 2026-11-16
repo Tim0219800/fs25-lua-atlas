@@ -1,0 +1,13 @@
+{
+ "fichier": "objects/BgaSellStation.lua",
+ "module": {
+  "en": "Unloading station used by biogas plants for selling goods. It extends UnloadingStation and only adds the XML registration of the appearsOnStats flag.",
+  "fr": "Station de déchargement utilisée par les méthaniseurs pour la vente de marchandises. Elle étend UnloadingStation et ajoute seulement l'enregistrement XML du drapeau appearsOnStats."
+ },
+ "fonctions": {
+  "BgaSellStation.registerXMLPaths": {
+   "en": "Registers the boolean XML attribute appearsOnStats (default false) at the base path, then the UnloadingStation paths. The attribute is only declared here; its use is not in this file (UNVERIFIED).",
+   "fr": "Enregistre l'attribut XML booléen appearsOnStats (false par défaut) au chemin de base, puis les chemins d'UnloadingStation. L'attribut n'est que déclaré ici ; son usage n'est pas dans ce fichier (NON VÉRIFIÉ)."
+  }
+ }
+}

@@ -1,0 +1,101 @@
+{
+ "fichier": "vehicles/specializations/AIConveyorBelt.lua",
+ "module": {
+  "en": "Specialization that lets a motorized conveyor belt vehicle be started as an AI job (AIJobType.CONVEYOR): the vehicle swings back and forth around its starting heading within a configurable angle. It requires AIFieldWorker and Motorized, and is only active when the XML contains a vehicle.ai.conveyorBelt node (minAngle, maxAngle, stepSize, speed, direction). The current angle is saved with the vehicle and synced with AIConveyorBeltSetAngleEvent.",
+  "fr": "Spécialisation qui permet de lancer un convoyeur motorisé comme travail IA (AIJobType.CONVEYOR) : le véhicule balaie d'un côté à l'autre autour de son cap de départ, dans un angle configurable. Elle exige AIFieldWorker et Motorized et n'est active que si le XML contient un nœud vehicle.ai.conveyorBelt (minAngle, maxAngle, stepSize, speed, direction). L'angle courant est sauvegardé avec le véhicule et synchronisé par AIConveyorBeltSetAngleEvent."
+ },
+ "fonctions": {
+  "AIConveyorBelt.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both the AIFieldWorker and Motorized specializations.",
+   "fr": "Renvoie vrai uniquement si le type de véhicule possède les spécialisations AIFieldWorker et Motorized."
+  },
+  "AIConveyorBelt.initSpecialization": {
+   "en": "Registers the XML keys minAngle (default 5), maxAngle (45), stepSize (5), speed (1) and direction (-1) under vehicle.ai.conveyorBelt, plus the savegame attribute currentAngle.",
+   "fr": "Déclare les clés XML minAngle (5 par défaut), maxAngle (45), stepSize (5), speed (1) et direction (-1) sous vehicle.ai.conveyorBelt, ainsi que l'attribut de sauvegarde currentAngle."
+  },
+  "AIConveyorBelt.registerFunctions": {
+   "en": "Adds setAIConveyorBeltAngle and getDirectionAndSpeedToTargetAngle to the vehicle type.",
+   "fr": "Ajoute setAIConveyorBeltAngle et getDirectionAndSpeedToTargetAngle au type de véhicule."
+  },
+  "AIConveyorBelt.registerOverwrittenFunctions": {
+   "en": "Overrides the AI start checks and job getters, getCanBeSelected and getAINeedsTrafficCollisionBox for conveyor belts.",
+   "fr": "Surcharge les tests de démarrage IA et les accesseurs de travail, getCanBeSelected et getAINeedsTrafficCollisionBox pour les convoyeurs."
+  },
+  "AIConveyorBelt.registerEventListeners": {
+   "en": "Subscribes to load, post-load, stream, update, update-tick, onAIFieldWorkerStart and action-event registration callbacks.",
+   "fr": "Abonne la spécialisation aux rappels de chargement, post-chargement, flux, mise à jour, update-tick, onAIFieldWorkerStart et enregistrement des événements d'action."
+  },
+  "AIConveyorBelt:onLoad": {
+   "en": "Reads the XML settings, marks the belt as AI-capable only if the vehicle.ai.conveyorBelt node exists, starts at the maximum angle and creates the conveyor job from the AI job type manager. Removes onUpdate on non-servers and onUpdateTick on non-clients.",
+   "fr": "Lit les réglages XML, ne marque le convoyeur comme compatible IA que si le nœud vehicle.ai.conveyorBelt existe, démarre à l'angle maximal et crée le travail de convoyeur via le gestionnaire de types de travaux IA. Retire onUpdate hors serveur et onUpdateTick hors client."
+  },
+  "AIConveyorBelt:onPostLoad": {
+   "en": "Restores the saved currentAngle from the savegame unless vehicles are being reset.",
+   "fr": "Restaure l'angle courant sauvegardé, sauf si les véhicules sont réinitialisés."
+  },
+  "AIConveyorBelt:saveToXMLFile": {
+   "en": "Writes currentAngle to the vehicle's savegame entry.",
+   "fr": "Écrit l'angle courant dans l'entrée de sauvegarde du véhicule."
+  },
+  "AIConveyorBelt:onReadStream": {
+   "en": "Client side on join: reads the angle as an int8 and applies it without sending an event.",
+   "fr": "Côté client à la connexion : lit l'angle sous forme d'int8 et l'applique sans envoyer d'événement."
+  },
+  "AIConveyorBelt:onWriteStream": {
+   "en": "Server side on join: writes the current angle as an int8 (so the value is truncated to whole degrees in the signed 8-bit range).",
+   "fr": "Côté serveur à la connexion : écrit l'angle courant en int8 (la valeur est donc limitée à des degrés entiers dans la plage signée sur 8 bits)."
+  },
+  "AIConveyorBelt:onUpdate": {
+   "en": "Server only, while the AI is active: computes the sweep direction and speed toward the target heading, limits the motor speed and drives the wheel physics accordingly.",
+   "fr": "Serveur uniquement, quand l'IA est active : calcule le sens et la vitesse de balayage vers le cap cible, limite la vitesse du moteur et pilote la physique des roues en conséquence."
+  },
+  "AIConveyorBelt:onUpdateTick": {
+   "en": "Client side: enables the IMPLEMENT_EXTRA3 action while the vehicle is input-active and sets its label to show the current angle in degrees.",
+   "fr": "Côté client : active l'action IMPLEMENT_EXTRA3 quand le véhicule est actif en entrée et met à jour son libellé avec l'angle courant en degrés."
+  },
+  "AIConveyorBelt:setAIConveyorBeltAngle": {
+   "en": "Stores the new sweep angle and, unless noEventSend is true, sends or broadcasts AIConveyorBeltSetAngleEvent so all peers agree.",
+   "fr": "Enregistre le nouvel angle de balayage et, sauf si noEventSend est vrai, envoie ou diffuse AIConveyorBeltSetAngleEvent pour que tous les pairs soient d'accord."
+  },
+  "AIConveyorBelt:getDirectionAndSpeedToTargetAngle": {
+   "en": "Compares the first component's current Y rotation to the min or max target and returns a direction and a speed: it reverses with speed 0 when the limit is passed, otherwise speed scales with the remaining angle (0.1 to 1). Angles are in radians.",
+   "fr": "Compare la rotation Y actuelle du premier composant à la cible min ou max et renvoie un sens et une vitesse : il s'inverse avec une vitesse de 0 quand la limite est dépassée, sinon la vitesse dépend de l'angle restant (0,1 à 1). Les angles sont en radians."
+  },
+  "AIConveyorBelt:getCanStartAIVehicle": {
+   "en": "Override: returns the parent result and additionally requires the vehicle.ai.conveyorBelt node to be present in the XML.",
+   "fr": "Surcharge : renvoie le résultat du parent et exige en plus la présence du nœud vehicle.ai.conveyorBelt dans le XML."
+  },
+  "AIConveyorBelt:getCanStartFieldWork": {
+   "en": "Returns the same value as getCanStartAIVehicle.",
+   "fr": "Renvoie la même valeur que getCanStartAIVehicle."
+  },
+  "AIConveyorBelt:getStartableAIJob": {
+   "en": "Override: if the belt can start, fills the cached conveyor job from the current vehicle state and the local player's farm, and returns it when validation succeeds; otherwise returns nil.",
+   "fr": "Surcharge : si le convoyeur peut démarrer, remplit le travail de convoyeur en cache d'après l'état du véhicule et la ferme du joueur local, puis le renvoie si la validation réussit ; sinon renvoie nil."
+  },
+  "AIConveyorBelt:getHasStartableAIJob": {
+   "en": "Override that always returns true.",
+   "fr": "Surcharge qui renvoie toujours vrai."
+  },
+  "AIConveyorBelt:getCanBeSelected": {
+   "en": "Override that always returns true, so the belt can be selected.",
+   "fr": "Surcharge qui renvoie toujours vrai : le convoyeur peut être sélectionné."
+  },
+  "AIConveyorBelt:getAINeedsTrafficCollisionBox": {
+   "en": "Override that returns false: the AI does not need a traffic collision box for this vehicle.",
+   "fr": "Surcharge qui renvoie faux : l'IA n'a pas besoin de boîte de collision de trafic pour ce véhicule."
+  },
+  "AIConveyorBelt:onAIFieldWorkerStart": {
+   "en": "When the AI job starts, records the current heading and sets the sweep limits to half the current angle on each side, starting in the positive direction.",
+   "fr": "Au démarrage du travail IA, mémorise le cap actuel et fixe les limites de balayage à la moitié de l'angle courant de chaque côté, en démarrant dans le sens positif."
+  },
+  "AIConveyorBelt:onRegisterActionEvents": {
+   "en": "Client side: registers the IMPLEMENT_EXTRA3 action to change the angle, only for an input-active vehicle with AI conveyor settings in its XML.",
+   "fr": "Côté client : enregistre l'action IMPLEMENT_EXTRA3 pour changer l'angle, seulement pour un véhicule actif en entrée dont le XML contient les réglages de convoyeur IA."
+  },
+  "AIConveyorBelt.actionEventChangeAngle": {
+   "en": "Input callback that adds one step to the angle and wraps back to the minimum when the maximum is exceeded.",
+   "fr": "Rappel d'entrée qui ajoute un pas à l'angle et revient au minimum quand le maximum est dépassé."
+  }
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "fichier": "objects/TourIconsMobile.lua",
+ "module": {
+  "en": "Scripted guided tour for the mobile-style tutorial, created from a map node whose children are the tour step triggers, each with an icon child. It shows one icon at a time with a map hotspot, waits for scripted conditions on the tour vehicles stored in `g_currentMission.tourVehicles` (harvesting, cultivating, sowing, trailer, selling), and pops up info dialogs with localized texts. Update runs on the mission updateable list; the tour ends by publishing `GUIDED_TOUR_FINISHED` and deleting itself.",
+  "fr": "Visite guidée scriptée du tutoriel de style mobile, créée depuis un noeud de carte dont les enfants sont les triggers des étapes, chacun avec une icône. Elle affiche une icône à la fois avec un point d'intérêt sur la carte, attend des conditions scriptées sur les véhicules de visite de `g_currentMission.tourVehicles` (récolte, labour, semis, remorque, vente) et affiche des dialogues d'information localisés. L'update tourne dans la liste des updatables de la mission ; la visite se termine en publiant `GUIDED_TOUR_FINISHED` puis en se supprimant."
+ },
+ "fonctions": {
+  "TourIconsMobile:onCreate": {
+   "en": "i3d onCreate callback: creates the tour object for the node, adds it to the mission updateables and stores it in `g_currentMission.tourIconsBase`.",
+   "fr": "Callback onCreate de l'i3d : crée l'objet de visite pour le noeud, l'ajoute aux updatables de la mission et le stocke dans `g_currentMission.tourIconsBase`."
+  },
+  "TourIconsMobile.new": {
+   "en": "Constructor: for each child of the node registers a trigger (callback `triggerCallback`, which is not defined in this file, UNVERIFIED) and hides its icon, then initializes the tour state and reads the plow and lime density map maximum values.",
+   "fr": "Constructeur : pour chaque enfant du noeud enregistre un trigger (callback `triggerCallback`, non défini dans ce fichier, NON VÉRIFIÉ) et masque son icône, puis initialise l'état de la visite et lit les valeurs maximales des cartes de densité de labour et de chaux."
+  },
+  "TourIconsMobile:delete": {
+   "en": "Removes the object from the mission updateables, removes all step triggers and deletes the root node.",
+   "fr": "Retire l'objet des updatables de la mission, retire tous les triggers d'étape et supprime le noeud racine."
+  },
+  "TourIconsMobile:showTourDialog": {
+   "en": "Shows a yes/no dialog asking whether to start the tour, answered via `reactToDialog`.",
+   "fr": "Affiche un dialogue oui/non demandant s'il faut démarrer la visite, traité par `reactToDialog`."
+  },
+  "TourIconsMobile:reactToDialog": {
+   "en": "Dialog callback: on yes, shows the tour and activates the first icon and hides the ordinary help icons; on no, shows an abort info dialog and deletes the tour object.",
+   "fr": "Callback du dialogue : si oui, active la visite et la première icône et masque les icônes d'aide ordinaires ; si non, affiche un dialogue d'abandon et supprime l'objet de visite."
+  },
+  "TourIconsMobile:update": {
+   "en": "Per-frame logic: on a new savegame on the server it fades the screen and allows the start dialog (field preparation is commented out and logs a dev warning), delays queued messages while a GUI is open, and for specific step numbers checks tour vehicle conditions to pause then advance to the next icon.",
+   "fr": "Logique par frame : sur une nouvelle sauvegarde côté serveur, fait un fondu d'écran et autorise le dialogue de départ (la préparation des champs est commentée et émet un avertissement dev), retarde les messages en file tant qu'une interface est ouverte et, pour certains numéros d'étape, vérifie des conditions sur les véhicules de visite pour mettre en pause puis passer à l'icône suivante."
+  },
+  "TourIconsMobile:makeIconVisible": {
+   "en": "Shows the given icon, creates or moves the tour map hotspot to its position, and sets it as the map target only when the icon is above the terrain height.",
+   "fr": "Affiche l'icône donnée, crée ou déplace le point d'intérêt de la visite à sa position et ne le définit comme cible de carte que si l'icône est au-dessus du terrain."
+  },
+  "TourIconsMobile:activateNextIcon": {
+   "en": "Hides earlier icons and clears their trigger masks, shows the next icon or ends the tour (removes the hotspot, restores help icons, publishes `GUIDED_TOUR_FINISHED`, deletes itself), turns cruise control off, and shows the localized instruction text for the current step in a dialog or queues it, then increments the step.",
+   "fr": "Masque les icônes précédentes et vide leurs masques de trigger, affiche l'icône suivante ou termine la visite (retire le point d'intérêt, rétablit les icônes d'aide, publie `GUIDED_TOUR_FINISHED`, se supprime), coupe le régulateur de vitesse, affiche le texte d'instruction localisé de l'étape dans un dialogue ou le met en file, puis incrémente l'étape."
+  }
+ }
+}

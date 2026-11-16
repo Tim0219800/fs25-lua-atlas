@@ -1,0 +1,45 @@
+{
+ "fichier": "fence/FenceGate.lua",
+ "module": {
+  "en": "A fence segment that is a gate: subclass of FenceSegment which clones a gate node from the fence's i3d, drives one or more AnimatedObject doors, and optionally registers an AI blocking region so GoTo-AI agents wait and open it. It reads the `fence.segment(?).gate` XML keys (node, alignY, poles, length, depth, depthOffset), saves the reversed flag and animation state, and syncs doors to joining clients. Triggering is limited to farms with access to the farmland owner or its active mission.",
+  "fr": "Segment de clôture qui est un portail : sous-classe de FenceSegment qui clone un nœud de portail depuis l'i3d de la clôture, pilote un ou plusieurs AnimatedObject (battants) et peut enregistrer une zone de blocage IA pour que les agents GoTo attendent et l'ouvrent. Il lit les clés XML `fence.segment(?).gate` (node, alignY, poteaux, length, depth, depthOffset), sauvegarde l'indicateur inversé et l'état d'animation, et synchronise les battants pour les clients qui rejoignent. Le déclenchement est limité aux fermes ayant accès au propriétaire de la parcelle ou à sa mission active."
+ },
+ "fonctions": {
+  "FenceGate.registerXMLPaths": {
+   "en": "Registers the `.gate` XML keys (node, alignY, hasStartPole, hasEndPole, length, depth, depthOffset), the AnimatedObject keys, and per-animation `useAIBlockingRegion` (default false), `aiBlockingRegion#stopDistance` (default 2) and `#openedStateAnimTime` (default 1, normalized 0..1).",
+   "fr": "Enregistre les clés XML `.gate` (node, alignY, hasStartPole, hasEndPole, length, depth, depthOffset), les clés d'AnimatedObject, et par animation `useAIBlockingRegion` (false par défaut), `aiBlockingRegion#stopDistance` (2 par défaut) et `#openedStateAnimTime` (1 par défaut, normalisé 0..1)."
+  },
+  "FenceGate.registerSavegameXMLPaths": {
+   "en": "Registers savegame keys: the FenceSegment ones, `#reversed`, and `animatedObject(?)` with its `#id` and AnimatedObject savegame keys.",
+   "fr": "Enregistre les clés de sauvegarde : celles de FenceSegment, `#reversed`, et `animatedObject(?)` avec son `#id` et les clés de sauvegarde d'AnimatedObject."
+  },
+  "FenceGate.new": {
+   "en": "Creates a gate: reloads the fence i3d privately, detaches the gate node as a hidden root, and builds an AnimatedObject per `animatedObject` entry. Each one is only triggerable by farms allowed to access the farmland owner or mission farm. An AI blocking region is stored only if the gate is wider than FenceGate.MIN_WIDTH_AI_BLOCKING_REGION (defined outside this file, UNVERIFIED).",
+   "fr": "Crée un portail : recharge l'i3d de la clôture en privé, détache le nœud du portail comme racine cachée et construit un AnimatedObject par entrée `animatedObject`. Chacun n'est déclenchable que par les fermes autorisées à accéder au propriétaire de la parcelle ou à la ferme de la mission. Une zone de blocage IA n'est mémorisée que si le portail est plus large que FenceGate.MIN_WIDTH_AI_BLOCKING_REGION (défini hors de ce fichier, NON VÉRIFIÉ)."
+  },
+  "FenceGate.loadMetadataFromXML": {
+   "en": "Extends the segment metadata with the class FenceGate and a `gate` table read from `.gate` (length, depth, depthOffset, alignY, pole flags defaulting to true), and registers the shared gate node as a source node of the fence so it leaves the scene and physics.",
+   "fr": "Complète les métadonnées du segment avec la classe FenceGate et une table `gate` lue depuis `.gate` (length, depth, depthOffset, alignY, indicateurs de poteaux à true par défaut), et enregistre le nœud de portail partagé comme nœud source de la clôture pour le retirer de la scène et de la physique."
+  },
+  "FenceGate:delete": {
+   "en": "Removes each AI blocking region from the AI system and deletes the animated objects, deletes the hidden root node, unsubscribes from FARMLAND_OWNER_CHANGED, then calls the parent delete. Note: `blockingRegionId` is read but never assigned in this file (UNVERIFIED where it is set).",
+   "fr": "Retire chaque zone de blocage IA du système IA et supprime les objets animés, supprime le nœud racine caché, se désabonne de FARMLAND_OWNER_CHANGED, puis appelle le delete du parent. À noter : `blockingRegionId` est lu mais jamais assigné dans ce fichier (origine NON VÉRIFIÉE)."
+  },
+  "FenceGate:loadFromXMLFile": {
+   "en": "Loads the reversed flag and the parent data, then raises start and end Y to terrain height (always on a new savegame, otherwise only if below terrain) and rebuilds meshes if changed. Then restores each animated object state matched by saved id. Returns false if the parent load fails.",
+   "fr": "Charge l'indicateur inversé et les données du parent, puis remonte les Y de début et de fin à la hauteur du terrain (toujours pour une nouvelle sauvegarde, sinon seulement si sous le terrain) et reconstruit les maillages en cas de changement. Restaure ensuite l'état de chaque objet animé retrouvé par id sauvegardé. Renvoie false si le chargement du parent échoue."
+  },
+  "FenceGate:saveToXMLFile": {
+   "en": "Saves the parent data, `#reversed` only when true, and every animated object under `animatedObject(i)` with its save id. Returns false if the parent save fails. A TODO in the source notes mod names are not handled.",
+   "fr": "Sauvegarde les données du parent, `#reversed` seulement s'il vaut true, et chaque objet animé sous `animatedObject(i)` avec son id de sauvegarde. Renvoie false si la sauvegarde du parent échoue. Un TODO de la source indique que les noms de mods ne sont pas gérés."
+  },
+  "FenceGate:readStream": {
+   "en": "Reads the parent segment data and the reversed Bool; on a client, for each animated object also reads its network object id and state, and finishes registering it with the client.",
+   "fr": "Lit les données du segment parent et le booléen inversé ; sur un client, lit aussi pour chaque objet animé son identifiant d'objet réseau et son état, et termine son enregistrement côté client."
+  },
+  "FenceGate:writeStream": {
+   "en": "Writes the parent segment data and the reversed Bool; for a connection to a client, writes each animated object's network id and state and registers the object in the stream.",
+   "fr": "Écrit les données du segment parent et le booléen inversé ; pour une connexion vers un client, écrit l'identifiant réseau et l'état de chaque objet animé et enregistre l'objet dans le flux."
+  }
+ }
+}

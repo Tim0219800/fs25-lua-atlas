@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/VehicleMaterialManager.lua",
+ "module": {
+  "en": "Manager (extends `AbstractManager`) for the material templates used by the vehicle shader (paint colors, smoothness, clear coat and detail textures). On map load it reads the default and brand template files, then the templates declared by mods. Templates can inherit from a parent template and are keyed by upper-cased name, prefixed with the mod's custom environment for mods.",
+  "fr": "Gestionnaire (étend `AbstractManager`) des modèles de matériaux utilisés par le shader des véhicules (couleurs de peinture, lissage, vernis, textures de détail). Au chargement de la carte il lit les fichiers de modèles par défaut et de marques, puis les modèles déclarés par les mods. Les modèles peuvent hériter d'un modèle parent et sont indexés par nom en majuscules, préfixé de l'environnement du mod pour les mods."
+ },
+ "fonctions": {
+  "VehicleMaterialManager:initDataStructures": {
+   "en": "Creates the empty template list, the name lookup and the queue of mod template files to load.",
+   "fr": "Crée la liste vide de modèles, la table de recherche par nom et la file des fichiers de modèles de mods à charger."
+  },
+  "VehicleMaterialManager:loadMapData": {
+   "en": "Loads the default and brand template files, then drains the queue of mod template XML files (parent default `calibratedPaint`), loading each and removing it from the queue.",
+   "fr": "Charge les fichiers de modèles par défaut et de marques, puis vide la file des XML de modèles de mods (parent par défaut `calibratedPaint`), en chargeant chacun et en le retirant de la file."
+  },
+  "VehicleMaterialManager:addModMaterialTemplatesToLoad": {
+   "en": "Queues a mod's template XML (file, key, base directory, custom environment) to be loaded at the next `loadMapData`.",
+   "fr": "Met en file le XML de modèles d'un mod (fichier, clé, dossier de base, environnement) pour un chargement au prochain `loadMapData`."
+  },
+  "VehicleMaterialManager:loadMaterialTemplates": {
+   "en": "Loads a template XML file with the manager schema and parses its `templates` section, then frees the file.",
+   "fr": "Charge un fichier XML de modèles avec le schéma du gestionnaire et lit sa section `templates`, puis libère le fichier."
+  },
+  "VehicleMaterialManager:loadMaterialTemplatesFromXML": {
+   "en": "Parses each `template` entry: name, parent, brand, color and finish scales, and the detail diffuse/normal/specular textures. Entries with a missing parent, or with no own or inherited texture, are skipped with an XML warning.",
+   "fr": "Lit chaque entrée `template` : nom, parent, marque, échelles de couleur et de finition, textures de détail diffuse/normale/spéculaire. Les entrées dont le parent manque ou sans texture propre ni héritée sont ignorées avec un avertissement XML."
+  },
+  "VehicleMaterialManager:getMaterialTemplateByName": {
+   "en": "Returns the template for a name; with a custom environment it first tries the environment-prefixed name, then the plain name. Returns nil if none.",
+   "fr": "Retourne le modèle pour un nom ; avec un environnement personnalisé il essaie d'abord le nom préfixé, puis le nom simple. Retourne nil sinon."
+  },
+  "VehicleMaterialManager:getMaterialTemplateColorByName": {
+   "en": "Returns the template color scale as a four-value table with alpha 0, or nil if the template or its colorScale is missing.",
+   "fr": "Retourne l'échelle de couleur du modèle sous forme d'une table à quatre valeurs avec alpha 0, ou nil si le modèle ou son colorScale manque."
+  },
+  "VehicleMaterialManager:getMaterialTemplateColorAndTitleByName": {
+   "en": "Returns a copy of the color scale (white if unset) and a display title built from brand title plus translated template title; returns nil, nil if unknown.",
+   "fr": "Retourne une copie de l'échelle de couleur (blanc si absente) et un titre d'affichage composé du titre de marque et du titre traduit du modèle ; retourne nil, nil si inconnu."
+  },
+  "VehicleMaterialManager:getMaterialTemplateIndexByName": {
+   "en": "Returns the list index of the template with this name, or 1 when the name is nil or not found.",
+   "fr": "Retourne l'index dans la liste du modèle portant ce nom, ou 1 si le nom est nil ou introuvable."
+  },
+  "VehicleMaterialManager:getMaterialTemplateNameByIndex": {
+   "en": "Returns the template name at an index, falling back to the first template when the index is invalid.",
+   "fr": "Retourne le nom du modèle à un index, avec repli sur le premier modèle si l'index est invalide."
+  },
+  "VehicleMaterialManager:getMaterialTemplateFinish": {
+   "en": "Guesses the finish from the template name: returns isMetallic (name contains silver, copper, gold, bronze, chrome or metallic) and isMat (contains matpaint).",
+   "fr": "Déduit la finition d'après le nom du modèle : retourne isMetallic (le nom contient silver, copper, gold, bronze, chrome ou metallic) et isMat (contient matpaint)."
+  },
+  "VehicleMaterialManager.registerXMLPaths": {
+   "en": "Registers on an XML schema the attributes allowed for a template file, including template name, title, parent, brand, color and finish scales, detail textures and the colorScan options.",
+   "fr": "Enregistre sur un schéma XML les attributs autorisés d'un fichier de modèles : nom, titre, parent, marque, échelles de couleur et de finition, textures de détail et options colorScan."
+  }
+ }
+}

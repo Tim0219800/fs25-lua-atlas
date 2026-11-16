@@ -1,0 +1,33 @@
+{
+ "fichier": "player/networking/PlayerPositionalInterpolator.lua",
+ "module": {
+  "en": "Smooths the player's position, yaw, speed and velocity between network or physics updates using time, position, angle and value interpolators. It can drive either the player's root node (mover) or only a graphical node whose interpolated position is queried by others. Some methods used here (such as startNetworkNewPhase and setTargetPhysicsIndex) are absent from the dump.",
+  "fr": "Lisse la position, le lacet, la vitesse et la vélocité du joueur entre les mises à jour réseau ou physiques à l'aide d'interpolateurs de temps, de position, d'angle et de valeur. Il peut piloter le noeud racine du joueur (mover) ou seulement un noeud graphique dont la position interpolée est lue par d'autres. Certaines méthodes utilisées ici (par ex. startNetworkNewPhase et setTargetPhysicsIndex) sont absentes du dump."
+ },
+ "fonctions": {
+  "PlayerPositionalInterpolator.new": {
+   "en": "Creates the interpolator for a player and a target node type (root or graphical), initialised on the player's current position, yaw, speed and vertical velocity. Registers a listener on the mover's teleport event.",
+   "fr": "Crée l'interpolateur pour un joueur et un type de noeud cible (racine ou graphique), initialisé sur la position, le lacet, la vitesse et la vélocité verticale actuels. Enregistre un écouteur sur l'événement de téléportation du mover."
+  },
+  "PlayerPositionalInterpolator:update": {
+   "en": "Per-frame step: advances the time interpolator with the unclamped physics delta, computes interpolated position, yaw, speed (output x1000) and velocity. In root-node mode it also pushes them into the player's mover.",
+   "fr": "Étape par frame : fait avancer l'interpolateur de temps avec le delta physique non borné, calcule position, lacet, vitesse (sortie x1000) et vélocité interpolés. En mode noeud racine, les pousse aussi dans le mover du joueur."
+  },
+  "PlayerPositionalInterpolator:updateTick": {
+   "en": "Per-tick step, graphical-node mode only: takes the mover position as new target (snapping to the old target when within 0.001), starts a new 75 ms phase and updates the target yaw. For non-owners it waits for the physics index to be simulated.",
+   "fr": "Étape par tick, mode noeud graphique uniquement : prend la position du mover comme nouvelle cible (s'alignant sur l'ancienne cible à moins de 0,001), démarre une phase de 75 ms et met à jour le lacet cible. Pour les non-propriétaires, attend que l'index physique soit simulé."
+  },
+  "PlayerPositionalInterpolator:setTargetPosition": {
+   "en": "Sets the position the interpolator moves toward.",
+   "fr": "Définit la position vers laquelle l'interpolateur se déplace."
+  },
+  "PlayerPositionalInterpolator:getInterpolatedPosition": {
+   "en": "Returns the last computed interpolated x, y, z position.",
+   "fr": "Retourne la dernière position x, y, z interpolée calculée."
+  },
+  "PlayerPositionalInterpolator:setTargetYaw": {
+   "en": "Sets the target yaw, first clamped to a valid angle range with MathUtil.getValidLimit.",
+   "fr": "Définit le lacet cible, d'abord ramené à une plage d'angle valide via MathUtil.getValidLimit."
+  }
+ }
+}

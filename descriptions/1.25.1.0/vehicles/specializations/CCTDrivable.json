@@ -1,0 +1,69 @@
+{
+ "fichier": "vehicles/specializations/CCTDrivable.lua",
+ "module": {
+  "en": "Specialization for vehicles driven as a character controller (CCT) instead of a rigid-body vehicle, such as kinematic animal-like or walking mounts. It reads cctDrivable XML values (radius, height, slope limit, step offset), builds collision groups and masks, and on the server keeps a transform group that follows the vehicle and moves the controller. Several registered functions (getTouchingNode, moveCCTExternal) and the addToPhysics override have no definition in this file, UNVERIFIED.",
+  "fr": "Spécialisation pour les véhicules pilotés comme un contrôleur de personnage (CCT) plutôt que comme un corps rigide, par exemple des montures cinématiques. Elle lit les valeurs XML cctDrivable (rayon, hauteur, pente max, hauteur de marche), construit les groupes et masques de collision et, côté serveur, maintient un groupe de transformation qui suit le véhicule et déplace le contrôleur. Plusieurs fonctions enregistrées (getTouchingNode, moveCCTExternal) et le remplacement de addToPhysics n'ont aucune définition dans ce fichier, NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "CCTDrivable.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "CCTDrivable.initSpecialization": {
+   "en": "Opens and closes the CCTDrivable XML specialization type; no keys are registered in this dump.",
+   "fr": "Ouvre et ferme le type de spécialisation XML CCTDrivable ; aucune clé n'est enregistrée dans ce dump."
+  },
+  "CCTDrivable.registerFunctions": {
+   "en": "Registers getTouchingNode, moveCCTExternal, moveCCT, getIsCCTOnGround, getCCTCollisionMask, getCCTWorldTranslation and getIsAIMovingObstacle. Note: getTouchingNode and moveCCTExternal are not defined in this file, so they register as nil (UNVERIFIED).",
+   "fr": "Enregistre getTouchingNode, moveCCTExternal, moveCCT, getIsCCTOnGround, getCCTCollisionMask, getCCTWorldTranslation et getIsAIMovingObstacle. À noter : getTouchingNode et moveCCTExternal ne sont pas définies dans ce fichier, elles s'enregistrent donc à nil (NON VÉRIFIÉ)."
+  },
+  "CCTDrivable.registerOverwrittenFunctions": {
+   "en": "Overrides addToPhysics, removeFromPhysics, setWorldPosition and setWorldPositionQuaternion. Note: CCTDrivable.addToPhysics is not defined in this file (UNVERIFIED).",
+   "fr": "Remplace addToPhysics, removeFromPhysics, setWorldPosition et setWorldPositionQuaternion. À noter : CCTDrivable.addToPhysics n'est pas défini dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "CCTDrivable.registerEventListeners": {
+   "en": "Registers onLoad and onDelete.",
+   "fr": "Enregistre onLoad et onDelete."
+  },
+  "CCTDrivable:onLoad": {
+   "en": "Reads cctRadius, cctHeight, cctSlopeLimit and cctStepOffset from XML, sets the CCT centre offset to minus the radius, and builds the kinematic and movement collision group and mask (excluding vehicles, water, triggers in some cases, blocking flags). On the server creates the cctDrivable transform group under the root node.",
+   "fr": "Lit cctRadius, cctHeight, cctSlopeLimit et cctStepOffset depuis le XML, fixe le décalage du centre du CCT à moins le rayon et construit les groupes et masques de collision cinématique et de déplacement (en excluant véhicules, eau, déclencheurs dans un cas, drapeaux de blocage). Côté serveur, crée le groupe de transformation cctDrivable sous le nœud racine."
+  },
+  "CCTDrivable:onDelete": {
+   "en": "Removes the CCT controller if one exists and deletes the transform group.",
+   "fr": "Supprime le contrôleur CCT s'il existe et détruit le groupe de transformation."
+  },
+  "CCTDrivable:moveCCT": {
+   "en": "Server only: moves the controller by the given offset using the movement collision group and mask, then raises the vehicle active. Does nothing if no controller has been created.",
+   "fr": "Serveur uniquement : déplace le contrôleur du décalage donné avec le groupe et le masque de collision de déplacement, puis active le véhicule. Ne fait rien si aucun contrôleur n'a été créé."
+  },
+  "CCTDrivable:getIsCCTOnGround": {
+   "en": "Server only: returns the on-ground flag reported by the engine for the controller, false if client or no controller.",
+   "fr": "Serveur uniquement : renvoie l'indicateur de contact au sol fourni par le moteur pour le contrôleur, false côté client ou sans contrôleur."
+  },
+  "CCTDrivable:getCCTCollisionMask": {
+   "en": "Returns the kinematic collision mask built in onLoad.",
+   "fr": "Renvoie le masque de collision cinématique construit dans onLoad."
+  },
+  "CCTDrivable:getCCTWorldTranslation": {
+   "en": "Returns x, y, z of the controller centre: the node position with the centre offset added to y.",
+   "fr": "Renvoie x, y, z du centre du contrôleur : la position du nœud avec le décalage du centre ajouté à y."
+  },
+  "CCTDrivable:getIsAIMovingObstacle": {
+   "en": "Always returns true: AI helpers must consider this vehicle a moving obstacle, even though its rigid body is kinematic.",
+   "fr": "Renvoie toujours true pour que les assistants IA traitent le véhicule comme un obstacle mobile bien que son corps soit cinématique."
+  },
+  "CCTDrivable:setWorldPosition": {
+   "en": "Calls the parent, then on the server, for component 1, moves the CCT node to the same position shifted by the centre offset. Rotation is not applied to the node.",
+   "fr": "Appelle le parent puis, côté serveur et pour le composant 1, déplace le nœud CCT à la même position décalée du décalage de centre. La rotation n'est pas appliquée au nœud."
+  },
+  "CCTDrivable:setWorldPositionQuaternion": {
+   "en": "Same as setWorldPosition but with a quaternion rotation: calls the parent, then on the server for component 1 moves the CCT node to the shifted position.",
+   "fr": "Comme setWorldPosition mais avec une rotation en quaternion : appelle le parent puis, côté serveur pour le composant 1, déplace le nœud CCT à la position décalée."
+  },
+  "CCTDrivable:removeFromPhysics": {
+   "en": "On the server, removes the CCT controller before calling the parent implementation and returning its result.",
+   "fr": "Côté serveur, retire le contrôleur CCT avant d'appeler l'implémentation parente et de renvoyer son résultat."
+  }
+ }
+}

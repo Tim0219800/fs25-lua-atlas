@@ -1,36 +1,40 @@
 # debug/DebugUtil.lua
 
+*[Version française](../../fr/scripts/debug/DebugUtil.md)*
+
 Source: `dataS/scripts/debug/DebugUtil.lua` — FS25 1.25.1.0
+
+✍ DebugUtil is a static helper table with immediate-mode debug drawing (lines, gizmos, circles, cubes, parallelograms) built on the engine functions `drawDebugLine`, `drawDebugTriangle` and `drawDebugPoint`, plus text helpers and table/node-hierarchy printers. Drawing functions must be called every frame. Some functions in this dump reference helpers whose bodies are not included (`DebugGizmo.renderAtNodeWithOffset`, `DebugUtil.setNodeEffectivelyVisible`, `DebugUtil.DEFAULT_RENDERLINE_SCALAR`).
 
 - **DebugUtil** (l.8)
 
 ## Functions
 
-| Function | Line | Description (FR) |
+| Function | Line | Description |
 |---|---|---|
-| `DebugUtil.drawDebugNode(node: integer, text: string, alignToGround: any, offsetY: any)` | 28 |  |
-| `DebugUtil.drawDebugGizmoAtWorldPos(x: any, y: any, z: any, dirX: any, dirY: any, dirZ: any, upX: any, upY: any, upZ: any, text: any, alignToGround: any, color: any)` | 44 |  |
-| `DebugUtil.drawDebugArea(start: any, width: any, height: any, r: any, g: any, b: any, alignToGround: any, drawNodes: any, drawCircle: any, offsetY: any)` | 62 |  |
-| `DebugUtil.drawDebugLine(x1: any, y1: any, z1: any, x2: any, y2: any, z2: any, r: any, g: any, b: any, radius: any, alignToGround: any)` | 98 |  |
-| `DebugUtil.drawDebugAreaRectangle(x: any, y: any, z: any, x1: any, y1: any, z1: any, x2: any, y2: any, z2: any, alignToGround: any, r: any, g: any, b: any)` | 121 |  |
-| `DebugUtil.drawDebugAreaRectangleFilled(x: any, y: any, z: any, x1: any, y1: any, z1: any, x2: any, y2: any, z2: any, alignToGround: any, r: any, g: any, b: any, a: any)` | 155 |  |
-| `DebugUtil.drawDebugRectangle(node: any, minX: any, maxX: any, minZ: any, maxZ: any, yOffset: any, r: any, g: any, b: any, a: any, filled: any)` | 171 |  |
-| `DebugUtil.drawDebugCircle(x: number, y: number, z: number, radius: number, steps: integer, color: table?, alignToTerrain: any, filled: any, solid: any)` | 268 |  |
-| `DebugUtil.drawDebugCircleAtNode(node: integer, radius: number, steps: integer, color: table?, vertical: boolean?, offset: table?)` | 309 |  |
-| `DebugUtil.drawDebugCubeAtWorldPos(x: number, y: number, z: number, dirX: number, dirY: number, dirZ: number, upX: number, upY: number, upZ: number, sizeX: number, sizeY: number, sizeZ: number, r: number, g: number, b: number)` | 362 |  |
-| `DebugUtil.drawOverlapBox(x: any, y: any, z: any, rotX: any, rotY: any, rotZ: any, extendX: any, extendY: any, extendZ: any, r: any, g: any, b: any)` | 373 |  |
-| `DebugUtil.drawDebugCube(node: integer, sizeX: number, sizeY: number, sizeZ: number, r: number, g: number, b: number, offsetX: any, offsetY: any, offsetZ: any)` | 391 |  |
-| `DebugUtil.drawSimpleDebugCube(x: number, y: number, z: number, width: number, r: number, g: number, b: number)` | 431 |  |
-| `DebugUtil.drawDebugReferenceAxisFromNode(node: integer)` | 453 |  |
-| `DebugUtil.drawDebugReferenceAxis(posX: number, posY: number, posZ: number, upX: number, upY: number, upZ: number, dirX: number, dirY: number, dirZ: number)` | 474 |  |
-| `DebugUtil.drawDebugParallelogram(x: number, z: number, widthX: number, widthZ: number, heightX: number, heightZ: number, heightOffset: number, r: number, g: number, b: number, a: number, fixedHeight: any)` | 496 |  |
-| `DebugUtil.drawDebugWorldParallelogram(x: number, z: number, widthX: number, widthZ: number, heightX: number, heightZ: number, heightOffset: number, r: number, g: number, b: number, a: number, fixedHeight: any)` | 545 |  |
-| `DebugUtil.drawArea(area: any, r: any, g: any, b: any, a: any)` | 583 |  |
-| `DebugUtil.drawCutNodeArea(node: integer, sizeY: number, sizeZ: number, r: number, g: number, b: number)` | 599 |  |
-| `DebugUtil.printTableRecursively(inputTable: table, inputIndent: string, depth: integer, maxDepth: integer)` | 614 |  |
-| `DebugUtil.debugTableToString(inputTable: any, inputIndent: any, depth: any, maxDepth: any)` | 639 |  |
-| `DebugUtil.renderTable(posX: any, posY: any, textSize: any, data: any, nextColumnOffset: any)` | 662 |  |
-| `DebugUtil.renderTextLine(x: number, y: number, textSize: number, text: string, spacingScalar: number?, isBold: boolean?, color: Color?) → number` | 712 |  |
-| `DebugUtil.renderNewLine(y: number, textSize: number, spacingScalar: number?) → number` | 734 |  |
-| `DebugUtil.printNodeHierarchy(node: any, offset: any, appendType: any)` | 742 |  |
-| `DebugUtil.printCallingFunctionLocation()` | 768 |  |
+| `DebugUtil.drawDebugNode(node: integer, text: string, alignToGround: any, offsetY: any)` | 28 | ✍ Draws a coloured axis gizmo at a node's world position using the node's up and forward directions, optionally with a text label, a Y offset and snapping to the terrain. |
+| `DebugUtil.drawDebugGizmoAtWorldPos(x: any, y: any, z: any, dirX: any, dirY: any, dirZ: any, upX: any, upY: any, upZ: any, text: any, alignToGround: any, color: any)` | 44 | ✍ Draws three 0.3 m axis lines (red side, green up, blue forward) at a world position from direction and up vectors. Optionally snaps to 0.1 m above the terrain and renders a text label. |
+| `DebugUtil.drawDebugArea(start: any, width: any, height: any, r: any, g: any, b: any, alignToGround: any, drawNodes: any, drawCircle: any, offsetY: any)` | 62 | ✍ Draws a work area defined by start/width/height nodes as a rectangle, optionally with gizmos on the three nodes and a white centre line with a circle computed by `DensityMapHeightUtil.getLineByArea` (radius from that call). |
+| `DebugUtil.drawDebugLine(x1: any, y1: any, z1: any, x2: any, y2: any, z2: any, r: any, g: any, b: any, radius: any, alignToGround: any)` | 98 | ✍ Draws a line between two world points (default white, nil Y treated as 0), optionally snapped to 0.1 m above terrain, and optionally a circle of the given radius at each end. |
+| `DebugUtil.drawDebugAreaRectangle(x: any, y: any, z: any, x1: any, y1: any, z1: any, x2: any, y2: any, z2: any, alignToGround: any, r: any, g: any, b: any)` | 121 | ✍ Draws the outline of a parallelogram given an origin and two corner points in world space, optionally snapping each of the three points to 0.1 m above the terrain. Colour is passed as r, g, b. |
+| `DebugUtil.drawDebugAreaRectangleFilled(x: any, y: any, z: any, x1: any, y1: any, z1: any, x2: any, y2: any, z2: any, alignToGround: any, r: any, g: any, b: any, a: any)` | 155 | ✍ Draws a filled, semi-transparent version of the area rectangle using two triangles (fourth corner derived from the other points), optionally snapped to the terrain. Alpha is the last argument. |
+| `DebugUtil.drawDebugRectangle(node: any, minX: any, maxX: any, minZ: any, maxZ: any, yOffset: any, r: any, g: any, b: any, a: any, filled: any)` | 171 | ✍ Draws a rectangle in a node's local XZ plane (min/max X and Z at a given Y offset) as four lines, optionally filled with two triangles of the given colour and alpha. |
+| `DebugUtil.drawDebugCircle(x: number, y: number, z: number, radius: number, steps: integer, color: table?, alignToTerrain: any, filled: any, solid: any)` | 268 | ✍ Draws a circle of line segments around a world point in the horizontal plane (default red), with optional terrain alignment, filled translucent triangles and solid flag. Note: with terrain alignment the centre Y is overwritten inside the loop, so later segments use a changed height. |
+| `DebugUtil.drawDebugCircleAtNode(node: integer, radius: number, steps: integer, color: table?, vertical: boolean?, offset: table?)` | 309 | ✍ Draws a circle around a node, horizontal or vertical in the node's local space, with an optional local offset and colour (red by default). |
+| `DebugUtil.drawDebugCubeAtWorldPos(x: number, y: number, z: number, dirX: number, dirY: number, dirZ: number, upX: number, upY: number, upZ: number, sizeX: number, sizeY: number, sizeZ: number, r: number, g: number, b: number)` | 362 | ✍ Draws a wireframe box at a world position oriented by direction and up vectors. It creates a temporary transform group under the root node, draws with `drawDebugCube`, then deletes it. |
+| `DebugUtil.drawOverlapBox(x: any, y: any, z: any, rotX: any, rotY: any, rotZ: any, extendX: any, extendY: any, extendZ: any, r: any, g: any, b: any)` | 373 | ✍ Draws an overlap box given its centre, Euler rotation and half-extents, by building a temporary transform group and drawing a cube twice the extents in size. Useful to visualise overlap test volumes. |
+| `DebugUtil.drawDebugCube(node: integer, sizeX: number, sizeY: number, sizeZ: number, r: number, g: number, b: number, offsetX: any, offsetY: any, offsetZ: any)` | 391 | ✍ Draws the twelve edges of a wireframe box centred on a node (plus optional local offset), scaled by the given full sizes along local X, Y and Z, default colour white. |
+| `DebugUtil.drawSimpleDebugCube(x: number, y: number, z: number, width: number, r: number, g: number, b: number)` | 431 | ✍ Draws an axis-aligned wireframe cube of the given edge length centred on a world point, plus a point at its centre. Colour r, g, b is required. |
+| `DebugUtil.drawDebugReferenceAxisFromNode(node: integer)` | 453 | ✍ Draws reference axes at a node's world position using its local up and forward directions. Does nothing when the node is nil. |
+| `DebugUtil.drawDebugReferenceAxis(posX: number, posY: number, posZ: number, upX: number, upY: number, upZ: number, dirX: number, dirY: number, dirZ: number)` | 474 | ✍ Draws three 0.4 m axis lines centred on a world position (each extending 0.2 m both ways, white to red, green or blue) from up and direction vectors. |
+| `DebugUtil.drawDebugParallelogram(x: number, z: number, widthX: number, widthZ: number, heightX: number, heightZ: number, heightOffset: number, r: number, g: number, b: number, a: number, fixedHeight: any)` | 496 | ✍ Draws a double-sided translucent parallelogram plus outline from an XZ origin and width/height vectors, following the terrain height plus an offset, or flat at the offset when `fixedHeight` is set. |
+| `DebugUtil.drawDebugWorldParallelogram(x: number, z: number, widthX: number, widthZ: number, heightX: number, heightZ: number, heightOffset: number, r: number, g: number, b: number, a: number, fixedHeight: any)` | 545 | ✍ Same as `drawDebugParallelogram`, but the width and height arguments are absolute world corner coordinates instead of vectors; the fourth corner is derived from them. |
+| `DebugUtil.drawArea(area: any, r: any, g: any, b: any, a: any)` | 583 | ✍ Draws a work area table (start/width/height nodes) as a parallelogram. Note: it passes r, g, b, a where `drawDebugParallelogram` expects the height offset first, so the arguments are shifted and the call looks buggy. |
+| `DebugUtil.drawCutNodeArea(node: integer, sizeY: number, sizeZ: number, r: number, g: number, b: number)` | 599 | ✍ Draws a rectangle spanning a node's local Y and Z axes (sizes default to 1), default green. Does nothing when the node is nil. |
+| `DebugUtil.printTableRecursively(inputTable: table, inputIndent: string, depth: integer, maxDepth: integer)` | 614 | ✍ Prints each key and value of a table to the log, descending into sub-tables up to `maxDepth` (default 3, indent grows each level). Returns an empty string. |
+| `DebugUtil.debugTableToString(inputTable: any, inputIndent: any, depth: any, maxDepth: any)` | 639 | ✍ Builds and returns a multi-line string of a table's keys and values, recursing to `maxDepth` (default 2). Returns nil when the depth is exceeded; impractical for large tables. |
+| `DebugUtil.renderTable(posX: any, posY: any, textSize: any, data: any, nextColumnOffset: any)` | 662 | ✍ Renders a list of name/value pairs on screen at a position, names right-aligned before the values; numbers use 4 decimals. An entry with `newColumn` or `columnOffset` starts a new column. |
+| `DebugUtil.renderTextLine(x: number, y: number, textSize: number, text: string, spacingScalar: number?, isBold: boolean?, color: Color?) → number` | 712 | ✍ Renders one left-aligned line of text (optional bold and colour, white by default) and returns the Y position of the next line, moved down by the text size times a spacing factor. |
+| `DebugUtil.renderNewLine(y: number, textSize: number, spacingScalar: number?) → number` | 734 | ✍ Returns Y moved down by the text size times the spacing scalar; when no scalar is given it uses `DebugUtil.DEFAULT_RENDERLINE_SCALAR`, whose value is not in this dump (UNVERIFIED). |
+| `DebugUtil.printNodeHierarchy(node: any, offset: any, appendType: any)` | 742 | ✍ Logs a node and all its descendants by name, indented per level, optionally appending the class ids (from `ClassIds`) that each node has. |
+| `DebugUtil.printCallingFunctionLocation()` | 768 | ✍ Prints the script name and line of the code that called the function that invoked this helper (stack level 3), via `debug.info`. |

@@ -1,0 +1,53 @@
+{
+ "fichier": "vehicles/specializations/ArticulatedAxis.lua",
+ "module": {
+  "en": "Specialization for vehicles that steer by bending a component joint (articulated loaders, dumpers, and similar). It requires Drivable. The XML under vehicle.articulatedAxis gives the joint index, rotation speed and limits, a rotation node, optional rotating visual parts, wheel lists and a steering sound. It extends the steering time limits, computes a maximum turning radius from the wheels, and overrides the curvature/radius conversions used by steering and AI. The joint is only physically rotated on the server; visuals and sound run on clients.",
+  "fr": "Spécialisation pour les véhicules qui tournent en pliant une articulation entre composants (chargeuses articulées, tombereaux, etc.). Elle exige Drivable. Le XML sous vehicle.articulatedAxis donne l'indice de l'articulation, la vitesse et les limites de rotation, un nœud de rotation, des pièces visuelles rotatives optionnelles, des listes de roues et un son de direction. Elle étend les limites de temps de braquage, calcule un rayon de braquage maximal à partir des roues et surcharge les conversions courbure/rayon utilisées par la direction et l'IA. L'articulation n'est physiquement tournée que sur le serveur ; visuels et son tournent sur les clients."
+ },
+ "fonctions": {
+  "ArticulatedAxis.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the Drivable specialization.",
+   "fr": "Renvoie vrai seulement si le type de véhicule possède la spécialisation Drivable."
+  },
+  "ArticulatedAxis.initSpecialization": {
+   "en": "Registers the vehicle.articulatedAxis XML keys (joint index, rotSpeed, rotMax, rotMin, anchorActor, rotNode, aiReverserNode, maxTurningRadius, custom wheel indices, rotatingPart entries) and the steering sound paths.",
+   "fr": "Déclare les clés XML vehicle.articulatedAxis (indice d'articulation, rotSpeed, rotMax, rotMin, anchorActor, rotNode, aiReverserNode, maxTurningRadius, indices de roues personnalisés, entrées rotatingPart) et les chemins du son de direction."
+  },
+  "ArticulatedAxis.registerOverwrittenFunctions": {
+   "en": "Overrides getSteeringRotTimeByCurvature, getTurningRadiusByRotTime and getAIReverserNode. The getAIReverserNode body is not in the dump (UNVERIFIED).",
+   "fr": "Surcharge getSteeringRotTimeByCurvature, getTurningRadiusByRotTime et getAIReverserNode. Le corps de getAIReverserNode n'est pas dans le dump (NON VÉRIFIÉ)."
+  },
+  "ArticulatedAxis.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, onDeactivate and onUpdate.",
+   "fr": "Abonne la spécialisation à onLoad, onPostLoad, onDelete, onDeactivate et onUpdate."
+  },
+  "ArticulatedAxis:onLoad": {
+   "en": "Reads the axis settings (component joint index starts at 1) and rotating parts, then widens the vehicle's min/max steering time. It sets maxRotation and wheelSteeringDuration and estimates maxTurningRadius from wheel and joint angles, unless the XML overrides it. Warns if fewer than 2 wheels are found per component. Loads the steering sound on clients.",
+   "fr": "Lit les réglages de l'axe (l'indice d'articulation commence à 1) et les pièces rotatives, puis élargit les temps de braquage min/max du véhicule. Définit maxRotation et wheelSteeringDuration et estime maxTurningRadius à partir des roues et de l'angle de l'articulation, sauf surcharge par le XML. Avertit si moins de 2 roues sont trouvées par composant. Charge le son de direction sur les clients."
+  },
+  "ArticulatedAxis:onPostLoad": {
+   "en": "If a component joint is configured, calls updateArticulatedAxisRotation (when defined) once with angle 0 and a large dt. Otherwise removes the onUpdate listener.",
+   "fr": "Si une articulation est configurée, appelle une fois updateArticulatedAxisRotation (si définie) avec un angle 0 et un grand dt. Sinon, retire l'écouteur onUpdate."
+  },
+  "ArticulatedAxis:onDelete": {
+   "en": "On clients, deletes the loaded steering samples.",
+   "fr": "Sur les clients, supprime les échantillons sonores de direction chargés."
+  },
+  "ArticulatedAxis:onDeactivate": {
+   "en": "On clients, stops the steering sound and resets its playing flag.",
+   "fr": "Sur les clients, arrête le son de direction et réinitialise son indicateur de lecture."
+  },
+  "ArticulatedAxis:onUpdate": {
+   "en": "Each frame converts rotatedTime into a clamped steering angle (optionally filtered by updateArticulatedAxisRotation), plays or stops the steering sound, and tracks an interpolated time for the camera. On change the server rotates the joint node and updates the component joint frame, and clients interpolate the rotating parts.",
+   "fr": "À chaque image, convertit rotatedTime en angle de braquage borné (éventuellement filtré par updateArticulatedAxisRotation), lance ou arrête le son de direction et suit un temps interpolé pour la caméra. En cas de changement, le serveur fait tourner le nœud et met à jour le repère de l'articulation, et les clients interpolent les pièces rotatives."
+  },
+  "ArticulatedAxis:getSteeringRotTimeByCurvature": {
+   "en": "Override: converts a path curvature into a steering time using wheelSteeringDuration, an arctangent mapping and maxTurningRadius.",
+   "fr": "Surcharge : convertit une courbure de trajectoire en temps de braquage à partir de wheelSteeringDuration, d'une correspondance par arctangente et de maxTurningRadius."
+  },
+  "ArticulatedAxis:getTurningRadiusByRotTime": {
+   "en": "Override: converts a steering time into a signed turning radius (1/curvature, math.huge when straight). Defers to the parent if there is no component joint or the rotation speed is 0.",
+   "fr": "Surcharge : convertit un temps de braquage en rayon de braquage signé (1/courbure, math.huge en ligne droite). Délègue au parent s'il n'y a pas d'articulation ou si la vitesse de rotation est 0."
+  }
+ }
+}

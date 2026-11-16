@@ -1,0 +1,21 @@
+{
+ "fichier": "gui/hud/TopNotification.lua",
+ "module": {
+  "en": "HUD element (HUDDisplay subclass) showing a framed notification at the top centre of the screen with a title, text, info line and optional icon. Only one notification is held at a time; a new one replaces the current one. Rendering code is not defined in this file apart from the setters shown.",
+  "fr": "Élément HUD (sous-classe de HUDDisplay) affichant une notification encadrée en haut au centre de l'écran avec titre, texte, ligne d'info et icône optionnelle. Une seule notification est conservée à la fois ; une nouvelle remplace l'actuelle. Hors les méthodes listées, aucun code de rendu n'est défini dans ce fichier."
+ },
+ "fonctions": {
+  "TopNotification.new": {
+   "en": "Creates the display with an empty, invalid current notification and the left/middle/right background overlays tinted with the HUD background colour. Also prepares an icon cache.",
+   "fr": "Crée l'affichage avec une notification courante vide et invalide et les overlays de fond gauche/milieu/droit teintés de la couleur de fond du HUD. Prépare aussi un cache d'icônes."
+  },
+  "TopNotification:storeScaledValues": {
+   "en": "Recomputes scaled sizes, offsets and the anchor position (screen centre, top anchor) for the current UI scale.",
+   "fr": "Recalcule les tailles, décalages et la position d'ancrage (centre de l'écran, ancre haute) pour l'échelle d'interface courante."
+  },
+  "TopNotification:setNotification": {
+   "en": "Replaces the current notification: title and text are converted to uppercase, the icon is loaded once per filename and cached, and the duration defaults to TopNotification.DEFAULT_DURATION when nil. Marks the notification valid.",
+   "fr": "Remplace la notification courante : titre et texte sont mis en majuscules, l'icône est chargée une fois par nom de fichier puis mise en cache, et la durée vaut TopNotification.DEFAULT_DURATION si nil. Marque la notification comme valide."
+  }
+ }
+}

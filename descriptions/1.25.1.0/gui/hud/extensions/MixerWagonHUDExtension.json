@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/extensions/MixerWagonHUDExtension.lua",
+ "module": {
+  "en": "HUD extension panel for the vehicle info HUD: shows the mixing ratio of a mixer wagon. It is a plain class (not a HUDDisplay subclass) built per vehicle by the HUD; only the constructor is defined here, the remaining methods are supplied elsewhere (UNVERIFIED which file).",
+  "fr": "Panneau d'extension du HUD d'informations véhicule : affiche le ratio de mélange d'une mélangeuse. C'est une classe simple (pas une sous-classe de HUDDisplay) instanciée par véhicule par le HUD ; seul le constructeur est défini ici, les autres méthodes viennent d'ailleurs (fichier NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "MixerWagonHUDExtension.new": {
+   "en": "Builds the extension for the given vehicle with priority GS_PRIO_HIGH: creates the background overlays (three-part box), a progress bar and a marker, keeps the vehicle and its mixerWagon spec, builds one status entry (icon, fill level, min/max percentage) per mixer fill type whose first fill type exists, and sets a title with the vehicle full name, calls storeScaledValues and re-calls it whenever the UI scale setting changes via the message center.",
+   "fr": "Construit l'extension pour le véhicule donné avec la priorité GS_PRIO_HIGH : crée les overlays de fond (boîte en trois parties), une barre de progression et un marqueur, conserve le véhicule et sa spécialisation mixerWagon, construit une entrée d'état (icône, niveau, pourcentages min/max) par type de remplissage du mélangeur dont le premier type existe, et définit un titre avec le nom complet du véhicule, appelle storeScaledValues puis le rappelle à chaque changement du réglage d'échelle de l'interface via le message center."
+  }
+ }
+}

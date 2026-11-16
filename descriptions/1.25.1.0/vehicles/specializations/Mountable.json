@@ -1,0 +1,177 @@
+{
+ "fichier": "vehicles/specializations/Mountable.lua",
+ "module": {
+  "en": "Specialization for objects that can be mounted onto another object: kinematically or by default (linked into the scene graph), or dynamically through a physics joint (for example on a fork). It has no prerequisites. It keeps the mount type and the mount object, raises onDynamicMountTypeChanged, syncs the type via MountableSetMountTypeEvent, and delegates the joint work to DynamicMountUtil (not in this dump, UNVERIFIED). Most mounting logic runs on the server.",
+  "fr": "Spécialisation des objets pouvant être montés sur un autre objet : de façon cinématique ou par défaut (liés dans le graphe de scène), ou dynamique via un joint physique (par exemple sur une fourche). Aucun prérequis. Elle garde le type de montage et l'objet porteur, déclenche onDynamicMountTypeChanged, synchronise le type via MountableSetMountTypeEvent et délègue le travail de joint à DynamicMountUtil (absent du dump, NON VÉRIFIÉ). L'essentiel de la logique tourne côté serveur."
+ },
+ "fonctions": {
+  "Mountable.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Retourne toujours true : aucune autre spécialisation n'est requise."
+  },
+  "Mountable.initSpecialization": {
+   "en": "Registers the XML paths under vehicle.dynamicMount: force limit scale, trigger and joint nodes, trigger force acceleration, free axes, folding, joint offsets, extra mount distance, mass reduction and lockPosition entries.",
+   "fr": "Enregistre les chemins XML sous vehicle.dynamicMount : échelle de limite de force, nœuds de trigger et de joint, accélération de force du trigger, axes libres, pliage, décalages de joint, distance de montage supplémentaire, réduction de masse et entrées lockPosition."
+  },
+  "Mountable.registerEvents": {
+   "en": "Declares the onDynamicMountTypeChanged event for the vehicle type.",
+   "fr": "Déclare l'événement onDynamicMountTypeChanged pour le type de véhicule."
+  },
+  "Mountable.registerFunctions": {
+   "en": "Registers the mount and unmount functions (default, kinematic, dynamic), mount type queries, mass handling, listeners and the force limit raycast helpers.",
+   "fr": "Enregistre les fonctions de montage et démontage (défaut, cinématique, dynamique), les requêtes de type de montage, la gestion de masse, les écouteurs et les aides de raycast pour la limite de force."
+  },
+  "Mountable.registerOverwrittenFunctions": {
+   "en": "Overrides getIsActive, getOwnerConnection, findRootVehicle, map hotspot visibility, additional component mass, setWorldPositionQuaternion, addToPhysics, removeFromPhysics and getIsFoldAllowed. Note: Mountable.addToPhysics and Mountable.removeFromPhysics are registered here but not defined in this file.",
+   "fr": "Surcharge getIsActive, getOwnerConnection, findRootVehicle, la visibilité du hotspot de carte, la masse supplémentaire du composant, setWorldPositionQuaternion, addToPhysics, removeFromPhysics et getIsFoldAllowed. À noter : Mountable.addToPhysics et Mountable.removeFromPhysics sont enregistrées ici mais non définies dans ce fichier."
+  },
+  "Mountable.registerEventListeners": {
+   "en": "Subscribes to load, delete, stream read/write, update and pre-attach events.",
+   "fr": "S'abonne aux événements de chargement, suppression, lecture/écriture de flux, mise à jour et pré-attache."
+  },
+  "Mountable:onLoad": {
+   "en": "Reads the dynamicMount XML. On the server it registers the mount trigger and creates a dynamic joint node under the component. It also initialises the force limit update state, mass reduction flag, lock positions and the mount type NONE.",
+   "fr": "Lit le XML dynamicMount. Côté serveur, enregistre le trigger de montage et crée un nœud de joint dynamique sous le composant. Initialise aussi l'état de mise à jour de la limite de force, l'indicateur de réduction de masse, les positions de verrouillage et le type de montage NONE."
+  },
+  "Mountable:onDelete": {
+   "en": "Notifies the mount object, removes the dynamic joint and its break report, removes this object from the mount object's dynamic list and removes the trigger.",
+   "fr": "Prévient l'objet porteur, supprime le joint dynamique et son rapport de rupture, retire cet objet de la liste dynamique du porteur et supprime le trigger."
+  },
+  "Mountable:onReadStream": {
+   "en": "Client on join: reads the mount type from the stream and applies it without sending an event.",
+   "fr": "Client à la connexion : lit le type de montage dans le flux et l'applique sans envoyer d'événement."
+  },
+  "Mountable:onWriteStream": {
+   "en": "Server on join: writes the mount type. Note: it reads spec_mountable.dynamicMountType, while the mount type is stored on the vehicle (self.dynamicMountType), so the spec field looks never set.",
+   "fr": "Serveur à la connexion : écrit le type de montage. À noter : il lit spec_mountable.dynamicMountType alors que le type est stocké sur le véhicule (self.dynamicMountType), donc le champ de la spec semble jamais renseigné."
+  },
+  "Mountable:onUpdate": {
+   "en": "Server only: unmounts dynamically once the mount trigger has no overlap left (waiting until the object has moved clear of the joint reference), and refreshes the joint force limit when allowed.",
+   "fr": "Serveur uniquement : démonte dynamiquement quand le trigger de montage n'a plus de chevauchement (en attendant que l'objet se soit dégagé de la référence du joint), et rafraîchit la limite de force du joint si autorisé."
+  },
+  "Mountable:getSupportsMountDynamic": {
+   "en": "Returns true if a force limit scale is set, which is the default value 1 unless XML overrides it.",
+   "fr": "Retourne true si une échelle de limite de force est définie, ce qui est le cas par défaut (valeur 1) sauf surcharge XML."
+  },
+  "Mountable:getSupportsMountKinematic": {
+   "en": "Returns true only for single-component vehicles.",
+   "fr": "Retourne true uniquement pour les véhicules à un seul composant."
+  },
+  "Mountable:onDynamicMountJointBreak": {
+   "en": "Joint break callback: unmounts dynamically if the broken joint is the mount joint and returns false so the engine does not delete the joint itself.",
+   "fr": "Callback de rupture de joint : démonte dynamiquement si le joint cassé est le joint de montage et retourne false pour que le moteur ne supprime pas lui-même le joint."
+  },
+  "Mountable:mountableTriggerCallback": {
+   "en": "Server trigger callback: when an object with a dynamic mount attacher enters, mounts dynamically as fork type (or remounts onto a new actor) and counts overlapping shapes; on leave it decrements and unmounts at zero if no joint node exists.",
+   "fr": "Callback de trigger serveur : quand un objet avec un attacheur de montage dynamique entre, monte dynamiquement en type fourche (ou remonte sur un nouvel acteur) et compte les formes en chevauchement ; à la sortie, décrémente et démonte à zéro s'il n'y a pas de nœud de joint."
+  },
+  "Mountable:mount": {
+   "en": "Default mount: cancels any dynamic mount, removes the component from physics if it was free, links it to the target node at the given offset and sets type DEFAULT.",
+   "fr": "Montage par défaut : annule tout montage dynamique, retire le composant de la physique s'il était libre, le lie au nœud cible au décalage donné et fixe le type DEFAULT."
+  },
+  "Mountable:unmount": {
+   "en": "Undoes a DEFAULT mount: notifies the mount object, relinks the component to the root keeping world pose, re-adds physics and sets type NONE. Returns true if it was mounted by default, false otherwise.",
+   "fr": "Annule un montage DEFAULT : prévient l'objet porteur, relie le composant à la racine en gardant la pose monde, réactive la physique et fixe le type NONE. Retourne true si le montage était DEFAULT, false sinon."
+  },
+  "Mountable:mountKinematic": {
+   "en": "Kinematic mount: links the component to the node, makes the rigid body kinematic on the server and disables collision between it and the mount object's dynamic component. Sets type KINEMATIC.",
+   "fr": "Montage cinématique : lie le composant au nœud, rend le corps rigide cinématique côté serveur et désactive la collision avec le composant dynamique de l'objet porteur. Fixe le type KINEMATIC."
+  },
+  "Mountable:unmountKinematic": {
+   "en": "Undoes a kinematic mount: restores collision, notifies the mount object, relinks to the root keeping world pose and makes the body dynamic again on the server. Returns true if it was kinematically mounted.",
+   "fr": "Annule un montage cinématique : rétablit la collision, prévient l'objet porteur, relie à la racine en gardant la pose monde et rend le corps de nouveau dynamique côté serveur. Retourne true s'il était monté en cinématique."
+  },
+  "Mountable:mountDynamic": {
+   "en": "Tries to mount through a physics joint via DynamicMountUtil (UNVERIFIED internals). It refuses if already mounted, if both share the same root vehicle, or if a lateral joint would be too steep. Returns true and sets type DYNAMIC on success.",
+   "fr": "Tente un montage par joint physique via DynamicMountUtil (détails NON VÉRIFIÉS). Refuse si déjà monté, si les deux partagent le même véhicule racine, ou si un joint latéral serait trop incliné. Retourne true et fixe le type DYNAMIC en cas de succès."
+  },
+  "Mountable:unmountDynamic": {
+   "en": "Resets the mount type to NONE, notifies the mount object and asks DynamicMountUtil to remove the joint; the optional flag marks a deletion.",
+   "fr": "Remet le type de montage à NONE, prévient l'objet porteur et demande à DynamicMountUtil de supprimer le joint ; le paramètre optionnel indique une suppression."
+  },
+  "Mountable:getIsFoldAllowed": {
+   "en": "Blocks folding with a warning text while the object is mounted, unless XML allows folding while mounted; otherwise defers to the parent.",
+   "fr": "Bloque le pliage avec un message d'avertissement tant que l'objet est monté, sauf si le XML l'autorise ; sinon délègue au parent."
+  },
+  "Mountable:getAdditionalMountingDistance": {
+   "en": "Returns the configured additional mount distance (object height, used when counting stacked objects).",
+   "fr": "Retourne la distance de montage supplémentaire configurée (hauteur de l'objet, utilisée pour compter les objets empilés)."
+  },
+  "Mountable:getAdditionalMountingMass": {
+   "en": "Always returns 0; kept as an empty function for compatibility.",
+   "fr": "Retourne toujours 0 ; fonction conservée vide par compatibilité."
+  },
+  "Mountable:updateDynamicMountJointForceLimit": {
+   "en": "Periodically starts an asynchronous upward raycast over dynamic objects to find objects stacked on this one; the result adjusts the joint force limit through the callback.",
+   "fr": "Lance périodiquement un raycast asynchrone vers le haut sur les objets dynamiques pour trouver ceux empilés sur celui-ci ; le résultat ajuste la limite de force du joint via le callback."
+  },
+  "Mountable:additionalMountingMassRaycastCallback": {
+   "en": "Raycast callback: adds the mass of each stacked vehicle found at the expected spacing, and on the last hit sets the joint linear drive force limit scaled by total mass over base mass. Returns true to continue.",
+   "fr": "Callback de raycast : ajoute la masse de chaque véhicule empilé trouvé à l'espacement attendu et, au dernier impact, fixe la limite de force de l'entraînement linéaire du joint selon la masse totale rapportée à la masse de base. Retourne true pour continuer."
+  },
+  "Mountable:getIsActive": {
+   "en": "Returns true if the vehicle is active itself or if the object it is mounted on is active.",
+   "fr": "Retourne true si le véhicule est actif ou si l'objet sur lequel il est monté est actif."
+  },
+  "Mountable:getMountObject": {
+   "en": "Returns the object it is mounted on for non-dynamic mounts (default or kinematic); returns nil for a dynamic mount or when unmounted.",
+   "fr": "Retourne l'objet porteur pour les montages non dynamiques (défaut ou cinématique) ; retourne nil pour un montage dynamique ou s'il n'est pas monté."
+  },
+  "Mountable:getDynamicMountObject": {
+   "en": "Resolves the stored network id to the mount object of any mount type, or nil.",
+   "fr": "Résout l'identifiant réseau mémorisé en objet porteur, quel que soit le type de montage, ou nil."
+  },
+  "Mountable:setReducedComponentMass": {
+   "en": "Turns the reduced component mass flag on or off when mass reduction is allowed, marking mass dirty on change. Returns whether reduction is allowed.",
+   "fr": "Active ou désactive l'indicateur de masse réduite si la réduction est autorisée, et marque la masse comme modifiée en cas de changement. Retourne si la réduction est autorisée."
+  },
+  "Mountable:getAllowComponentMassReduction": {
+   "en": "Returns whether the mount object may reduce this component's mass.",
+   "fr": "Retourne si l'objet porteur peut réduire la masse de ce composant."
+  },
+  "Mountable:getDefaultAllowComponentMassReduction": {
+   "en": "Default for mass reduction when the XML does not set it: false.",
+   "fr": "Valeur par défaut de la réduction de masse quand le XML ne la définit pas : false."
+  },
+  "Mountable:getMountableLockPositions": {
+   "en": "Returns the table of lock positions loaded from XML (xmlFilename, joint node, offsets).",
+   "fr": "Retourne la table des positions de verrouillage chargées depuis le XML (xmlFilename, nœud de joint, décalages)."
+  },
+  "Mountable:setDynamicMountType": {
+   "en": "Changes the mount type and mount object id; on change it resets reduced mass for NONE, calls registered listeners, raises onDynamicMountTypeChanged and sends MountableSetMountTypeEvent unless suppressed.",
+   "fr": "Change le type de montage et l'identifiant de l'objet porteur ; en cas de changement, réinitialise la masse réduite pour NONE, appelle les écouteurs, déclenche onDynamicMountTypeChanged et envoie MountableSetMountTypeEvent sauf si supprimé."
+  },
+  "Mountable:addMountStateChangeListener": {
+   "en": "Adds a mount state listener (object plus method name or function, default name onObjectMountStateChanged); duplicates are ignored.",
+   "fr": "Ajoute un écouteur d'état de montage (objet et nom de méthode ou fonction, nom par défaut onObjectMountStateChanged) ; les doublons sont ignorés."
+  },
+  "Mountable:removeMountStateChangeListener": {
+   "en": "Removes a previously added mount state listener matching object and callback.",
+   "fr": "Retire un écouteur d'état de montage ajouté précédemment, identifié par l'objet et le callback."
+  },
+  "Mountable:getOwnerConnection": {
+   "en": "Returns the owner connection of the (non-dynamic) mount object if it has one, otherwise the parent's result.",
+   "fr": "Retourne la connexion propriétaire de l'objet porteur (non dynamique) s'il en a une, sinon le résultat du parent."
+  },
+  "Mountable:findRootVehicle": {
+   "en": "If the vehicle has no attacher root of its own, follows the mount object to find its root vehicle; falls back to itself.",
+   "fr": "Si le véhicule n'a pas de racine d'attache propre, suit l'objet porteur pour trouver son véhicule racine ; sinon retourne lui-même."
+  },
+  "Mountable:getIsMapHotspotVisible": {
+   "en": "Hides the map hotspot while the object is mounted on another object, otherwise uses the parent's answer.",
+   "fr": "Masque le hotspot de carte tant que l'objet est monté sur un autre objet, sinon utilise la réponse du parent."
+  },
+  "Mountable:getAdditionalComponentMass": {
+   "en": "While reduced mass is active, returns an adjustment that leaves the component with only about 0.1 mass; otherwise the parent value.",
+   "fr": "Quand la masse réduite est active, retourne un ajustement qui ne laisse au composant qu'environ 0,1 de masse ; sinon la valeur du parent."
+  },
+  "Mountable:setWorldPositionQuaternion": {
+   "en": "On clients, ignores received world positions while a non-dynamic mount object exists, since the pose follows the mount object; otherwise defers to the parent.",
+   "fr": "Sur les clients, ignore les positions monde reçues tant qu'un objet porteur non dynamique existe, car la pose suit le porteur ; sinon délègue au parent."
+  },
+  "Mountable:onPreAttach": {
+   "en": "Before being attached as an implement, drops any dynamic mount.",
+   "fr": "Avant d'être attaché comme outil, abandonne tout montage dynamique."
+  }
+ }
+}

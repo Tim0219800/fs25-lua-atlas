@@ -1,0 +1,29 @@
+{
+ "fichier": "gui/base/GuiMixin.lua",
+ "module": {
+  "en": "Base class for GUI element mixins, small objects attached to a GuiElement to add behaviour. The mixin instance is stored on the element under its mixinType key, and concrete mixins subclass this class and override clone.",
+  "fr": "Classe de base des mixins d'éléments d'interface, de petits objets attachés à un GuiElement pour lui ajouter un comportement. L'instance du mixin est stockée sur l'élément sous la clé de son mixinType, et les mixins concrets héritent de cette classe en surchargeant clone."
+ },
+ "fonctions": {
+  "GuiMixin.new": {
+   "en": "Creates a mixin instance; class defaults to the GuiMixin metatable and mixinType to GuiMixin. Subclasses pass their own type table, which is later used as the storage key on the element.",
+   "fr": "Crée une instance de mixin ; class vaut par défaut la métatable de GuiMixin et mixinType vaut GuiMixin. Les sous-classes fournissent leur propre table de type, utilisée ensuite comme clé de stockage sur l'élément."
+  },
+  "GuiMixin:addTo": {
+   "en": "Attaches this mixin to a GuiElement under element[mixinType] and copies the hasIncluded helper onto it. Returns true on success, false if that mixin type was already present.",
+   "fr": "Attache ce mixin à un GuiElement sous element[mixinType] et copie l'aide hasIncluded sur lui. Retourne true en cas de succès, false si ce type de mixin était déjà présent."
+  },
+  "GuiMixin.hasIncluded": {
+   "en": "Returns true when the element holds an entry for the given mixin type. Installed on elements by addTo, so it can be called as element:hasIncluded(type).",
+   "fr": "Retourne true si l'élément contient une entrée pour le type de mixin donné. Installée sur les éléments par addTo, elle s'appelle donc element:hasIncluded(type)."
+  },
+  "GuiMixin.cloneMixin": {
+   "en": "Static helper that forwards to mixinType:clone to copy mixin state between two elements.",
+   "fr": "Aide statique qui délègue à mixinType:clone pour copier l'état du mixin entre deux éléments."
+  },
+  "GuiMixin:clone": {
+   "en": "Empty hook in the base class; subclasses override it to copy their state from the source element to the destination element.",
+   "fr": "Point d'extension vide dans la classe de base ; les sous-classes le surchargent pour copier leur état de l'élément source vers l'élément destination."
+  }
+ }
+}

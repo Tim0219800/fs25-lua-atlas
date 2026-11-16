@@ -1,0 +1,81 @@
+{
+ "fichier": "gui/hud/SteeringSliderDisplay.lua",
+ "module": {
+  "en": "Touch/mobile HUD element (HUDDisplayElement subclass) with a horizontal steering slider that auto-centres. It feeds steering to the controlled vehicle or rideable each update unless gyroscope steering is enabled, and hides itself for gamepad input, gyroscope steering, AI driving or an on-foot player. Only meaningful when Platform.hasTouchSliders is true. Client-side only.",
+  "fr": "Élément HUD tactile/mobile (sous-classe de HUDDisplayElement) avec un curseur de direction horizontal à recentrage automatique. Il envoie la direction au véhicule ou à la monture contrôlé à chaque mise à jour sauf si la direction au gyroscope est active, et se cache en mode manette, direction gyroscope, conduite IA ou joueur à pied. N'a de sens que si Platform.hasTouchSliders est vrai. Côté client uniquement."
+ },
+ "fonctions": {
+  "SteeringSliderDisplay.new": {
+   "en": "Creates the display on an empty positioning overlay, initialises state (rest position 0.5, no vehicle), builds the components and subscribes to changes of the steering-back-speed setting.",
+   "fr": "Crée l'affichage sur un overlay de positionnement vide, initialise l'état (position de repos 0,5, aucun véhicule), construit les composants et s'abonne aux changements du réglage de vitesse de retour de direction."
+  },
+  "SteeringSliderDisplay:delete": {
+   "en": "Unsubscribes from all message center subscriptions and deletes the element through the parent class.",
+   "fr": "Se désabonne de tous les messages du message center et supprime l'élément via la classe parente."
+  },
+  "SteeringSliderDisplay:setVehicle": {
+   "en": "Sets the controlled vehicle, detects whether it is rideable and resets the handle texture.",
+   "fr": "Définit le véhicule contrôlé, détecte s'il est monture et réinitialise la texture de la poignée."
+  },
+  "SteeringSliderDisplay:setPlayer": {
+   "en": "Sets the on-foot player reference and refreshes the visibility state.",
+   "fr": "Définit la référence du joueur à pied et rafraîchit l'état de visibilité."
+  },
+  "SteeringSliderDisplay:createComponents": {
+   "en": "Builds the background, the slider handle (with auto-centre speed taken from the steering-back-speed setting) and the steering wheel icon attached to the handle.",
+   "fr": "Construit le fond, la poignée du curseur (vitesse de recentrage issue du réglage de retour de direction) et l'icône de volant attachée à la poignée."
+  },
+  "SteeringSliderDisplay:setVisible": {
+   "en": "Overrides visibility: the request is forwarded to the parent unless it asks to show while the input help mode is gamepad, in which case nothing happens.",
+   "fr": "Surcharge la visibilité : la demande est transmise au parent sauf si elle demande l'affichage en mode d'aide manette, auquel cas rien ne se passe."
+  },
+  "SteeringSliderDisplay:onSliderPositionChanged": {
+   "en": "Slider callback storing the new position clamped to 0..1.",
+   "fr": "Callback du curseur mémorisant la nouvelle position bornée entre 0 et 1."
+  },
+  "SteeringSliderDisplay:getSteeringValue": {
+   "en": "Maps the slider position to a steering value in -1..1 with a quadratic curve (sign kept), giving finer control near the centre.",
+   "fr": "Convertit la position du curseur en valeur de direction entre -1 et 1 avec une courbe quadratique (signe conservé), pour plus de finesse près du centre."
+  },
+  "SteeringSliderDisplay:getIsSliderActive": {
+   "en": "Returns true only when usable: not gamepad help mode, touch sliders supported, gyroscope steering off, no AI active on the vehicle and no on-foot player.",
+   "fr": "Renvoie vrai seulement si utilisable : pas en mode manette, curseurs tactiles supportés, direction gyroscope désactivée, aucune IA active sur le véhicule et aucun joueur à pied."
+  },
+  "SteeringSliderDisplay:onInputHelpModeChange": {
+   "en": "Stores the new input help mode and refreshes the visibility state.",
+   "fr": "Mémorise le nouveau mode d'aide à la saisie et rafraîchit l'état de visibilité."
+  },
+  "SteeringSliderDisplay:onAIVehicleStateChanged": {
+   "en": "AI state callback: refreshes the visibility state (the vehicle argument is not compared here).",
+   "fr": "Callback d'état IA : rafraîchit l'état de visibilité (l'argument véhicule n'est pas comparé ici)."
+  },
+  "SteeringSliderDisplay:onGyroscopeSteeringChanged": {
+   "en": "Stores the gyroscope steering state and refreshes the visibility state.",
+   "fr": "Mémorise l'état de la direction au gyroscope et rafraîchit l'état de visibilité."
+  },
+  "SteeringSliderDisplay:updateVisibilityState": {
+   "en": "When the slider activity differs from the stored animation state, shows or hides the display (animated) and enables or disables touch on the handle.",
+   "fr": "Quand l'activité du curseur diffère de l'état d'animation mémorisé, affiche ou cache l'affichage (animé) et active ou désactive le toucher sur la poignée."
+  },
+  "SteeringSliderDisplay:onSteeringBackSpeedSettingChanged": {
+   "en": "Setting callback: re-applies the auto-centre speed factor (setting value divided by 10) to the handle.",
+   "fr": "Callback de réglage : réapplique à la poignée le facteur de vitesse de recentrage (valeur du réglage divisée par 10)."
+  },
+  "SteeringSliderDisplay:update": {
+   "en": "Per-frame update: unless gyroscope steering is on, sends the slider steering value to the rideable or to the vehicle via setSteeringInput (wheel category). Then updates the slider element.",
+   "fr": "Mise à jour par frame : sauf direction gyroscope active, envoie la valeur de direction du curseur à la monture ou au véhicule via setSteeringInput (catégorie volant). Met ensuite à jour le curseur."
+  },
+  "SteeringSliderDisplay:setScale": {
+   "en": "Applies a new UI scale: resizes the element, recomputes position, slider range and original position, preserving the current visibility.",
+   "fr": "Applique une nouvelle échelle d'interface : redimensionne l'élément, recalcule position, plage du curseur et position d'origine en conservant la visibilité courante."
+  },
+  "SteeringSliderDisplay.getBackgroundPosition": {
+   "en": "Returns the screen position of the display for the given scale (the width argument is unused).",
+   "fr": "Renvoie la position écran de l'affichage pour l'échelle donnée (l'argument de largeur est inutilisé)."
+  },
+  "SteeringSliderDisplay.createBackground": {
+   "en": "Creates the empty overlay used only as the positioning frame of the display.",
+   "fr": "Crée l'overlay vide servant uniquement de cadre de positionnement à l'affichage."
+  }
+ }
+}

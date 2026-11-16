@@ -1,0 +1,305 @@
+{
+ "fichier": "missions/AbstractMission.lua",
+ "module": {
+  "en": "Base class (subclass of Object, so a network object) of every contract mission. It holds status (MissionStatus), finish state, reward, completion, optional end date, and borrowed vehicles, and handles savegame XML, network streams, the status flow CREATED, PREPARING, RUNNING, FINISHED, DISMISSED, and payout. Concrete missions override hooks like getCompletion, getReward, getMissionTypeName and getVehicleSize. It talks to g_missionManager, g_messageCenter, g_farmManager and the HUD side-notification progress bar. Environment and MissionManager are not in the dump (UNVERIFIED).",
+  "fr": "Classe de base (sous-classe d'Object, donc objet réseau) de toutes les missions de contrat. Elle contient le statut (MissionStatus), l'état de fin, la récompense, l'avancement, une date de fin optionnelle et les véhicules prêtés, et gère le XML de sauvegarde, les flux réseau, l'enchaînement CREATED, PREPARING, RUNNING, FINISHED, DISMISSED et le versement. Les missions concrètes surchargent des hooks comme getCompletion, getReward, getMissionTypeName et getVehicleSize. Elle dialogue avec g_missionManager, g_messageCenter, g_farmManager et la barre de progression du HUD. Environment et MissionManager sont absents du dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AbstractMission.new": {
+   "en": "Creates a mission with title and description, status CREATED, zero reward and completion, and empty vehicle lists. Allocates a dirty flag, subscribes to FARM_DELETED and SAVEGAME_LOADED, and increments the instance counter of its mission type in g_missionManager.",
+   "fr": "Crée une mission avec titre et description, statut CREATED, récompense et avancement nuls, et listes de véhicules vides. Alloue un drapeau dirty, s'abonne à FARM_DELETED et SAVEGAME_LOADED, et incrémente le compteur d'instances de son type dans g_missionManager."
+  },
+  "AbstractMission:init": {
+   "en": "Initialises the mission by picking a vehicle group and its identifier through getVehicleGroup. Returns true; subclasses extend it with their own set-up.",
+   "fr": "Initialise la mission en choisissant un groupe de véhicules et son identifiant via getVehicleGroup. Retourne true ; les sous-classes l'étendent avec leur propre préparation."
+  },
+  "AbstractMission:onSavegameLoaded": {
+   "en": "Message handler after a savegame load: calls reactivate if the mission had been started.",
+   "fr": "Gestionnaire de message après le chargement d'une sauvegarde : appelle reactivate si la mission avait été démarrée."
+  },
+  "AbstractMission:reactivate": {
+   "en": "Restores runtime hooks after loading: if vehicles were spawned, subscribes to VEHICLE_RESET so replaced vehicles stay tracked.",
+   "fr": "Restaure les hooks d'exécution après chargement : si des véhicules ont été générés, s'abonne à VEHICLE_RESET pour suivre les véhicules remplacés."
+  },
+  "AbstractMission:getMapHotspots": {
+   "en": "Hook returning the map hotspots of the mission; the base returns nil.",
+   "fr": "Hook retournant les points d'intérêt de carte de la mission ; la base retourne nil."
+  },
+  "AbstractMission:delete": {
+   "en": "Deletes the mission: calls the parent delete, removes access (deletes borrowed vehicles on the server), unsubscribes messages, removes it from g_missionManager, publishes MISSION_DELETED and decrements the type's instance count.",
+   "fr": "Supprime la mission : appelle le delete du parent, retire l'accès (supprime les véhicules prêtés sur le serveur), se désabonne des messages, se retire de g_missionManager, publie MISSION_DELETED et décrémente le compteur d'instances du type."
+  },
+  "AbstractMission:saveToXMLFile": {
+   "en": "Writes uniqueId, status, finish state, farm id, active id, reward, reimbursement, completion, stealing cost, spawned flag, vehicle group, vehicle unique ids and end date under the key. Subclasses add their own fields.",
+   "fr": "Écrit uniqueId, statut, état de fin, identifiant de ferme, identifiant actif, récompense, remboursement, avancement, coût de vol, drapeau de génération, groupe de véhicules, identifiants uniques des véhicules et date de fin sous la clé. Les sous-classes ajoutent leurs champs."
+  },
+  "AbstractMission:loadFromXMLFile": {
+   "en": "Reads the data written by saveToXMLFile. Returns false (with a log) if the status is invalid, the vehicle group no longer matches the variant, or no vehicle group can be found. Queues vehicle unique ids to re-attach and flags missing vehicles to be respawned for unfinished missions.",
+   "fr": "Lit les données écrites par saveToXMLFile. Retourne false (avec un log) si le statut est invalide, si le groupe de véhicules ne correspond plus à la variante ou si aucun groupe n'est trouvé. Met en file les identifiants de véhicules à rattacher et marque les véhicules manquants à régénérer pour les missions non terminées."
+  },
+  "AbstractMission:writeStream": {
+   "en": "Server to client initial sync: writes the parent state, type id, reward, reimbursement, status, spawned flag and vehicle group id, then farm id if started, active id or stealing cost and finish state depending on the status, and the end date.",
+   "fr": "Synchronisation initiale serveur vers client : écrit l'état du parent, l'identifiant de type, la récompense, le remboursement, le statut, le drapeau de génération et l'identifiant de groupe, puis l'identifiant de ferme si démarrée, l'identifiant actif ou le coût de vol et l'état de fin selon le statut, et la date de fin."
+  },
+  "AbstractMission:readStream": {
+   "en": "Client counterpart of writeStream: reads those fields in the same order, then registers the mission in g_missionManager.missions and publishes MISSION_GENERATED on the next frame.",
+   "fr": "Pendant client de writeStream : lit ces champs dans le même ordre, puis enregistre la mission dans g_missionManager.missions et publie MISSION_GENERATED à la frame suivante."
+  },
+  "AbstractMission:writeUpdateStream": {
+   "en": "Writes the live update: current status and completion as a float. The dirty mask is ignored.",
+   "fr": "Écrit la mise à jour en direct : statut courant et avancement en flottant. Le masque dirty est ignoré."
+  },
+  "AbstractMission:readUpdateStream": {
+   "en": "Reads the live update: applies the status through setStatus and stores the completion value.",
+   "fr": "Lit la mise à jour en direct : applique le statut via setStatus et mémorise l'avancement."
+  },
+  "AbstractMission:update": {
+   "en": "Per-frame update. Re-attaches saved vehicles by unique id and respawns missing ones. Server: finishes preparation when vehicles are ready, fails the mission if vehicle loading failed, and ends a running mission on timeout or failed validation. Clients of the owning farm get a HUD progress bar.",
+   "fr": "Mise à jour par frame. Rattache les véhicules sauvegardés par identifiant unique et régénère les manquants. Serveur : termine la préparation quand les véhicules sont prêts, fait échouer la mission si le chargement a échoué, et termine une mission en cours en cas de délai dépassé ou de validation échouée. Les clients de la ferme propriétaire ont une barre de progression au HUD."
+  },
+  "AbstractMission:updateTick": {
+   "en": "Server only, while running: recomputes completion from getCompletion about every 2.5 s of mission time, finishes with SUCCESS at 0.995 or more, and raises the dirty flag when the value changed.",
+   "fr": "Serveur uniquement, en cours de mission : recalcule l'avancement via getCompletion environ toutes les 2,5 s de temps de mission, termine avec SUCCESS à 0,995 ou plus, et lève le drapeau dirty quand la valeur a changé."
+  },
+  "AbstractMission:start": {
+   "en": "Starts the mission: calls prepare, raises active and broadcasts MissionStartedEvent from the server. Returns true.",
+   "fr": "Démarre la mission : appelle prepare, active l'objet et diffuse MissionStartedEvent depuis le serveur. Retourne true."
+  },
+  "AbstractMission:prepare": {
+   "en": "Sets the status to PREPARING. On the server, when requested and vehicles are defined, spawns them and subscribes to VEHICLE_RESET.",
+   "fr": "Passe le statut à PREPARING. Sur le serveur, si demandé et que des véhicules sont définis, les génère et s'abonne à VEHICLE_RESET."
+  },
+  "AbstractMission:getIsPrepared": {
+   "en": "Returns true if no vehicles were spawned, or if the number of loaded vehicles equals the number expected.",
+   "fr": "Retourne true si aucun véhicule n'a été généré, ou si le nombre de véhicules chargés égale le nombre attendu."
+  },
+  "AbstractMission:finishedPreparing": {
+   "en": "Moves the mission from PREPARING to RUNNING.",
+   "fr": "Fait passer la mission de PREPARING à RUNNING."
+  },
+  "AbstractMission:started": {
+   "en": "Empty hook for subclasses, called when the mission has started.",
+   "fr": "Hook vide pour les sous-classes, appelé quand la mission a démarré."
+  },
+  "AbstractMission:finish": {
+   "en": "Sets status FINISHED and the finish state; removes vehicle access unless it succeeded. On the server it counts a success in the farm stats, computes the stealing cost and broadcasts MissionFinishedEvent. Also removes the progress bar and publishes MissionFinishedEvent locally.",
+   "fr": "Passe le statut à FINISHED et fixe l'état de fin ; retire l'accès aux véhicules sauf en cas de succès. Sur le serveur, il compte un succès dans les stats de la ferme, calcule le coût de vol et diffuse MissionFinishedEvent. Retire aussi la barre de progression et publie MissionFinishedEvent localement."
+  },
+  "AbstractMission:dismiss": {
+   "en": "Moves the mission to DISMISSED once. After a success it removes vehicle access; on the server it pays the farm the total reward (can be negative) as MoneyType.MISSIONS when non-zero.",
+   "fr": "Fait passer la mission à DISMISSED une seule fois. Après un succès, il retire l'accès aux véhicules ; sur le serveur, il verse à la ferme la récompense totale (éventuellement négative) en MoneyType.MISSIONS si non nulle."
+  },
+  "AbstractMission:calculateStealingCost": {
+   "en": "Hook computing the penalty applied after completion; the base returns 0.",
+   "fr": "Hook calculant la pénalité appliquée après la fin ; la base retourne 0."
+  },
+  "AbstractMission:getUniqueId": {
+   "en": "Returns the mission's unique id string (nil until set).",
+   "fr": "Retourne la chaîne d'identifiant unique de la mission (nil tant qu'elle n'est pas définie)."
+  },
+  "AbstractMission:setUniqueId": {
+   "en": "Stores the unique id. It should be set only once; debug builds assert it is a string and was previously nil.",
+   "fr": "Mémorise l'identifiant unique. Il ne doit être défini qu'une fois ; les builds de debug vérifient que c'est une chaîne et qu'il était nil."
+  },
+  "AbstractMission:spawnVehicles": {
+   "en": "Calls spawnVehicle for each entry of vehiclesToLoad and sets spawnedVehicles to true if there was at least one.",
+   "fr": "Appelle spawnVehicle pour chaque entrée de vehiclesToLoad et met spawnedVehicles à true s'il y en avait au moins une."
+  },
+  "AbstractMission:spawnVehicle": {
+   "en": "Starts asynchronous loading of one vehicle (filename and optional configurations) at the store spawn places, with MISSION property state and the mission farm as owner. Calls onSpawnedVehicle when done; nothing happens if the data is invalid.",
+   "fr": "Lance le chargement asynchrone d'un véhicule (nom de fichier et configurations optionnelles) aux places d'apparition de la boutique, avec l'état de propriété MISSION et la ferme de la mission comme propriétaire. Appelle onSpawnedVehicle à la fin ; rien ne se passe si les données sont invalides."
+  },
+  "AbstractMission:onSpawnedVehicle": {
+   "en": "Callback of vehicle loading. On success adds random wear and operating time (about 30 to 70 hours) to each vehicle and tracks it. On failure marks the mission as failed to load, deletes loaded vehicles, cancels pending loads and clears vehicle lists.",
+   "fr": "Callback du chargement de véhicule. En cas de succès, ajoute usure et temps de fonctionnement aléatoires (environ 30 à 70 heures) à chaque véhicule et le suit. En cas d'échec, marque la mission comme ayant échoué au chargement, supprime les véhicules chargés, annule les chargements en attente et vide les listes."
+  },
+  "AbstractMission:getStealingCosts": {
+   "en": "Hook returning the stealing cost; the base returns 0. getActualStealingCosts uses it.",
+   "fr": "Hook retournant le coût de vol ; la base retourne 0. getActualStealingCosts l'utilise."
+  },
+  "AbstractMission:getVehicleCosts": {
+   "en": "Returns the cost of borrowed vehicles: number of vehicles times AbstractMission.VEHICLE_USE_COST times a difficulty factor (0.7 plus 0.3 times economic difficulty). Returns 0 without vehicles.",
+   "fr": "Retourne le coût des véhicules prêtés : nombre de véhicules multiplié par AbstractMission.VEHICLE_USE_COST et par un facteur de difficulté (0,7 plus 0,3 fois la difficulté économique). Retourne 0 sans véhicules."
+  },
+  "AbstractMission:getReward": {
+   "en": "Hook returning the base reward; the base returns 0.",
+   "fr": "Hook retournant la récompense de base ; la base retourne 0."
+  },
+  "AbstractMission:getReimbursement": {
+   "en": "Returns the stored reimbursement amount.",
+   "fr": "Retourne le montant de remboursement mémorisé."
+  },
+  "AbstractMission:calculateReimbursement": {
+   "en": "Empty hook, called from removeAccess on the server, for subclasses to compute a reimbursement.",
+   "fr": "Hook vide, appelé depuis removeAccess sur le serveur, pour que les sous-classes calculent un remboursement."
+  },
+  "AbstractMission:getActualVehicleCosts": {
+   "en": "Returns the vehicle costs only if vehicles were actually spawned, otherwise 0.",
+   "fr": "Retourne les coûts des véhicules seulement si des véhicules ont réellement été générés, sinon 0."
+  },
+  "AbstractMission:getActualReward": {
+   "en": "Returns the reward only when the finish state is SUCCESS, otherwise 0.",
+   "fr": "Retourne la récompense seulement si l'état de fin est SUCCESS, sinon 0."
+  },
+  "AbstractMission:getActualStealingCosts": {
+   "en": "Returns the stealing costs that apply, currently the same as getStealingCosts.",
+   "fr": "Retourne les coûts de vol applicables, actuellement identiques à getStealingCosts."
+  },
+  "AbstractMission:getTotalReward": {
+   "en": "Net payout: actual reward minus vehicle costs minus stealing costs plus reimbursement. Used by dismiss.",
+   "fr": "Versement net : récompense réelle moins coûts des véhicules moins coûts de vol plus remboursement. Utilisé par dismiss."
+  },
+  "AbstractMission:validate": {
+   "en": "Returns whether the mission can still run, which is false only when it has timed out. Subclasses extend it; a false result fails the running mission.",
+   "fr": "Retourne si la mission peut encore se poursuivre, ce qui n'est faux que si le délai est dépassé. Les sous-classes l'étendent ; un résultat faux fait échouer la mission en cours."
+  },
+  "AbstractMission:isTimedOut": {
+   "en": "Returns true if an end date exists and no minutes are left; false when there is no end date.",
+   "fr": "Retourne true si une date de fin existe et qu'il ne reste plus de minutes ; false s'il n'y a pas de date de fin."
+  },
+  "AbstractMission:getMinutesLeft": {
+   "en": "Returns in-game minutes until the end date (day and day time in ms) using the current environment, or nil without an end date. Depends on Environment fields not in the dump (UNVERIFIED).",
+   "fr": "Retourne les minutes de jeu restantes jusqu'à la date de fin (jour et heure en ms) d'après l'environnement courant, ou nil sans date de fin. Dépend de champs d'Environment absents du dump (NON VÉRIFIÉ)."
+  },
+  "AbstractMission:setDefaultEndDate": {
+   "en": "Sets the end date to the last millisecond of the final day of the current period, computed from daysPerPeriod and the day in period.",
+   "fr": "Fixe la date de fin à la dernière milliseconde du dernier jour de la période courante, calculée depuis daysPerPeriod et le jour dans la période."
+  },
+  "AbstractMission:setEndDateByOffset": {
+   "en": "Sets the end date from the current day plus a day-time offset in ms, resolved with environment:getDayAndDayTime.",
+   "fr": "Fixe la date de fin à partir du jour courant plus un décalage d'heure en ms, résolu via environment:getDayAndDayTime."
+  },
+  "AbstractMission:setEndDate": {
+   "en": "Stores the end date as a table with endDay (monotonic day) and endDayTime (ms).",
+   "fr": "Mémorise la date de fin sous forme de table avec endDay (jour monotone) et endDayTime (ms)."
+  },
+  "AbstractMission:getIsInProgress": {
+   "en": "Returns true while the status is PREPARING or RUNNING.",
+   "fr": "Retourne true tant que le statut est PREPARING ou RUNNING."
+  },
+  "AbstractMission:getIsRunning": {
+   "en": "Returns true when the status is RUNNING.",
+   "fr": "Retourne true quand le statut est RUNNING."
+  },
+  "AbstractMission:getWasRunning": {
+   "en": "Returns true if the status is RUNNING, FINISHED or DISMISSED.",
+   "fr": "Retourne true si le statut est RUNNING, FINISHED ou DISMISSED."
+  },
+  "AbstractMission:getIsReadyToStart": {
+   "en": "Returns true when the status is CREATED.",
+   "fr": "Retourne true quand le statut est CREATED."
+  },
+  "AbstractMission:getWasStarted": {
+   "en": "Returns true when the status is anything other than CREATED.",
+   "fr": "Retourne true quand le statut est autre que CREATED."
+  },
+  "AbstractMission:getIsFinished": {
+   "en": "Returns true when the status is FINISHED.",
+   "fr": "Retourne true quand le statut est FINISHED."
+  },
+  "AbstractMission:getInfo": {
+   "en": "Returns the info table of the mission.",
+   "fr": "Retourne la table d'informations de la mission."
+  },
+  "AbstractMission:getLocation": {
+   "en": "Hook returning a location text; the base returns an empty string.",
+   "fr": "Hook retournant un texte de lieu ; la base retourne une chaîne vide."
+  },
+  "AbstractMission:getDescription": {
+   "en": "Returns the description given at construction.",
+   "fr": "Retourne la description donnée à la construction."
+  },
+  "AbstractMission:getDetails": {
+   "en": "Returns a list of title/value rows for the contract screen; the base adds the formatted vehicle costs row when not started or when vehicles were spawned.",
+   "fr": "Retourne une liste de lignes titre/valeur pour l'écran des contrats ; la base ajoute la ligne des coûts de véhicules formatés si non démarrée ou si des véhicules ont été générés."
+  },
+  "AbstractMission:getFinishedDetails": {
+   "en": "Returns rows for the finished-mission summary: reward, reimbursement, vehicle costs and stealing costs (costs shown as negative money).",
+   "fr": "Retourne les lignes du résumé de mission terminée : récompense, remboursement, coûts des véhicules et coûts de vol (coûts affichés en argent négatif)."
+  },
+  "AbstractMission:getTitle": {
+   "en": "Returns the mission title.",
+   "fr": "Retourne le titre de la mission."
+  },
+  "AbstractMission:getNPC": {
+   "en": "Hook returning the NPC tied to the mission; the base returns nil.",
+   "fr": "Hook retournant le PNJ associé à la mission ; la base retourne nil."
+  },
+  "AbstractMission:getExtraProgressText": {
+   "en": "Hook returning extra text shown beside the progress bar; the base returns an empty string.",
+   "fr": "Hook retournant un texte supplémentaire affiché près de la barre de progression ; la base retourne une chaîne vide."
+  },
+  "AbstractMission:getCompletion": {
+   "en": "Hook returning completion from 0 to 1; the base returns 0. The mission succeeds once it reaches about 0.995.",
+   "fr": "Hook retournant l'avancement de 0 à 1 ; la base retourne 0. La mission réussit dès qu'il atteint environ 0,995."
+  },
+  "AbstractMission:farmDestroyed": {
+   "en": "FARM_DELETED handler: if the deleted farm is this mission's farm, asks g_missionManager to delete the mission.",
+   "fr": "Gestionnaire de FARM_DELETED : si la ferme supprimée est celle de la mission, demande à g_missionManager de supprimer la mission."
+  },
+  "AbstractMission:getMissionTypeName": {
+   "en": "Hook returning the mission type name; the base returns nil. Used in the constructor to count instances, so subclasses must override it.",
+   "fr": "Hook retournant le nom du type de mission ; la base retourne nil. Utilisé dans le constructeur pour compter les instances, les sous-classes doivent donc le surcharger."
+  },
+  "AbstractMission:onVehicleReset": {
+   "en": "VEHICLE_RESET handler, server only: if the old vehicle belonged to the mission, replaces it with the new vehicle.",
+   "fr": "Gestionnaire de VEHICLE_RESET, serveur uniquement : si l'ancien véhicule appartenait à la mission, le remplace par le nouveau."
+  },
+  "AbstractMission:getVehicleSize": {
+   "en": "Hook returning the vehicle size class; the base returns \"small\".",
+   "fr": "Hook retournant la classe de taille des véhicules ; la base retourne \"small\"."
+  },
+  "AbstractMission:getVehicleGroupFromIdentifier": {
+   "en": "Looks up a borrowed-vehicle group by identifier for this mission type and size via g_missionManager.",
+   "fr": "Recherche un groupe de véhicules prêtés par identifiant pour ce type de mission et cette taille via g_missionManager."
+  },
+  "AbstractMission:getVehicleGroup": {
+   "en": "Picks a random vehicle group for the mission type, size and variant from g_missionManager. Returns the vehicle list (or nil) and the group identifier.",
+   "fr": "Choisit un groupe de véhicules au hasard pour le type, la taille et la variante de la mission via g_missionManager. Retourne la liste de véhicules (ou nil) et l'identifiant du groupe."
+  },
+  "AbstractMission:getVehicleVariant": {
+   "en": "Hook returning the required vehicle variant name; nil means no filter.",
+   "fr": "Hook retournant le nom de variante de véhicule requis ; nil signifie aucun filtre."
+  },
+  "AbstractMission:getVariant": {
+   "en": "Hook returning the mission variant; the base returns nil.",
+   "fr": "Hook retournant la variante de la mission ; la base retourne nil."
+  },
+  "AbstractMission:removeAccess": {
+   "en": "Server only: calls calculateReimbursement, then deletes every borrowed vehicle not already being deleted and empties the vehicle list.",
+   "fr": "Serveur uniquement : appelle calculateReimbursement, puis supprime chaque véhicule prêté qui n'est pas déjà en cours de suppression et vide la liste."
+  },
+  "AbstractMission:hasLeasableVehicles": {
+   "en": "Returns true when the mission has a vehicle list to borrow (vehiclesToLoad is not nil).",
+   "fr": "Retourne true quand la mission a une liste de véhicules à prêter (vehiclesToLoad n'est pas nil)."
+  },
+  "AbstractMission:isSpawnSpaceAvailable": {
+   "en": "Checks that every vehicle to load fits at the store spawn places, using size from the store item with minimum spawn dimensions. Places are temporarily marked used during the check and released afterwards. Returns a boolean.",
+   "fr": "Vérifie que chaque véhicule à charger tient aux places d'apparition de la boutique, avec la taille de l'article de boutique et des dimensions minimales d'apparition. Les places sont marquées utilisées temporairement pendant le test puis libérées. Retourne un booléen."
+  },
+  "AbstractMission:getIsWorkAllowed": {
+   "en": "Hook asked whether a work area may operate at a position for a farm and vehicle; the base always returns true.",
+   "fr": "Hook demandant si une zone de travail peut opérer à une position pour une ferme et un véhicule ; la base retourne toujours true."
+  },
+  "AbstractMission:getWorldPosition": {
+   "en": "Hook returning the mission's world x and z; the base returns 0, 0.",
+   "fr": "Hook retournant x et z monde de la mission ; la base retourne 0, 0."
+  },
+  "AbstractMission.loadMapData": {
+   "en": "Static hook called with map XML and base directory to load mission-type data; empty in the base class.",
+   "fr": "Hook statique appelé avec le XML de carte et le dossier de base pour charger les données du type de mission ; vide dans la classe de base."
+  },
+  "AbstractMission.unloadMapData": {
+   "en": "Static hook called when the map is unloaded to free mission-type data; empty in the base class.",
+   "fr": "Hook statique appelé au déchargement de la carte pour libérer les données du type de mission ; vide dans la classe de base."
+  },
+  "AbstractMission.tryGenerateMission": {
+   "en": "Static hook that subclasses implement to try creating a new mission of their type; empty here and returns nothing.",
+   "fr": "Hook statique que les sous-classes implémentent pour tenter de créer une nouvelle mission de leur type ; vide ici et ne retourne rien."
+  },
+  "AbstractMission.canRun": {
+   "en": "Static hook that subclasses implement to tell whether this mission type can run on the current map; empty here and returns nothing (nil).",
+   "fr": "Hook statique que les sous-classes implémentent pour indiquer si ce type de mission peut tourner sur la carte courante ; vide ici et ne retourne rien (nil)."
+  }
+ }
+}

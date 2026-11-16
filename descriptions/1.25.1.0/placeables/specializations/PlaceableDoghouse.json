@@ -1,0 +1,117 @@
+{
+ "fichier": "placeables/specializations/PlaceableDoghouse.lua",
+ "module": {
+  "en": "Placeable specialization for the farm's dog house. The server spawns a `Dog` and a `DogBall` at nodes defined in the XML (optionally per `dogHouse` configuration), a construction preview shows a textured dog model instead, and players can interact via a trigger to fill the food bowl. Only one dog house is allowed per farm, tracked in `g_currentMission.doghouses`, and the bowl is emptied every game hour.",
+  "fr": "Spécialisation de placeable pour la niche de la ferme. Le serveur fait apparaître un `Dog` et un `DogBall` à des nœuds définis dans le XML (éventuellement par configuration `dogHouse`), un aperçu de construction affiche à la place un modèle de chien texturé, et les joueurs interagissent via un déclencheur pour remplir la gamelle. Une seule niche est autorisée par ferme, suivie dans `g_currentMission.doghouses`, et la gamelle est vidée à chaque heure de jeu."
+ },
+ "fonctions": {
+  "PlaceableDoghouse.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableDoghouse.initSpecialization": {
+   "en": "Adds the placeable configuration type `dogHouse` (selectable doghouse configurations) to the placeable configuration manager.",
+   "fr": "Ajoute le type de configuration de placeable `dogHouse` (configurations de niche sélectionnables) au gestionnaire de configurations de placeables."
+  },
+  "PlaceableDoghouse.registerFunctions": {
+   "en": "Registers eight functions: interaction trigger callback, registration checks and (un)registration with the mission, food bowl state, dog and spawn node getters, and the preview dog load callback.",
+   "fr": "Enregistre huit fonctions : rappel du déclencheur d'interaction, vérification et (dés)enregistrement auprès de la mission, état de la gamelle, accesseurs du chien et du nœud d'apparition, et rappel de chargement du chien d'aperçu."
+  },
+  "PlaceableDoghouse.registerOverwrittenFunctions": {
+   "en": "Overrides `setOwnerFarmId`, `canBuy`, `getCanBePlacedAt` and `getNeedHourChanged`.",
+   "fr": "Surcharge `setOwnerFarmId`, `canBuy`, `getCanBePlacedAt` et `getNeedHourChanged`."
+  },
+  "PlaceableDoghouse.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete`, `onFinalizePlacement`, `onWriteStream`, `onReadStream` and `onHourChanged`.",
+   "fr": "S'abonne à `onLoad`, `onDelete`, `onFinalizePlacement`, `onWriteStream`, `onReadStream` et `onHourChanged`."
+  },
+  "PlaceableDoghouse.registerXMLPaths": {
+   "en": "Declares the dog house keys (dog node, preview node, texture tile indices, dog XML, nameplate, ball node and file, interaction trigger, bowl food node and fill sound) both under `dogHouse` and under each `dogHouseConfiguration`.",
+   "fr": "Déclare les clés de la niche (nœud du chien, nœud d'aperçu, indices de tuile de texture, XML du chien, plaque de nom, nœud et fichier de la balle, déclencheur d'interaction, nœud de nourriture de la gamelle et son de remplissage) à la fois sous `dogHouse` et sous chaque `dogHouseConfiguration`."
+  },
+  "PlaceableDoghouse.registerSavegameXMLPaths": {
+   "en": "Declares the savegame keys by delegating to `Dog.registerSavegameXMLPaths`.",
+   "fr": "Déclare les clés de sauvegarde en déléguant à `Dog.registerSavegameXMLPaths`."
+  },
+  "PlaceableDoghouse:onLoad": {
+   "en": "Picks the active configuration, then on the server (not in preview) creates and registers the `Dog` and `DogBall`. In construction preview it loads the dog model asynchronously for display. Sets up the interaction trigger, bowl food node and sound and the activatable. If the spawn node or dog is invalid, it removes most listeners and stops.",
+   "fr": "Choisit la configuration active puis, côté serveur (hors aperçu), crée et enregistre le `Dog` et le `DogBall`. En aperçu de construction, charge le modèle du chien de façon asynchrone pour l'affichage. Met en place le déclencheur d'interaction, le nœud de nourriture, le son et l'activable. Si le nœud d'apparition ou le chien est invalide, retire la plupart des écouteurs et s'arrête."
+  },
+  "PlaceableDoghouse:onDelete": {
+   "en": "Removes the activatable, unregisters the doghouse from the mission, and on the server deletes the dog and ball if not already deleted. Removes the trigger, deletes the fill sound and releases the preview dog i3d.",
+   "fr": "Retire l'activable, désenregistre la niche de la mission et, côté serveur, supprime le chien et la balle s'ils ne le sont pas déjà. Retire le déclencheur, supprime le son de remplissage et libère le i3d du chien d'aperçu."
+  },
+  "PlaceableDoghouse:onFinalizePlacement": {
+   "en": "Server: calls `finalizePlacement` on the dog. Then registers the doghouse with the mission.",
+   "fr": "Serveur : appelle `finalizePlacement` sur le chien. Enregistre ensuite la niche auprès de la mission."
+  },
+  "PlaceableDoghouse:onReadStream": {
+   "en": "Client side join: reads the dog network object (and links the dog back to this spawner) and the food bowl visibility.",
+   "fr": "Connexion côté client : lit l'objet réseau du chien (et relie le chien à ce placeable) ainsi que la visibilité de la gamelle de nourriture."
+  },
+  "PlaceableDoghouse:onWriteStream": {
+   "en": "Server side join: writes the dog network object and the food bowl visibility.",
+   "fr": "Connexion côté serveur : écrit l'objet réseau du chien et la visibilité de la gamelle de nourriture."
+  },
+  "PlaceableDoghouse:loadFromXMLFile": {
+   "en": "Delegates loading of the savegame data to the dog, if there is one.",
+   "fr": "Délègue le chargement des données de sauvegarde au chien, s'il existe."
+  },
+  "PlaceableDoghouse:saveToXMLFile": {
+   "en": "Delegates saving to the dog, if there is one.",
+   "fr": "Délègue la sauvegarde au chien, s'il existe."
+  },
+  "PlaceableDoghouse:onPreviewDogLoaded": {
+   "en": "Async callback for the preview dog model: links it to the preview node (or root node) and sets the texture atlas tile shader parameter. Always finishes the loading task.",
+   "fr": "Rappel asynchrone du modèle de chien d'aperçu : l'attache au nœud d'aperçu (ou au nœud racine) et règle le paramètre de shader de la tuile d'atlas de texture. Termine toujours la tâche de chargement."
+  },
+  "PlaceableDoghouse:dogInteractionTriggerCallback": {
+   "en": "Trigger callback: when the local player of the owning farm enters or leaves and a dog exists, adds or removes the doghouse activatable.",
+   "fr": "Rappel du déclencheur : quand le joueur local de la ferme propriétaire entre ou sort et qu'un chien existe, ajoute ou retire l'activable de la niche."
+  },
+  "PlaceableDoghouse:isDoghouseRegistered": {
+   "en": "Returns true if the mission already has a doghouse for this placeable's owner farm.",
+   "fr": "Renvoie true si la mission possède déjà une niche pour la ferme propriétaire de ce placeable."
+  },
+  "PlaceableDoghouse:registerDoghouseToMission": {
+   "en": "Adds this placeable to `g_currentMission.doghouses` unless the farm already has one; returns whether it was added.",
+   "fr": "Ajoute ce placeable à `g_currentMission.doghouses` sauf si la ferme en a déjà une ; renvoie si l'ajout a eu lieu."
+  },
+  "PlaceableDoghouse:unregisterDoghouseToMission": {
+   "en": "Removes this placeable from `g_currentMission.doghouses` and returns true.",
+   "fr": "Retire ce placeable de `g_currentMission.doghouses` et renvoie true."
+  },
+  "PlaceableDoghouse:setOwnerFarmId": {
+   "en": "Calls the parent, then on the server propagates the new owner farm id to the dog and the ball.",
+   "fr": "Appelle le parent puis, côté serveur, propage le nouvel id de ferme au chien et à la balle."
+  },
+  "PlaceableDoghouse:setFoodBowlState": {
+   "en": "Sends a bowl state event, shows or hides the food node and, when filled, tells the dog about the bowl and plays the fill sound. Does nothing without a food node.",
+   "fr": "Envoie un événement d'état de la gamelle, affiche ou masque le nœud de nourriture et, si elle est remplie, signale la gamelle au chien et joue le son de remplissage. Sans effet sans nœud de nourriture."
+  },
+  "PlaceableDoghouse:getDog": {
+   "en": "Returns the `Dog` object (nil on clients not yet synced or when none was spawned).",
+   "fr": "Renvoie l'objet `Dog` (nil côté client non encore synchronisé ou si aucun chien n'a été créé)."
+  },
+  "PlaceableDoghouse:getSpawnNode": {
+   "en": "Returns the dog spawn node.",
+   "fr": "Renvoie le nœud d'apparition du chien."
+  },
+  "PlaceableDoghouse:getCanBePlacedAt": {
+   "en": "Refuses placement with a one-per-farm warning if a doghouse is already registered; otherwise defers to the parent.",
+   "fr": "Refuse le placement avec un avertissement « un seul par ferme » si une niche est déjà enregistrée ; sinon s'en remet au parent."
+  },
+  "PlaceableDoghouse:canBuy": {
+   "en": "Runs the parent check, then refuses the purchase with a one-per-farm warning if a doghouse already exists for the farm.",
+   "fr": "Exécute la vérification parent puis refuse l'achat avec un avertissement « un seul par ferme » si la ferme possède déjà une niche."
+  },
+  "PlaceableDoghouse:getNeedHourChanged": {
+   "en": "Always returns true so the placeable receives `onHourChanged`.",
+   "fr": "Renvoie toujours true pour que le placeable reçoive `onHourChanged`."
+  },
+  "PlaceableDoghouse:onHourChanged": {
+   "en": "Empties the food bowl every game hour, without sending an event (`setFoodBowlState(false, true)`).",
+   "fr": "Vide la gamelle à chaque heure de jeu, sans envoyer d'événement (`setFoodBowlState(false, true)`)."
+  }
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "fichier": "vehicles/specializations/activatables/ConsumableActivatable.lua",
+ "module": {
+  "en": "Activatable object used by the Consumable specialization to let the player choose a consumable variation for an empty consumable slot of a vehicle. It reads `spec_consumable.types`, asks g_consumableManager for the available variations and shows an OptionDialog. The choice is sent to the server with ConsumableRefillEvent. The `TYPE_TEXTS` table it uses is not defined in this file (UNVERIFIED where it is set).",
+  "fr": "Objet activable utilisé par la spécialisation Consumable pour laisser le joueur choisir une variante de consommable pour un emplacement vide d'un véhicule. Il lit `spec_consumable.types`, interroge g_consumableManager pour les variantes disponibles et affiche un OptionDialog. Le choix est envoyé au serveur par ConsumableRefillEvent. La table `TYPE_TEXTS` qu'il utilise n'est pas définie dans ce fichier (définition NON VÉRIFIÉE)."
+ },
+ "fonctions": {
+  "ConsumableActivatable.new": {
+   "en": "Creates the activatable for the given vehicle with an empty activate text.",
+   "fr": "Crée l'activable pour le véhicule donné avec un texte d'activation vide."
+  },
+  "ConsumableActivatable:getIsActivatable": {
+   "en": "Returns true if the vehicle is active for input and at least one consumable type has a consuming fill level of 0 (needs refilling).",
+   "fr": "Retourne true si le véhicule est actif pour l'entrée et qu'au moins un type de consommable a un niveau consommé de 0 (à recharger)."
+  },
+  "ConsumableActivatable:run": {
+   "en": "For each empty consumable type, fetches its variations and opens an option dialog; the selected variation is sent via ConsumableRefillEvent. Note: with several empty types it opens one dialog per type in the same call.",
+   "fr": "Pour chaque type de consommable vide, récupère ses variantes et ouvre une boîte de choix ; la variante retenue est envoyée via ConsumableRefillEvent. À noter : avec plusieurs types vides, une boîte par type est ouverte dans le même appel."
+  },
+  "ConsumableActivatable:updateActivateText": {
+   "en": "Sets the activate text to the localized label of an empty consumable type; with several empty types the last one wins.",
+   "fr": "Définit le texte d'activation sur le libellé localisé d'un type de consommable vide ; s'il y en a plusieurs, c'est le dernier qui l'emporte."
+  }
+ }
+}

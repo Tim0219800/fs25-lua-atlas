@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/ingameMap/IngameMapMobile.lua",
+ "module": {
+  "en": "Mobile subclass of IngameMap (the HUD/menu map display). It only overrides the scaling behaviour so the element is repositioned to its base position after a scale change.",
+  "fr": "Sous-classe mobile de IngameMap (affichage de la carte du HUD/menu). Elle ne surcharge que la mise à l'échelle pour replacer l'élément à sa position de base après un changement d'échelle."
+ },
+ "fonctions": {
+  "IngameMapMobile:setScale": {
+   "en": "Applies the uiScale through the IngameMap parent implementation, then moves the element to the background position computed for that scale.",
+   "fr": "Applique uiScale via l'implémentation parente de IngameMap, puis déplace l'élément à la position de fond calculée pour cette échelle."
+  }
+ }
+}

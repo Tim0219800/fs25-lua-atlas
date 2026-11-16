@@ -1,0 +1,65 @@
+{
+ "fichier": "gui/hud/PlayerControlPadDisplay.lua",
+ "module": {
+  "en": "Touch joystick pad for on-foot movement in the mobile UI (extends HUDDisplayElement). It combines a background, a joystick knob and two HUDSliderElements (X and Y axes); the normalized stick position is sent every update to the player with onInputMoveSide and onInputMoveForward. Visibility follows the input help mode and whether the player can move. Client-side only.",
+  "fr": "Pavé joystick tactile pour le déplacement à pied dans l'interface mobile (étend HUDDisplayElement). Il combine un fond, un bouton de joystick et deux HUDSliderElement (axes X et Y) ; la position normalisée du stick est envoyée à chaque update au joueur via onInputMoveSide et onInputMoveForward. La visibilité suit le mode d'aide à la saisie et la possibilité de se déplacer. Côté client uniquement."
+ },
+ "fonctions": {
+  "PlayerControlPadDisplay.new": {
+   "en": "Creates the pad with its HUD reference and atlas path, a centered stick position and the keyboard help mode as initial state, then builds its components.",
+   "fr": "Crée le pavé avec sa référence au HUD et le chemin de l'atlas, une position de stick centrée et le mode d'aide clavier comme état initial, puis construit ses composants."
+  },
+  "PlayerControlPadDisplay:setPlayer": {
+   "en": "Assigns the player that receives the movement input and refreshes visibility.",
+   "fr": "Affecte le joueur qui reçoit la saisie de déplacement et rafraîchit la visibilité."
+  },
+  "PlayerControlPadDisplay:createComponents": {
+   "en": "Builds the background and knob elements and two HUDSliderElements (one per axis) with callbacks to onSliderPositionChangedX/Y, then centers both sliders.",
+   "fr": "Construit les éléments de fond et de bouton et deux HUDSliderElement (un par axe) avec callbacks vers onSliderPositionChangedX/Y, puis centre les deux curseurs."
+  },
+  "PlayerControlPadDisplay:setVisible": {
+   "en": "Hides always works; showing is ignored while the input help mode is gamepad. Otherwise delegates to the parent setVisible.",
+   "fr": "Le masquage fonctionne toujours ; l'affichage est ignoré tant que le mode d'aide est manette. Sinon délègue au setVisible du parent."
+  },
+  "PlayerControlPadDisplay:onSliderPositionChangedX": {
+   "en": "Slider callback for the X axis: maps the 0..1 position to -1..1, clamps the stick to the unit circle and moves the knob horizontally. Returns the corrected position if clamped (nil otherwise).",
+   "fr": "Callback du curseur de l'axe X : convertit la position 0..1 en -1..1, limite le stick au cercle unité et déplace le bouton horizontalement. Retourne la position corrigée si limitée (nil sinon)."
+  },
+  "PlayerControlPadDisplay:onSliderPositionChangedY": {
+   "en": "Slider callback for the Y axis: maps the 0..1 position to -1..1 and clamps the stick to the unit circle, returning the corrected Y when clamped.",
+   "fr": "Callback du curseur de l'axe Y : convertit la position 0..1 en -1..1 et limite le stick au cercle unité, en retournant le Y corrigé s'il y a eu limitation."
+  },
+  "PlayerControlPadDisplay:updateJoystickPosition": {
+   "en": "When the stick vector exceeds length 1, normalizes it and moves both sliders to the clamped position, returning the new X and Y translations; otherwise returns nil.",
+   "fr": "Si le vecteur du stick dépasse la longueur 1, le normalise et déplace les deux curseurs à la position limitée, en retournant les nouvelles translations X et Y ; sinon retourne nil."
+  },
+  "PlayerControlPadDisplay:onInputHelpModeChange": {
+   "en": "Stores the new input help mode and refreshes visibility.",
+   "fr": "Mémorise le nouveau mode d'aide à la saisie et rafraîchit la visibilité."
+  },
+  "PlayerControlPadDisplay:updateVisibilityState": {
+   "en": "Shows or hides the pad with animation when the desired state differs from the current one, and enables or disables the sliders' touch handling. Uses getIsPlayerMoveActive and animationState, defined elsewhere (UNVERIFIED).",
+   "fr": "Affiche ou masque le pavé avec animation quand l'état voulu diffère de l'actuel, et active ou désactive la gestion tactile des curseurs. Utilise getIsPlayerMoveActive et animationState, définis ailleurs (NON VÉRIFIÉ)."
+  },
+  "PlayerControlPadDisplay:update": {
+   "en": "Updates the animation, syncs the knob to the sliders and, when a player is set, updates the sliders and sends the stick values to onInputMoveSide and onInputMoveForward (Y inverted). Note: canControl is hard-coded true, so the disabled UVs are never used.",
+   "fr": "Met à jour l'animation, synchronise le bouton avec les curseurs et, si un joueur est défini, met à jour les curseurs et envoie les valeurs du stick à onInputMoveSide et onInputMoveForward (Y inversé). À noter : canControl vaut true en dur, donc les UV désactivés ne sont jamais utilisés."
+  },
+  "PlayerControlPadDisplay:onAnimateVisibilityFinished": {
+   "en": "Runs the parent handler and, when the pad has become visible, resets both sliders.",
+   "fr": "Exécute le gestionnaire du parent et, quand le pavé est devenu visible, réinitialise les deux curseurs."
+  },
+  "PlayerControlPadDisplay:setScale": {
+   "en": "Applies the UI scale, repositions the pad at its scaled background position, keeps the current visibility, refreshes the visibility state and recomputes slider translations.",
+   "fr": "Applique l'échelle d'interface, repositionne le pavé à sa position de fond mise à l'échelle, conserve la visibilité actuelle, rafraîchit l'état de visibilité et recalcule les translations des curseurs."
+  },
+  "PlayerControlPadDisplay.getBackgroundPosition": {
+   "en": "Returns the configured background offset multiplied by the scale; the width argument is unused.",
+   "fr": "Retourne le décalage de fond configuré multiplié par l'échelle ; l'argument de largeur n'est pas utilisé."
+  },
+  "PlayerControlPadDisplay.createBackground": {
+   "en": "Creates an image-less overlay at the base position with the configured background size, used only as a positioning frame.",
+   "fr": "Crée un overlay sans image à la position de base avec la taille de fond configurée, utilisé uniquement comme cadre de positionnement."
+  }
+ }
+}

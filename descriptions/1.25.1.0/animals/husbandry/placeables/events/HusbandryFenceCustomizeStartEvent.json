@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/husbandry/placeables/events/HusbandryFenceCustomizeStartEvent.lua",
+ "module": {
+  "en": "Network event announcing that a player starts customizing the fence of a husbandry placeable. Sent by a client to the server, which rebroadcasts it to the other clients and applies it locally.",
+  "fr": "Événement réseau annonçant qu'un joueur commence à personnaliser la clôture d'un placeable d'élevage. Envoyé par un client au serveur, qui le rediffuse aux autres clients et l'applique localement."
+ },
+ "fonctions": {
+  "HusbandryFenceCustomizeStartEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "HusbandryFenceCustomizeStartEvent.new": {
+   "en": "Creates the event for the given husbandry placeable.",
+   "fr": "Crée l'événement pour le placeable d'élevage donné."
+  },
+  "HusbandryFenceCustomizeStartEvent:readStream": {
+   "en": "Reads the placeable as a node object from the stream, then runs the event.",
+   "fr": "Lit le placeable comme objet-noeud dans le flux, puis exécute l'événement."
+  },
+  "HusbandryFenceCustomizeStartEvent:writeStream": {
+   "en": "Writes the placeable as a node object to the stream.",
+   "fr": "Écrit le placeable comme objet-noeud dans le flux."
+  },
+  "HusbandryFenceCustomizeStartEvent:run": {
+   "en": "If received by the server, rebroadcasts it to other clients. When the placeable is synchronized, resolves the sending user (server only) and calls `startFenceCustomization(user, true)`.",
+   "fr": "Si le serveur le reçoit, le rediffuse aux autres clients. Quand le placeable est synchronisé, retrouve l'utilisateur émetteur (serveur seulement) et appelle `startFenceCustomization(user, true)`."
+  }
+ }
+}

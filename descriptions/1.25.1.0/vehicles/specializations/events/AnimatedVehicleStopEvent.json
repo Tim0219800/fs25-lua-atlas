@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/AnimatedVehicleStopEvent.lua",
+ "module": {
+  "en": "Network event class `AnimatedVehicleStopEvent` (extends `Event`) that replicates the stop of a named animation on a vehicle. It carries the vehicle and the animation name. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `AnimatedVehicleStopEvent` (hérite de `Event`) qui réplique l'arrêt d'une animation nommée sur un véhicule. Elle transporte le véhicule et le nom de l'animation. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "AnimatedVehicleStopEvent.emptyNew": {
+   "en": "Creates an empty `AnimatedVehicleStopEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `AnimatedVehicleStopEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "AnimatedVehicleStopEvent.new": {
+   "en": "Creates the event with its data: the vehicle and the animation name.",
+   "fr": "Crée l'événement avec ses données : le véhicule et le nom de l'animation."
+  },
+  "AnimatedVehicleStopEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle and the animation name), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule et le nom de l'animation), puis appelle `run`."
+  },
+  "AnimatedVehicleStopEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle and the animation name).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule et le nom de l'animation)."
+  },
+  "AnimatedVehicleStopEvent:run": {
+   "en": "Executes the event on the receiving side: calls `stopAnimation(name, true)` on the vehicle. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `stopAnimation(name, true)` sur le véhicule. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  }
+ }
+}

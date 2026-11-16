@@ -1,0 +1,125 @@
+{
+ "fichier": "vehicles/VehicleCamera.lua",
+ "module": {
+  "en": "Third-person or cabin camera of a vehicle (client-side). It wraps a camera node from the vehicle XML and manages rotation, zoom limits, smoothed follow/look-at positions, optional head tracking and seat suspension, collision-avoiding zoom by raycasts, input actions (mouse, gamepad, touch), FOV and savegame persistence of the pose. It registers with `g_cameraManager`, reads `GameSettings`, and sets `g_activeVehicleCamera` while active. Several methods called here (e.g. `updatePrecipitationCollisions`, the console command handlers) are not in the SDK dump.",
+  "fr": "Caméra à la troisième personne ou de cabine d'un véhicule (côté client). Elle enveloppe un noeud caméra du XML du véhicule et gère rotation, limites de zoom, suivi et visée lissés, suivi de tête optionnel et suspension du siège, zoom évitant les collisions par lancers de rayons, actions d'entrée (souris, manette, tactile), champ de vision et sauvegarde de la pose. Elle s'enregistre auprès de `g_cameraManager`, lit `GameSettings` et définit `g_activeVehicleCamera` quand elle est active. Plusieurs méthodes appelées ici (par ex. `updatePrecipitationCollisions`, les gestionnaires de commandes console) ne figurent pas dans le dump du SDK."
+ },
+ "fonctions": {
+  "VehicleCamera.new": {
+   "en": "Creates a camera for a vehicle with zeroed pose and input state, and subscribes to setting changes (active suspension camera, field of view; collision setting only if the FS22 collision mod is loaded or in a development build).",
+   "fr": "Crée une caméra pour un véhicule avec pose et état d'entrée à zéro, et s'abonne aux changements de réglages (caméra à suspension active, champ de vision ; réglage de collision seulement si le mod FS22 de collision est chargé ou en version de développement)."
+  },
+  "VehicleCamera:loadFromXML": {
+   "en": "Loads the camera from XML: validates the camera node, optional shadow focus box, inside/outside flags, FOV, rotation and zoom limits, smoothing, head tracking, raycast nodes and object changes. Restores the saved pose from the savegame unless the reset-camera setting applies. Returns false on invalid node or missing limit values. Note: the focus-box check reads `isInside` before it is assigned from XML.",
+   "fr": "Charge la caméra depuis le XML : valide le noeud caméra, la boîte de focus d'ombre optionnelle, les indicateurs intérieur/extérieur, le champ de vision, les limites de rotation et de zoom, le lissage, le suivi de tête, les noeuds de rayons et les changements d'objets. Restaure la pose sauvegardée sauf si le réglage de réinitialisation s'applique. Renvoie faux si le noeud est invalide ou si des limites manquent. À noter : le contrôle de la boîte de focus lit `isInside` avant son affectation depuis le XML."
+  },
+  "VehicleCamera:onPostLoad": {
+   "en": "Resolves the seat suspension node from `suspensionNodeIndex`; if valid, adds its Y offset to the camera origin and creates parent nodes so the camera can follow the suspension. Warns on invalid index or a torso suspension.",
+   "fr": "Résout le noeud de suspension du siège via `suspensionNodeIndex` ; s'il est valide, ajoute son décalage Y à l'origine de la caméra et crée des noeuds parents pour que la caméra suive la suspension. Avertit si l'indice est invalide ou s'il s'agit d'une suspension de torse."
+  },
+  "VehicleCamera:saveToXMLFile": {
+   "en": "Writes the camera rotation, translation, zoom and current Y field of view, plus the LOD debug state when that mode is on.",
+   "fr": "Écrit la rotation, la translation, le zoom et le champ de vision Y courant de la caméra, ainsi que l'état du mode de débogage LOD s'il est actif."
+  },
+  "VehicleCamera:delete": {
+   "en": "Removes the camera from `g_cameraManager`, deactivates it, deletes the camera node (only when position smoothing created a separate parent structure) and the world parent node, and unsubscribes from setting messages.",
+   "fr": "Retire la caméra de `g_cameraManager`, la désactive, supprime le noeud caméra (seulement si le lissage de position a créé une structure parent séparée) et le noeud parent monde, et se désabonne des messages de réglages."
+  },
+  "VehicleCamera:zoomSmoothly": {
+   "en": "Changes the zoom target by `offset`, clamped to `transMin`..`transMax` when set; the actual zoom then eases toward it in `update`. The offset is multiplied by 10 in LOD debug mode.",
+   "fr": "Modifie la cible de zoom de `offset`, bornée à `transMin`..`transMax` si définis ; le zoom réel s'en rapproche ensuite dans `update`. Le décalage est multiplié par 10 en mode de débogage LOD."
+  },
+  "VehicleCamera:raycastCallback": {
+   "en": "Raycast callback that stores the hit distance, normal and transform id used by `getCollisionDistance`.",
+   "fr": "Rappel de lancer de rayon qui mémorise la distance de l'impact, la normale et l'identifiant de transformation utilisés par `getCollisionDistance`."
+  },
+  "VehicleCamera:update": {
+   "en": "Per-frame update: eases the zoom, applies look input to X/Y rotation (only when active and no GUI is shown), handles head tracking, adjusts rotation to stay above terrain, shortens zoom on collisions, then updates the smoothed camera pose. Resets the camera if rotation becomes NaN. `dt` is in milliseconds.",
+   "fr": "Mise à jour par image : adoucit le zoom, applique l'entrée de regard aux rotations X/Y (seulement si active et sans interface affichée), gère le suivi de tête, ajuste la rotation pour rester au-dessus du terrain, raccourcit le zoom en cas de collision, puis met à jour la pose lissée. Réinitialise la caméra si la rotation devient NaN. `dt` est en millisecondes."
+  },
+  "VehicleCamera:onActivate": {
+   "en": "Activates the camera: optionally resets it, makes it the active camera in `g_cameraManager`, initializes smoothed positions, registers look up/down and left/right input events (and touch gestures if available), applies object changes, sets `g_activeVehicleCamera`. With cheat commands on, registers three console commands.",
+   "fr": "Active la caméra : la réinitialise éventuellement, la rend active dans `g_cameraManager`, initialise les positions lissées, enregistre les événements d'entrée de regard haut/bas et gauche/droite (et les gestes tactiles si disponibles), applique les changements d'objets, définit `g_activeVehicleCamera`. Avec les commandes de triche actives, enregistre trois commandes console."
+  },
+  "VehicleCamera:setLODDebugState": {
+   "en": "Toggles the LOD debug mode: when on, allows zoom up to 350 and forces view, LOD and terrain LOD distance coefficients to 1; when off, restores the default zoom, FOV and the coefficients from the graphics settings.",
+   "fr": "Active ou désactive le mode de débogage LOD : activé, autorise un zoom jusqu'à 350 et force à 1 les coefficients de distance de vue, de LOD et de LOD du terrain ; désactivé, restaure le zoom, le champ de vision et les coefficients issus des réglages graphiques."
+  },
+  "VehicleCamera:setCameraYDebugState": {
+   "en": "Toggles an orthographic top-down debug view with a given height, locking rotation and hiding the HUD; turning it off restores perspective and HUD. Debug use only.",
+   "fr": "Active ou désactive une vue de débogage orthographique de dessus avec une hauteur donnée, verrouillant la rotation et masquant l'interface ; la désactivation rétablit la perspective et l'interface. Usage de débogage uniquement."
+  },
+  "VehicleCamera:onDeactivate": {
+   "en": "Deactivates the camera: removes console commands, input events, touch listeners and object changes, clears precipitation collision bits, leaves LOD debug mode and clears `g_activeVehicleCamera` if it was this camera.",
+   "fr": "Désactive la caméra : retire les commandes console, les événements d'entrée, les écouteurs tactiles et les changements d'objets, efface les bits de collision de précipitations, quitte le mode de débogage LOD et vide `g_activeVehicleCamera` s'il s'agissait de cette caméra."
+  },
+  "VehicleCamera:actionEventLookUpDown": {
+   "en": "Input handler for vertical look: scales the value by 16.666 ms for mouse or by the current frame time otherwise, and accumulates it for the next `update`.",
+   "fr": "Gestionnaire d'entrée du regard vertical : met la valeur à l'échelle de 16,666 ms pour la souris ou du temps d'image courant sinon, et l'accumule pour le prochain `update`."
+  },
+  "VehicleCamera:touchEventLookUpDown": {
+   "en": "Touch gesture handler for vertical look; converts the gesture value with a screen-height factor and forwards it when the camera is active.",
+   "fr": "Gestionnaire de geste tactile pour le regard vertical ; convertit la valeur avec un facteur de hauteur d'écran et la transmet si la caméra est active."
+  },
+  "VehicleCamera:touchEventZoomInOut": {
+   "en": "Touch pinch handler: calls `zoomSmoothly(value * 15)` when the camera is active.",
+   "fr": "Gestionnaire de pincement tactile : appelle `zoomSmoothly(value * 15)` si la caméra est active."
+  },
+  "VehicleCamera:touchEventLookLeftRight": {
+   "en": "Touch gesture handler for horizontal look; converts the value with a screen aspect-ratio factor and forwards it when the camera is active.",
+   "fr": "Gestionnaire de geste tactile pour le regard horizontal ; convertit la valeur avec un facteur de rapport d'aspect de l'écran et la transmet si la caméra est active."
+  },
+  "VehicleCamera:actionEventLookLeftRight": {
+   "en": "Input handler for horizontal look, scaled like the vertical one and accumulated for `update`.",
+   "fr": "Gestionnaire d'entrée du regard horizontal, mis à l'échelle comme le vertical et accumulé pour `update`."
+  },
+  "VehicleCamera:resetCamera": {
+   "en": "Restores the original rotation, translation and zoom of the camera, clears the collision-limited zoom and re-aligns smoothed positions.",
+   "fr": "Restaure la rotation, la translation et le zoom d'origine de la caméra, efface le zoom limité par collision et réaligne les positions lissées."
+  },
+  "VehicleCamera:updateRotateNodeRotation": {
+   "en": "Applies rotX/rotY/rotZ to the rotate node. Adds steering-based Y rotation for articulated vehicles; in world-XZ mode it builds a direction aligned to the world up axis and falls back to plain rotation near the poles.",
+   "fr": "Applique rotX/rotY/rotZ au noeud de rotation. Ajoute une rotation Y liée à la direction pour les véhicules articulés ; en mode XZ monde, construit une direction alignée sur l'axe vertical du monde et revient à une rotation simple près des pôles."
+  },
+  "VehicleCamera:setSeparateCameraPose": {
+   "en": "Writes the smoothed position and look direction to the real camera node (either from position/look-at/up vectors or from the rotate node). In LOD debug mode it also adjusts FOV and draws the distance text.",
+   "fr": "Écrit la position et la direction de visée lissées sur le vrai noeud caméra (depuis les vecteurs position/cible/haut ou depuis le noeud de rotation). En mode de débogage LOD, ajuste aussi le champ de vision et affiche le texte de distance."
+  },
+  "VehicleCamera:getTiltDirectionOffset": {
+   "en": "Returns a horizontal up-vector tilt from device gravity when the outdoor camera has tilting enabled and a touchpad device is present, otherwise 0.",
+   "fr": "Renvoie une inclinaison horizontale du vecteur haut issue de la gravité de l'appareil quand la caméra extérieure a l'inclinaison activée et qu'un pavé tactile est présent, sinon 0."
+  },
+  "VehicleCamera:getCollisionDistance": {
+   "en": "Casts rays from the raycast nodes toward the target camera position, ignoring the own vehicle chain, mounted objects, split shapes and triggers. Returns hasCollision, distance, hit normal and normal dot direction; returns false if collision is disabled.",
+   "fr": "Lance des rayons depuis les noeuds de rayons vers la position cible de la caméra, en ignorant la chaîne du véhicule, les objets montés, les formes découpées et les déclencheurs. Renvoie hasCollision, la distance, la normale de l'impact et le produit normale·direction ; renvoie faux si les collisions sont désactivées."
+  },
+  "VehicleCamera:onActiveCameraSuspensionSettingChanged": {
+   "en": "Reacts to the active-suspension-camera setting by linking the camera position node under the suspension parent or the original parent. Only acts when a suspension node exists and the state changed.",
+   "fr": "Réagit au réglage de caméra à suspension active en liant le noeud de position de la caméra sous le parent de suspension ou le parent d'origine. N'agit que s'il existe un noeud de suspension et que l'état a changé."
+  },
+  "VehicleCamera:onFovySettingChanged": {
+   "en": "Recalculates the Y field of view from the default value via `calculateFovY` and applies it to the camera node.",
+   "fr": "Recalcule le champ de vision Y depuis la valeur par défaut via `calculateFovY` et l'applique au noeud caméra."
+  },
+  "VehicleCamera:onCameraCollisionDetectionSettingChanged": {
+   "en": "Stores the new state of the camera collision detection setting.",
+   "fr": "Mémorise le nouvel état du réglage de détection de collision de la caméra."
+  },
+  "VehicleCamera.registerCameraXMLPaths": {
+   "en": "Registers the vehicle camera XML schema: node, rotatable, limits (rotMinX/rotMaxX/transMin/transMax), inside flag, head tracking, shadow focus box, outdoor sounds, rotate node, pose, mirror, world XZ rotation, suspension index, smoothing parameters, raycast nodes and object changes.",
+   "fr": "Enregistre le schéma XML de la caméra de véhicule : noeud, rotatable, limites (rotMinX/rotMaxX/transMin/transMax), indicateur intérieur, suivi de tête, boîte de focus d'ombre, sons extérieurs, noeud de rotation, pose, miroir, rotation XZ monde, indice de suspension, paramètres de lissage, noeuds de rayons et changements d'objets."
+  },
+  "VehicleCamera.registerCameraSavegameXMLPaths": {
+   "en": "Registers the savegame XML schema for a camera: rotation, translation, zoom, FOV Y and the debug-mode keys.",
+   "fr": "Enregistre le schéma XML de sauvegarde d'une caméra : rotation, translation, zoom, champ de vision Y et clés des modes de débogage."
+  },
+  "VehicleCamera.consoleCommandLODDebug": {
+   "en": "Console command that toggles LOD debug mode on the active vehicle camera and returns a status string; asks to enter a vehicle first if none is active.",
+   "fr": "Commande console qui bascule le mode de débogage LOD sur la caméra de véhicule active et renvoie une chaîne d'état ; demande d'entrer d'abord dans un véhicule si aucune n'est active."
+  },
+  "VehicleCamera.consoleCommandCameraYDebug": {
+   "en": "Console command that toggles the orthographic Y debug view (optional height) on the active vehicle camera and returns a status string.",
+   "fr": "Commande console qui bascule la vue de débogage orthographique Y (hauteur optionnelle) sur la caméra de véhicule active et renvoie une chaîne d'état."
+  }
+ }
+}

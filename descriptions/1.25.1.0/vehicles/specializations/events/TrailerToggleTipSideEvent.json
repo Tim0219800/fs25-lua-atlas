@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/TrailerToggleTipSideEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the preferred tip side of a trailer between server and clients. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise le côté de bennage préféré d'une remorque entre serveur et clients. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "TrailerToggleTipSideEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "TrailerToggleTipSideEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a tip side index (Trailer.TIP_SIDE_NUM_BITS bits)); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un indice de côté de bennage (Trailer.TIP_SIDE_NUM_BITS bits)) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "TrailerToggleTipSideEvent:readStream": {
+      "en": "Reads a node object and a tip side index (Trailer.TIP_SIDE_NUM_BITS bits) from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un indice de côté de bennage (Trailer.TIP_SIDE_NUM_BITS bits) depuis le flux, puis appelle `run(connection)`."
+    },
+    "TrailerToggleTipSideEvent:writeStream": {
+      "en": "Writes a node object and a tip side index (Trailer.TIP_SIDE_NUM_BITS bits) to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un indice de côté de bennage (Trailer.TIP_SIDE_NUM_BITS bits) dans le flux (même ordre que `readStream`)."
+    },
+    "TrailerToggleTipSideEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself, then calls `setPreferedTipSide(index, true)` on the object if synchronized.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet, puis appelle `setPreferedTipSide(indice, true)` sur l'objet s'il est synchronisé."
+    }
+  }
+}

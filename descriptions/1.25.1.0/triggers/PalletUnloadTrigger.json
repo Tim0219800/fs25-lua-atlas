@@ -1,0 +1,29 @@
+{
+ "fichier": "triggers/PalletUnloadTrigger.lua",
+ "module": {
+  "en": "Subclass of UnloadTrigger that detects pallets (objects with isPallet) entering a vehicle-collision trigger and either unloads them automatically on the server or lets the player trigger the unload. It tracks pallets carrying a supported fill type and, when autoUnload is off, nearby vehicles and the player. The dump has a gap where methods such as unloadPallets and updateActivatableObject would be, so their code is not visible here (UNVERIFIED).",
+  "fr": "Sous-classe de UnloadTrigger qui détecte les palettes (objets avec isPallet) entrant dans un trigger de collision véhicule et soit les décharge automatiquement côté serveur, soit laisse le joueur déclencher le déchargement. Elle suit les palettes portant un type supporté et, si autoUnload est désactivé, les véhicules proches et le joueur. Le dump présente un trou à l'emplacement de méthodes comme unloadPallets et updateActivatableObject, dont le code n'est donc pas visible ici (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PalletUnloadTrigger.registerXMLPaths": {
+   "en": "Registers the parent UnloadTrigger XML paths plus triggerNode, autoUnload (default true) and autoUnloadStrapped (default false).",
+   "fr": "Enregistre les chemins XML du parent UnloadTrigger ainsi que triggerNode, autoUnload (true par défaut) et autoUnloadStrapped (false par défaut)."
+  },
+  "PalletUnloadTrigger.new": {
+   "en": "Creates the trigger on top of UnloadTrigger.new with its activatable, empty pallet and vehicle tables, enabled, autoUnload on and autoUnloadStrapped off.",
+   "fr": "Crée le trigger au-dessus d'UnloadTrigger.new avec son activable, des tables vides de palettes et de véhicules, actif, autoUnload activé et autoUnloadStrapped désactivé."
+  },
+  "PalletUnloadTrigger:load": {
+   "en": "Calls the parent load, then reads triggerNode and returns false if it is missing or if its collision mask lacks the VEHICLE bit (logged as an XML error). Registers the physics callback `palletTriggerCallback` and reads autoUnload and autoUnloadStrapped.",
+   "fr": "Appelle le load du parent, puis lit triggerNode et retourne false s'il manque ou si son masque de collision n'a pas le bit VEHICLE (erreur XML journalisée). Enregistre le callback physique `palletTriggerCallback` et lit autoUnload et autoUnloadStrapped."
+  },
+  "PalletUnloadTrigger:delete": {
+   "en": "Removes the physics trigger, drops the delete listeners on tracked pallets, clears the pallet and vehicle tables, then calls the parent delete.",
+   "fr": "Retire le trigger physique, supprime les écouteurs de suppression des palettes suivies, vide les tables de palettes et de véhicules, puis appelle le delete du parent."
+  },
+  "PalletUnloadTrigger:palletTriggerCallback": {
+   "en": "Physics callback. A pallet with a non-empty fill unit of a supported type is added on enter (removed on leave); with autoUnload the server then calls unloadPallets. Without autoUnload it counts vehicles in range and tracks the local player, then refreshes the activatable.",
+   "fr": "Callback physique. Une palette ayant une unité non vide d'un type supporté est ajoutée à l'entrée (retirée à la sortie) ; avec autoUnload le serveur appelle alors unloadPallets. Sans autoUnload il compte les véhicules à portée et suit le joueur local, puis rafraîchit l'activable."
+  }
+ }
+}

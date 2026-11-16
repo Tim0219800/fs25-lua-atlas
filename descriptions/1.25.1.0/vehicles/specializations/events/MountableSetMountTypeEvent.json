@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/MountableSetMountTypeEvent.lua",
+ "module": {
+  "en": "Network event class `MountableSetMountTypeEvent` (extends `Event`) that replicates the dynamic mount type of a mountable object. It carries the object, a mount type (`MountableObject.MOUNT_TYPE_SEND_NUM_BITS` bits) and an optional mount object. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `MountableSetMountTypeEvent` (hérite de `Event`) qui réplique le type de montage dynamique d'un objet montable. Elle transporte l'objet, un type de montage (`MountableObject.MOUNT_TYPE_SEND_NUM_BITS` bits) et un objet de montage optionnel. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "MountableSetMountTypeEvent.emptyNew": {
+   "en": "Creates an empty `MountableSetMountTypeEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `MountableSetMountTypeEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "MountableSetMountTypeEvent.new": {
+   "en": "Creates the event with its data: the object, a mount type (`MountableObject.MOUNT_TYPE_SEND_NUM_BITS` bits) and an optional mount object.",
+   "fr": "Crée l'événement avec ses données : l'objet, un type de montage (`MountableObject.MOUNT_TYPE_SEND_NUM_BITS` bits) et un objet de montage optionnel."
+  },
+  "MountableSetMountTypeEvent:readStream": {
+   "en": "Reads the event data from the network stream (the object, a mount type (`MountableObject.MOUNT_TYPE_SEND_NUM_BITS` bits) and an optional mount object), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (l'objet, un type de montage (`MountableObject.MOUNT_TYPE_SEND_NUM_BITS` bits) et un objet de montage optionnel), puis appelle `run`."
+  },
+  "MountableSetMountTypeEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the object, a mount type (`MountableObject.MOUNT_TYPE_SEND_NUM_BITS` bits) and an optional mount object).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (l'objet, un type de montage (`MountableObject.MOUNT_TYPE_SEND_NUM_BITS` bits) et un objet de montage optionnel)."
+  },
+  "MountableSetMountTypeEvent:run": {
+   "en": "Executes the event on the receiving side: calls `setDynamicMountType(mountType, mountObject, true)` on the object. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `setDynamicMountType(mountType, mountObject, true)` sur l'objet. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  },
+  "MountableSetMountTypeEvent.sendEvent": {
+   "en": "Helper that sends the event: the server broadcasts it to clients, a client sends it to the server. Skipped when `noEventSend` is set.",
+   "fr": "Fonction utilitaire d'envoi : le serveur diffuse l'événement aux clients, un client l'envoie au serveur. Ignorée si `noEventSend` est activé."
+  }
+ }
+}

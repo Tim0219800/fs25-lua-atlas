@@ -1,0 +1,133 @@
+{
+ "fichier": "vehicles/specializations/Consumable.lua",
+ "module": {
+  "en": "Vehicle specialization for tools that use swappable consumables (for example bales, bags or pallets of wrapping, seed or similar items), requiring `FillUnit`. Each consumable type maps to a fill unit with visual storage slots and consuming slots whose meshes come from `g_consumableManager`. It tracks the consumed fill level and variation, drives mesh scale, shader parameters and animations, saves and syncs this state, shows an empty warning and exposes a refill dialog through a `ConsumableActivatable`. Configurations can set the default consumable. Class table definition and `Consumable.CONFIG_NAMES` constants are not in the dump (stripped header).",
+  "fr": "Spécialisation de véhicule pour les outils utilisant des consommables interchangeables (par exemple balles, sacs ou palettes de film, de semences ou d'objets similaires), qui exige `FillUnit`. Chaque type de consommable est lié à une unité de remplissage, avec des emplacements visuels de stockage et de consommation dont les maillages viennent de `g_consumableManager`. Elle suit le niveau consommé et la variante, pilote échelle des maillages, paramètres de shader et animations, sauvegarde et synchronise cet état, affiche un avertissement de vide et propose un dialogue de recharge via un `ConsumableActivatable`. Les configurations peuvent définir le consommable par défaut. La définition de la table de classe et la constante `Consumable.CONFIG_NAMES` ne figurent pas dans le dump (en-tête supprimé)."
+ },
+ "fonctions": {
+  "Consumable.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the `FillUnit` specialization.",
+   "fr": "Renvoie vrai uniquement si le type de véhicule possède la spécialisation `FillUnit`."
+  },
+  "Consumable.initSpecialization": {
+   "en": "Registers a shop configuration type per name in `Consumable.CONFIG_NAMES`, plus the XML schema under `vehicle.consumable` (types, slots, consuming animations, shader nodes, object changes) and the savegame schema.",
+   "fr": "Enregistre un type de configuration de boutique pour chaque nom de `Consumable.CONFIG_NAMES`, ainsi que le schéma XML sous `vehicle.consumable` (types, emplacements, animations de consommation, nœuds de shader, changements d'objets) et le schéma de sauvegarde."
+  },
+  "Consumable.registerEvents": {
+   "en": "Registers the vehicle event `onConsumableVariationChanged`, raised when the consuming variation changes.",
+   "fr": "Enregistre l'événement de véhicule `onConsumableVariationChanged`, déclenché lorsque la variante en cours de consommation change."
+  },
+  "Consumable.registerFunctions": {
+   "en": "Registers six vehicle functions: variation lookup by fill unit, slot variation setter, `updateConsumable`, availability check, empty-warning check and the fill trigger speed factor.",
+   "fr": "Enregistre six fonctions de véhicule : recherche de variante par unité de remplissage, définition de la variante d'un emplacement, `updateConsumable`, test de disponibilité, test d'avertissement de vide et facteur de vitesse du déclencheur de remplissage."
+  },
+  "Consumable.registerOverwrittenFunctions": {
+   "en": "Overrides `addFillUnitFillLevel`, `getFillUnitFreeCapacity` and `collectPalletTensionBeltNodes`.",
+   "fr": "Surcharge `addFillUnitFillLevel`, `getFillUnitFreeCapacity` et `collectPalletTensionBeltNodes`."
+  },
+  "Consumable.registerEventListeners": {
+   "en": "Subscribes to load, post-load, delete, stream read/write, update stream, dirty mask cleared, update, draw and the fill unit events (level changed, filling state, trigger added or removed).",
+   "fr": "S'abonne aux événements de chargement, post-chargement, suppression, lecture/écriture de flux, flux de mise à jour, effacement du masque de modification, mise à jour, affichage et aux événements d'unité de remplissage (niveau modifié, état de remplissage, ajout ou retrait de déclencheur)."
+  },
+  "Consumable:onLoad": {
+   "en": "Reads each consumable type from XML (fill unit, slots, consuming settings, animations, object changes, shader nodes), skipping invalid ones with a warning. It sets the fill unit capacity to the slot count, applies configuration default names and creates the activatable.",
+   "fr": "Lit chaque type de consommable dans le XML (unité de remplissage, emplacements, paramètres de consommation, animations, changements d'objets, nœuds de shader), en ignorant les types invalides avec un avertissement. Fixe la capacité de l'unité au nombre d'emplacements, applique les noms par défaut des configurations et crée l'activable."
+  },
+  "Consumable:onPostLoad": {
+   "en": "Restores consumed level, variation and storage slot variations from the savegame unless vehicles are reset. For a new vehicle not spawned empty, it fills the unit with the default consumable. Then refreshes the activatable.",
+   "fr": "Restaure le niveau consommé, la variante et celles des emplacements de stockage depuis la sauvegarde, sauf réinitialisation des véhicules. Pour un véhicule neuf non créé vide, remplit l'unité avec le consommable par défaut. Puis met à jour l'activable."
+  },
+  "Consumable:onDelete": {
+   "en": "Removes the refill activatable from the activatable objects system.",
+   "fr": "Retire l'activable de recharge du système d'objets activables."
+  },
+  "Consumable:saveToXMLFile": {
+   "en": "Saves, for each type, the name, consuming fill level and consuming variation name, plus the variation name of each storage slot.",
+   "fr": "Sauvegarde, pour chaque type, le nom, le niveau de consommation et le nom de la variante en cours, ainsi que le nom de la variante de chaque emplacement de stockage."
+  },
+  "Consumable:onReadStream": {
+   "en": "Client side: on the initial sync reads consuming level and variation, then each storage slot variation, and updates meshes and pallet straps.",
+   "fr": "Côté client : lors de la synchronisation initiale, lit niveau et variante de consommation, puis la variante de chaque emplacement de stockage, et met à jour maillages et sangles de palette."
+  },
+  "Consumable:onWriteStream": {
+   "en": "Server side: writes the same consuming level, variation and storage slot variation data that `onReadStream` reads, in the same order.",
+   "fr": "Côté serveur : écrit les mêmes données de niveau, variante de consommation et variantes des emplacements de stockage que lit `onReadStream`, dans le même ordre."
+  },
+  "Consumable:onReadUpdateStream": {
+   "en": "Client side: when the dirty flag is set, reads per-type consuming data and storage slot variations if flagged, applying them to the meshes.",
+   "fr": "Côté client : lorsque le drapeau de modification est présent, lit les données de consommation par type et les variantes des emplacements si elles sont signalées, puis les applique aux maillages."
+  },
+  "Consumable:onWriteUpdateStream": {
+   "en": "Server side: writes per-type consuming data and all storage slot variations, each preceded by a bool telling whether it changed.",
+   "fr": "Côté serveur : écrit les données de consommation par type et toutes les variantes des emplacements, chacune précédée d'un booléen indiquant si elle a changé."
+  },
+  "Consumable:onDirtyMaskCleared": {
+   "en": "Resets the per-type and per-slot dirty markers after the dirty mask has been cleared.",
+   "fr": "Réinitialise les marqueurs de modification par type et par emplacement une fois le masque de modification effacé."
+  },
+  "Consumable:onUpdate": {
+   "en": "Moves each dirty consuming animation toward its target time at its speed scale, wrapping the time at 1 or 0, and keeps the vehicle active until all animations reach their target.",
+   "fr": "Fait avancer chaque animation de consommation en attente vers son temps cible selon son échelle de vitesse, avec bouclage à 1 ou 0, et garde le véhicule actif jusqu'à ce que toutes atteignent leur cible."
+  },
+  "Consumable:onDraw": {
+   "en": "Shows a blinking warning for the first type with consuming slots when both its consuming level and fill unit are at zero and the empty-warning check allows it.",
+   "fr": "Affiche un avertissement clignotant pour le premier type à emplacements de consommation dont le niveau de consommation et celui de l'unité sont nuls, si le test d'avertissement de vide l'autorise."
+  },
+  "Consumable:onFillUnitFillLevelChanged": {
+   "en": "Server only. When the type's fill unit changes, fills or empties storage slots one by one. The variation is taken from the fill trigger source, then the consuming variation, then the default, and consuming slots are refilled if there are no storage slots.",
+   "fr": "Serveur uniquement. Quand l'unité du type change, remplit ou vide les emplacements de stockage un par un. La variante vient de la source du déclencheur de remplissage, puis de la variante en cours, puis de celle par défaut ; les emplacements de consommation sont rechargés s'il n'y a pas d'emplacement de stockage."
+  },
+  "Consumable:onFillUnitIsFillingStateChanged": {
+   "en": "When filling ends, refills the consuming slots for types whose consuming level is zero, otherwise only refreshes the display.",
+   "fr": "À la fin du remplissage, recharge les emplacements de consommation des types dont le niveau est nul, sinon ne fait que rafraîchir l'affichage."
+  },
+  "Consumable:onAddedFillUnitTrigger": {
+   "en": "Refreshes the refill activatable when a fill trigger becomes available.",
+   "fr": "Met à jour l'activable de recharge lorsqu'un déclencheur de remplissage devient disponible."
+  },
+  "Consumable:onRemovedFillUnitTrigger": {
+   "en": "Refreshes the refill activatable when a fill trigger is removed.",
+   "fr": "Met à jour l'activable de recharge lorsqu'un déclencheur de remplissage est retiré."
+  },
+  "Consumable:getConsumableVariationIndexByFillUnitIndex": {
+   "en": "Returns the variation index of the first filled storage slot of the type using that fill unit, else the last consumed variation, or nil if no type matches.",
+   "fr": "Renvoie l'index de variante du premier emplacement de stockage rempli du type utilisant cette unité, sinon la dernière variante consommée, ou nil si aucun type ne correspond."
+  },
+  "Consumable:setConsumableSlotVariationIndex": {
+   "en": "Sets a storage slot's variation (0 = empty), replacing its mesh with the one from `g_consumableManager` and updating washable, wearable and tension belt nodes. Marks the slot dirty and raises the vehicle dirty flag.",
+   "fr": "Définit la variante d'un emplacement de stockage (0 = vide), remplace son maillage par celui de `g_consumableManager` et met à jour les nœuds lavables, usables et de sangle. Marque l'emplacement et lève le drapeau de modification du véhicule."
+  },
+  "Consumable:updateConsumable": {
+   "en": "Core update: adds `delta` to the consuming level and optionally pulls a new unit from the fill unit. It refreshes meshes, shader parameters, scale, animation targets, object changes and the displayed fill level, raises `onConsumableVariationChanged`, and flags the sync.",
+   "fr": "Mise à jour centrale : ajoute `delta` au niveau de consommation et, si besoin, prélève une nouvelle unité dans l'unité de remplissage. Rafraîchit maillages, paramètres de shader, échelle, cibles d'animation, changements d'objets et niveau affiché, déclenche `onConsumableVariationChanged` et signale la synchronisation."
+  },
+  "Consumable:getConsumableIsAvailable": {
+   "en": "Returns true if the named type still has consuming material left, or true when the type name is unknown.",
+   "fr": "Renvoie vrai s'il reste de la matière à consommer pour le type nommé, ou vrai si le nom de type est inconnu."
+  },
+  "Consumable:getShowConsumableEmptyWarning": {
+   "en": "Returns true if the named type's consuming level is exactly zero, false for unknown types.",
+   "fr": "Renvoie vrai si le niveau de consommation du type nommé est exactement nul, faux pour un type inconnu."
+  },
+  "Consumable:getCustomFillTriggerSpeedFactor": {
+   "en": "Returns 1 normally, or `math.huge` once all storage slots are full on a type with consuming slots, so the consuming slots fill instantly.",
+   "fr": "Renvoie 1 en temps normal, ou `math.huge` lorsque tous les emplacements de stockage sont pleins sur un type à emplacements de consommation, de sorte que ceux-ci se remplissent instantanément."
+  },
+  "Consumable:addFillUnitFillLevel": {
+   "en": "Override. For positive deltas, caps the added amount to the room left (storage slots plus unconsumed part of consuming slots) before calling the parent.",
+   "fr": "Surcharge. Pour les deltas positifs, plafonne la quantité ajoutée à la place restante (emplacements de stockage plus partie non consommée des emplacements de consommation) avant d'appeler le parent."
+  },
+  "Consumable:getFillUnitFreeCapacity": {
+   "en": "Override. For consumable fill units, returns slot-based free capacity; consuming slots cannot be refilled until fully consumed when storage slots exist. Other units use the parent.",
+   "fr": "Surcharge. Pour les unités de consommables, renvoie la capacité libre basée sur les emplacements ; les emplacements de consommation ne se rechargent qu'une fois entièrement consommés s'il existe des emplacements de stockage. Les autres unités utilisent le parent."
+  },
+  "Consumable:collectPalletTensionBeltNodes": {
+   "en": "Override. After the parent, appends the tension belt meshes of all storage slots to the node list.",
+   "fr": "Surcharge. Après le parent, ajoute à la liste de nœuds les maillages de sangles de tous les emplacements de stockage."
+  },
+  "Consumable.updateActivatable": {
+   "en": "Adds the refill activatable if any type is empty and allows the refill dialog, and no fill trigger is nearby; otherwise removes it.",
+   "fr": "Ajoute l'activable de recharge si un type est vide et autorise le dialogue de recharge, et qu'aucun déclencheur de remplissage n'est présent ; sinon le retire."
+  }
+ }
+}

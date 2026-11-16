@@ -1,0 +1,45 @@
+{
+ "fichier": "placeables/specializations/PlaceableTipOcclusionAreas.lua",
+ "module": {
+  "en": "Placeable specialization that lets a building mark ground areas where bulk material cannot be tipped. It loads rectangles from `placeable.tipOcclusionUpdateAreas` (start and end nodes) or a legacy single `tipOcclusionUpdateArea`. On the server it flags the matching region of the height-map collision data as dirty so tip collisions get refreshed.",
+  "fr": "Spécialisation de placeable qui permet à un bâtiment de marquer des zones au sol où l'on ne peut pas déverser de vrac. Elle charge des rectangles depuis `placeable.tipOcclusionUpdateAreas` (nœuds de début et de fin) ou un ancien `tipOcclusionUpdateArea` unique. Côté serveur, elle marque la zone correspondante de la carte de collision des hauteurs comme à recalculer afin de rafraîchir les collisions de déversement."
+ },
+ "fonctions": {
+  "PlaceableTipOcclusionAreas.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableTipOcclusionAreas.registerFunctions": {
+   "en": "Registers `loadTipOcclusionArea` and `updateTipOcclusionAreas` on the placeable type.",
+   "fr": "Enregistre `loadTipOcclusionArea` et `updateTipOcclusionAreas` sur le type de placeable."
+  },
+  "PlaceableTipOcclusionAreas.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete and onFinalizePlacement.",
+   "fr": "S'abonne à onLoad, onDelete et onFinalizePlacement."
+  },
+  "PlaceableTipOcclusionAreas.registerXMLPaths": {
+   "en": "Declares the XML keys for the legacy single area (`#sizeX`, `#sizeZ`, `#centerX`, `#centerZ`) and the multi-area list with `#startNode` and `#endNode`.",
+   "fr": "Déclare les clés XML de l'ancienne zone unique (`#sizeX`, `#sizeZ`, `#centerX`, `#centerZ`) et de la liste multi-zones avec `#startNode` et `#endNode`."
+  },
+  "PlaceableTipOcclusionAreas:onLoad": {
+   "en": "Builds the list of areas from the XML (each listed area through `loadTipOcclusionArea`, plus the legacy single area if size X and Z are both given) and clears the update-on-delete flag.",
+   "fr": "Construit la liste des zones depuis le XML (chaque zone listée via `loadTipOcclusionArea`, plus l'ancienne zone unique si les tailles X et Z sont données) et remet à zéro le drapeau de mise à jour à la suppression."
+  },
+  "PlaceableTipOcclusionAreas:onDelete": {
+   "en": "Server only, and not while reloading: if the flag set at placement is on, refreshes the occlusion areas so the freed ground can be used again.",
+   "fr": "Serveur seulement, et pas pendant un rechargement : si le drapeau posé lors du placement est actif, rafraîchit les zones d'occlusion pour que le sol libéré redevienne utilisable."
+  },
+  "PlaceableTipOcclusionAreas:loadTipOcclusionArea": {
+   "en": "Reads start and end nodes, warns and returns false if one is missing, then fills `area` with center and size (in root-node local XZ) from the two node positions. Returns true on success.",
+   "fr": "Lit les nœuds de début et de fin, avertit et renvoie false si l'un manque, puis remplit `area` avec le centre et la taille (XZ locaux au nœud racine) d'après les positions des deux nœuds. Renvoie true en cas de succès."
+  },
+  "PlaceableTipOcclusionAreas:onFinalizePlacement": {
+   "en": "Server only: refreshes the occlusion areas unless the placeable was loaded from a valid savegame whose tip and placement collision data are still valid; then arms the refresh on delete.",
+   "fr": "Serveur seulement : rafraîchit les zones d'occlusion sauf si le placeable vient d'une sauvegarde valide dont les collisions de déversement et de placement sont encore valides ; arme ensuite le rafraîchissement à la suppression."
+  },
+  "PlaceableTipOcclusionAreas:updateTipOcclusionAreas": {
+   "en": "Server only: converts each area into a world-space bounding box and marks it dirty in `g_densityMapHeightManager` collision map.",
+   "fr": "Serveur seulement : convertit chaque zone en boîte englobante monde et la marque à recalculer dans la carte de collision de `g_densityMapHeightManager`."
+  }
+ }
+}

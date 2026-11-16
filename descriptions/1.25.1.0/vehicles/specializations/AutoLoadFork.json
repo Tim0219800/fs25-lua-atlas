@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/AutoLoadFork.lua",
+ "module": {
+  "en": "Specialization for a fork-style vehicle that picks up a pallet or bale entering a trigger and carries it mounted on a joint node, with an optional lift animation and an unload input. Detection runs on the server only. Mounted bales or vehicle ids are written to and restored from the savegame. Several registered functions (`mountObjectToFork`, `doUnloadFork`, `getCanUnloadFork`, `getIsForkUnloadingAllowed`, `onUnmountObject`) have no body in the SDK dump: UNVERIFIED.",
+  "fr": "Spécialisation pour un véhicule de type fourche qui prend une palette ou une balle entrant dans un trigger et la transporte montée sur un noeud d'articulation, avec une animation de levage optionnelle et une touche de déchargement. La détection se fait uniquement côté serveur. Les balles ou identifiants de véhicules montés sont sauvegardés et restaurés. Plusieurs fonctions enregistrées (`mountObjectToFork`, `doUnloadFork`, `getCanUnloadFork`, `getIsForkUnloadingAllowed`, `onUnmountObject`) n'ont pas de corps dans le dump du SDK : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "AutoLoadFork.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisite.",
+   "fr": "Renvoie toujours true : cette spécialisation n'a aucun prérequis."
+  },
+  "AutoLoadFork.initSpecialization": {
+   "en": "Registers the XML keys `vehicle.autoLoadFork` (trigger node, joint node, lift animation name and speed scale) and the savegame keys for lift animation time and mounted vehicles or bales.",
+   "fr": "Enregistre les clés XML `vehicle.autoLoadFork` (noeud trigger, noeud d'articulation, nom et vitesse de l'animation de levage) et les clés de sauvegarde pour l'animation de levage et les véhicules ou balles montés."
+  },
+  "AutoLoadFork.registerFunctions": {
+   "en": "Registers the vehicle functions of this specialization: trigger callback, unload checks, `doUnloadFork`, `onUnmountObject` and `mountObjectToFork`.",
+   "fr": "Enregistre les fonctions de véhicule de cette spécialisation : callback du trigger, vérifications de déchargement, `doUnloadFork`, `onUnmountObject` et `mountObjectToFork`."
+  },
+  "AutoLoadFork.registerOverwrittenFunctions": {
+   "en": "Overrides `addToPhysics` and `removeFromPhysics` so the carried objects follow the vehicle in and out of the physics world.",
+   "fr": "Surcharge `addToPhysics` et `removeFromPhysics` pour que les objets transportés suivent le véhicule dans et hors du monde physique."
+  },
+  "AutoLoadFork.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, onUpdate, onDeactivate, onRootVehicleChanged and onRegisterActionEvents.",
+   "fr": "S'abonne à onLoad, onPostLoad, onDelete, onUpdate, onDeactivate, onRootVehicleChanged et onRegisterActionEvents."
+  },
+  "AutoLoadFork:onLoad": {
+   "en": "Reads the XML configuration. On the server it registers the pallet detection trigger; on all sides it reads the joint node and lift animation and creates the empty mounted and unmounted object lists.",
+   "fr": "Lit la configuration XML. Sur le serveur, elle enregistre le trigger de détection des palettes ; partout, elle lit le noeud d'articulation et l'animation de levage et crée les listes vides d'objets montés et démontés."
+  },
+  "AutoLoadFork:onPostLoad": {
+   "en": "When loading a non-reset savegame, restores the lift animation time, queues saved vehicles by unique id, and recreates, registers and mounts saved bales on the fork.",
+   "fr": "Au chargement d'une sauvegarde non réinitialisée, restaure le temps d'animation de levage, met en attente les véhicules sauvegardés par identifiant unique, et recrée, enregistre et monte les balles sauvegardées sur la fourche."
+  },
+  "AutoLoadFork:onDelete": {
+   "en": "On the server, releases every mounted object with `unmountKinematic`, then removes the trigger if there is one.",
+   "fr": "Sur le serveur, libère chaque objet monté avec `unmountKinematic`, puis retire le trigger s'il existe."
+  },
+  "AutoLoadFork:saveToXMLFile": {
+   "en": "Saves the lift animation time and each mounted object: a vehicle by unique id, a bale through its own save routine.",
+   "fr": "Sauvegarde le temps d'animation de levage et chaque objet monté : un véhicule par identifiant unique, une balle via sa propre routine de sauvegarde."
+  },
+  "AutoLoadFork:onRegisterActionEvents": {
+   "en": "On clients, registers the UNLOAD_FORK input action when the vehicle is active for input, ignoring selection, with normal text priority.",
+   "fr": "Sur les clients, enregistre l'action d'entrée UNLOAD_FORK quand le véhicule est actif pour la saisie, sans tenir compte de la sélection, avec une priorité de texte normale."
+  },
+  "AutoLoadFork:onRootVehicleChanged": {
+   "en": "Keeps a `forkLifting` action in the root vehicle's action controller: creates it with its callback and icons, moves it to a new controller, or removes it when there is none.",
+   "fr": "Maintient une action `forkLifting` dans l'action controller du véhicule racine : la crée avec son callback et ses icônes, la rattache à un nouveau contrôleur, ou la supprime s'il n'y en a plus."
+  },
+  "AutoLoadFork.actionControllerEvent": {
+   "en": "Action controller callback: plays the lift animation forward or backward according to `direction`, scaled by its speed. Always returns true.",
+   "fr": "Callback de l'action controller : joue l'animation de levage vers l'avant ou l'arrière selon `direction`, à sa vitesse. Renvoie toujours true."
+  },
+  "AutoLoadFork.onDeleteMountedObject": {
+   "en": "Delete listener: when a mounted object is deleted, drops it from the mounted list and records it in the unmounted list with the current time.",
+   "fr": "Écouteur de suppression : quand un objet monté est supprimé, le retire de la liste des objets montés et l'ajoute à celle des objets démontés avec l'heure courante."
+  },
+  "AutoLoadFork:onAutoLoadForkTriggerCallback": {
+   "en": "Trigger callback for pallets and bales. On enter, if nothing is mounted and the remount distance is zero or less, mounts the object unless it just left (`BLOCK_REMOUNT_TIME`). On leave, forgets it. Note: the first inner loop over mounted objects can never run.",
+   "fr": "Callback du trigger pour palettes et balles. À l'entrée, si rien n'est monté et que la distance de remontage est nulle ou négative, monte l'objet sauf s'il vient de sortir (`BLOCK_REMOUNT_TIME`). À la sortie, l'oublie. À noter : la première boucle interne sur les objets montés ne peut jamais s'exécuter."
+  },
+  "AutoLoadFork.actionEventUnloadFork": {
+   "en": "Input callback for UNLOAD_FORK: simply calls `doUnloadFork` on the vehicle.",
+   "fr": "Callback d'entrée pour UNLOAD_FORK : appelle simplement `doUnloadFork` sur le véhicule."
+  },
+  "AutoLoadFork:addToPhysics": {
+   "en": "Calls the parent function, then on the server re-adds each carried object to physics. Returns false if the parent failed.",
+   "fr": "Appelle la fonction parente puis, sur le serveur, rajoute chaque objet transporté à la physique. Renvoie false si le parent a échoué."
+  },
+  "AutoLoadFork:removeFromPhysics": {
+   "en": "Calls the parent function, then on the server removes each carried object from physics. Returns the parent's result.",
+   "fr": "Appelle la fonction parente puis, sur le serveur, retire chaque objet transporté de la physique. Renvoie le résultat du parent."
+  }
+ }
+}

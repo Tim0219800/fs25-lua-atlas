@@ -1,0 +1,45 @@
+{
+ "fichier": "ai/parameters/AIParameterVehicle.lua",
+ "module": {
+  "en": "AI job parameter that references one vehicle by network object id. It is displayed as the vehicle name and cannot be edited by the player once set. It is saved by vehicle unique id and validates that the vehicle exists and, by default, supports AI targets.",
+  "fr": "Paramètre de job IA qui référence un véhicule par son identifiant d'objet réseau. Il s'affiche sous forme du nom du véhicule et ne peut pas être modifié par le joueur. Il est sauvegardé par identifiant unique du véhicule et vérifie que le véhicule existe et, par défaut, gère les cibles IA."
+ },
+ "fonctions": {
+  "AIParameterVehicle.new": {
+   "en": "Creates the parameter with type TEXT and no vehicle selected.",
+   "fr": "Crée le paramètre de type TEXT, sans véhicule sélectionné."
+  },
+  "AIParameterVehicle:saveToXMLFile": {
+   "en": "Writes the unique id of the vehicle to `#vehicleUniqueId` when a vehicle is resolved. Nothing is written otherwise.",
+   "fr": "Écrit l'identifiant unique du véhicule dans `#vehicleUniqueId` lorsqu'un véhicule est résolu. Sinon rien n'est écrit."
+  },
+  "AIParameterVehicle:readStream": {
+   "en": "Reads a presence flag and, if set, the network node object id of the vehicle.",
+   "fr": "Lit un indicateur de présence puis, s'il est actif, l'identifiant d'objet réseau du véhicule."
+  },
+  "AIParameterVehicle:writeStream": {
+   "en": "Writes a presence flag and, if a vehicle is set, its network node object id.",
+   "fr": "Écrit un indicateur de présence puis, si un véhicule est défini, son identifiant d'objet réseau."
+  },
+  "AIParameterVehicle:getCanBeChanged": {
+   "en": "Always returns false: the player cannot change this parameter in the UI.",
+   "fr": "Retourne toujours false : le joueur ne peut pas modifier ce paramètre dans l'interface."
+  },
+  "AIParameterVehicle:getString": {
+   "en": "Returns the vehicle name for display, or an empty string if it cannot be resolved.",
+   "fr": "Retourne le nom du véhicule pour l'affichage, ou une chaîne vide s'il est introuvable."
+  },
+  "AIParameterVehicle:setVehicle": {
+   "en": "Stores the network object id of the given vehicle.",
+   "fr": "Stocke l'identifiant d'objet réseau du véhicule donné."
+  },
+  "AIParameterVehicle:getVehicle": {
+   "en": "Resolves the stored id to a vehicle and returns it only if it is synchronized, otherwise nil.",
+   "fr": "Résout l'identifiant stocké en véhicule et ne le retourne que s'il est synchronisé, sinon nil."
+  },
+  "AIParameterVehicle:validate": {
+   "en": "Fails if no vehicle is set or it no longer exists. Unless the argument is false, it also requires the vehicle to have `setAITarget`. Returns a boolean and a localized error.",
+   "fr": "Échoue si aucun véhicule n'est défini ou s'il n'existe plus. Sauf si l'argument vaut false, exige aussi que le véhicule possède `setAITarget`. Retourne un booléen et une erreur localisée."
+  }
+ }
+}

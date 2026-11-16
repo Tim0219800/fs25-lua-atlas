@@ -1,0 +1,13 @@
+{
+ "fichier": "field/FieldState.lua",
+ "module": {
+  "en": "Plain data holder for the state of a field or sampled spot: fruit, growth, weeds, stones, ground type, spray, lime, roller, plow, stubble and water levels, farmland and owner. It has no logic of its own; other classes fill it.",
+  "fr": "Simple conteneur de données pour l'état d'un champ ou d'un point échantillonné : culture, croissance, mauvaises herbes, cailloux, type de sol, pulvérisation, chaux, rouleau, labour, chaume et eau, parcelle et propriétaire. Aucune logique propre ; d'autres classes le remplissent."
+ },
+ "fonctions": {
+  "FieldState.new": {
+   "en": "Constructor. Sets all levels to 0, validity to false, fruit type unknown, ground type NONE, farmland id 0 and owner AccessHandler.NOBODY.",
+   "fr": "Constructeur. Met tous les niveaux à 0, la validité à false, la culture inconnue, le type de sol à NONE, l'id de parcelle à 0 et le propriétaire à AccessHandler.NOBODY."
+  }
+ }
+}

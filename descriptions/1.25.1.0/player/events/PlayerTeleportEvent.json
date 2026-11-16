@@ -1,0 +1,33 @@
+{
+ "fichier": "player/events/PlayerTeleportEvent.lua",
+ "module": {
+  "en": "Client-to-server event ordering a player teleportation, either to world coordinates or to the exit point of a vehicle. It is processed only on the server, which looks up the player of the sending connection, and uses the main network channel.",
+  "fr": "Événement client vers serveur ordonnant la téléportation d'un joueur, soit vers des coordonnées du monde, soit vers le point de sortie d'un véhicule. Il n'est traité que sur le serveur, qui retrouve le joueur de la connexion émettrice, et utilise le canal réseau principal."
+ },
+ "fonctions": {
+  "PlayerTeleportEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel for stream reading.",
+   "fr": "Crée un événement vide sur le canal réseau principal pour la lecture depuis un flux."
+  },
+  "PlayerTeleportEvent.new": {
+   "en": "Builds a coordinate teleport event with x, y, z and two flags, `isAbsolute` and `isRootNode`, which are serialized.",
+   "fr": "Construit un événement de téléportation par coordonnées avec x, y, z et deux indicateurs, `isAbsolute` et `isRootNode`, qui sont sérialisés."
+  },
+  "PlayerTeleportEvent.newExitVehicle": {
+   "en": "Builds a teleport event that places the player at the exit point of the given vehicle.",
+   "fr": "Construit un événement de téléportation qui place le joueur au point de sortie du véhicule donné."
+  },
+  "PlayerTeleportEvent:readStream": {
+   "en": "Reads a boolean: if true, a vehicle node object; otherwise three floats and the two flags. Then runs the event.",
+   "fr": "Lit un booléen : si vrai, un objet véhicule ; sinon trois flottants et les deux indicateurs. Puis exécute l'événement."
+  },
+  "PlayerTeleportEvent:writeStream": {
+   "en": "Writes a boolean telling whether an exit vehicle is set, then either the vehicle node object or the x, y, z floats and the two flags.",
+   "fr": "Écrit un booléen indiquant si un véhicule de sortie est défini, puis soit l'objet véhicule, soit les flottants x, y, z et les deux indicateurs."
+  },
+  "PlayerTeleportEvent:run": {
+   "en": "Ignored on clients. On the server, finds the player for the connection and calls `teleportToExitPoint` for a vehicle, or `teleportTo(x, y, z, true, true)` for coordinates; the stored `isAbsolute` and `isRootNode` are not used here.",
+   "fr": "Ignoré côté client. Sur le serveur, retrouve le joueur de la connexion et appelle `teleportToExitPoint` pour un véhicule, ou `teleportTo(x, y, z, true, true)` pour des coordonnées ; `isAbsolute` et `isRootNode` stockés ne sont pas utilisés ici."
+  }
+ }
+}

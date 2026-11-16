@@ -1,0 +1,49 @@
+{
+ "fichier": "gui/elements/ClearElement.lua",
+ "module": {
+  "en": "GUI element that punches a transparent hole in what was already drawn, by calling the engine function `clearOverlayArea` over its own rectangle before drawing its children. Derived from GuiElement; uses a \"clear\" overlay for rotation and an optional offset. It only takes focus when it has children that can all take focus. Client-side GUI.",
+  "fr": "Élément GUI qui découpe un trou transparent dans ce qui a déjà été dessiné, en appelant la fonction moteur `clearOverlayArea` sur son rectangle avant de dessiner ses enfants. Dérivé de GuiElement ; utilise un overlay \"clear\" pour la rotation et un décalage optionnel. Il ne prend le focus que s'il a des enfants capables de le prendre. Interface côté client."
+ },
+ "fonctions": {
+  "ClearElement.new": {
+   "en": "Constructor with zero offset and focused offset and an empty overlay table. Note: the fallback metatable is `BitmapElement_mt`, which is not defined in this file, so it is presumably nil when no custom_mt is given.",
+   "fr": "Constructeur avec décalage et décalage focalisé nuls et une table d'overlay vide. À noter : la métatable de repli est `BitmapElement_mt`, absente de ce fichier ; elle est probablement nil si aucun custom_mt n'est fourni."
+  },
+  "ClearElement:delete": {
+   "en": "Releases the overlay then runs the parent delete.",
+   "fr": "Libère l'overlay puis exécute la suppression du parent."
+  },
+  "ClearElement:loadFromXML": {
+   "en": "Loads the \"clear\" overlay and the `offset` and `focusedOffset` attributes (screen-normalized values) from the XML node.",
+   "fr": "Charge l'overlay \"clear\" et les attributs `offset` et `focusedOffset` (valeurs normalisées à l'écran) depuis le nœud XML."
+  },
+  "ClearElement:loadProfile": {
+   "en": "Same as the XML loader but from a GUI profile; focusedOffset defaults to the normal offset when absent.",
+   "fr": "Comme le chargeur XML mais depuis un profil GUI ; focusedOffset prend par défaut la valeur de offset s'il est absent."
+  },
+  "ClearElement:copyAttributes": {
+   "en": "Copies the overlay, offset and focusedOffset from a source element.",
+   "fr": "Copie l'overlay, offset et focusedOffset depuis un élément source."
+  },
+  "ClearElement:getOffset": {
+   "en": "Returns the x/y offset to use for drawing. Note: the state test ends with `or GuiOverlay.STATE_HIGHLIGHTED` without comparing, so it is always true and the focused offset is always returned.",
+   "fr": "Retourne le décalage x/y à utiliser pour le dessin. À noter : le test d'état finit par `or GuiOverlay.STATE_HIGHLIGHTED` sans comparaison, donc toujours vrai : le décalage focalisé est toujours retourné."
+  },
+  "ClearElement:setImageRotation": {
+   "en": "Sets the rotation of the clear overlay, in radians.",
+   "fr": "Définit la rotation de l'overlay de découpe, en radians."
+  },
+  "ClearElement:draw": {
+   "en": "Clears the screen area of the element (position plus offset, size, rotation around its center) with `clearOverlayArea`, then draws the children through the parent.",
+   "fr": "Efface la zone d'écran de l'élément (position plus décalage, taille, rotation autour de son centre) avec `clearOverlayArea`, puis dessine les enfants via le parent."
+  },
+  "ClearElement:canReceiveFocus": {
+   "en": "Returns false if the element is hidden or has no children, and true only if every child can receive focus.",
+   "fr": "Retourne false si l'élément est caché ou n'a pas d'enfant, et true seulement si chaque enfant peut recevoir le focus."
+  },
+  "ClearElement:getFocusTarget": {
+   "en": "Returns the first child element as focus target, or the element itself when it has no children.",
+   "fr": "Retourne le premier enfant comme cible du focus, ou l'élément lui-même s'il n'a pas d'enfant."
+  }
+ }
+}

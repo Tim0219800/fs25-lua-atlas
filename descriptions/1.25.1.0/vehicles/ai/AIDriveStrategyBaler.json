@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/ai/AIDriveStrategyBaler.lua",
+ "module": {
+  "en": "AI drive strategy (extends `AIDriveStrategy`) for balers. It collects the baler vehicle and attached AI implements that have the `Baler` specialization, slows the AI as the bale chamber fills and stops it while a bale is full or unloading. For balers with non-stop baling it only caps speed during platform drops.",
+  "fr": "Stratégie de conduite IA (étend `AIDriveStrategy`) pour les presses. Elle rassemble le véhicule et les outils IA attelés ayant la spécialisation `Baler`, ralentit l'IA quand la chambre se remplit et l'arrête tant qu'une balle est pleine ou en éjection. Pour les presses à enchaînement continu, elle ne limite la vitesse que pendant la dépose sur plateforme."
+ },
+ "fonctions": {
+  "AIDriveStrategyBaler.new": {
+   "en": "Constructor; initializes the baler list and the slow-down settings (free capacity threshold 200, start speed 20).",
+   "fr": "Constructeur ; initialise la liste des presses et les réglages de ralentissement (seuil de capacité libre 200, vitesse de départ 20)."
+  },
+  "AIDriveStrategyBaler:setAIVehicle": {
+   "en": "Calls the parent, then collects the vehicle and its attached AI implements that carry the `Baler` specialization into the baler list.",
+   "fr": "Appelle le parent, puis range dans la liste des presses le véhicule et ses outils IA attelés possédant la spécialisation `Baler`."
+  },
+  "AIDriveStrategyBaler:update": {
+   "en": "Empty per-frame override.",
+   "fr": "Surcharge vide appelée à chaque image."
+  },
+  "AIDriveStrategyBaler:getDriveData": {
+   "en": "For each baler, limits speed to 2 km/h plus a share of the start speed when free capacity is low, and forbids driving when full or unloading. Returns a stop request (0, 1, true, 0, math.huge) if blocked, else only a max speed.",
+   "fr": "Pour chaque presse, limite la vitesse à 2 km/h plus une part de la vitesse de départ quand la capacité libre est faible, et interdit d'avancer si elle est pleine ou en éjection. Retourne une demande d'arrêt (0, 1, true, 0, math.huge) si bloqué, sinon seulement une vitesse max."
+  },
+  "AIDriveStrategyBaler:updateDriving": {
+   "en": "Empty override.",
+   "fr": "Surcharge vide."
+  }
+ }
+}

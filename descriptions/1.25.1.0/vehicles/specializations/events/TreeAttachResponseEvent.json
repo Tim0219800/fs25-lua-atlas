@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/TreeAttachResponseEvent.lua",
+  "module": {
+    "en": "Server-to-client answer to a refused tree attach request. It carries a failure reason code so the client can show a warning. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Réponse serveur vers client à une demande de fixation d'arbre refusée. Elle contient un code de raison d'échec pour que le client affiche un avertissement. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "TreeAttachResponseEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "TreeAttachResponseEvent.new": {
+      "en": "Builds the event with the data to send (a node object, a failure reason (TreeAttachResponseEvent.TREE_ATTACH_FAIL_REASON_NUM_BITS bits) and an optional rope index (3 bits)); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud, une raison d'échec (TreeAttachResponseEvent.TREE_ATTACH_FAIL_REASON_NUM_BITS bits) et un indice de câble optionnel (3 bits)) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "TreeAttachResponseEvent:readStream": {
+      "en": "Reads a node object, a failure reason (TreeAttachResponseEvent.TREE_ATTACH_FAIL_REASON_NUM_BITS bits) and an optional rope index (3 bits) from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud, une raison d'échec (TreeAttachResponseEvent.TREE_ATTACH_FAIL_REASON_NUM_BITS bits) et un indice de câble optionnel (3 bits) depuis le flux, puis appelle `run(connection)`."
+    },
+    "TreeAttachResponseEvent:writeStream": {
+      "en": "Writes a node object, a failure reason (TreeAttachResponseEvent.TREE_ATTACH_FAIL_REASON_NUM_BITS bits) and an optional rope index (3 bits) to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud, une raison d'échec (TreeAttachResponseEvent.TREE_ATTACH_FAIL_REASON_NUM_BITS bits) et un indice de câble optionnel (3 bits) dans le flux (même ordre que `readStream`)."
+    },
+    "TreeAttachResponseEvent:run": {
+      "en": "Applies the event on the receiving side: calls `showCarriageTreeMountFailedWarning` or `showWinchTreeMountFailedWarning` on the object, depending on which one it has.",
+      "fr": "Applique l'événement côté récepteur : appelle `showCarriageTreeMountFailedWarning` ou `showWinchTreeMountFailedWarning` sur l'objet, selon celui qu'il possède."
+    }
+  }
+}

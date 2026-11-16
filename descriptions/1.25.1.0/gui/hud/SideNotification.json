@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/hud/SideNotification.lua",
+ "module": {
+  "en": "HUD display (extends HUDDisplay) at the top-right that stacks short colored notification lines, progress bars with title, text and percentage, and a rotating save-in-progress icon. The notification queue is drawn up to SideNotification.MAX_NOTIFICATIONS entries. Expiry and removal of notifications and the progress bar list are not handled in this file (UNVERIFIED). Client-side only.",
+  "fr": "Affichage HUD (étend HUDDisplay) en haut à droite qui empile de courtes notifications colorées, des barres de progression avec titre, texte et pourcentage, et une icône d'enregistrement en rotation. La file de notifications est dessinée jusqu'à SideNotification.MAX_NOTIFICATIONS entrées. L'expiration et le retrait des notifications et la liste des barres de progression ne sont pas gérés dans ce fichier (NON VÉRIFIÉ). Côté client uniquement."
+ },
+ "fonctions": {
+  "SideNotification.new": {
+   "en": "Creates the display with an empty notification queue and progress bar list, background and progress overlays, a three-part progress bar, a saving icon and the localized ui_savegameSaveInProgress text.",
+   "fr": "Crée l'affichage avec une file de notifications et une liste de barres de progression vides, des overlays de fond et de progression, une barre de progression en trois parties, une icône d'enregistrement et le texte localisé ui_savegameSaveInProgress."
+  },
+  "SideNotification:storeScaledValues": {
+   "en": "Anchors the display near the HUD top-right and converts the reference-pixel layout (background parts, text sizes, 400 wide progress panel, bar parts, icon size) to screen units.",
+   "fr": "Ancre l'affichage près du coin haut-droit du HUD et convertit la mise en page en pixels de référence (parties du fond, tailles de texte, panneau de progression de 400 de large, parties de barre, taille d'icône) en unités écran."
+  },
+  "SideNotification:draw": {
+   "en": "Draws each visible progress bar (title, text, bar and percentage) and then clears its visible flag, so owners must re-flag it every frame. Then draws the save icon (spinning with g_currentDt) if saving, and the queued notifications.",
+   "fr": "Dessine chaque barre de progression visible (titre, texte, barre et pourcentage) puis efface son drapeau visible, donc les propriétaires doivent le remettre à chaque frame. Dessine ensuite l'icône d'enregistrement (rotation avec g_currentDt) si une sauvegarde est en cours, puis les notifications en file."
+  },
+  "SideNotification:addNotification": {
+   "en": "Appends a notification with text, an RGBA color and a display duration (milliseconds per the queue comment) to the queue.",
+   "fr": "Ajoute à la file une notification avec texte, couleur RGBA et durée d'affichage (en millisecondes d'après le commentaire de la file)."
+  }
+ }
+}

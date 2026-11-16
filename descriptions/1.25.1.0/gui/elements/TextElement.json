@@ -1,0 +1,185 @@
+{
+ "fichier": "gui/elements/TextElement.lua",
+ "module": {
+  "en": "Base GUI element (derived from GuiElement) that renders one or more lines of text, with an optional secondary text (text2) drawn behind it. It supports per-state colours, offsets and bold flags, alignment, formats (number, currency, accounting, temperature, percentage) fed by setValue, localisation keys, auto-sizing, and layout modes (truncate, resize, overflow, scrolling, fill). Attributes come from XML or GUI profiles. FORMAT, LAYOUT_MODE and VERTICAL_ALIGNMENT constants, getTextPosition and the g_i18n and message-center internals are not defined in this file (UNVERIFIED).",
+  "fr": "Élément GUI de base (dérivé de GuiElement) qui affiche une ou plusieurs lignes de texte, avec un texte secondaire optionnel (text2) dessiné derrière. Il gère couleurs, décalages et gras par état, alignement, formats (nombre, monnaie, comptabilité, température, pourcentage) alimentés par setValue, clés de localisation, redimensionnement automatique et modes de mise en page (truncate, resize, overflow, scrolling, fill). Les attributs viennent du XML ou des profils GUI. Les constantes FORMAT, LAYOUT_MODE et VERTICAL_ALIGNMENT, getTextPosition et les internes de g_i18n et du centre de messages ne sont pas définis dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "TextElement.new": {
+   "en": "Constructor. Sets defaults: white text, size 0.03, centred, one line, truncate layout, no format, empty text, no text2 (size 0) and cleared scrolling state.",
+   "fr": "Constructeur. Définit les valeurs par défaut : texte blanc, taille 0.03, centré, une ligne, mode truncate, aucun format, texte vide, pas de text2 (taille 0) et état de défilement vidé."
+  },
+  "TextElement:loadFromXML": {
+   "en": "Loads all text attributes from XML (colours, offsets, sizes, bold flags, alignment, layout mode, width and line limits, format, text and an onTextChanged callback). Sets the mod environment from the file path so $l10n_ keys resolve with it, then updates the size.",
+   "fr": "Charge tous les attributs de texte depuis le XML (couleurs, décalages, tailles, gras, alignement, mode de mise en page, limites de largeur et de lignes, format, texte et callback onTextChanged). Définit l'environnement du mod depuis le chemin du fichier pour résoudre les clés $l10n_, puis met la taille à jour."
+  },
+  "TextElement:loadProfile": {
+   "en": "Loads the same text attributes from a GUI profile (colours, offsets, sizes, bold, alignment, layout mode, limits and format). Updates the size only if applyProfile is true. Unlike XML loading, it does not read the text itself or the callback.",
+   "fr": "Charge les mêmes attributs de texte depuis un profil GUI (couleurs, décalages, tailles, gras, alignement, mode, limites et format). Ne met la taille à jour que si applyProfile est vrai. Contrairement au XML, il ne lit ni le texte ni le callback."
+  },
+  "TextElement:copyAttributes": {
+   "en": "Copies text, format, value, source text, colours, offsets, sizes, layout settings and the change callback from a source element, cloning the tables. Used when cloning elements.",
+   "fr": "Copie texte, format, valeur, texte source, couleurs, décalages, tailles, réglages de mise en page et callback de changement depuis un élément source, en clonant les tables. Utilisé lors du clonage d'éléments."
+  },
+  "TextElement:delete": {
+   "en": "Unsubscribes this element from the Fahrenheit and money-unit setting-change messages, then deletes it via the parent class.",
+   "fr": "Désabonne cet élément des messages de changement des réglages Fahrenheit et unité monétaire, puis le supprime via la classe parente."
+  },
+  "TextElement:setTextSize": {
+   "en": "Sets the text size and recomputes the element size. Note: it does not update the default size used by resize mode, so the next setText resets it.",
+   "fr": "Définit la taille du texte et recalcule la taille de l'élément. À noter : ne met pas à jour la taille par défaut utilisée par le mode resize, donc le prochain setText la réinitialise."
+  },
+  "TextElement:setAbsolutePosition": {
+   "en": "Sets the absolute position through the parent class (children follow) and, unless a scroll update is running, stores the new x as the start position for scrolling.",
+   "fr": "Définit la position absolue via la classe parente (les enfants suivent) et, sauf pendant une mise à jour de défilement, mémorise le nouveau x comme position de départ du défilement."
+  },
+  "TextElement:setDisabled": {
+   "en": "Sets the disabled state through the parent class, then refreshes the scrolling layout mode so a scrolling text stops properly.",
+   "fr": "Définit l'état désactivé via la classe parente, puis rafraîchit le mode de défilement pour qu'un texte défilant s'arrête correctement."
+  },
+  "TextElement:updateAbsolutePosition": {
+   "en": "Recomputes the absolute position through the parent class, re-lays out the source text unless it is a single line in overflow or scrolling mode or auto-sized, and resets the scrolling start position and parameters.",
+   "fr": "Recalcule la position absolue via la classe parente, remet en page le texte source sauf s'il s'agit d'une ligne unique en mode overflow ou scrolling ou d'un dimensionnement automatique, et réinitialise position de départ et paramètres de défilement."
+  },
+  "TextElement:setText": {
+   "en": "Sets the displayed text, clearing any loca key, value and format. If the text changed (or forceScrollingParameterUpdate is set), restarts the scroll timer and updates the scrolling parameters. Returns nothing despite the original doc suggesting a leftover.",
+   "fr": "Définit le texte affiché en effaçant clé de localisation, valeur et format. Si le texte a changé (ou si forceScrollingParameterUpdate est vrai), relance le minuteur de défilement et met à jour les paramètres. Ne retourne rien."
+  },
+  "TextElement:setTextInternal": {
+   "en": "Core text routine: stores the source text (upper-cased if enabled), resets sizes, then fits it to the width and line limit according to the layout mode (shrink, ellipsis, line cut). Raises onTextChangedCallback unless skipCallback, and returns true if the text changed.",
+   "fr": "Routine centrale du texte : mémorise le texte source (en majuscules si activé), réinitialise les tailles, puis l'ajuste à la largeur et au nombre de lignes selon le mode (réduction, points de suspension, coupe de lignes). Lève onTextChangedCallback sauf si skipCallback, et retourne true si le texte a changé."
+  },
+  "TextElement:getText": {
+   "en": "Returns the source text, i.e. the full text before any truncation or cutting.",
+   "fr": "Retourne le texte source, c'est-à-dire le texte complet avant toute troncature ou coupe."
+  },
+  "TextElement:setValue": {
+   "en": "Stores a value and regenerates the text using the current format. Takes effect only through updateFormattedText, which uses the value over any loca key.",
+   "fr": "Mémorise une valeur et régénère le texte selon le format courant. N'agit que via updateFormattedText, qui privilégie la valeur sur toute clé de localisation."
+  },
+  "TextElement:getValue": {
+   "en": "Returns the value last set with setValue, or nil.",
+   "fr": "Retourne la valeur définie en dernier par setValue, ou nil."
+  },
+  "TextElement:setFormat": {
+   "en": "Changes the value format (nil means none), refreshes the text, and subscribes to or unsubscribes from the Fahrenheit and money-unit setting messages as the format requires. Note: the unsubscribe of the old currency format only runs when the new format is a currency one.",
+   "fr": "Change le format de la valeur (nil signifie aucun), rafraîchit le texte et s'abonne ou se désabonne des messages de réglage Fahrenheit et unité monétaire selon le format. À noter : le désabonnement de l'ancien format monétaire ne s'exécute que si le nouveau format est aussi monétaire."
+  },
+  "TextElement:setLocaKey": {
+   "en": "Shows the translation of a loca key (a trailing colon is kept after translation). Clears the format and value and refreshes the text using the element's mod environment.",
+   "fr": "Affiche la traduction d'une clé de localisation (un deux-points final est conservé après traduction). Efface format et valeur et rafraîchit le texte avec l'environnement du mod de l'élément."
+  },
+  "TextElement:updateFormattedText": {
+   "en": "Builds the text from the value and format (plain, number, currency, accounting, temperature, percentage) through g_i18n, or from the loca key when no value is set, then applies it. Empty text if neither exists.",
+   "fr": "Construit le texte à partir de la valeur et du format (brut, nombre, monnaie, comptabilité, température, pourcentage) via g_i18n, ou de la clé de localisation si aucune valeur, puis l'applique. Texte vide si aucun des deux n'existe."
+  },
+  "TextElement:updateScrollingParameters": {
+   "en": "Only in scrolling mode: resets the offset, computes the maximum scroll distance from the source text width and the clip rectangle, and left-aligns the text if it overflows, else restores the original alignment.",
+   "fr": "Seulement en mode scrolling : réinitialise le décalage, calcule la distance maximale de défilement d'après la largeur du texte source et le rectangle de clipping, et aligne à gauche si le texte déborde, sinon restaure l'alignement d'origine."
+  },
+  "TextElement:setTextColor": {
+   "en": "Sets the normal text colour from r, g, b, a.",
+   "fr": "Définit la couleur normale du texte à partir de r, g, b, a."
+  },
+  "TextElement:setTextSelectedColor": {
+   "en": "Sets the text colour used when the element is selected.",
+   "fr": "Définit la couleur du texte quand l'élément est sélectionné."
+  },
+  "TextElement:setTextFocusedColor": {
+   "en": "Sets the text colour used when the element has focus.",
+   "fr": "Définit la couleur du texte quand l'élément a le focus."
+  },
+  "TextElement:setTextFocusedSelectedColor": {
+   "en": "Sets the colour for the combined focused-plus-selected state.",
+   "fr": "Définit la couleur de l'état combiné focalisé plus sélectionné."
+  },
+  "TextElement:setTextHighlightedSelectedColor": {
+   "en": "Sets the colour used when the element is both highlighted and selected.",
+   "fr": "Définit la couleur utilisée quand l'élément est à la fois surligné et sélectionné."
+  },
+  "TextElement:setTextHighlightedColor": {
+   "en": "Sets the text colour used when the element is highlighted.",
+   "fr": "Définit la couleur du texte quand l'élément est surligné."
+  },
+  "TextElement:getTextColor": {
+   "en": "Returns the colour for the current state. Priority: disabled (unless ignoreDisabled), selected (with focused or highlighted variants), focused, highlighted, then normal. Falls back to the normal colour if the state colour is unset.",
+   "fr": "Retourne la couleur de l'état courant. Priorité : désactivé (sauf ignoreDisabled), sélectionné (avec variantes focalisé ou surligné), focalisé, surligné, puis normal. Retombe sur la couleur normale si celle de l'état n'est pas définie."
+  },
+  "TextElement:setText2Color": {
+   "en": "Sets the normal colour of the secondary text.",
+   "fr": "Définit la couleur normale du texte secondaire."
+  },
+  "TextElement:setText2SelectedColor": {
+   "en": "Sets the secondary text colour used when selected.",
+   "fr": "Définit la couleur du texte secondaire quand l'élément est sélectionné."
+  },
+  "TextElement:setText2FocusedColor": {
+   "en": "Sets the secondary text colour used when focused.",
+   "fr": "Définit la couleur du texte secondaire quand l'élément a le focus."
+  },
+  "TextElement:setText2HighlightedColor": {
+   "en": "Sets the secondary text colour used when highlighted.",
+   "fr": "Définit la couleur du texte secondaire quand l'élément est surligné."
+  },
+  "TextElement:getText2Color": {
+   "en": "Returns the secondary text colour for the current state (disabled, selected, focused, highlighted or normal). Note: unlike getTextColor it has no fallback, so an unset state colour returns nil and draw would fail on unpack.",
+   "fr": "Retourne la couleur du texte secondaire pour l'état courant (désactivé, sélectionné, focalisé, surligné ou normal). À noter : contrairement à getTextColor, aucun repli n'existe ; une couleur d'état absente donne nil et draw échouerait sur unpack."
+  },
+  "TextElement:getTextWidth": {
+   "en": "Measures the text width with the engine, using bold if set and optionally the source text. Unless overflow, scrolling or auto-width applies, the result is capped to the element width.",
+   "fr": "Mesure la largeur du texte avec le moteur, en gras si activé et éventuellement sur le texte source. Sauf overflow, scrolling ou largeur automatique, le résultat est plafonné à la largeur de l'élément."
+  },
+  "TextElement:getTextHeight": {
+   "en": "Returns the text height and line count from the engine, applying wrap width, bold, indentation and line-height scale temporarily. With includeNegativeSpacing, adds 10% of a line for descenders. Resets the engine text state afterwards.",
+   "fr": "Retourne la hauteur du texte et le nombre de lignes via le moteur, en appliquant temporairement largeur de retour à la ligne, gras, indentation et échelle de hauteur de ligne. Avec includeNegativeSpacing, ajoute 10 % d'une ligne pour les jambages. Réinitialise ensuite l'état de texte du moteur."
+  },
+  "TextElement:getTextOffset": {
+   "en": "Returns the x and y text offset for the current overlay state (focused, selected, highlighted, pressed), falling back to the base offset when the state offset is unset.",
+   "fr": "Retourne le décalage x et y du texte pour l'état d'overlay courant (focalisé, sélectionné, surligné, pressé), avec repli sur le décalage de base si celui de l'état n'est pas défini."
+  },
+  "TextElement:getText2Offset": {
+   "en": "Returns the secondary text offset: the focused offset for focused, pressed, selected or highlighted states, otherwise the base offset.",
+   "fr": "Retourne le décalage du texte secondaire : le décalage focalisé pour les états focalisé, pressé, sélectionné ou surligné, sinon le décalage de base."
+  },
+  "TextElement:getIsScrollingAllowed": {
+   "en": "Returns true if scrolling may run: always when textScrollOnFocusOnly is false, otherwise only while the element is focused, highlighted or selected.",
+   "fr": "Retourne true si le défilement peut s'exécuter : toujours si textScrollOnFocusOnly est faux, sinon seulement quand l'élément est focalisé, surligné ou sélectionné."
+  },
+  "TextElement:getTextLayoutMode": {
+   "en": "Returns the effective layout mode: a scrolling element reports truncate whenever scrolling is not currently allowed, otherwise the configured mode.",
+   "fr": "Retourne le mode de mise en page effectif : un élément défilant renvoie truncate quand le défilement n'est pas autorisé, sinon le mode configuré."
+  },
+  "TextElement:getDoRenderText": {
+   "en": "Returns true; hook that subclasses may override to suppress text rendering in draw.",
+   "fr": "Retourne true ; point d'extension que les sous-classes peuvent surcharger pour supprimer le rendu du texte dans draw."
+  },
+  "TextElement:getTextPositionX": {
+   "en": "Returns the x anchor of the text: left edge, centre or right edge of the element according to the alignment.",
+   "fr": "Retourne l'ancre x du texte : bord gauche, centre ou bord droit de l'élément selon l'alignement."
+  },
+  "TextElement:getTextPositionY": {
+   "en": "Returns the y position of the first line for the vertical alignment (top, middle, otherwise bottom), from the line height and the total text height.",
+   "fr": "Retourne la position y de la première ligne selon l'alignement vertical (haut, milieu, sinon bas), à partir de la hauteur de ligne et de la hauteur totale du texte."
+  },
+  "TextElement:update": {
+   "en": "Per-frame update with dt in ms. In scrolling mode it advances a timer and moves the element left by a smoothstep offset, pausing at both ends (cycle of 9000 ms or more depending on overflow). Does nothing extra in other modes.",
+   "fr": "Mise à jour par image avec dt en ms. En mode scrolling, elle avance un minuteur et décale l'élément vers la gauche par un décalage smoothstep, avec pause aux deux extrémités (cycle d'au moins 9000 ms selon le débordement). Rien de plus dans les autres modes."
+  },
+  "TextElement:draw": {
+   "en": "Renders the text, and the secondary text first if its size is above 0, with state colours, alpha, bold, wrap, page lines and clip area, then restores engine text state and draws children. Skips empty text. Draws debug guides when UI debug is on.",
+   "fr": "Dessine le texte, et d'abord le texte secondaire si sa taille dépasse 0, avec couleurs d'état, alpha, gras, retour à la ligne, lignes de page et zone de clipping, puis restaure l'état de texte du moteur et dessine les enfants. Ignore un texte vide. Affiche des repères de debug si le debug UI est actif."
+  },
+  "TextElement:updateScrollingLayoutMode": {
+   "en": "If the effective layout mode changed since last time, re-applies the source text and forces a scrolling parameter update, then stores the mode.",
+   "fr": "Si le mode de mise en page effectif a changé depuis la dernière fois, réapplique le texte source avec mise à jour forcée des paramètres de défilement, puis mémorise le mode."
+  },
+  "TextElement:updateScaledWidth": {
+   "en": "For an element whose size is 0 by 0 and which has text, sets its size to the text width (divided by xScale) and the text height. Only xScale is used.",
+   "fr": "Pour un élément de taille 0 par 0 qui contient du texte, fixe sa taille à la largeur du texte (divisée par xScale) et à la taille du texte. Seul xScale est utilisé."
+  },
+  "TextElement:updateSize": {
+   "en": "Resizes to fit the content when textAutoWidth (single-line width plus offset, clamped by min and max width) or textAutoHeight applies, unless forceTextSize is true, and invalidates the parent layout if it auto-validates. In fill mode, recomputes the maximum line count from the height.",
+   "fr": "Redimensionne pour s'adapter au contenu quand textAutoWidth (largeur d'une ligne plus décalage, bornée par les largeurs min et max) ou textAutoHeight s'applique, sauf si forceTextSize est vrai, et invalide la mise en page du parent si elle se valide automatiquement. En mode fill, recalcule le nombre maximal de lignes d'après la hauteur."
+  }
+ }
+}

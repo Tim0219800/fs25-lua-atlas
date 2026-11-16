@@ -1,0 +1,29 @@
+{
+ "fichier": "handTools/events/HandsPickUpFailedEvent.lua",
+ "module": {
+  "en": "Server-to-client network event telling a client that its hands hand tool failed to pick up the requested object. It is only allowed in the server to client direction (asserted in `run`).",
+  "fr": "Événement réseau serveur vers client indiquant à un client que son outil à main (les mains) n'a pas pu ramasser l'objet demandé. Il n'est autorisé que dans le sens serveur vers client (assertion dans `run`)."
+ },
+ "fonctions": {
+  "HandsPickUpFailedEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "HandsPickUpFailedEvent.new": {
+   "en": "Creates the event for the given hands hand tool.",
+   "fr": "Crée l'événement pour l'outil à main (mains) donné."
+  },
+  "HandsPickUpFailedEvent:readStream": {
+   "en": "Reads the hands (node object) from the stream, then runs the event.",
+   "fr": "Lit les mains (objet-noeud) dans le flux, puis exécute l'événement."
+  },
+  "HandsPickUpFailedEvent:writeStream": {
+   "en": "Writes the hands as a node object to the stream.",
+   "fr": "Écrit les mains comme objet-noeud dans le flux."
+  },
+  "HandsPickUpFailedEvent:run": {
+   "en": "Asserts it comes from the server; if the hands exist and are synchronized, calls `pickupFailed()` on them.",
+   "fr": "Vérifie par assertion qu'il vient du serveur ; si les mains existent et sont synchronisées, appelle `pickupFailed()` dessus."
+  }
+ }
+}

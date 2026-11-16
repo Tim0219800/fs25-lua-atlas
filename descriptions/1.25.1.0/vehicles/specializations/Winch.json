@@ -1,0 +1,185 @@
+{
+ "fichier": "vehicles/specializations/Winch.lua",
+ "module": {
+  "en": "Forestry winch specialization: one or more ropes (XML `vehicle.winch.rope`, also per `winchConfiguration`) can be attached by the player to felled trees, then pulled or released. It uses `ForestryPhysicsRope` (main rope and a temporary setup rope), `ForestryHook`, `TargetTreeMarker`, activatables, and syncs attach/detach through `TreeAttachEvent`, `TreeDetachEvent` and `TreeAttachRequestEvent`. Attached trees are saved via saveable split shape ids; all trees detach when one is cut or mounted elsewhere. The activatable classes `WinchAttachTreeActivatable` and `WinchControlRopeActivatable` are used but not defined in this file (UNVERIFIED).",
+  "fr": "Spécialisation de treuil forestier : une ou plusieurs cordes (XML `vehicle.winch.rope`, aussi par `winchConfiguration`) peuvent être accrochées par le joueur à des arbres abattus, puis tirées ou relâchées. Elle utilise `ForestryPhysicsRope` (corde principale et corde de préparation temporaire), `ForestryHook`, `TargetTreeMarker`, des activables, et synchronise l'accroche/décroche via `TreeAttachEvent`, `TreeDetachEvent` et `TreeAttachRequestEvent`. Les arbres accrochés sont sauvegardés par identifiants de split shape sauvegardables ; tous les arbres se décrochent quand l'un est coupé ou monté ailleurs. Les classes d'activables `WinchAttachTreeActivatable` et `WinchControlRopeActivatable` sont utilisées mais non définies dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "Winch.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisites.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "Winch.initSpecialization": {
+   "en": "Adds the `winch` configuration type (not when the icon generator runs), the store spec `winchMaxMass`, and registers the XML paths for the winch and its configurations, plus object-change paths.",
+   "fr": "Ajoute le type de configuration `winch` (sauf lors de la génération d'icônes), la spec boutique `winchMaxMass`, et enregistre les chemins XML du treuil et de ses configurations, ainsi que les chemins de changement d'objets."
+  },
+  "Winch.registerXMLPaths": {
+   "en": "Registers all XML and savegame paths for ropes (limits, speed, acceleration, nodes, main/setup rope, component joints, attach marker, tree hook, sounds, animation nodes, attached trees) and the `winch#ropeIndices` option for cylindered moving tools and parts.",
+   "fr": "Enregistre tous les chemins XML et de sauvegarde des cordes (limites, vitesse, accélération, nœuds, corde principale/de préparation, articulations, marqueur, crochet, sons, nœuds d'animation, arbres accrochés) et l'option `winch#ropeIndices` pour les outils et pièces mobiles de Cylindered."
+  },
+  "Winch.registerFunctions": {
+   "en": "Adds the winch functions (attach/detach tree, control input, attach mode, trigger and raycast callbacks, tree cut/mounted handlers) to the vehicle type.",
+   "fr": "Ajoute au type de véhicule les fonctions du treuil (accroche/décroche d'arbre, commande, mode d'accroche, rappels de déclencheur et de raycast, gestionnaires d'arbre coupé/monté)."
+  },
+  "Winch.registerOverwrittenFunctions": {
+   "en": "Overrides extra dependent parts loading/updating, PTO consumption and activity, consuming load, and addToPhysics/removeFromPhysics.",
+   "fr": "Surcharge le chargement/la mise à jour des pièces dépendantes, la consommation et l'activité de la prise de force, la charge consommée et addToPhysics/removeFromPhysics."
+  },
+  "Winch.registerEventListeners": {
+   "en": "Subscribes to load, load finished, delete, the four stream events, onPostUpdate and onRegisterActionEvents.",
+   "fr": "S'abonne au chargement, à la fin du chargement, à la suppression, aux quatre événements de flux, à onPostUpdate et à onRegisterActionEvents."
+  },
+  "Winch:onLoad": {
+   "en": "Applies the configuration object changes, loads ropes from the base and configuration XML, and if any exist sets up texts, the tree raycast state, message center subscriptions (tree cut, tree mounted, player pre-teleport) and two dirty flags; otherwise removes all its listeners. Note: PLAYER_PRE_TELEPORT is subscribed to `onWinchTreeShapeMounted`, not to `onPlayerPreTeleport` (apparent oversight).",
+   "fr": "Applique les changements d'objets de la configuration, charge les cordes depuis le XML de base et de configuration et, s'il y en a, prépare textes, état du raycast d'arbre, abonnements au centre de messages (arbre coupé, monté, pré-téléportation du joueur) et deux drapeaux de modification ; sinon retire tous ses écouteurs. À noter : PLAYER_PRE_TELEPORT est abonné à `onWinchTreeShapeMounted` et non à `onPlayerPreTeleport` (oubli apparent)."
+  },
+  "Winch:onLoadFinished": {
+   "en": "Restores trees attached in the savegame (unless vehicles are reset): resolves the saved split shape id and calls `attachTreeToWinch` with the saved hook position and rope positions.",
+   "fr": "Restaure les arbres accrochés dans la sauvegarde (sauf réinitialisation des véhicules) : résout l'identifiant de split shape sauvegardé et appelle `attachTreeToWinch` avec la position du crochet et des cordes sauvegardée."
+  },
+  "Winch:onDelete": {
+   "en": "Detaches all trees, removes triggers, deletes ropes, marker and hook data, client sounds and animations, and removes both activatables of every rope.",
+   "fr": "Décroche tous les arbres, retire les déclencheurs, supprime cordes, marqueur et données de crochet, sons et animations côté client, et retire les deux activables de chaque corde."
+  },
+  "Winch:onReadStream": {
+   "en": "Client join: for each rope with attached trees, reads the tree count, hook position and split shape id; attaches immediately if the shape is known, otherwise queues it in `splitShapesToAttach` for onPostUpdate.",
+   "fr": "Connexion d'un client : pour chaque corde avec des arbres, lit le nombre d'arbres, la position du crochet et l'identifiant de split shape ; accroche tout de suite si la forme est connue, sinon la met en file dans `splitShapesToAttach` pour onPostUpdate."
+  },
+  "Winch:onWriteStream": {
+   "en": "Server side on join: writes, per rope, whether trees are attached, their count minus one, the hook position in tree-local space and the split shape id.",
+   "fr": "Côté serveur lors d'une connexion : écrit, par corde, la présence d'arbres, leur nombre moins un, la position du crochet dans le repère de l'arbre et l'identifiant de split shape."
+  },
+  "Winch:onReadUpdateStream": {
+   "en": "Server reads the clients' control input (2 bits per rope, minus 1). Clients read the rope control direction (starting pull/release sounds and animations) and the main rope's physics state.",
+   "fr": "Le serveur lit la commande des clients (2 bits par corde, moins 1). Les clients lisent la direction de commande de la corde (démarrant sons et animations de tirage/relâchement) et l'état physique de la corde principale."
+  },
+  "Winch:onWriteUpdateStream": {
+   "en": "Clients send their sent control input when the dirty flag is set. The server writes the control direction and, under the rope dirty flag, the main rope state.",
+   "fr": "Les clients envoient leur commande quand le drapeau de modification est posé. Le serveur écrit la direction de commande et, sous le drapeau de corde, l'état de la corde principale."
+  },
+  "Winch:saveToXMLFile": {
+   "en": "Saves, for each rope with trees, the rope index and for each tree the hook world translation, the saveable split shape id parts and the physics rope data.",
+   "fr": "Sauvegarde, pour chaque corde avec des arbres, l'indice de corde et, pour chaque arbre, la translation monde du crochet, les parties de l'identifiant de split shape sauvegardable et les données de la corde physique."
+  },
+  "Winch:onPostUpdate": {
+   "en": "Client: finishes queued tree attachments once their shape id resolves. Server: detaches all trees if one no longer exists. Locally, in attach mode it casts an async tree raycast from the player's camera, manages the setup rope (length check, color green/red, auto-cancel when too long), the target marker and activity; also counts down the control timer and stops sounds and animations when it ends.",
+   "fr": "Client : termine les accroches en file dès que l'identifiant de forme est résolu. Serveur : décroche tout si un arbre n'existe plus. En local, en mode d'accroche, lance un raycast asynchrone d'arbre depuis la caméra du joueur, gère la corde de préparation (contrôle de longueur, couleur verte/rouge, annulation automatique si trop longue), le marqueur de cible et l'activité ; décompte aussi le minuteur de commande et arrête sons et animations à son terme."
+  },
+  "Winch:onRegisterActionEvents": {
+   "en": "Client: when active for input and the cylindered control group matches (if one is configured), registers the powered actions WINCH_CONTROL_VEHICLE (pull/release) and WINCH_DETACH, then refreshes their active state.",
+   "fr": "Client : quand actif pour l'entrée et que le groupe de commande de Cylindered correspond (si configuré), enregistre les actions alimentées WINCH_CONTROL_VEHICLE (tirer/relâcher) et WINCH_DETACH, puis met à jour leur état."
+  },
+  "Winch.actionEventControl": {
+   "en": "Input callback: sends the analog control value to every rope via `setWinchControlInput`.",
+   "fr": "Rappel d'entrée : envoie la valeur analogique de commande à chaque corde via `setWinchControlInput`."
+  },
+  "Winch.actionEventDetach": {
+   "en": "Input callback: detaches the trees from all ropes.",
+   "fr": "Rappel d'entrée : décroche les arbres de toutes les cordes."
+  },
+  "Winch.updateActionEvents": {
+   "en": "Client: enables the control and detach actions only while at least one tree is attached.",
+   "fr": "Client : n'active les actions de commande et de décrochage que si au moins un arbre est accroché."
+  },
+  "Winch:loadWinchRopeFromXML": {
+   "en": "Loads one rope from XML (nodes, limits, speed in m/ms, acceleration, main and setup `ForestryPhysicsRope`, component joints, marker, hook, object changes, sounds, animations, activatables). Returns false if node, trigger node or attach node is missing. Note: `maxTreeBits` is computed as ceil(sqrt(maxNumTrees)) (inferred from the code).",
+   "fr": "Charge une corde depuis le XML (nœuds, limites, vitesse en m/ms, accélération, `ForestryPhysicsRope` principale et de préparation, articulations, marqueur, crochet, changements d'objets, sons, animations, activables). Renvoie false s'il manque le nœud, le déclencheur ou le nœud d'accroche. À noter : `maxTreeBits` vaut ceil(sqrt(maxNumTrees)) (déduit du code)."
+  },
+  "Winch:setWinchTreeAttachMode": {
+   "en": "Turns the attach mode of a rope on, off, or toggles it when state is nil. Enabling swaps in the attach activatable; disabling hides the marker, destroys the setup rope and restores the activatables according to player range and attached trees.",
+   "fr": "Active, désactive ou inverse (si state est nil) le mode d'accroche d'une corde. L'activer met en place l'activable d'accroche ; le désactiver masque le marqueur, détruit la corde de préparation et rétablit les activables selon la portée du joueur et les arbres accrochés."
+  },
+  "Winch:getIsWinchAttachModeActive": {
+   "en": "Returns whether the given rope is in attach mode.",
+   "fr": "Indique si la corde donnée est en mode d'accroche."
+  },
+  "Winch:getCanAttachWinchTree": {
+   "en": "Returns true when the rope is in attach mode and the raycast currently found a valid tree.",
+   "fr": "Renvoie true quand la corde est en mode d'accroche et que le raycast a trouvé un arbre valide."
+  },
+  "Winch:onAttachTreeInputEvent": {
+   "en": "Confirms the attachment of the targeted tree: on a server checks `getIsWinchTreeAttachAllowed` then attaches or shows the failure warning; on a client sends a `TreeAttachRequestEvent`. Then leaves attach mode.",
+   "fr": "Confirme l'accroche de l'arbre ciblé : sur un serveur, vérifie `getIsWinchTreeAttachAllowed` puis accroche ou affiche l'avertissement d'échec ; sur un client, envoie un `TreeAttachRequestEvent`. Quitte ensuite le mode d'accroche."
+  },
+  "Winch:getWinchRopeSpeedFactor": {
+   "en": "Returns the control direction of the rope whose index (as string) matches `param`, or 1 if none matches; used as a parameter by dependent animation code (UNVERIFIED who calls it).",
+   "fr": "Renvoie la direction de commande de la corde dont l'indice (en chaîne) correspond à `param`, ou 1 sinon ; sert de paramètre au code d'animation dépendant (NON VÉRIFIÉ : appelant inconnu)."
+  },
+  "Winch:getIsWinchTreeAttachAllowed": {
+   "en": "Checks a candidate tree: fails with TOO_HEAVY if the total mass including attached trees exceeds `maxTreeMass`, or TOO_MANY if `maxNumTrees` is reached. Returns a boolean and a reason constant from `TreeAttachResponseEvent`.",
+   "fr": "Vérifie un arbre candidat : échec TOO_HEAVY si la masse totale, arbres déjà accrochés inclus, dépasse `maxTreeMass`, ou TOO_MANY si `maxNumTrees` est atteint. Renvoie un booléen et une constante de raison de `TreeAttachResponseEvent`."
+  },
+  "Winch:showWinchTreeMountFailedWarning": {
+   "en": "Shows a blinking warning (2.5 s) for the given failure reason: tree too heavy (with the max mass) or too many trees.",
+   "fr": "Affiche un avertissement clignotant (2,5 s) pour la raison d'échec donnée : arbre trop lourd (avec la masse max) ou trop d'arbres."
+  },
+  "Winch:attachTreeToWinch": {
+   "en": "Attaches a tree (split shape) to a rope: mounts a cloned hook, creates the main rope for the first tree or an additional sub-rope to the first tree, applies active joint limits and object changes, plays the sound, registers the control activatable, publishes TREE_SHAPE_MOUNTED and sends `TreeAttachEvent` unless `noEventSend`. Does nothing if the hook cannot mount.",
+   "fr": "Accroche un arbre (split shape) à une corde : monte un crochet cloné, crée la corde principale pour le premier arbre ou une sous-corde vers le premier, applique limites d'articulation actives et changements d'objets, joue le son, enregistre l'activable de commande, publie TREE_SHAPE_MOUNTED et envoie `TreeAttachEvent` sauf `noEventSend`. Ne fait rien si le crochet ne peut pas se monter."
+  },
+  "Winch:detachTreeFromWinch": {
+   "en": "Detaches all trees of one rope (or of every rope when the index is nil): leaves attach mode, destroys sub-ropes and the main rope, deletes hooks, resets joint limits on the server, resets object changes and activatables, then sends `TreeDetachEvent` unless `noEventSend`.",
+   "fr": "Décroche tous les arbres d'une corde (ou de toutes si l'indice est nil) : quitte le mode d'accroche, détruit sous-cordes et corde principale, supprime les crochets, remet les limites d'articulation sur le serveur, réinitialise changements d'objets et activables, puis envoie `TreeDetachEvent` sauf `noEventSend`."
+  },
+  "Winch:setWinchControlInput": {
+   "en": "Applies pull/release input for a rope (only if the winch is not an attachable or is attached). Server: accelerates and calls `adjustLength` on the main rope, updates sounds/animations and raises dirty flags. Client: stores the input to send. Uses the global `g_currentDt`.",
+   "fr": "Applique la commande tirer/relâcher à une corde (seulement si le treuil n'est pas attachable ou est attelé). Serveur : accélère et appelle `adjustLength` sur la corde principale, met à jour sons/animations et pose les drapeaux. Client : mémorise la commande à envoyer. Utilise la globale `g_currentDt`."
+  },
+  "Winch:onWinchPlayerTriggerCallback": {
+   "en": "Trigger callback: when the local player enters or leaves a rope's trigger node, sets `isPlayerInRange` and adds or removes the attach activatable (kept while in attach mode).",
+   "fr": "Rappel de déclencheur : quand le joueur local entre ou sort du nœud de déclenchement d'une corde, règle `isPlayerInRange` et ajoute ou retire l'activable d'accroche (conservé en mode d'accroche)."
+  },
+  "Winch:onWinchTreeRaycastCallback": {
+   "en": "Async raycast callback: validates the hit split shape as a tree (not already attached, static trees only for the first one), computes the target and marker position with `SplitShapeUtil.getTreeOffsetPosition`, and flags it valid or invalid depending on the distance to the rope start. Returns false for tree hits.",
+   "fr": "Rappel de raycast asynchrone : valide la forme touchée comme arbre (pas déjà accroché, arbres statiques seulement pour le premier), calcule la cible et la position du marqueur avec `SplitShapeUtil.getTreeOffsetPosition` et la marque valide ou non selon la distance au départ de la corde. Renvoie false pour les arbres."
+  },
+  "Winch:onWinchTreeShapeCut": {
+   "en": "Server only: when a tree shape is cut and the old shape was attached, detaches all trees.",
+   "fr": "Serveur uniquement : quand un arbre est coupé et que l'ancienne forme était accrochée, décroche tous les arbres."
+  },
+  "Winch:onWinchTreeShapeMounted": {
+   "en": "Server only: when an attached tree is mounted on another vehicle, detaches all trees.",
+   "fr": "Serveur uniquement : quand un arbre accroché est monté sur un autre véhicule, décroche tous les arbres."
+  },
+  "Winch:onPlayerPreTeleport": {
+   "en": "Before the local player teleports, destroys all setup ropes to avoid physics trouble caused by an overly long rope. Note: it is not connected in onLoad (see Winch:onLoad).",
+   "fr": "Avant la téléportation du joueur local, détruit toutes les cordes de préparation pour éviter des problèmes de physique dus à une corde trop longue. À noter : elle n'est pas reliée dans onLoad (voir Winch:onLoad)."
+  },
+  "Winch:loadExtraDependentParts": {
+   "en": "Override: after the base loading, reads the optional `winch#ropeIndices` list of a moving part or tool.",
+   "fr": "Surcharge : après le chargement de base, lit la liste facultative `winch#ropeIndices` d'une pièce ou d'un outil mobile."
+  },
+  "Winch:updateExtraDependentParts": {
+   "en": "Override: after the base update, refreshes the anchor nodes of the main ropes listed in the part's rope indices.",
+   "fr": "Surcharge : après la mise à jour de base, rafraîchit les nœuds d'ancrage des cordes principales listées dans les indices de corde de la pièce."
+  },
+  "Winch:getDoConsumePtoPower": {
+   "en": "Override: returns true while any rope has a tree attached, otherwise the previous result.",
+   "fr": "Surcharge : renvoie true tant qu'une corde a un arbre accroché, sinon le résultat précédent."
+  },
+  "Winch:getConsumingLoad": {
+   "en": "Override: adds a full load (1) to the previous load value while any rope was controlled recently, and increments the count by one.",
+   "fr": "Surcharge : ajoute une charge pleine (1) à la valeur précédente tant qu'une corde a été commandée récemment, et incrémente le compteur de un."
+  },
+  "Winch:getIsPowerTakeOffActive": {
+   "en": "Override: returns true while any rope has a tree attached, otherwise the previous result.",
+   "fr": "Surcharge : renvoie true tant qu'une corde a un arbre accroché, sinon le résultat précédent."
+  },
+  "Winch:addToPhysics": {
+   "en": "Override: after the base call succeeds, recreates the main rope for each rope with an attached tree (used when the vehicle re-enters physics).",
+   "fr": "Surcharge : une fois l'appel de base réussi, recrée la corde principale pour chaque corde ayant un arbre accroché (utile quand le véhicule revient dans la physique)."
+  },
+  "Winch:removeFromPhysics": {
+   "en": "Override: destroys the main rope of every rope with attached trees, then calls the previous implementation.",
+   "fr": "Surcharge : détruit la corde principale de chaque corde ayant des arbres accrochés, puis appelle l'implémentation précédente."
+  },
+  "Winch.loadSpecValueMaxMass": {
+   "en": "Store spec loader: reads the highest `maxTreeMass` over the base ropes and, separately, per winch configuration. Returns a table with `maxTreeMass` and `massByConfig`.",
+   "fr": "Chargeur de spec boutique : lit la plus grande valeur `maxTreeMass` sur les cordes de base et, séparément, par configuration de treuil. Renvoie une table avec `maxTreeMass` et `massByConfig`."
+  },
+  "Winch.getSpecValueMaxMass": {
+   "en": "Store spec getter: picks the max tree mass for the chosen configuration (or the highest across configurations) and returns it formatted with the tons unit, as value(s) or string depending on `returnValues`/`returnRange`.",
+   "fr": "Accesseur de spec boutique : choisit la masse d'arbre max de la configuration retenue (ou la plus haute parmi les configurations) et la renvoie formatée avec l'unité tonnes, en valeur(s) ou chaîne selon `returnValues`/`returnRange`."
+  }
+ }
+}

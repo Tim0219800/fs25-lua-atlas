@@ -1,0 +1,29 @@
+{
+ "fichier": "events/InlineBaleOpenEvent.lua",
+ "module": {
+  "en": "Network event asking the server to open an inline bale (a bale in a wrapped chain) at a world position. Sent by a client, applied on the server through `openBaleAtPosition`, whose behaviour is UNVERIFIED (InlineBale class not in this file).",
+  "fr": "Événement réseau demandant au serveur d'ouvrir une balle en ligne (balle d'une chaîne filmée) à une position monde. Envoyé par un client, appliqué sur le serveur via `openBaleAtPosition`, dont le comportement est NON VÉRIFIÉ (classe InlineBale absente de ce fichier)."
+ },
+ "fonctions": {
+  "InlineBaleOpenEvent.emptyNew": {
+   "en": "Creates an empty event, used when reading from a stream.",
+   "fr": "Crée un événement vide, utilisé lors de la lecture d'un flux."
+  },
+  "InlineBaleOpenEvent.new": {
+   "en": "Creates the event for an inline bale and an opening position (x, y, z, world coordinates).",
+   "fr": "Crée l'événement pour une balle en ligne et une position d'ouverture (x, y, z, coordonnées monde)."
+  },
+  "InlineBaleOpenEvent:readStream": {
+   "en": "Server side: reads the inline bale node object and three Float32 coordinates, then calls `run`.",
+   "fr": "Côté serveur : lit l'objet node de la balle en ligne et trois coordonnées Float32, puis appelle `run`."
+  },
+  "InlineBaleOpenEvent:writeStream": {
+   "en": "Client side: writes the inline bale node object and the x, y, z floats; nothing when sent by the server.",
+   "fr": "Côté client : écrit l'objet node de la balle en ligne et les flottants x, y, z ; rien quand l'envoi vient du serveur."
+  },
+  "InlineBaleOpenEvent:run": {
+   "en": "Server only: calls `openBaleAtPosition(x, y, z)` on the inline bale.",
+   "fr": "Serveur uniquement : appelle `openBaleAtPosition(x, y, z)` sur la balle en ligne."
+  }
+ }
+}

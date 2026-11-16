@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/LicensePlates.lua",
+ "module": {
+  "en": "Specialization that lets a vehicle carry license plates. Each `vehicle.licensePlates.licensePlate` entry links a plate object from `g_licensePlateManager` to a node, scales and shifts it to fit a placement area, and toggles optional object changes. Plate data (variation, characters, colour, placement) is saved per vehicle and sent to joining clients; it has no prerequisites.",
+  "fr": "Spécialisation qui permet à un véhicule de porter des plaques d'immatriculation. Chaque entrée `vehicle.licensePlates.licensePlate` rattache une plaque issue de `g_licensePlateManager` à un nœud, la met à l'échelle et la décale pour tenir dans une zone de placement, et active d'éventuels object changes. Les données de plaque (variation, caractères, couleur, placement) sont sauvegardées par véhicule et envoyées aux clients qui rejoignent ; aucun prérequis."
+ },
+ "fonctions": {
+  "LicensePlates.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours vrai : aucune autre spécialisation n'est requise."
+  },
+  "LicensePlates.initSpecialization": {
+   "en": "Registers the `licensePlate` store spec type and the XML schema (default placement, plate nodes, preferred type, placement area, position, frame, object changes) plus the savegame attributes.",
+   "fr": "Enregistre le type de spec boutique `licensePlate` et le schéma XML (placement par défaut, nœuds de plaque, type préféré, zone de placement, position, cadre, object changes) ainsi que les attributs de sauvegarde."
+  },
+  "LicensePlates.registerFunctions": {
+   "en": "Registers the license plate data accessors, the equality check, `getHasLicensePlates` and `getLicensePlateDialogSettings` on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les accesseurs de données de plaque, la comparaison, `getHasLicensePlates` et `getLicensePlateDialogSettings`."
+  },
+  "LicensePlates.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onPostLoad, onReadStream and onWriteStream.",
+   "fr": "S'abonne aux événements onLoad, onDelete, onPostLoad, onReadStream et onWriteStream."
+  },
+  "LicensePlates:onLoad": {
+   "en": "Reads the default placement and, if plates are available in the map, creates each plate from the manager, parents it to its node, hides it and fits it into the placement area. If no plates are available, it resets the object changes instead.",
+   "fr": "Lit le placement par défaut et, si la carte propose des plaques, crée chaque plaque via le manager, la rattache à son nœud, la masque et l'ajuste à la zone de placement. Sans plaques disponibles, elle réinitialise les object changes."
+  },
+  "LicensePlates:onPostLoad": {
+   "en": "Disables all plate object changes, then restores saved plate data from the savegame (characters are split byte by byte, not UTF-8 safe) and applies it with `setLicensePlatesData`.",
+   "fr": "Désactive tous les object changes de plaque, puis restaure les données sauvegardées (les caractères sont découpés octet par octet, sans gestion UTF-8) et les applique avec `setLicensePlatesData`."
+  },
+  "LicensePlates:onDelete": {
+   "en": "Empties the plate list of the vehicle.",
+   "fr": "Vide la liste des plaques du véhicule."
+  },
+  "LicensePlates:saveToXMLFile": {
+   "en": "Writes variation, characters, colour and placement to the savegame, unless the vehicle has no plates or the placement is NONE.",
+   "fr": "Écrit variation, caractères, couleur et placement dans la sauvegarde, sauf si le véhicule n'a pas de plaque ou si le placement vaut NONE."
+  },
+  "LicensePlates:onReadStream": {
+   "en": "Client join: reads the plate data from the stream and applies it.",
+   "fr": "Connexion client : lit les données de plaque depuis le flux et les applique."
+  },
+  "LicensePlates:onWriteStream": {
+   "en": "Server join: writes the current plate data to the stream.",
+   "fr": "Connexion côté serveur : écrit les données de plaque actuelles dans le flux."
+  },
+  "LicensePlates:setLicensePlatesData": {
+   "en": "Applies plate data to all plates: shows or hides each according to the placement option (NONE, BACK_ONLY), updates text, variation and colour, and toggles object changes. Incomplete data hides all plates.",
+   "fr": "Applique les données de plaque à toutes les plaques : affiche ou masque chacune selon l'option de placement (NONE, BACK_ONLY), met à jour texte, variation et couleur, et active les object changes. Des données incomplètes masquent toutes les plaques."
+  },
+  "LicensePlates:getLicensePlatesData": {
+   "en": "Returns the current plate data table (variation, characters, colorIndex, placementIndex), or nil.",
+   "fr": "Renvoie la table des données de plaque actuelles (variation, caractères, colorIndex, placementIndex), ou nil."
+  },
+  "LicensePlates:getLicensePlatesDataIsEqual": {
+   "en": "Compares given data with the vehicle's own. Returns true if either is nil, otherwise true only if variation, colour, placement and characters all match.",
+   "fr": "Compare les données fournies avec celles du véhicule. Renvoie vrai si l'une est nil, sinon vrai seulement si variation, couleur, placement et caractères sont identiques."
+  },
+  "LicensePlates:getHasLicensePlates": {
+   "en": "Returns true if at least one plate was loaded on the vehicle.",
+   "fr": "Renvoie vrai si au moins une plaque a été chargée sur le véhicule."
+  },
+  "LicensePlates:getLicensePlateDialogSettings": {
+   "en": "Returns the default placement index and whether the vehicle has a front plate, for the plate editing dialog.",
+   "fr": "Renvoie l'index de placement par défaut et si le véhicule a une plaque avant, pour la boîte de dialogue d'édition."
+  },
+  "LicensePlates.loadSpecValuePlateText": {
+   "en": "Store spec loader; always returns nil because the spec only applies to existing vehicles.",
+   "fr": "Chargeur de spec boutique ; renvoie toujours nil car la spec ne concerne que les véhicules existants."
+  },
+  "LicensePlates.getSpecValuePlateText": {
+   "en": "Store spec getter: for an owned vehicle with plates, returns the formatted text of the back plate (or the last one); otherwise nil.",
+   "fr": "Getter de spec boutique : pour un véhicule possédé avec plaques, renvoie le texte formaté de la plaque arrière (ou de la dernière) ; sinon nil."
+  }
+ }
+}

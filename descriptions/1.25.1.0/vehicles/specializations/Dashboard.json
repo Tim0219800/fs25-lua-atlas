@@ -1,0 +1,129 @@
+{
+ "fichier": "vehicles/specializations/Dashboard.lua",
+ "module": {
+  "en": "Client-side engine for in-cab instruments (gauges, lights, displays, visibility toggles). Other specializations register DashboardValueType objects through the onRegisterDashboardValueTypes event; the XML under vehicle.dashboard then binds a value type to a display type. Dashboards are sorted into group, critical (every frame), tick and event-driven (by value type) lists, with distance-based throttling. It also loads external dashboard compounds (separate XML plus i3d) linked to a node, switchable by vehicle configuration. The DashboardValueType class and the Dashboard.TYPES, TYPE_DATA and COLORS tables are defined elsewhere: UNVERIFIED.",
+  "fr": "Moteur côté client des instruments de cabine (jauges, voyants, écrans, bascules de visibilité). Les autres spécialisations enregistrent des objets DashboardValueType via l'événement onRegisterDashboardValueTypes ; le XML sous vehicle.dashboard associe ensuite un type de valeur à un type d'affichage. Les dashboards sont répartis en listes de groupe, critiques (à chaque image), tick et pilotées par événement (par type de valeur), avec limitation selon la distance. Il charge aussi des compounds externes (XML et i3d séparés) liés à un nœud, activables selon la configuration du véhicule. La classe DashboardValueType et les tables Dashboard.TYPES, TYPE_DATA et COLORS sont définies ailleurs : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "Dashboard.prerequisitesPresent": {
+   "en": "Always returns true: the specialization has no prerequisites.",
+   "fr": "Renvoie toujours true : la spécialisation n'a aucun prérequis."
+  },
+  "Dashboard.initSpecialization": {
+   "en": "Registers the XML schema: default dashboards, group names, update distances, tickIntervall and compound entries. It also builds the separate dashboardCompounds schema used by compound XML files.",
+   "fr": "Enregistre le schéma XML : dashboards par défaut, noms de groupes, distances de mise à jour, tickIntervall et compounds. Construit aussi le schéma séparé dashboardCompounds utilisé par les fichiers XML de compounds."
+  },
+  "Dashboard.registerEvents": {
+   "en": "Declares the onRegisterDashboardValueTypes event that other specializations listen to in order to register their value types.",
+   "fr": "Déclare l'événement onRegisterDashboardValueTypes, que les autres spécialisations écoutent pour enregistrer leurs types de valeur."
+  },
+  "Dashboard.registerFunctions": {
+   "en": "Registers the specialization's public vehicle functions (updateDashboards, registerDashboardValueType, group and compound loaders, getDashboardValue, etc.).",
+   "fr": "Enregistre les fonctions publiques du véhicule de la spécialisation (updateDashboards, registerDashboardValueType, chargeurs de groupes et de compounds, getDashboardValue, etc.)."
+  },
+  "Dashboard.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPreInitComponentPlacement, onDelete, onUpdate, onUpdateTick and onUpdateEnd.",
+   "fr": "S'abonne à onLoad, onPreInitComponentPlacement, onDelete, onUpdate, onUpdateTick et onUpdateEnd."
+  },
+  "Dashboard:onLoad": {
+   "en": "Initialises the empty dashboard lists, reads the groups from vehicle.dashboard.groups, the tick interval and the two max update distances from the XML.",
+   "fr": "Initialise les listes de dashboards vides, lit depuis le XML les groupes de vehicle.dashboard.groups, l'intervalle de tick et les deux distances maximales de mise à jour."
+  },
+  "Dashboard:onPreInitComponentPlacement": {
+   "en": "Client only: raises onRegisterDashboardValueTypes, loads the default dashboards, each value type's own XML and the compounds. On servers or with zero dashboards it removes the onUpdate and onUpdateTick listeners. Runs here so value types registered during post-load are all known.",
+   "fr": "Client uniquement : déclenche onRegisterDashboardValueTypes, charge les dashboards par défaut, le XML propre à chaque type de valeur et les compounds. Sur un serveur ou sans dashboard, retire les écouteurs onUpdate et onUpdateTick. S'exécute ici pour connaître tous les types enregistrés au post-chargement."
+  },
+  "Dashboard:onDelete": {
+   "en": "Releases all shared i3d files that were requested for dashboard compounds.",
+   "fr": "Libère tous les fichiers i3d partagés demandés pour les compounds de dashboard."
+  },
+  "Dashboard:registerDashboardValueType": {
+   "en": "Adds a value type object to the vehicle's list. If the dashboard types have already been loaded, it immediately makes the value type load its own XML settings.",
+   "fr": "Ajoute un objet de type de valeur à la liste du véhicule. Si les types de dashboard sont déjà chargés, le type de valeur charge immédiatement ses propres réglages XML."
+  },
+  "Dashboard:onUpdate": {
+   "en": "Client per-frame: checks one dashboard group per frame (round robin) and forces a full refresh when its active state flips. Updates the critical dashboards when the vehicle is within the critical distance or flagged dirty.",
+   "fr": "Par image côté client : contrôle un groupe de dashboard par image (tourniquet) et force un rafraîchissement complet si son état actif change. Met à jour les dashboards critiques si le véhicule est dans la distance critique ou marqué sale."
+  },
+  "Dashboard:onUpdateTick": {
+   "en": "Client tick: updates the low-priority dashboards when within the max distance (or dirty), honouring tickIntervall if set. Also refreshes event-driven dashboards whose value type was flagged dirty.",
+   "fr": "Tick côté client : met à jour les dashboards de faible priorité dans la distance maximale (ou si sales), en respectant tickIntervall s'il est défini. Rafraîchit aussi les dashboards pilotés par événement dont le type de valeur est marqué sale."
+  },
+  "Dashboard:onUpdateEnd": {
+   "en": "Client only: forces a refresh of the tick and critical dashboards, regardless of whether their value changed.",
+   "fr": "Client uniquement : force le rafraîchissement des dashboards de tick et critiques, que leur valeur ait changé ou non."
+  },
+  "Dashboard:updateDashboardValueType": {
+   "en": "Flags the named value type as dirty so its dashboards are refreshed at the next tick when the vehicle is in update range. Called by other specializations when the source value changes.",
+   "fr": "Marque le type de valeur nommé comme sale pour que ses dashboards soient rafraîchis au prochain tick si le véhicule est à portée. Appelée par les autres spécialisations quand la valeur source change."
+  },
+  "Dashboard:updateDashboards": {
+   "en": "Core update loop for a list of dashboards. It reads the value from the value type, applies state change, active range, scale, offset, mapping, idle value, interpolation and min/max clamping, then calls the dashboard's state function if the value changed or force is set.",
+   "fr": "Boucle de mise à jour centrale pour une liste de dashboards. Lit la valeur du type de valeur, applique changement d'état, plage active, échelle, décalage, mapping, valeur de repos, interpolation et bornes min/max, puis appelle la fonction d'état si la valeur a changé ou si force est vrai."
+  },
+  "Dashboard:loadDashboardGroupFromXML": {
+   "en": "Reads a group name from XML into the group table and sets it inactive. Returns false with a warning if the name is missing or already used.",
+   "fr": "Lit un nom de groupe dans le XML, le place dans la table du groupe et le met inactif. Renvoie false avec un avertissement si le nom manque ou est déjà utilisé."
+  },
+  "Dashboard:getIsDashboardGroupActive": {
+   "en": "Default implementation, always true. Other specializations override it to drive group visibility.",
+   "fr": "Implémentation par défaut, toujours true. D'autres spécialisations la surchargent pour piloter la visibilité des groupes."
+  },
+  "Dashboard:getDashboardGroupByName": {
+   "en": "Returns the dashboard group table registered under the given name, or nil.",
+   "fr": "Renvoie la table du groupe de dashboard enregistré sous ce nom, ou nil."
+  },
+  "Dashboard:loadDashboardCompoundFromXML": {
+   "en": "Reads one compound entry (link node, file, name, config ids and configuration dependencies), finds the named compound in the external XML and starts a shared i3d load with onDashboardCompoundLoaded as callback. Returns true only when that load was started.",
+   "fr": "Lit une entrée de compound (nœud de liaison, fichier, nom, ids de config et dépendances de configuration), trouve le compound nommé dans le XML externe et lance un chargement i3d partagé avec onDashboardCompoundLoaded en rappel. Renvoie true seulement si ce chargement a démarré."
+  },
+  "Dashboard:onDashboardCompoundLoaded": {
+   "en": "Callback of the compound i3d load: builds i3d mappings from the loaded children, loads the compound's dashboards, then deletes the temporary i3d root node and the compound XML file. Note: the compound's node is linked before deletion of the root.",
+   "fr": "Rappel du chargement i3d du compound : construit les mappings i3d depuis les enfants chargés, charge les dashboards du compound, puis supprime le nœud racine i3d temporaire et le fichier XML du compound. À noter : le nœud du compound est lié avant la suppression de la racine."
+  },
+  "Dashboard:loadDashboardCompoundFromExternalXML": {
+   "en": "Links the compound node under the compound's link node at the origin, loads its dashboards, then for each configuration entry applies object changes and loads that configuration's dashboards only if its id is enabled. Returns false with a warning if the node is missing.",
+   "fr": "Lie le nœud du compound sous son nœud de liaison à l'origine, charge ses dashboards, puis pour chaque configuration applique les changements d'objets et charge ses dashboards seulement si son id est activé. Renvoie false avec un avertissement si le nœud manque."
+  },
+  "Dashboard:loadDashboardsFromXML": {
+   "en": "Client only: iterates the dashboard entries at a key, resolves the value type by name (warns on unknown or ambiguous names), loads each one and files it in the critical, value-type, tick or group list. Always returns true.",
+   "fr": "Client uniquement : parcourt les entrées dashboard d'une clé, résout le type de valeur par son nom (avertit si inconnu ou ambigu), charge chacune et la range dans la liste critique, par type de valeur, tick ou groupe. Renvoie toujours true."
+  },
+  "Dashboard:loadDashboardFromXML": {
+   "en": "Loads one dashboard definition: display type, interpolation, state change, idle/offset/scale, active range, value mapping curve, groups and state function. It then calls the display type's loadFunc and the value type's loadFunction; returns false if any step fails.",
+   "fr": "Charge la définition d'un dashboard : type d'affichage, interpolation, changement d'état, repos/décalage/échelle, plage active, courbe de mapping, groupes et fonction d'état. Appelle ensuite le loadFunc du type d'affichage et le loadFunction du type de valeur ; renvoie false si une étape échoue."
+  },
+  "Dashboard:defaultDashboardStateFunc": {
+   "en": "Default state function: forwards the new value and limits to the updateFunc of the dashboard's display type.",
+   "fr": "Fonction d'état par défaut : transmet la nouvelle valeur et ses limites à l'updateFunc du type d'affichage du dashboard."
+  },
+  "Dashboard:setDashboardsDirty": {
+   "en": "Marks both the critical and tick dashboards as dirty and wakes the vehicle with raiseActive, so they refresh on the next update.",
+   "fr": "Marque les dashboards critiques et de tick comme sales et réveille le véhicule avec raiseActive, pour un rafraîchissement à la prochaine mise à jour."
+  },
+  "Dashboard:getDashboardValue": {
+   "en": "Resolves a value source: a number or boolean is returned as is, a function is called with the object and dashboard, and a string is looked up as a method or field of the object. Returns nil otherwise.",
+   "fr": "Résout une source de valeur : un nombre ou booléen est renvoyé tel quel, une fonction est appelée avec l'objet et le dashboard, et une chaîne est cherchée comme méthode ou champ de l'objet. Renvoie nil sinon."
+  },
+  "Dashboard.getDashboardColor": {
+   "en": "Converts a colour string into an RGBA table: first a named Dashboard.COLORS entry, then a material template colour of the vehicle material manager, then a numeric vector (alpha defaults to 1). Warns and returns nil otherwise.",
+   "fr": "Convertit une chaîne de couleur en table RGBA : d'abord une entrée nommée de Dashboard.COLORS, puis une couleur de modèle de matériau du gestionnaire de matériaux, puis un vecteur numérique (alpha 1 par défaut). Avertit et renvoie nil sinon."
+  },
+  "Dashboard.warningAttributes": {
+   "en": "Reads warningThresholdMin and warningThresholdMax from XML into the dashboard (defaults -inf and +inf) and returns true.",
+   "fr": "Lit warningThresholdMin et warningThresholdMax depuis le XML dans le dashboard (par défaut -inf et +inf) et renvoie true."
+  },
+  "Dashboard.registerDisplayType": {
+   "en": "Stores a display type's data (critical flag, schema, load and update functions) in Dashboard.TYPE_DATA under the given index. Used by the display type definitions.",
+   "fr": "Stocke les données d'un type d'affichage (indicateur critique, schéma, fonctions de chargement et de mise à jour) dans Dashboard.TYPE_DATA sous l'index donné. Utilisée par les définitions de types d'affichage."
+  },
+  "Dashboard.registerDashboardXMLPaths": {
+   "en": "Registers all common dashboard XML attributes under a base path, then each display type's own schema entries, and marks the path for delayed registration. The optional list restricts allowed value type names.",
+   "fr": "Enregistre tous les attributs XML communs d'un dashboard sous un chemin de base, puis les entrées de schéma propres à chaque type d'affichage, et marque le chemin pour enregistrement différé. La liste optionnelle limite les noms de types de valeur autorisés."
+  },
+  "Dashboard.addDelayedRegistrationFunc": {
+   "en": "Adds a delayed schema registration function for 'Dashboard' to both the vehicle schema and the compounds schema (creating the latter if needed).",
+   "fr": "Ajoute une fonction d'enregistrement différé du schéma pour « Dashboard » au schéma du véhicule et à celui des compounds (créé au besoin)."
+  }
+ }
+}

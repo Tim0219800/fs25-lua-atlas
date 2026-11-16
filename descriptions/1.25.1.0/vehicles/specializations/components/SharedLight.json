@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/specializations/components/SharedLight.lua",
+ "module": {
+  "en": "A reusable light model loaded from a shared XML/i3d asset (`data/shared/assets/lights`) and linked to a vehicle node. On load it distributes the lights found in the asset (default, top, bottom, brake, reverse, day-time, left and right turn) into the vehicle's `staticLights` tables as `StaticLight` objects, optionally builds a `StaticLightCompound`, and applies base and glass materials. Light role flags (reverse, turn left/right) and rotation presets come from the vehicle XML. Client-side visual; ships a debug console command that spawns every shared light.",
+  "fr": "Modèle de lumière réutilisable chargé depuis un asset XML/i3d partagé (`data/shared/assets/lights`) et lié à un nœud du véhicule. Au chargement il répartit les lumières de l'asset (par défaut, haut, bas, frein, marche arrière, jour, clignotants gauche et droit) dans les tables `staticLights` du véhicule sous forme d'objets `StaticLight`, construit éventuellement un `StaticLightCompound` et applique les matériaux de base et de verre. Les indicateurs de rôle (recul, clignotant gauche/droit) et les préréglages de rotation viennent du XML du véhicule. Visuel côté client ; fournit une commande console de debug qui fait apparaître toutes les lumières partagées."
+ },
+ "fonctions": {
+  "SharedLight.new": {
+   "en": "Creates a shared light bound to a vehicle and to the vehicle's `staticLights` category tables; reverse and turn role flags start false.",
+   "fr": "Crée une lumière partagée liée à un véhicule et aux tables de catégories `staticLights` du véhicule ; les indicateurs de rôle recul et clignotants démarrent à false."
+  },
+  "SharedLight:delete": {
+   "en": "Deletes the pending XML file, the light node and releases the shared i3d request.",
+   "fr": "Supprime le fichier XML en attente, le nœud de lumière et libère la requête i3d partagée."
+  },
+  "SharedLight:setCallback": {
+   "en": "Stores a callback (and optional target) called with the success flag after loading.",
+   "fr": "Mémorise un callback (et une cible optionnelle) appelé avec l'indicateur de succès après le chargement."
+  },
+  "SharedLight:onFinished": {
+   "en": "Invokes the registered callback, with or without target, passing the success flag.",
+   "fr": "Appelle le callback enregistré, avec ou sans cible, en lui passant l'indicateur de succès."
+  },
+  "SharedLight:setRotationNodes": {
+   "en": "Stores a table mapping rotation node names to rotation vectors, applied when the asset loads.",
+   "fr": "Mémorise une table associant noms de nœuds de rotation et vecteurs de rotation, appliquée au chargement de l'asset."
+  },
+  "SharedLight:setLightTypes": {
+   "en": "Stores the light types and excluded light types handed to the compound light.",
+   "fr": "Mémorise les types de lumière et types exclus transmis à la lumière composée."
+  },
+  "SharedLight:loadFromVehicleXML": {
+   "en": "Reads one shared light entry in the vehicle XML (`#filename`, `#linkNode`, rotation nodes, light types, reverse/turn flags, function mapping, extra attributes) and starts loading. Refuses hidden or runtime-loaded reference link nodes. The result goes through `callback(success, self or nil)`.",
+   "fr": "Lit une entrée de lumière partagée dans le XML du véhicule (`#filename`, `#linkNode`, nœuds de rotation, types de lumière, indicateurs recul/clignotant, mappage de fonctions, attributs supplémentaires) et lance le chargement. Refuse les nœuds d'attache cachés ou de référence chargée à l'exécution. Le résultat passe par `callback(success, self ou nil)`."
+  },
+  "SharedLight:loadFromXML": {
+   "en": "Loads the shared light XML and starts the async shared i3d load. When the XML is missing it checks `FS22_RENAMED_LIGHTS` to warn about renamed assets. Returns false (after `onFinished(false)`) on failure.",
+   "fr": "Charge le XML de lumière partagée et lance le chargement i3d partagé asynchrone. Si le XML manque, il consulte `FS22_RENAMED_LIGHTS` pour avertir d'un asset renommé. Renvoie false (après `onFinished(false)`) en cas d'échec."
+  },
+  "SharedLight:onI3DLoaded": {
+   "en": "Async callback: loads the lights of every category into the vehicle tables (the default category is redirected to reverse or turn lists depending on the role flags), applies rotation presets, builds the optional compound, applies base and glass materials and links the node under the link node.",
+   "fr": "Callback asynchrone : charge les lumières de chaque catégorie dans les tables du véhicule (la catégorie par défaut est redirigée vers les listes de recul ou de clignotants selon les indicateurs de rôle), applique les rotations, construit le composé optionnel, applique les matériaux de base et de verre et lie le nœud sous le nœud d'attache."
+  },
+  "SharedLight.consoleCommandDebug": {
+   "en": "Debug console command: loads every shared light XML in the game's lights folder in rows in front of the player using a dummy vehicle, switches on the light types given as `true` strings and logs how many loaded. It also spawns the debug beacons.",
+   "fr": "Commande console de debug : charge tous les XML de lumières partagées du dossier de lumières du jeu en rangées devant le joueur avec un faux véhicule, active les types de lumière passés en chaînes `true` et journalise combien ont chargé. Elle fait aussi apparaître les gyrophares de debug."
+  },
+  "SharedLight.registerXMLPaths": {
+   "en": "Empty; registers no XML paths.",
+   "fr": "Vide ; n'enregistre aucun chemin XML."
+  },
+  "SharedLight.registerExternalXMLPaths": {
+   "en": "Registers the XML paths of the shared light asset: each static light category, base and glass materials and the static light compound.",
+   "fr": "Enregistre les chemins XML de l'asset de lumière partagée : chaque catégorie de lumière statique, les matériaux de base et de verre et la lumière statique composée."
+  }
+ }
+}

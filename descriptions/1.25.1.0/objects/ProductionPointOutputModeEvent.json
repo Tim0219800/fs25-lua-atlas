@@ -1,0 +1,33 @@
+{
+ "fichier": "objects/ProductionPointOutputModeEvent.lua",
+ "module": {
+  "en": "Network event telling that the output distribution mode of one output fill type of a production point changed (see ProductionPoint.OUTPUT_MODE, defined outside this dump). A client sends it to the server, which applies it and rebroadcasts it to the other clients.",
+  "fr": "Événement réseau signalant que le mode de distribution de sortie d'un type de remplissage d'un point de production a changé (voir ProductionPoint.OUTPUT_MODE, défini hors de ce dump). Un client l'envoie au serveur, qui l'applique et le rediffuse aux autres clients."
+ },
+ "fonctions": {
+  "ProductionPointOutputModeEvent.emptyNew": {
+   "en": "Creates an empty event instance, used when reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée lors de la lecture depuis un flux."
+  },
+  "ProductionPointOutputModeEvent.new": {
+   "en": "Creates the event with the production point, the output fill type id and the output mode.",
+   "fr": "Crée l'événement avec le point de production, l'id du type de remplissage de sortie et le mode de sortie."
+  },
+  "ProductionPointOutputModeEvent:readStream": {
+   "en": "Reads the production point object, fill type id and mode from the stream, then runs the event.",
+   "fr": "Lit l'objet point de production, l'id du type de remplissage et le mode depuis le flux, puis exécute l'événement."
+  },
+  "ProductionPointOutputModeEvent:writeStream": {
+   "en": "Writes the production point object, fill type id and mode to the stream.",
+   "fr": "Écrit l'objet point de production, l'id du type de remplissage et le mode dans le flux."
+  },
+  "ProductionPointOutputModeEvent:run": {
+   "en": "On the server, rebroadcasts the event to the other clients; then, if the production point still exists, calls setOutputDistributionMode with the no-event flag so it does not resend.",
+   "fr": "Sur le serveur, rediffuse l'événement aux autres clients ; puis, si le point de production existe encore, appelle setOutputDistributionMode avec l'indicateur sans événement pour éviter un nouvel envoi."
+  },
+  "ProductionPointOutputModeEvent.sendEvent": {
+   "en": "Sends the change unless noEventSend is true: the server broadcasts it to all clients, a client sends it to the server.",
+   "fr": "Envoie le changement sauf si noEventSend est true : le serveur le diffuse à tous les clients, un client l'envoie au serveur."
+  }
+ }
+}

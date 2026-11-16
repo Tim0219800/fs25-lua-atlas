@@ -1,0 +1,21 @@
+{
+ "fichier": "gui/hud/InfoDisplay.lua",
+ "module": {
+  "en": "Base class of the HUD info panels anchored at the bottom right of the screen (extends HUDDisplay). It holds a list of boxes (InfoDisplayBox) and forwards scale changes to them. The boxes list, totalHeight and isEnabled are filled by subclasses or other code, not here (UNVERIFIED).",
+  "fr": "Classe de base des panneaux d'information HUD ancrés en bas à droite de l'écran (étend HUDDisplay). Elle garde une liste de boîtes (InfoDisplayBox) et leur transmet les changements d'échelle. Les champs boxes, totalHeight et isEnabled sont renseignés par des sous-classes ou d'autres codes, pas ici (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "InfoDisplay:setScale": {
+   "en": "Applies the UI scale through the parent class, then calls setScale on every box in self.boxes.",
+   "fr": "Applique l'échelle d'interface via la classe parente, puis appelle setScale sur chaque boîte de self.boxes."
+  },
+  "InfoDisplay:storeScaledValues": {
+   "en": "Anchors the display at the HUD's right/bottom anchor and caches a 5 pixel vertical margin between boxes in screen units.",
+   "fr": "Ancre l'affichage au point d'ancrage droit/bas du HUD et met en cache une marge verticale de 5 pixels entre les boîtes, en unités écran."
+  },
+  "InfoDisplay:getDisplayHeight": {
+   "en": "Returns the stored total height when the display is enabled, otherwise 0.",
+   "fr": "Retourne la hauteur totale mémorisée si l'affichage est activé, sinon 0."
+  }
+ }
+}

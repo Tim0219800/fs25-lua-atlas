@@ -1,0 +1,81 @@
+{
+ "fichier": "gui/elements/BinaryOptionElement.lua",
+ "module": {
+  "en": "Two-choice option element (left/right, default texts off/on or no/yes) with two buttons and a slider that glides between them. Derived from MultiTextOptionElement; similar to CheckedOptionElement but driven by left/right input and an animated slider. Texts come from `g_i18n` strings; STATE_LEFT, STATE_RIGHT, NUM_SLIDER_STATES and STRING_* constants are defined elsewhere. Client-side GUI.",
+  "fr": "Élément d'option à deux choix (gauche/droite, textes par défaut off/on ou non/oui) avec deux boutons et un curseur qui glisse entre eux. Dérivé de MultiTextOptionElement ; proche de CheckedOptionElement mais piloté par les entrées gauche/droite et un curseur animé. Les textes viennent des chaînes `g_i18n` ; les constantes STATE_LEFT, STATE_RIGHT, NUM_SLIDER_STATES et STRING_* sont définies ailleurs. Interface côté client."
+ },
+ "fonctions": {
+  "BinaryOptionElement.new": {
+   "en": "Constructor; initializes slider state (no slider element, not moving, direction 0) and the yes/no text flag to false.",
+   "fr": "Constructeur ; initialise l'état du curseur (pas d'élément curseur, immobile, direction 0) et l'indicateur de textes oui/non à false."
+  },
+  "BinaryOptionElement:loadFromXML": {
+   "en": "Reads the optional `useYesNoTexts` boolean from the XML node after the parent attributes.",
+   "fr": "Lit le booléen optionnel `useYesNoTexts` depuis le nœud XML après les attributs du parent."
+  },
+  "BinaryOptionElement:loadProfile": {
+   "en": "Reads useYesNoTexts, sliderOffset and the default slider profiles (plain, round, three-part) from a GUI profile.",
+   "fr": "Lit useYesNoTexts, sliderOffset et les profils de curseur par défaut (simple, arrondi, trois parties) depuis un profil GUI."
+  },
+  "BinaryOptionElement:copyAttributes": {
+   "en": "Copies useYesNoTexts and the three default slider profile names from a source element.",
+   "fr": "Copie useYesNoTexts et les trois noms de profils de curseur par défaut depuis un élément source."
+  },
+  "BinaryOptionElement:setElementsByName": {
+   "en": "Re-scans the children after naming: finds the child named \"slider\" (warns if missing), binds the two buttons' selected state and scroll permission to this element's state/focus, and computes the slider travel per animation step.",
+   "fr": "Reparcourt les enfants une fois nommés : trouve l'enfant \"slider\" (avertit s'il manque), lie l'état sélectionné et l'autorisation de défilement des deux boutons à l'état et au focus de cet élément, et calcule le déplacement du curseur par pas d'animation."
+  },
+  "BinaryOptionElement:addDefaultElements": {
+   "en": "When automatic default elements are enabled and no \"slider\" child exists, creates one (RoundCornerElement, ThreePartBitmapElement or BitmapElement depending on which default slider profile is set) and applies that profile.",
+   "fr": "Si les éléments par défaut automatiques sont activés et qu'aucun enfant \"slider\" n'existe, en crée un (RoundCornerElement, ThreePartBitmapElement ou BitmapElement selon le profil de curseur par défaut défini) et lui applique ce profil."
+  },
+  "BinaryOptionElement:onGuiSetupFinished": {
+   "en": "Sets the two button texts to localized no/yes or off/on depending on `useYesNoTexts` and hides the inherited text element.",
+   "fr": "Règle les textes des deux boutons sur non/oui ou off/on localisés selon `useYesNoTexts` et masque l'élément de texte hérité."
+  },
+  "BinaryOptionElement:getIsChecked": {
+   "en": "Returns true when the right-hand state is selected (the right choice counts as checked).",
+   "fr": "Retourne true quand l'état de droite est sélectionné (le choix de droite compte comme coché)."
+  },
+  "BinaryOptionElement:setIsChecked": {
+   "en": "Sets the state to right (checked) or left (unchecked), optionally forcing the click callback, then stores `skipAnimation` so the slider can jump instead of gliding on the next update.",
+   "fr": "Place l'état à droite (coché) ou à gauche (décoché), avec possibilité de forcer le callback de clic, puis mémorise `skipAnimation` pour que le curseur saute au lieu de glisser à la mise à jour suivante."
+  },
+  "BinaryOptionElement:getIsActiveNonRec": {
+   "en": "Reports the element as active whenever it is visible, even if disabled, so `update` keeps running and the slider movement can finish.",
+   "fr": "Considère l'élément comme actif dès qu'il est visible, même désactivé, afin que `update` continue et que le mouvement du curseur puisse se terminer."
+  },
+  "BinaryOptionElement:setTexts": {
+   "en": "Sets the texts of the left and right buttons. Logs a warning with call stack when the table does not contain exactly two entries.",
+   "fr": "Définit les textes des boutons gauche et droit. Journalise un avertissement avec la pile d'appels si la table ne contient pas exactement deux entrées."
+  },
+  "BinaryOptionElement:update": {
+   "en": "Per-frame update that advances the slider one step toward its target, or jumps to the end when skipping animation, stops at either end, and repositions the slider element. Resets `skipAnimation` afterwards.",
+   "fr": "Mise à jour à chaque frame qui avance le curseur d'un pas vers sa cible, ou saute à la fin si l'animation est ignorée, s'arrête à chaque extrémité et repositionne l'élément curseur. Réinitialise ensuite `skipAnimation`."
+  },
+  "BinaryOptionElement:inputLeft": {
+   "en": "Handles a left input: if the slider is idle and the element is focused or its left button is pressed, triggers the left click and returns true; otherwise returns false.",
+   "fr": "Gère une entrée gauche : si le curseur est immobile et que l'élément est focalisé ou que son bouton gauche est pressé, déclenche le clic gauche et retourne true ; sinon false."
+  },
+  "BinaryOptionElement:inputRight": {
+   "en": "Handles a right input: if the slider is idle and the element is focused or its right button is pressed, triggers the right click and returns true; otherwise returns false.",
+   "fr": "Gère une entrée droite : si le curseur est immobile et que l'élément est focalisé ou que son bouton droit est pressé, déclenche le clic droit et retourne true ; sinon false."
+  },
+  "BinaryOptionElement:setState": {
+   "en": "Validates that the state is left or right (warns otherwise). If unchanged, optionally raises the click callback when forced; if changed, applies it via the parent, refreshes selection and slider direction, and stores `skipAnimation`.",
+   "fr": "Vérifie que l'état est gauche ou droite (avertit sinon). Si inchangé, déclenche éventuellement le callback de clic lorsqu'il est forcé ; sinon l'applique via le parent, met à jour la sélection et la direction du curseur et mémorise `skipAnimation`."
+  },
+  "BinaryOptionElement:onRightButtonClicked": {
+   "en": "Gives focus to the element silently, then if changes are allowed and the state is not already right, plays the click sound, switches to right, updates content, raises the click callback (false) and notifies the index change.",
+   "fr": "Donne le focus à l'élément sans son, puis, si les changements sont autorisés et que l'état n'est pas déjà à droite, joue le son de clic, passe à droite, met à jour le contenu, déclenche le callback de clic (false) et notifie le changement d'indice."
+  },
+  "BinaryOptionElement:onLeftButtonClicked": {
+   "en": "Gives focus silently, then if allowed and not already left, plays the click sound, switches to left, updates content, raises the click callback (true) and notifies the index change.",
+   "fr": "Donne le focus sans son, puis, si autorisé et pas déjà à gauche, joue le son de clic, passe à gauche, met à jour le contenu, déclenche le callback de clic (true) et notifie le changement d'indice."
+  },
+  "BinaryOptionElement:updateSelection": {
+   "en": "Marks the matching button as selected and sets the slider direction (+1 toward right, -1 toward left) so `update` animates it.",
+   "fr": "Marque le bouton correspondant comme sélectionné et règle la direction du curseur (+1 vers la droite, -1 vers la gauche) pour que `update` l'anime."
+  }
+ }
+}

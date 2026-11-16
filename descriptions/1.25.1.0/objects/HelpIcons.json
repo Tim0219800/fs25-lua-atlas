@@ -1,0 +1,33 @@
+{
+ "fichier": "objects/HelpIcons.lua",
+ "module": {
+  "en": "Manages the collectable help icons placed on a map: a root node whose children are trigger nodes, each holding an icon child. Entering a trigger with the local player's vehicle hides the icon, stores the found state in the savegame mission info and shows an in-game message from the i18n texts helpIcon_title and helpIcon_text.",
+  "fr": "Gère les icônes d'aide à collecter placées sur une carte : un nœud racine dont les enfants sont des déclencheurs, chacun contenant une icône. Quand le véhicule du joueur local entre dans un déclencheur, l'icône est masquée, l'état trouvé est stocké dans les infos de la partie et un message est affiché via les textes i18n helpIcon_title et helpIcon_text."
+ },
+ "fonctions": {
+  "HelpIcons:onCreate": {
+   "en": "Map callback for an i3d node: builds the HelpIcons object, adds it to the non-updateables of the mission and stores it in g_currentMission.helpIconsBase.",
+   "fr": "Callback de carte pour un nœud i3d : crée l'objet HelpIcons, l'ajoute aux objets non mis à jour de la mission et le stocke dans g_currentMission.helpIconsBase."
+  },
+  "HelpIcons.new": {
+   "en": "Constructor. For each child of the node, takes the first grandchild as icon, reads the customNumber user attribute (default 0), adds a trigger with triggerCallback and records the entry. Starts visible.",
+   "fr": "Constructeur. Pour chaque enfant du nœud, prend le premier petit-enfant comme icône, lit l'attribut utilisateur customNumber (0 par défaut), ajoute un déclencheur avec triggerCallback et enregistre l'entrée. Démarre visible."
+  },
+  "HelpIcons:delete": {
+   "en": "Removes the triggers of all help icons.",
+   "fr": "Retire les déclencheurs de toutes les icônes d'aide."
+  },
+  "HelpIcons:triggerCallback": {
+   "en": "Trigger callback, enter only and local player only. Requires the player to be in a vehicle that matches the entering node. Hides that icon, disables its trigger, rebuilds the foundHelpIcons string ('1' for found, '0' for visible) and shows the message numbered by customNumber or by index.",
+   "fr": "Callback de déclencheur, entrée seulement et joueur local seulement. Exige que le joueur soit dans un véhicule correspondant au nœud entrant. Masque l'icône, désactive son déclencheur, reconstruit la chaîne foundHelpIcons ('1' trouvée, '0' visible) et affiche le message numéroté par customNumber ou par index."
+  },
+  "HelpIcons:showHelpIcons": {
+   "en": "Shows or hides all icons. Unless clearIconStates is true, an icon is shown only if its entry in foundHelpIcons is '0'. Sets the trigger collision mask to 3145728 for visible icons and 0 otherwise.",
+   "fr": "Affiche ou masque toutes les icônes. Sauf si clearIconStates vaut true, une icône n'est affichée que si son entrée dans foundHelpIcons vaut '0'. Fixe le masque de collision du déclencheur à 3145728 pour les icônes visibles et à 0 sinon."
+  },
+  "HelpIcons:deleteHelpIcon": {
+   "en": "Hides the icon with the given index and disables its trigger collision mask. Does nothing if the index does not exist.",
+   "fr": "Masque l'icône d'index donné et désactive le masque de collision de son déclencheur. Sans effet si l'index n'existe pas."
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "fichier": "graphics/HumanGraphicsComponentState.lua",
+ "module": {
+  "en": "Tiny data class meant to hold the state of a human graphics component. In this dump it only has a constructor that calls setDefault, which is not defined in this file (UNVERIFIED where it comes from).",
+  "fr": "Minuscule classe de données destinée à contenir l'état d'un composant graphique humain. Dans ce dump elle n'a qu'un constructeur qui appelle setDefault, non défini dans ce fichier (origine NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HumanGraphicsComponentState.new": {
+   "en": "Creates an instance and calls self:setDefault(). setDefault is not defined here, so the constructor would fail unless it is supplied elsewhere (UNVERIFIED).",
+   "fr": "Crée une instance et appelle self:setDefault(). setDefault n'est pas défini ici : le constructeur échouerait s'il n'est pas fourni ailleurs (NON VÉRIFIÉ)."
+  }
+ }
+}

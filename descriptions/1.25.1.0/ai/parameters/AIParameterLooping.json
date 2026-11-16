@@ -1,0 +1,49 @@
+{
+ "fichier": "ai/parameters/AIParameterLooping.lua",
+ "module": {
+  "en": "AI job parameter holding a yes/no looping choice that the player toggles in the UI. It is saved to XML as a boolean attribute and streamed as one bool.",
+  "fr": "Paramètre de job IA qui contient un choix oui/non de bouclage que le joueur bascule dans l'interface. Il est sauvegardé en XML comme attribut booléen et transmis comme un seul booléen."
+ },
+ "fonctions": {
+  "AIParameterLooping.new": {
+   "en": "Creates the parameter with type SELECTOR and looping off.",
+   "fr": "Crée le paramètre de type SELECTOR, avec le bouclage désactivé."
+  },
+  "AIParameterLooping:saveToXMLFile": {
+   "en": "Writes the looping flag to `#isLooping`.",
+   "fr": "Écrit le drapeau de bouclage dans `#isLooping`."
+  },
+  "AIParameterLooping:loadFromXMLFile": {
+   "en": "Reads `#isLooping`, keeping the current value if absent.",
+   "fr": "Lit `#isLooping`, en gardant la valeur courante si absent."
+  },
+  "AIParameterLooping:readStream": {
+   "en": "Reads one bool and applies it as the looping flag.",
+   "fr": "Lit un booléen et l'applique comme drapeau de bouclage."
+  },
+  "AIParameterLooping:writeStream": {
+   "en": "Writes the looping flag as one bool.",
+   "fr": "Écrit le drapeau de bouclage comme un booléen."
+  },
+  "AIParameterLooping:setIsLooping": {
+   "en": "Sets the looping flag.",
+   "fr": "Fixe le drapeau de bouclage."
+  },
+  "AIParameterLooping:getIsLooping": {
+   "en": "Returns the looping flag.",
+   "fr": "Renvoie le drapeau de bouclage."
+  },
+  "AIParameterLooping:getString": {
+   "en": "Returns the localized \"looping\" or \"no looping\" text.",
+   "fr": "Renvoie le texte localisé « en boucle » ou « sans boucle »."
+  },
+  "AIParameterLooping:setNextItem": {
+   "en": "Toggles the looping flag.",
+   "fr": "Bascule le drapeau de bouclage."
+  },
+  "AIParameterLooping:setPreviousItem": {
+   "en": "Toggles the looping flag, same as `setNextItem`.",
+   "fr": "Bascule le drapeau de bouclage, comme `setNextItem`."
+  }
+ }
+}

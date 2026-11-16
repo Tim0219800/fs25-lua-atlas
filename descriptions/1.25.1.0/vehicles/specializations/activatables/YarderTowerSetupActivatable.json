@@ -1,0 +1,53 @@
+{
+ "fichier": "vehicles/specializations/activatables/YarderTowerSetupActivatable.lua",
+ "module": {
+  "en": "Activatable used to set up and remove a yarder tower's main rope: start or cancel setup mode and confirm the target tree. Selected when the player is in range of the tower. The actual state is held in `spec_yarderTower` (defined elsewhere, UNVERIFIED).",
+  "fr": "Activatable servant à installer et retirer le câble principal d'une tour de débardage : démarrer ou annuler la mise en place et confirmer l'arbre cible. Sélectionné quand le joueur est à portée de la tour. L'état réel est tenu dans `spec_yarderTower` (défini ailleurs, NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "YarderTowerSetupActivatable.new": {
+   "en": "Creates the setup activatable for a yarder tower vehicle with an empty prompt text.",
+   "fr": "Crée l'activatable de mise en place pour un véhicule de tour de débardage avec un texte d'invite vide."
+  },
+  "YarderTowerSetupActivatable:registerCustomInput": {
+   "en": "Registers the `ACTIVATE_OBJECT` toggle and `YARDER_SETUP_ROPE` set-target action events at very high priority, then updates their texts.",
+   "fr": "Enregistre les événements d'action `ACTIVATE_OBJECT` (bascule) et `YARDER_SETUP_ROPE` (définir la cible) à priorité très haute, puis met à jour leurs textes."
+  },
+  "YarderTowerSetupActivatable:removeCustomInput": {
+   "en": "Removes every input action event registered by this object (all events bound to it as target).",
+   "fr": "Retire tous les événements d'action d'entrée enregistrés par cet objet (tous ceux dont il est la cible)."
+  },
+  "YarderTowerSetupActivatable:onToggleSetupMode": {
+   "en": "Input callback: if the main rope is active it deactivates the target; otherwise, when allowed, enters setup mode, else shows the returned warning for 2000 ms.",
+   "fr": "Callback d'entrée : si le câble principal est actif, désactive la cible ; sinon, si c'est permis, entre en mode de mise en place, sinon affiche l'avertissement renvoyé pendant 2000 ms."
+  },
+  "YarderTowerSetupActivatable:onSetTarget": {
+   "en": "Input callback: calls `setYarderTargetActive(true)` to confirm the target tree and activate the main rope.",
+   "fr": "Callback d'entrée : appelle `setYarderTargetActive(true)` pour confirmer l'arbre cible et activer le câble principal."
+  },
+  "YarderTowerSetupActivatable:updateActionEventTexts": {
+   "en": "Sets the toggle text (cancel, remove or start setup) from the yarder state, and enables the set-target action only in setup mode with a valid main rope.",
+   "fr": "Fixe le texte de bascule (annuler, retirer ou démarrer la mise en place) selon l'état du yarder, et n'active l'action de cible qu'en mode de mise en place avec un câble principal valide."
+  },
+  "YarderTowerSetupActivatable:getIsActivatable": {
+   "en": "Returns whether the player is within the yarder setup range, via `getIsPlayerInYarderRange`.",
+   "fr": "Renvoie si le joueur est dans la zone de mise en place du yarder, via `getIsPlayerInYarderRange`."
+  },
+  "YarderTowerSetupActivatable:activate": {
+   "en": "Empty hook; nothing happens when the activatable becomes the selected one.",
+   "fr": "Fonction vide ; rien ne se passe quand l'activatable devient celui sélectionné."
+  },
+  "YarderTowerSetupActivatable:deactivate": {
+   "en": "Empty hook; nothing happens when the activatable stops being the selected one.",
+   "fr": "Fonction vide ; rien ne se passe quand l'activatable n'est plus celui sélectionné."
+  },
+  "YarderTowerSetupActivatable:getDistance": {
+   "en": "Returns the 3D distance to `controlTriggerNode`, or `math.huge` if that node is nil.",
+   "fr": "Renvoie la distance 3D jusqu'à `controlTriggerNode`, ou `math.huge` si ce nœud est nil."
+  },
+  "YarderTowerSetupActivatable:draw": {
+   "en": "Empty hook; this activatable draws nothing on screen.",
+   "fr": "Fonction vide ; cet activatable n'affiche rien à l'écran."
+  }
+ }
+}

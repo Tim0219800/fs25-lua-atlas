@@ -1,0 +1,45 @@
+{
+ "fichier": "graphics/HumanModel.lua",
+ "module": {
+  "en": "Wraps the 3D model of a human character: it loads the i3d file referenced by a player XML, finds the skeleton, mesh, hand, foot, head, hips, spine and suspension nodes, and links them into the scene. It also creates the swim and plunge particle nodes and keeps the style part nodes (hair, top, footwear...). Many methods (reset, applyFromStyle, updateVisibility, loadIKChains, loadFromStyleAsync...) are called here but absent from this dump (UNVERIFIED).",
+  "fr": "Enveloppe le modèle 3D d'un personnage humain : il charge le fichier i3d référencé par un XML de joueur, retrouve les nœuds de squelette, maillage, mains, pieds, tête, hanches, colonne et suspension, et les rattache à la scène. Il crée aussi les nœuds de particules de nage et de plongeon et garde les nœuds des parties de style (cheveux, haut, chaussures...). Plusieurs méthodes (reset, applyFromStyle, updateVisibility, loadIKChains, loadFromStyleAsync...) sont appelées ici mais absentes de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HumanModel.registerXMLPaths": {
+   "en": "Registers on the given schema the XML paths read by this class: i3d mappings, the model nodes (mesh, skeleton, animationRoot, hips, suspension, hands, feet, head, spine plus spine offset), and the sounds and animation file names.",
+   "fr": "Enregistre sur le schéma donné les chemins XML lus par cette classe : mappings i3d, nœuds du modèle (mesh, skeleton, animationRoot, hips, suspension, mains, pieds, head, spine et son décalage), et noms de fichiers de sons et d'animation."
+  },
+  "HumanModel.new": {
+   "en": "Creates an empty model with loading flags false, all node references nil, empty tables for model parts, clip mappings, IK chains, i3d mappings and components, and an empty swim/plunge particle information table.",
+   "fr": "Crée un modèle vide avec les drapeaux de chargement à false, toutes les références de nœuds à nil, des tables vides pour parties de modèle, correspondances de clips, chaînes IK, mappings i3d et composants, et une table d'infos de particules de nage et plongeon vide."
+  },
+  "HumanModel:load": {
+   "en": "Opens the player XML file and loads the model from it asynchronously, closing the XML at the end. If the XML cannot be opened, the callback is called at once with false. Otherwise it receives a HumanModelLoadingState value, not a boolean.",
+   "fr": "Ouvre le XML du joueur et charge le modèle de façon asynchrone, puis ferme le XML. Si le XML est introuvable, le rappel est appelé aussitôt avec false. Sinon il reçoit une valeur HumanModelLoadingState et non un booléen."
+  },
+  "HumanModel:loadFromXMLFileAsync": {
+   "en": "Starts the async load from an already opened XML: stores the file name, resolves the i3d path, releases earlier shared i3d requests and requests the new one; loadFileFinished runs on completion. The caller stays responsible for closing the XML.",
+   "fr": "Lance le chargement asynchrone depuis un XML déjà ouvert : mémorise le nom du fichier, résout le chemin i3d, libère les demandes i3d partagées précédentes et demande la nouvelle ; loadFileFinished s'exécute à la fin. L'appelant reste responsable de fermer le XML."
+  },
+  "HumanModel:loadFileFinished": {
+   "en": "Completion callback of the i3d load. Reports FAILED if the i3d or XML is gone. Otherwise resets, reads components, mappings, animation and sound file names and body nodes, then links the skeleton (for a real player, also creates swim and plunge particle systems). Reports INVALID_CONTENT if a real player has no animation root, else OK.",
+   "fr": "Rappel de fin du chargement i3d. Signale FAILED si l'i3d ou le XML a disparu. Sinon réinitialise, lit composants, mappings, noms de fichiers d'animation et de sons et nœuds du corps, puis rattache le squelette (pour un vrai joueur, crée aussi les systèmes de particules de nage et de plongeon). Signale INVALID_CONTENT si un vrai joueur n'a pas de racine d'animation, sinon OK."
+  },
+  "HumanModel:onAllModelPartsLoaded": {
+   "en": "Called when every style part is loaded: applies the style unless the model was deleted meanwhile, marks the style loaded, deletes the temporary part nodes, then fires the one-shot finish callback with OK or FAILED.",
+   "fr": "Appelée quand toutes les parties de style sont chargées : applique le style sauf si le modèle a été supprimé entre-temps, marque le style chargé, supprime les nœuds de parties temporaires, puis déclenche le rappel de fin à usage unique avec OK ou FAILED."
+  },
+  "HumanModel:getVisibility": {
+   "en": "Returns the engine visibility of the model's root node.",
+   "fr": "Retourne la visibilité moteur du nœud racine du modèle."
+  },
+  "HumanModel:setVisibility": {
+   "en": "Stores the requested visibility and calls updateVisibility (defined elsewhere, UNVERIFIED) to apply it.",
+   "fr": "Mémorise la visibilité demandée et appelle updateVisibility (défini ailleurs, NON VÉRIFIÉ) pour l'appliquer."
+  },
+  "HumanModel:debugDraw": {
+   "en": "Draws the skeleton as red debug lines from bone to bone, recursively from the first child of the skeleton node. The x, y and textSize parameters are unused and nothing is returned.",
+   "fr": "Dessine le squelette sous forme de lignes de débogage rouges d'os en os, récursivement à partir du premier enfant du nœud de squelette. Les paramètres x, y et textSize sont inutilisés et rien n'est retourné."
+  }
+ }
+}

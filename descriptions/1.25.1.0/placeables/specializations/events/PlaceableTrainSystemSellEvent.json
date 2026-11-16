@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableTrainSystemSellEvent.lua",
+ "module": {
+  "en": "Client-to-server network event asking a PlaceableTrainSystem to sell its goods. The server executes `sellGoods`; the effects on money or fill levels are implemented elsewhere (UNVERIFIED).",
+  "fr": "Événement réseau client vers serveur demandant à un PlaceableTrainSystem de vendre ses marchandises. Le serveur exécute `sellGoods` ; les effets sur l'argent ou les niveaux sont implémentés ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlaceableTrainSystemSellEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable, used by the network layer before reading a stream.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe, utilisée par la couche réseau avant la lecture d'un flux."
+  },
+  "PlaceableTrainSystemSellEvent.new": {
+   "en": "Builds the event from the train system object.",
+   "fr": "Construit l'événement à partir de l'objet système ferroviaire."
+  },
+  "PlaceableTrainSystemSellEvent:readStream": {
+   "en": "Reads the object from the stream and runs the event.",
+   "fr": "Lit l'objet dans le flux et exécute l'événement."
+  },
+  "PlaceableTrainSystemSellEvent:writeStream": {
+   "en": "Writes only the train system object reference.",
+   "fr": "Écrit uniquement la référence de l'objet système ferroviaire."
+  },
+  "PlaceableTrainSystemSellEvent:run": {
+   "en": "Acts only on the server side (when the connection is not the server's): if the object is synchronized, calls `sellGoods` on it. No rebroadcast.",
+   "fr": "Agit uniquement côté serveur (quand la connexion n'est pas celle du serveur) : si l'objet est synchronisé, appelle `sellGoods` dessus. Aucune rediffusion."
+  }
+ }
+}

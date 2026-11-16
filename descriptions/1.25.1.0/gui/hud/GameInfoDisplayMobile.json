@@ -1,0 +1,85 @@
+{
+ "fichier": "gui/hud/GameInfoDisplayMobile.lua",
+ "module": {
+  "en": "Top HUD bar for the mobile/touch layout, derived from HUDDisplayElement. It spans the screen width inside the safe-frame insets and hosts menu, shop, map and help buttons plus weather, money and fuel/fitness elements. The create* helpers, updateInsets and updateButtonPosition are called here but not defined in this file (UNVERIFIED). The button handlers forward to g_currentMission toggles unless the sleep manager is sleeping.",
+  "fr": "Barre HUD supérieure pour la disposition mobile/tactile, dérivée de HUDDisplayElement. Elle occupe la largeur de l'écran dans les marges de zone sûre et héberge les boutons menu, boutique, carte et aide ainsi que des éléments météo, argent et carburant/forme. Les helpers create*, updateInsets et updateButtonPosition sont appelés ici mais non définis dans ce fichier (NON VÉRIFIÉ). Les gestionnaires de boutons appellent les bascules de g_currentMission sauf si le gestionnaire de sommeil dort."
+ },
+ "fonctions": {
+  "GameInfoDisplayMobile.new": {
+   "en": "Constructor taking the HUD, the HUD atlas path, the money unit and the control atlas path. Creates the background frame, builds the buttons and weather/money/fuel elements through create* helpers and subscribes to MessageType.INSETS_CHANGED.",
+   "fr": "Constructeur prenant le HUD, le chemin de l'atlas HUD, l'unité monétaire et celui de l'atlas des contrôles. Crée le cadre de fond, construit les boutons et les éléments météo/argent/carburant via des helpers create* et s'abonne à MessageType.INSETS_CHANGED."
+  },
+  "GameInfoDisplayMobile:setVehicle": {
+   "en": "Stores the controlled vehicle, flags whether it has the Rideable specialization, and shows the fuel/fitness element only when a vehicle is set.",
+   "fr": "Mémorise le véhicule contrôlé, indique s'il possède la spécialisation Rideable et n'affiche l'élément carburant/forme que si un véhicule est défini."
+  },
+  "GameInfoDisplayMobile:onOpenShop": {
+   "en": "Button handler calling g_currentMission:onToggleStore(); ignored while the sleep manager is sleeping.",
+   "fr": "Gestionnaire de bouton appelant g_currentMission:onToggleStore() ; ignoré pendant que le gestionnaire de sommeil dort."
+  },
+  "GameInfoDisplayMobile:onOpenMap": {
+   "en": "Button handler calling g_currentMission:onToggleMap(); ignored while the sleep manager is sleeping.",
+   "fr": "Gestionnaire de bouton appelant g_currentMission:onToggleMap() ; ignoré pendant que le gestionnaire de sommeil dort."
+  },
+  "GameInfoDisplayMobile:onOpenMenu": {
+   "en": "Button handler calling g_currentMission:onToggleMenu(); ignored while the sleep manager is sleeping.",
+   "fr": "Gestionnaire de bouton appelant g_currentMission:onToggleMenu() ; ignoré pendant que le gestionnaire de sommeil dort."
+  },
+  "GameInfoDisplayMobile:onOpenHelp": {
+   "en": "Button handler calling g_currentMission:onToggleHelp(); ignored while the sleep manager is sleeping.",
+   "fr": "Gestionnaire de bouton appelant g_currentMission:onToggleHelp() ; ignoré pendant que le gestionnaire de sommeil dort."
+  },
+  "GameInfoDisplayMobile:setMoneyUnit": {
+   "en": "Sets the currency unit (GS_MONEY_EURO, POUND or DOLLAR); any other value falls back to dollar.",
+   "fr": "Définit l'unité monétaire (GS_MONEY_EURO, POUND ou DOLLAR) ; toute autre valeur retombe sur le dollar."
+  },
+  "GameInfoDisplayMobile:setMissionInfo": {
+   "en": "Stores the MissionInfo reference used for base information; it should not be modified.",
+   "fr": "Mémorise la référence MissionInfo utilisée pour les informations de base ; elle ne doit pas être modifiée."
+  },
+  "GameInfoDisplayMobile:setEnvironment": {
+   "en": "Stores the environment reference used for weather display; its class is not in the SDK dump (UNVERIFIED).",
+   "fr": "Mémorise la référence d'environnement utilisée pour l'affichage météo ; sa classe n'est pas dans le dump du SDK (NON VÉRIFIÉ)."
+  },
+  "GameInfoDisplayMobile:setMoneyVisible": {
+   "en": "Empty stub: the body is empty in this version, so it has no effect.",
+   "fr": "Fonction vide : le corps est vide dans cette version, elle n'a donc aucun effet."
+  },
+  "GameInfoDisplayMobile:setTimeVisible": {
+   "en": "Empty stub: the body is empty in this version, so it has no effect.",
+   "fr": "Fonction vide : le corps est vide dans cette version, elle n'a donc aucun effet."
+  },
+  "GameInfoDisplayMobile:setTemperatureVisible": {
+   "en": "Empty stub: the body is empty in this version, so it has no effect.",
+   "fr": "Fonction vide : le corps est vide dans cette version, elle n'a donc aucun effet."
+  },
+  "GameInfoDisplayMobile:setWeatherVisible": {
+   "en": "Empty stub: the body is empty in this version, so it has no effect.",
+   "fr": "Fonction vide : le corps est vide dans cette version, elle n'a donc aucun effet."
+  },
+  "GameInfoDisplayMobile:setTutorialVisible": {
+   "en": "Empty stub: the body is empty in this version, so it has no effect.",
+   "fr": "Fonction vide : le corps est vide dans cette version, elle n'a donc aucun effet."
+  },
+  "GameInfoDisplayMobile:setTutorialProgress": {
+   "en": "Empty stub: the body is empty in this version, so it has no effect.",
+   "fr": "Fonction vide : le corps est vide dans cette version, elle n'a donc aucun effet."
+  },
+  "GameInfoDisplayMobile:draw": {
+   "en": "Runs every registered text draw function in textElements, then draws the parent element.",
+   "fr": "Exécute chaque fonction de dessin de texte enregistrée dans textElements, puis dessine l'élément parent."
+  },
+  "GameInfoDisplayMobile:setScale": {
+   "en": "Applies a uniform UI scale, recomputes the bar position and size, stores the original position, repositions the shop/menu/map/help buttons relative to the bar corner and moves the help highlight.",
+   "fr": "Applique une échelle d'interface uniforme, recalcule la position et la taille de la barre, mémorise la position d'origine, repositionne les boutons boutique/menu/carte/aide par rapport au coin de la barre et déplace la surbrillance de l'aide."
+  },
+  "GameInfoDisplayMobile.getBackgroundPositionAndSize": {
+   "en": "Returns x, y, width and height of the bar: it fills the screen width minus the larger of the safe-frame inset and the scaled offset on each side, and sits at the top edge.",
+   "fr": "Renvoie x, y, largeur et hauteur de la barre : elle remplit la largeur de l'écran moins le plus grand de la marge de zone sûre et du décalage mis à l'échelle de chaque côté, et se place en haut de l'écran."
+  },
+  "GameInfoDisplayMobile.createBackground": {
+   "en": "Creates an image-less overlay with the computed bar rectangle, used as a positioning frame.",
+   "fr": "Crée un overlay sans image avec le rectangle calculé de la barre, utilisé comme cadre de positionnement."
+  }
+ }
+}

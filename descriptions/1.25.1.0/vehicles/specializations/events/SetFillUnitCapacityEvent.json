@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/SetFillUnitCapacityEvent.lua",
+ "module": {
+  "en": "Network event class `SetFillUnitCapacityEvent` (extends `Event`) that replicates a new capacity for a fill unit. It carries the vehicle, a fill unit index (8 bits) and a capacity (float32). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `SetFillUnitCapacityEvent` (hérite de `Event`) qui réplique une nouvelle capacité pour une unité de remplissage. Elle transporte le véhicule, un index d'unité de remplissage (8 bits) et une capacité (float32). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "SetFillUnitCapacityEvent.emptyNew": {
+   "en": "Creates an empty `SetFillUnitCapacityEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `SetFillUnitCapacityEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "SetFillUnitCapacityEvent.new": {
+   "en": "Creates the event with its data: the vehicle, a fill unit index (8 bits) and a capacity (float32).",
+   "fr": "Crée l'événement avec ses données : le véhicule, un index d'unité de remplissage (8 bits) et une capacité (float32)."
+  },
+  "SetFillUnitCapacityEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, a fill unit index (8 bits) and a capacity (float32)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, un index d'unité de remplissage (8 bits) et une capacité (float32)), puis appelle `run`."
+  },
+  "SetFillUnitCapacityEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, a fill unit index (8 bits) and a capacity (float32)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, un index d'unité de remplissage (8 bits) et une capacité (float32))."
+  },
+  "SetFillUnitCapacityEvent:run": {
+   "en": "Executes the event on the receiving side: calls `setFillUnitCapacity(fillUnitIndex, capacity, true)` on the vehicle. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `setFillUnitCapacity(fillUnitIndex, capacity, true)` sur le véhicule. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  },
+  "SetFillUnitCapacityEvent.sendEvent": {
+   "en": "Helper that sends the event: the server broadcasts it to clients, a client sends it to the server. Skipped when `noEventSend` is set.",
+   "fr": "Fonction utilitaire d'envoi : le serveur diffuse l'événement aux clients, un client l'envoie au serveur. Ignorée si `noEventSend` est activé."
+  }
+ }
+}

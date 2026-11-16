@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/AIVehicleIsBlockedEvent.lua",
+ "module": {
+  "en": "Network event class `AIVehicleIsBlockedEvent` (extends `Event`) that tells clients that an AI-driven vehicle became blocked or free again. It carries the vehicle object and a blocked flag. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `AIVehicleIsBlockedEvent` (hérite de `Event`) qui indique aux clients qu'un véhicule piloté par l'IA est bloqué ou de nouveau libre. Elle transporte l'objet véhicule et un booléen de blocage. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "AIVehicleIsBlockedEvent.emptyNew": {
+   "en": "Creates an empty `AIVehicleIsBlockedEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `AIVehicleIsBlockedEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "AIVehicleIsBlockedEvent.new": {
+   "en": "Creates the event with its data: the vehicle object and a blocked flag.",
+   "fr": "Crée l'événement avec ses données : l'objet véhicule et un booléen de blocage."
+  },
+  "AIVehicleIsBlockedEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle object and a blocked flag), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (l'objet véhicule et un booléen de blocage), puis appelle `run`."
+  },
+  "AIVehicleIsBlockedEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle object and a blocked flag).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (l'objet véhicule et un booléen de blocage)."
+  },
+  "AIVehicleIsBlockedEvent:run": {
+   "en": "Executes the event on the receiving side: calls `aiBlock()` or `aiContinue()` on the vehicle once it is synchronized (no rebroadcast in `run`).",
+   "fr": "Exécute l'événement côté réception : appelle `aiBlock()` ou `aiContinue()` sur le véhicule une fois synchronisé (pas de retransmission dans `run`)."
+  }
+ }
+}

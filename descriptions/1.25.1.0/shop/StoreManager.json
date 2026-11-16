@@ -1,0 +1,145 @@
+{
+ "fichier": "shop/StoreManager.lua",
+ "module": {
+  "en": "Global manager (g_storeManager, subclass of AbstractManager) that owns the shop data: store categories and category types, store packs, construction categories and tabs, spec types shown in item details, and every store item loaded from base game, map, DLC and mod XML files. It parses the `storeData` block of vehicle, placeable and hand tool XMLs (price, upkeep, categories, bundles, brush, VRAM usage), keeps a text index for shop search, and registers the `gsStoreItemsReload` console command. Item loading is queued through the async task manager.",
+  "fr": "Gestionnaire global (g_storeManager, sous-classe d'AbstractManager) qui détient les données de la boutique : catégories et types de catégories, packs, catégories et onglets de construction, types de caractéristiques affichés dans les détails, et tous les articles chargés depuis les XML du jeu, de la carte, des DLC et des mods. Il analyse le bloc `storeData` des XML de véhicules, placeables et outils à main (prix, entretien, catégories, lots, brosse, usage VRAM), tient un index de recherche pour la boutique et enregistre la commande console `gsStoreItemsReload`. Le chargement des articles passe par le gestionnaire de tâches asynchrones."
+ },
+ "fonctions": {
+  "StoreManager.new": {
+   "en": "Creates the manager with an empty species-to-schema map and a search index weighting title 10, brand 5, author 3 and DLC title 3.",
+   "fr": "Crée le gestionnaire avec une table espèce-vers-schéma vide et un index de recherche pondérant titre 10, marque 5, auteur 3 et titre de DLC 3."
+  },
+  "StoreManager:initDataStructures": {
+   "en": "Resets all tables (categories, types, packs, items, filename lookup, mod-registered lists, spec types, construction categories) and clears the search index if present.",
+   "fr": "Réinitialise toutes les tables (catégories, types, packs, articles, recherche par fichier, listes enregistrées par les mods, types de caractéristiques, catégories de construction) et vide l'index de recherche s'il existe."
+  },
+  "StoreManager:loadMapData": {
+   "en": "Loads `dataS/storeCategories.xml` and `storePacks.xml` (skipping packs whose required DLC is not loaded), then mod categories and packs. On platforms with construction it loads the construction categories and tabs. It then queues the default, map and mod store items, builds the search index and registers `gsStoreItemsReload`. Returns true.",
+   "fr": "Charge `dataS/storeCategories.xml` et `storePacks.xml` (en ignorant les packs dont le DLC requis n'est pas chargé), puis les catégories et packs des mods. Sur les plateformes avec construction, charge catégories et onglets de construction. Met ensuite en file les articles par défaut, de la carte et des mods, construit l'index de recherche et enregistre `gsStoreItemsReload`. Renvoie true."
+  },
+  "StoreManager:unloadMapData": {
+   "en": "Calls the parent unload and removes the `gsStoreItemsReload` console command.",
+   "fr": "Appelle le déchargement du parent et retire la commande console `gsStoreItemsReload`."
+  },
+  "StoreManager:loadItemsFromXML": {
+   "en": "Opens a store items list XML and queues one async subtask per `storeItems.storeItem`, working out the mod name, DLC title and whether the item comes from a non-DLC mod before calling loadItem. Does nothing if the file cannot be loaded.",
+   "fr": "Ouvre un XML de liste d'articles et met en file une sous-tâche asynchrone par `storeItems.storeItem`, en déterminant le nom du mod, le titre du DLC et si l'article vient d'un mod hors DLC avant d'appeler loadItem. Ne fait rien si le fichier ne se charge pas."
+  },
+  "StoreManager:loadCategoryFromXML": {
+   "en": "Reads a category's name, title (translated), image, type and `insertAfter`. For mods it only stores the data for later; otherwise it calls addCategory immediately.",
+   "fr": "Lit le nom, le titre (traduit), l'image, le type et `insertAfter` d'une catégorie. Pour les mods, il ne mémorise les données que pour plus tard ; sinon il appelle addCategory aussitôt."
+  },
+  "StoreManager:addCategory": {
+   "en": "Registers a store category after validating name, title, image, base directory and an existing category type; rejects duplicates and, on Switch, the COINS category. Names are stored uppercase; `insertAfter` places it after another category and renumbers orderId. Returns true on success, false otherwise.",
+   "fr": "Enregistre une catégorie de boutique après validation du nom, du titre, de l'image, du répertoire de base et d'un type de catégorie existant ; refuse les doublons et, sur Switch, la catégorie COINS. Les noms sont stockés en majuscules ; `insertAfter` la place après une autre et renumérote orderId. Renvoie true en cas de succès, sinon false."
+  },
+  "StoreManager:getCategoryByName": {
+   "en": "Returns the category table for a name (case-insensitive), or nil.",
+   "fr": "Renvoie la table de la catégorie pour un nom (insensible à la casse), ou nil."
+  },
+  "StoreManager:addConstructionCategory": {
+   "en": "Adds a construction category with title, icon, UVs and an empty tab list. Name is uppercased; an existing name only logs a warning and returns nothing.",
+   "fr": "Ajoute une catégorie de construction avec titre, icône, UVs et une liste d'onglets vide. Le nom est mis en majuscules ; un nom existant produit seulement un avertissement et rien n'est renvoyé."
+  },
+  "StoreManager:getConstructionCategoryByName": {
+   "en": "Returns the construction category for a name (case-insensitive), or nil.",
+   "fr": "Renvoie la catégorie de construction pour un nom (insensible à la casse), ou nil."
+  },
+  "StoreManager:addConstructionTab": {
+   "en": "Appends a tab (uppercased name, title, icon, UVs, index) to the named construction category. Silently does nothing if the category does not exist.",
+   "fr": "Ajoute un onglet (nom en majuscules, titre, icône, UVs, index) à la catégorie de construction nommée. Ne fait rien, sans message, si la catégorie n'existe pas."
+  },
+  "StoreManager:getConstructionTabByName": {
+   "en": "Finds a tab by name inside a construction category; returns nil if the category or tab is missing.",
+   "fr": "Trouve un onglet par son nom dans une catégorie de construction ; renvoie nil si la catégorie ou l'onglet manque."
+  },
+  "StoreManager:getConstructionCategories": {
+   "en": "Returns the ordered list of construction categories.",
+   "fr": "Renvoie la liste ordonnée des catégories de construction."
+  },
+  "StoreManager:addSpecType": {
+   "en": "Registers a spec type (name, profile, load and value functions, species defaulting to vehicle, related configurations, optional config data function). Logs an error and returns if the name is invalid or already used.",
+   "fr": "Enregistre un type de caractéristique (nom, profil, fonctions de chargement et de valeur, espèce par défaut véhicule, configurations liées, fonction optionnelle de données de configuration). Journalise une erreur et s'arrête si le nom est invalide ou déjà utilisé."
+  },
+  "StoreManager:getSpecTypes": {
+   "en": "Returns the ordered list of registered spec types.",
+   "fr": "Renvoie la liste ordonnée des types de caractéristiques enregistrés."
+  },
+  "StoreManager:getSpecTypeByName": {
+   "en": "Returns the spec type with the given name; warns and returns nil for an invalid name.",
+   "fr": "Renvoie le type de caractéristique portant ce nom ; avertit et renvoie nil si le nom est invalide."
+  },
+  "StoreManager:getSpecTypeByProfile": {
+   "en": "Returns the first spec type whose profile matches, or nil.",
+   "fr": "Renvoie le premier type de caractéristique dont le profil correspond, ou nil."
+  },
+  "StoreManager:addItem": {
+   "en": "Adds a loaded store item, assigns its id as list index and indexes it by lower-case XML filename. Returns false if the file is already known (copying over isBundleItem/showInStore if it had first been added as a bundle item). Visible, unlocked vehicle and hand tool items are added to the search index with title, brand and mod author.",
+   "fr": "Ajoute un article de boutique chargé, lui attribue comme id son index dans la liste et l'indexe par nom de fichier XML en minuscules. Renvoie false si le fichier est déjà connu (en recopiant isBundleItem/showInStore s'il avait d'abord été ajouté comme élément de lot). Les véhicules et outils à main visibles et débloqués sont ajoutés à l'index de recherche avec titre, marque et auteur du mod."
+  },
+  "StoreManager:removeItemByIndex": {
+   "en": "Removes an item by index by moving the last item into its slot (so ids stay equal to indexes) and dropping the last entry. Note: the search index is not updated here.",
+   "fr": "Retire un article par index en déplaçant le dernier article à sa place (les ids restent égaux aux index) et en supprimant la dernière entrée. À noter : l'index de recherche n'est pas mis à jour ici."
+  },
+  "StoreManager:getItems": {
+   "en": "Returns the list of all store items.",
+   "fr": "Renvoie la liste de tous les articles de la boutique."
+  },
+  "StoreManager:getItemByIndex": {
+   "en": "Returns the item at the index, or nil.",
+   "fr": "Renvoie l'article à l'index donné, ou nil."
+  },
+  "StoreManager:getItemByXMLFilename": {
+   "en": "Returns the item for an XML filename (lookup is case-insensitive), or nil.",
+   "fr": "Renvoie l'article correspondant à un nom de fichier XML (recherche insensible à la casse), ou nil."
+  },
+  "StoreManager:getIsItemUnlocked": {
+   "en": "True if the item exists and has no extra content id, or the extra content system reports it unlocked.",
+   "fr": "Vrai si l'article existe et n'a pas d'identifiant de contenu supplémentaire, ou si le système de contenu supplémentaire le déclare débloqué."
+  },
+  "StoreManager:getItemsByCombinationData": {
+   "en": "Resolves a combination definition to a list of `{storeItem, configData}` entries: either a direct XML filename, or all unlocked items filtered by category and optionally by a spec range (weight in kg is converted to tons), also trying configuration variants. Note: the direct case reads `customXMLFilename` without a nil check, and a nil spec value in the related-configuration branch would error.",
+   "fr": "Résout une définition de combinaison en liste d'entrées `{storeItem, configData}` : soit un nom de fichier XML direct, soit tous les articles débloqués filtrés par catégorie et éventuellement par plage de caractéristique (poids en kg converti en tonnes), en essayant aussi les variantes de configuration. À noter : le cas direct lit `customXMLFilename` sans test nil, et une valeur nil dans la branche des configurations liées provoquerait une erreur."
+  },
+  "StoreManager:getItemByCustomEnvironment": {
+   "en": "Returns a new list of all items whose customEnvironment (mod name) matches. Despite the singular name, it returns several items.",
+   "fr": "Renvoie une nouvelle liste de tous les articles dont le customEnvironment (nom du mod) correspond. Malgré le nom au singulier, plusieurs articles sont renvoyés."
+  },
+  "StoreManager:addModStoreItem": {
+   "en": "Queues a mod store item (filename, base dir, environment, mod/bundle flags, DLC title) to be loaded during loadMapData. No extra content id can be passed.",
+   "fr": "Met en file un article de boutique de mod (fichier, répertoire de base, environnement, indicateurs mod/lot, titre de DLC) pour être chargé pendant loadMapData. Aucun identifiant de contenu supplémentaire ne peut être passé."
+  },
+  "StoreManager:loadItem": {
+   "en": "Parses one store item XML into a store item table: validates species schema, name and image (invalid items return nil), reads storeData fields, categories (fallback MISC), configurations, price, upkeep, lifetime, VRAM usage, store packs and, for bundles, sums prices and merges configurations of the bundle elements. It also assigns a construction brush when supported, then adds the item (and new bundle items) unless `ignoreAdd` is set. Returns the item.",
+   "fr": "Analyse un XML d'article de boutique en table d'article : valide le schéma de l'espèce, le nom et l'image (un article invalide renvoie nil), lit les champs storeData, les catégories (repli MISC), les configurations, le prix, l'entretien, la durée de vie, l'usage VRAM, les packs et, pour les lots, additionne les prix et fusionne les configurations des éléments. Assigne aussi une brosse de construction si prise en charge, puis ajoute l'article (et les nouveaux éléments de lot) sauf si `ignoreAdd` est défini. Renvoie l'article."
+  },
+  "StoreManager:addPack": {
+   "en": "Registers a store pack (name uppercased, title, image, base dir) with an empty item list and the next order id. Returns false with a warning on invalid or missing arguments or if the pack already exists.",
+   "fr": "Enregistre un pack de boutique (nom en majuscules, titre, image, répertoire de base) avec une liste d'articles vide et le prochain identifiant d'ordre. Renvoie false avec un avertissement si les arguments sont invalides ou manquants ou si le pack existe déjà."
+  },
+  "StoreManager:addModStorePack": {
+   "en": "Queues a mod store pack and its item filenames to be registered during loadMapData.",
+   "fr": "Met en file un pack de boutique de mod et les noms de fichiers de ses articles pour enregistrement pendant loadMapData."
+  },
+  "StoreManager:addPackItem": {
+   "en": "Appends an item XML filename to a pack. Warns and ignores the call if the name, the pack or the filename is missing. The pack name is not uppercased here, unlike in addPack.",
+   "fr": "Ajoute un nom de fichier XML d'article à un pack. Avertit et ignore l'appel si le nom, le pack ou le fichier manque. Le nom du pack n'est pas mis en majuscules ici, contrairement à addPack."
+  },
+  "StoreManager:getPacks": {
+   "en": "Returns the table of packs keyed by uppercase name.",
+   "fr": "Renvoie la table des packs indexée par nom en majuscules."
+  },
+  "StoreManager:getPackItems": {
+   "en": "Returns the item filenames of a pack, or nil if the pack does not exist.",
+   "fr": "Renvoie les noms de fichiers des articles d'un pack, ou nil si le pack n'existe pas."
+  },
+  "StoreManager:consoleCommandReloadStoreItems": {
+   "en": "Console command `gsStoreItemsReload`: reloads every item from its XML (without re-adding), refreshes the filename lookup and publishes STORE_ITEMS_RELOADED. Note: a failed reload leaves a nil hole in the items list, and the search index is not rebuilt.",
+   "fr": "Commande console `gsStoreItemsReload` : recharge chaque article depuis son XML (sans le rajouter), actualise la recherche par fichier et publie STORE_ITEMS_RELOADED. À noter : un rechargement échoué laisse un trou nil dans la liste, et l'index de recherche n'est pas reconstruit."
+  },
+  "StoreManager.registerStoreDataXMLPaths": {
+   "en": "Registers the whole `storeData` XML schema under the base path: name, species, image, brand, flags, categories, packs, price, upkeep, leasing, lifetime, shop offsets, memory usage fields, bundle elements, attacher info, functions, brush and the icon-rendering settings (marked in the source as unused by the game).",
+   "fr": "Enregistre tout le schéma XML `storeData` sous le chemin de base : nom, espèce, image, marque, indicateurs, catégories, packs, prix, entretien, leasing, durée de vie, décalages boutique, champs d'usage mémoire, éléments de lot, infos d'attelage, fonctions, brosse et réglages de rendu d'icône (indiqués dans la source comme inutilisés par le jeu)."
+  }
+ }
+}

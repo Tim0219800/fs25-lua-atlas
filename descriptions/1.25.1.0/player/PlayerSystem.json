@@ -1,0 +1,69 @@
+{
+ "fichier": "player/PlayerSystem.lua",
+ "module": {
+  "en": "Registry of all players of a mission. It keeps lookup tables by index, user id, unique user id, root node and network connection, plus server-side data of players who are not currently in the game, and writes them all to the players savegame XML. The constants `MAX_NUM_SAVED_PLAYERS` and `MAX_NUM_DAYS_OFFLINE` and the constructor are not in this dump (UNVERIFIED).",
+  "fr": "Registre de tous les joueurs d'une mission. Il tient des tables de recherche par index, identifiant utilisateur, identifiant unique, noeud racine et connexion réseau, ainsi que les données côté serveur des joueurs absents de la partie, et les écrit dans le XML de sauvegarde des joueurs. Les constantes `MAX_NUM_SAVED_PLAYERS` et `MAX_NUM_DAYS_OFFLINE` et le constructeur ne figurent pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlayerSystem:saveToXMLFile": {
+   "en": "Server only: creates the players XML file, saves each active player, then the unloaded ones (pruned if the count reaches the maximum), and writes the file. Returns false if the file could not be created, true otherwise.",
+   "fr": "Serveur uniquement : crée le fichier XML des joueurs, y sauvegarde chaque joueur actif puis les joueurs déchargés (élagués si le nombre atteint le maximum), et écrit le fichier. Renvoie false si le fichier n'a pas pu être créé, sinon true."
+  },
+  "PlayerSystem:saveUnloadedPlayers": {
+   "en": "Appends every unloaded player data entry to the XML after the active players, without any pruning. Used when the total stays under the saved-player limit.",
+   "fr": "Ajoute chaque entrée de données de joueur déchargé au XML après les joueurs actifs, sans aucun élagage. Utilisé tant que le total reste sous la limite de joueurs sauvegardés."
+  },
+  "PlayerSystem:saveHugeUnloadedPlayers": {
+   "en": "Saves unloaded players sorted by most recent connection. Past the limit, it stops at the first player whose last connection is older than the allowed offline days and logs how many were dropped.",
+   "fr": "Sauvegarde les joueurs déchargés triés par connexion la plus récente. Au-delà de la limite, s'arrête au premier joueur dont la dernière connexion dépasse le nombre de jours hors ligne autorisé et journalise combien ont été exclus."
+  },
+  "PlayerSystem:draw": {
+   "en": "Per-frame draw hook: calls `drawUIInfo` on every non-deleted player, and renders animation or sound debug columns for all players when `DEBUG_ANIMATIONS` or `DEBUG_SOUNDS` is set.",
+   "fr": "Fonction de dessin à chaque image : appelle `drawUIInfo` sur chaque joueur non supprimé, et affiche des colonnes de debug d'animations ou de sons pour tous les joueurs si `DEBUG_ANIMATIONS` ou `DEBUG_SOUNDS` est actif."
+  },
+  "PlayerSystem:getHasPlayerWithUniqueId": {
+   "en": "Returns true if a player with this unique id is active; on the server, unloaded player data is also checked. A nil id gives false.",
+   "fr": "Renvoie true si un joueur actif porte cet identifiant unique ; sur le serveur, les données de joueurs déchargés sont aussi vérifiées. Un identifiant nil donne false."
+  },
+  "PlayerSystem:getIsPlayerAdded": {
+   "en": "Returns true if the player is non-nil, has a unique user id and is registered under it as an active player.",
+   "fr": "Renvoie true si le joueur n'est pas nil, possède un identifiant utilisateur unique et est enregistré sous celui-ci comme joueur actif."
+  },
+  "PlayerSystem:getPlayerCount": {
+   "en": "Returns the number of active players, excluding those who only exist as unloaded data.",
+   "fr": "Renvoie le nombre de joueurs actifs, hors ceux qui n'existent que comme données déchargées."
+  },
+  "PlayerSystem:getPlayerByIndex": {
+   "en": "Returns the active player at the given list index, or nil.",
+   "fr": "Renvoie le joueur actif à l'index donné de la liste, ou nil."
+  },
+  "PlayerSystem:getPlayerByUniqueId": {
+   "en": "Returns the active player registered under this unique user id, or nil.",
+   "fr": "Renvoie le joueur actif enregistré sous cet identifiant utilisateur unique, ou nil."
+  },
+  "PlayerSystem:getPlayerByUserId": {
+   "en": "Returns the active player with the given session user id, or nil.",
+   "fr": "Renvoie le joueur actif ayant l'identifiant utilisateur de session donné, ou nil."
+  },
+  "PlayerSystem:getPlayerByRootNode": {
+   "en": "Returns the player whose root scene node is the given node, or nil.",
+   "fr": "Renvoie le joueur dont le noeud racine de scène est le noeud donné, ou nil."
+  },
+  "PlayerSystem:getPlayerByConnection": {
+   "en": "Returns the player associated with the given network connection, or nil.",
+   "fr": "Renvoie le joueur associé à la connexion réseau donnée, ou nil."
+  },
+  "PlayerSystem:getPlayerDataByUniqueId": {
+   "en": "Server only: returns the saved data of an unloaded player for this unique id; on clients always returns nil.",
+   "fr": "Serveur uniquement : renvoie les données sauvegardées d'un joueur déchargé pour cet identifiant unique ; renvoie toujours nil sur les clients."
+  },
+  "PlayerSystem:addPlayer": {
+   "en": "Registers a player in the list and the by-user-id, by-root-node, by-connection and by-unique-id tables, removes any matching unloaded data on the server, and sets it as local player if it is the owner. Returns false if the user id already exists (error logged if it is another object).",
+   "fr": "Enregistre un joueur dans la liste et les tables par identifiant utilisateur, noeud racine, connexion et identifiant unique, retire les données déchargées correspondantes sur le serveur, et le définit comme joueur local s'il en est le propriétaire. Renvoie false si l'identifiant existe déjà (erreur journalisée si c'est un autre objet). `setLocalPlayer` n'est pas dans ce dump."
+  },
+  "PlayerSystem:debugDrawAllPlayers": {
+   "en": "Debug helper that calls `debugDraw` on each player, shifting the x position by 0.2 for each one.",
+   "fr": "Outil de debug qui appelle `debugDraw` sur chaque joueur en décalant la position x de 0,2 à chaque fois."
+  }
+ }
+}

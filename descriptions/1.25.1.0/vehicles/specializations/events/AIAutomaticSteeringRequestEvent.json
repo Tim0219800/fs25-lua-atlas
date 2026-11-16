@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/AIAutomaticSteeringRequestEvent.lua",
+ "module": {
+  "en": "Network event asking for an automatic-steering field course to be generated for a vehicle at a field position with given settings. Handling directly calls the vehicle's `generateSteeringFieldCourse`.",
+  "fr": "Événement réseau demandant la génération d'un parcours de champ de guidage automatique pour un véhicule à une position de champ avec des réglages donnés. Le traitement appelle directement `generateSteeringFieldCourse` du véhicule."
+ },
+ "fonctions": {
+  "AIAutomaticSteeringRequestEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable; used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe ; utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "AIAutomaticSteeringRequestEvent.new": {
+   "en": "Creates a request for a vehicle with a field position (x, z) and the field course settings to use.",
+   "fr": "Crée une demande pour un véhicule avec une position de champ (x, z) et les réglages de parcours de champ à utiliser."
+  },
+  "AIAutomaticSteeringRequestEvent:readStream": {
+   "en": "Reads the vehicle, a terrain detail pixel position through `g_fieldCourseManager` and the `FieldCourseSettings` attributes, builds the settings object, then calls `run`.",
+   "fr": "Lit le véhicule, une position en pixel de détail du terrain via `g_fieldCourseManager` et les attributs `FieldCourseSettings`, construit l'objet de réglages, puis appelle `run`."
+  },
+  "AIAutomaticSteeringRequestEvent:writeStream": {
+   "en": "Writes the vehicle, the terrain pixel position and the field course settings.",
+   "fr": "Écrit le véhicule, la position en pixel du terrain et les réglages de parcours de champ."
+  },
+  "AIAutomaticSteeringRequestEvent:run": {
+   "en": "If the vehicle is synchronized, calls `generateSteeringFieldCourse(x, z, settings)` on it. Intended for the receiving side (presumably the server; UNVERIFIED, no side check here).",
+   "fr": "Si le véhicule est synchronisé, appelle `generateSteeringFieldCourse(x, z, settings)` sur lui. Prévu pour le côté récepteur (vraisemblablement le serveur ; NON VÉRIFIÉ, aucun contrôle de côté ici)."
+  }
+ }
+}

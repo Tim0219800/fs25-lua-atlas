@@ -1,0 +1,33 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/statistics/FarmlandStatisticCounter.lua",
+ "module": {
+  "en": "Plain data object of Precision Farming holding the numeric counters of one farmland (soil samples, lime, fertilizers, manure, seeds, herbicide, yield, fuel, vehicle and helper costs, subsidies, plus 'Regular' variants). It can be reset, loaded and saved as XML attributes and streamed over the network.",
+  "fr": "Objet de données de Precision Farming contenant les compteurs numériques d'une parcelle (échantillons de sol, chaux, engrais, fumier, semences, herbicide, rendement, carburant, coûts de véhicules et d'aides, subventions, avec variantes 'Regular'). Il peut être remis à zéro, chargé/sauvegardé en attributs XML et transmis par le réseau."
+ },
+ "fonctions": {
+  "FarmlandStatisticCounter.new": {
+   "en": "Constructor. Creates the object and initialises every counter to 0 through reset.",
+   "fr": "Constructeur. Crée l'objet et initialise tous les compteurs à 0 via reset."
+  },
+  "FarmlandStatisticCounter:loadFromItemsXML": {
+   "en": "Reads every counter from XML attributes at the key, keeping the current value as default when an attribute is missing.",
+   "fr": "Lit chaque compteur dans les attributs XML de la clé, en gardant la valeur actuelle par défaut si un attribut manque."
+  },
+  "FarmlandStatisticCounter:saveToXMLFile": {
+   "en": "Writes every counter as an attribute (integer for numSoilSamples, float for the others). The usedModNames parameter is unused here.",
+   "fr": "Écrit chaque compteur en attribut (entier pour numSoilSamples, flottant pour les autres). Le paramètre usedModNames n'est pas utilisé ici."
+  },
+  "FarmlandStatisticCounter:reset": {
+   "en": "Sets all 24 counters (samples, costs, used inputs, yield values, fuel, vehicle/helper costs, subsidies) back to 0.",
+   "fr": "Remet à 0 les 24 compteurs (échantillons, coûts, intrants utilisés, rendements, carburant, coûts véhicules/aides, subventions)."
+  },
+  "FarmlandStatisticCounter:onReadStream": {
+   "en": "Reads all counters from the stream: numSoilSamples as 16-bit unsigned, the rest as float32. Must stay in the same order as onWriteStream.",
+   "fr": "Lit tous les compteurs du flux : numSoilSamples en entier non signé 16 bits, le reste en float32. L'ordre doit rester identique à onWriteStream."
+  },
+  "FarmlandStatisticCounter:onWriteStream": {
+   "en": "Writes all counters to the stream (16-bit unsigned for numSoilSamples, float32 for the rest). Note: the 16-bit field caps at 65535 samples.",
+   "fr": "Écrit tous les compteurs dans le flux (16 bits non signé pour numSoilSamples, float32 pour le reste). À noter : le champ 16 bits plafonne à 65535 échantillons."
+  }
+ }
+}

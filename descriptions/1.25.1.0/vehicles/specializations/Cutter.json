@@ -1,60 +1,225 @@
 {
  "fichier": "vehicles/specializations/Cutter.lua",
- "module": "Spécialisation des tables de coupe et ramasseurs (moissonneuse, ensileuse, andaineuse-ramasseuse) : détermine, dans les cartes de densité, la culture coupée (processCutterArea), le ramassage d'andains (processPickupCutterArea) et le dépôt de haulm (processHaulmDropArea), puis transmet litres et surfaces au Combine via addCutterArea (appelé dans onEndWorkAreaProcessing, côté serveur). EFFETS : deux groupes, chargés côté client par g_effectManager:loadEffect : cutterEffects (clé vehicle.cutter.effect, effet de coupe de la culture) et fillEffects (vehicle.cutter.fillEffect, flux de matière) plus animationNodes ; EffectManager étant absent du dump, leur rendu est NON VÉRIFIÉ. Conditions d'allumage dans onUpdateTick (client et serveur) : outil allumé, movingDirection égal à celui configuré (vehicle.cutter#movingDirection), getLastSpeed() > 0.5, outil abaissé (sauf allowCuttingWhileRaised) et un Combine valide trouvé (workAreaParameters.combineVehicle). Le fillEffect démarre si un type de remplissage est connu et que l'outil a coupé durant les 300 dernières ms (lastAreaBiggerZeroTime) ; le cutterEffect démarre si un fruit d'entrée valide est connu et que la zone de test n'est pas réinitialisée. L'effet reçoit : type de remplissage, fruit, stade de croissance (setEffectTypeInfo) et la largeur couverte par le test (setMinMaxWidth, bornes min/max et alphas normalisés par rapport à la zone de test), ce qui permet de limiter l'effet à la largeur réellement coupée. Un cutterLoad (charge lissée 0..1, 0.95/0.05 ou décroissance 0.9) sert de densité au Combine et au HUD. DONNÉES MÉTÉO/HUMIDITÉ : aucune lue (ni pluie, ni vent, ni humidité) ; la pluie n'agit que dans Combine.addCutterArea. Donnée de culture utilisée pour le rendu : stade de croissance (growthState) lu dans la carte de densité. RÉSEAU : les états d'effet (stade, fruit d'entrée, type de remplissage, windrow) sont envoyés via effectDirtyFlag (writeCutterToStream / readCutterFromStream, 4 bits pour le stade) et lastAreaBiggerZero à chaque mise à jour ; le client rétablit les zones de test (setTestAreaRequirements) pour pouvoir piloter l'effet localement. Sur un client, les trois fonctions process* ne travaillent que si currentUpdateDistance <= Cutter.CLIENT_DM_UPDATE_RADIUS (constante non définie dans ce fichier : valeur NON VÉRIFIÉE). Points d'extension : fonctions enregistrées getCombine, getCutterLoad, getCutterStoneMultiplier, processCutterArea, processPickupCutterArea, processHaulmDropArea, setCutterCutHeight, getCutterTilt* ; surcharges getIsWorkAreaActive, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, isAttachAllowed, getConsumingLoad, getIsGroundReferenceNodeThreshold, loadInputAttacherJoint, getFruitExtraObjectTypeData ; vitesse par défaut Cutter.getDefaultSpeedLimit. Pour un mod de poussière de récolte, onUpdateTick est le seul endroit qui connaît à la fois la largeur coupée, la culture et son stade.",
+ "module": {
+  "en": "Specialization for cutter bars/headers and pickups (combine, forage harvester, windrow pickup): in the density maps it determines the cut crop (processCutterArea), windrow pickup (processPickupCutterArea) and haulm drop (processHaulmDropArea), then passes litres and areas to the Combine through addCutterArea (called in onEndWorkAreaProcessing, server side). EFFECTS: two groups, loaded client side by g_effectManager:loadEffect: cutterEffects (key vehicle.cutter.effect, crop cutting effect) and fillEffects (vehicle.cutter.fillEffect, material flow) plus animationNodes; since EffectManager is absent from the dump, their rendering is UNVERIFIED. Start conditions in onUpdateTick (client and server): tool turned on, movingDirection equal to the configured one (vehicle.cutter#movingDirection), getLastSpeed() > 0.5, tool lowered (unless allowCuttingWhileRaised) and a valid Combine found (workAreaParameters.combineVehicle). The fillEffect starts if a fill type is known and the tool has cut during the last 300 ms (lastAreaBiggerZeroTime); the cutterEffect starts if a valid input fruit is known and the test area is not reset. The effect receives: fill type, fruit, growth state (setEffectTypeInfo) and the width covered by the test (setMinMaxWidth, min/max bounds and alphas normalised relative to the test area), which lets the effect be limited to the width actually cut. A cutterLoad (smoothed load 0..1, 0.95/0.05 or 0.9 decay) serves as density for the Combine and the HUD. WEATHER/WETNESS DATA: none read (no rain, wind or wetness); rain only acts in Combine.addCutterArea. Crop data used for rendering: growth state (growthState) read from the density map. NETWORK: the effect states (stage, input fruit, fill type, windrow) are sent via effectDirtyFlag (writeCutterToStream / readCutterFromStream, 4 bits for the stage) and lastAreaBiggerZero on every update; the client restores the test areas (setTestAreaRequirements) so it can drive the effect locally. On a client, the three process* functions only work if currentUpdateDistance <= Cutter.CLIENT_DM_UPDATE_RADIUS (a constant not defined in this file: value UNVERIFIED). Extension points: registered functions getCombine, getCutterLoad, getCutterStoneMultiplier, processCutterArea, processPickupCutterArea, processHaulmDropArea, setCutterCutHeight, getCutterTilt*; overrides getIsWorkAreaActive, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, isAttachAllowed, getConsumingLoad, getIsGroundReferenceNodeThreshold, loadInputAttacherJoint, getFruitExtraObjectTypeData; default speed Cutter.getDefaultSpeedLimit. For a harvest dust mod, onUpdateTick is the only place that knows the cut width, the crop and its stage at the same time.",
+  "fr": "Spécialisation des tables de coupe et ramasseurs (moissonneuse, ensileuse, andaineuse-ramasseuse) : détermine, dans les cartes de densité, la culture coupée (processCutterArea), le ramassage d'andains (processPickupCutterArea) et le dépôt de haulm (processHaulmDropArea), puis transmet litres et surfaces au Combine via addCutterArea (appelé dans onEndWorkAreaProcessing, côté serveur). EFFETS : deux groupes, chargés côté client par g_effectManager:loadEffect : cutterEffects (clé vehicle.cutter.effect, effet de coupe de la culture) et fillEffects (vehicle.cutter.fillEffect, flux de matière) plus animationNodes ; EffectManager étant absent du dump, leur rendu est NON VÉRIFIÉ. Conditions d'allumage dans onUpdateTick (client et serveur) : outil allumé, movingDirection égal à celui configuré (vehicle.cutter#movingDirection), getLastSpeed() > 0.5, outil abaissé (sauf allowCuttingWhileRaised) et un Combine valide trouvé (workAreaParameters.combineVehicle). Le fillEffect démarre si un type de remplissage est connu et que l'outil a coupé durant les 300 dernières ms (lastAreaBiggerZeroTime) ; le cutterEffect démarre si un fruit d'entrée valide est connu et que la zone de test n'est pas réinitialisée. L'effet reçoit : type de remplissage, fruit, stade de croissance (setEffectTypeInfo) et la largeur couverte par le test (setMinMaxWidth, bornes min/max et alphas normalisés par rapport à la zone de test), ce qui permet de limiter l'effet à la largeur réellement coupée. Un cutterLoad (charge lissée 0..1, 0.95/0.05 ou décroissance 0.9) sert de densité au Combine et au HUD. DONNÉES MÉTÉO/HUMIDITÉ : aucune lue (ni pluie, ni vent, ni humidité) ; la pluie n'agit que dans Combine.addCutterArea. Donnée de culture utilisée pour le rendu : stade de croissance (growthState) lu dans la carte de densité. RÉSEAU : les états d'effet (stade, fruit d'entrée, type de remplissage, windrow) sont envoyés via effectDirtyFlag (writeCutterToStream / readCutterFromStream, 4 bits pour le stade) et lastAreaBiggerZero à chaque mise à jour ; le client rétablit les zones de test (setTestAreaRequirements) pour pouvoir piloter l'effet localement. Sur un client, les trois fonctions process* ne travaillent que si currentUpdateDistance <= Cutter.CLIENT_DM_UPDATE_RADIUS (constante non définie dans ce fichier : valeur NON VÉRIFIÉE). Points d'extension : fonctions enregistrées getCombine, getCutterLoad, getCutterStoneMultiplier, processCutterArea, processPickupCutterArea, processHaulmDropArea, setCutterCutHeight, getCutterTilt* ; surcharges getIsWorkAreaActive, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, isAttachAllowed, getConsumingLoad, getIsGroundReferenceNodeThreshold, loadInputAttacherJoint, getFruitExtraObjectTypeData ; vitesse par défaut Cutter.getDefaultSpeedLimit. Pour un mod de poussière de récolte, onUpdateTick est le seul endroit qui connaît à la fois la largeur coupée, la culture et son stade."
+ },
  "fonctions": {
-  "Cutter.initSpecialization": "Enregistre dans le schéma XML les clés vehicle.cutter (fruitTypes, fruitTypeCategories, fruitTypeConverter, fillTypeConverter, supportsPickupAI, effet de coupe, fillEffect, allowsForageGrowthState, allowCuttingWhileRaised, movingDirection, strawRatio, haulmDrop, tambours à dents, sons, inclinaison) et vehicles.vehicle(?).cutter#cutHeight pour la sauvegarde. Non relu clé par clé.",
-  "Cutter.prerequisitesPresent": "Exige WorkArea et TestAreas (la liste continue sur la même ligne, non relue en entier).",
-  "Cutter.registerFunctions": "Expose getCombine, getAllowCutterAIFruitRequirements, processCutterArea, processPickupCutterArea, processHaulmDropArea, getCutterLoad, getCutterStoneMultiplier, loadCutterTiltFromXML, getCutterTiltIsAvailable, getCutterTiltIsActive, getCutterTiltDelta, les rappels de raycast d'inclinaison, setCutterCutHeight, ainsi que le chargement/état des pièces à rotation par vitesse et à mouvement aléatoire.",
-  "Cutter.registerOverwrittenFunctions": "Surcharge getIsWorkAreaActive, doCheckSpeedLimit, loadWorkAreaFromXML, getDirtMultiplier, getWearMultiplier, isAttachAllowed, getConsumingLoad, getIsGroundReferenceNodeThreshold, getDefaultAllowComponentMassReduction, loadInputAttacherJoint, getFruitExtraObjectTypeData et les fonctions de pièces tournantes/mobiles.",
-  "Cutter.registerEventListeners": "Écoute onLoad, onPostLoad, onDelete, les flux réseau, onUpdate, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOn/Off, onAIImplementStart et onAIFieldCourseSettingsInitialized.",
-  "Cutter:onLoad": "Charge les cultures supportées (liste, catégories), les convertisseurs de culture et de type de remplissage, les types de sortie, la hauteur de coupe initiale, les effets (cutterEffects et fillEffects, côté client), les animations et sons, l'inclinaison automatique, la rangée de zones de test et l'état interne (cutterLoad, dernier fruit, windrow, dirty flag effectDirtyFlag).",
-  "Cutter:onPostLoad": "Après chargement : restaure la hauteur de coupe depuis la sauvegarde.",
-  "Cutter:onDelete": "Supprime les effets, animations et sons du cutter.",
-  "Cutter:onReadStream": "Côté client à la connexion : lit l'état de coupe synchronisé (via readCutterFromStream).",
-  "Cutter:onWriteStream": "Côté serveur à la connexion : écrit l'état de coupe via writeCutterToStream.",
-  "Cutter:onReadUpdateStream": "Côté client : si un indicateur est vrai, lit l'état de coupe ; lit lastAreaBiggerZero (met à jour lastAreaBiggerZeroTime) puis rétablit les exigences des zones de test selon le fruit courant.",
-  "Cutter:onWriteUpdateStream": "Côté serveur : écrit l'état de coupe si effectDirtyFlag est levé, puis lastAreaBiggerZeroSent.",
-  "Cutter:readCutterFromStream": "Lit stade de croissance (4 bits), fruit d'entrée, indicateur de validité, mode andain (windrow) et type de remplissage d'entrée ; recalcule le type de sortie et le facteur de conversion à partir des convertisseurs.",
-  "Cutter:writeCutterToStream": "Écrit stade de croissance, fruit d'entrée, si ce fruit est le dernier valide, mode andain et type de remplissage d'entrée (si andain).",
-  "Cutter:saveToXMLFile": "Sauvegarde la hauteur de coupe courante (#cutHeight).",
-  "Cutter:onUpdate": "Par frame : applique l'inclinaison automatique de la table (rotation de nœuds selon le delta calculé par raycast) et, côté client, repositionne les dents des tambours (spikedDrums) le long de leur spline selon la rotation du tambour.",
-  "Cutter:onUpdateTick": "Par tick : calcule isEffectActive (allumé, sens de marche, vitesse > 0.5, abaissé, Combine présent). Si actif : lisse cutterLoad, convertit la zone de test en bornes min/max normalisées (inversées selon le sens), vérifie que le fruit d'entrée est celui que le Combine peut traiter (sinon pas d'effet), et, côté client, démarre/arrête fillEffects et cutterEffects (type de remplissage, fruit, stade, largeur) et le son de coupe. Si inactif : arrête effets et son et fait décroître cutterLoad (x0.9). Détermine aussi, toutes les 500 ms, le type de sortie prioritaire pour éviter les changements rapides en bordure de champ, et lance les raycasts asynchrones d'inclinaison. Aucune donnée météo.",
-  "Cutter:getCombine": "Trouve le Combine qui accepte le fruit/type de sortie : par verifyCombine propre ou du véhicule porteur.",
-  "Cutter:getAllowCutterAIFruitRequirements": "Renvoie true : l'IA applique les exigences de culture du cutter.",
-  "Cutter:processCutterArea": "Pour chaque culture utilisable : lit la zone dans la carte de densité (récolte, facteurs de pulvérisation, labour, chaux, mauvaises herbes, chaume, rouleau, bonus d'abeilles, stade de croissance), met à jour fruit/type de sortie/stade courants (serveur), calcule le multiplicateur de récolte (g_currentMission:getHarvestScaleMultiplier), cumule aires et aires pondérées, dépose le sol de paille ou le haulm dans la zone de chaume, relève l'état des pierres et marque isWorking. Ignoré sur client trop éloigné.",
-  "Cutter:processPickupCutterArea": "Ramassage d'andain : reprend, le long d'une ligne, les litres du type d'entrée via tipToGroundAroundLine, applique la conversion de type et le rendement des andains coupés (getCutWindrowHarvestFillLevel), active useWindrow. Côté client, déduit l'état du dernier ramassage connu.",
-  "Cutter:processHaulmDropArea": "Dépose du haulm sur la zone tant que la coupe est active (dernière coupe il y a moins de 150 ms, ou lissage valueDelay), efface les traces de pneus.",
-  "Cutter:onStartWorkAreaProcessing": "Avant le traitement : recherche le Combine, remet à zéro les cumuls et choisit la liste de cultures à tester, éventuellement restreinte au type requis par le Combine.",
-  "Cutter:onEndWorkAreaProcessing": "Côté serveur : convertit surfaces en litres, applique la conversion de type, tient les statistiques par type de sortie, appelle Combine:addCutterArea, met à jour les statistiques (hectares battus), l'exigence de culture de l'IA, les dirty flags d'effet et lastAreaBiggerZeroTime.",
-  "Cutter:getCutterLoad": "Charge de la table : cutterLoad x (0.25 + 0.75 x vitesse / limite de vitesse bornée à 0..1).",
-  "Cutter:getCutterStoneMultiplier": "Facteur d'usure dû aux pierres selon l'état de pierre relevé (1 par défaut).",
-  "Cutter:loadCutterTiltFromXML": "Charge les nœuds, limites et raycasts de l'inclinaison automatique de la table.",
-  "Cutter:getCutterTiltIsAvailable": "Indique si l'inclinaison automatique est disponible.",
-  "Cutter:getCutterTiltIsActive": "Indique si l'inclinaison automatique est active (conditions selon l'état de la table et les réglages).",
-  "Cutter:getCutterTiltDelta": "Renvoie le delta d'inclinaison calculé, un indicateur d'activité et un indicateur de retour au neutre.",
-  "Cutter:tiltRaycastDetectionCallbackLeft": "Rappel du raycast gauche : mémorise la hauteur du sol détecté pour l'inclinaison.",
-  "Cutter:tiltRaycastDetectionCallbackRight": "Rappel du raycast droit : idem côté droit.",
-  "Cutter:setCutterCutHeight": "Mémorise la hauteur de coupe et l'applique à la distance au sol d'abaissement de l'attelage (lowerDistanceToGround) des joints de type cutter.",
-  "Cutter:loadSpeedRotatingPartFromXML": "Ajoute aux pièces à rotation par vitesse l'option #rotateIfTurnedOn (false par défaut).",
-  "Cutter:getIsSpeedRotatingPartActive": "Avec rotateIfTurnedOn, la pièce n'est active que si le cutter est allumé.",
-  "Cutter:loadRandomlyMovingPartFromXML": "Charge l'option de mouvement aléatoire conditionné à la coupe.",
-  "Cutter:getIsRandomlyMovingPartActive": "Avec moveOnlyIfCut, n'active la pièce que si le cutter a coupé durant les 150 dernières ms.",
-  "Cutter:getIsWorkAreaActive": "Une zone de type CUTTER n'est active que si la table est abaissée (sauf allowCuttingWhileRaised).",
-  "Cutter:doCheckSpeedLimit": "La limite de vitesse s'applique aussi quand le cutter est allumé et abaissé.",
-  "Cutter:loadWorkAreaFromXML": "Lit l'index de zone de déchiquetage (chopperArea#index) d'une zone de travail.",
-  "Cutter:getDirtMultiplier": "Ajoute le multiplicateur de salissure de travail x (vitesse / limite) tant que isWorking.",
-  "Cutter:getWearMultiplier": "Même principe pour l'usure, multipliée par le facteur de pierres.",
-  "Cutter:isAttachAllowed": "Refuse l'attelage à un Combine dont les types de remplissage ne sont pas compatibles avec la sortie du cutter.",
-  "Cutter:getConsumingLoad": "Ajoute la charge de la table à la charge consommatrice du moteur.",
-  "Cutter:getIsGroundReferenceNodeThreshold": "Ajoute la hauteur de coupe courante au seuil de contact des nœuds de référence au sol.",
-  "Cutter:getDefaultAllowComponentMassReduction": "Renvoie true.",
-  "Cutter:loadInputAttacherJoint": "Lit l'option #useFruitCutHeight (true par défaut) des joints d'attelage.",
-  "Cutter:getFruitExtraObjectTypeData": "Renvoie le dernier fruit d'entrée valide pour les objets additionnels dépendant du fruit.",
-  "Cutter:onTurnedOn": "Côté client, démarre les animationNodes.",
-  "Cutter:onTurnedOff": "Côté client, arrête les animationNodes ; réinitialise dans tous les cas les fruits et types de remplissage courants (entrée, sortie, IA).",
-  "Cutter:onAIImplementStart": "Au démarrage de l'IA, réinitialise les exigences de culture puis exige les cultures supportées que le Combine peut recevoir.",
-  "Cutter:onAIFieldCourseSettingsInitialized": "Force pour l'IA : bordures d'abord, travail du segment initial et coupe des coins prise en charge.",
-  "Cutter.getDefaultSpeedLimit": "Limite de vitesse par défaut : 10.",
-  "Cutter:updateDebugValues": "Ajoute à l'affichage de débogage le type de sortie prioritaire, la hauteur de coupe et la répartition du tampon par type de remplissage."
+  "Cutter.initSpecialization": {
+   "en": "Registers in the XML schema the keys vehicle.cutter (fruitTypes, fruitTypeCategories, fruitTypeConverter, fillTypeConverter, supportsPickupAI, cutting effect, fillEffect, allowsForageGrowthState, allowCuttingWhileRaised, movingDirection, strawRatio, haulmDrop, spiked drums, sounds, tilt) and vehicles.vehicle(?).cutter#cutHeight for the savegame. Not re-read key by key.",
+   "fr": "Enregistre dans le schéma XML les clés vehicle.cutter (fruitTypes, fruitTypeCategories, fruitTypeConverter, fillTypeConverter, supportsPickupAI, effet de coupe, fillEffect, allowsForageGrowthState, allowCuttingWhileRaised, movingDirection, strawRatio, haulmDrop, tambours à dents, sons, inclinaison) et vehicles.vehicle(?).cutter#cutHeight pour la sauvegarde. Non relu clé par clé."
+  },
+  "Cutter.prerequisitesPresent": {
+   "en": "Requires WorkArea and TestAreas (the list continues on the same line, not read in full).",
+   "fr": "Exige WorkArea et TestAreas (la liste continue sur la même ligne, non relue en entier)."
+  },
+  "Cutter.registerFunctions": {
+   "en": "Exposes getCombine, getAllowCutterAIFruitRequirements, processCutterArea, processPickupCutterArea, processHaulmDropArea, getCutterLoad, getCutterStoneMultiplier, loadCutterTiltFromXML, getCutterTiltIsAvailable, getCutterTiltIsActive, getCutterTiltDelta, the tilt raycast callbacks, setCutterCutHeight, as well as the loading/state of speed-rotating and randomly moving parts.",
+   "fr": "Expose getCombine, getAllowCutterAIFruitRequirements, processCutterArea, processPickupCutterArea, processHaulmDropArea, getCutterLoad, getCutterStoneMultiplier, loadCutterTiltFromXML, getCutterTiltIsAvailable, getCutterTiltIsActive, getCutterTiltDelta, les rappels de raycast d'inclinaison, setCutterCutHeight, ainsi que le chargement/état des pièces à rotation par vitesse et à mouvement aléatoire."
+  },
+  "Cutter.registerOverwrittenFunctions": {
+   "en": "Overrides getIsWorkAreaActive, doCheckSpeedLimit, loadWorkAreaFromXML, getDirtMultiplier, getWearMultiplier, isAttachAllowed, getConsumingLoad, getIsGroundReferenceNodeThreshold, getDefaultAllowComponentMassReduction, loadInputAttacherJoint, getFruitExtraObjectTypeData and the rotating/moving part functions.",
+   "fr": "Surcharge getIsWorkAreaActive, doCheckSpeedLimit, loadWorkAreaFromXML, getDirtMultiplier, getWearMultiplier, isAttachAllowed, getConsumingLoad, getIsGroundReferenceNodeThreshold, getDefaultAllowComponentMassReduction, loadInputAttacherJoint, getFruitExtraObjectTypeData et les fonctions de pièces tournantes/mobiles."
+  },
+  "Cutter.registerEventListeners": {
+   "en": "Listens to onLoad, onPostLoad, onDelete, the network streams, onUpdate, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOn/Off, onAIImplementStart and onAIFieldCourseSettingsInitialized.",
+   "fr": "Écoute onLoad, onPostLoad, onDelete, les flux réseau, onUpdate, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOn/Off, onAIImplementStart et onAIFieldCourseSettingsInitialized."
+  },
+  "Cutter:onLoad": {
+   "en": "Loads the supported crops (list, categories), the crop and fill type converters, the output types, the initial cut height, the effects (cutterEffects and fillEffects, client side), the animations and sounds, the automatic tilt, the row of test areas and the internal state (cutterLoad, last fruit, windrow, dirty flag effectDirtyFlag).",
+   "fr": "Charge les cultures supportées (liste, catégories), les convertisseurs de culture et de type de remplissage, les types de sortie, la hauteur de coupe initiale, les effets (cutterEffects et fillEffects, côté client), les animations et sons, l'inclinaison automatique, la rangée de zones de test et l'état interne (cutterLoad, dernier fruit, windrow, dirty flag effectDirtyFlag)."
+  },
+  "Cutter:onPostLoad": {
+   "en": "After loading: restores the cut height from the savegame.",
+   "fr": "Après chargement : restaure la hauteur de coupe depuis la sauvegarde."
+  },
+  "Cutter:onDelete": {
+   "en": "Deletes the cutter's effects, animations and sounds.",
+   "fr": "Supprime les effets, animations et sons du cutter."
+  },
+  "Cutter:onReadStream": {
+   "en": "Client side on connection: reads the synchronised cutting state (via readCutterFromStream).",
+   "fr": "Côté client à la connexion : lit l'état de coupe synchronisé (via readCutterFromStream)."
+  },
+  "Cutter:onWriteStream": {
+   "en": "Server side on connection: writes the cutting state via writeCutterToStream.",
+   "fr": "Côté serveur à la connexion : écrit l'état de coupe via writeCutterToStream."
+  },
+  "Cutter:onReadUpdateStream": {
+   "en": "Client side: if a flag is true, reads the cutting state; reads lastAreaBiggerZero (updates lastAreaBiggerZeroTime) then restores the test area requirements according to the current fruit.",
+   "fr": "Côté client : si un indicateur est vrai, lit l'état de coupe ; lit lastAreaBiggerZero (met à jour lastAreaBiggerZeroTime) puis rétablit les exigences des zones de test selon le fruit courant."
+  },
+  "Cutter:onWriteUpdateStream": {
+   "en": "Server side: writes the cutting state if effectDirtyFlag is raised, then lastAreaBiggerZeroSent.",
+   "fr": "Côté serveur : écrit l'état de coupe si effectDirtyFlag est levé, puis lastAreaBiggerZeroSent."
+  },
+  "Cutter:readCutterFromStream": {
+   "en": "Reads growth state (4 bits), input fruit, validity flag, windrow mode and input fill type; recomputes the output type and the conversion factor from the converters.",
+   "fr": "Lit stade de croissance (4 bits), fruit d'entrée, indicateur de validité, mode andain (windrow) et type de remplissage d'entrée ; recalcule le type de sortie et le facteur de conversion à partir des convertisseurs."
+  },
+  "Cutter:writeCutterToStream": {
+   "en": "Writes growth state, input fruit, whether this fruit is the last valid one, windrow mode and input fill type (if windrow).",
+   "fr": "Écrit stade de croissance, fruit d'entrée, si ce fruit est le dernier valide, mode andain et type de remplissage d'entrée (si andain)."
+  },
+  "Cutter:saveToXMLFile": {
+   "en": "Saves the current cut height (#cutHeight).",
+   "fr": "Sauvegarde la hauteur de coupe courante (#cutHeight)."
+  },
+  "Cutter:onUpdate": {
+   "en": "Per frame: applies the table's automatic tilt (rotation of nodes according to the delta computed by raycast) and, client side, repositions the drum teeth (spikedDrums) along their spline according to the drum rotation.",
+   "fr": "Par frame : applique l'inclinaison automatique de la table (rotation de nœuds selon le delta calculé par raycast) et, côté client, repositionne les dents des tambours (spikedDrums) le long de leur spline selon la rotation du tambour."
+  },
+  "Cutter:onUpdateTick": {
+   "en": "Per tick: computes isEffectActive (turned on, travel direction, speed > 0.5, lowered, Combine present). If active: smooths cutterLoad, converts the test area into normalised min/max bounds (inverted according to direction), checks that the input fruit is one the Combine can process (otherwise no effect), and, client side, starts/stops fillEffects and cutterEffects (fill type, fruit, stage, width) and the cutting sound. If inactive: stops effects and sound and decays cutterLoad (x0.9). Also determines, every 500 ms, the priority output type to avoid rapid changes at the field edge, and launches the asynchronous tilt raycasts. No weather data.",
+   "fr": "Par tick : calcule isEffectActive (allumé, sens de marche, vitesse > 0.5, abaissé, Combine présent). Si actif : lisse cutterLoad, convertit la zone de test en bornes min/max normalisées (inversées selon le sens), vérifie que le fruit d'entrée est celui que le Combine peut traiter (sinon pas d'effet), et, côté client, démarre/arrête fillEffects et cutterEffects (type de remplissage, fruit, stade, largeur) et le son de coupe. Si inactif : arrête effets et son et fait décroître cutterLoad (x0.9). Détermine aussi, toutes les 500 ms, le type de sortie prioritaire pour éviter les changements rapides en bordure de champ, et lance les raycasts asynchrones d'inclinaison. Aucune donnée météo."
+  },
+  "Cutter:getCombine": {
+   "en": "Finds the Combine that accepts the fruit/output type: through its own verifyCombine or that of the carrier vehicle.",
+   "fr": "Trouve le Combine qui accepte le fruit/type de sortie : par verifyCombine propre ou du véhicule porteur."
+  },
+  "Cutter:getAllowCutterAIFruitRequirements": {
+   "en": "Returns true: the AI applies the cutter's crop requirements.",
+   "fr": "Renvoie true : l'IA applique les exigences de culture du cutter."
+  },
+  "Cutter:processCutterArea": {
+   "en": "For each usable crop: reads the area in the density map (harvest, spray factors, plowing, lime, weeds, stubble, roller, bee bonus, growth state), updates the current fruit/output type/stage (server), computes the harvest multiplier (g_currentMission:getHarvestScaleMultiplier), accumulates areas and weighted areas, drops the straw ground or the haulm in the stubble area, reads the stone state and marks isWorking. Skipped on a client that is too far.",
+   "fr": "Pour chaque culture utilisable : lit la zone dans la carte de densité (récolte, facteurs de pulvérisation, labour, chaux, mauvaises herbes, chaume, rouleau, bonus d'abeilles, stade de croissance), met à jour fruit/type de sortie/stade courants (serveur), calcule le multiplicateur de récolte (g_currentMission:getHarvestScaleMultiplier), cumule aires et aires pondérées, dépose le sol de paille ou le haulm dans la zone de chaume, relève l'état des pierres et marque isWorking. Ignoré sur client trop éloigné."
+  },
+  "Cutter:processPickupCutterArea": {
+   "en": "Windrow pickup: along a line, takes back the litres of the input type via tipToGroundAroundLine, applies the type conversion and the yield of cut windrows (getCutWindrowHarvestFillLevel), activates useWindrow. Client side, deduces the state from the last known pickup.",
+   "fr": "Ramassage d'andain : reprend, le long d'une ligne, les litres du type d'entrée via tipToGroundAroundLine, applique la conversion de type et le rendement des andains coupés (getCutWindrowHarvestFillLevel), active useWindrow. Côté client, déduit l'état du dernier ramassage connu."
+  },
+  "Cutter:processHaulmDropArea": {
+   "en": "Drops haulm on the area while cutting is active (last cut less than 150 ms ago, or valueDelay smoothing), clears tyre tracks.",
+   "fr": "Dépose du haulm sur la zone tant que la coupe est active (dernière coupe il y a moins de 150 ms, ou lissage valueDelay), efface les traces de pneus."
+  },
+  "Cutter:onStartWorkAreaProcessing": {
+   "en": "Before processing: looks for the Combine, resets the accumulators and picks the list of crops to test, possibly restricted to the type required by the Combine.",
+   "fr": "Avant le traitement : recherche le Combine, remet à zéro les cumuls et choisit la liste de cultures à tester, éventuellement restreinte au type requis par le Combine."
+  },
+  "Cutter:onEndWorkAreaProcessing": {
+   "en": "Server side: converts areas to litres, applies the type conversion, keeps statistics per output type, calls Combine:addCutterArea, updates the statistics (hectares threshed), the AI crop requirement, the effect dirty flags and lastAreaBiggerZeroTime.",
+   "fr": "Côté serveur : convertit surfaces en litres, applique la conversion de type, tient les statistiques par type de sortie, appelle Combine:addCutterArea, met à jour les statistiques (hectares battus), l'exigence de culture de l'IA, les dirty flags d'effet et lastAreaBiggerZeroTime."
+  },
+  "Cutter:getCutterLoad": {
+   "en": "Table load: cutterLoad x (0.25 + 0.75 x speed / speed limit clamped to 0..1).",
+   "fr": "Charge de la table : cutterLoad x (0.25 + 0.75 x vitesse / limite de vitesse bornée à 0..1)."
+  },
+  "Cutter:getCutterStoneMultiplier": {
+   "en": "Wear factor due to stones according to the stone state read (1 by default).",
+   "fr": "Facteur d'usure dû aux pierres selon l'état de pierre relevé (1 par défaut)."
+  },
+  "Cutter:loadCutterTiltFromXML": {
+   "en": "Loads the nodes, limits and raycasts of the table's automatic tilt.",
+   "fr": "Charge les nœuds, limites et raycasts de l'inclinaison automatique de la table."
+  },
+  "Cutter:getCutterTiltIsAvailable": {
+   "en": "Tells whether automatic tilt is available.",
+   "fr": "Indique si l'inclinaison automatique est disponible."
+  },
+  "Cutter:getCutterTiltIsActive": {
+   "en": "Tells whether automatic tilt is active (conditions depend on the table state and settings).",
+   "fr": "Indique si l'inclinaison automatique est active (conditions selon l'état de la table et les réglages)."
+  },
+  "Cutter:getCutterTiltDelta": {
+   "en": "Returns the computed tilt delta, an activity flag and a return-to-neutral flag.",
+   "fr": "Renvoie le delta d'inclinaison calculé, un indicateur d'activité et un indicateur de retour au neutre."
+  },
+  "Cutter:tiltRaycastDetectionCallbackLeft": {
+   "en": "Left raycast callback: stores the height of the detected ground for the tilt.",
+   "fr": "Rappel du raycast gauche : mémorise la hauteur du sol détecté pour l'inclinaison."
+  },
+  "Cutter:tiltRaycastDetectionCallbackRight": {
+   "en": "Right raycast callback: same for the right side.",
+   "fr": "Rappel du raycast droit : idem côté droit."
+  },
+  "Cutter:setCutterCutHeight": {
+   "en": "Stores the cut height and applies it to the attacher lowering ground distance (lowerDistanceToGround) of the cutter-type joints.",
+   "fr": "Mémorise la hauteur de coupe et l'applique à la distance au sol d'abaissement de l'attelage (lowerDistanceToGround) des joints de type cutter."
+  },
+  "Cutter:loadSpeedRotatingPartFromXML": {
+   "en": "Adds the #rotateIfTurnedOn option (false by default) to speed-rotating parts.",
+   "fr": "Ajoute aux pièces à rotation par vitesse l'option #rotateIfTurnedOn (false par défaut)."
+  },
+  "Cutter:getIsSpeedRotatingPartActive": {
+   "en": "With rotateIfTurnedOn, the part is only active if the cutter is turned on.",
+   "fr": "Avec rotateIfTurnedOn, la pièce n'est active que si le cutter est allumé."
+  },
+  "Cutter:loadRandomlyMovingPartFromXML": {
+   "en": "Loads the random movement option conditioned on cutting.",
+   "fr": "Charge l'option de mouvement aléatoire conditionné à la coupe."
+  },
+  "Cutter:getIsRandomlyMovingPartActive": {
+   "en": "With moveOnlyIfCut, activates the part only if the cutter has cut during the last 150 ms.",
+   "fr": "Avec moveOnlyIfCut, n'active la pièce que si le cutter a coupé durant les 150 dernières ms."
+  },
+  "Cutter:getIsWorkAreaActive": {
+   "en": "A CUTTER-type area is only active if the table is lowered (unless allowCuttingWhileRaised).",
+   "fr": "Une zone de type CUTTER n'est active que si la table est abaissée (sauf allowCuttingWhileRaised)."
+  },
+  "Cutter:doCheckSpeedLimit": {
+   "en": "The speed limit also applies when the cutter is turned on and lowered.",
+   "fr": "La limite de vitesse s'applique aussi quand le cutter est allumé et abaissé."
+  },
+  "Cutter:loadWorkAreaFromXML": {
+   "en": "Reads the chopper area index (chopperArea#index) of a work area.",
+   "fr": "Lit l'index de zone de déchiquetage (chopperArea#index) d'une zone de travail."
+  },
+  "Cutter:getDirtMultiplier": {
+   "en": "Adds the work dirt multiplier x (speed / limit) while isWorking.",
+   "fr": "Ajoute le multiplicateur de salissure de travail x (vitesse / limite) tant que isWorking."
+  },
+  "Cutter:getWearMultiplier": {
+   "en": "Same principle for wear, multiplied by the stone factor.",
+   "fr": "Même principe pour l'usure, multipliée par le facteur de pierres."
+  },
+  "Cutter:isAttachAllowed": {
+   "en": "Refuses attachment to a Combine whose fill types are not compatible with the cutter's output.",
+   "fr": "Refuse l'attelage à un Combine dont les types de remplissage ne sont pas compatibles avec la sortie du cutter."
+  },
+  "Cutter:getConsumingLoad": {
+   "en": "Adds the table load to the engine's consuming load.",
+   "fr": "Ajoute la charge de la table à la charge consommatrice du moteur."
+  },
+  "Cutter:getIsGroundReferenceNodeThreshold": {
+   "en": "Adds the current cut height to the contact threshold of the ground reference nodes.",
+   "fr": "Ajoute la hauteur de coupe courante au seuil de contact des nœuds de référence au sol."
+  },
+  "Cutter:getDefaultAllowComponentMassReduction": {
+   "en": "Returns true.",
+   "fr": "Renvoie true."
+  },
+  "Cutter:loadInputAttacherJoint": {
+   "en": "Reads the #useFruitCutHeight option (true by default) of the attacher joints.",
+   "fr": "Lit l'option #useFruitCutHeight (true par défaut) des joints d'attelage."
+  },
+  "Cutter:getFruitExtraObjectTypeData": {
+   "en": "Returns the last valid input fruit for the extra objects that depend on the fruit.",
+   "fr": "Renvoie le dernier fruit d'entrée valide pour les objets additionnels dépendant du fruit."
+  },
+  "Cutter:onTurnedOn": {
+   "en": "Client side, starts the animationNodes.",
+   "fr": "Côté client, démarre les animationNodes."
+  },
+  "Cutter:onTurnedOff": {
+   "en": "Client side, stops the animationNodes; in all cases resets the current fruits and fill types (input, output, AI).",
+   "fr": "Côté client, arrête les animationNodes ; réinitialise dans tous les cas les fruits et types de remplissage courants (entrée, sortie, IA)."
+  },
+  "Cutter:onAIImplementStart": {
+   "en": "When the AI starts, resets the crop requirements then requires the supported crops the Combine can receive.",
+   "fr": "Au démarrage de l'IA, réinitialise les exigences de culture puis exige les cultures supportées que le Combine peut recevoir."
+  },
+  "Cutter:onAIFieldCourseSettingsInitialized": {
+   "en": "Forces for the AI: borders first, working the initial segment and corner cutting supported.",
+   "fr": "Force pour l'IA : bordures d'abord, travail du segment initial et coupe des coins prise en charge."
+  },
+  "Cutter.getDefaultSpeedLimit": {
+   "en": "Default speed limit: 10.",
+   "fr": "Limite de vitesse par défaut : 10."
+  },
+  "Cutter:updateDebugValues": {
+   "en": "Adds to the debug display the priority output type, the cut height and the buffer distribution per fill type.",
+   "fr": "Ajoute à l'affichage de débogage le type de sortie prioritaire, la hauteur de coupe et la répartition du tampon par type de remplissage."
+  }
  }
 }

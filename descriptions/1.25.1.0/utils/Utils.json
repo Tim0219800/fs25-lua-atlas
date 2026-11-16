@@ -1,0 +1,241 @@
+{
+ "fichier": "utils/Utils.lua",
+ "module": {
+  "en": "Global `Utils` helper table: general-purpose helpers for defaults, value stepping, file paths, settings index conversion, function hooking (append/prepend/overwrite), bit masks, version strings and text. In the SDK dump almost all bodies are stripped, so only getUniqueId has a visible implementation; the others are described from names and parameters and are UNVERIFIED.",
+  "fr": "Table globale `Utils` : fonctions utilitaires générales (valeurs par défaut, déplacement de valeurs, chemins de fichiers, conversion d'indices de réglages, surcharge de fonctions append/prepend/overwrite, masques de bits, versions, texte). Dans le dump du SDK presque tous les corps sont retirés : seule getUniqueId a une implémentation visible, les autres sont décrites d'après leur nom et leurs paramètres (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "Utils.getNoNil": {
+   "en": "Signature only (no body in the SDK dump): returns the second argument when the first is nil, otherwise the first. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie le deuxième argument si le premier est nil, sinon le premier. NON VÉRIFIÉ."
+  },
+  "Utils.getNoNilRad": {
+   "en": "Signature only (no body in the SDK dump): converts a value given in degrees to radians, or returns the default (already in radians) when the value is nil. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : convertit une valeur en degrés en radians, ou renvoie la valeur par défaut (déjà en radians) si elle est nil. NON VÉRIFIÉ."
+  },
+  "Utils.limitTextToWidth": {
+   "en": "Signature only (no body in the SDK dump): shortens text so it fits a screen-space width at a given text size, optionally trimming the front and using a replacement marker; also returns first and last kept character indices. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : raccourcit un texte pour qu'il tienne dans une largeur d'écran à une taille donnée, en coupant éventuellement le début et avec un texte de remplacement ; renvoie aussi les indices du premier et du dernier caractère conservés. NON VÉRIFIÉ."
+  },
+  "Utils.getMovedLimitedValue": {
+   "en": "Signature only (no body in the SDK dump): moves a value toward a maximum or minimum at a given speed scaled by dt, with an inverted option, and returns the new value. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : fait évoluer une valeur vers un maximum ou un minimum à une vitesse donnée multipliée par dt, avec option inversée, et renvoie la nouvelle valeur. NON VÉRIFIÉ."
+  },
+  "Utils.getMovedLimitedValues": {
+   "en": "Signature only (no body in the SDK dump): array version of getMovedLimitedValue: computes new values for several entries and returns them as a new array. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : version tableau de getMovedLimitedValue : calcule les nouvelles valeurs de plusieurs entrées et les renvoie dans un nouveau tableau. NON VÉRIFIÉ."
+  },
+  "Utils.setMovedLimitedValues": {
+   "en": "Signature only (no body in the SDK dump): in-place variant of getMovedLimitedValues: updates the given values and returns a boolean telling whether anything changed. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : variante en place de getMovedLimitedValues : met à jour les valeurs fournies et renvoie un booléen indiquant si quelque chose a changé. NON VÉRIFIÉ."
+  },
+  "Utils.getUniqueId": {
+   "en": "builds an id from an MD5 hash of the value, the current time and a counter, with an optional prefix and truncated hash length (1 to 31, otherwise full 32). Loops until the id is absent from the optional mapping table; calling twice with the same value gives different ids.",
+   "fr": "construit un identifiant à partir d'un hash MD5 de la valeur, de l'heure courante et d'un compteur, avec préfixe optionnel et longueur de hash tronquée (1 à 31, sinon 32 complets). Boucle jusqu'à ce que l'id soit absent de la table de correspondance optionnelle ; deux appels avec la même valeur donnent des ids différents."
+  },
+  "Utils.getModNameAndBaseDirectory": {
+   "en": "Signature only (no body in the SDK dump): extracts the mod name and its base directory from a filename path. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : extrait le nom du mod et son répertoire de base à partir d'un chemin de fichier. NON VÉRIFIÉ."
+  },
+  "Utils.getVersatileRotation": {
+   "en": "Signature only (no body in the SDK dump): computes a steering angle (radians) for a node from a reference node, a world position, dt and the current, minimum and maximum angles. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : calcule un angle de braquage (radians) pour un noeud à partir d'un noeud de référence, d'une position monde, de dt et des angles courant, minimal et maximal. NON VÉRIFIÉ."
+  },
+  "Utils.getYRotationBetweenNodes": {
+   "en": "Signature only (no body in the SDK dump): returns the Y rotation between two nodes, with an offset per node in radians and an option to wrap the rotation. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie la rotation autour de Y entre deux noeuds, avec un décalage par noeud en radians et une option d'enroulement de la rotation. NON VÉRIFIÉ."
+  },
+  "Utils.getPerformanceClassIndex": {
+   "en": "Signature only (no body in the SDK dump): maps a performance profile class name to its GS_PROFILE_* index. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : convertit le nom d'une classe de profil de performance en indice GS_PROFILE_*. NON VÉRIFIÉ."
+  },
+  "Utils.getPerformanceClassFromIndex": {
+   "en": "Signature only (no body in the SDK dump): maps a profile index back to its class name such as \"Very High\". UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : convertit un indice de profil en nom de classe, par exemple \"Very High\". NON VÉRIFIÉ."
+  },
+  "Utils.getPerformanceClassId": {
+   "en": "Signature only (no body in the SDK dump): returns the index of the current performance profile. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie l'indice du profil de performance courant. NON VÉRIFIÉ."
+  },
+  "Utils.getStateFromValues": {
+   "en": "Signature only (no body in the SDK dump): finds the state index matching a value in a list of values with a given step count. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : trouve l'indice d'état correspondant à une valeur dans une liste de valeurs avec un nombre de pas donné. NON VÉRIFIÉ."
+  },
+  "Utils.getValueIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the index of a target value in a table of values. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie l'indice d'une valeur cible dans une table de valeurs. NON VÉRIFIÉ."
+  },
+  "Utils.getNumTimeScales": {
+   "en": "Signature only (no body in the SDK dump): returns the number of available time scale settings. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie le nombre de réglages d'accélération du temps disponibles. NON VÉRIFIÉ."
+  },
+  "Utils.getTimeScaleString": {
+   "en": "Signature only (no body in the SDK dump): returns the formatted display string of the time scale at the given index. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie la chaîne d'affichage formatée de l'accélération du temps à l'indice donné. NON VÉRIFIÉ."
+  },
+  "Utils.getTimeScaleIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the setting index corresponding to a time scale value. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie l'indice de réglage correspondant à une valeur d'accélération du temps. NON VÉRIFIÉ."
+  },
+  "Utils.getTimeScaleFromIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the time scale value for a setting index. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie la valeur d'accélération du temps pour un indice de réglage. NON VÉRIFIÉ."
+  },
+  "Utils.getMasterVolumeIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the setting index for a master volume value. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie l'indice de réglage d'une valeur de volume principal. NON VÉRIFIÉ."
+  },
+  "Utils.getMasterVolumeFromIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the master volume value for a setting index. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie la valeur de volume principal pour un indice de réglage. NON VÉRIFIÉ."
+  },
+  "Utils.getUIScaleIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the setting index for a UI scale value. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie l'indice de réglage d'une valeur d'échelle d'interface. NON VÉRIFIÉ."
+  },
+  "Utils.getUIScaleFromIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the UI scale value for a setting index. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie l'échelle d'interface pour un indice de réglage. NON VÉRIFIÉ."
+  },
+  "Utils.getRecordingVolumeIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the setting index for a voice recording volume. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie l'indice de réglage d'un volume d'enregistrement vocal. NON VÉRIFIÉ."
+  },
+  "Utils.getRecordingVolumeFromIndex": {
+   "en": "Signature only (no body in the SDK dump): returns the recording volume for a setting index. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie le volume d'enregistrement pour un indice de réglage. NON VÉRIFIÉ."
+  },
+  "Utils.getFilename": {
+   "en": "Signature only (no body in the SDK dump): resolves an optional filename against an optional base directory and also returns a flag for mod-directory use. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : résout un nom de fichier optionnel par rapport à un répertoire de base optionnel et renvoie aussi un indicateur d'usage du répertoire du mod. NON VÉRIFIÉ."
+  },
+  "Utils.getFilenameFromPath": {
+   "en": "Signature only (no body in the SDK dump): returns the file name part of a path, for example the last element of a slash-separated path. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie la partie nom de fichier d'un chemin, par exemple le dernier élément d'un chemin séparé par des slashs. NON VÉRIFIÉ."
+  },
+  "Utils.getDirectory": {
+   "en": "Signature only (no body in the SDK dump): returns the directory part of a file path, or nil. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie la partie répertoire d'un chemin de fichier, ou nil. NON VÉRIFIÉ."
+  },
+  "Utils.getDirectoryName": {
+   "en": "Signature only (no body in the SDK dump): returns the name of the last directory in a directory path, or nil. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie le nom du dernier répertoire d'un chemin de répertoire, ou nil. NON VÉRIFIÉ."
+  },
+  "Utils.resolveRelativePath": {
+   "en": "Signature only (no body in the SDK dump): collapses parent-directory segments (../) in a path and returns nil when there are not enough parent elements. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : réduit les segments de répertoire parent (../) d'un chemin et renvoie nil s'il n'y a pas assez d'éléments parents. NON VÉRIFIÉ."
+  },
+  "Utils.getPathIsValid": {
+   "en": "Signature only (no body in the SDK dump): checks a path for invalid characters such as backslashes; returns a boolean and a description usable in log output. The boolean's polarity is UNVERIFIED despite its name hasInvalidCharacters.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : vérifie qu'un chemin ne contient pas de caractères invalides comme les antislashs ; renvoie un booléen et une description utilisable dans les logs. La polarité du booléen reste NON VÉRIFIÉE malgré son nom hasInvalidCharacters."
+  },
+  "Utils.getMaxJointForceLimit": {
+   "en": "Signature only (no body in the SDK dump): combines two joint force limits into one, with -1 as fallback. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : combine deux limites de force d'articulation en une seule, avec -1 en repli. NON VÉRIFIÉ."
+  },
+  "Utils.appendedFunction": {
+   "en": "Signature only (no body in the SDK dump): builds a function that calls the old function and then the new one; used to hook into existing functions. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : construit une fonction qui appelle l'ancienne puis la nouvelle ; sert à se brancher sur une fonction existante. NON VÉRIFIÉ."
+  },
+  "Utils.prependedFunction": {
+   "en": "Signature only (no body in the SDK dump): builds a function that calls the new function first and then the old one. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : construit une fonction qui appelle d'abord la nouvelle puis l'ancienne. NON VÉRIFIÉ."
+  },
+  "Utils.overwrittenFunction": {
+   "en": "Signature only (no body in the SDK dump): builds a replacement function around the old one, typically passing the old function to the new one. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : construit une fonction de remplacement autour de l'ancienne, qui reçoit en général l'ancienne fonction en paramètre. NON VÉRIFIÉ."
+  },
+  "Utils.shuffle": {
+   "en": "Signature only (no body in the SDK dump): shuffles a list in place. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : mélange une liste sur place. NON VÉRIFIÉ."
+  },
+  "Utils.getFilenameInfo": {
+   "en": "Signature only (no body in the SDK dump): splits a filename into a clean name and its extension, with an option to drop the path. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : découpe un nom de fichier en nom propre et extension, avec une option pour retirer le chemin. NON VÉRIFIÉ."
+  },
+  "Utils.stringToBoolean": {
+   "en": "Signature only (no body in the SDK dump): returns true only when the string is \"true\" in any letter case, false for nil or anything else. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie true seulement si la chaîne vaut \"true\" quelle que soit la casse, false pour nil ou toute autre valeur. NON VÉRIFIÉ."
+  },
+  "Utils.parseConsoleParameter": {
+   "en": "Signature only (no body in the SDK dump): turns the string \"nil\" or a nil value into nil and returns other strings unchanged; used for console command arguments. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : transforme la chaîne \"nil\" ou une valeur nil en nil et renvoie les autres chaînes inchangées ; sert aux arguments de commandes console. NON VÉRIFIÉ."
+  },
+  "Utils.getMinuteOfDayFromTime": {
+   "en": "Signature only (no body in the SDK dump): parses an hh:mm string into minutes since midnight; nil if the format or range is invalid. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : analyse une chaîne hh:mm en minutes depuis minuit ; nil si le format ou la plage est invalide. NON VÉRIFIÉ."
+  },
+  "Utils.formatTime": {
+   "en": "Signature only (no body in the SDK dump): formats minutes since midnight as an hh:mm string. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : formate des minutes depuis minuit en chaîne hh:mm. NON VÉRIFIÉ."
+  },
+  "Utils.renderMultiColumnText": {
+   "en": "Signature only (no body in the SDK dump): draws several texts side by side at a screen position (0 to 1) with a horizontal spacing and optional per-column alignment; a debug-style drawing helper to call each frame. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : dessine plusieurs textes côte à côte à une position d'écran (0 à 1) avec un espacement horizontal et un alignement optionnel par colonne ; aide de dessin de type debug à appeler à chaque image. NON VÉRIFIÉ."
+  },
+  "Utils.getCoinToss": {
+   "en": "Signature only (no body in the SDK dump): returns a random boolean, a fair coin flip. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie un booléen aléatoire, comme un pile ou face. NON VÉRIFIÉ."
+  },
+  "Utils.getNormallyDistributedRandomVariables": {
+   "en": "Signature only (no body in the SDK dump): returns two normally distributed random numbers for a given mean and variance (parameter named sigmaSq). UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie deux nombres aléatoires de loi normale pour une moyenne et une variance données (paramètre nommé sigmaSq). NON VÉRIFIÉ."
+  },
+  "Utils.getIntersectionOfLinearMovementAndTerrain": {
+   "en": "Signature only (no body in the SDK dump): estimates where a node moving linearly at a given speed meets the terrain and returns the x, y, z of that point. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : estime où un noeud en mouvement linéaire à une vitesse donnée rencontre le terrain et renvoie le point x, y, z. NON VÉRIFIÉ."
+  },
+  "Utils.clearBit": {
+   "en": "Signature only (no body in the SDK dump): returns the 32-bit mask with the bit at the given index (0 to 31) cleared. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie le masque 32 bits avec le bit d'indice donné (0 à 31) mis à zéro. NON VÉRIFIÉ."
+  },
+  "Utils.setBit": {
+   "en": "Signature only (no body in the SDK dump): returns the 32-bit mask with the bit at the given index (0 to 31) set. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie le masque 32 bits avec le bit d'indice donné (0 à 31) mis à un. NON VÉRIFIÉ."
+  },
+  "Utils.isBitSet": {
+   "en": "Signature only (no body in the SDK dump): tells whether the bit at the given index (0 to 31) is set in the mask. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : indique si le bit d'indice donné (0 à 31) est à un dans le masque. NON VÉRIFIÉ."
+  },
+  "Utils.clearFlags": {
+   "en": "Signature only (no body in the SDK dump): removes all the listed flag values (not bit indices) from a bitmask and returns the result. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : retire d'un masque toutes les valeurs de drapeaux listées (et non des indices de bits) et renvoie le résultat. NON VÉRIFIÉ."
+  },
+  "Utils.renderTextAtWorldPosition": {
+   "en": "Signature only (no body in the SDK dump): draws text at a world position with optional size, offset and RGBA colour; a debug rendering helper called each frame. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : dessine du texte à une position monde avec taille, décalage et couleur RGBA optionnels ; aide de rendu debug appelée à chaque image. NON VÉRIFIÉ."
+  },
+  "Utils.getGreenRedBlendedColor": {
+   "en": "Signature only (no body in the SDK dump): returns r, g, b, a for a green-to-red gradient where factor 0 is green and 1 is red. UNVERIFIED beyond the parameter naming.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie r, g, b, a d'un dégradé vert vers rouge où le facteur 0 donne du vert et 1 du rouge. NON VÉRIFIÉ au-delà du nommage des paramètres."
+  },
+  "Utils.maskToFormat": {
+   "en": "Signature only (no body in the SDK dump): converts a text mask into a format string and a numeric precision. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : convertit un masque de texte en chaîne de format et en précision numérique. NON VÉRIFIÉ."
+  },
+  "Utils.getClosestMatchingString": {
+   "en": "Signature only (no body in the SDK dump): finds the list entry with the smallest Levenshtein distance to a string (case-insensitive by default, optional max distance); returns the match and its distance. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : trouve l'entrée de la liste ayant la plus petite distance de Levenshtein avec une chaîne (insensible à la casse par défaut, distance max optionnelle) ; renvoie l'entrée et sa distance. NON VÉRIFIÉ."
+  },
+  "Utils.getNumOfWords": {
+   "en": "Signature only (no body in the SDK dump): counts the words in a string. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : compte les mots d'une chaîne. NON VÉRIFIÉ."
+  },
+  "Utils.getVersionParts": {
+   "en": "Signature only (no body in the SDK dump): splits a version string such as a.b.c.d into an array of numbers, ignoring non-numeric characters. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : découpe une chaîne de version du type a.b.c.d en tableau de nombres, en ignorant les caractères non numériques. NON VÉRIFIÉ."
+  },
+  "Utils.compareVersions": {
+   "en": "Signature only (no body in the SDK dump): compares two version arrays and returns 1, -1 or 0 for greater, lower or equal. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : compare deux tableaux de version et renvoie 1, -1 ou 0 pour supérieur, inférieur ou égal. NON VÉRIFIÉ."
+  },
+  "Utils.compareVersionStrings": {
+   "en": "Signature only (no body in the SDK dump): compares two version strings a.b.c.d and returns 1, -1 or 0 for greater, lower or equal. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : compare deux chaînes de version a.b.c.d et renvoie 1, -1 ou 0 pour supérieur, inférieur ou égal. NON VÉRIFIÉ."
+  },
+  "Utils.naturalSort": {
+   "en": "Signature only (no body in the SDK dump): sorts a table in place with natural ordering (item2 before item10) using a key function, stable for equal keys, and returns it. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : trie une table sur place selon l'ordre naturel (item2 avant item10) via une fonction de clé, de façon stable, et la renvoie. NON VÉRIFIÉ."
+  }
+ }
+}

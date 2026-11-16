@@ -1,0 +1,85 @@
+{
+ "fichier": "vehicles/specializations/StandaloneMotor.lua",
+ "module": {
+  "en": "Specialization for an implement with its own engine that is not a drivable motorized vehicle (for example a self-powered machine or trailer engine). It plays motor sounds, effects and animation nodes while the machine needs power and is allowed to run, simulates RPM, load and a simple motor temperature with a cooling fan, and exposes dashboard values (operating time, temperature, warning, ignition state). It has no prerequisites and is not synchronised over the network by this file.",
+  "fr": "Spécialisation pour un outil doté de son propre moteur, sans être un véhicule motorisé conduisible (par exemple une machine autonome ou un moteur de remorque). Elle joue sons, effets et animations de moteur tant que la machine a besoin de puissance et peut tourner, simule régime, charge et une température moteur simple avec ventilateur, et expose des valeurs de tableau de bord (temps de fonctionnement, température, alerte, état d'allumage). Aucun prérequis, et ce fichier ne synchronise rien sur le réseau."
+ },
+ "fonctions": {
+  "StandaloneMotor.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Retourne toujours true : aucune autre spécialisation n'est requise."
+  },
+  "StandaloneMotor.initSpecialization": {
+   "en": "Declares the `vehicle.standaloneMotor` schema (turn-off delay, idle load and RPM fractions, start duration, fold limits), sound/effect/animation paths, the dashboard value paths and the `#isMotorRunning` dashboard group attribute.",
+   "fr": "Déclare le schéma `vehicle.standaloneMotor` (délai d'arrêt, fractions de charge et de régime au ralenti, durée de démarrage, limites de pliage), les chemins de sons, effets et animations, les chemins de valeurs de tableau de bord et l'attribut de groupe `#isMotorRunning`."
+  },
+  "StandaloneMotor.registerFunctions": {
+   "en": "Registers `updateStandaloneMotorTemperature`, `getNeedsStandaloneMotorRunning`, `getAllowsStandaloneMotorRunning`, `getStandaloneMotorTargetRpm` and `getStandaloneMotorLoad`.",
+   "fr": "Enregistre `updateStandaloneMotorTemperature`, `getNeedsStandaloneMotorRunning`, `getAllowsStandaloneMotorRunning`, `getStandaloneMotorTargetRpm` et `getStandaloneMotorLoad`."
+  },
+  "StandaloneMotor.registerOverwrittenFunctions": {
+   "en": "Overrides `getIsOperating`, `loadDashboardGroupFromXML` and `getIsDashboardGroupActive`.",
+   "fr": "Surcharge `getIsOperating`, `loadDashboardGroupFromXML` et `getIsDashboardGroupActive`."
+  },
+  "StandaloneMotor.registerEventListeners": {
+   "en": "Subscribes to onLoad, onRegisterDashboardValueTypes, onDelete and onUpdateTick.",
+   "fr": "S'abonne à onLoad, onRegisterDashboardValueTypes, onDelete et onUpdateTick."
+  },
+  "StandaloneMotor:onLoad": {
+   "en": "Reads the XML settings, initialises RPM, load and the temperature state (start 20, max 120, heating 1.5 degrees per second at full load; fan on at 95 and off at 85, cooling 3 degrees per second) and loads the motor samples, effects and animation nodes.",
+   "fr": "Lit les réglages XML, initialise régime, charge et température (départ 20, max 120, chauffe 1,5 degré par seconde à pleine charge ; ventilateur activé à 95 et coupé à 85, refroidissement 3 degrés par seconde) et charge les sons, effets et animations du moteur."
+  },
+  "StandaloneMotor:onRegisterDashboardValueTypes": {
+   "en": "Registers the dashboard value types \"operatingTime\", \"motorTemperature\" (with min/max range), \"motorTemperatureWarning\" (true while the temperature is within the dashboard warning thresholds) and \"ignitionState\" (range 0 to 2).",
+   "fr": "Enregistre les types de valeurs de tableau de bord « operatingTime », « motorTemperature » (avec plage min/max), « motorTemperatureWarning » (vrai tant que la température est dans les seuils d'alerte du tableau de bord) et « ignitionState » (plage 0 à 2)."
+  },
+  "StandaloneMotor:onDelete": {
+   "en": "Deletes the motor samples, effects and animation nodes.",
+   "fr": "Supprime les sons, effets et animations du moteur."
+  },
+  "StandaloneMotor:onUpdateTick": {
+   "en": "Starts the motor (sound, effects, animations, start timer) when it is needed and allowed, and stops it after the turn-off delay (instantly if not allowed). While active, smooths the RPM toward the target, computes the load from `getStandaloneMotorLoad`, feeds sound and effect parameters, updates the temperature and keeps the vehicle active with `raiseActive`.",
+   "fr": "Démarre le moteur (son, effets, animations, minuteur de démarrage) quand il est nécessaire et autorisé, et l'arrête après le délai d'arrêt (immédiatement s'il n'est pas autorisé). Tant qu'il est actif, lisse le régime vers la cible, calcule la charge via `getStandaloneMotorLoad`, alimente les paramètres de son et d'effet, met à jour la température et garde le véhicule actif avec `raiseActive`."
+  },
+  "StandaloneMotor:getNeedsStandaloneMotorRunning": {
+   "en": "Returns whether the motor should run: the result of `getRequiresPower`.",
+   "fr": "Retourne si le moteur doit tourner : le résultat de `getRequiresPower`."
+  },
+  "StandaloneMotor:getAllowsStandaloneMotorRunning": {
+   "en": "Returns false if the vehicle is foldable and its fold animation time is outside the configured fold limits; otherwise true.",
+   "fr": "Retourne false si le véhicule est repliable et que son temps d'animation de pliage est hors des limites configurées ; sinon true."
+  },
+  "StandaloneMotor:getStandaloneMotorTargetRpm": {
+   "en": "Returns 0 by default: the target RPM fraction (0 to 1), meant to be overridden by other specializations.",
+   "fr": "Retourne 0 par défaut : la fraction de régime cible (0 à 1), prévue pour être surchargée par d'autres spécialisations."
+  },
+  "StandaloneMotor:getStandaloneMotorLoad": {
+   "en": "Returns 0, 0 by default: sum of load factors and their count, meant to be overridden by other specializations.",
+   "fr": "Retourne 0, 0 par défaut : la somme des facteurs de charge et leur nombre, prévus pour être surchargés par d'autres spécialisations."
+  },
+  "StandaloneMotor:updateStandaloneMotorTemperature": {
+   "en": "Heats the motor proportionally to dt, load and RPM (capped at the max), switches the fan on above its enable temperature and off below its disable temperature, and cools the motor while the fan runs (not below the minimum).",
+   "fr": "Chauffe le moteur proportionnellement à dt, à la charge et au régime (plafonné au maximum), active le ventilateur au-dessus de sa température d'activation et le coupe sous sa température de désactivation, et refroidit le moteur tant que le ventilateur tourne (pas sous le minimum)."
+  },
+  "StandaloneMotor:getIsOperating": {
+   "en": "Returns true if the parent does or if the standalone motor is active.",
+   "fr": "Retourne true si le parent le fait ou si le moteur autonome est actif."
+  },
+  "StandaloneMotor:loadDashboardGroupFromXML": {
+   "en": "Calls the parent and additionally reads `isMotorRunning` onto the dashboard group.",
+   "fr": "Appelle le parent et lit en plus `isMotorRunning` sur le groupe de tableau de bord."
+  },
+  "StandaloneMotor:getIsDashboardGroupActive": {
+   "en": "Returns false for a group flagged `isMotorRunning` while the motor is not active; otherwise defers to the parent.",
+   "fr": "Retourne false pour un groupe marqué `isMotorRunning` tant que le moteur n'est pas actif ; sinon délègue au parent."
+  },
+  "StandaloneMotor:updateDebugValues": {
+   "en": "Server-side debug helper: adds RPM (percent and real sample RPM when available), load, turn-off timer and temperature to the given values table.",
+   "fr": "Aide de débogage côté serveur : ajoute à la table fournie le régime (pourcentage et régime réel du son si disponible), la charge, le minuteur d'arrêt et la température."
+  },
+  "StandaloneMotor.getMotorIgnitionState": {
+   "en": "Returns the ignition state for the dashboard: 0 when the motor is off, 1 while it is still starting (until `motorStartTime` is reached), 2 once started.",
+   "fr": "Retourne l'état d'allumage pour le tableau de bord : 0 moteur éteint, 1 pendant le démarrage (jusqu'à `motorStartTime`), 2 une fois démarré."
+  }
+ }
+}

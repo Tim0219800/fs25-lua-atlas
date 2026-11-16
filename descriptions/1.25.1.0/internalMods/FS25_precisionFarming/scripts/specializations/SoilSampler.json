@@ -1,0 +1,105 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/specializations/SoilSampler.lua",
+ "module": {
+  "en": "Vehicle specialization of Precision Farming for soil sampling tools (requires PrecisionFarmingStatistic). The player takes samples at a sampling node with a radius, which triggers an animation and a cover map analysis, then sends the collected samples to the lab. It manages animations, input actions, minimap display, savegame/network sync of the sample count, and uses SoilSamplerStartEvent and SoilSamplerSendEvent.",
+  "fr": "Spécialisation de véhicule de Precision Farming pour les outils de prélèvement de sol (exige PrecisionFarmingStatistic). Le joueur prélève des échantillons à un noeud de prélèvement avec un rayon, ce qui lance une animation et une analyse de la carte de couverture, puis envoie les échantillons collectés au laboratoire. Elle gère animations, actions d'entrée, minicarte, sauvegarde/synchronisation réseau du nombre d'échantillons et utilise SoilSamplerStartEvent et SoilSamplerSendEvent."
+ },
+ "fonctions": {
+  "SoilSampler.prerequisitesPresent": {
+   "en": "True only if the vehicle has the PrecisionFarmingStatistic specialization.",
+   "fr": "Vrai uniquement si le véhicule possède la spécialisation PrecisionFarmingStatistic."
+  },
+  "SoilSampler.initSpecialization": {
+   "en": "Registers the vehicle.soilSampler XML keys (node, radius default 10, input action names, animations, fold limits, samples animation, visual sample nodes) and the savegame attribute numCollectedSamples.",
+   "fr": "Enregistre les clés XML vehicle.soilSampler (node, radius 10 par défaut, noms d'actions d'entrée, animations, limites de pliage, animation des échantillons, noeuds visuels) et l'attribut de sauvegarde numCollectedSamples."
+  },
+  "SoilSampler:onLoad": {
+   "en": "Reads the XML settings, resolves the input actions (take defaults to IMPLEMENT_EXTRA, send to IMPLEMENT_EXTRA3), hides the visual sample nodes, loads texts and caches the soil map, cover map and farmland statistics from g_precisionFarming. Note: the send action fallback after a failed lookup is IMPLEMENT_EXTRA, not EXTRA3.",
+   "fr": "Lit les réglages XML, résout les actions d'entrée (prélever vaut IMPLEMENT_EXTRA par défaut, envoyer IMPLEMENT_EXTRA3), cache les noeuds d'échantillons visuels, charge les textes et met en cache la carte des sols, la carte de couverture et les statistiques de parcelle de g_precisionFarming. À noter : le repli de l'action d'envoi après un échec de recherche est IMPLEMENT_EXTRA, pas EXTRA3."
+  },
+  "SoilSampler:onPostLoad": {
+   "en": "Restores the collected sample count from the savegame unless vehicles are being reset, updating the visuals.",
+   "fr": "Restaure le nombre d'échantillons collectés depuis la sauvegarde sauf si les véhicules sont réinitialisés, en mettant à jour les visuels."
+  },
+  "SoilSampler:saveToXMLFile": {
+   "en": "Saves the number of collected samples as the numCollectedSamples attribute.",
+   "fr": "Sauvegarde le nombre d'échantillons collectés dans l'attribut numCollectedSamples."
+  },
+  "SoilSampler:onReadStream": {
+   "en": "Client side on join: reads the sample count (SEND_NUM_BITS bits) and applies it with visual update.",
+   "fr": "Côté client à la connexion : lit le nombre d'échantillons (SEND_NUM_BITS bits) et l'applique avec mise à jour visuelle."
+  },
+  "SoilSampler:onWriteStream": {
+   "en": "Server side on join: writes the sample count with SEND_NUM_BITS bits.",
+   "fr": "Côté serveur à la connexion : écrit le nombre d'échantillons sur SEND_NUM_BITS bits."
+  },
+  "SoilSampler:onUpdate": {
+   "en": "While sampling, updates visual samples on the client and, when the sampling animation ends, resets it, clears the minimap sampling state, runs processSoilSampling and lifts the speed limit. Shows the collected count as extra HUD text. Note: visualSampleUpdated is set to false inside the branch that checks it as false, so the visual refresh repeats each update until the animation ends.",
+   "fr": "Pendant le prélèvement, met à jour les échantillons visuels côté client et, à la fin de l'animation, la réinitialise, coupe l'état d'échantillonnage de la minicarte, exécute processSoilSampling et lève la limite de vitesse. Affiche le nombre d'échantillons en texte HUD. À noter : visualSampleUpdated est mis à false dans la branche qui le teste déjà à false, donc la mise à jour visuelle se répète à chaque update jusqu'à la fin de l'animation."
+  },
+  "SoilSampler:onFoldStateChanged": {
+   "en": "When active for input, asks the soil map to show the minimap if the tool is unfolding (direction 1) and hide it otherwise.",
+   "fr": "Quand actif pour l'entrée, demande à la carte des sols d'afficher la minicarte si l'outil se déplie (direction 1) et de la masquer sinon."
+  },
+  "SoilSampler:onLeaveRootVehicle": {
+   "en": "If this sampler's node is the minimap link node, hides the minimap display and clears its link node and sampling state.",
+   "fr": "Si le noeud de ce préleveur est le noeud de liaison de la minicarte, masque la minicarte et efface son noeud de liaison et son état d'échantillonnage."
+  },
+  "SoilSampler:onPreDetach": {
+   "en": "Same minimap cleanup as onLeaveRootVehicle, done just before the tool is detached.",
+   "fr": "Même nettoyage de minicarte que onLeaveRootVehicle, effectué juste avant le détachement de l'outil."
+  },
+  "SoilSampler:startSoilSampling": {
+   "en": "Starts a sample: on the server lowers the tool via its attacher joint, records 'numSoilSamples' and 'soilSampleCosts' if on a field and sets speed limit 0. Plays the sampling animation, increments the count, updates visuals and action state and sends SoilSamplerStartEvent.",
+   "fr": "Lance un prélèvement : côté serveur abaisse l'outil via son attache, enregistre 'numSoilSamples' et 'soilSampleCosts' si sur un champ et met la limite de vitesse à 0. Joue l'animation, incrémente le compteur, met à jour visuels et état d'action et envoie SoilSamplerStartEvent."
+  },
+  "SoilSampler:setNumCollectedSoilSamples": {
+   "en": "Sets the collected count (or adds one when num is nil). With updateVisuals, shows the matching visual sample nodes and sets the samples animation time.",
+   "fr": "Définit le nombre collecté (ou ajoute un si num est nil). Avec updateVisuals, affiche les noeuds d'échantillons correspondants et règle le temps de l'animation des échantillons."
+  },
+  "SoilSampler:getNormalizedSampleIndex": {
+   "en": "Maps the sample count to a 0 to N index over the N visual sample nodes, wrapping around so a full rack shows N rather than 0.",
+   "fr": "Convertit le nombre d'échantillons en indice de 0 à N sur les N noeuds visuels, en bouclant pour qu'un support plein affiche N et non 0."
+  },
+  "SoilSampler:getCanStartSoilSampling": {
+   "en": "Returns a boolean and an optional warning text. Refuses if the sampling node is not on farmland the farm can access, the motor (own or root vehicle) is off, the fold state is outside the allowed limits, or a sampling is already running.",
+   "fr": "Renvoie un booléen et un texte d'avertissement optionnel. Refuse si le noeud de prélèvement n'est pas sur une parcelle accessible à la ferme, si le moteur (propre ou du véhicule racine) est coupé, si le pliage est hors des limites ou si un prélèvement est déjà en cours."
+  },
+  "SoilSampler:processSoilSampling": {
+   "en": "Server only: builds a density circle at the sampling node with the sampling radius and has the cover map analyse the area for the owner farm.",
+   "fr": "Serveur uniquement : construit un cercle de densité au noeud de prélèvement avec le rayon voulu et fait analyser la zone par la carte de couverture pour la ferme propriétaire."
+  },
+  "SoilSampler:sendTakenSoilSamples": {
+   "en": "Server: asks the soil map to analyse the collected samples for the owner farm. Client: hides visual samples and plays the samples animation backwards. Resets the count to 0 and sends SoilSamplerSendEvent.",
+   "fr": "Serveur : demande à la carte des sols d'analyser les échantillons collectés pour la ferme propriétaire. Client : masque les échantillons visuels et joue l'animation en sens inverse. Remet le compteur à 0 et envoie SoilSamplerSendEvent."
+  },
+  "SoilSampler:onRegisterActionEvents": {
+   "en": "Client side: registers the take and send input actions with high priority and texts, refreshes their state and sets up the minimap link node and sampling area size (twice the radius).",
+   "fr": "Côté client : enregistre les actions d'entrée prélever et envoyer avec priorité haute et textes, rafraîchit leur état et configure le noeud de liaison de la minicarte et la taille de la zone (deux fois le rayon)."
+  },
+  "SoilSampler.updateActionEventState": {
+   "en": "Enables the send action only when at least one sample has been collected.",
+   "fr": "Active l'action d'envoi seulement si au moins un échantillon a été collecté."
+  },
+  "SoilSampler.actionEventStartSample": {
+   "en": "Input callback: starts sampling if allowed, otherwise shows the blocking warning for 2000 ms.",
+   "fr": "Rappel d'entrée : lance le prélèvement si autorisé, sinon affiche l'avertissement bloquant pendant 2000 ms."
+  },
+  "SoilSampler.actionEventSendSamples": {
+   "en": "Input callback: when samples exist and none is being taken, opens an info dialog whose confirmation calls onSendSoilSamplesDialog.",
+   "fr": "Rappel d'entrée : s'il y a des échantillons et qu'aucun n'est en cours, ouvre un dialogue d'information dont la confirmation appelle onSendSoilSamplesDialog."
+  },
+  "SoilSampler.onSendSoilSamplesDialog": {
+   "en": "Dialog callback: tells the soil map to send all samples of the owner farm, from any sampler, since results are tracked per farm and not per vehicle.",
+   "fr": "Rappel du dialogue : demande à la carte des sols d'envoyer tous les échantillons de la ferme propriétaire, de n'importe quel préleveur, car les résultats sont suivis par ferme et non par véhicule."
+  },
+  "SoilSampler:doCheckSpeedLimit": {
+   "en": "Override. Returns true if the parent does or if a sample is being taken, so the speed limit applies while sampling.",
+   "fr": "Surcharge. Renvoie true si le parent le fait ou si un prélèvement est en cours, de sorte que la limite de vitesse s'applique pendant le prélèvement."
+  },
+  "SoilSampler:getIsFoldAllowed": {
+   "en": "Override. Forbids folding while sampling; otherwise defers to the parent.",
+   "fr": "Surcharge. Interdit le pliage pendant un prélèvement ; sinon s'en remet au parent."
+  }
+ }
+}

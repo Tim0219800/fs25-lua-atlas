@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/LocomotiveStateEvent.lua",
+ "module": {
+  "en": "Network event class `LocomotiveStateEvent` (extends `Event`) that replicates the state of a locomotive. It carries the vehicle and a state (`Locomotive.NUM_BITS_STATE` bits). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `LocomotiveStateEvent` (hérite de `Event`) qui réplique l'état d'une locomotive. Elle transporte le véhicule et un état (`Locomotive.NUM_BITS_STATE` bits). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "LocomotiveStateEvent.emptyNew": {
+   "en": "Creates an empty `LocomotiveStateEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `LocomotiveStateEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "LocomotiveStateEvent.new": {
+   "en": "Creates the event with its data: the vehicle and a state (`Locomotive.NUM_BITS_STATE` bits).",
+   "fr": "Crée l'événement avec ses données : le véhicule et un état (`Locomotive.NUM_BITS_STATE` bits)."
+  },
+  "LocomotiveStateEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle and a state (`Locomotive.NUM_BITS_STATE` bits)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule et un état (`Locomotive.NUM_BITS_STATE` bits)), puis appelle `run`."
+  },
+  "LocomotiveStateEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle and a state (`Locomotive.NUM_BITS_STATE` bits)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule et un état (`Locomotive.NUM_BITS_STATE` bits))."
+  },
+  "LocomotiveStateEvent:run": {
+   "en": "Executes the event on the receiving side: calls `setLocomotiveState(state, true)` on the vehicle (no rebroadcast in `run`).",
+   "fr": "Exécute l'événement côté réception : appelle `setLocomotiveState(state, true)` sur le véhicule (pas de retransmission dans `run`)."
+  }
+ }
+}

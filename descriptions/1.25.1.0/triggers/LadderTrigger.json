@@ -1,0 +1,25 @@
+{
+ "fichier": "triggers/LadderTrigger.lua",
+ "module": {
+  "en": "Client-side trigger that tells the local player's mover it is on a ladder while the player's root node is inside the trigger volume. It is created from an i3d trigger node at map load and warns if the node's collision mask lacks the player bit.",
+  "fr": "Trigger côté client qui indique au mover du joueur local qu'il est sur une échelle tant que le noeud racine du joueur est dans le volume du trigger. Il est créé depuis un noeud trigger de l'i3d au chargement de la carte et avertit si le masque de collision du noeud n'a pas le bit joueur."
+ },
+ "fonctions": {
+  "LadderTrigger:onCreate": {
+   "en": "Map-load entry point for a ladder trigger node: builds a LadderTrigger and adds it to the mission's non-updateable objects.",
+   "fr": "Point d'entrée au chargement de la carte pour un noeud d'échelle : construit un LadderTrigger et l'ajoute aux objets non mis à jour de la mission."
+  },
+  "LadderTrigger.new": {
+   "en": "Creates the instance. Only on a client it checks that the node's collision mask has the PLAYER flag (warning otherwise) and registers the physics trigger callback `triggerCallback`; on a dedicated server nothing is registered.",
+   "fr": "Crée l'instance. Uniquement sur un client, il vérifie que le masque de collision du noeud a le drapeau PLAYER (avertissement sinon) et enregistre le callback physique `triggerCallback` ; sur un serveur dédié rien n'est enregistré."
+  },
+  "LadderTrigger:delete": {
+   "en": "Removes the physics trigger if one was registered.",
+   "fr": "Retire le trigger physique s'il a été enregistré."
+  },
+  "LadderTrigger:triggerCallback": {
+   "en": "On enter or leave of the local player's root node, calls setIsOnLadder(true) or (false) on the local player's mover. Other actors and stay events are ignored.",
+   "fr": "À l'entrée ou la sortie du noeud racine du joueur local, appelle setIsOnLadder(true) ou (false) sur le mover du joueur local. Les autres acteurs et les événements de présence sont ignorés."
+  }
+ }
+}

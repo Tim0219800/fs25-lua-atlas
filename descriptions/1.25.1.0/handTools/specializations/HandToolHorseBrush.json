@@ -1,0 +1,53 @@
+{
+ "fichier": "handTools/specializations/HandToolHorseBrush.lua",
+ "module": {
+  "en": "Hand tool specialization for the horse brush. The owning player targets animals (collision flag ANIMAL, 3 m range) and, while the activate input is held, brushes the animal under the crosshair; cleaning is sent to the server as AnimalCleanEvent with an accumulated amount. Needs the husbandry system and farm access rights. Note: `onHeldEnd` is registered as a listener but no such function exists in this file, and `treeTypeCrosshair` used in `onDraw` is never assigned here.",
+  "fr": "Spécialisation d'outil à main pour la brosse à chevaux. Le joueur propriétaire cible les animaux (drapeau de collision ANIMAL, portée de 3 m) et, tant que l'entrée d'activation est maintenue, brosse l'animal visé ; le nettoyage est envoyé au serveur via AnimalCleanEvent avec une quantité cumulée. Nécessite le système d'élevage et les droits d'accès à la ferme. À noter : `onHeldEnd` est enregistré comme écouteur mais aucune fonction de ce nom n'existe dans ce fichier, et `treeTypeCrosshair` utilisé dans `onDraw` n'y est jamais assigné."
+ },
+ "fonctions": {
+  "HandToolHorseBrush.registerXMLPaths": {
+   "en": "Registers `handTool.horseBrush#node` (the brush node) and the `cleaning` sound samples.",
+   "fr": "Enregistre `handTool.horseBrush#node` (le nœud de la brosse) et les échantillons sonores `cleaning`."
+  },
+  "HandToolHorseBrush.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete`, `onUpdate`, `onDraw`, `onHeldStart`, `onHeldEnd` and `onRegisterActionEvents`.",
+   "fr": "Abonne la spécialisation à `onLoad`, `onDelete`, `onUpdate`, `onDraw`, `onHeldStart`, `onHeldEnd` et `onRegisterActionEvents`."
+  },
+  "HandToolHorseBrush.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "HandToolHorseBrush:onLoad": {
+   "en": "Initialises detection distance (3), brush node and rest position, client sound and crosshairs, a dirty flag, a cleaning rate of 0.01 per millisecond and the action text.",
+   "fr": "Initialise la distance de détection (3), le nœud de brosse et sa position de repos, le son et les réticules côté client, un indicateur de modification, une vitesse de nettoyage de 0,01 par milliseconde et le texte de l'action."
+  },
+  "HandToolHorseBrush:onDelete": {
+   "en": "Frees the sound samples and both crosshair overlays.",
+   "fr": "Libère les échantillons sonores et les deux réticules."
+  },
+  "HandToolHorseBrush:onUpdate": {
+   "en": "For the owner, finds the targeted husbandry cluster, enables the action, animates the brush node while cleaning and raises a dirty flag when the target changes. Clients play or stop the sound; while a target is set it accumulates time and sends AnimalCleanEvent to the server each time the sum exceeds 5.",
+   "fr": "Pour le propriétaire, trouve le groupe d'animaux visé, active l'action, anime le nœud de brosse pendant le nettoyage et lève un indicateur quand la cible change. Les clients jouent ou arrêtent le son ; avec une cible, il cumule le temps et envoie un AnimalCleanEvent au serveur à chaque dépassement de 5."
+  },
+  "HandToolHorseBrush:onDraw": {
+   "en": "Renders the brush crosshair when an animal is targeted, otherwise the default crosshair; also renders `treeTypeCrosshair` if set (never set in this file).",
+   "fr": "Affiche le réticule de brosse quand un animal est visé, sinon le réticule par défaut ; affiche aussi `treeTypeCrosshair` s'il existe (jamais défini dans ce fichier)."
+  },
+  "HandToolHorseBrush:onRegisterActionEvents": {
+   "en": "Registers the ACTIVATE_HANDTOOL input with `onBrushAction`, very high priority, initially inactive and with empty text. Skipped when the tool is not active for input.",
+   "fr": "Enregistre l'entrée ACTIVATE_HANDTOOL avec `onBrushAction`, priorité très haute, initialement inactive et sans texte. Ignoré si l'outil n'est pas actif pour les entrées."
+  },
+  "HandToolHorseBrush:onBrushAction": {
+   "en": "Input callback: sets the cleaning flag to true while the input value is positive.",
+   "fr": "Rappel d'entrée : met l'indicateur de nettoyage à true tant que la valeur d'entrée est positive."
+  },
+  "HandToolHorseBrush:onHeldStart": {
+   "en": "For the owning player only, adds an ANIMAL target type to the player's targeter, with minimum 0.5 and the detection distance.",
+   "fr": "Pour le joueur propriétaire seulement, ajoute un type de cible ANIMAL au ciblage du joueur, avec 0,5 minimum et la distance de détection."
+  },
+  "HandToolHorseBrush.getHusbandryAndClusterFromNode": {
+   "en": "Maps a targeted collision node to its animal husbandry and animal cluster. Returns both only if the farm may access the husbandry and the cluster supports dirt change and a name; otherwise returns nil, nil.",
+   "fr": "Associe un nœud de collision ciblé à son élevage et à son groupe d'animaux. Ne renvoie les deux que si la ferme a accès à l'élevage et que le groupe gère la saleté et un nom ; sinon renvoie nil, nil."
+  }
+ }
+}

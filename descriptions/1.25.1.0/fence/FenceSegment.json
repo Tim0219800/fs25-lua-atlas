@@ -1,0 +1,41 @@
+{
+ "fichier": "fence/FenceSegment.lua",
+ "module": {
+  "en": "One straight run of a fence: a start and end world position, optional start/end poles and a chain of panels built from the segment template metadata. This dump only keeps the XML schema, savegame position saving, network streaming and position getters; the mesh building, finalize, delete and validation methods that other fence files call (updateMeshes, finalize, getPrice, getCanBeBuilt...) are not present, so their behaviour is UNVERIFIED. FenceGate extends this class.",
+  "fr": "Un tronçon rectiligne de clôture : positions monde de début et de fin, poteaux de début/fin optionnels et une chaîne de panneaux construits à partir des métadonnées du modèle de segment. Ce dump ne conserve que le schéma XML, la sauvegarde des positions, la synchronisation réseau et les accesseurs de position ; les méthodes de construction des maillages, de finalisation, de suppression et de validation appelées par les autres fichiers (updateMeshes, finalize, getPrice, getCanBeBuilt...) sont absentes, leur comportement est donc NON VÉRIFIÉ. FenceGate étend cette classe."
+ },
+ "fonctions": {
+  "FenceSegment.registerXMLPaths": {
+   "en": "Registers the per-segment XML keys: slope/vertical angle limits, snap distances, parallel snapping and extending settings, `#price`, `poles.pole(?)` (variation, node, radius, height) and `panels` (maxScale, useRandomization, `panel(?)` with node, collisionNode, length, width, height, alignY, scaleZ).",
+   "fr": "Enregistre les clés XML par segment : limites d'angle vertical et de pente, distances d'accrochage, réglages d'accrochage parallèle et de prolongement, `#price`, `poles.pole(?)` (variation, node, radius, height) et `panels` (maxScale, useRandomization, `panel(?)` avec node, collisionNode, length, width, height, alignY, scaleZ)."
+  },
+  "FenceSegment:saveToXMLFile": {
+   "en": "Writes the start and end positions as translations under `#start` and `#end`. Returns false (with a dev log) if either position is unset, which makes the caller skip the segment.",
+   "fr": "Écrit les positions de début et de fin comme translations sous `#start` et `#end`. Renvoie false (avec un log de développement) si l'une des positions n'est pas définie, ce qui fait ignorer le segment par l'appelant."
+  },
+  "FenceSegment:readStream": {
+   "en": "Reads the segment from a stream: the UInt16 id (only when the sender is the server), a start position or, if the Bool is false, the previous segment's end, then the compressed end position, pole flags if the template has poles, and the split-rebuild flag. Registers terrain-height callbacks.",
+   "fr": "Lit le segment depuis un flux : l'identifiant UInt16 (seulement si l'émetteur est le serveur), une position de début ou, si le booléen est false, la fin du segment précédent, puis la position de fin compressée, les indicateurs de poteaux si le modèle en a, et l'indicateur de reconstruction après coupe. Enregistre les callbacks de hauteur du terrain."
+  },
+  "FenceSegment:writeStream": {
+   "en": "Mirror of readStream: writes the id (when sending to a client), skips the start position when it equals the previous segment's end, then the compressed end position, pole flags and the split-rebuild flag.",
+   "fr": "Miroir de readStream : écrit l'identifiant (à l'envoi vers un client), omet la position de début si elle égale la fin du segment précédent, puis la position de fin compressée, les indicateurs de poteaux et l'indicateur de reconstruction après coupe."
+  },
+  "FenceSegment:getStartPos": {
+   "en": "Returns the start position as three numbers (x, y, z).",
+   "fr": "Renvoie la position de début en trois nombres (x, y, z)."
+  },
+  "FenceSegment:getStartPosVector": {
+   "en": "Returns the start position as a vector, or nil if it is not set yet.",
+   "fr": "Renvoie la position de début sous forme de vecteur, ou nil si elle n'est pas encore définie."
+  },
+  "FenceSegment:getEndPos": {
+   "en": "Returns the end position as three numbers (x, y, z).",
+   "fr": "Renvoie la position de fin en trois nombres (x, y, z)."
+  },
+  "FenceSegment:getSegmentPartStartEnd": {
+   "en": "Resolves a node to its segment part (via getSegmentPartFromNode, not in this file, UNVERIFIED) and returns its start and end world positions plus whether it is the first or last part of the segment (0.01 distance tolerance). Returns nil if no part is found.",
+   "fr": "Résout un nœud en partie de segment (via getSegmentPartFromNode, absente de ce fichier, NON VÉRIFIÉ) et renvoie ses positions monde de début et de fin, ainsi que si c'est la première ou la dernière partie du segment (tolérance de 0,01). Renvoie nil si aucune partie n'est trouvée."
+  }
+ }
+}

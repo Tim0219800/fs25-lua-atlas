@@ -1,0 +1,53 @@
+{
+ "fichier": "gui/hud/InfoDisplayKeyValueBoxMobile.lua",
+ "module": {
+  "en": "Mobile variant of the key/value info box (extends InfoDisplayBox). It keeps a pool of reusable line tables (cached/active) and draws a rounded translucent black panel with bold key text on the left and value text on the right, truncated with an ellipsis. It must be re-armed every frame with showNextFrame. Client-side only.",
+  "fr": "Variante mobile de la boîte d'information clé/valeur (étend InfoDisplayBox). Elle garde un pool de tables de lignes réutilisables (en cache/actives) et dessine un panneau noir translucide aux coins arrondis, avec la clé en gras à gauche et la valeur à droite, tronquée par des points de suspension. Elle doit être réarmée à chaque frame avec showNextFrame. Côté client uniquement."
+ },
+ "fonctions": {
+  "InfoDisplayKeyValueBoxMobile.new": {
+   "en": "Creates the box with empty line pools and a vertical offset computed from 160 reference pixels scaled to the current screen height.",
+   "fr": "Crée la boîte avec des pools de lignes vides et un décalage vertical calculé à partir de 160 pixels de référence mis à l'échelle de la hauteur d'écran actuelle."
+  },
+  "InfoDisplayKeyValueBoxMobile:canDraw": {
+   "en": "Returns true only if showNextFrame was called since the last draw.",
+   "fr": "Retourne true seulement si showNextFrame a été appelé depuis le dernier dessin."
+  },
+  "InfoDisplayKeyValueBoxMobile:getDisplayHeight": {
+   "en": "Returns the panel height for the active lines (margins plus rows) plus a small label offset.",
+   "fr": "Retourne la hauteur du panneau pour les lignes actives (marges plus lignes) plus un petit décalage de libellé."
+  },
+  "InfoDisplayKeyValueBoxMobile:draw": {
+   "en": "Draws the rounded panel right-aligned inside the safe-frame inset, then the active lines from bottom to top with an optional highlight color. Clears the show-next-frame flag.",
+   "fr": "Dessine le panneau arrondi aligné à droite dans la marge de zone sûre, puis les lignes actives de bas en haut avec une couleur de mise en avant optionnelle. Efface le drapeau show-next-frame."
+  },
+  "InfoDisplayKeyValueBoxMobile:clear": {
+   "en": "Moves all active lines back into the cache pool for reuse.",
+   "fr": "Remet toutes les lignes actives dans le pool de cache pour réutilisation."
+  },
+  "InfoDisplayKeyValueBoxMobile:setTitle": {
+   "en": "Empty function: the mobile box ignores titles.",
+   "fr": "Fonction vide : la boîte mobile ignore les titres."
+  },
+  "InfoDisplayKeyValueBoxMobile:textSizeToFit": {
+   "en": "Shrinks the text size in 5 percent steps until the text fits on one line within maxWidth, never below minSize (default half the base size), and returns the size. Not called in this file.",
+   "fr": "Réduit la taille du texte par pas de 5 % jusqu'à ce qu'il tienne sur une ligne dans maxWidth, sans descendre sous minSize (moitié de la taille de base par défaut), et retourne la taille. Non appelée dans ce fichier."
+  },
+  "InfoDisplayKeyValueBoxMobile:addLine": {
+   "en": "Appends a key/value line, reusing a cached table when possible; a missing value becomes an empty string. The accentuate flag and optional color highlight the key.",
+   "fr": "Ajoute une ligne clé/valeur en réutilisant une table du cache si possible ; une valeur absente devient une chaîne vide. Le drapeau accentuate et la couleur optionnelle mettent la clé en évidence."
+  },
+  "InfoDisplayKeyValueBoxMobile:showNextFrame": {
+   "en": "Marks the box to be drawn on the next frame.",
+   "fr": "Marque la boîte pour qu'elle soit dessinée à la prochaine frame."
+  },
+  "InfoDisplayKeyValueBoxMobile:setScale": {
+   "en": "Stores the UI scale and recomputes scaled values.",
+   "fr": "Mémorise l'échelle d'interface et recalcule les valeurs mises à l'échelle."
+  },
+  "InfoDisplayKeyValueBoxMobile:storeScaledValues": {
+   "en": "Converts reference-pixel constants (box width 500, rows 450x40, margins, text offsets) and HUDElement.TEXT_SIZE.DEFAULT_TEXT_MOBILE to screen units for the current scale.",
+   "fr": "Convertit les constantes en pixels de référence (largeur de boîte 500, lignes 450x40, marges, décalages de texte) et HUDElement.TEXT_SIZE.DEFAULT_TEXT_MOBILE en unités écran pour l'échelle actuelle."
+  }
+ }
+}

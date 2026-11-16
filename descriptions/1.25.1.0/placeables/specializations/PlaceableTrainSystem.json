@@ -1,0 +1,193 @@
+{
+ "fichier": "placeables/specializations/PlaceableTrainSystem.lua",
+ "module": {
+  "en": "Placeable specialization that runs a train on a closed spline: it loads the train vehicles, moves them along the spline from the locomotive speed (server) or from interpolated network values (client), and hosts railroad crossings and callers. It also handles train rental per farm (hourly price billed daily or on return), an optional limited driving range tied to a selling station, and selling the cargo. Network sync uses a dirty flag for spline time and one for the selling station; events such as PlaceableTrainSystemRentEvent are defined elsewhere.",
+  "fr": "Spécialisation de placeable qui fait circuler un train sur une spline fermée : elle charge les véhicules du train, les déplace le long de la spline d'après la vitesse de la locomotive (serveur) ou des valeurs réseau interpolées (client), et héberge des passages à niveau et des appelants ferroviaires. Elle gère aussi la location du train par ferme (prix horaire facturé chaque jour ou au retour), une plage de conduite limitée optionnelle liée à une station de vente, et la vente du chargement. La synchronisation réseau utilise un drapeau pour le temps de spline et un pour la station de vente ; les événements comme PlaceableTrainSystemRentEvent sont définis ailleurs."
+ },
+ "fonctions": {
+  "PlaceableTrainSystem.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableTrainSystem.registerFunctions": {
+   "en": "Registers the train system functions (spline time, vehicle creation, rental, range state, selling and helpers) on the placeable type.",
+   "fr": "Enregistre sur le type de placeable les fonctions du système ferroviaire (temps de spline, création des véhicules, location, état de plage, vente et utilitaires)."
+  },
+  "PlaceableTrainSystem.registerOverwrittenFunctions": {
+   "en": "Overrides `getNeedDayChanged` on the placeable type.",
+   "fr": "Surcharge `getNeedDayChanged` sur le type de placeable."
+  },
+  "PlaceableTrainSystem.registerEventListeners": {
+   "en": "Subscribes to load, delete, placement, stream read/write (full and update), update, day-changed and delete-object events (day changed and delete object come from the engine, exact event list partly UNVERIFIED).",
+   "fr": "S'abonne aux événements de chargement, suppression, placement, lecture/écriture de flux (complet et de mise à jour), mise à jour, changement de jour et suppression d'objet (les deux derniers viennent du moteur, liste exacte en partie NON VÉRIFIÉ)."
+  },
+  "PlaceableTrainSystem.registerXMLPaths": {
+   "en": "Declares the `.trainSystem` XML keys (spline, driving range, rent price, electricity spline, train vehicles) and delegates to RailroadCrossing and RailroadCaller for their entries.",
+   "fr": "Déclare les clés XML `.trainSystem` (spline, plage de conduite, prix de location, spline d'électricité, véhicules du train) et délègue à RailroadCrossing et RailroadCaller pour leurs entrées."
+  },
+  "PlaceableTrainSystem.registerSavegameXMLPaths": {
+   "en": "Declares savegame attributes: spline time, rented flag, renting farm, current price, vehicle unique ids and per-object data.",
+   "fr": "Déclare les attributs de sauvegarde : temps de spline, drapeau de location, ferme locataire, prix courant, identifiants uniques des véhicules et données par objet."
+  },
+  "PlaceableTrainSystem:onLoad": {
+   "en": "Initializes state and network helpers and reads the rent price. Validates the spline node (must exist, be a spline and be closed, otherwise sets the loading state to ERROR), reads the optional driving range and electricity spline, queues vehicle filenames on the server, creates crossings and callers, and finds for each the nearest spline time. Note: the electricity spline start check samples `spec.spline` twice, so the distance is always 0.",
+   "fr": "Initialise l'état et les aides réseau et lit le prix de location. Valide la spline (doit exister, être une spline et être fermée, sinon l'état de chargement passe à ERROR), lit la plage de conduite et la spline d'électricité optionnelles, met en file les fichiers de véhicules côté serveur, crée passages à niveau et appelants, et trouve pour chacun le temps de spline le plus proche. À noter : la vérification du départ de la spline d'électricité échantillonne deux fois `spec.spline`, donc la distance est toujours 0."
+  },
+  "PlaceableTrainSystem:onDelete": {
+   "en": "Deletes railroad crossings and callers, clears the train reference on each vehicle and removes the system from the mission.",
+   "fr": "Supprime passages à niveau et appelants, efface la référence au système sur chaque véhicule et retire le système de la mission."
+  },
+  "PlaceableTrainSystem:onFinalizePlacement": {
+   "en": "Finds crossing blocking positions, gives railroad objects their spline time and position, registers the system in the mission, and creates the vehicles now or once the mission starts.",
+   "fr": "Trouve les positions de blocage des passages à niveau, donne aux objets ferroviaires leur temps et position de spline, enregistre le système dans la mission et crée les véhicules maintenant ou au démarrage de la mission."
+  },
+  "PlaceableTrainSystem:onReadStream": {
+   "en": "Client side on join: reads the vehicle object ids, spline time, per-object data, rental state, renting farm and selling station id, then wakes the placeable.",
+   "fr": "Côté client à la connexion : lit les identifiants des véhicules, le temps de spline, les données par objet, l'état de location, la ferme locataire et l'identifiant de la station de vente, puis réveille le placeable."
+  },
+  "PlaceableTrainSystem:onWriteStream": {
+   "en": "Server side on join: writes the vehicle objects, last sent spline time, per-object data, rental state, renting farm and selling station placeable.",
+   "fr": "Côté serveur à la connexion : écrit les véhicules, le dernier temps de spline envoyé, les données par objet, l'état de location, la ferme locataire et le placeable de station de vente."
+  },
+  "PlaceableTrainSystem:onReadUpdateStream": {
+   "en": "Client side: when the dirty bit is set, reads the spline time (feeds the interpolators) and per-object updates; when the station bit is set, reads the selling station id.",
+   "fr": "Côté client : si le bit sale est positionné, lit le temps de spline (alimente les interpolateurs) et les mises à jour par objet ; si le bit de station est positionné, lit l'identifiant de la station de vente."
+  },
+  "PlaceableTrainSystem:onWriteUpdateStream": {
+   "en": "Server side: writes the spline time and per-object updates when the dirty flag is set, and the selling station when its flag is set.",
+   "fr": "Côté serveur : écrit le temps de spline et les mises à jour par objet si le drapeau est positionné, et la station de vente si son drapeau l'est."
+  },
+  "PlaceableTrainSystem:loadFromXMLFile": {
+   "en": "Restores railroad object data, rental state, renting farm, current price, start spline time and the saved vehicle unique ids.",
+   "fr": "Restaure les données des objets ferroviaires, l'état de location, la ferme locataire, le prix courant, le temps de spline de départ et les identifiants uniques des véhicules sauvegardés."
+  },
+  "PlaceableTrainSystem:saveToXMLFile": {
+   "en": "Saves the spline time, vehicle unique ids, objects that support saving (called with a dot, so without self; possible slip, UNVERIFIED), rental state, renting farm and current price.",
+   "fr": "Sauvegarde le temps de spline, les identifiants uniques des véhicules, les objets qui gèrent la sauvegarde (appel avec un point, donc sans self ; faute possible, NON VÉRIFIÉ), l'état de location, la ferme locataire et le prix courant."
+  },
+  "PlaceableTrainSystem:onUpdate": {
+   "en": "Per frame: sets train tabbability once, smooths the speed on clients, updates railroad objects, accrues rent by elapsed time, and on pure clients resolves synchronized vehicles and interpolates spline time. With a limited range, links the selling station and shows the delayed info or sell dialog; then moves vehicles and stays active.",
+   "fr": "À chaque image : règle une fois la possibilité de passer au train avec Tab, lisse la vitesse sur les clients, met à jour les objets ferroviaires, cumule la location selon le temps écoulé et, sur les clients purs, résout les véhicules synchronisés et interpole le temps de spline. Avec une plage limitée, relie la station de vente et affiche la boîte d'info ou de vente différée ; puis déplace les véhicules et reste actif."
+  },
+  "PlaceableTrainSystem:updateRailroadVehiclePositions": {
+   "en": "Once per update loop, advances the spline time from each locomotive speed, then aligns a few vehicles per frame (up to 3, all if any is within clip distance) to the spline behind their predecessor, remembering each end time.",
+   "fr": "Une fois par boucle de mise à jour, fait avancer le temps de spline d'après la vitesse de chaque locomotive, puis aligne quelques véhicules par image (3 au plus, tous si l'un est dans la distance de rendu) sur la spline derrière leur prédécesseur, en mémorisant chaque temps de fin."
+  },
+  "PlaceableTrainSystem:createVehicles": {
+   "en": "Loads the train: from saved vehicle unique ids if available (attaching existing vehicles), otherwise loads each configured vehicle file asynchronously with no owner restriction. Clears the pending filename list.",
+   "fr": "Charge le train : depuis les identifiants uniques sauvegardés s'ils existent (rattache les véhicules existants), sinon charge chaque fichier de véhicule configuré de façon asynchrone, accessible à tous. Vide la liste de fichiers en attente."
+  },
+  "PlaceableTrainSystem:railroadVehicleLoaded": {
+   "en": "Load callback for one train vehicle: on success links it to the train system and stores its index; logs a warning on failure; when all vehicles are done, finalizes the train.",
+   "fr": "Callback de chargement d'un véhicule du train : en cas de succès le relie au système et mémorise son indice ; journalise un avertissement en cas d'échec ; quand tous sont chargés, finalise le train."
+  },
+  "PlaceableTrainSystem:finalizeTrain": {
+   "en": "Sorts vehicles by index, registers as delete listener, picks the first locomotive as root, optionally couples each vehicle to the previous one, then updates the train length and tabbability. Does nothing if being deleted.",
+   "fr": "Trie les véhicules par indice, s'enregistre comme écouteur de suppression, choisit la première locomotive comme racine, attelle éventuellement chaque véhicule au précédent, puis met à jour la longueur du train et la possibilité de le sélectionner. Ne fait rien si le placeable est supprimé."
+  },
+  "PlaceableTrainSystem:setIsTrainTabbable": {
+   "en": "Applies tabbability to every railroad vehicle that supports it; requires the game setting for train tabbing and, with a limited range, that the train is within the driveable range.",
+   "fr": "Applique la possibilité de sélection par Tab à chaque véhicule ferroviaire qui la gère ; exige le réglage de jeu correspondant et, avec une plage limitée, que le train soit dans la zone conduisible."
+  },
+  "PlaceableTrainSystem:getIsTrainInDriveableRange": {
+   "en": "Returns whether the train was last inside the driveable range (true when no limited range).",
+   "fr": "Renvoie si le train était dernièrement dans la zone conduisible (true sans plage limitée)."
+  },
+  "PlaceableTrainSystem:getSplineTime": {
+   "en": "Returns the current spline time (0 to 1 along the closed spline) of the train head.",
+   "fr": "Renvoie le temps de spline courant (0 à 1 sur la spline fermée) de la tête du train."
+  },
+  "PlaceableTrainSystem:setSplineTime": {
+   "en": "Sets the head and end spline times when changed: updates driveable state, notifies position listeners, recomputes speeds, pushes them to vehicles, and on the server raises a network dirty flag if the move exceeds about 2 cm.",
+   "fr": "Fixe les temps de spline de tête et de fin en cas de changement : met à jour l'état de conduite, prévient les écouteurs de position, recalcule les vitesses, les transmet aux véhicules et, sur le serveur, lève un drapeau réseau si le déplacement dépasse environ 2 cm."
+  },
+  "PlaceableTrainSystem:addSplinePositionUpdateListener": {
+   "en": "Adds a listener (needing `onSplinePositionTimeUpdate`) notified when the spline time changes; nil is ignored.",
+   "fr": "Ajoute un écouteur (devant avoir `onSplinePositionTimeUpdate`) prévenu quand le temps de spline change ; nil est ignoré."
+  },
+  "PlaceableTrainSystem:removeSplinePositionUpdateListener": {
+   "en": "Removes a previously added spline position listener; nil is ignored.",
+   "fr": "Retire un écouteur de position de spline ajouté précédemment ; nil est ignoré."
+  },
+  "PlaceableTrainSystem:updateTrainPositionByLocomotiveSpeed": {
+   "en": "Advances the spline time by distance (speed times dt in ms) divided by the spline length, and sets the tail time using the train length.",
+   "fr": "Fait avancer le temps de spline de la distance (vitesse fois dt en ms) divisée par la longueur de la spline, et fixe le temps de queue d'après la longueur du train."
+  },
+  "PlaceableTrainSystem:updateTrainPositionByLocomotiveSplinePosition": {
+   "en": "Sets the head spline time directly and derives the tail time from the train length.",
+   "fr": "Fixe directement le temps de spline de tête et en déduit le temps de queue d'après la longueur du train."
+  },
+  "PlaceableTrainSystem:updateTrainLength": {
+   "en": "Adds up the front-to-back distance of all vehicles into the train length (note: adds to the existing value without resetting it first), converts it to spline time and repositions the train.",
+   "fr": "Additionne la distance avant-arrière de tous les véhicules dans la longueur du train (à noter : ajoute à la valeur existante sans la remettre à zéro), la convertit en temps de spline et repositionne le train."
+  },
+  "PlaceableTrainSystem:toggleRent": {
+   "en": "Rents the train to the given farm if free, or returns it if it is rented by that same farm; otherwise does nothing.",
+   "fr": "Loue le train à la ferme donnée s'il est libre, ou le rend s'il est loué par cette même ferme ; sinon ne fait rien."
+  },
+  "PlaceableTrainSystem:rentRailroad": {
+   "en": "Marks the train rented by the farm, asks the root locomotive to go to the requested spline position, gives vehicles to that farm and sends a PlaceableTrainSystemRentEvent. Does nothing without a locomotive.",
+   "fr": "Marque le train comme loué par la ferme, demande à la locomotive racine de rejoindre la position de spline demandée, attribue les véhicules à cette ferme et envoie un PlaceableTrainSystemRentEvent. Ne fait rien sans locomotive."
+  },
+  "PlaceableTrainSystem:returnRailroad": {
+   "en": "Ends the rental. On the server it bills the accumulated leasing cost to the renting farm and sends the locomotive back to automated travel; vehicles go back to the spectator farm and a rent event is sent.",
+   "fr": "Met fin à la location. Sur le serveur, elle facture le coût de leasing accumulé à la ferme locataire et renvoie la locomotive en trajet automatique ; les véhicules repassent à la ferme spectateur et un événement de location est envoyé."
+  },
+  "PlaceableTrainSystem:onDayChanged": {
+   "en": "Server only: bills the accumulated rent to the renting farm as leasing costs and resets the price.",
+   "fr": "Serveur seulement : facture la location accumulée à la ferme locataire comme coûts de leasing et remet le prix à zéro."
+  },
+  "PlaceableTrainSystem:getIsRented": {
+   "en": "Returns whether the train is currently rented.",
+   "fr": "Renvoie si le train est actuellement loué."
+  },
+  "PlaceableTrainSystem:getCanBeRented": {
+   "en": "Returns false only if the train is rented by a different farm than the given one.",
+   "fr": "Renvoie false seulement si le train est loué par une autre ferme que celle donnée."
+  },
+  "PlaceableTrainSystem:onDeleteObject": {
+   "en": "Delete listener callback: removes the deleted vehicle from the train and recomputes the train length.",
+   "fr": "Callback d'écouteur de suppression : retire le véhicule supprimé du train et recalcule sa longueur."
+  },
+  "PlaceableTrainSystem:getSplineLength": {
+   "en": "Returns the length of the train spline (meters presumed).",
+   "fr": "Renvoie la longueur de la spline du train (mètres, supposé)."
+  },
+  "PlaceableTrainSystem:getElectricitySpline": {
+   "en": "Returns the electricity spline node, or nil if none was accepted.",
+   "fr": "Renvoie le nœud de la spline d'électricité, ou nil si aucune n'a été acceptée."
+  },
+  "PlaceableTrainSystem:getElectricitySplineLength": {
+   "en": "Returns the electricity spline length, or 0 if there is none.",
+   "fr": "Renvoie la longueur de la spline d'électricité, ou 0 s'il n'y en a pas."
+  },
+  "PlaceableTrainSystem:getNeedDayChanged": {
+   "en": "Always returns true so the daily callback (rent billing) runs.",
+   "fr": "Renvoie toujours true pour que le callback quotidien (facturation de la location) soit exécuté."
+  },
+  "PlaceableTrainSystem:getLengthSplineTime": {
+   "en": "Returns the train length expressed in spline time units.",
+   "fr": "Renvoie la longueur du train exprimée en unités de temps de spline."
+  },
+  "PlaceableTrainSystem:getSpline": {
+   "en": "Returns the train spline node.",
+   "fr": "Renvoie le nœud de la spline du train."
+  },
+  "PlaceableTrainSystem:updateDriveableState": {
+   "en": "Checks whether the spline time is inside the driveable range. On leaving it: clients eject an entered player and show a dialog, the server switches locomotives to automatic travel and returns an empty rented train. On re-entering it resets the locomotive states; updates tabbability.",
+   "fr": "Vérifie si le temps de spline est dans la zone conduisible. En sortie : les clients éjectent un joueur à bord et affichent une boîte de dialogue, le serveur passe les locomotives en trajet automatique et rend un train loué vide. En rentrée, il réinitialise les états des locomotives ; met à jour la sélection par Tab."
+  },
+  "PlaceableTrainSystem:gsIsTrainFilled": {
+   "en": "Returns true if any fill unit of any train vehicle holds more than 0, otherwise false.",
+   "fr": "Renvoie true si une unité de remplissage d'un véhicule du train contient plus de 0, sinon false."
+  },
+  "PlaceableTrainSystem:onSellGoodsQuestion": {
+   "en": "Callback of the yes/no dialog: when answered yes, sends a PlaceableTrainSystemSellEvent to the server.",
+   "fr": "Callback de la boîte oui/non : si la réponse est oui, envoie un PlaceableTrainSystemSellEvent au serveur."
+  },
+  "PlaceableTrainSystem:sellGoods": {
+   "en": "Server logic: pushes the fill level of every fill unit into the linked selling station for the renting farm, removes what was accepted from the vehicles, and returns the train if anything was sold.",
+   "fr": "Logique serveur : verse le niveau de chaque unité de remplissage dans la station de vente liée pour la ferme locataire, retire des véhicules ce qui a été accepté, et rend le train si quelque chose a été vendu."
+  }
+ }
+}

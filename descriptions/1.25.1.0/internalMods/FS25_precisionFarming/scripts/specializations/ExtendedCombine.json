@@ -1,0 +1,45 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/specializations/ExtendedCombine.lua",
+ "module": {
+  "en": "Precision Farming specialization added to combines (requires Combine and PrecisionFarmingStatistic). It shows the yield map on the minimap while harvesting on a field, adds a HUD help extension, and synchronises the last yield weight, yield percentage and yield potential from server to clients. The class doc comment in the source says it toggles minimap zoom.",
+  "fr": "Spécialisation de Precision Farming ajoutée aux moissonneuses (nécessite Combine et PrecisionFarmingStatistic). Elle affiche la carte de rendement sur la minicarte pendant la récolte sur un champ, ajoute une extension d'aide du HUD et synchronise du serveur vers les clients le poids, le pourcentage et le potentiel du dernier rendement. Le commentaire de classe de la source parle d'un basculement du zoom de la minicarte."
+ },
+ "fonctions": {
+  "ExtendedCombine.prerequisitesPresent": {
+   "en": "Returns true when the vehicle type has both Combine and PrecisionFarmingStatistic.",
+   "fr": "Renvoie true si le type de véhicule possède à la fois Combine et PrecisionFarmingStatistic."
+  },
+  "ExtendedCombine:onDelete": {
+   "en": "Deletes the HUD extension if one was created.",
+   "fr": "Supprime l'extension du HUD si elle a été créée."
+  },
+  "ExtendedCombine:onReadUpdateStream": {
+   "en": "Client side: if the server sent a flag, reads the last yield weight (tenths), yield percentage and yield potential percentage.",
+   "fr": "Côté client : si le serveur a envoyé l'indicateur, lit le poids du dernier rendement (en dixièmes), le pourcentage de rendement et le pourcentage de potentiel de rendement."
+  },
+  "ExtendedCombine:onWriteUpdateStream": {
+   "en": "Server side: when the usage values dirty flag is set, writes the three yield values, each capped at its maximum bit range.",
+   "fr": "Côté serveur : quand l'indicateur de modification des valeurs d'usage est levé, écrit les trois valeurs de rendement, chacune plafonnée à sa plage de bits maximale."
+  },
+  "ExtendedCombine:onUpdate": {
+   "en": "When the vehicle is active for input (ignoring AI), adds its HUD extension to the HUD help.",
+   "fr": "Quand le véhicule est actif pour les entrées (hors IA), ajoute son extension au panneau d'aide du HUD."
+  },
+  "ExtendedCombine:onUpdateTick": {
+   "en": "Client only: while active for input (ignoring AI), refreshes the minimap yield map display state.",
+   "fr": "Client uniquement : tant que le véhicule est actif pour les entrées (hors IA), rafraîchit l'état d'affichage de la carte de rendement sur la minicarte."
+  },
+  "ExtendedCombine:onRegisterActionEvents": {
+   "en": "Client only: refreshes the minimap state, forcing it off when the vehicle is not active for input.",
+   "fr": "Client uniquement : rafraîchit l'état de la minicarte en le forçant à faux quand le véhicule n'est pas actif pour les entrées."
+  },
+  "ExtendedCombine.updateMinimapActiveState": {
+   "en": "Tells the yield map whether the minimap should show it: true when the combine is on a field with an attached cutter and no mission, unless a state is forced. Does nothing if there is no yield map.",
+   "fr": "Indique à la carte de rendement si la minicarte doit l'afficher : vrai quand la moissonneuse est sur un champ avec une coupe attelée et sans mission, sauf état forcé. Ne fait rien s'il n'y a pas de carte de rendement."
+  },
+  "ExtendedCombine:setLastYieldValues": {
+   "en": "Stores the last yield weight, percentage and potential and raises the dirty flag for network sync only if one of them changed.",
+   "fr": "Mémorise le poids, le pourcentage et le potentiel du dernier rendement et lève l'indicateur de modification pour la synchronisation réseau seulement si l'une des valeurs a changé."
+  }
+ }
+}

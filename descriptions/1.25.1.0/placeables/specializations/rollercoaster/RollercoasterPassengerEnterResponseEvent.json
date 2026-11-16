@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/rollercoaster/RollercoasterPassengerEnterResponseEvent.lua",
+ "module": {
+  "en": "Server-to-client event telling clients which user takes which seat of a rollercoaster, so the matching player can enter the ride. It is the answer to RollercoasterPassengerEnterRequestEvent; seat indices are sent with `PlaceableRollercoaster.SEAT_INDEX_NUM_BITS` bits, zero-based on the wire and one-based in Lua.",
+  "fr": "Événement serveur vers client indiquant quel utilisateur prend quel siège d'une montagne russe, pour que le joueur concerné entre dans le manège. C'est la réponse à RollercoasterPassengerEnterRequestEvent ; les index de siège sont envoyés sur `PlaceableRollercoaster.SEAT_INDEX_NUM_BITS` bits, base zéro sur le réseau et base un en Lua."
+ },
+ "fonctions": {
+  "RollercoasterPassengerEnterResponseEvent.emptyNew": {
+   "en": "Creates an empty event with the class metatable and default channel.",
+   "fr": "Crée un événement vide avec la métatable de la classe et le canal par défaut."
+  },
+  "RollercoasterPassengerEnterResponseEvent.new": {
+   "en": "Builds the response from the rollercoaster, a user id and the one-based seat index to occupy.",
+   "fr": "Construit la réponse à partir de la montagne russe, d'un id d'utilisateur et de l'index de siège (base un) à occuper."
+  },
+  "RollercoasterPassengerEnterResponseEvent:readStream": {
+   "en": "Reads the rollercoaster, the user id and the seat index (adding 1 to the transmitted value), then runs the event.",
+   "fr": "Lit la montagne russe, l'id d'utilisateur et l'index de siège (en ajoutant 1 à la valeur transmise), puis exécute l'événement."
+  },
+  "RollercoasterPassengerEnterResponseEvent:writeStream": {
+   "en": "Writes the rollercoaster, the user id and the seat index minus 1.",
+   "fr": "Écrit la montagne russe, l'id d'utilisateur et l'index de siège moins 1."
+  },
+  "RollercoasterPassengerEnterResponseEvent:run": {
+   "en": "Finds the player whose unique user id matches the user id among `playerSystem.players` and calls `onEnterRollercoaster` with the seat. Note: if no player matches, `player` stays nil and the call errors.",
+   "fr": "Trouve parmi `playerSystem.players` le joueur dont l'id utilisateur unique correspond et appelle `onEnterRollercoaster` avec le siège. À noter : si aucun joueur ne correspond, `player` reste nil et l'appel provoque une erreur."
+  }
+ }
+}

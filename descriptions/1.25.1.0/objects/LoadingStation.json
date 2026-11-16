@@ -1,0 +1,29 @@
+{
+ "fichier": "objects/LoadingStation.lua",
+ "module": {
+  "en": "Station that lets vehicles load fill types out of one or more source storages through load triggers (class extends Object). In this dump only a few members have bodies: stream sync of the load triggers, activation forwarding to the owning placeable, removal of fill level and XML schema registration. Most of the class (loading, storage registration, access rules) is not present in the SDK dump and its behaviour is UNVERIFIED.",
+  "fr": "Station permettant aux véhicules de charger des types de remplissage depuis un ou plusieurs stockages source via des load triggers (la classe hérite de Object). Dans ce dump seuls quelques membres ont un corps : synchro réseau des load triggers, transmission de l'activation au placeable propriétaire, retrait de niveau de remplissage et enregistrement du schéma XML. Le reste de la classe (chargement, enregistrement des stockages, règles d'accès) est absent du dump du SDK : comportement NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "LoadingStation:readStream": {
+   "en": "Client-side join: after the parent readStream, when the connection is the server it reads each load trigger's network id and state and completes its registration with the client.",
+   "fr": "Côté client à la connexion : après le readStream parent, si la connexion est celle du serveur, lit l'id réseau et l'état de chaque load trigger puis termine son enregistrement auprès du client."
+  },
+  "LoadingStation:writeStream": {
+   "en": "Server-side join: after the parent writeStream, writes each load trigger's network id and state and registers the trigger in the stream for the connecting client.",
+   "fr": "Côté serveur à la connexion : après le writeStream parent, écrit l'id réseau et l'état de chaque load trigger et l'enregistre dans le flux pour le client qui se connecte."
+  },
+  "LoadingStation:raiseActive": {
+   "en": "Calls the parent raiseActive and also wakes the owning placeable, if any, so both keep updating.",
+   "fr": "Appelle le raiseActive parent et réveille aussi le placeable propriétaire, s'il existe, pour que les deux continuent à être mis à jour."
+  },
+  "LoadingStation:removeFillLevel": {
+   "en": "Takes fillDelta of a fill type out of the source storages the farm may access and returns the amount still missing (0 once below 0.0001). Note: each storage is asked for the full fillDelta, not the remaining amount, so later storages may lose more than needed.",
+   "fr": "Retire fillDelta d'un type de remplissage des stockages source auxquels la ferme a accès et retourne la quantité encore manquante (0 si inférieure à 0,0001). À noter : chaque stockage reçoit la demande du fillDelta complet et non du reste, donc les stockages suivants peuvent perdre plus que nécessaire."
+  },
+  "LoadingStation.registerXMLPaths": {
+   "en": "Registers the XML schema entries for a loading station: node, stationName, storageRadius, supportsExtension, fillTypes, fillTypeCategories, plus repeated loadTrigger children (via LoadTrigger.registerXMLPaths) with a class attribute.",
+   "fr": "Enregistre les entrées du schéma XML d'une station de chargement : node, stationName, storageRadius, supportsExtension, fillTypes, fillTypeCategories, plus des enfants loadTrigger répétés (via LoadTrigger.registerXMLPaths) avec un attribut class."
+  }
+ }
+}

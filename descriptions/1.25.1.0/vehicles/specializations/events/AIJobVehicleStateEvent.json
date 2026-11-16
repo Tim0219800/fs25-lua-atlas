@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/AIJobVehicleStateEvent.lua",
+ "module": {
+  "en": "Server-to-client event telling clients that an AI job started or finished on a vehicle. The job is sent as its id and looked up in the client's AI system, so it must already exist there.",
+  "fr": "Événement serveur vers client indiquant aux clients qu'un job IA a démarré ou s'est terminé sur un véhicule. Le job est envoyé par son id et recherché dans le système IA du client, il doit donc déjà y exister."
+ },
+ "fonctions": {
+  "AIJobVehicleStateEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable; used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe ; utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "AIJobVehicleStateEvent.new": {
+   "en": "Creates the event for a vehicle with the AI job (nil when the job ended), helper index and the farm id that started it.",
+   "fr": "Crée l'événement pour un véhicule avec le job IA (nil quand le job est terminé), l'indice d'assistant et l'id de la ferme qui l'a lancé."
+  },
+  "AIJobVehicleStateEvent:readStream": {
+   "en": "Reads the vehicle and, if flagged, the job id (resolved through `g_currentMission.aiSystem`), farm id and helper index, then calls `run`.",
+   "fr": "Lit le véhicule et, si indiqué, l'id du job (résolu via `g_currentMission.aiSystem`), l'id de ferme et l'indice d'assistant, puis appelle `run`."
+  },
+  "AIJobVehicleStateEvent:writeStream": {
+   "en": "Writes the vehicle, a job-present flag and, if present, job id, farm id and helper index. Asserts server-to-client use.",
+   "fr": "Écrit le véhicule, un indicateur de présence du job et, s'il existe, id du job, id de ferme et indice d'assistant. Vérifie par assertion un usage serveur vers client."
+  },
+  "AIJobVehicleStateEvent:run": {
+   "en": "On a synchronized vehicle, calls `aiJobStarted(job, helperIndex, farmId)` when a job is set, otherwise `aiJobFinished()`.",
+   "fr": "Sur un véhicule synchronisé, appelle `aiJobStarted(job, helperIndex, farmId)` si un job est défini, sinon `aiJobFinished()`."
+  }
+ }
+}

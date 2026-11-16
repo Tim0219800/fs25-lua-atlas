@@ -1,0 +1,225 @@
+{
+ "fichier": "vehicles/specializations/Pipe.lua",
+ "module": {
+  "en": "Specialization for vehicles that unload through a movable pipe (combines, harvesters, auger wagons). It requires FillUnit and Dischargeable. The pipe has numbered states (1 = folded) driven by pipe nodes and/or an animation, with optional auto-aim at the nearest fillable vehicle found through unloading triggers. It reads vehicle.pipe (optionally per pipe configuration), saves the state, and syncs it with SetPipeStateEvent plus a dirty-flag stream for the nearest target. Registered but not defined in the dump: setIsPipeStateChangeAllowed (UNVERIFIED).",
+  "fr": "Spécialisation pour les véhicules qui déchargent par un tuyau mobile (moissonneuses, récolteuses, bennes à vis). Elle requiert FillUnit et Dischargeable. Le tuyau a des états numérotés (1 = replié) pilotés par des nœuds de tuyau et/ou une animation, avec visée automatique optionnelle du véhicule remplissable le plus proche détecté par des déclencheurs de déchargement. Elle lit vehicle.pipe (éventuellement par configuration de tuyau), sauvegarde l'état et le synchronise par SetPipeStateEvent et un flux à drapeau modifié pour la cible la plus proche. Enregistrée mais non définie dans le dump : setIsPipeStateChangeAllowed (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "Pipe.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has FillUnit and Dischargeable.",
+   "fr": "Retourne true uniquement si le type de véhicule possède FillUnit et Dischargeable."
+  },
+  "Pipe.initSpecialization": {
+   "en": "Adds the 'pipe' configuration type, registers animation node XML paths, the Cylindered freezingPipeStates key, cover min/max pipe state keys, the pipe XML paths (base and per configuration) and the savegame keys state and isStateChangeAllowed.",
+   "fr": "Ajoute le type de configuration « pipe », enregistre les chemins XML des nœuds d'animation, la clé freezingPipeStates de Cylindered, les clés d'état min/max du tuyau pour les bâches, les chemins XML du tuyau (de base et par configuration) et les clés de sauvegarde state et isStateChangeAllowed."
+  },
+  "Pipe.registers": {
+   "en": "Registers every pipe XML attribute under a base path: texts, discharge node index, automatic discharge, unloading triggers, animation, states, pipe nodes with per-state transforms, speeds, limits, bending regulation, sounds, fold limits and autoFoldWithFoldable.",
+   "fr": "Enregistre tous les attributs XML du tuyau sous un chemin de base : textes, index du nœud de déchargement, déchargement automatique, déclencheurs, animation, états, nœuds de tuyau avec transformations par état, vitesses, limites, régulation de flexion, sons, limites de pliage et autoFoldWithFoldable."
+  },
+  "Pipe.registerFunctions": {
+   "en": "Adds the pipe API to the vehicle type (loaders, setPipeState, getCurrentPipeState, updatePipeNodes, trigger callback, nearest-object lookup and others). Note: it also registers setIsPipeStateChangeAllowed, which has no body in this dump.",
+   "fr": "Ajoute l'API du tuyau au type de véhicule (chargeurs, setPipeState, getCurrentPipeState, updatePipeNodes, rappel de déclencheur, recherche de l'objet le plus proche, etc.). À noter : elle enregistre aussi setIsPipeStateChangeAllowed, dont le corps est absent de ce dump."
+  },
+  "Pipe.registerOverwrittenFunctions": {
+   "en": "Overrides discharge, turn-on, fold, moving tool, cover, selection and AI readiness functions so the pipe state influences them.",
+   "fr": "Surcharge les fonctions de déchargement, de mise en marche, de pliage, d'outil mobile, de bâche, de sélection et de disponibilité IA afin que l'état du tuyau les influence."
+  },
+  "Pipe.registerEventListeners": {
+   "en": "Subscribes to load, delete, stream, update, moving tool, action events, discharge state, fold state, AI transport and root vehicle change events.",
+   "fr": "Abonne aux événements de chargement, suppression, flux réseau, mise à jour, outil mobile, événements d'action, état de déchargement, état de pliage, transport IA et changement de véhicule racine."
+  },
+  "Pipe:onLoad": {
+   "en": "Loads the pipe settings from the configuration key (fallback vehicle.pipe): unloading triggers (added as engine triggers), animation, states, pipe nodes, unloading/auto-aim/turn-on state sets, discharge node mapping, fold limits, texts, side notification progress bar and dirty flag. Removes the update tick on clients and the fold listener unless autoFoldWithFoldable.",
+   "fr": "Charge les réglages du tuyau depuis la clé de configuration (repli vehicle.pipe) : déclencheurs de déchargement (ajoutés comme triggers moteur), animation, états, nœuds de tuyau, ensembles d'états de déchargement/visée/mise en marche, correspondance des nœuds de déchargement, limites de pliage, textes, barre de notification latérale et drapeau modifié. Retire le tick de mise à jour côté client et l'écouteur de pliage sauf si autoFoldWithFoldable."
+  },
+  "Pipe:onPostLoad": {
+   "en": "Restores state and isStateChangeAllowed from the savegame and snaps the pipe to that state. Without a savegame and with autoFoldWithFoldable, sets the pipe state from the foldable's current fold position.",
+   "fr": "Restaure state et isStateChangeAllowed depuis la sauvegarde et place immédiatement le tuyau dans cet état. Sans sauvegarde et avec autoFoldWithFoldable, détermine l'état du tuyau d'après la position de pliage actuelle du pliable."
+  },
+  "Pipe:onDelete": {
+   "en": "Removes delete listeners from tracked objects, removes the unloading triggers, deletes pipe move sounds and the side notification progress bar, and deletes the animation nodes.",
+   "fr": "Retire les écouteurs de suppression des objets suivis, supprime les déclencheurs de déchargement, les sons de mouvement du tuyau, la barre de notification latérale et les nœuds d'animation."
+  },
+  "Pipe:saveToXMLFile": {
+   "en": "Saves the current pipe state (clamped to 1..numStates, only if states exist) and isStateChangeAllowed.",
+   "fr": "Sauvegarde l'état actuel du tuyau (borné à 1..numStates, seulement s'il y a des états) et isStateChangeAllowed."
+  },
+  "Pipe:onReadStream": {
+   "en": "Client on join: reads the pipe state (2 bits) and applies it without sending an event, then reads the nearest target (object id, fill unit, discharge flag) if present.",
+   "fr": "Client à la connexion : lit l'état du tuyau (2 bits) et l'applique sans envoyer d'événement, puis lit la cible la plus proche (id d'objet, unité de remplissage, indicateur de déchargement) si elle existe."
+  },
+  "Pipe:onWriteStream": {
+   "en": "Server on join: writes the target pipe state (2 bits) and, if one was sent, the nearest target data.",
+   "fr": "Serveur à la connexion : écrit l'état cible du tuyau (2 bits) et, s'il existe, les données de la cible la plus proche."
+  },
+  "Pipe:onReadUpdateStream": {
+   "en": "Client: when the dirty flag bit is set, reads the nearest target (object id, fill unit, discharge flag) or clears it.",
+   "fr": "Client : quand le bit du drapeau modifié est présent, lit la cible la plus proche (id d'objet, unité de remplissage, indicateur de déchargement) ou l'efface."
+  },
+  "Pipe:onWriteUpdateStream": {
+   "en": "Server: if the pipe dirty flag is set, writes the last sent nearest target data for clients.",
+   "fr": "Serveur : si le drapeau modifié du tuyau est actif, écrit pour les clients les dernières données de cible la plus proche envoyées."
+  },
+  "Pipe:onUpdate": {
+   "en": "Refreshes the action text and moves pipe nodes if the pipe is movable. On the client it shows a side notification progress bar with name, fill level and fill type of the target being filled, kept for 5 seconds after it leaves.",
+   "fr": "Rafraîchit le texte d'action et déplace les nœuds si le tuyau est mobile. Côté client, affiche une barre de notification latérale avec le nom, le niveau et le type de remplissage de la cible remplie, conservée 5 secondes après son départ."
+  },
+  "Pipe:onUpdateTick": {
+   "en": "Server only. Updates the nearest target and flags a network dirty state when it changes. If Platform.gameplay.automaticPipeUnfolding is on, there is no auto-aim state and no AI is active, it unfolds the pipe when a target or unload trigger is in range (and the vehicle is filled or running), and folds it back otherwise.",
+   "fr": "Serveur uniquement. Met à jour la cible la plus proche et marque l'état réseau modifié si elle change. Si Platform.gameplay.automaticPipeUnfolding est actif, qu'aucun état de visée n'existe et qu'aucune IA n'est active, déplie le tuyau quand une cible ou un déclencheur est à portée (et que le véhicule est rempli ou en marche), et le replie sinon."
+  },
+  "Pipe:loadUnloadingTriggers": {
+   "en": "Reads the unloading trigger nodes from XML into a list. A node without the FILLABLE collision mask bit is rejected with a warning.",
+   "fr": "Lit les nœuds de déclencheur de déchargement du XML dans une liste. Un nœud sans le bit de masque de collision FILLABLE est rejeté avec un avertissement."
+  },
+  "Pipe:loadPipeNodes": {
+   "en": "Loads each pipe node: per-state translation and rotation, speeds (converted from per second to per ms), rotation limits, fold priority, auto-aim flags, sub node ratio, bending regulation nodes and move sounds. Also computes the inverse fold priorities.",
+   "fr": "Charge chaque nœud de tuyau : translation et rotation par état, vitesses (converties de par seconde en par ms), limites de rotation, priorité de pliage, indicateurs de visée, ratio du sous-nœud, nœuds de régulation de flexion et sons de mouvement. Calcule aussi les priorités de pliage inverses."
+  },
+  "Pipe:getIsPipeStateChangeAllowed": {
+   "en": "Returns false if state changes are disabled or the foldable's fold animation time is outside foldMinLimit/foldMaxLimit; otherwise true. The pipeState argument is not used.",
+   "fr": "Retourne false si les changements d'état sont désactivés ou si le temps d'animation de pliage du pliable est hors de foldMinLimit/foldMaxLimit ; sinon true. L'argument pipeState n'est pas utilisé."
+  },
+  "Pipe:setPipeState": {
+   "en": "Sets the target state (capped at numStates), sends SetPipeStateEvent unless noEventSend, plays the pipe animation forward or backward and selects the discharge node of that state when forced.",
+   "fr": "Définit l'état cible (plafonné à numStates), envoie SetPipeStateEvent sauf si noEventSend, joue l'animation du tuyau en avant ou en arrière et sélectionne le nœud de déchargement de cet état si c'est forcé."
+  },
+  "Pipe:getCurrentPipeState": {
+   "en": "Returns the current pipe state index; it is 0 while the pipe is still moving to a new target.",
+   "fr": "Retourne l'indice de l'état actuel du tuyau ; il vaut 0 tant que le tuyau se déplace vers une nouvelle cible."
+  },
+  "Pipe:updatePipeNodes": {
+   "en": "Moves each pipe node toward its target state by translation and rotation speeds, with auto-aim at the nearest target when allowed, rotation limits, fold priorities, bending regulation and move sounds. Marks the state reached when nothing moves anymore.",
+   "fr": "Déplace chaque nœud de tuyau vers son état cible selon les vitesses de translation et de rotation, avec visée automatique de la cible la plus proche si autorisée, limites de rotation, priorités de pliage, régulation de flexion et sons de mouvement. Marque l'état atteint quand plus rien ne bouge."
+  },
+  "Pipe:updateBendingRegulationNodes": {
+   "en": "Rotates the regulation nodes by the pipe node's upward direction times its bendingRegulation, and returns the vertical offset (sin of that angle times distance) used to correct auto-aim.",
+   "fr": "Fait pivoter les nœuds de régulation selon la direction vers le haut du nœud de tuyau multipliée par son bendingRegulation, et retourne le décalage vertical (sinus de cet angle fois la distance) utilisé pour corriger la visée."
+  },
+  "Pipe:unloadingTriggerCallback": {
+   "en": "Trigger callback on enter and leave. Counts vehicles in range that support at least one of the discharged fill types, and UnloadTrigger objects. Registers delete listeners and wakes the vehicle with raiseActive.",
+   "fr": "Rappel de déclencheur à l'entrée et à la sortie. Compte les véhicules à portée qui acceptent au moins un des types de remplissage déchargés, ainsi que les objets UnloadTrigger. Enregistre des écouteurs de suppression et réveille le véhicule avec raiseActive."
+  },
+  "Pipe:updateNearestObjectInTriggers": {
+   "en": "Finds the closest target in the triggers: a fill unit that accepts the dischargeable tool type and the output fill type and has free capacity. Distance is measured to its auto-aim node or exact-fill root. Fills nearestObjectInTriggers; warns if the discharge node is missing.",
+   "fr": "Trouve la cible la plus proche dans les déclencheurs : une unité de remplissage acceptant le type d'outil déchargeable et le type de remplissage de sortie, avec capacité libre. La distance est mesurée jusqu'à son nœud de visée ou sa racine de remplissage exact. Remplit nearestObjectInTriggers ; avertit si le nœud de déchargement manque."
+  },
+  "Pipe:updateActionEventText": {
+   "en": "Updates the TOGGLE_PIPE action text (pipe in, or pipe out with state number and fill type when several unloading states exist) and shows the action only if the change is allowed.",
+   "fr": "Met à jour le texte de l'action TOGGLE_PIPE (rentrer le tuyau, ou sortir avec numéro d'état et type de remplissage quand plusieurs états de déchargement existent) et n'affiche l'action que si le changement est autorisé."
+  },
+  "Pipe:getIsDischargeNodeActive": {
+   "en": "For the pipe's discharge node, returns true only when the current state is an unloading state; other nodes go to the parent.",
+   "fr": "Pour le nœud de déchargement du tuyau, retourne true uniquement quand l'état actuel est un état de déchargement ; les autres nœuds passent au parent."
+  },
+  "Pipe:getCanBeTurnedOn": {
+   "en": "Returns false if turn-on allowed states are defined and the current pipe state is not one of them; otherwise defers to the parent.",
+   "fr": "Retourne false si des états de mise en marche autorisés sont définis et que l'état actuel du tuyau n'en fait pas partie ; sinon délègue au parent."
+  },
+  "Pipe:getTurnedOnNotAllowedWarning": {
+   "en": "Returns the 'set pipe state first' warning when the current state is not a turn-on allowed state; otherwise defers to the parent.",
+   "fr": "Retourne l'avertissement « régler d'abord le tuyau » quand l'état actuel n'est pas un état de mise en marche autorisé ; sinon délègue au parent."
+  },
+  "Pipe:getIsFoldAllowed": {
+   "en": "Returns false with a warning text if the pipe state is outside foldMinState..foldMaxState; otherwise defers to the parent.",
+   "fr": "Retourne false avec un texte d'avertissement si l'état du tuyau est hors de foldMinState..foldMaxState ; sinon délègue au parent."
+  },
+  "Pipe:handleDischarge": {
+   "en": "With automaticDischarge, ignores discharge handling for the pipe's own discharge node and lets the parent handle the others. Without it, always defers to the parent.",
+   "fr": "Avec automaticDischarge, ignore le traitement du déchargement pour le nœud propre au tuyau et laisse le parent traiter les autres. Sans cela, délègue toujours au parent."
+  },
+  "Pipe:handleDischargeRaycast": {
+   "en": "With automaticDischarge, starts object discharge when the vehicle is powered and the hit target accepts the fill type with free capacity, discharges to ground if that mode is enabled, and stops discharging to an object otherwise. Without it, uses the parent.",
+   "fr": "Avec automaticDischarge, démarre le déchargement vers un objet quand le véhicule est alimenté et que la cible touchée accepte le type avec de la capacité libre, décharge au sol si ce mode est activé, et arrête le déchargement vers un objet sinon. Sans cela, utilise le parent."
+  },
+  "Pipe:getCanToggleDischargeToObject": {
+   "en": "Returns false when automaticDischarge is set; otherwise defers to the parent.",
+   "fr": "Retourne false quand automaticDischarge est actif ; sinon délègue au parent."
+  },
+  "Pipe:getCanToggleDischargeToGround": {
+   "en": "Returns false when both automaticDischarge and toggleableDischargeToGround are set; otherwise defers to the parent.",
+   "fr": "Retourne false quand automaticDischarge et toggleableDischargeToGround sont tous deux actifs ; sinon délègue au parent."
+  },
+  "Pipe:getRequiresPower": {
+   "en": "Returns true while the pipe is moving between states or, with automaticDischarge, while a discharge target exists; otherwise defers to the parent.",
+   "fr": "Retourne true pendant que le tuyau change d'état ou, avec automaticDischarge, tant qu'une cible de déchargement existe ; sinon délègue au parent."
+  },
+  "Pipe:loadMovingToolFromXML": {
+   "en": "After the parent loads a moving tool, reads its freezingPipeStates list. Returns false if the parent failed.",
+   "fr": "Après le chargement de l'outil mobile par le parent, lit sa liste freezingPipeStates. Retourne false si le parent a échoué."
+  },
+  "Pipe:getIsMovingToolActive": {
+   "en": "Returns false for a moving tool when the pipe is in or moving to one of its freezing states, or is in transit (state 0); otherwise defers to the parent.",
+   "fr": "Retourne false pour un outil mobile quand le tuyau est dans l'un de ses états de blocage, ou se déplace vers l'un d'eux, ou est en transit (état 0) ; sinon délègue au parent."
+  },
+  "Pipe:loadCoverFromXML": {
+   "en": "Reads minPipeState and maxPipeState on a cover (defaults 0 and infinity), then calls the parent loader.",
+   "fr": "Lit minPipeState et maxPipeState sur une bâche (0 et l'infini par défaut), puis appelle le chargeur parent."
+  },
+  "Pipe:getIsNextCoverStateAllowed": {
+   "en": "Refuses a cover state change if the parent does, or if the target cover (other than state 0) requires a pipe state range that does not include the current pipe state.",
+   "fr": "Refuse un changement d'état de bâche si le parent le refuse, ou si la bâche cible (hors état 0) exige une plage d'états de tuyau qui n'inclut pas l'état actuel."
+  },
+  "Pipe:onDeletePipeObject": {
+   "en": "Delete listener callback: drops a deleted object from the tracked vehicle and unload trigger tables and adjusts the counters.",
+   "fr": "Rappel d'écouteur de suppression : retire un objet supprimé des tables de véhicules et de déclencheurs suivis et ajuste les compteurs."
+  },
+  "Pipe:getPipeDischargeNodeIndex": {
+   "en": "Returns the discharge node index mapped to the given pipe state (default: the current one), or the default discharge node index when no mapping exists.",
+   "fr": "Retourne l'indice du nœud de déchargement associé à l'état de tuyau donné (par défaut l'état actuel), ou l'indice de nœud par défaut s'il n'existe aucune association."
+  },
+  "Pipe:setPipeDischargeToGround": {
+   "en": "Sets or toggles (nil) the discharge-to-ground flag, updates the action text and sends SetPipeDischargeToGroundEvent unless noEventSend.",
+   "fr": "Définit ou bascule (nil) l'indicateur de déchargement au sol, met à jour le texte d'action et envoie SetPipeDischargeToGroundEvent sauf si noEventSend."
+  },
+  "Pipe:getCanBeSelected": {
+   "en": "Always returns true, so a vehicle with a pipe can be selected.",
+   "fr": "Retourne toujours true : un véhicule équipé d'un tuyau peut être sélectionné."
+  },
+  "Pipe:getIsAIReadyToDrive": {
+   "en": "For a movable pipe, returns false unless the pipe is folded (state 1); otherwise defers to the parent.",
+   "fr": "Pour un tuyau mobile, retourne false tant que le tuyau n'est pas replié (état 1) ; sinon délègue au parent."
+  },
+  "Pipe:getIsAIPreparingToDrive": {
+   "en": "For a movable pipe, returns true while the pipe has not reached its target state; otherwise defers to the parent.",
+   "fr": "Pour un tuyau mobile, retourne true tant que le tuyau n'a pas atteint son état cible ; sinon délègue au parent."
+  },
+  "Pipe:onMovingToolChanged": {
+   "en": "Copies the current translation and rotation of a moving tool to the matching pipe node, keeping both in sync.",
+   "fr": "Copie la translation et la rotation courantes d'un outil mobile vers le nœud de tuyau correspondant afin de les garder synchronisés."
+  },
+  "Pipe:onRegisterActionEvents": {
+   "en": "Client only. For a movable pipe, registers TOGGLE_PIPE (unless autoFoldWithFoldable) and, if toggleable, TOGGLE_TIPSTATE_GROUND with their texts.",
+   "fr": "Client uniquement. Pour un tuyau mobile, enregistre TOGGLE_PIPE (sauf si autoFoldWithFoldable) et, si c'est activable, TOGGLE_TIPSTATE_GROUND avec leurs textes."
+  },
+  "Pipe:onDischargeStateChanged": {
+   "en": "Client only. When the pipe's discharge node changes state, stops the animation nodes if discharge is off, otherwise starts them and sets their fill type.",
+   "fr": "Client uniquement. Quand le nœud de déchargement du tuyau change d'état, arrête les nœuds d'animation si le déchargement est coupé, sinon les démarre et définit leur type de remplissage."
+  },
+  "Pipe:onFoldStateChanged": {
+   "en": "With autoFoldWithFoldable, sets the pipe to its last state when folding toward the turn-on direction, otherwise to state 1. Ignored while lifting to the middle fold position.",
+   "fr": "Avec autoFoldWithFoldable, place le tuyau dans son dernier état lors d'un pliage vers la direction de mise en marche, sinon à l'état 1. Ignoré pendant la montée vers la position de pliage intermédiaire."
+  },
+  "Pipe:onAIImplementPrepareForTransport": {
+   "en": "Folds the pipe back to state 1 for AI transport if a movable pipe is present and the change is allowed.",
+   "fr": "Replie le tuyau à l'état 1 pour le transport IA si un tuyau mobile est présent et que le changement est autorisé."
+  },
+  "Pipe:onRootVehicleChanged": {
+   "en": "For pipes with auto-aim states, creates or re-parents an action controller entry 'pipe' for the new root vehicle, or removes it when none exists. The AI end listener is added unless autoFoldWithFoldable.",
+   "fr": "Pour les tuyaux avec états de visée, crée ou rattache une entrée « pipe » du contrôleur d'actions au nouveau véhicule racine, ou la supprime s'il n'y en a pas. L'écouteur de fin IA est ajouté sauf si autoFoldWithFoldable."
+  },
+  "Pipe.actionControllerPipeEvent": {
+   "en": "Action controller callback: sets the first auto-aim state for a positive direction, or state 1 otherwise. Returns true.",
+   "fr": "Rappel du contrôleur d'actions : place le premier état de visée pour une direction positive, ou l'état 1 sinon. Retourne true."
+  },
+  "Pipe.actionEventTogglePipe": {
+   "en": "Input callback cycling to the next pipe state (wrapping to 1). If that state is refused, it tries to fold to state 1.",
+   "fr": "Callback d'entrée passant à l'état de tuyau suivant (retour à 1 après le dernier). Si cet état est refusé, tente de replier à l'état 1."
+  },
+  "Pipe.actionEventToggleDischargeToGround": {
+   "en": "Input callback that toggles the discharge-to-ground flag via setPipeDischargeToGround.",
+   "fr": "Callback d'entrée qui bascule l'indicateur de déchargement au sol via setPipeDischargeToGround."
+  }
+ }
+}

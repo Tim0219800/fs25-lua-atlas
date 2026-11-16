@@ -1,0 +1,13 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/maps/TramlineMap.lua",
+ "module": {
+  "en": "Precision Farming map class (child of ValueMap) for tramlines. In this dump only the in-game map frame setter is visible; the rest of the class is not included.",
+  "fr": "Classe de carte de Precision Farming (enfant de ValueMap) pour les passages de roues (tramlines). Dans ce dump, seul l'accesseur du cadre de carte du menu est visible ; le reste de la classe n'est pas inclus."
+ },
+ "fonctions": {
+  "TramlineMap:setMapFrame": {
+   "en": "Stores the given in-game menu map frame in self.mapFrame. No other effect.",
+   "fr": "Mémorise dans self.mapFrame le cadre de carte du menu en jeu fourni. Aucun autre effet."
+  }
+ }
+}

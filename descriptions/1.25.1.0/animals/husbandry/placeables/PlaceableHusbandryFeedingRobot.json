@@ -1,0 +1,85 @@
+{
+ "fichier": "animals/husbandry/placeables/PlaceableHusbandryFeedingRobot.lua",
+ "module": {
+  "en": "Placeable specialization that adds an automatic feeding robot to a husbandry. It requires `PlaceableHusbandryFood`, instantiates the class named in `placeable.husbandry.feedingRobot#class` from a config file, moves it along splines defined in the XML, and ties its driving state to optional animated objects. It also forwards network streams and savegame data to the robot object and makes the robot mix food in proportion to the husbandry's consumption (the robot class itself is not in this file).",
+  "fr": "Spécialisation de placeable qui ajoute un robot d'alimentation automatique à un élevage. Elle exige `PlaceableHusbandryFood`, instancie la classe nommée dans `placeable.husbandry.feedingRobot#class` à partir d'un fichier de configuration, la déplace le long de splines définies dans le XML et lie son état de conduite à des objets animés optionnels. Elle relaie aussi les flux réseau et les données de sauvegarde vers le robot et lui fait préparer un mélange proportionnel à la consommation de l'élevage (la classe du robot n'est pas dans ce fichier)."
+ },
+ "fonctions": {
+  "PlaceableHusbandryFeedingRobot.prerequisitesPresent": {
+   "en": "Returns true only if the `PlaceableHusbandryFood` specialization is present.",
+   "fr": "Renvoie vrai uniquement si la spécialisation `PlaceableHusbandryFood` est présente."
+  },
+  "PlaceableHusbandryFeedingRobot.registerFunctions": {
+   "en": "Registers the method `onFeedingRobotLoaded` on the placeable type.",
+   "fr": "Enregistre la méthode `onFeedingRobotLoaded` sur le type de placeable."
+  },
+  "PlaceableHusbandryFeedingRobot.registerOverwrittenFunctions": {
+   "en": "Registers overrides of `setOwnerFarmId`, `updateFeeding`, `collectPickObjects` and `updateInfo`.",
+   "fr": "Enregistre les surcharges de `setOwnerFarmId`, `updateFeeding`, `collectPickObjects` et `updateInfo`."
+  },
+  "PlaceableHusbandryFeedingRobot.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onPostLoad`, `onDelete`, `onFinalizePlacement`, `onReadStream` and `onWriteStream`.",
+   "fr": "S'abonne à `onLoad`, `onPostLoad`, `onDelete`, `onFinalizePlacement`, `onReadStream` et `onWriteStream`."
+  },
+  "PlaceableHusbandryFeedingRobot.registerXMLPaths": {
+   "en": "Registers the XML keys under `husbandry.feedingRobot`: link node, class, config file, spline entries (node, direction, feeding flag, fake length, stop at end) and dependent animated objects.",
+   "fr": "Enregistre les clés XML sous `husbandry.feedingRobot` : noeud d'attache, classe, fichier de configuration, entrées de spline (noeud, direction, indicateur de nourrissage, longueur fictive, arrêt en fin) et objets animés dépendants."
+  },
+  "PlaceableHusbandryFeedingRobot.registerSavegameXMLPaths": {
+   "en": "Registers the savegame XML paths by delegating to `FeedingRobot.registerSavegameXMLPaths`.",
+   "fr": "Enregistre les chemins XML de sauvegarde en déléguant à `FeedingRobot.registerSavegameXMLPaths`."
+  },
+  "PlaceableHusbandryFeedingRobot:onLoad": {
+   "en": "Does nothing without a `feedingRobot` XML node. Otherwise requires filename, class and link node (error state if missing), creates and registers the robot with an async load, adds the splines or fake waiting points, and records the dependent animated objects.",
+   "fr": "Ne fait rien sans noeud XML `feedingRobot`. Sinon exige le fichier, la classe et le noeud d'attache (état d'erreur s'ils manquent), crée et enregistre le robot avec un chargement asynchrone, ajoute les splines ou points d'attente fictifs et mémorise les objets animés dépendants."
+  },
+  "PlaceableHusbandryFeedingRobot:onPostLoad": {
+   "en": "For each dependent animated object, blocks its trigger while the robot is driving and makes it switch to the configured direction whenever the robot starts driving. Requires the animated objects specialization.",
+   "fr": "Pour chaque objet animé dépendant, bloque son déclenchement pendant que le robot roule et lui fait prendre la direction configurée quand le robot se met en route. Nécessite la spécialisation des objets animés."
+  },
+  "PlaceableHusbandryFeedingRobot:onFeedingRobotLoaded": {
+   "en": "Callback when the robot finishes loading: completes the placeable's loading task.",
+   "fr": "Rappel de fin de chargement du robot : termine la tâche de chargement du placeable."
+  },
+  "PlaceableHusbandryFeedingRobot:onDelete": {
+   "en": "Deletes the feeding robot object if one exists.",
+   "fr": "Supprime l'objet robot d'alimentation s'il existe."
+  },
+  "PlaceableHusbandryFeedingRobot:onFinalizePlacement": {
+   "en": "Forwards the placement finalization to the feeding robot.",
+   "fr": "Transmet la finalisation du placement au robot d'alimentation."
+  },
+  "PlaceableHusbandryFeedingRobot:onReadStream": {
+   "en": "Network read: reads the robot's object id, its stream data, then completes its client-side registration.",
+   "fr": "Lecture réseau : lit l'identifiant d'objet du robot, ses données de flux, puis termine son enregistrement côté client."
+  },
+  "PlaceableHusbandryFeedingRobot:onWriteStream": {
+   "en": "Network write: writes the robot's object id and stream data, and registers it in the connection's stream.",
+   "fr": "Écriture réseau : écrit l'identifiant d'objet du robot et ses données de flux, et l'enregistre dans le flux de la connexion."
+  },
+  "PlaceableHusbandryFeedingRobot:loadFromXMLFile": {
+   "en": "Delegates savegame loading to the feeding robot.",
+   "fr": "Délègue le chargement de la sauvegarde au robot d'alimentation."
+  },
+  "PlaceableHusbandryFeedingRobot:saveToXMLFile": {
+   "en": "Delegates savegame saving to the feeding robot.",
+   "fr": "Délègue l'écriture de la sauvegarde au robot d'alimentation."
+  },
+  "PlaceableHusbandryFeedingRobot:setOwnerFarmId": {
+   "en": "Override: calls the parent, then gives the same owner farm id to the feeding robot.",
+   "fr": "Surcharge : appelle le parent, puis donne le même identifiant de ferme propriétaire au robot d'alimentation."
+  },
+  "PlaceableHusbandryFeedingRobot:updateFeeding": {
+   "en": "Override: on the server asks the robot to create a food mixture of 1.5 times the hourly food consumption scaled by the environment's time adjustment, then calls the parent.",
+   "fr": "Surcharge : sur le serveur demande au robot de créer un mélange valant 1,5 fois la consommation horaire de nourriture, mise à l'échelle par l'ajustement temporel de l'environnement, puis appelle le parent."
+  },
+  "PlaceableHusbandryFeedingRobot:collectPickObjects": {
+   "en": "Override: skips nodes that belong to the feeding robot so they are not collected as pick objects; otherwise defers to the parent.",
+   "fr": "Surcharge : ignore les noeuds appartenant au robot d'alimentation pour qu'ils ne soient pas collectés comme objets sélectionnables ; sinon délègue au parent."
+  },
+  "PlaceableHusbandryFeedingRobot:updateInfo": {
+   "en": "Override: calls the parent then lets the robot append its own info entries.",
+   "fr": "Surcharge : appelle le parent puis laisse le robot ajouter ses propres entrées d'information."
+  }
+ }
+}

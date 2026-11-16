@@ -1,0 +1,33 @@
+{
+ "fichier": "utils/TargetedFunction.lua",
+ "module": {
+  "en": "Small class that wraps a function with an optional target object and optional bound arguments, so it can be stored as an event listener and called later. Instances are callable directly through the __call metamethod, which forwards to invoke. Pure Lua, no client or server distinction.",
+  "fr": "Petite classe qui enveloppe une fonction avec un objet cible optionnel et des arguments liés optionnels, pour la stocker comme écouteur d'événement et l'appeler plus tard. Les instances sont appelables directement via la métaméthode __call, qui renvoie vers invoke. Lua pur, sans distinction client ou serveur."
+ },
+ "fonctions": {
+  "TargetedFunction.new": {
+   "en": "Creates a TargetedFunction from a function, an optional target table and optional extra arguments stored as a packed table. Debug builds assert on the types.",
+   "fr": "Crée un TargetedFunction à partir d'une fonction, d'une table cible optionnelle et d'arguments supplémentaires optionnels stockés dans une table packée. Les builds de debug vérifient les types par assert."
+  },
+  "TargetedFunction:delete": {
+   "en": "Clears the stored function and target references so they can be collected. The bound arguments are kept.",
+   "fr": "Efface les références à la fonction et à la cible pour qu'elles puissent être libérées. Les arguments liés sont conservés."
+  },
+  "TargetedFunction.resolveListener": {
+   "en": "Wraps a plain function (with optional target) into a new TargetedFunction; any other value is assumed to be a TargetedFunction already and returned unchanged, without checking.",
+   "fr": "Enveloppe une fonction simple (avec cible optionnelle) dans un nouveau TargetedFunction ; toute autre valeur est supposée être déjà un TargetedFunction et renvoyée telle quelle, sans vérification."
+  },
+  "TargetedFunction:unpackCombinedArguments": {
+   "en": "Returns the bound arguments followed by the extra arguments given now, as separate values. It relies on table.getListUnion, defined elsewhere (UNVERIFIED).",
+   "fr": "Renvoie les arguments liés suivis des arguments supplémentaires donnés maintenant, comme valeurs séparées. S'appuie sur table.getListUnion, défini ailleurs (NON VÉRIFIÉ)."
+  },
+  "TargetedFunction:invoke": {
+   "en": "Calls the stored function, passing the target object first if there is one, then the bound arguments (when any) followed by the call arguments. Returns the function's return value.",
+   "fr": "Appelle la fonction stockée en passant d'abord l'objet cible s'il existe, puis les arguments liés (s'il y en a) suivis des arguments de l'appel. Renvoie la valeur de retour de la fonction."
+  },
+  "TargetedFunction_mt.__call": {
+   "en": "Metamethod that lets the instance be called like a function; it simply forwards the arguments to invoke and returns its result.",
+   "fr": "Métaméthode qui permet d'appeler l'instance comme une fonction ; elle transmet simplement les arguments à invoke et renvoie son résultat."
+  }
+ }
+}

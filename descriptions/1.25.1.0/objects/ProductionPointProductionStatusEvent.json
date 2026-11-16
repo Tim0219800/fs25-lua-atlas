@@ -1,0 +1,33 @@
+{
+ "fichier": "objects/ProductionPointProductionStatusEvent.lua",
+ "module": {
+  "en": "Network event carrying the status of one production of a production point, identified by its index in the productions list (sent as 8 bits). A client sends it to the server, which applies it and rebroadcasts it to the other clients. Status values come from ProductionPoint constants not present in this dump.",
+  "fr": "Événement réseau transportant le statut d'une production d'un point de production, identifiée par son index dans la liste des productions (envoyé sur 8 bits). Un client l'envoie au serveur, qui l'applique et le rediffuse aux autres clients. Les valeurs de statut viennent de constantes de ProductionPoint absentes de ce dump."
+ },
+ "fonctions": {
+  "ProductionPointProductionStatusEvent.emptyNew": {
+   "en": "Creates an empty event instance, used when reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée lors de la lecture depuis un flux."
+  },
+  "ProductionPointProductionStatusEvent.new": {
+   "en": "Creates the event with the production point, the production index and the status value.",
+   "fr": "Crée l'événement avec le point de production, l'index de la production et la valeur de statut."
+  },
+  "ProductionPointProductionStatusEvent:readStream": {
+   "en": "Reads the production point object, the production index (8 bits) and the status from the stream, then runs the event.",
+   "fr": "Lit l'objet point de production, l'index de la production (8 bits) et le statut depuis le flux, puis exécute l'événement."
+  },
+  "ProductionPointProductionStatusEvent:writeStream": {
+   "en": "Writes the production point object, production index (8 bits) and status to the stream.",
+   "fr": "Écrit l'objet point de production, l'index de la production (8 bits) et le statut dans le flux."
+  },
+  "ProductionPointProductionStatusEvent:run": {
+   "en": "On the server, rebroadcasts the event; then looks up the production by index and calls setProductionStatus with the no-event flag. Note: no check that the index maps to an existing production.",
+   "fr": "Sur le serveur, rediffuse l'événement ; puis retrouve la production par son index et appelle setProductionStatus avec l'indicateur sans événement. À noter : aucune vérification que l'index correspond à une production existante."
+  },
+  "ProductionPointProductionStatusEvent.sendEvent": {
+   "en": "Sends the change unless noEventSend is true: the server broadcasts it to all clients, a client sends it to the server.",
+   "fr": "Envoie le changement sauf si noEventSend est true : le serveur le diffuse à tous les clients, un client l'envoie au serveur."
+  }
+ }
+}

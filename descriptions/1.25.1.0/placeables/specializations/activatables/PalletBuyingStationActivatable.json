@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/activatables/PalletBuyingStationActivatable.lua",
+ "module": {
+  "en": "Activatable object for a pallet buying station placeable. It is available to players who can access the placeable, with a caller-supplied prompt text, and running it opens the placeable shop.",
+  "fr": "Objet activable pour un placeable de station d'achat de palettes. Il est disponible pour les joueurs qui peuvent accéder au placeable, avec un texte fourni par l'appelant, et son exécution ouvre la boutique du placeable."
+ },
+ "fonctions": {
+  "PalletBuyingStationActivatable.new": {
+   "en": "Creates the activatable for a placeable with the given prompt text.",
+   "fr": "Crée l'activable pour un placeable avec le texte d'invite donné."
+  },
+  "PalletBuyingStationActivatable:getIsActivatable": {
+   "en": "Returns whether the local player may access the placeable according to the access handler.",
+   "fr": "Renvoie si le joueur local peut accéder au placeable selon le gestionnaire d'accès."
+  },
+  "PalletBuyingStationActivatable:run": {
+   "en": "Calls `openShop` on the placeable.",
+   "fr": "Appelle `openShop` sur le placeable."
+  }
+ }
+}

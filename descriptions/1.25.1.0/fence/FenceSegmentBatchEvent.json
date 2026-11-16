@@ -1,0 +1,33 @@
+{
+ "fichier": "fence/FenceSegmentBatchEvent.lua",
+ "module": {
+  "en": "Server-to-client event with two forms in one class: a batch of freshly built fence segments (bulk construction), or a progress report (request id, done steps, total steps) with no segments, sent only to the requesting client. The first stream Bool selects the form. Subclass of Event on the main channel.",
+  "fr": "Événement serveur vers client avec deux formes dans une même classe : un lot de segments de clôture fraîchement construits (construction en masse), ou un rapport de progression (identifiant de requête, étapes faites, étapes totales) sans segments, envoyé au seul client demandeur. Le premier booléen du flux choisit la forme. Sous-classe d'Event sur le canal principal."
+ },
+ "fonctions": {
+  "FenceSegmentBatchEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel.",
+   "fr": "Crée un événement vide sur le canal réseau principal."
+  },
+  "FenceSegmentBatchEvent.newSegments": {
+   "en": "Creates the batch form for a placeable and an array of built segments. The source documents a cap named MAX_SEGMENTS (not defined in this file, UNVERIFIED); the count is written as a UInt8.",
+   "fr": "Crée la forme lot pour un placeable et un tableau de segments construits. La source mentionne un plafond MAX_SEGMENTS (non défini dans ce fichier, NON VÉRIFIÉ) ; le nombre est écrit en UInt8."
+  },
+  "FenceSegmentBatchEvent.newProgress": {
+   "en": "Creates the progress form from a build-run request id, steps done and total steps. Meant for the requesting client only, since run ids are per client.",
+   "fr": "Crée la forme progression à partir d'un identifiant de requête de construction, des étapes faites et des étapes totales. Destiné au seul client demandeur, car les identifiants de run sont propres à chaque client."
+  },
+  "FenceSegmentBatchEvent:readStream": {
+   "en": "Reads the form Bool. Progress form: UInt8 request id and two UInt16 counters, then run. Batch form: reads the placeable (logs an error and aborts if unknown, which misaligns the stream), then per segment a UInt8 template index and the segment data (no chained previous segment), then run.",
+   "fr": "Lit le booléen de forme. Forme progression : identifiant de requête UInt8 et deux compteurs UInt16, puis run. Forme lot : lit le placeable (journalise une erreur et abandonne s'il est inconnu, ce qui désaligne le flux), puis pour chaque segment un index de modèle UInt8 et les données du segment (sans segment précédent chaîné), puis run."
+  },
+  "FenceSegmentBatchEvent:writeStream": {
+   "en": "Writes the form Bool (true if segments are set), then either the progress counters or the placeable, the segment count and each segment's template index and data.",
+   "fr": "Écrit le booléen de forme (true si des segments sont définis), puis soit les compteurs de progression, soit le placeable, le nombre de segments et, pour chacun, son index de modèle et ses données."
+  },
+  "FenceSegmentBatchEvent:run": {
+   "en": "Progress form: publishes request id, done and total steps on the message center. Batch form: if the placeable is not synchronized, deletes the segments just created; otherwise updates meshes (true, false) and finalizes each one.",
+   "fr": "Forme progression : publie l'identifiant de requête et les étapes faites/totales sur le message center. Forme lot : si le placeable n'est pas synchronisé, supprime les segments qui viennent d'être créés ; sinon met à jour les maillages (true, false) et finalise chacun."
+  }
+ }
+}

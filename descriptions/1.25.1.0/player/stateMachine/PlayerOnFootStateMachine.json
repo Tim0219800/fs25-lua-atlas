@@ -1,0 +1,25 @@
+{
+ "fichier": "player/stateMachine/PlayerOnFootStateMachine.lua",
+ "module": {
+  "en": "Sub-state machine of PlayerStateMachine used while the player walks around on foot. It owns the idle, walking, swimming, falling, jumping and crouching states and, while current, runs the whole on-foot frame: input, targeter, camera, capsule controller, mover, interpolator, graphics and network component.",
+  "fr": "Sous-machine à états de PlayerStateMachine utilisée quand le joueur se déplace à pied. Elle possède les états idle, walking, swimming, falling, jumping et crouching et, lorsqu'elle est active, exécute toute la frame à pied : entrées, targeter, caméra, contrôleur capsule, mover, interpolateur, graphismes et composant réseau."
+ },
+ "fonctions": {
+  "PlayerOnFootStateMachine.new": {
+   "en": "Creates the machine with its six states, builds their transitions, starts on idle (also the default) and allows hand tools. Registers its leave handler for the vehicle, passenger and rollercoaster leave events (the handler itself is not in the dump).",
+   "fr": "Crée la machine avec ses six états, construit leurs transitions, démarre sur idle (aussi l'état par défaut) et autorise les outils à main. Enregistre son gestionnaire pour les événements de sortie de véhicule, de passager et de montagnes russes (le gestionnaire n'est pas dans le dump)."
+  },
+  "PlayerOnFootStateMachine:onStateEntered": {
+   "en": "Entered when the player becomes on foot (for instance leaving a vehicle): resets network and graphics state, zeroes speed, and on the server shows the player. For the owner it restores the player input context, activates activatable objects, tells the HUD and picks the right sub-state.",
+   "fr": "Appelé quand le joueur passe à pied (par ex. en quittant un véhicule) : réinitialise l'état réseau et graphique, annule la vitesse et, sur le serveur, affiche le joueur. Pour le propriétaire, restaure le contexte d'entrée du joueur, active les objets activables, informe le HUD et détermine le bon sous-état."
+  },
+  "PlayerOnFootStateMachine:onStateExited": {
+   "en": "Called when leaving the on-foot state: resets network and graphics state and places the model at the graphical position. For the owner it also stops movement, unequips any hand tool and deactivates activatable objects.",
+   "fr": "Appelé en quittant l'état à pied : réinitialise l'état réseau et graphique et place le modèle à la position graphique. Pour le propriétaire, arrête aussi le mouvement, range l'outil à main et désactive les objets activables."
+  },
+  "PlayerOnFootStateMachine:updateAsCurrent": {
+   "en": "Per-frame on-foot update, in a fixed order: input, targeter, network pre-update, camera rotation, capsule controller, sub-state update, horizontal movement from the current state, mover, camera offset, interpolator, graphics, camera position, activatable-object position (owner), input reset, network update.",
+   "fr": "Mise à jour par frame à pied, dans un ordre fixe : entrées, targeter, pré-mise à jour réseau, rotation caméra, contrôleur capsule, mise à jour du sous-état, mouvement horizontal de l'état courant, mover, décalage caméra, interpolateur, graphismes, position caméra, position des objets activables (propriétaire), réinitialisation des entrées, mise à jour réseau."
+  }
+ }
+}

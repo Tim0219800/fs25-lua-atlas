@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/GroundAdjustedNodes.lua",
+ "module": {
+  "en": "Vehicle specialization that moves nodes vertically so they follow the ground, for example the hoses of a slurry spreader. Raycasts from configured nodes measure the distance to the terrain (or water), and the adjust nodes are translated toward the result at a limited speed. It runs on the client and the server alike, only updates when the vehicle is near the player, and adds a small wobble while over a field. Configurable through the vehicle XML and a shop configuration.",
+  "fr": "Spécialisation de véhicule qui déplace verticalement des nœuds pour qu'ils suivent le sol, par exemple les tuyaux d'un épandeur de lisier. Des raycasts partant de nœuds configurés mesurent la distance au terrain (ou à l'eau), et les nœuds ajustés sont translatés vers ce résultat à vitesse limitée. Elle tourne aussi bien côté client que serveur, ne se met à jour que si le véhicule est proche du joueur et ajoute une légère oscillation au-dessus d'un champ. Configurable via le XML du véhicule et une configuration de la boutique."
+ },
+ "fonctions": {
+  "GroundAdjustedNodes.prerequisitesPresent": {
+   "en": "Always returns true: the specialization has no prerequisite on other specializations.",
+   "fr": "Renvoie toujours true : la spécialisation n'a aucun prérequis envers d'autres spécialisations."
+  },
+  "GroundAdjustedNodes.initSpecialization": {
+   "en": "Registers the shop configuration type \"groundAdjustedNode\" and the XML schema paths under vehicle.groundAdjustedNodes (update distances, water adjustment, collision mask, attach-only flag). Also adds start/end ground adjust scale attributes to animation parts.",
+   "fr": "Enregistre le type de configuration boutique « groundAdjustedNode » et les chemins du schéma XML sous vehicle.groundAdjustedNodes (distances de mise à jour, ajustement à l'eau, masque de collision, option d'activité seulement attelé). Ajoute aussi les attributs de début/fin d'échelle d'ajustement aux parties d'animation."
+  },
+  "GroundAdjustedNodes.registerNodeXMLPaths": {
+   "en": "Registers the XML attributes of one groundAdjustedNode entry: activation time, Y offset and up to several raycast nodes. Also registers the adjust-node attributes, both directly on the entry (old style) and on its adjustNode children.",
+   "fr": "Enregistre les attributs XML d'une entrée groundAdjustedNode : temps d'activation, décalage Y et nœuds de raycast. Enregistre aussi les attributs des nœuds ajustés, directement sur l'entrée (ancien style) et sur ses enfants adjustNode."
+  },
+  "GroundAdjustedNodes.registerAdjustNodeXMLPaths": {
+   "en": "Registers the XML attributes of an adjust node: node, minY and maxY limits, move speeds, reset-when-inactive, update threshold, inactive position and the averaged inactive height option.",
+   "fr": "Enregistre les attributs XML d'un nœud ajusté : nœud, limites minY et maxY, vitesses de déplacement, retour à l'état inactif, seuil de mise à jour, position inactive et option de hauteur inactive moyenne."
+  },
+  "GroundAdjustedNodes.registerFunctions": {
+   "en": "Registers the specialization's vehicle functions (XML loaders, init, activity check and the raycast and node update functions) on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les fonctions de la spécialisation (chargeurs XML, initialisation, test d'activité, mises à jour des raycasts et des nœuds)."
+  },
+  "GroundAdjustedNodes.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad, onLoadFinished, onUpdate and onRegisterAnimationValueTypes.",
+   "fr": "Abonne la spécialisation à onLoad, onLoadFinished, onUpdate et onRegisterAnimationValueTypes."
+  },
+  "GroundAdjustedNodes:onLoad": {
+   "en": "Reads the global settings and loads every groundAdjustedNode, both the base ones and those of the selected configuration. If none is valid, it removes the update, load-finished and animation listeners to save work.",
+   "fr": "Lit les réglages globaux et charge chaque groundAdjustedNode, ceux de base comme ceux de la configuration choisie. Si aucun n'est valide, retire les écouteurs de mise à jour, de fin de chargement et d'animation pour économiser du temps."
+  },
+  "GroundAdjustedNodes:onLoadFinished": {
+   "en": "Computes the initial active state of each node and, if active, applies the current adjusted height to nodes that differ noticeably from their i3d position. Flags moving tools as dirty when available.",
+   "fr": "Calcule l'état actif initial de chaque nœud et, s'il est actif, applique la hauteur ajustée courante aux nœuds qui s'écartent sensiblement de leur position i3d. Marque les outils mobiles comme modifiés si disponible."
+  },
+  "GroundAdjustedNodes:onUpdate": {
+   "en": "Each frame, if the vehicle is closer than maxUpdateDistance, runs the raycasts and then updates every ground adjusted node. Nothing happens when the vehicle is farther away.",
+   "fr": "À chaque frame, si le véhicule est plus proche que maxUpdateDistance, lance les raycasts puis met à jour chaque nœud ajusté au sol. Rien ne se passe si le véhicule est plus éloigné."
+  },
+  "GroundAdjustedNodes:loadGroundAdjustedNodeFromXML": {
+   "en": "Loads one groundAdjustedNode: activation time, adjust nodes (including the legacy single-node form) and raycast nodes, with a limit of two raycast nodes. Returns true only if at least one raycast node and one adjust node exist, otherwise logs a warning.",
+   "fr": "Charge un groundAdjustedNode : temps d'activation, nœuds ajustés (y compris l'ancienne forme à nœud unique) et nœuds de raycast, avec au plus deux nœuds de raycast. Renvoie true seulement s'il existe au moins un nœud de raycast et un nœud ajusté, sinon journalise un avertissement."
+  },
+  "GroundAdjustedNodes:loadGroundAdjustedRaycastNodeFromXML": {
+   "en": "Loads a raycast node (node, distance, Y offset) and builds its raycast callback, which ignores triggers and stores the hit distance. Reuses an existing entry when the same node has identical settings, and rejects conflicting duplicates. Returns nil on error.",
+   "fr": "Charge un nœud de raycast (nœud, distance, décalage Y) et construit son callback de raycast, qui ignore les triggers et mémorise la distance touchée. Réutilise une entrée existante si le même nœud a des réglages identiques et refuse les doublons contradictoires. Renvoie nil en cas d'erreur."
+  },
+  "GroundAdjustedNodes:loadGroundAdjustedAdjustNodeFromXML": {
+   "en": "Loads one adjust node: stores its current translation, Y limits, move speeds (converted to per millisecond) and inactive height. Returns false if the node is missing, with a warning only when it is required.",
+   "fr": "Charge un nœud ajusté : mémorise sa translation actuelle, ses limites en Y, ses vitesses de déplacement (converties par milliseconde) et sa hauteur inactive. Renvoie false si le nœud manque, avec un avertissement seulement s'il est obligatoire."
+  },
+  "GroundAdjustedNodes:initGroundAdjustedAdjustNode": {
+   "en": "When two raycast nodes are used, computes the adjust node's relative position between them (alpha) so the two measured heights can be interpolated. Does nothing with a single raycast node.",
+   "fr": "Quand deux nœuds de raycast sont utilisés, calcule la position relative du nœud ajusté entre eux (alpha) afin d'interpoler les deux hauteurs mesurées. Sans effet avec un seul nœud de raycast."
+  },
+  "GroundAdjustedNodes:updateGroundAdjustedRaycasts": {
+   "en": "For each active raycast node, checks whether the spot is on a field via the terrain detail density map. Off a field (or with water adjustment) it raycasts downward, otherwise it uses the terrain height. Stores the resulting distance to the ground.",
+   "fr": "Pour chaque nœud de raycast actif, teste si l'endroit est sur un champ via la carte de densité de détail du terrain. Hors champ (ou avec ajustement à l'eau) il lance un raycast vers le bas, sinon il utilise la hauteur du terrain. Mémorise la distance au sol obtenue."
+  },
+  "GroundAdjustedNodes:updateGroundAdjustedNode": {
+   "en": "Updates the active state and each adjust node's target height: from the measured ground distance, plus a noise wobble on fields, clamped to minY and maxY and blended with the inactive position by the active scale. Then moves the node toward it at the configured speed.",
+   "fr": "Met à jour l'état actif et la hauteur cible de chaque nœud ajusté : d'après la distance mesurée au sol, plus une oscillation de bruit sur les champs, bornée par minY et maxY et mélangée à la position inactive selon l'échelle active. Déplace ensuite le nœud vers la cible à la vitesse configurée."
+  },
+  "GroundAdjustedNodes:getIsGroundAdjustedNodeActive": {
+   "en": "Returns whether ground adjustment is allowed: always when the onlyActiveWhileAttached option is off, or when the vehicle is attached to another vehicle, or when the attach check is ignored.",
+   "fr": "Indique si l'ajustement au sol est permis : toujours si l'option onlyActiveWhileAttached est désactivée, ou si le véhicule est attelé à un autre véhicule, ou si le test d'attelage est ignoré."
+  },
+  "GroundAdjustedNodes:onRegisterAnimationValueTypes": {
+   "en": "Registers the animation value type \"groundAdjustScale\", which lets an animation drive the active scale of the ground adjusted node owning a given node. Warns and returns 0 if no matching groundAdjustedNode is found.",
+   "fr": "Enregistre le type de valeur d'animation « groundAdjustScale », qui permet à une animation de piloter l'échelle active du groundAdjustedNode possédant un nœud donné. Avertit et renvoie 0 si aucun groundAdjustedNode correspondant n'est trouvé."
+  }
+ }
+}

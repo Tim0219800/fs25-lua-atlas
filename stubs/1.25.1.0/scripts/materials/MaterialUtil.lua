@@ -1,20 +1,20 @@
 ---@meta
 -- FS25 1.25.1.0 : materials/MaterialUtil.lua (generated stub, FS25 Lua Atlas)
 
---- Fonctions utilitaires liées aux matériaux. Les quatre fonctions « onCreate » sont des rappels destinés à être déclarés dans un I3D (attribut onCreate du nœud, résolu par nom de fonction globale) : ils lisent les attributs utilisateur du nœud (getUserAttribute) et enregistrent le résultat dans g_materialManager ou g_particleSystemManager. Elles s'exécutent donc au chargement des I3D porte-matériaux et porte-particules (absents du dump), sur chaque pair.
+--- Utility functions related to materials. The four "onCreate" functions are callbacks meant to be declared in an I3D (the node's onCreate attribute, resolved by global function name): they read the node's user attributes (getUserAttribute) and record the result in g_materialManager or g_particleSystemManager. They therefore run when the material-holder and particle-holder I3Ds (absent from the dump) are loaded, on every peer.
 --- 
---- ATTRIBUTS UTILISATEUR LUS. Matériau de base : materialName. Matériau par matière : fillType (nom de type de remplissage, via g_fillTypeManager), materialType (doit exister dans MaterialManager) et materialIndex (entier, 1 par défaut). Système de particules : particleType (obligatoire, doit exister dans ParticleSystemManager), defaultEmittingState (faux par défaut), worldSpace (vrai par défaut), forceFullLifespan (faux par défaut). Le matériau retenu est toujours celui de l'emplacement 0 du nœud (getMaterial(id, 0)). Pour un mod : placer ces attributs et ces onCreate dans son I3D est la voie vanilla pour déclarer matériaux et particules, sous réserve d'être chargé par addModMaterialHolder pour les matériaux (le chemin équivalent pour les particules n'est pas dans ce fichier : NON VÉRIFIÉ).
+--- USER ATTRIBUTES READ. Base material: materialName. Per-material: fillType (fill type name, via g_fillTypeManager), materialType (must exist in MaterialManager) and materialIndex (integer, 1 by default). Particle system: particleType (required, must exist in ParticleSystemManager), defaultEmittingState (false by default), worldSpace (true by default), forceFullLifespan (false by default). The material kept is always the one in slot 0 of the node (getMaterial(id, 0)). For a mod: putting these attributes and these onCreate callbacks in its I3D is the vanilla way to declare materials and particles, provided it is loaded by addModMaterialHolder for materials (the equivalent path for particles is not in this file: UNVERIFIED).
 --- 
---- GESTION D'ERREUR : tous les cas invalides sont signalés par Logging.i3dWarning avec le nœud, puis l'appel est abandonné sans exception ; onCreateParticleSystem affiche aussi la liste des types disponibles. Les corps de ParticleUtil.loadParticleSystemFromNode et de getUserAttribute sont absents du dump : la manière dont defaultEmittingState, worldSpace et forceFullLifespan sont appliqués est NON VÉRIFIÉE ici.
+--- ERROR HANDLING: all invalid cases are reported with Logging.i3dWarning with the node, then the call is abandoned without an exception; onCreateParticleSystem also prints the list of available types. The bodies of ParticleUtil.loadParticleSystemFromNode and getUserAttribute are absent from the dump: how defaultEmittingState, worldSpace and forceFullLifespan are applied is UNVERIFIED here.
 ---@class MaterialUtil
 MaterialUtil = {}
 
---- Rappel de porte-matériaux : lit l'attribut materialName du nœud et enregistre le matériau d'emplacement 0 comme matériau de base (g_materialManager:addBaseMaterial) ; avertit si l'attribut manque.
+--- Material-holder callback: reads the node's materialName attribute and registers the slot-0 material as a base material (g_materialManager:addBaseMaterial); warns if the attribute is missing.
 ---@param _ any
 ---@param id integer
 function MaterialUtil.onCreateBaseMaterial(_, id) end
 
---- Valide les attributs fillType, materialType et materialIndex d'un nœud et renvoie, en cas de succès, vrai puis l'indice du type de remplissage, le nom de type de matériau et l'indice (1 par défaut). Renvoie faux avec avertissement I3D si un attribut manque, si le type de remplissage ou de matériau est inconnu, ou si l'indice n'est pas numérique.
+--- Validates a node's fillType, materialType and materialIndex attributes and, on success, returns true then the fill type index, the material type name and the index (1 by default). Returns false with an I3D warning if an attribute is missing, if the fill type or material type is unknown, or if the index is not numeric.
 ---@param node integer
 ---@param sourceFuncName string
 ---@return boolean
@@ -23,22 +23,22 @@ function MaterialUtil.onCreateBaseMaterial(_, id) end
 ---@return integer
 function MaterialUtil.validateMaterialAttributes(node, sourceFuncName) end
 
---- Rappel de porte-matériaux : après validation, enregistre le matériau d'emplacement 0 dans le registre des matériaux (g_materialManager:addMaterial).
+--- Material-holder callback: after validation, registers the slot-0 material in the materials registry (g_materialManager:addMaterial).
 ---@param _ any
 ---@param id integer
 function MaterialUtil.onCreateMaterial(_, id) end
 
---- Rappel de porte-matériaux : après validation, enregistre le matériau d'emplacement 0 dans le registre des matériaux de particules (g_materialManager:addParticleMaterial).
+--- Material-holder callback: after validation, registers the slot-0 material in the particle materials registry (g_materialManager:addParticleMaterial).
 ---@param _ any
 ---@param id integer
 function MaterialUtil.onCreateParticleMaterial(_, id) end
 
---- Rappel de porte-particules : lit particleType, defaultEmittingState, worldSpace et forceFullLifespan, construit un système de particules depuis le nœud (ParticleUtil.loadParticleSystemFromNode) et l'enregistre comme système de référence du type (g_particleSystemManager:addParticleSystem), en remplaçant tout système déjà déclaré pour ce type.
+--- Particle-holder callback: reads particleType, defaultEmittingState, worldSpace and forceFullLifespan, builds a particle system from the node (ParticleUtil.loadParticleSystemFromNode) and registers it as the reference system of the type (g_particleSystemManager:addParticleSystem), replacing any system already declared for that type.
 ---@param _ any
 ---@param id integer
 function MaterialUtil.onCreateParticleSystem(_, id) end
 
---- Cherche, récursivement dans le nœud puis ses enfants, le premier matériau dont le nom d'emplacement (getMaterialSlotName) vaut le nom demandé ; ne regarde que les formes (ClassIds.SHAPE) ; renvoie son identifiant ou nil.
+--- Searches, recursively in the node then its children, for the first material whose slot name (getMaterialSlotName) equals the requested name; only looks at shapes (ClassIds.SHAPE); returns its identifier or nil.
 ---@param node any
 ---@param materialName any
 function MaterialUtil.getMaterialBySlotName(node, materialName) end

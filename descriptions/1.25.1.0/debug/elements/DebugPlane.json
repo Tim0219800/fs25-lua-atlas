@@ -1,0 +1,21 @@
+{
+ "fichier": "debug/elements/DebugPlane.lua",
+ "module": {
+  "en": "DebugPlane is a debug element drawing a quadrilateral from four corner positions, optionally terrain-aligned, filled, double-sided or solid. The renderer `DebugPlane.renderWithPositions` and `createWithPositions` are absent from this dump (UNVERIFIED).",
+  "fr": "DebugPlane est un élément de débogage qui dessine un quadrilatère à partir de quatre positions de coins, avec alignement terrain, remplissage, double face ou option solide. Le rendu `DebugPlane.renderWithPositions` et `createWithPositions` sont absents de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugPlane:draw": {
+   "en": "Calls `DebugPlane.renderWithPositions` with the stored corner positions and display options (the explicit coordinate arguments are passed as nil).",
+   "fr": "Appelle `DebugPlane.renderWithPositions` avec les positions de coins mémorisées et les options d'affichage (les arguments de coordonnées explicites sont passés à nil)."
+  },
+  "DebugPlane:createWithNodes": {
+   "en": "Builds the plane from the world positions of a start node and a width and a height node by delegating to `createWithPositions` (not in this dump). Returns self.",
+   "fr": "Construit le plan à partir des positions monde d'un noeud de départ et de noeuds de largeur et de hauteur, en déléguant à `createWithPositions` (absent de ce dump). Renvoie self."
+  },
+  "DebugPlane:createWithNode": {
+   "en": "Builds a horizontal rectangle of the given X and Z size centred on a node, storing its four corners in world space (computed once, not updated if the node moves). Returns self.",
+   "fr": "Construit un rectangle horizontal de taille X et Z données, centré sur un noeud, et mémorise ses quatre coins en espace monde (calculés une fois, non mis à jour si le noeud bouge). Renvoie self."
+  }
+ }
+}

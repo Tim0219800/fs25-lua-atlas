@@ -1,0 +1,21 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/maps/CoverMap.lua",
+ "module": {
+  "en": "Precision Farming map class (child of ValueMap) that tracks ground cover per pixel and uses a temporary harvest lock bitmap to detect which pixels were actually harvested. When a harvest finishes, it triggers the harvest updates of the nitrogen, pH and seed rate maps. The class's constructor and loading code are not present in this dump; only the cover update functions are.",
+  "fr": "Classe de carte de Precision Farming (enfant de ValueMap) qui suit la couverture du sol par pixel et utilise une carte temporaire de verrouillage de récolte pour savoir quels pixels ont réellement été récoltés. À la fin d'une récolte, elle déclenche les mises à jour de récolte des cartes d'azote, de pH et de taux de semis. Le constructeur et le chargement de la classe ne figurent pas dans ce dump ; seules les fonctions de mise à jour de la couverture y sont."
+ },
+ "fonctions": {
+  "CoverMap:getCoverUpdateDensityMapModifiers": {
+   "en": "Builds, then caches per fruit type set and forage flag, the DensityMapMultiModifier used before (preUpdate) or after a harvest. Returns the multi-modifier plus the two shared stats tables for changed and total pixels.",
+   "fr": "Construit, puis met en cache par ensemble de types de fruits et indicateur de fourrage, le DensityMapMultiModifier utilisé avant (preUpdate) ou après une récolte. Renvoie le multi-modificateur et les deux tables de statistiques partagées (pixels modifiés et totaux)."
+  },
+  "CoverMap:preUpdateCoverArea": {
+   "en": "Runs before the harvest: marks pixels in harvestable (or preparable) growth state on the temporary lock map inside the given shape. Returns the index of the fruit type found with changed pixels, or nil, and remembers it as fallback.",
+   "fr": "S'exécute avant la récolte : marque sur la carte de verrouillage temporaire les pixels à un stade récoltable (ou préparable) dans la forme donnée. Renvoie l'indice du type de fruit trouvé, ou nil, et le mémorise comme valeur de repli."
+  },
+  "CoverMap:postUpdateCoverArea": {
+   "en": "Runs after the harvest: lowers the cover state on pixels that held fruit and no longer do, and calls harvestUpdate on the nitrogen, pH and seed rate maps when pixels were locked. Clears the lock and returns two booleans (pH map updated, nitrogen map updated).",
+   "fr": "S'exécute après la récolte : réduit l'état de couverture des pixels qui portaient du fruit et n'en portent plus, et appelle harvestUpdate sur les cartes d'azote, de pH et de taux de semis si des pixels étaient verrouillés. Efface le verrou et renvoie deux booléens (carte pH mise à jour, carte azote mise à jour)."
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "fichier": "debug/elements/DebugPolygon.lua",
+ "module": {
+  "en": "DebugPolygon is a debug element drawing a polygon from a flat list of vertex coordinates, with optional contour lines. It wraps the engine function `drawDebugPolygon` (behaviour UNVERIFIED, engine side).",
+  "fr": "DebugPolygon est un élément de débogage qui dessine un polygone à partir d'une liste plate de coordonnées de sommets, avec contour optionnel. Il enveloppe la fonction moteur `drawDebugPolygon` (comportement NON VÉRIFIÉ, côté moteur)."
+ },
+ "fonctions": {
+  "DebugPolygon:draw": {
+   "en": "Calls `DebugPolygon.renderWithPositions` with the stored positions, colour, solid flag and contour option.",
+   "fr": "Appelle `DebugPolygon.renderWithPositions` avec les positions mémorisées, la couleur, l'option solide et l'option de contour."
+  },
+  "DebugPolygon.renderWithPositions": {
+   "en": "Draws a polygon from vertices given as x1,y1,z1,x2,y2,z2,... (default white) with `drawDebugPolygon`; if `drawContour` is set it also draws the edges including the closing edge back to the first vertex.",
+   "fr": "Dessine un polygone à partir de sommets donnés sous la forme x1,y1,z1,x2,y2,z2,... (blanc par défaut) avec `drawDebugPolygon` ; si `drawContour` est actif, il dessine aussi les arêtes, y compris l'arête de fermeture vers le premier sommet."
+  }
+ }
+}

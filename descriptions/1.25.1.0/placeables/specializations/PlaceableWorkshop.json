@@ -1,0 +1,37 @@
+{
+ "fichier": "placeables/specializations/PlaceableWorkshop.lua",
+ "module": {
+  "en": "Placeable specialization that turns a building into a workshop by creating a VehicleSellingPoint from `placeable.workshop.sellingPoint`. The selling point is linked back to the placeable and its owner farm is kept in step.",
+  "fr": "Spécialisation de placeable qui transforme un bâtiment en atelier en créant un VehicleSellingPoint à partir de `placeable.workshop.sellingPoint`. Le point de vente est relié au placeable et sa ferme propriétaire reste synchronisée."
+ },
+ "fonctions": {
+  "PlaceableWorkshop.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableWorkshop.registerOverwrittenFunctions": {
+   "en": "Overrides `setOwnerFarmId` on the placeable type.",
+   "fr": "Surcharge `setOwnerFarmId` sur le type de placeable."
+  },
+  "PlaceableWorkshop.registerEventListeners": {
+   "en": "Subscribes to onLoad and onDelete.",
+   "fr": "S'abonne à onLoad et onDelete."
+  },
+  "PlaceableWorkshop.registerXMLPaths": {
+   "en": "Declares the selling point XML keys via `VehicleSellingPoint.registerXMLPaths` under `.workshop.sellingPoint`.",
+   "fr": "Déclare les clés XML du point de vente via `VehicleSellingPoint.registerXMLPaths` sous `.workshop.sellingPoint`."
+  },
+  "PlaceableWorkshop:onLoad": {
+   "en": "Creates and loads the VehicleSellingPoint, sets its owner farm and stores `owningPlaceable` on it.",
+   "fr": "Crée et charge le VehicleSellingPoint, fixe sa ferme propriétaire et y stocke `owningPlaceable`."
+  },
+  "PlaceableWorkshop:onDelete": {
+   "en": "Deletes the selling point if it exists.",
+   "fr": "Supprime le point de vente s'il existe."
+  },
+  "PlaceableWorkshop:setOwnerFarmId": {
+   "en": "Calls the parent, then propagates the new owner farm to the selling point.",
+   "fr": "Appelle le parent, puis propage la nouvelle ferme propriétaire au point de vente."
+  }
+ }
+}

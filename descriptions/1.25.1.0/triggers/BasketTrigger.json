@@ -1,0 +1,29 @@
+{
+ "fichier": "triggers/BasketTrigger.lua",
+ "module": {
+  "en": "Small trigger class for a basket (target area) placed in a map through the onCreate mechanism. It registers a trigger and remembers which objects that were thrown (those with a thrownFromPosition field) entered it. Distance or scoring logic exists only as commented-out code, so in this dump the trigger has no visible gameplay effect.",
+  "fr": "Petite classe de déclencheur pour un panier (zone cible) placé dans une carte via le mécanisme onCreate. Elle enregistre un déclencheur et mémorise quels objets lancés (ceux ayant un champ thrownFromPosition) y sont entrés. La logique de distance ou de score n'existe qu'en code commenté, donc dans ce dump le déclencheur n'a aucun effet de jeu visible."
+ },
+ "fonctions": {
+  "BasketTrigger:onCreate": {
+   "en": "Map onCreate entry point: creates a trigger from the given node and registers it as non-updateable in the mission if loading succeeds, otherwise deletes it.",
+   "fr": "Point d'entrée onCreate de la carte : crée un déclencheur à partir du nœud donné et l'enregistre comme non mis à jour dans la mission si le chargement réussit, sinon le supprime."
+  },
+  "BasketTrigger.new": {
+   "en": "Constructor. Creates an instance with trigger and node ids set to 0.",
+   "fr": "Constructeur. Crée une instance avec les identifiants de déclencheur et de nœud à 0."
+  },
+  "BasketTrigger:load": {
+   "en": "Resolves the trigger shape from the node's triggerIndex user attribute (falling back to the node itself), registers the trigger callback, enables it and returns true.",
+   "fr": "Résout la forme du déclencheur depuis l'attribut utilisateur triggerIndex du nœud (à défaut, le nœud lui-même), enregistre le callback du déclencheur, l'active et retourne true."
+  },
+  "BasketTrigger:delete": {
+   "en": "Removes the trigger registration.",
+   "fr": "Retire l'enregistrement du déclencheur."
+  },
+  "BasketTrigger:triggerCallback": {
+   "en": "When enabled, flags an entering actor as inside if its object has a thrownFromPosition, and clears the flag when it leaves. Note: the object returned for the actor is not checked for nil on enter, which would raise an error for unknown nodes.",
+   "fr": "Quand le déclencheur est actif, marque un acteur entrant comme présent si son objet a un thrownFromPosition, et retire le marquage à sa sortie. À noter : l'objet retourné pour l'acteur n'est pas testé contre nil à l'entrée, ce qui provoquerait une erreur pour un nœud inconnu."
+  }
+ }
+}

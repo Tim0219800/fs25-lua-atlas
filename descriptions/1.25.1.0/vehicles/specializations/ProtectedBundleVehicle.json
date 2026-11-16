@@ -1,0 +1,37 @@
+{
+ "fichier": "vehicles/specializations/ProtectedBundleVehicle.lua",
+ "module": {
+  "en": "Specialization for vehicles made of several parts that must behave as one unit. A bundle root stays selectable and resettable, while a bundle child is hidden from selection and overview. It has no prerequisites and reads its settings from the vehicle XML under vehicle.protectedBundleVehicle.",
+  "fr": "Spécialisation pour les véhicules composés de plusieurs éléments qui doivent se comporter comme un seul. La racine du lot reste sélectionnable et réinitialisable, tandis qu'un enfant est masqué de la sélection et de l'aperçu. Elle n'a aucun prérequis et lit ses réglages dans le XML du véhicule sous vehicle.protectedBundleVehicle."
+ },
+ "fonctions": {
+  "ProtectedBundleVehicle.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisite specializations.",
+   "fr": "Retourne toujours true : cette spécialisation n'a aucune spécialisation prérequise."
+  },
+  "ProtectedBundleVehicle.initSpecialization": {
+   "en": "Registers the XML schema entries isBundleRoot, isBundleChild (booleans, default false) and bundleFilename (string path) under vehicle.protectedBundleVehicle.",
+   "fr": "Enregistre dans le schéma XML les entrées isBundleRoot, isBundleChild (booléens, faux par défaut) et bundleFilename (chemin) sous vehicle.protectedBundleVehicle."
+  },
+  "ProtectedBundleVehicle.registerOverwrittenFunctions": {
+   "en": "Overrides getReloadXML on the vehicle type so a reset can respawn the whole bundle.",
+   "fr": "Surcharge getReloadXML sur le type de véhicule afin qu'une réinitialisation puisse refaire apparaître tout le lot."
+  },
+  "ProtectedBundleVehicle.registerEventListeners": {
+   "en": "Subscribes the specialization to the onLoad and onPostDetach events.",
+   "fr": "Abonne la spécialisation aux événements onLoad et onPostDetach."
+  },
+  "ProtectedBundleVehicle:onLoad": {
+   "en": "Reads the XML flags and the bundle file path, and warns if no store item exists for that path. A child gets canBeReset, showInVehicleOverview and allowSelection set to false. The onPostDetach listener is kept only for a child on the server.",
+   "fr": "Lit les indicateurs XML et le chemin du fichier de lot, et avertit si aucun article de boutique n'existe pour ce chemin. Un enfant reçoit canBeReset, showInVehicleOverview et allowSelection à false. L'écouteur onPostDetach n'est conservé que pour un enfant côté serveur."
+  },
+  "ProtectedBundleVehicle:onPostDetach": {
+   "en": "Deletes this child vehicle after it is detached, unless a reload or teleport is running or it is already being deleted. Only registered for server-side bundle children.",
+   "fr": "Supprime ce véhicule enfant après son détachement, sauf si un rechargement ou une téléportation est en cours ou s'il est déjà en cours de suppression. Enregistré uniquement pour les enfants de lot côté serveur."
+  },
+  "ProtectedBundleVehicle:getReloadXML": {
+   "en": "For a bundle root with a bundle file, returns the reload XML with vehicle(0)#filename replaced by the bundle file, so a reset spawns the bundle. Otherwise returns the parent result unchanged.",
+   "fr": "Pour une racine de lot ayant un fichier de lot, retourne le XML de rechargement avec vehicle(0)#filename remplacé par ce fichier, de sorte qu'une réinitialisation fasse apparaître le lot. Sinon retourne le résultat parent inchangé."
+  }
+ }
+}

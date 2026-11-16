@@ -1,0 +1,33 @@
+{
+ "fichier": "placeables/specializations/PlaceableNPCSpot.lua",
+ "module": {
+  "en": "Placeable specialization that lets a building define NPC spots (positions where non-player characters can stand). Spots are built from the XML on load and registered with g_npcManager once the placement is final. NPCSpot and the NPC manager are defined elsewhere.",
+  "fr": "Spécialisation de placeable permettant à un bâtiment de définir des emplacements de PNJ (positions où des personnages non joueurs peuvent se tenir). Les emplacements sont construits depuis le XML au chargement et enregistrés auprès de g_npcManager une fois le placement final. NPCSpot et le gestionnaire de PNJ sont définis ailleurs."
+ },
+ "fonctions": {
+  "PlaceableNPCSpot.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is required.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableNPCSpot.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete and onFinalizePlacement.",
+   "fr": "S'abonne à onLoad, onDelete et onFinalizePlacement."
+  },
+  "PlaceableNPCSpot.registerXMLPaths": {
+   "en": "Declares the npcSpots.spot XML entries by delegating to NPCSpot.registerXMLPaths.",
+   "fr": "Déclare les entrées XML npcSpots.spot en déléguant à NPCSpot.registerXMLPaths."
+  },
+  "PlaceableNPCSpot:onLoad": {
+   "en": "Creates one NPCSpot per npcSpots.spot entry with a unique id built from the placeable's unique id and the index; spots that fail to load are deleted. Stores the list only if it is not empty.",
+   "fr": "Crée un NPCSpot par entrée npcSpots.spot avec un identifiant unique construit à partir de l'identifiant unique du placeable et de l'indice ; les emplacements qui échouent sont supprimés. La liste n'est conservée que si elle n'est pas vide."
+  },
+  "PlaceableNPCSpot:onFinalizePlacement": {
+   "en": "Adds each spot to the NPC manager.",
+   "fr": "Ajoute chaque emplacement au gestionnaire de PNJ."
+  },
+  "PlaceableNPCSpot:onDelete": {
+   "en": "Removes each spot from the NPC manager. Note: the spots themselves are not deleted here.",
+   "fr": "Retire chaque emplacement du gestionnaire de PNJ. À noter : les emplacements eux-mêmes ne sont pas supprimés ici."
+  }
+ }
+}

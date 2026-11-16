@@ -1,0 +1,17 @@
+{
+ "fichier": "handTools/HandToolUtil.lua",
+ "module": {
+  "en": "Static helper class for hand tools: targeting of holders and node placement helpers. It uses constants (`HOLDER_DEFAULT_*_DISTANCE`, `CLICK_BOX_TARGET_MASK`) and `transformRelativeToParent` that are not defined in this file (UNVERIFIED).",
+  "fr": "Classe d'aides statiques pour les outils à main : ciblage des holders et placement de noeuds. Elle utilise des constantes (`HOLDER_DEFAULT_*_DISTANCE`, `CLICK_BOX_TARGET_MASK`) et `transformRelativeToParent` absentes de ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HandToolUtil.addHandToolHolderTarget": {
+   "en": "Registers `HandToolHolder` as a target type on a player targeter, with optional min and max distances (defaults from `HandToolUtil` constants), filtered so that only nodes that are click boxes of a known holder in `handToolSystem` count.",
+   "fr": "Enregistre `HandToolHolder` comme type de cible sur un targeter de joueur, avec distances min et max optionnelles (valeurs par défaut des constantes de `HandToolUtil`), filtré pour ne retenir que les noeuds qui sont des click boxes d'un holder connu de `handToolSystem`."
+  },
+  "HandToolUtil.linkAndTransformRelativeToParent": {
+   "en": "Links `rootNode` under `parentNode`, then calls `HandToolUtil.transformRelativeToParent` so that `childNode` ends up at the parent's position and rotation (that function is UNVERIFIED here).",
+   "fr": "Lie `rootNode` sous `parentNode`, puis appelle `HandToolUtil.transformRelativeToParent` pour que `childNode` se retrouve à la position et à la rotation du parent (cette fonction est NON VÉRIFIÉE ici)."
+  }
+ }
+}

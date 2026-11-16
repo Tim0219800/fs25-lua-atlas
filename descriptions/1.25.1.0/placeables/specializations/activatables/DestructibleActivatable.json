@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/activatables/DestructibleActivatable.lua",
+ "module": {
+  "en": "Activatable object that lets a player start repairing a destructible placeable. Availability depends on the placeable, and running it sends a PlaceableDestructibleRepairEvent to the server, except during a guided tour where an info dialog is shown instead.",
+  "fr": "Objet activable qui permet à un joueur de lancer la réparation d'un placeable destructible. La disponibilité dépend du placeable, et son exécution envoie un PlaceableDestructibleRepairEvent au serveur, sauf pendant une visite guidée où une boîte d'information s'affiche à la place."
+ },
+ "fonctions": {
+  "DestructibleActivatable.new": {
+   "en": "Creates the activatable for a placeable and sets the prompt text `action_destructibleStartRepairing`.",
+   "fr": "Crée l'activable pour un placeable et fixe le texte `action_destructibleStartRepairing`."
+  },
+  "DestructibleActivatable:getIsActivatable": {
+   "en": "Returns the result of the placeable `getCanRepairDestructible` for the local farm id.",
+   "fr": "Renvoie le résultat de `getCanRepairDestructible` du placeable pour l'identifiant de la ferme locale."
+  },
+  "DestructibleActivatable:run": {
+   "en": "Shows an info dialog and stops if a guided tour is running; otherwise sends a PlaceableDestructibleRepairEvent to the server connection.",
+   "fr": "Affiche une boîte d'information et s'arrête si une visite guidée est en cours ; sinon envoie un PlaceableDestructibleRepairEvent à la connexion serveur."
+  }
+ }
+}

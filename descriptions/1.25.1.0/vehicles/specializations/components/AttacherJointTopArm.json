@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/specializations/components/AttacherJointTopArm.lua",
+ "module": {
+  "en": "Visual top link (upper link) of a three-point attacher joint. It can be loaded from a shared XML/i3d asset linked to a vehicle node, or built from nodes already in the vehicle, and it re-aims itself at a target node each update, stretching its translation and scale parts to match the distance. It also applies brand material templates and object changes. Purely cosmetic and client-side; `RENAMED_UPPER_LINKS` and `xmlSchema` are used here but not defined in this file (UNVERIFIED where they are set).",
+  "fr": "Bras supérieur (top link) visuel d'une articulation d'attelage trois points. Il peut être chargé depuis un asset XML/i3d partagé lié à un nœud du véhicule, ou construit à partir de nœuds déjà présents, et se réoriente vers un nœud cible à chaque mise à jour en ajustant translation et échelle selon la distance. Il applique aussi des modèles de matériaux de marque et des changements d'objets. Purement cosmétique et côté client ; `RENAMED_UPPER_LINKS` et `xmlSchema` sont utilisés ici mais non définis dans ce fichier (NON VÉRIFIÉ : où ils sont définis)."
+ },
+ "fonctions": {
+  "AttacherJointTopArm.new": {
+   "en": "Creates a top arm object bound to a vehicle with default settings: z scale -1, mount arm and brand decal enabled, no visibility toggle, empty component and change-object tables.",
+   "fr": "Crée un objet de bras supérieur lié à un véhicule avec les réglages par défaut : échelle z -1, bras de montage et décalque de marque activés, pas de bascule de visibilité, tables de composants et de changements d'objets vides."
+  },
+  "AttacherJointTopArm:delete": {
+   "en": "Deletes the top arm node and releases the shared i3d load request if any.",
+   "fr": "Supprime le nœud du bras supérieur et libère la requête de chargement i3d partagée le cas échéant."
+  },
+  "AttacherJointTopArm:setCallback": {
+   "en": "Stores a callback (and optional target) that is invoked with the success flag when loading finishes.",
+   "fr": "Mémorise un callback (et une cible optionnelle) appelé avec l'indicateur de succès à la fin du chargement."
+  },
+  "AttacherJointTopArm:onFinished": {
+   "en": "Called when loading ends: deletes the temporary XML file, runs `finalize` and then calls the registered callback with the success flag.",
+   "fr": "Appelé en fin de chargement : supprime le fichier XML temporaire, exécute `finalize` puis appelle le callback enregistré avec l'indicateur de succès."
+  },
+  "AttacherJointTopArm.loadFromVehicleXML": {
+   "en": "Builds a top arm from a vehicle XML key: either from `#baseNode` plus `#filename` (an XML asset, with warnings for i3d paths and renamed upper links) or from existing `#rotationNode`/`#translationNode` nodes. Then reads zScale, visibility, mount arm, material templates and object changes. Returns the top arm or nil.",
+   "fr": "Construit un bras supérieur depuis une clé XML de véhicule : soit via `#baseNode` et `#filename` (un asset XML, avec avertissements pour les chemins i3d et les bras renommés), soit via des nœuds existants `#rotationNode`/`#translationNode`. Lit ensuite zScale, visibilité, bras de montage, modèles de matériaux et changements d'objets. Renvoie le bras ou nil."
+  },
+  "AttacherJointTopArm:loadFromXML": {
+   "en": "Loads the top arm definition XML, reads its i3d filename and starts the asynchronous shared i3d load (via the vehicle when present). Returns false and finishes with failure if the XML or filename is missing.",
+   "fr": "Charge le XML de définition du bras, lit le nom du fichier i3d et lance le chargement i3d partagé asynchrone (via le véhicule s'il existe). Renvoie false et termine en échec si le XML ou le nom de fichier manque."
+  },
+  "AttacherJointTopArm:onI3DLoaded": {
+   "en": "Async i3d callback: links the root node under the link node, resolves translation, scale, decal and mount-arm nodes, hides unused parts and applies brand materials. Note: the decal material built from the brightness of the main material is never assigned to `self.decalMaterial`, so it has no effect.",
+   "fr": "Callback asynchrone du chargement i3d : lie le nœud racine sous le nœud d'attache, résout les nœuds de translation, d'échelle, de décalque et de bras de montage, masque les parties inutiles et applique les matériaux de marque. À noter : le matériau de décalque calculé d'après la luminosité du matériau principal n'est jamais affecté à `self.decalMaterial`, il reste sans effet."
+  },
+  "AttacherJointTopArm:finalize": {
+   "en": "Computes the reference distance and default translation of the translating part, and the reference length of the scaled part, used later by `update`.",
+   "fr": "Calcule la distance de référence et la translation par défaut de la partie coulissante, ainsi que la longueur de référence de la partie mise à l'échelle, utilisées ensuite par `update`."
+  },
+  "AttacherJointTopArm:setIsActive": {
+   "en": "Switches between attached and detached pose: sets mount-arm rotation, optionally toggles visibility, resets rotation, translation and scale when inactive, and applies the configured object changes.",
+   "fr": "Bascule entre pose attelée et détachée : règle la rotation du bras de montage, bascule éventuellement la visibilité, réinitialise rotation, translation et échelle si inactif, et applique les changements d'objets configurés."
+  },
+  "AttacherJointTopArm:update": {
+   "en": "Aims the top arm node at `targetNode` (direction plus an up vector depending on whether the node is in the front or rear half of the vehicle) and adjusts translation and scale to the current distance.",
+   "fr": "Oriente le nœud du bras vers `targetNode` (direction plus vecteur haut selon que le nœud est dans la moitié avant ou arrière du véhicule) et ajuste translation et échelle selon la distance courante."
+  },
+  "AttacherJointTopArm.registerVehicleXMLPaths": {
+   "en": "Registers the vehicle-side XML paths for a top arm (filename, baseNode, zScale, visibility, mount arm, material templates, decal, fallback nodes) plus object-change paths.",
+   "fr": "Enregistre les chemins XML côté véhicule pour un bras supérieur (fichier, baseNode, zScale, visibilité, bras de montage, modèles de matériaux, décalque, nœuds de repli) ainsi que les chemins de changements d'objets."
+  },
+  "AttacherJointTopArm.registerXMLPaths": {
+   "en": "Registers the XML paths of the top arm asset file (`topArm.*`: filename, root, translation, scale, brand decal and mount arm nodes) and i3d mappings.",
+   "fr": "Enregistre les chemins XML du fichier d'asset du bras (`topArm.*` : fichier, racine, translation, échelle, décalque de marque et bras de montage) et les mappings i3d."
+  }
+ }
+}

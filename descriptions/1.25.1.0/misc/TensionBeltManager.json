@@ -1,0 +1,33 @@
+{
+ "fichier": "misc/TensionBeltManager.lua",
+ "module": {
+  "en": "Plain manager (not an AbstractManager subclass) that stores the visual definitions of tension belts (straps used to secure loads). Belt types are registered when a map i3d node using the onCreateTensionBelt callback is loaded; each reads user attributes and child nodes (material, dummy material, hooks, ratchet). The first registered belt becomes the default.",
+  "fr": "Gestionnaire simple (pas une sous-classe d'AbstractManager) qui stocke les définitions visuelles des sangles de tension servant à arrimer des charges. Les types de sangle sont enregistrés au chargement d'un nœud i3d de carte utilisant le rappel onCreateTensionBelt ; chacun lit des attributs utilisateur et des nœuds enfants (matériau, matériau factice, crochets, cliquet). La première sangle enregistrée devient celle par défaut."
+ },
+ "fonctions": {
+  "TensionBeltManager.new": {
+   "en": "Constructor: builds the manager with the given or default metatable and initialises its data tables.",
+   "fr": "Constructeur : construit le gestionnaire avec la métatable fournie ou celle par défaut et initialise ses tables de données."
+  },
+  "TensionBeltManager:initDataStructures": {
+   "en": "Empties the belts table and clears the default belt data.",
+   "fr": "Vide la table des sangles et efface la sangle par défaut."
+  },
+  "TensionBeltManager:unloadMapData": {
+   "en": "Called on map unload: simply resets all stored belts by re-running initDataStructures.",
+   "fr": "Appelé au déchargement de la carte : réinitialise simplement toutes les sangles stockées en relançant initDataStructures."
+  },
+  "TensionBeltManager.onCreateTensionBelt": {
+   "en": "i3d onCreate callback for a belt template node. Reads user attributes name (default \"default\") and width (default 0.15), then scans children flagged isMaterial, isDummyMaterial, isHook (first and second hook) and isRatchet. Warns and skips if the type exists or if material or dummy material is missing; stores the belt and sets the first one as default. Uses the global g_tensionBeltManager.",
+   "fr": "Rappel onCreate i3d pour un nœud modèle de sangle. Lit les attributs utilisateur name (défaut \"default\") et width (défaut 0.15), puis parcourt les enfants marqués isMaterial, isDummyMaterial, isHook (premier et second crochet) et isRatchet. Avertit et ignore si le type existe déjà ou s'il manque le matériau ou le matériau factice ; enregistre la sangle et fait de la première la sangle par défaut. Utilise la globale g_tensionBeltManager."
+  },
+  "TensionBeltManager:getType": {
+   "en": "Builds the internal key for a belt name: the uppercased name prefixed with BELT_TYPE_.",
+   "fr": "Construit la clé interne d'un nom de sangle : le nom en majuscules préfixé par BELT_TYPE_."
+  },
+  "TensionBeltManager:getBeltData": {
+   "en": "Returns the belt definition for a name, falling back to the default belt when the name is nil or unknown (nil if no belt was ever registered).",
+   "fr": "Retourne la définition de sangle pour un nom, avec repli sur la sangle par défaut si le nom est nil ou inconnu (nil si aucune sangle n'a jamais été enregistrée)."
+  }
+ }
+}

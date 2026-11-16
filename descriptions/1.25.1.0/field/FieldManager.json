@@ -1,0 +1,37 @@
+{
+ "fichier": "field/FieldManager.lua",
+ "module": {
+  "en": "Manager of the map fields, a subclass of AbstractManager. On map load it links each Field to its farmland, checks the field does not touch other farmlands, and on a new server savegame queues FieldUpdateTask objects to preplant or prepare the NPC fields. It also saves and loads field data and pending tasks, and registers gsField* cheat commands. Many methods it calls (getFieldById, addFieldUpdateTask, onFinishFieldUpdateTask, update logic) are not in this file: UNVERIFIED.",
+  "fr": "Gestionnaire des champs de la carte, sous-classe de AbstractManager. Au chargement, il relie chaque Field à sa parcelle, vérifie que le champ ne touche pas d'autres parcelles et, sur une nouvelle sauvegarde serveur, met en file des FieldUpdateTask pour pré-planter ou préparer les champs des PNJ. Il sauvegarde et charge aussi les données des champs et les tâches en attente, et enregistre des commandes de triche gsField*. Beaucoup de méthodes appelées (getFieldById, addFieldUpdateTask, onFinishFieldUpdateTask, logique de mise à jour) ne sont pas dans ce fichier : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "FieldManager.new": {
+   "en": "Constructor. Creates the manager from AbstractManager.new with the given or default metatable.",
+   "fr": "Constructeur. Crée le gestionnaire via AbstractManager.new avec la métatable fournie ou par défaut."
+  },
+  "FieldManager:initDataStructures": {
+   "en": "Resets the field list, farmland-to-field mapping, update task queues, pending field update tables, timers and debug field.",
+   "fr": "Réinitialise la liste des champs, la correspondance parcelle-champ, les files de tâches de mise à jour, les tables de mises à jour en attente, les minuteries et le champ de debug."
+  },
+  "FieldManager:loadMapData": {
+   "en": "Large loader run through g_asyncTaskManager subtasks: registers as updateable, builds the available fruit list, links fields to farmlands with error logs for overlaps, creates random FieldUpdateTask for unowned mission-allowed fields on a new server savegame (or tasks from the map fields XML), registers cheat commands, subscribes to growth and mission-generation messages and creates a debug overlay. On clients it only sets all fields to cultivated ground. Pending tasks are then run to completion.",
+   "fr": "Gros chargeur exécuté par sous-tâches de g_asyncTaskManager : s'enregistre comme updateable, construit la liste des cultures disponibles, relie les champs aux parcelles avec des erreurs de log en cas de chevauchement, crée des FieldUpdateTask aléatoires pour les champs sans propriétaire autorisant les missions dans une nouvelle sauvegarde serveur (ou des tâches du XML des champs de la carte), enregistre les commandes de triche, s'abonne aux messages de croissance et de génération de missions et crée un overlay de debug. Sur les clients, il met seulement tous les champs en sol cultivé. Les tâches en attente sont ensuite exécutées jusqu'au bout."
+  },
+  "FieldManager:unloadMapData": {
+   "en": "Removes the updateable, deletes all fields, clears references, unsubscribes from messages, removes the gsField* console commands and calls the parent.",
+   "fr": "Retire l'updateable, supprime tous les champs, efface les références, se désabonne des messages, retire les commandes console gsField* et appelle le parent."
+  },
+  "FieldManager:delete": {
+   "en": "Empty function; cleanup is done in unloadMapData.",
+   "fr": "Fonction vide ; le nettoyage est fait dans unloadMapData."
+  },
+  "FieldManager:loadFromXMLFile": {
+   "en": "Reads the savegame fields file: per-field data through Field:loadFromXMLFile, the pending update list, and saved update tasks instantiated by class name and queued. Logs and returns if the file is missing.",
+   "fr": "Lit le fichier des champs de la sauvegarde : données par champ via Field:loadFromXMLFile, liste des mises à jour en attente et tâches de mise à jour sauvegardées, instanciées par nom de classe et mises en file. Journalise et retourne si le fichier manque."
+  },
+  "FieldManager:saveToXMLFile": {
+   "en": "Writes fields (id plus Field:saveToXMLFile data), pending updates and queued update tasks (skipped if needsSaving is false) to the savegame XML file.",
+   "fr": "Écrit les champs (id plus données de Field:saveToXMLFile), les mises à jour en attente et les tâches de mise à jour en file (ignorées si needsSaving vaut false) dans le fichier XML de la sauvegarde."
+  }
+ }
+}

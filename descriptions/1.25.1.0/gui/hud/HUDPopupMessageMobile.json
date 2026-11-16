@@ -1,0 +1,109 @@
+{
+ "fichier": "gui/hud/HUDPopupMessageMobile.lua",
+ "module": {
+  "en": "Mobile-UI popup message box (extends HUDDisplayElement) shown at the bottom center of the screen. Messages are queued, displayed one at a time with a title, a text and up to a fixed number of input rows, and closed after a timeout, on tap or via the confirm actions. While shown it hides the minimap toggle, pushes a depth-of-field blur area and uses a touch custom context named guidedTour. Client-side only.",
+  "fr": "Boîte de message popup de l'interface mobile (étend HUDDisplayElement), affichée en bas au centre de l'écran. Les messages sont mis en file et montrés un par un avec titre, texte et un nombre maximal de lignes de commandes, puis fermés après un délai, au toucher ou via les actions de confirmation. Pendant l'affichage, elle bloque le basculement de la minicarte, ajoute une zone de flou de profondeur de champ et utilise un contexte tactile nommé guidedTour. Côté client uniquement."
+ },
+ "fonctions": {
+  "HUDPopupMessageMobile.new": {
+   "en": "Creates the popup with its background overlay, empty message queue, input rows and glyphs, and a continue-text from the l10n key introduction_continueTextTouch. Needs the ingame map so it can force it small while a message is shown.",
+   "fr": "Crée le popup avec son overlay de fond, une file de messages vide, des lignes d'entrée et des glyphes, et un texte de continuation issu de la clé l10n introduction_continueTextTouch. Nécessite la carte en jeu pour la forcer en petit pendant un message."
+  },
+  "HUDPopupMessageMobile:showMessage": {
+   "en": "Queues a message with title, text, optional controls and an optional callback/target. Duration 0 is derived from text length, a negative duration means the maximum duration; the oldest pending messages are dropped when the queue is too long and extra controls are truncated.",
+   "fr": "Met en file un message avec titre, texte, commandes optionnelles et callback/cible optionnels. Une durée de 0 est déduite de la longueur du texte, une durée négative vaut la durée maximale ; les plus anciens messages en attente sont supprimés si la file est trop longue et les commandes en trop tronquées."
+  },
+  "HUDPopupMessageMobile:getVisible": {
+   "en": "Returns true only when the base element is visible and a current message exists.",
+   "fr": "Retourne true seulement si l'élément de base est visible et qu'un message courant existe."
+  },
+  "HUDPopupMessageMobile:getHidingTranslation": {
+   "en": "Returns the (x, y) offset used by the hide animation: straight down by the box height plus safe-frame offset and a small margin.",
+   "fr": "Retourne le décalage (x, y) utilisé par l'animation de masquage : vers le bas de la hauteur de la boîte plus le décalage de zone sûre et une petite marge."
+  },
+  "HUDPopupMessageMobile:assignCurrentMessage": {
+   "en": "Makes the given message current and resets its timer. When a touch handler exists it enters the guidedTour custom context and registers a full-screen touch-up area that confirms the message. Hides the continue glyph in touch mode, then sizes the box and refreshes glyphs.",
+   "fr": "Définit le message donné comme courant et remet son minuteur à zéro. Si un gestionnaire tactile existe, entre dans le contexte guidedTour et enregistre une zone tactile plein écran qui confirme le message au relâchement. Masque le glyphe de continuation en mode tactile, puis dimensionne la boîte et rafraîchit les glyphes."
+  },
+  "HUDPopupMessageMobile:setCurrentMessageHeight": {
+   "en": "Computes the box height from title, text and input-row heights plus paddings and the continue button, and applies it with a minimum height.",
+   "fr": "Calcule la hauteur de la boîte à partir des hauteurs du titre, du texte et des lignes de commandes, des marges et du bouton de continuation, puis l'applique avec une hauteur minimale."
+  },
+  "HUDPopupMessageMobile:getTitleHeight": {
+   "en": "Measures the wrapped, upper-cased title of the current message in screen units (0 when there is none), restoring text state afterwards.",
+   "fr": "Mesure le titre, mis en majuscules et renvoyé à la ligne, du message courant en unités écran (0 s'il n'y en a pas), puis restaure l'état du texte."
+  },
+  "HUDPopupMessageMobile:getTextHeight": {
+   "en": "Measures the wrapped body text of the current message with the popup line height scale, returning 0 when there is no message.",
+   "fr": "Mesure le corps du texte du message courant avec l'échelle de hauteur de ligne du popup, en retournant 0 s'il n'y a pas de message."
+  },
+  "HUDPopupMessageMobile:getInputRowsHeight": {
+   "en": "Returns the height reserved for the control rows: one row per control plus one extra row, 0 without a current message.",
+   "fr": "Retourne la hauteur réservée aux lignes de commandes : une ligne par commande plus une ligne supplémentaire, 0 sans message courant."
+  },
+  "HUDPopupMessageMobile:animateHide": {
+   "en": "Runs the parent hide animation, pops the depth-of-field area and registers finishMessage as the animation-end callback.",
+   "fr": "Lance l'animation de masquage du parent, retire la zone de profondeur de champ et enregistre finishMessage comme callback de fin d'animation."
+  },
+  "HUDPopupMessageMobile:startMessage": {
+   "en": "Disables map toggling and forces the minimap small, then takes the first queued message and makes it current.",
+   "fr": "Désactive le basculement de la carte et force la minicarte en petit, puis prend le premier message en file et le rend courant."
+  },
+  "HUDPopupMessageMobile:finishMessage": {
+   "en": "Re-enables map toggling, calls the current message's callback (with its target, or with the popup itself when no target) and clears the current message.",
+   "fr": "Réactive le basculement de la carte, appelle le callback du message courant (avec sa cible, ou avec le popup lui-même sans cible) et efface le message courant."
+  },
+  "HUDPopupMessageMobile:update": {
+   "en": "Skipped while a menu is visible. Otherwise updates the animation, accumulates display time unless the game is paused or sleeping, handles expiry or next message, and refreshes glyphs when the input help mode changes.",
+   "fr": "Ignoré tant qu'un menu est visible. Sinon, met à jour l'animation, cumule le temps d'affichage sauf en pause ou pendant le sommeil, gère l'expiration ou le message suivant, et rafraîchit les glyphes quand le mode d'aide à la saisie change."
+  },
+  "HUDPopupMessageMobile:updateCurrentMessage": {
+   "en": "Hides the current message with animation once its display time exceeds its duration; with no current message, starts the next queued one, animates in and pushes a blur area at the end of the animation.",
+   "fr": "Masque le message courant avec animation quand son temps d'affichage dépasse sa durée ; sans message courant, démarre le suivant en file, l'anime à l'entrée et ajoute une zone de flou à la fin de l'animation."
+  },
+  "HUDPopupMessageMobile:updateButtonGlyphs": {
+   "en": "Sets the continue glyph to the SKIP_MESSAGE_BOX action and, for each visible input row of the current message, assigns the control's action names to the row glyph.",
+   "fr": "Règle le glyphe de continuation sur l'action SKIP_MESSAGE_BOX et, pour chaque ligne visible du message courant, affecte les noms d'action de la commande au glyphe de la ligne."
+  },
+  "HUDPopupMessageMobile:setInputActive": {
+   "en": "Switches the dedicated input context on or off. On: registers MENU_ACCEPT and SKIP_MESSAGE_BOX events (text hidden) calling onConfirmMessage. Off: removes this target's events and reverts the context.",
+   "fr": "Active ou désactive le contexte de saisie dédié. Activation : enregistre les événements MENU_ACCEPT et SKIP_MESSAGE_BOX (texte masqué) appelant onConfirmMessage. Désactivation : retire les événements de cette cible et restaure le contexte."
+  },
+  "HUDPopupMessageMobile:onConfirmMessage": {
+   "en": "Input or touch callback that dismisses the message by hiding with animation, but only when no animation is running; it also reverts the touch custom context.",
+   "fr": "Callback de saisie ou tactile qui ferme le message en le masquant avec animation, mais seulement si aucune animation n'est en cours ; il restaure aussi le contexte tactile personnalisé."
+  },
+  "HUDPopupMessageMobile:draw": {
+   "en": "Draws the background then the title (upper-cased, centered), wrapped body text, one text per control and, in touch mode, the continue label. Not drawn while a menu is visible or without a current message.",
+   "fr": "Dessine le fond puis le titre (en majuscules, centré), le texte du corps renvoyé à la ligne, un texte par commande et, en mode tactile, le libellé de continuation. Rien n'est dessiné si un menu est visible ou sans message courant."
+  },
+  "HUDPopupMessageMobile.getBackgroundPosition": {
+   "en": "Returns the box's base position: horizontally centered, bottom at the safe-frame offset, plus the configured offset times uiScale.",
+   "fr": "Retourne la position de base de la boîte : centrée horizontalement, bas à hauteur de la zone sûre, plus le décalage configuré multiplié par uiScale."
+  },
+  "HUDPopupMessageMobile:setScale": {
+   "en": "Applies the UI scale, recomputes cached scaled values and re-centers the box horizontally at its background position.",
+   "fr": "Applique l'échelle d'interface, recalcule les valeurs mises à l'échelle en cache et recentre la boîte horizontalement à sa position de fond."
+  },
+  "HUDPopupMessageMobile:setDimension": {
+   "en": "Pass-through override that calls the parent setDimension without extra behavior.",
+   "fr": "Surcharge simple qui appelle setDimension du parent sans comportement supplémentaire."
+  },
+  "HUDPopupMessageMobile:storeScaledValues": {
+   "en": "Caches all scaled sizes, offsets and text sizes (minimum size, paddings, row and button sizes, title/text/continue text sizes) converted from the pixel constants.",
+   "fr": "Met en cache toutes les tailles, décalages et tailles de texte mis à l'échelle (taille minimale, marges, tailles de lignes et de bouton, textes de titre/corps/continuation), convertis depuis les constantes en pixels."
+  },
+  "HUDPopupMessageMobile.createBackground": {
+   "en": "Creates the background overlay from the HUD atlas at the base position with the minimum size, background UVs and color.",
+   "fr": "Crée l'overlay de fond depuis l'atlas HUD à la position de base avec la taille minimale, les UV et la couleur de fond."
+  },
+  "HUDPopupMessageMobile:createComponents": {
+   "en": "Creates the stack of input rows (stored in reverse order) and the continue InputGlyphElement, and adds them as children.",
+   "fr": "Crée la pile de lignes de commandes (stockées dans l'ordre inverse) et l'InputGlyphElement de continuation, puis les ajoute comme enfants."
+  },
+  "HUDPopupMessageMobile:createInputRow": {
+   "en": "Builds one input row: a colored background panel, an InputGlyphElement and a separator line. Returns the panel, the glyph and the Y position for the next row.",
+   "fr": "Construit une ligne de commande : un panneau de fond coloré, un InputGlyphElement et une ligne de séparation. Retourne le panneau, le glyphe et la position Y de la ligne suivante."
+  }
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "fichier": "placeables/specializations/PlaceableSolarPanels.lua",
+ "module": {
+  "en": "Placeable specialization that adds solar panels: an optional head node that slowly turns toward the sun, and a weather-dependent income bonus. It requires PlaceableIncomePerHour and registers a `solarPanels` configuration type. Settings come from `placeable.solarPanels.solarPanelsConfigurations.solarPanelsConfiguration(?)`.",
+  "fr": "Spécialisation de placeable qui ajoute des panneaux solaires : un nœud de tête optionnel qui pivote lentement vers le soleil et un revenu dépendant de la météo. Elle exige PlaceableIncomePerHour et enregistre un type de configuration `solarPanels`. Les réglages viennent de `placeable.solarPanels.solarPanelsConfigurations.solarPanelsConfiguration(?)`."
+ },
+ "fonctions": {
+  "PlaceableSolarPanels.prerequisitesPresent": {
+   "en": "Returns true only if the placeable type includes the PlaceableIncomePerHour specialization.",
+   "fr": "Renvoie true seulement si le type de placeable inclut la spécialisation PlaceableIncomePerHour."
+  },
+  "PlaceableSolarPanels.initSpecialization": {
+   "en": "Registers the `solarPanels` configuration type with the placeable configuration manager, using the localized label `configuration_solarPanel`.",
+   "fr": "Enregistre le type de configuration `solarPanels` auprès du gestionnaire de configurations de placeables, avec le libellé localisé `configuration_solarPanel`."
+  },
+  "PlaceableSolarPanels.registerOverwrittenFunctions": {
+   "en": "Overrides `getIncomePerHour` and `getNeedHourChanged` on the placeable type.",
+   "fr": "Surcharge `getIncomePerHour` et `getNeedHourChanged` sur le type de placeable."
+  },
+  "PlaceableSolarPanels.registerFunctions": {
+   "en": "Registers the new placeable function `updateHeadRotation`.",
+   "fr": "Enregistre la nouvelle fonction de placeable `updateHeadRotation`."
+  },
+  "PlaceableSolarPanels.registerEventListeners": {
+   "en": "Subscribes to onLoad, onFinalizePlacement, onReadStream, onWriteStream, onHourChanged and onUpdate.",
+   "fr": "S'abonne à onLoad, onFinalizePlacement, onReadStream, onWriteStream, onHourChanged et onUpdate."
+  },
+  "PlaceableSolarPanels.registerXMLPaths": {
+   "en": "Declares the XML keys of a solar panel configuration: `#headNode`, `#randomHeadOffsetRange` (default 15 degrees), `#rotationSpeed` (default 5 deg/s), `#isActive` and `#incomePerHour`.",
+   "fr": "Déclare les clés XML d'une configuration de panneaux solaires : `#headNode`, `#randomHeadOffsetRange` (15 degrés par défaut), `#rotationSpeed` (5 deg/s par défaut), `#isActive` et `#incomePerHour`."
+  },
+  "PlaceableSolarPanels.registerSavegameXMLPaths": {
+   "en": "Declares the savegame attribute `#headRotationRandom` used to store the random head offset.",
+   "fr": "Déclare l'attribut de sauvegarde `#headRotationRandom` qui stocke le décalage aléatoire de la tête."
+  },
+  "PlaceableSolarPanels:onLoad": {
+   "en": "Reads the selected solar configuration. With a head node it picks a random head offset (-range/2, 0 or +range/2) and sets the rotation speed; it also reads the income and whether panels exist. If there are none, it removes listeners; note that the removals target `Cover` instead of this class, so only onFinalizePlacement is really removed.",
+   "fr": "Lit la configuration solaire choisie. Avec un nœud de tête, elle tire un décalage aléatoire (-plage/2, 0 ou +plage/2) et règle la vitesse de rotation ; elle lit aussi le revenu et la présence de panneaux. Sans panneaux elle retire des écouteurs ; à noter que les retraits visent `Cover` et non cette classe, donc seul onFinalizePlacement est réellement retiré."
+  },
+  "PlaceableSolarPanels:onFinalizePlacement": {
+   "en": "Aligns the head with the sun once placement is final, by calling `updateHeadRotation`.",
+   "fr": "Oriente la tête vers le soleil une fois le placement finalisé, en appelant `updateHeadRotation`."
+  },
+  "PlaceableSolarPanels:loadFromXMLFile": {
+   "en": "Reads `#headRotationRandom` from the savegame. Note: the condition is inverted (it assigns only when the value is nil), so the saved offset is never restored.",
+   "fr": "Lit `#headRotationRandom` dans la sauvegarde. À noter : la condition est inversée (l'affectation n'a lieu que si la valeur est nil), donc le décalage sauvegardé n'est jamais restauré."
+  },
+  "PlaceableSolarPanels:saveToXMLFile": {
+   "en": "Writes the random head rotation offset to the savegame when a head node exists.",
+   "fr": "Écrit le décalage de rotation aléatoire de la tête dans la sauvegarde si un nœud de tête existe."
+  },
+  "PlaceableSolarPanels:onReadStream": {
+   "en": "Client side: reads the compressed random head angle sent by the server when a head node exists.",
+   "fr": "Côté client : lit l'angle aléatoire compressé de la tête envoyé par le serveur si un nœud de tête existe."
+  },
+  "PlaceableSolarPanels:onWriteStream": {
+   "en": "Server side: writes the random head angle as a compressed angle for joining clients when a head node exists.",
+   "fr": "Côté serveur : écrit l'angle aléatoire de la tête sous forme d'angle compressé pour les clients qui rejoignent, si un nœud de tête existe."
+  },
+  "PlaceableSolarPanels:onUpdate": {
+   "en": "Moves the current head rotation toward the target at the configured speed (scaled by `dt`) and applies it with `setDirection` on the head node; keeps the placeable active until the target is reached.",
+   "fr": "Fait tendre la rotation courante de la tête vers la cible à la vitesse configurée (multipliée par `dt`) et l'applique avec `setDirection` ; garde le placeable actif jusqu'à l'atteinte de la cible."
+  },
+  "PlaceableSolarPanels:onHourChanged": {
+   "en": "Hourly callback that recomputes the head target rotation.",
+   "fr": "Callback horaire qui recalcule la rotation cible de la tête."
+  },
+  "PlaceableSolarPanels:updateHeadRotation": {
+   "en": "Computes the sun direction from the environment sun light and, when its X component exceeds 0.3 in absolute value, sets the head target angle (plus the random offset). Depends on `g_currentMission.environment`, UNVERIFIED (class absent from the dump).",
+   "fr": "Calcule la direction du soleil à partir de la lumière solaire de l'environnement et, si sa composante X dépasse 0,3 en valeur absolue, fixe l'angle cible de la tête (plus le décalage aléatoire). Dépend de `g_currentMission.environment`, NON VÉRIFIÉ (classe absente du dump)."
+  },
+  "PlaceableSolarPanels:getIncomePerHour": {
+   "en": "Adds the configured solar income to the base value: full when the sun is on, times 0.75 in winter, times 0.1 when raining. Weather values come from `Environment`/`Weather`, UNVERIFIED.",
+   "fr": "Ajoute le revenu solaire configuré à la valeur de base : complet quand le soleil est levé, multiplié par 0,75 en hiver, par 0,1 sous la pluie. Les valeurs météo viennent de `Environment`/`Weather`, NON VÉRIFIÉ."
+  },
+  "PlaceableSolarPanels:getNeedHourChanged": {
+   "en": "Returns whether solar panels exist, so the hourly callback is only required for placeables that have them.",
+   "fr": "Renvoie si des panneaux solaires existent, de sorte que le callback horaire n'est requis que pour les placeables qui en ont."
+  }
+ }
+}

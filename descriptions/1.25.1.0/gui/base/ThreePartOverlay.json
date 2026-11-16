@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/base/ThreePartOverlay.lua",
+ "module": {
+  "en": "Declared class for a three-part overlay, but in this dump it only has a constructor that sets a default direction vector (1, 0). No rendering or other methods are present in the file.",
+  "fr": "Classe déclarée pour un overlay en trois parties, mais dans ce dump elle n'a qu'un constructeur qui fixe un vecteur de direction par défaut (1, 0). Aucune méthode de rendu ni autre n'est présente dans le fichier."
+ },
+ "fonctions": {
+  "ThreePartOverlay.new": {
+   "en": "Creates an instance with dirX = 1 and dirY = 0 and returns it; custom_mt allows subclassing.",
+   "fr": "Crée une instance avec dirX = 1 et dirY = 0 et la renvoie ; custom_mt permet l'héritage."
+  }
+ }
+}

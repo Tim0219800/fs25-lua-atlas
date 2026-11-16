@@ -1,0 +1,185 @@
+{
+ "fichier": "handTools/specializations/HandToolHands.lua",
+ "module": {
+  "en": "Hand tool specialization for the player's bare hands, which cannot be dropped. It lets the owning player pick up dynamic physics objects up to a maximum mass through a joint attached to a kinematic helper node, rotate, level and throw them with charged force, and kick or pass a Football. Throws and pickups are synchronised with events (HandsPickUpObjectEvent, HandsThrowObjectEvent, HandsPickUpFailedEvent); the helper pose is streamed to the server. Note: `getHeldItem` and `throwHeldItemWithForceVector` are registered or called but no body for them is in this dump (UNVERIFIED).",
+  "fr": "Spécialisation d'outil à main pour les mains nues du joueur, qui ne peuvent pas être lâchées. Elle permet au joueur propriétaire de ramasser des objets physiques dynamiques jusqu'à une masse maximale via un joint attaché à un nœud cinématique auxiliaire, de les tourner, les mettre à plat et les lancer avec une force chargée, et de frapper ou passer un Football. Ramassages et lancers sont synchronisés par événements (HandsPickUpObjectEvent, HandsThrowObjectEvent, HandsPickUpFailedEvent) ; la pose de l'auxiliaire est envoyée au serveur. À noter : `getHeldItem` et `throwHeldItemWithForceVector` sont enregistrées ou appelées mais leur corps est absent de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HandToolHands.registerXMLPaths": {
+   "en": "Opens and closes the specialization XML type without registering any key: the hands have no XML configuration here.",
+   "fr": "Ouvre et ferme le type XML de la spécialisation sans enregistrer de clé : les mains n'ont ici aucune configuration XML."
+  },
+  "HandToolHands.registerFunctions": {
+   "en": "Registers the held item, joint, pickup, drop, throw, rotate, level, football and super strength console functions on the hand tool type (including `getHeldItem` and `throwHeldItemWithForceVector`, whose bodies are not in this file).",
+   "fr": "Enregistre sur le type d'outil à main les fonctions d'objet tenu, de joint, de ramassage, de lâcher, de lancer, de rotation, de mise à plat, de football et de commande console de super force (dont `getHeldItem` et `throwHeldItemWithForceVector`, dont les corps ne sont pas dans ce fichier)."
+  },
+  "HandToolHands.registerOverwrittenFunctions": {
+   "en": "Overrides `getCanBeDropped`.",
+   "fr": "Surcharge `getCanBeDropped`."
+  },
+  "HandToolHands.registerEventListeners": {
+   "en": "Subscribes to load, delete, update, draw, update stream read/write, action events, carrying player change, held start/end and debug draw.",
+   "fr": "Abonne la spécialisation au chargement, suppression, mise à jour, affichage, lecture/écriture du flux de mise à jour, actions, changement de joueur porteur, début/fin de prise en main et debug."
+  },
+  "HandToolHands.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "HandToolHands:onLoad": {
+   "en": "Initialises pickup mass and distance, throw and football state, action texts and the dirty flag; starts an async load of the shared kinematic helper i3d; creates three crosshairs on clients.",
+   "fr": "Initialise la masse et la distance de ramassage, l'état de lancer et de football, les textes d'action et l'indicateur de modification ; lance le chargement asynchrone de l'i3d partagé de l'auxiliaire cinématique ; crée trois réticules sur les clients."
+  },
+  "HandToolHands:onKinematicHelperLoaded": {
+   "en": "Async callback: takes the helper's first child as the kinematic node, links it to the root and adds it to physics, and creates a rotation helper under it. Logs an error if loading failed.",
+   "fr": "Rappel asynchrone : prend le premier enfant de l'auxiliaire comme nœud cinématique, le relie à la racine et l'ajoute à la physique, et crée sous lui un nœud d'aide à la rotation. Journalise une erreur en cas d'échec."
+  },
+  "HandToolHands:onDelete": {
+   "en": "Drops the held item without event, releases the helper i3d and node, removes the super strength console command for the owner and frees the crosshairs.",
+   "fr": "Lâche l'objet tenu sans événement, libère l'i3d et le nœud auxiliaires, retire la commande console de super force pour le propriétaire et libère les réticules."
+  },
+  "HandToolHands:onWriteUpdateStream": {
+   "en": "Client to server, when the dirty flag is set: writes the compressed world position of the kinematic node, its horizontal direction and the rotation node angles.",
+   "fr": "Client vers serveur, quand l'indicateur de modification est actif : écrit la position monde compressée du nœud cinématique, sa direction horizontale et les angles du nœud de rotation."
+  },
+  "HandToolHands:onReadUpdateStream": {
+   "en": "Server side: reads those values, sets the kinematic and rotation node transforms and, if a joint exists, updates its frame.",
+   "fr": "Côté serveur : lit ces valeurs, applique les transformations des nœuds cinématique et de rotation et, si un joint existe, met à jour son repère."
+  },
+  "HandToolHands:onUpdate": {
+   "en": "Creates the joint once the awaited physics frame is simulated (server), updates the kinematic node and, for the owner, detects pickable targets and footballs, switches the action texts, completes a charged throw when the input is released, and dribbles a nearby football.",
+   "fr": "Crée le joint une fois l'image physique attendue simulée (serveur), met à jour le nœud cinématique et, pour le propriétaire, détecte les cibles ramassables et les ballons, change les textes d'action, termine un lancer chargé au relâchement de l'entrée et fait dribbler un ballon proche."
+  },
+  "HandToolHands:onDraw": {
+   "en": "In first person for the owner, draws the throw crosshair scaled by charge, the pickup crosshair when holding or aiming at a pickable object, or the default crosshair.",
+   "fr": "En première personne pour le propriétaire, affiche le réticule de lancer à l'échelle de la charge, le réticule de ramassage en tenant ou visant un objet ramassable, ou le réticule par défaut."
+  },
+  "HandToolHands:onRegisterActionEvents": {
+   "en": "Registers pick up/drop, throw, pitch, yaw and level input actions with texts and priority. Skipped if the tool is not active for input.",
+   "fr": "Enregistre les actions d'entrée de ramassage/dépôt, lancer, tangage, lacet et mise à plat avec textes et priorité. Ignoré si l'outil n'est pas actif pour les entrées."
+  },
+  "HandToolHands:onHeldStart": {
+   "en": "For the owner, adds the pickup target type to the player's targeter with the current pickup distance.",
+   "fr": "Pour le propriétaire, ajoute le type de cible de ramassage au ciblage du joueur avec la distance de ramassage courante."
+  },
+  "HandToolHands:onHeldEnd": {
+   "en": "For the owner, removes the target type and drops any held item.",
+   "fr": "Pour le propriétaire, retire le type de cible et lâche tout objet tenu."
+  },
+  "HandToolHands:onCarryingPlayerChanged": {
+   "en": "Adds the console command `gsPlayerSuperStrengthToggle` when the owning player gets the hands, and removes it when they are lost.",
+   "fr": "Ajoute la commande console `gsPlayerSuperStrengthToggle` quand le joueur propriétaire reçoit les mains, et la retire quand il les perd."
+  },
+  "HandToolHands:getCanBeDropped": {
+   "en": "Overwritten function: always returns false, the hands cannot be dropped.",
+   "fr": "Fonction surchargée : renvoie toujours false, les mains ne peuvent pas être lâchées."
+  },
+  "HandToolHands:updateKinematicNode": {
+   "en": "For the owner while held, places the kinematic node along the player's look ray at the hold distance, kept level, and flags a network update. Does nothing without a node or ray.",
+   "fr": "Pour le propriétaire pendant la prise en main, place le nœud cinématique le long du rayon de visée à la distance de tenue, à l'horizontale, et signale une mise à jour réseau. Ne fait rien sans nœud ou rayon."
+  },
+  "HandToolHands:getKinematicNode": {
+   "en": "Returns the kinematic node and its rotation node (nil until loaded).",
+   "fr": "Renvoie le nœud cinématique et son nœud de rotation (nil tant qu'ils ne sont pas chargés)."
+  },
+  "HandToolHands:getIsHoldingItem": {
+   "en": "Returns true if an item is held, even if no joint exists yet.",
+   "fr": "Renvoie true si un objet est tenu, même si aucun joint n'existe encore."
+  },
+  "HandToolHands:getIsThrowingItem": {
+   "en": "Returns true while a throw is being charged.",
+   "fr": "Renvoie true pendant la charge d'un lancer."
+  },
+  "HandToolHands:getIsAwaitingJointCreation": {
+   "en": "Returns true if an item was picked up and the joint is still awaiting a physics frame.",
+   "fr": "Renvoie true si un objet a été ramassé et que le joint attend encore une image physique."
+  },
+  "HandToolHands:getHasJoint": {
+   "en": "Returns true if a joint links the kinematic node and the held item.",
+   "fr": "Renvoie true si un joint relie le nœud cinématique et l'objet tenu."
+  },
+  "HandToolHands:getCanPickUpNode": {
+   "en": "Tests whether a node can be picked up: it exists, is not already held, on the server is a dynamic body not heavier than the allowed mass, and its object is not mounted and allows pickup (unless super strength).",
+   "fr": "Teste si un nœud peut être ramassé : il existe, n'est pas déjà tenu, sur le serveur c'est un corps dynamique pas plus lourd que la masse autorisée, et son objet n'est pas monté et autorise le ramassage (sauf super force)."
+  },
+  "HandToolHands:onPickUpAction": {
+   "en": "Owner input: passes a nearby football if one is targeted, otherwise drops the held item or picks up the targeted one.",
+   "fr": "Entrée du propriétaire : fait une passe si un ballon est ciblé, sinon lâche l'objet tenu ou ramasse celui visé."
+  },
+  "HandToolHands:onThrowAction": {
+   "en": "Owner input: shoots a football if present (angle 30 degrees). Otherwise, if holding an item, notes the update index and accumulates charge time with the frame delta.",
+   "fr": "Entrée du propriétaire : tire dans un ballon s'il y en a un (angle de 30 degrés). Sinon, en tenant un objet, mémorise l'indice de mise à jour et cumule le temps de charge avec le delta de l'image."
+  },
+  "HandToolHands:onPitchAction": {
+   "en": "Input callback: rotates the held item about the player-relative horizontal axis.",
+   "fr": "Rappel d'entrée : fait pivoter l'objet tenu autour de l'axe horizontal relatif au joueur."
+  },
+  "HandToolHands:onYawAction": {
+   "en": "Input callback: rotates the held item about the vertical axis.",
+   "fr": "Rappel d'entrée : fait pivoter l'objet tenu autour de l'axe vertical."
+  },
+  "HandToolHands:onLevelAction": {
+   "en": "Input callback: levels the held item.",
+   "fr": "Rappel d'entrée : met l'objet tenu à plat."
+  },
+  "HandToolHands:rotateHeldItem": {
+   "en": "Rotates the rotation node about a local axis by a quarter turn per second scaled by input and physics dt; on the server updates the joint frame.",
+   "fr": "Fait pivoter le nœud de rotation autour d'un axe local d'un quart de tour par seconde, pondéré par l'entrée et le dt physique ; sur le serveur met à jour le repère du joint."
+  },
+  "HandToolHands:levelHeldItem": {
+   "en": "Resets pitch and roll of the rotation node while keeping the item's yaw, and updates the joint frame on the server. Intended for pallets and square bales.",
+   "fr": "Remet à zéro tangage et roulis du nœud de rotation en conservant le lacet de l'objet, et met à jour le repère du joint sur le serveur. Prévue pour palettes et balles carrées."
+  },
+  "HandToolHands:dropHeldItem": {
+   "en": "If an item is held, sends a HandsThrowObjectEvent with zero force (unless `noEventSend`) and releases the item through `onHeldItemJointBroken`.",
+   "fr": "Si un objet est tenu, envoie un HandsThrowObjectEvent de force nulle (sauf `noEventSend`) et relâche l'objet via `onHeldItemJointBroken`."
+  },
+  "HandToolHands:throwHeldItemWithForceScalar": {
+   "en": "Throws the held item along the player's last look ray with the given force scalar (0 to 1) by calling `throwHeldItemWithForceVector`. Logs an error without a targeter.",
+   "fr": "Lance l'objet tenu le long du dernier rayon de visée du joueur avec le coefficient de force donné (0 à 1) via `throwHeldItemWithForceVector`. Journalise une erreur sans ciblage."
+  },
+  "HandToolHands:pickUpTarget": {
+   "en": "Validates the target, sends HandsPickUpObjectEvent, stores the held node, disables capsule collision with it, sets the hold distance and enables the related actions. The server then waits one physics frame before the joint, clients orient the rotation node. Returns true on success.",
+   "fr": "Valide la cible, envoie HandsPickUpObjectEvent, mémorise le nœud tenu, désactive la collision de la capsule avec lui, fixe la distance de tenue et active les actions associées. Le serveur attend ensuite une image physique avant le joint, les clients orientent le nœud de rotation. Renvoie true en cas de succès."
+  },
+  "HandToolHands:pickupFailed": {
+   "en": "Cleans up after a failed pickup: disables held-only actions for the owner, restores the pick up text and capsule collision, and clears the held node.",
+   "fr": "Nettoie après un ramassage échoué : désactive les actions réservées à la tenue pour le propriétaire, restaure le texte de ramassage et la collision de la capsule, et efface le nœud tenu."
+  },
+  "HandToolHands:orientRotationNodeToItem": {
+   "en": "Places the rotation node at the item's centre of mass with the item's world rotation.",
+   "fr": "Place le nœud de rotation au centre de masse de l'objet avec la rotation monde de l'objet."
+  },
+  "HandToolHands:createItemJoint": {
+   "en": "Server only. Aborts and drops if the item vanished or is no longer dynamic; otherwise builds a locked joint between the kinematic node and item with springs and dampers scaled by mass, breakable beyond a mass-based force unless super strength, and registers a break report.",
+   "fr": "Serveur uniquement. Abandonne et lâche si l'objet a disparu ou n'est plus dynamique ; sinon construit un joint verrouillé entre le nœud cinématique et l'objet, avec ressorts et amortisseurs proportionnels à la masse, cassable au-delà d'une force liée à la masse sauf super force, et enregistre un rapport de rupture."
+  },
+  "HandToolHands:onHeldItemJointBroken": {
+   "en": "Called when the joint breaks or on a drop: resets owner actions, restores capsule collision and clears the held node. On the server it sends a throw event to clients (zero force), removes the joint or cancels the pending one.",
+   "fr": "Appelée à la rupture du joint ou lors d'un lâcher : réinitialise les actions du propriétaire, restaure la collision de la capsule et efface le nœud tenu. Sur le serveur, envoie un événement de lancer (force nulle) aux clients, supprime le joint ou annule celui en attente."
+  },
+  "HandToolHands:findFootballCallback": {
+   "en": "Overlap callback: stores the first Football object found among shapes and stops the search.",
+   "fr": "Rappel de recouvrement : mémorise le premier objet Football trouvé parmi les formes et arrête la recherche."
+  },
+  "HandToolHands:shootBall": {
+   "en": "Records the shot time, clears `canShoot` and calls `football:shoot` with direction, angle, velocity and shot type.",
+   "fr": "Enregistre l'instant du tir, remet `canShoot` à false et appelle `football:shoot` avec direction, angle, vitesse et type de tir."
+  },
+  "HandToolHands.calculateItemMass": {
+   "en": "Returns the object's total mass if it provides `getTotalMass`, otherwise the node mass; nil if the node does not exist.",
+   "fr": "Renvoie la masse totale de l'objet s'il fournit `getTotalMass`, sinon la masse du nœud ; nil si le nœud n'existe pas."
+  },
+  "HandToolHands.calculateItemJointBreakForceFactor": {
+   "en": "Returns the object's `getHandsJointBreakForceFactor` result to make the hold sturdier, or 1 if the object does not define it.",
+   "fr": "Renvoie le résultat de `getHandsJointBreakForceFactor` de l'objet pour rendre la prise plus solide, ou 1 s'il ne la définit pas."
+  },
+  "HandToolHands:onDebugDraw": {
+   "en": "Draws debug markers for the kinematic and rotation nodes and, when holding, for the item with a line showing the distance in metres.",
+   "fr": "Dessine des repères de debug pour les nœuds cinématique et de rotation et, en tenant un objet, pour l'objet avec une ligne indiquant la distance en mètres."
+  },
+  "HandToolHands:consoleCommandToggleSuperStrength": {
+   "en": "Console command: toggles super strength, which raises the maximum mass and pickup distance (10) and removes the joint break limit and `getCanBePickedUp` check. Refreshes the target type for the owner and returns a status text.",
+   "fr": "Commande console : bascule la super force, qui augmente la masse maximale et la distance de ramassage (10) et supprime la limite de rupture du joint et le test `getCanBePickedUp`. Rafraîchit le type de cible pour le propriétaire et renvoie un texte d'état."
+  }
+ }
+}

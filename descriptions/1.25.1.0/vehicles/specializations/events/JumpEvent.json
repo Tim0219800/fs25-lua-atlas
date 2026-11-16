@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/JumpEvent.lua",
+ "module": {
+  "en": "Network event class `JumpEvent` (extends `Event`) that is a client request to make a vehicle jump. It carries the vehicle, written only when the stream goes to the server. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `JumpEvent` (hérite de `Event`) qui est une demande client pour faire sauter un véhicule. Elle transporte le véhicule, écrit seulement quand le flux part vers le serveur. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "JumpEvent.emptyNew": {
+   "en": "Creates an empty `JumpEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `JumpEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "JumpEvent.new": {
+   "en": "Creates the event with its data: the vehicle, written only when the stream goes to the server.",
+   "fr": "Crée l'événement avec ses données : le véhicule, écrit seulement quand le flux part vers le serveur."
+  },
+  "JumpEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, written only when the stream goes to the server), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, écrit seulement quand le flux part vers le serveur), puis appelle `run`."
+  },
+  "JumpEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, written only when the stream goes to the server).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, écrit seulement quand le flux part vers le serveur)."
+  },
+  "JumpEvent:run": {
+   "en": "Executes the event on the receiving side: calls `jump(true)` on the vehicle once synchronized; there is no client/server check in `run`.",
+   "fr": "Exécute l'événement côté réception : appelle `jump(true)` sur le véhicule une fois synchronisé ; `run` ne vérifie pas le côté client/serveur."
+  }
+ }
+}

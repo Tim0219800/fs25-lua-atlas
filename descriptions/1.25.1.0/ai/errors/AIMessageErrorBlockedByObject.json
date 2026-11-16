@@ -1,0 +1,13 @@
+{
+ "fichier": "ai/errors/AIMessageErrorBlockedByObject.lua",
+ "module": {
+  "en": "AI error message for a helper blocked by an object in its way. Extends `AIMessage` but defines no `getI18NText`, and `AIMessage.lua` does not define one either. Note: calling `getMessage` on it would therefore call a nil method (apparent bug, unless it is supplied elsewhere; UNVERIFIED).",
+  "fr": "Message d'erreur IA pour un assistant bloqué par un objet sur son chemin. Étend `AIMessage` mais ne définit pas `getI18NText`, et `AIMessage.lua` non plus. À noter : appeler `getMessage` appellerait donc une méthode nil (bug apparent, sauf définition ailleurs ; NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AIMessageErrorBlockedByObject.new": {
+   "en": "Constructor of the blocked-by-object error message. Inherits from `AIMessage`, adds no state.",
+   "fr": "Constructeur du message d'erreur « bloqué par un objet ». Hérite de `AIMessage`, sans état ajouté."
+  }
+ }
+}

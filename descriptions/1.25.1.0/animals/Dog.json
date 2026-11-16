@@ -1,0 +1,153 @@
+{
+ "fichier": "animals/Dog.lua",
+ "module": {
+  "en": "Networked companion dog (subclass of Object) driven by the engine's animal companion manager (createAnimalCompanionManager and the setCompanion* functions, whose internals are UNVERIFIED). The server runs the behaviors (follow, fetch, pet, stay, feed, go home) and syncs the companion state to clients; clients send events (DogFollowEvent, DogFetchItemEvent, DogPetEvent) to request actions. It also handles saving the name, coat texture tile, scope and update priority, an abandon timer that teleports the dog back to its spawn, and a pet activatable.",
+  "fr": "Chien compagnon en réseau (sous-classe de Object) piloté par le gestionnaire de compagnons animaux du moteur (createAnimalCompanionManager et les fonctions setCompanion*, dont le fonctionnement interne est NON VÉRIFIÉ). Le serveur exécute les comportements (suivre, rapporter, caresser, rester, manger, rentrer) et synchronise l'état du compagnon vers les clients ; les clients envoient des événements (DogFollowEvent, DogFetchItemEvent, DogPetEvent) pour demander des actions. Le fichier gère aussi la sauvegarde du nom, la tuile de texture du pelage, la portée réseau et la priorité de mise à jour, un minuteur d'abandon qui ramène le chien à son point d'apparition, et un activatable de caresse."
+ },
+ "fonctions": {
+  "Dog.new": {
+   "en": "Creates the dog object with no engine instance yet, a random-name placeholder, abandon timer defaults (6000 ms, range 100), a forced clip distance of 80, a pet activatable and a dirty flag. It registers the class name for the network.",
+   "fr": "Crée l'objet chien sans instance moteur, avec les valeurs par défaut du minuteur d'abandon (6000 ms, portée 100), une distance de découpe forcée de 80, un activatable de caresse et un indicateur dirty. Il enregistre le nom de classe pour le réseau."
+  },
+  "Dog:load": {
+   "en": "Picks a random name from the animal name system and creates the engine companion at the spawn position, with water detection offset, interaction trigger, collision masks and indoor/outdoor audio setup. Returns false if the engine instance could not be created.",
+   "fr": "Choisit un nom aléatoire via le système de noms d'animaux et crée le compagnon moteur à la position d'apparition, avec décalage de détection d'eau, déclencheur d'interaction, masques de collision et réglage audio intérieur/extérieur. Retourne false si l'instance moteur n'a pas pu être créée."
+  },
+  "Dog:delete": {
+   "en": "Marks the dog as deleted, deletes the engine instance, unsubscribes message listeners (server), unregisters the class name, removes the activatable and the indoor listener, then calls the parent delete.",
+   "fr": "Marque le chien comme supprimé, supprime l'instance moteur, désabonne les écouteurs de messages (serveur), retire le nom de classe, l'activatable et l'écouteur d'état intérieur, puis appelle le delete du parent."
+  },
+  "Dog:loadFromXMLFile": {
+   "en": "Restores the dog name from the savegame XML attribute `#name`. Always returns true.",
+   "fr": "Restaure le nom du chien depuis l'attribut XML de sauvegarde `#name`. Retourne toujours true."
+  },
+  "Dog:saveToXMLFile": {
+   "en": "Writes the dog name HTML-encoded to `#name`.",
+   "fr": "Écrit le nom du chien, encodé en HTML, dans `#name`."
+  },
+  "Dog:readStream": {
+   "en": "Client join: reads spawner, XML filename, spawn position, name and coat tile indices. On first read it loads the companion and links the spawner to the dog; it applies tile and name, then calls the parent readStream. The spawner can be nil if not yet synced.",
+   "fr": "Connexion d'un client : lit le point d'apparition, le fichier XML, la position, le nom et les indices de tuile du pelage. À la première lecture il charge le compagnon et lie le spawner au chien ; il applique tuile et nom, puis appelle le readStream du parent. Le spawner peut être nil s'il n'est pas encore synchronisé."
+  },
+  "Dog:writeStream": {
+   "en": "Server side: writes the spawner, XML filename, spawn position, name and tile indices (3 bits each), then calls the parent writeStream.",
+   "fr": "Côté serveur : écrit le spawner, le fichier XML, la position d'apparition, le nom et les indices de tuile (3 bits chacun), puis appelle le writeStream du parent."
+  },
+  "Dog:writeUpdateStream": {
+   "en": "Server side: writes the engine companion state to the update stream via writeAnimalCompanionManagerToStream.",
+   "fr": "Côté serveur : écrit l'état du compagnon moteur dans le flux de mise à jour via writeAnimalCompanionManagerToStream."
+  },
+  "Dog:readUpdateStream": {
+   "en": "Client side: reads the companion state from the stream with the client interpolation delay and network timing globals (engine behavior UNVERIFIED).",
+   "fr": "Côté client : lit l'état du compagnon depuis le flux avec le délai d'interpolation client et les variables de temps réseau (comportement du moteur NON VÉRIFIÉ)."
+  },
+  "Dog:update": {
+   "en": "Applies a pending coat tile once the companion is ready, otherwise stays active. On the server it teleports a staying dog home if abandoned and keeps itself active every frame.",
+   "fr": "Applique une tuile de pelage en attente dès que le compagnon est prêt, sinon reste actif. Sur le serveur, il ramène à son point d'origine un chien resté en attente s'il est abandonné et se maintient actif à chaque image."
+  },
+  "Dog:updateTick": {
+   "en": "Server only: raises the dirty flag when the engine reports that the companion needs a network update, then calls the parent.",
+   "fr": "Serveur seulement : lève l'indicateur dirty quand le moteur signale que le compagnon doit être synchronisé, puis appelle le parent."
+  },
+  "Dog:testScope": {
+   "en": "Network scope test: true if the viewer is closer than the smaller of the companion clip distance (scaled by coeff) and forcedClipDistance. Returns a boolean.",
+   "fr": "Test de portée réseau : vrai si l'observateur est plus proche que le plus petit de la distance de découpe du compagnon (multipliée par coeff) et de forcedClipDistance. Retourne un booléen."
+  },
+  "Dog:getUpdatePriority": {
+   "en": "Network update priority: 0 if clip distance is 0, otherwise higher when nearer, plus a bonus growing with skipCount (80% distance, 20% skip weighting).",
+   "fr": "Priorité de mise à jour réseau : 0 si la distance de découpe vaut 0, sinon plus élevée quand le chien est proche, avec un bonus croissant selon skipCount (80 % distance, 20 % pondération des sauts)."
+  },
+  "Dog:onGhostRemove": {
+   "en": "Hides the dog and stops its physics update when it leaves a client's network scope.",
+   "fr": "Masque le chien et arrête sa mise à jour physique quand il sort de la portée réseau d'un client."
+  },
+  "Dog:onGhostAdd": {
+   "en": "Shows the dog and resumes its physics update when it enters a client's network scope.",
+   "fr": "Affiche le chien et reprend sa mise à jour physique quand il entre dans la portée réseau d'un client."
+  },
+  "Dog:hourChanged": {
+   "en": "Server only, subscribed to HOUR_CHANGED: passes the environment's day time to the companion via setCompanionDaytime. Environment is not in the dump, so its dayTime unit is UNVERIFIED.",
+   "fr": "Serveur seulement, abonné à HOUR_CHANGED : transmet l'heure du jour de l'environnement au compagnon via setCompanionDaytime. Environment est absent du dump, l'unité de dayTime est NON VÉRIFIÉE."
+  },
+  "Dog:setName": {
+   "en": "Sets the dog name, using an empty string if nil is given.",
+   "fr": "Définit le nom du chien, avec une chaîne vide si nil est passé."
+  },
+  "Dog:setVisibility": {
+   "en": "Shows or hides the companion and enables or disables its physics update, if the engine instance exists.",
+   "fr": "Affiche ou masque le compagnon et active ou désactive sa mise à jour physique, si l'instance moteur existe."
+  },
+  "Dog:playerInteractionTriggerCallback": {
+   "en": "Engine trigger callback: when the local player enters and the farm may access the dog, the pet activatable is added to the mission; on leave it is removed.",
+   "fr": "Callback de déclencheur du moteur : quand le joueur local entre et que sa ferme peut accéder au chien, l'activatable de caresse est ajouté à la mission ; il est retiré à la sortie."
+  },
+  "Dog:followEntity": {
+   "en": "Makes the dog follow a player. A client only stores the target and sends DogFollowEvent; the server sets the follow behavior and clears the staying flag.",
+   "fr": "Fait suivre un joueur par le chien. Un client mémorise seulement la cible et envoie DogFollowEvent ; le serveur applique le comportement de suivi et efface l'indicateur d'attente."
+  },
+  "Dog:goToSpawn": {
+   "en": "Clears follow and thrower targets and sends the dog to the spawner's spawn node. A client sends DogFollowEvent with no player; the server sets the go-to behavior.",
+   "fr": "Efface les cibles de suivi et de lanceur et envoie le chien vers le noeud d'apparition du spawner. Un client envoie DogFollowEvent sans joueur ; le serveur applique le comportement d'aller vers."
+  },
+  "Dog:onFoodBowlFilled": {
+   "en": "Clears follow and thrower targets and starts the feed behavior toward the given bowl node. No client/server check is made here, so it is expected to be called on the server.",
+   "fr": "Efface les cibles de suivi et de lanceur et lance le comportement de repas vers le noeud de gamelle donné. Aucun test client/serveur n'est fait ici : l'appel est attendu côté serveur."
+  },
+  "Dog:fetchItem": {
+   "en": "Starts the fetch behavior for a ball thrown by a player. A client sends DogFetchItemEvent; the server records the ball's throw position, sets the fetch behavior and remembers the thrower.",
+   "fr": "Lance le comportement de rapport d'une balle lancée par un joueur. Un client envoie DogFetchItemEvent ; le serveur enregistre la position de lancer de la balle, applique le comportement et mémorise le lanceur."
+  },
+  "Dog:pet": {
+   "en": "Triggers the petting reaction. A client sends DogPetEvent; the server sets the pet behavior, increments the farm stat petDogCount and tries to unlock the PetDog achievement.",
+   "fr": "Déclenche la réaction à la caresse. Un client envoie DogPetEvent ; le serveur applique le comportement, incrémente la statistique de ferme petDogCount et tente de débloquer le succès PetDog."
+  },
+  "Dog:idleStay": {
+   "en": "Server only: clears follow and thrower targets, sets the default behavior and flags the dog as staying (so the abandon timer can apply).",
+   "fr": "Serveur seulement : efface les cibles de suivi et de lanceur, applique le comportement par défaut et marque le chien comme en attente (le minuteur d'abandon peut alors s'appliquer)."
+  },
+  "Dog:idleWander": {
+   "en": "Server-only placeholder whose body does nothing (the engine call is commented out in the source).",
+   "fr": "Point d'entrée serveur sans effet (l'appel moteur est commenté dans la source)."
+  },
+  "Dog:setTextureTileIndices": {
+   "en": "Stores the coat atlas tile indices (for sync) and applies them at once if the companion is ready, otherwise marks them pending and keeps the dog active until it loads.",
+   "fr": "Mémorise les indices de tuile du pelage de l'atlas (pour la synchronisation) et les applique aussitôt si le compagnon est prêt, sinon les marque en attente et garde le chien actif jusqu'à son chargement."
+  },
+  "Dog:applyTextureTile": {
+   "en": "Applies the stored tile indices to the companion with setCompanionTextureTile and clears the pending flag.",
+   "fr": "Applique les indices de tuile stockés au compagnon via setCompanionTextureTile et efface l'indicateur d'attente."
+  },
+  "Dog:isAbandoned": {
+   "en": "Checks whether any controlled player or entered vehicle is within abandonRange of the dog. In range it refills the timer; otherwise it counts down dt and returns true when the timer expires.",
+   "fr": "Vérifie si un joueur contrôlé ou un véhicule occupé se trouve à moins de abandonRange du chien. À portée, le minuteur est rechargé ; sinon il décompte dt et retourne true à son expiration."
+  },
+  "Dog:resetSteeringParms": {
+   "en": "Empty server-side placeholder with no effect.",
+   "fr": "Point d'entrée serveur vide, sans effet."
+  },
+  "Dog:teleportToSpawn": {
+   "en": "Server only: moves the dog back to its spawn position, clears staying and follow state and shows the in-game notification that the dog is in its doghouse. A TODO in the source notes the notification is not synced.",
+   "fr": "Serveur seulement : ramène le chien à sa position d'apparition, efface les états d'attente et de suivi et affiche la notification que le chien est dans sa niche. Un TODO de la source indique que la notification n'est pas synchronisée."
+  },
+  "Dog:playerFarmChanged": {
+   "en": "Server message callback: if the player who changed farm was being followed or was the ball thrower, the dog switches to staying idle.",
+   "fr": "Callback de message côté serveur : si le joueur qui change de ferme était suivi ou lanceur de balle, le chien passe à l'attente."
+  },
+  "Dog:onPlayerLeave": {
+   "en": "Server only: if the leaving player was followed or was the thrower, the dog switches to staying idle. Calling code is outside this file.",
+   "fr": "Serveur seulement : si le joueur qui part était suivi ou lanceur, le chien passe à l'attente. Le code appelant est hors de ce fichier."
+  },
+  "Dog:finalizePlacement": {
+   "en": "Shows the dog and, on the server, subscribes to HOUR_CHANGED and PLAYER_FARM_CHANGED messages.",
+   "fr": "Affiche le chien et, sur le serveur, s'abonne aux messages HOUR_CHANGED et PLAYER_FARM_CHANGED."
+  },
+  "Dog:onIndoorStateChanged": {
+   "en": "Sound manager listener: updates the companion's outdoor audio setup from the current indoor state.",
+   "fr": "Écouteur du gestionnaire de sons : met à jour le réglage audio extérieur du compagnon selon l'état intérieur courant."
+  },
+  "Dog.registerSavegameXMLPaths": {
+   "en": "Registers the savegame XML attribute `#name` (name of the dog) in the schema.",
+   "fr": "Enregistre dans le schéma l'attribut XML de sauvegarde `#name` (nom du chien)."
+  }
+ }
+}

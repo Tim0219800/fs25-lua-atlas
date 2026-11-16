@@ -1,0 +1,25 @@
+{
+ "fichier": "vehicles/VehicleSetIsReconfiguratingEvent.lua",
+ "module": {
+  "en": "Network event sent to a joining client so that a vehicle is flagged as reconfiguring. It only carries the vehicle reference; the receiver sets `isReconfigurating` to true on that vehicle once it is synchronized. It extends `Event`.",
+  "fr": "Événement réseau envoyé à un client qui rejoint la partie pour marquer un véhicule comme en reconfiguration. Il ne transporte que la référence du véhicule ; le récepteur met `isReconfigurating` à true sur ce véhicule une fois celui-ci synchronisé. Il étend `Event`."
+ },
+ "fonctions": {
+  "VehicleSetIsReconfiguratingEvent.emptyNew": {
+   "en": "Creates an empty event instance, used by the network layer before reading a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée par la couche réseau avant la lecture d'un flux."
+  },
+  "VehicleSetIsReconfiguratingEvent.new": {
+   "en": "Creates the event for the given vehicle object. Note: the doc comment mentions a `state` parameter that the function does not have.",
+   "fr": "Crée l'événement pour l'objet véhicule donné. À noter : le commentaire de doc cite un paramètre `state` que la fonction n'a pas."
+  },
+  "VehicleSetIsReconfiguratingEvent:readStream": {
+   "en": "Reads the vehicle node object from the stream and, if it exists and is already synchronized, sets its `isReconfigurating` flag to true.",
+   "fr": "Lit l'objet véhicule dans le flux et, s'il existe et est déjà synchronisé, met son indicateur `isReconfigurating` à true."
+  },
+  "VehicleSetIsReconfiguratingEvent:writeStream": {
+   "en": "Writes the vehicle node object reference to the stream.",
+   "fr": "Écrit la référence du véhicule dans le flux."
+  }
+ }
+}

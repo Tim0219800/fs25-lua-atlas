@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/VehicleAttachEvent.lua",
+ "module": {
+  "en": "Network event sent by the server to tell clients that an implement was attached to a vehicle. It carries the two node objects, the two joint indices (7 bits each) and whether the implement starts lowered. Subclass of `Event`; on receipt it calls `attachImplement` with noEventSend set.",
+  "fr": "Événement réseau envoyé par le serveur pour signaler aux clients qu'un outil a été attelé à un véhicule. Il transporte les deux objets, les deux indices d'articulation (7 bits chacun) et l'indicateur de démarrage en position basse. Sous-classe de `Event` ; à la réception il appelle `attachImplement` sans renvoyer d'événement."
+ },
+ "fonctions": {
+  "VehicleAttachEvent.emptyNew": {
+   "en": "Creates an empty event instance, used when the event is rebuilt from a network stream.",
+   "fr": "Crée une instance d'événement vide, utilisée quand l'événement est reconstruit depuis un flux réseau."
+  },
+  "VehicleAttachEvent.new": {
+   "en": "Builds the event from vehicle, implement, both joint indices and the start-lowered flag. Asserts that `jointIndex` lies in 0..126, since it is sent on 7 bits.",
+   "fr": "Construit l'événement à partir du véhicule, de l'outil, des deux indices d'articulation et de l'indicateur de position basse. Vérifie par `assert` que `jointIndex` est entre 0 et 126 (envoi sur 7 bits)."
+  },
+  "VehicleAttachEvent:readStream": {
+   "en": "Reads vehicle, implement, joint indices and the lowered flag from the stream, then immediately calls `run`.",
+   "fr": "Lit le véhicule, l'outil, les indices d'articulation et l'indicateur de position basse depuis le flux, puis appelle aussitôt `run`."
+  },
+  "VehicleAttachEvent:writeStream": {
+   "en": "Writes the vehicle and implement node objects, the two 7-bit joint indices and the lowered flag to the stream.",
+   "fr": "Écrit dans le flux les objets véhicule et outil, les deux indices d'articulation sur 7 bits et l'indicateur de position basse."
+  },
+  "VehicleAttachEvent:run": {
+   "en": "If the vehicle is synchronized, attaches the implement locally (without re-sending an event); logs an error if the implement is unknown. When received by the server, it rebroadcasts the event to the other clients.",
+   "fr": "Si le véhicule est synchronisé, attelle localement l'outil (sans renvoyer d'événement) ; journalise une erreur si l'outil est inconnu. Reçu par le serveur, l'événement est rediffusé aux autres clients."
+  }
+ }
+}

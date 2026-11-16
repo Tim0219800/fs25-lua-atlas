@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/hud/ExtendedSprayerHUDExtension.lua",
+  "module": {
+    "en": "HUD box shown in the vehicle input help for sprayers and spreaders with the Precision Farming ExtendedSprayer specialization. Depending on the loaded fill type it shows a pH gradient (lime) or a nitrogen gradient, with current, target and planned values, the application rate, the soil type and an explanatory text. Reads the soil, pH and nitrogen maps of g_precisionFarming. Created per vehicle with low priority (GS_PRIO_LOW).",
+    "fr": "Boîte de HUD affichée dans l'aide à la saisie du véhicule pour les pulvérisateurs et épandeurs ayant la spécialisation Precision Farming ExtendedSprayer. Selon le produit chargé, elle montre un dégradé de pH (chaux) ou d'azote, avec les valeurs actuelle, cible et prévue, le taux d'application, le type de sol et un texte explicatif. Lit les cartes de sol, de pH et d'azote de g_precisionFarming. Créée par véhicule avec une priorité basse (GS_PRIO_LOW)."
+  },
+  "fonctions": {
+    "ExtendedSprayerHUDExtension.new": {
+      "en": "Constructor taking the vehicle: grabs the ExtendedSprayer spec and the soil, pH and nitrogen maps, creates gradient, bar, flag and background overlays, loads the many HUD texts, and subscribes to colorblind and UI scale changes. Note: it subscribes self.storeScaledValues to the UI_SCALE setting and calls it, but that method is not defined in this file (UNVERIFIED where it comes from).",
+      "fr": "Constructeur prenant le véhicule : récupère la spec ExtendedSprayer et les cartes de sol, de pH et d'azote, crée les overlays de dégradé, de barres, de drapeau et de fond, charge les nombreux textes du HUD et s'abonne aux changements de mode daltonien et d'échelle d'interface. À noter : il abonne self.storeScaledValues au réglage UI_SCALE et l'appelle, mais cette méthode n'est pas définie dans ce fichier (origine NON VÉRIFIÉE)."
+    },
+    "ExtendedSprayerHUDExtension:delete": {
+      "en": "Deletes all overlays, unsubscribes from the message center and clears the vehicle and spec references.",
+      "fr": "Supprime tous les overlays, se désabonne du message center et efface les références au véhicule et à la spec."
+    },
+    "ExtendedSprayerHUDExtension:setColorBlindMode": {
+      "en": "When the colorblind flag changes, stores it and asks the pH map and the nitrogen map to rebuild their minimap on next update. Note: the source doc comment says it determines whether the extension is drawn, which does not match what the code does.",
+      "fr": "Quand l'indicateur daltonien change, le mémorise et demande aux cartes de pH et d'azote de reconstruire leur minicarte à la prochaine mise à jour. À noter : le commentaire du source dit qu'il détermine si l'extension est dessinée, ce qui ne correspond pas à ce que fait le code."
+    },
+    "ExtendedSprayerHUDExtension:getHeight": {
+      "en": "Returns the box height: the base display height plus the extra height needed for the change line and description text.",
+      "fr": "Retourne la hauteur de la boîte : la hauteur d'affichage de base plus la hauteur supplémentaire nécessaire à la ligne de changement et au texte de description."
+    },
+    "ExtendedSprayerHUDExtension:draw": {
+      "en": "Draws the box. With lime loaded it shows pH, otherwise nitrogen (solid, liquid, slurry or manure). Computes the application rate, actual, planned and target positions on the gradient, the soil type and a description, then the footer. Returns the Y below the box, or posY without the spec. Note: the source doc comment mentions a mixing wagon, which looks like a copy-paste leftover.",
+      "fr": "Dessine la boîte. Avec de la chaux chargée elle montre le pH, sinon l'azote (solide, liquide, lisier ou fumier). Calcule le taux d'application, les positions actuelle, prévue et cible sur le dégradé, le type de sol et une description, puis le pied de page. Retourne le Y sous la boîte, ou posY sans la spec. À noter : le commentaire du source parle d'une mélangeuse, ce qui semble être un reste de copier-coller."
+    }
+  }
+}

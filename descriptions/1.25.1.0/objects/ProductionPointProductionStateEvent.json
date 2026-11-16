@@ -1,0 +1,33 @@
+{
+ "fichier": "objects/ProductionPointProductionStateEvent.lua",
+ "module": {
+  "en": "Network event telling that a production of a production point was switched on or off, identified by its string id. A client sends it to the server, which applies it and rebroadcasts it to the other clients.",
+  "fr": "Événement réseau signalant qu'une production d'un point de production a été activée ou désactivée, identifiée par son id texte. Un client l'envoie au serveur, qui l'applique et le rediffuse aux autres clients."
+ },
+ "fonctions": {
+  "ProductionPointProductionStateEvent.emptyNew": {
+   "en": "Creates an empty event instance, used when reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée lors de la lecture depuis un flux."
+  },
+  "ProductionPointProductionStateEvent.new": {
+   "en": "Creates the event with the production point, the production id string and the enabled flag.",
+   "fr": "Crée l'événement avec le point de production, l'id texte de la production et l'indicateur d'activation."
+  },
+  "ProductionPointProductionStateEvent:readStream": {
+   "en": "Reads the production point object, production id string and enabled flag from the stream, then runs the event.",
+   "fr": "Lit l'objet point de production, l'id texte de la production et l'indicateur d'activation depuis le flux, puis exécute l'événement."
+  },
+  "ProductionPointProductionStateEvent:writeStream": {
+   "en": "Writes the production point object, production id string and enabled flag to the stream.",
+   "fr": "Écrit l'objet point de production, l'id texte de la production et l'indicateur d'activation dans le flux."
+  },
+  "ProductionPointProductionStateEvent:run": {
+   "en": "On the server, rebroadcasts the event to the other clients; then, if the production point exists, calls setProductionState with the no-event flag.",
+   "fr": "Sur le serveur, rediffuse l'événement aux autres clients ; puis, si le point de production existe, appelle setProductionState avec l'indicateur sans événement."
+  },
+  "ProductionPointProductionStateEvent.sendEvent": {
+   "en": "Sends the change unless noEventSend is true: the server broadcasts it to all clients, a client sends it to the server.",
+   "fr": "Envoie le changement sauf si noEventSend est true : le serveur le diffuse à tous les clients, un client l'envoie au serveur."
+  }
+ }
+}

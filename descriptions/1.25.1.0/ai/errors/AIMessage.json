@@ -1,0 +1,29 @@
+{
+ "fichier": "ai/errors/AIMessage.lua",
+ "module": {
+  "en": "Base class of all messages shown when an AI helper job ends, with error or success. Subclasses supply the localized text through `getI18NText` and may override the type and the network serialization; `AIMessageManager` registers them and `AIJobStopEvent` transmits them.",
+  "fr": "Classe de base des messages affichés quand un travail d'assistant IA se termine, en erreur ou avec succès. Les sous-classes fournissent le texte localisé via `getI18NText` et peuvent redéfinir le type et la sérialisation réseau ; `AIMessageManager` les enregistre et `AIJobStopEvent` les transmet."
+ },
+ "fonctions": {
+  "AIMessage.new": {
+   "en": "Creates a message instance with the given optional metatable so that subclasses can reuse it.",
+   "fr": "Crée une instance de message avec la métatable optionnelle donnée, ce qui permet aux sous-classes de la réutiliser."
+  },
+  "AIMessage:getMessage": {
+   "en": "Formats the text from `self:getI18NText()` with the helper name of the given job, using \"Unknown\" if the job or name is nil. Returns an empty string when there is no text. `getI18NText` is not defined in this class.",
+   "fr": "Formate le texte de `self:getI18NText()` avec le nom d'assistant du job donné, ou \"Unknown\" si job ou nom est nil. Renvoie une chaîne vide s'il n'y a pas de texte. `getI18NText` n'est pas défini dans cette classe."
+  },
+  "AIMessage:getType": {
+   "en": "Returns `AIMessageType.ERROR` by default; success subclasses override it.",
+   "fr": "Renvoie `AIMessageType.ERROR` par défaut ; les sous-classes de succès le redéfinissent."
+  },
+  "AIMessage:readStream": {
+   "en": "Empty hook for reading message data from a network stream; subclasses with state override it.",
+   "fr": "Point d'extension vide pour lire les données du message depuis un flux réseau ; les sous-classes avec état le redéfinissent."
+  },
+  "AIMessage:writeStream": {
+   "en": "Empty hook for writing message data to a network stream; subclasses with state override it.",
+   "fr": "Point d'extension vide pour écrire les données du message dans un flux réseau ; les sous-classes avec état le redéfinissent."
+  }
+ }
+}

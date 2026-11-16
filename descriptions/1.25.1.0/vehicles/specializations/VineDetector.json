@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/VineDetector.lua",
+ "module": {
+  "en": "Specialization that detects vine rows in front of a machine by casting an asynchronous downward raycast from a configured node (`vehicle.vineDetector.raycast`). It runs on the server only and uses the static-object collision mask. The detection callbacks and helper getters (raycastCallbackVineDetection, getIsValidVinePlaceable, handleVinePlaceable, hit position getters, and so on) are registered but their bodies are not in this dump (UNVERIFIED); the vine cutter and prepruner specializations override or use them.",
+  "fr": "Spécialisation qui détecte les rangs de vigne devant une machine par un raycast asynchrone vers le bas depuis un nœud configuré (`vehicle.vineDetector.raycast`). Elle ne tourne que sur le serveur et utilise le masque de collision des objets statiques. Les rappels de détection et accesseurs (raycastCallbackVineDetection, getIsValidVinePlaceable, handleVinePlaceable, positions d'impact, etc.) sont enregistrés mais leurs corps ne sont pas dans ce dump (NON VÉRIFIÉ) ; les spécialisations de coupe et de prétaille les surchargent ou les utilisent."
+ },
+ "fonctions": {
+  "VineDetector.initSpecialization": {
+   "en": "Registers the XML paths `vehicle.vineDetector.raycast#node` and `#maxDistance` (default 1).",
+   "fr": "Enregistre les chemins XML `vehicle.vineDetector.raycast#node` et `#maxDistance` (1 par défaut)."
+  },
+  "VineDetector.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisites.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "VineDetector.registerFunctions": {
+   "en": "Registers ten functions on the vehicle type (raycast callback, finish/cancel detection, placeable validation and handling, hit position and distance getters). Their implementations are not in this file (UNVERIFIED).",
+   "fr": "Enregistre dix fonctions sur le type de véhicule (rappel de raycast, fin/annulation de détection, validation et traitement du placeable, accesseurs de position et de distance). Leurs implémentations ne sont pas dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "VineDetector.registerEventListeners": {
+   "en": "Subscribes to onLoad and onUpdate.",
+   "fr": "S'abonne à onLoad et onUpdate."
+  },
+  "VineDetector:onLoad": {
+   "en": "Loads the raycast node (warning if missing) and max distance, and initializes the raycast state table (hit positions, distance, current node) and the detection-active flag.",
+   "fr": "Charge le nœud de raycast (avertissement s'il manque) et la distance max, et initialise la table d'état du raycast (positions d'impact, distance, nœud courant) ainsi que le drapeau de détection active."
+  },
+  "VineDetector:onUpdate": {
+   "en": "Server only: while `getCanStartVineDetection` is true, launches one asynchronous raycast at a time from the node along its -Y direction (callback `raycastCallbackVineDetection`, mask STATIC_OBJECT). When detection is no longer allowed, clears the current vine placeable and calls `finishedVineDetection`. A TODO in the source questions whether the mask is sufficient.",
+   "fr": "Serveur uniquement : tant que `getCanStartVineDetection` est vrai, lance un raycast asynchrone à la fois depuis le nœud selon sa direction -Y (rappel `raycastCallbackVineDetection`, masque STATIC_OBJECT). Quand la détection n'est plus permise, efface le placeable de vigne courant et appelle `finishedVineDetection`. Un TODO du source se demande si le masque suffit."
+  }
+ }
+}

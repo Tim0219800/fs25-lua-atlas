@@ -1,0 +1,125 @@
+{
+ "fichier": "misc/BaleManager.lua",
+ "module": {
+  "en": "Map-bound manager (extends AbstractManager) that lists every bale type: size, fill types with capacity, variations and the shared i3d. Bale types come from the map file referenced by map.bales#filename and from mods through loadModBaleFromXML. It also runs bale fermentation timers on the server and offers cheat console commands (gsBaleAdd, gsBaleAddAll, gsBaleList) when g_addCheatCommands is set.",
+  "fr": "Gestionnaire lié à la carte (étend AbstractManager) qui recense tous les types de balles : dimensions, types de remplissage avec capacité, variations et i3d partagé. Les types viennent du fichier de carte référencé par map.bales#filename et des mods via loadModBaleFromXML. Il fait aussi tourner les minuteurs de fermentation côté serveur et fournit des commandes console de triche (gsBaleAdd, gsBaleAddAll, gsBaleList) si g_addCheatCommands est actif."
+ },
+ "fonctions": {
+  "BaleManager.new": {
+   "en": "Creates the manager and builds the two XML schemas, bale and mapBales, registering their paths. The schemas are stored on the class table, not on the instance.",
+   "fr": "Crée le gestionnaire et construit les deux schémas XML, bale et mapBales, en y enregistrant leurs chemins. Les schémas sont stockés sur la table de classe et non sur l'instance."
+  },
+  "BaleManager:initDataStructures": {
+   "en": "Resets the lists of bale types, pending mod bales and running fermentations.",
+   "fr": "Réinitialise les listes de types de balles, de balles de mods en attente et de fermentations en cours."
+  },
+  "BaleManager:loadMapData": {
+   "en": "Reads map.bales#filename, loads the map bale list, then loads queued mod bales, computes SEND_NUM_BITS from the bale count and starts async shared i3d loads for each type. Registers the cheat console commands if enabled. Returns false when the map defines no bales xml.",
+   "fr": "Lit map.bales#filename, charge la liste de balles de la carte, puis les balles de mods en file, calcule SEND_NUM_BITS d'après le nombre de balles et lance le chargement i3d partagé asynchrone de chaque type. Enregistre les commandes console de triche si activées. Renvoie false si la carte ne définit pas de xml de balles."
+  },
+  "BaleManager:baleLoaded": {
+   "en": "Callback for the shared bale i3d: stores the root as sharedRoot, logs an error if the first child's collision group or mask differs from CollisionPreset.BALE, and removes the node from physics.",
+   "fr": "Callback du i3d partagé de la balle : stocke la racine dans sharedRoot, journalise une erreur si le groupe ou le masque de collision du premier enfant diffère de CollisionPreset.BALE, et retire le noeud de la physique."
+  },
+  "BaleManager:unloadMapData": {
+   "en": "Frees the bale shared data, removes the gsBaleAdd and gsBaleList console commands, then calls the parent. Note: gsBaleAddAll is registered at load but not removed here.",
+   "fr": "Libère les données partagées des balles, retire les commandes console gsBaleAdd et gsBaleList, puis appelle le parent. À noter : gsBaleAddAll est enregistrée au chargement mais n'est pas retirée ici."
+  },
+  "BaleManager:unloadBaleData": {
+   "en": "Releases each bale type's shared i3d request and deletes its shared root node.",
+   "fr": "Libère la requête i3d partagée de chaque type de balle et supprime son noeud racine partagé."
+  },
+  "BaleManager:loadBales": {
+   "en": "Iterates map.bales.bale entries of the given XML file and calls loadBaleFromXML for each; always returns true.",
+   "fr": "Parcourt les entrées map.bales.bale du fichier XML donné et appelle loadBaleFromXML pour chacune ; renvoie toujours true."
+  },
+  "BaleManager:loadBaleFromXML": {
+   "en": "Loads one bale type from a map XML key: resolves #filename, reads #isAvailable (default true), loads the bale xml and adds the type to the list. Logs an XML error and returns false on failure.",
+   "fr": "Charge un type de balle à partir d'une clé XML de la carte : résout #filename, lit #isAvailable (true par défaut), charge le xml de la balle et ajoute le type à la liste. Journalise une erreur XML et renvoie false en cas d'échec."
+  },
+  "BaleManager:loadModBaleFromXML": {
+   "en": "Queues a mod bale (xml filename, base directory, custom environment, isAvailable) in modBalesToLoad; the data is only parsed later in loadMapData. Logs an XML error and returns false if #filename is missing.",
+   "fr": "Met en file une balle de mod (nom de xml, répertoire de base, environnement personnalisé, isAvailable) dans modBalesToLoad ; les données ne sont lues que plus tard dans loadMapData. Journalise une erreur XML et renvoie false si #filename manque."
+  },
+  "BaleManager:loadBaleDataFromXML": {
+   "en": "Fills a bale type from its xml: i3d file (must exist), round or square flag, rounded sizes, max stack height, visual sizes, fill types with capacity and variations (default id DEFAULT). Returns false with an XML error when a file is missing, sizes required for the shape are zero, or no i3d is set; unknown fill types only warn.",
+   "fr": "Remplit un type de balle depuis son xml : fichier i3d (doit exister), balle ronde ou carrée, dimensions arrondies, hauteur de pile max, dimensions visuelles, types de remplissage avec capacité et variations (id DEFAULT par défaut). Renvoie false avec une erreur XML si un fichier manque, si des dimensions nécessaires à la forme sont nulles ou si aucun i3d n'est défini ; un type de remplissage inconnu ne produit qu'un avertissement."
+  },
+  "BaleManager:update": {
+   "en": "Server only. Advances every fermentation by dt times the effective time scale, calls the bale's onFermentationUpdate when the whole-percent value changes, and on completion calls onFermentationUpdate(1) and onFermentationEnd then removes the entry.",
+   "fr": "Serveur uniquement. Fait avancer chaque fermentation de dt multiplié par l'échelle de temps effective, appelle onFermentationUpdate de la balle quand le pourcentage entier change, et à la fin appelle onFermentationUpdate(1) puis onFermentationEnd avant de retirer l'entrée."
+  },
+  "BaleManager:registerFermentation": {
+   "en": "Adds a fermentation timer for a bale with a start time and maximum time. The max time is set to 0 when Platform.gameplay.hasBaleFermentation is false and is multiplied by the mission's economicDifficulty.",
+   "fr": "Ajoute un minuteur de fermentation pour une balle avec un temps de départ et un temps maximal. Le temps maximal passe à 0 si Platform.gameplay.hasBaleFermentation est faux et est multiplié par economicDifficulty de la mission."
+  },
+  "BaleManager:getFermentationTime": {
+   "en": "Returns the elapsed fermentation time stored for the bale, or 0 if it has none.",
+   "fr": "Renvoie le temps de fermentation écoulé enregistré pour la balle, ou 0 s'il n'y en a pas."
+  },
+  "BaleManager:removeFermentation": {
+   "en": "Removes every fermentation entry belonging to the given bale.",
+   "fr": "Retire toutes les entrées de fermentation appartenant à la balle donnée."
+  },
+  "BaleManager:getBaleIndex": {
+   "en": "Finds the index of an available bale type matching fill type, shape and size. With a customEnvironment it searches that mod's bales first, then the bales without custom environment. Returns nil if none matches.",
+   "fr": "Trouve l'indice d'un type de balle disponible correspondant au type de remplissage, à la forme et aux dimensions. Avec un customEnvironment, cherche d'abord les balles de ce mod, puis celles sans environnement personnalisé. Renvoie nil si rien ne correspond."
+  },
+  "BaleManager:getBaleInfoByXMLFilename": {
+   "en": "Returns isRoundbale, width, height, length, diameter and maxStackHeight for a bale xml, using the visual sizes when the flag is true. Unknown files give false, 0, 0, 0, 0, 1.",
+   "fr": "Renvoie isRoundbale, largeur, hauteur, longueur, diamètre et hauteur de pile max pour un xml de balle, avec les dimensions visuelles si l'indicateur est true. Un fichier inconnu donne false, 0, 0, 0, 0, 1."
+  },
+  "BaleManager:getIsBaleMatching": {
+   "en": "Tests one bale type against a request: same round or square shape, the fill type is listed, and each non-nil size equals the type's size after rounding to 2 decimals (width and diameter for round, width, height and length for square).",
+   "fr": "Teste un type de balle par rapport à une demande : même forme ronde ou carrée, type de remplissage présent, et chaque dimension non nil égale à celle du type après arrondi à 2 décimales (largeur et diamètre pour une ronde, largeur, hauteur et longueur pour une carrée)."
+  },
+  "BaleManager:getBaleXMLFilename": {
+   "en": "Wraps getBaleIndex and returns the matching bale xml filename together with its index, or nil when nothing matches.",
+   "fr": "Enveloppe getBaleIndex et renvoie le nom du xml de balle correspondant avec son indice, ou nil si rien ne correspond."
+  },
+  "BaleManager:getBaleTypeIndexByXMLFilename": {
+   "en": "Returns the index of the bale type with the given xml filename, or nil.",
+   "fr": "Renvoie l'indice du type de balle ayant le nom de xml donné, ou nil."
+  },
+  "BaleManager:getBaleXMLFilenameByIndex": {
+   "en": "Returns the xml filename of the bale type at the given index, or nil if the index is invalid.",
+   "fr": "Renvoie le nom du xml du type de balle à l'indice donné, ou nil si l'indice est invalide."
+  },
+  "BaleManager:getIsRoundBale": {
+   "en": "Returns whether the bale type at the index is round, or nil if the index is invalid.",
+   "fr": "Indique si le type de balle à l'indice est rond, ou nil si l'indice est invalide."
+  },
+  "BaleManager:getBaleCapacityByBaleIndex": {
+   "en": "Returns the capacity defined for a fill type on the bale type at the given index; 0 when the bale or fill type is unknown.",
+   "fr": "Renvoie la capacité définie pour un type de remplissage sur le type de balle à l'indice donné ; 0 si la balle ou le type est inconnu."
+  },
+  "BaleManager:getPossibleCapacitiesForFillType": {
+   "en": "Returns a list of the capacities of every bale type that supports the fill type (one entry per matching bale type, duplicates possible).",
+   "fr": "Renvoie la liste des capacités de tous les types de balles qui acceptent le type de remplissage (une entrée par type, doublons possibles)."
+  },
+  "BaleManager:consoleCommandAddBale": {
+   "en": "Console command gsBaleAdd (server only): spawns a bale of the given fill type, shape and size about 4 m in front of the local player and 5 m up, with optional wrap state and mod name; defaults to STRAW. Note: the height argument is also passed as the diameter.",
+   "fr": "Commande console gsBaleAdd (serveur uniquement) : fait apparaître une balle du type, de la forme et de la taille donnés à environ 4 m devant le joueur local et 5 m en hauteur, avec état d'emballage et nom de mod optionnels ; STRAW par défaut. À noter : l'argument de hauteur est aussi transmis comme diamètre."
+  },
+  "BaleManager:consoleCommandAddBaleAll": {
+   "en": "Console command gsBaleAddAll (server only): reloads data/maps/maps_bales.xml, clears the shared i3d cache and, once every i3d is loaded, spawns one physics-free bale per type, fill type and variation in a grid with 3D debug labels and optional size boxes. Replaces previously spawned debug bales.",
+   "fr": "Commande console gsBaleAddAll (serveur uniquement) : recharge data/maps/maps_bales.xml, vide le cache i3d partagé puis, une fois tous les i3d chargés, crée une balle sans physique par type, type de remplissage et variation, en grille avec étiquettes 3D de debug et boîtes de taille optionnelles. Remplace les balles de debug précédentes."
+  },
+  "BaleManager:consoleCommandListBales": {
+   "en": "Console command gsBaleList: prints each bale type's xml, shape, non-zero sizes and fill type names to the log.",
+   "fr": "Commande console gsBaleList : écrit dans le log pour chaque type de balle son xml, sa forme, ses dimensions non nulles et les noms de ses types de remplissage."
+  },
+  "BaleManager.registerBaleXMLPaths": {
+   "en": "Registers the bale xml schema paths: i3d filename, size and visual size, mountable object settings, uvId, bale meshes, fill types (capacity, mass, materials, wrapping), variations, fermenting (output fill type, wrapping requirement, time in in-game days) and packed bale data.",
+   "fr": "Enregistre les chemins du schéma xml de balle : fichier i3d, dimensions et dimensions visuelles, réglages d'objet montable, uvId, meshes de balle, types de remplissage (capacité, masse, matériaux, emballage), variations, fermentation (type de sortie, besoin d'emballage, durée en jours du jeu) et données de balles groupées."
+  },
+  "BaleManager.registerBaleTextureXMLPaths": {
+   "en": "Registers the texture paths (diffuse, normal, alpha, baleNormal, netWrapDiffuse, netWrapNormal) under a base path, with fill-type-array flags for diffuse and normal; shared by fill types and variations.",
+   "fr": "Enregistre les chemins de textures (diffuse, normal, alpha, baleNormal, netWrapDiffuse, netWrapNormal) sous un chemin de base, avec des indicateurs de tableau de types de remplissage pour diffuse et normal ; partagé par les types de remplissage et les variations."
+  },
+  "BaleManager.registerMapBalesXMLPaths": {
+   "en": "Registers the map-level schema paths map.bales.bale(?)#filename and #isAvailable.",
+   "fr": "Enregistre les chemins de schéma au niveau carte map.bales.bale(?)#filename et #isAvailable."
+  }
+ }
+}

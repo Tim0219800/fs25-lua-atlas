@@ -1,0 +1,49 @@
+{
+ "fichier": "vehicles/specializations/TipOccluder.lua",
+ "module": {
+  "en": "Specialization (no prerequisites) that defines ground areas where material must not be tipped, for example under the wheels. Areas come from vehicle.tipOccluder.occlusionArea in XML, and are also auto-built from wheels that share a tipOcclusionAreaGroupId (a box around those wheels' contact zone). Other systems read them through getTipOcclusionAreas.",
+  "fr": "Spécialisation (sans prérequis) qui définit des zones au sol où la matière ne doit pas être déversée, par exemple sous les roues. Les zones viennent de vehicle.tipOccluder.occlusionArea dans le XML et sont aussi construites automatiquement à partir des roues partageant un tipOcclusionAreaGroupId (une boîte autour de leur zone de contact). Les autres systèmes les lisent via getTipOcclusionAreas."
+ },
+ "fonctions": {
+  "TipOccluder.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "TipOccluder.initSpecialization": {
+   "en": "Registers the XML schema of occlusionArea entries: start, width and height nodes.",
+   "fr": "Enregistre le schéma XML des entrées occlusionArea : nodes start, width et height."
+  },
+  "TipOccluder.registerFunctions": {
+   "en": "Registers getTipOcclusionAreas, getWheelsWithTipOcclisionAreaGroupId and getRequiresTipOcclusionArea.",
+   "fr": "Enregistre getTipOcclusionAreas, getWheelsWithTipOcclisionAreaGroupId et getRequiresTipOcclusionArea."
+  },
+  "TipOccluder.registerOverwrittenFunctions": {
+   "en": "Empty: registers no overridden functions.",
+   "fr": "Vide : n'enregistre aucune fonction surchargée."
+  },
+  "TipOccluder.registerEventListeners": {
+   "en": "Subscribes to onLoad and onLoadFinished.",
+   "fr": "S'abonne à onLoad et onLoadFinished."
+  },
+  "TipOccluder:onLoad": {
+   "en": "Reads every occlusionArea with its three nodes into the list (skipping incomplete ones) and warns about the old FS17-FS19 key.",
+   "fr": "Lit chaque occlusionArea avec ses trois nodes dans la liste (en ignorant les incomplètes) et avertit pour l'ancienne clé FS17 à FS19."
+  },
+  "TipOccluder:onLoadFinished": {
+   "en": "For wheels with a tipOcclusionAreaGroupId, creates one area per group (three transform nodes) and resizes it to cover the wheels' contact footprint. Warns in dev mode if the vehicle requires an area but has none.",
+   "fr": "Pour les roues ayant un tipOcclusionAreaGroupId, crée une zone par groupe (trois transform nodes) et la redimensionne pour couvrir l'empreinte de contact des roues. Avertit en mode dev si le véhicule exige une zone mais n'en a aucune."
+  },
+  "TipOccluder:getTipOcclusionAreas": {
+   "en": "Returns the list of occlusion areas, each with start, width and height nodes.",
+   "fr": "Renvoie la liste des zones d'occlusion, chacune avec les nodes start, width et height."
+  },
+  "TipOccluder:getWheelsWithTipOcclisionAreaGroupId": {
+   "en": "Returns a new table of the wheels whose physics has the given tipOcclusionAreaGroupId. Note: 'Occlision' is misspelled in the name.",
+   "fr": "Renvoie une nouvelle table des roues dont la physique a le tipOcclusionAreaGroupId donné. À noter : « Occlision » est mal orthographié dans le nom."
+  },
+  "TipOccluder:getRequiresTipOcclusionArea": {
+   "en": "Returns false by default; other specializations can override it to demand at least one occlusion area.",
+   "fr": "Renvoie false par défaut ; d'autres spécialisations peuvent le surcharger pour exiger au moins une zone d'occlusion."
+  }
+ }
+}

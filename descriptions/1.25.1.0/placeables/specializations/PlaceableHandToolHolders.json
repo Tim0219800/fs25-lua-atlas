@@ -1,0 +1,17 @@
+{
+ "fichier": "placeables/specializations/PlaceableHandToolHolders.lua",
+ "module": {
+  "en": "Placeable specialization for placeables that contain hand tool holders (racks where hand tools are hung). In this SDK dump only the event registration stub and a setName override are present; the loading of the holders themselves is UNVERIFIED.",
+  "fr": "Spécialisation de placeable pour les placeables qui contiennent des supports d'outils à main (râteliers où l'on accroche les outils). Dans ce dump du SDK, seuls un squelette d'enregistrement d'événements et une surcharge de setName sont présents ; le chargement des supports eux-mêmes est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlaceableHandToolHolders.registerEvents": {
+   "en": "Empty body in this dump: registers no event. Any intended events are UNVERIFIED.",
+   "fr": "Corps vide dans ce dump : n'enregistre aucun événement. Les événements prévus éventuels sont NON VÉRIFIÉS."
+  },
+  "PlaceableHandToolHolders:setName": {
+   "en": "Overrides setName: calls the parent, then forwards the new name to every hand tool holder in spec.handToolHolders so their display matches the placeable.",
+   "fr": "Surcharge setName : appelle le parent, puis transmet le nouveau nom à chaque support d'outil à main de spec.handToolHolders pour que leur affichage suive le placeable."
+  }
+ }
+}

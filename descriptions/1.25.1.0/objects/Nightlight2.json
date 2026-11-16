@@ -1,0 +1,13 @@
+{
+ "fichier": "objects/Nightlight2.lua",
+ "module": {
+  "en": "Legacy i3D onCreate user-attribute handler. It does nothing except log a deprecation warning pointing to the Visibility Condition tab of GIANTS Editor.",
+  "fr": "Gestionnaire hérité d'attribut utilisateur onCreate d'i3D. Il se contente d'écrire un avertissement de dépréciation renvoyant à l'onglet Visibility Condition de GIANTS Editor."
+ },
+ "fonctions": {
+  "Nightlight2:onCreate": {
+   "en": "Logs a deprecation warning with the node's name; has no other effect.",
+   "fr": "Écrit un avertissement de dépréciation avec le nom du noeud ; aucun autre effet."
+  }
+ }
+}

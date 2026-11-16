@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/AISetModeEvent.lua",
+ "module": {
+  "en": "Network event that synchronises the selected AI mode of a vehicle (1-based index, sent as index minus 1 on `AIModeSelection.NUM_BITS` bits). Clients send it to the server, which applies it and relays it to the others. Use `sendEvent` to emit it.",
+  "fr": "Événement réseau qui synchronise le mode IA sélectionné d'un véhicule (indice base 1, envoyé comme indice moins 1 sur `AIModeSelection.NUM_BITS` bits). Les clients l'envoient au serveur, qui l'applique et le relaie aux autres. Utiliser `sendEvent` pour l'émettre."
+ },
+ "fonctions": {
+  "AISetModeEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable; used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe ; utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "AISetModeEvent.new": {
+   "en": "Creates the event for a vehicle with the AI mode index to select.",
+   "fr": "Crée l'événement pour un véhicule avec l'indice de mode IA à sélectionner."
+  },
+  "AISetModeEvent:readStream": {
+   "en": "Reads the vehicle and the mode as an unsigned integer of `AIModeSelection.NUM_BITS` bits, adding 1, then calls `run`.",
+   "fr": "Lit le véhicule et le mode sous forme d'entier non signé de `AIModeSelection.NUM_BITS` bits, en ajoutant 1, puis appelle `run`."
+  },
+  "AISetModeEvent:writeStream": {
+   "en": "Writes the vehicle and the mode minus 1 in `AIModeSelection.NUM_BITS` bits (modes are 1-based).",
+   "fr": "Écrit le véhicule et le mode moins 1 sur `AIModeSelection.NUM_BITS` bits (les modes commencent à 1)."
+  },
+  "AISetModeEvent:run": {
+   "en": "Calls `setAIModeSelection(mode, true)` on a synchronized vehicle; on the server it rebroadcasts to the other clients, excluding the sender.",
+   "fr": "Appelle `setAIModeSelection(mode, true)` sur un véhicule synchronisé ; sur le serveur il le rediffuse aux autres clients, en excluant l'émetteur."
+  },
+  "AISetModeEvent.sendEvent": {
+   "en": "Sends the event unless `noEventSend` is true: the server broadcasts it, a client sends it to the server.",
+   "fr": "Envoie l'événement sauf si `noEventSend` vaut true : le serveur le diffuse, un client l'envoie au serveur."
+  }
+ }
+}

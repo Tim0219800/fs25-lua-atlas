@@ -1,0 +1,17 @@
+{
+ "fichier": "placeables/specializations/PlaceableLadders.lua",
+ "module": {
+  "en": "Placeable specialization for placeables with climbable ladders. In this SDK dump only the collectPickObjects override is present; the ladder trigger loading code is not included, so spec.ladderTriggers is filled elsewhere (UNVERIFIED).",
+  "fr": "Spécialisation de placeable pour les placeables avec échelles. Dans ce dump du SDK, seule la surcharge de collectPickObjects est présente ; le code de chargement des déclencheurs d'échelle n'est pas inclus, donc spec.ladderTriggers est rempli ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlaceableLadders.registerOverwrittenFunctions": {
+   "en": "Overrides collectPickObjects on the placeable type.",
+   "fr": "Surcharge collectPickObjects sur le type de placeable."
+  },
+  "PlaceableLadders:collectPickObjects": {
+   "en": "Calls the parent for the node unless the node is one of the ladder trigger nodes, which are therefore not registered as pickable objects.",
+   "fr": "Appelle le parent pour le noeud sauf si c'est l'un des noeuds de déclencheur d'échelle, qui ne sont donc pas enregistrés comme objets sélectionnables."
+  }
+ }
+}

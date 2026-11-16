@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/activatables/FactoryActivatable.lua",
+ "module": {
+  "en": "Activatable object that offers to buy a factory that has no owner yet. The prompt text includes the factory name and running it requests the purchase when the factory is still unowned.",
+  "fr": "Objet activable qui propose d'acheter une usine qui n'a pas encore de propriétaire. Le texte inclut le nom de l'usine et son exécution demande l'achat si l'usine est toujours sans propriétaire."
+ },
+ "fonctions": {
+  "FactoryActivatable.new": {
+   "en": "Creates the activatable for a factory and builds the prompt from `action_buyOBJECT` and the factory name.",
+   "fr": "Crée l'activable pour une usine et construit le texte à partir de `action_buyOBJECT` et du nom de l'usine."
+  },
+  "FactoryActivatable:getIsActivatable": {
+   "en": "Returns true only while the factory owner is the unowned marker (`AccessHandler.EVERYONE`).",
+   "fr": "Renvoie true seulement tant que le propriétaire de l'usine est le marqueur sans propriétaire (`AccessHandler.EVERYONE`)."
+  },
+  "FactoryActivatable:run": {
+   "en": "If the factory is still unowned, calls its `buyRequest`.",
+   "fr": "Si l'usine est toujours sans propriétaire, appelle son `buyRequest`."
+  }
+ }
+}

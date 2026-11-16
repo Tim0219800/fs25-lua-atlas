@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/TreeAttachRequestEvent.lua",
+  "module": {
+    "en": "Client-to-server request to attach a tree to a forestry carriage or winch. The server checks permission and either attaches the tree or answers with a TreeAttachResponseEvent carrying the failure reason. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Requête client vers serveur pour fixer un arbre à un chariot ou un treuil forestier. Le serveur vérifie l'autorisation puis fixe l'arbre ou répond par un TreeAttachResponseEvent contenant la raison de l'échec. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "TreeAttachRequestEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "TreeAttachRequestEvent.new": {
+      "en": "Builds the event with the data to send (a node object, a split shape id, three float32 coordinates, an optional rope index (3 bits) and optional rope setup data (ForestryPhysicsRope)); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud, un identifiant de split shape, trois coordonnées float32, un indice de câble optionnel (3 bits) et des données optionnelles de montage du câble (ForestryPhysicsRope)) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "TreeAttachRequestEvent:readStream": {
+      "en": "Reads a node object, a split shape id, three float32 coordinates, an optional rope index (3 bits) and optional rope setup data (ForestryPhysicsRope) from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud, un identifiant de split shape, trois coordonnées float32, un indice de câble optionnel (3 bits) et des données optionnelles de montage du câble (ForestryPhysicsRope) depuis le flux, puis appelle `run(connection)`."
+    },
+    "TreeAttachRequestEvent:writeStream": {
+      "en": "Writes a node object, a split shape id, three float32 coordinates, an optional rope index (3 bits) and optional rope setup data (ForestryPhysicsRope) to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud, un identifiant de split shape, trois coordonnées float32, un indice de câble optionnel (3 bits) et des données optionnelles de montage du câble (ForestryPhysicsRope) dans le flux (même ordre que `readStream`)."
+    },
+    "TreeAttachRequestEvent:run": {
+      "en": "Applies the event on the receiving side: asks `getIsCarriageTreeAttachAllowed` or `getIsWinchTreeAttachAllowed`; if allowed it calls `attachTreeToCarriage` or `attachTreeToWinch`, otherwise it sends a TreeAttachResponseEvent only to the requesting connection.",
+      "fr": "Applique l'événement côté récepteur : interroge `getIsCarriageTreeAttachAllowed` ou `getIsWinchTreeAttachAllowed` ; si autorisé il appelle `attachTreeToCarriage` ou `attachTreeToWinch`, sinon il envoie un TreeAttachResponseEvent uniquement à la connexion demandeuse."
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+ "fichier": "events/BaleOpenEvent.lua",
+ "module": {
+  "en": "Network event asking the server to open a bale (client to server only). The server calls `bale:open()`; the effect on other clients is UNVERIFIED because `Bale` is not in this file. Note that the payload is only written by the client and read by the server.",
+  "fr": "Événement réseau demandant au serveur d'ouvrir une balle (client vers serveur uniquement). Le serveur appelle `bale:open()` ; l'effet sur les autres clients est NON VÉRIFIÉ car `Bale` n'est pas dans ce fichier. La charge n'est écrite que par le client et lue que par le serveur."
+ },
+ "fonctions": {
+  "BaleOpenEvent.emptyNew": {
+   "en": "Creates an empty event, used when reading from a stream.",
+   "fr": "Crée un événement vide, utilisé lors de la lecture d'un flux."
+  },
+  "BaleOpenEvent.new": {
+   "en": "Creates the event for a bale. Note: the doc comment mentions x, y, z but the function only takes the bale.",
+   "fr": "Crée l'événement pour une balle. À noter : le commentaire de doc cite x, y, z mais la fonction ne prend que la balle."
+  },
+  "BaleOpenEvent:readStream": {
+   "en": "Server side: reads the bale node object, then calls `run`. On a client connection nothing is read but `run` is still called.",
+   "fr": "Côté serveur : lit l'objet node de la balle puis appelle `run`. Sur une connexion client rien n'est lu mais `run` est tout de même appelé."
+  },
+  "BaleOpenEvent:writeStream": {
+   "en": "Client side: writes the bale node object; writes nothing when sent by the server.",
+   "fr": "Côté client : écrit l'objet node de la balle ; n'écrit rien quand l'envoi vient du serveur."
+  },
+  "BaleOpenEvent:run": {
+   "en": "Server only: calls `open()` on the bale. Does nothing on a client.",
+   "fr": "Serveur uniquement : appelle `open()` sur la balle. Ne fait rien côté client."
+  }
+ }
+}

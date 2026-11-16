@@ -1,0 +1,65 @@
+{
+ "fichier": "gui/elements/BoxLayoutElement.lua",
+ "module": {
+  "en": "Layout container that arranges its children in rows or columns (flows), derived from BitmapElement and able to draw a background image. Children whose `ignoreLayout` is set are skipped. XML/profile keys include alignmentX/Y, fillDirectionX/Y, flowDirection, focusDirection, numFlows, elementSpacing, lateralFlowSize, fitFlowToElements, autoValidateLayout, useFullVisibility, wrapAround and rememberLastFocus. It also links its children for gamepad focus navigation. `invalidateLayout` (which triggers the layout) is defined outside this file. Client-side GUI.",
+  "fr": "Conteneur de mise en page qui range ses enfants en lignes ou colonnes (flux), dérivé de BitmapElement et capable d'afficher une image de fond. Les enfants dont `ignoreLayout` est défini sont ignorés. Les clés XML/profil comprennent alignmentX/Y, fillDirectionX/Y, flowDirection, focusDirection, numFlows, elementSpacing, lateralFlowSize, fitFlowToElements, autoValidateLayout, useFullVisibility, wrapAround et rememberLastFocus. Il relie aussi ses enfants pour la navigation au focus (manette). `invalidateLayout` (qui déclenche la mise en page) est défini hors de ce fichier. Interface côté client."
+ },
+ "fonctions": {
+  "BoxLayoutElement.new": {
+   "en": "Constructor with defaults: horizontal flow, left/top alignment, left-to-right and top-to-bottom filling, one flow, flows fitted to elements, no spacing, no auto validation, full visibility checks, empty cell tables.",
+   "fr": "Constructeur avec valeurs par défaut : flux horizontal, alignement gauche/haut, remplissage de gauche à droite et de haut en bas, un seul flux, flux ajustés aux éléments, pas d'espacement, pas de validation automatique, vérification de visibilité complète, tables de cellules vides."
+  },
+  "BoxLayoutElement:loadFromXML": {
+   "en": "Reads alignment, fill directions, flow and focus direction, flow count, spacing, lateral flow size and the boolean options listed in the module description from the XML node. fitFlowToElements defaults to true when lateralFlowSize is 0.",
+   "fr": "Lit l'alignement, les directions de remplissage, la direction de flux et de focus, le nombre de flux, l'espacement, la taille latérale et les options booléennes citées dans la description du module depuis le nœud XML. fitFlowToElements vaut true par défaut quand lateralFlowSize vaut 0."
+  },
+  "BoxLayoutElement:loadProfile": {
+   "en": "Same settings as the XML loader but read from a GUI profile.",
+   "fr": "Mêmes réglages que le chargeur XML mais lus depuis un profil GUI."
+  },
+  "BoxLayoutElement:copyAttributes": {
+   "en": "Copies alignment, fill directions, flow/focus direction, flow count, sizes, spacing, tolerances and boolean options from a source layout.",
+   "fr": "Copie l'alignement, les directions de remplissage, la direction de flux/focus, le nombre de flux, les tailles, l'espacement, les tolérances et les options booléennes depuis une mise en page source."
+  },
+  "BoxLayoutElement:onGuiSetupFinished": {
+   "en": "Computes the layout tolerance in screen units from the pixel size constant, then invalidates the layout so it gets built.",
+   "fr": "Calcule la tolérance de mise en page en unités d'écran à partir de la constante de pixels, puis invalide la mise en page pour qu'elle soit construite."
+  },
+  "BoxLayoutElement:addElement": {
+   "en": "Adds a child, resets its anchor and pivot to (0,0) so they do not interfere with layouting, and invalidates the layout when auto-validation is on.",
+   "fr": "Ajoute un enfant, remet son ancre et son pivot à (0,0) pour qu'ils n'interfèrent pas avec la mise en page, et invalide la mise en page si la validation automatique est active."
+  },
+  "BoxLayoutElement:removeElement": {
+   "en": "Removes a child and invalidates the layout when auto-validation is on.",
+   "fr": "Retire un enfant et invalide la mise en page si la validation automatique est active."
+  },
+  "BoxLayoutElement:getIsElementIncluded": {
+   "en": "Decides whether a child takes part in the layout, based on `ignoreLayout`, the ignoreVisibility argument and visibility mode (full or own visible flag). Note: operator precedence of the `and`/`or` chain means `ignoreLayout` only guards the first branch.",
+   "fr": "Décide si un enfant participe à la mise en page, d'après `ignoreLayout`, l'argument ignoreVisibility et le mode de visibilité (complète ou indicateur propre). À noter : à cause de la précédence des `and`/`or`, `ignoreLayout` ne protège que la première branche."
+  },
+  "BoxLayoutElement:updateLayoutCells": {
+   "en": "Rebuilds the cell table from the included children: places them in order, starts a new flow when the size would overflow (while the flow count allows), and records flow sizes, lateral sizes and totals. Sizes include margins and spacing.",
+   "fr": "Reconstruit la table de cellules à partir des enfants inclus : les place dans l'ordre, ouvre un nouveau flux en cas de dépassement (tant que le nombre de flux le permet) et enregistre les tailles de flux, les tailles latérales et les totaux. Les tailles incluent marges et espacement."
+  },
+  "BoxLayoutElement:applyCellPositions": {
+   "en": "Positions every cell element according to alignment, fill directions, flow sizes, margins and spacing, with optional x/y offsets (used by scrolling layouts). Also resets each cell's anchor and pivot.",
+   "fr": "Positionne chaque élément de cellule selon l'alignement, les directions de remplissage, les tailles de flux, les marges et l'espacement, avec décalages x/y optionnels (utilisés par les listes défilantes). Réinitialise aussi l'ancre et le pivot de chaque cellule."
+  },
+  "BoxLayoutElement:focusLinkCells": {
+   "en": "Finds the first and last focusable element among the cells, stores the first as default focus target, clears the incoming focus targets and links each focusable cell to its neighbors through `focusLinkChildElement` (defined elsewhere).",
+   "fr": "Trouve le premier et le dernier éléments focalisables parmi les cellules, mémorise le premier comme cible de focus par défaut, vide les cibles de focus entrantes et relie chaque cellule focalisable à ses voisines via `focusLinkChildElement` (défini ailleurs)."
+  },
+  "BoxLayoutElement:canReceiveFocus": {
+   "en": "Returns true only if the layout handles focus and at least one child can receive focus.",
+   "fr": "Retourne true seulement si la mise en page gère le focus et qu'au moins un enfant peut le recevoir."
+  },
+  "BoxLayoutElement:onFocusLeave": {
+   "en": "Runs the parent handler; when `rememberLastFocus` is set and the currently focused element is a descendant, stores it as `lastFocusElement`.",
+   "fr": "Exécute le gestionnaire du parent ; si `rememberLastFocus` est actif et que l'élément focalisé est un descendant, le mémorise dans `lastFocusElement`."
+  },
+  "BoxLayoutElement:updateAbsolutePosition": {
+   "en": "Updates the absolute position through the parent, then reapplies the cell positions so children follow.",
+   "fr": "Met à jour la position absolue via le parent, puis réapplique les positions des cellules pour que les enfants suivent."
+  }
+ }
+}

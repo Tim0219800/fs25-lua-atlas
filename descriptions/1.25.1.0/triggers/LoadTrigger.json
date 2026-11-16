@@ -1,0 +1,117 @@
+{
+ "fichier": "triggers/LoadTrigger.lua",
+ "module": {
+  "en": "Network Object (subclass of Object) for a loading station that fills vehicles' fill units from a source object, such as a silo or production point. Vehicles are tracked through a physics trigger; the player (or an automatic timer when the platform enables automatic filling) starts and stops loading. The server transfers liters in update, the client plays effects, sounds and a scrolling shader. Also defines LoadTriggerActivatable, the activatable that exposes the start/stop action. Depends on EffectManager, SoundManager and SiloDialog, which are not in the dump (UNVERIFIED).",
+  "fr": "Objet réseau (sous-classe de Object) pour une station de chargement qui remplit les unités de remplissage des véhicules depuis un objet source, comme un silo ou un point de production. Les véhicules sont suivis par un trigger physique ; le joueur (ou un minuteur automatique si la plateforme active le remplissage automatique) démarre et arrête le chargement. Le serveur transfère les litres dans update, le client joue effets, sons et un shader défilant. Définit aussi LoadTriggerActivatable, l'activable qui expose l'action démarrer/arrêter. Dépend de EffectManager, SoundManager et SiloDialog, absents du dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "LoadTrigger.registerXMLPaths": {
+   "en": "Registers the XML attributes of a load trigger: triggerNode, fillLitersPerSecond, useTimeScale, discharge node and size, sound identifiers and sounds, scroller node/shader/speed, fillTypes or fillTypeCategories, autoStart, infiniteCapacity, start/stop texts and aiNode. Also registers effect and sample paths.",
+   "fr": "Enregistre les attributs XML d'un trigger de chargement : triggerNode, fillLitersPerSecond, useTimeScale, noeud et taille de déversement, identifiants de sons et sons, noeud/shader/vitesse du défileur, fillTypes ou fillTypeCategories, autoStart, infiniteCapacity, textes démarrer/arrêter et aiNode. Enregistre aussi les chemins d'effets et d'échantillons."
+  },
+  "LoadTrigger.new": {
+   "en": "Creates the load trigger as a network Object with the given server/client flags and an empty table of fillable objects. Call load next to configure it from XML.",
+   "fr": "Crée le trigger de chargement comme objet réseau avec les drapeaux serveur/client donnés et une table vide d'objets remplissables. Appeler ensuite load pour le configurer depuis le XML."
+  },
+  "LoadTrigger:load": {
+   "en": "Reads the configuration from XML and returns false if the root node or triggerNode is missing. Registers the physics trigger and node object, reads fill rate, optional AI node and discharge info, and on clients loads effects, samples and the scroller. Restricts fill types by list or category, creates the activatable and sets automatic filling from Platform.gameplay.",
+   "fr": "Lit la configuration depuis le XML et retourne false si le noeud racine ou triggerNode manque. Enregistre le trigger physique et l'objet de noeud, lit le débit, l'éventuel noeud IA et les infos de déversement, et sur les clients charge effets, échantillons et défileur. Restreint les types par liste ou catégorie, crée l'activable et règle le remplissage automatique depuis Platform.gameplay."
+  },
+  "LoadTrigger:delete": {
+   "en": "Unregisters delete listeners on tracked objects, removes the physics trigger and node object, deletes samples and effects, removes the activatable, then calls the parent delete.",
+   "fr": "Retire les écouteurs de suppression sur les objets suivis, retire le trigger physique et l'objet de noeud, supprime échantillons et effets, retire l'activable, puis appelle le delete du parent."
+  },
+  "LoadTrigger:setSource": {
+   "en": "Sets the source object that supplies the fill levels. Asserts that it implements getSupportedFillTypes, getAllFillLevels, addFillLevelToFillableObject and getIsFillAllowedToFarm; it errors otherwise.",
+   "fr": "Définit l'objet source qui fournit les niveaux. Vérifie par assert qu'il implémente getSupportedFillTypes, getAllFillLevels, addFillLevelToFillableObject et getIsFillAllowedToFarm ; erreur sinon."
+  },
+  "LoadTrigger:raiseActive": {
+   "en": "Keeps this object in the update loop by calling the parent raiseActive, and also raises the source object active if it has that method.",
+   "fr": "Maintient cet objet dans la boucle de mise à jour via le raiseActive du parent, et active aussi l'objet source s'il possède cette méthode."
+  },
+  "LoadTrigger:loadTriggerCallback": {
+   "en": "Physics callback for enter/leave. Finds a fill unit of the vehicle that accepts a fill type offered by the source (matching the node, else a unit with no exact fill root node), and tracks the object with a delete listener and in-range flag. Then starts auto loading or adds/removes the activatable.",
+   "fr": "Callback physique d'entrée/sortie. Trouve une unité du véhicule qui accepte un type proposé par la source (celle du noeud, sinon une unité sans noeud de remplissage exact), et suit l'objet avec un écouteur de suppression et un drapeau de portée. Puis lance le chargement auto ou ajoute/retire l'activable."
+  },
+  "LoadTrigger:farmIdForFillableObject": {
+   "en": "Returns the farm id of a fillable object: its active farm if available, else its owner farm, falling back to the spectator farm id when none is found.",
+   "fr": "Retourne l'identifiant de ferme d'un objet remplissable : sa ferme active si disponible, sinon sa ferme propriétaire, avec repli sur la ferme spectateur si aucune n'est trouvée."
+  },
+  "LoadTrigger:getIsFillableObjectAvailable": {
+   "en": "Returns true if a tracked object can be loaded now. While loading it checks the current object; otherwise it picks a valid target (activation allowed, TRIGGER tool supported, free capacity, farm allowed), rotating priority away from the last filled one, and stores it as validFillableObject.",
+   "fr": "Retourne true si un objet suivi peut être chargé maintenant. Pendant un chargement, il vérifie l'objet courant ; sinon il choisit une cible valide (activation permise, outil TRIGGER supporté, capacité libre, ferme autorisée), en déprioritisant le dernier rempli, et la mémorise comme validFillableObject."
+  },
+  "LoadTrigger:toggleLoading": {
+   "en": "Stops loading if running. Otherwise collects the source's fill levels (for the current farm) allowed by the target unit; unless autoStart is set it opens SiloDialog for type selection (brakes the vehicle in automatic mode), else starts with the first type. Uses the local player's vehicle.",
+   "fr": "Arrête le chargement s'il est en cours. Sinon collecte les niveaux de la source (pour la ferme courante) autorisés par l'unité cible ; sauf autoStart, ouvre SiloDialog pour choisir le type (freine le véhicule en mode automatique), sinon démarre avec le premier type. Utilise le véhicule du joueur local."
+  },
+  "LoadTrigger:onFillTypeSelection": {
+   "en": "Callback of the type selection: if the type is valid and the target still allows activation, starts loading it on the validated object and unit via setIsLoading. Ignored for nil or unknown types.",
+   "fr": "Callback de la sélection de type : si le type est valide et que la cible autorise encore l'activation, démarre son chargement sur l'objet et l'unité validés via setIsLoading. Ignoré pour un type nil ou inconnu."
+  },
+  "LoadTrigger:setIsLoading": {
+   "en": "Sends LoadTriggerSetIsLoadingEvent (unless noEventSend), then starts loading and the fill sound, or stops the sound and loading. Entry point used to synchronize loading state between server and clients.",
+   "fr": "Envoie LoadTriggerSetIsLoadingEvent (sauf noEventSend), puis démarre le chargement et le son, ou arrête le son et le chargement. Point d'entrée utilisé pour synchroniser l'état de chargement entre serveur et clients."
+  },
+  "LoadTrigger:getAllowsActivation": {
+   "en": "Returns true if no active vehicle is required (automatic filling), or if the object reports getAllowLoadTriggerActivation as true; false otherwise.",
+   "fr": "Retourne true si aucun véhicule actif n'est requis (remplissage automatique), ou si l'objet indique true via getAllowLoadTriggerActivation ; false sinon."
+  },
+  "LoadTrigger:startLoading": {
+   "en": "Marks loading as started (once only): stores fill type, target object and unit, switches the activatable text to the stop text, and on clients starts effects, both samples and the scroller speed. Does not move any liters itself.",
+   "fr": "Marque le chargement comme démarré (une seule fois) : mémorise type, objet cible et unité, passe le texte de l'activable en texte d'arrêt, et sur les clients démarre effets, les deux échantillons et la vitesse du défileur. Ne transfère aucun litre."
+  },
+  "LoadTrigger:stopLoading": {
+   "en": "Ends loading: resets type and text, notifies the target through aiStoppedLoadingFromTrigger if present, records which object was filled last for priority, and on clients stops effects, samples and the scroller.",
+   "fr": "Termine le chargement : réinitialise type et texte, notifie la cible via aiStoppedLoadingFromTrigger si présent, note quel objet a été rempli en dernier pour la priorité, et sur les clients arrête effets, échantillons et défileur."
+  },
+  "LoadTrigger:update": {
+   "en": "Server only. While loading, transfers liters per frame from the source to the target (rate times dt, capped by the target's getLoadTriggerMaxFillSpeed, scaled by effective time scale if enabled) and stops when nothing more is transferred. In automatic mode, tries to start every 10 seconds.",
+   "fr": "Serveur uniquement. Pendant le chargement, transfère des litres à chaque image de la source vers la cible (débit fois dt, plafonné par getLoadTriggerMaxFillSpeed de la cible, mis à l'échelle du temps si activé) et s'arrête quand plus rien n'est transféré. En mode automatique, tente de démarrer toutes les 10 secondes."
+  },
+  "LoadTrigger:getCurrentFillType": {
+   "en": "Returns the fill type currently being loaded (FillType.UNKNOWN when idle).",
+   "fr": "Retourne le type de remplissage en cours de chargement (FillType.UNKNOWN au repos)."
+  },
+  "LoadTrigger:getFillTargetNode": {
+   "en": "Returns the root node of the target fill unit being loaded, or nil if no object is currently being filled.",
+   "fr": "Retourne le noeud racine de l'unité cible en cours de chargement, ou nil si aucun objet n'est rempli."
+  },
+  "LoadTrigger:setFillSoundIsPlaying": {
+   "en": "Without discharge info, moves the sound node to the target position when starting. If no custom `load` sample exists it delegates to FillTrigger.setFillSoundIsPlaying, and it also forwards the state to the target object's setFillSoundIsPlaying if present. Note: reads self.samples, which exists only on clients.",
+   "fr": "Sans infos de déversement, déplace le noeud sonore à la position de la cible au démarrage. Sans échantillon `load` personnalisé, il délègue à FillTrigger.setFillSoundIsPlaying, et transmet aussi l'état au setFillSoundIsPlaying de la cible si présent. À noter : lit self.samples, qui n'existe que sur les clients."
+  },
+  "LoadTrigger:onDeleteObject": {
+   "en": "Delete-listener callback: removes the deleted vehicle from the tracked objects and, if it was the one being loaded, stops loading.",
+   "fr": "Callback de l'écouteur de suppression : retire le véhicule supprimé des objets suivis et, si c'était celui en cours de chargement, arrête le chargement."
+  },
+  "LoadTrigger:getIsFillTypeSupported": {
+   "en": "Returns true if the fill type is in this trigger's allowed list. Note: it indexes self.fillTypes without a nil check, but load sets it to nil when no restriction is configured, which would raise an error.",
+   "fr": "Retourne true si le type est dans la liste autorisée du trigger. À noter : il indexe self.fillTypes sans test de nil, alors que load le met à nil sans restriction configurée, ce qui provoquerait une erreur."
+  },
+  "LoadTrigger:getSupportAILoading": {
+   "en": "Returns whether AI loading is supported, which is true when an aiNode was defined in the XML.",
+   "fr": "Indique si le chargement par IA est supporté, ce qui est vrai quand un aiNode est défini dans le XML."
+  },
+  "LoadTrigger:getAITargetPositionAndDirection": {
+   "en": "Returns world x and z of the AI node plus the x and z of its local forward (+Z) direction, as the AI approach target.",
+   "fr": "Retourne x et z monde du noeud IA ainsi que x et z de sa direction locale avant (+Z), comme cible d'approche de l'IA."
+  },
+  "LoadTriggerActivatable.new": {
+   "en": "Creates the activatable bound to a load trigger, with an empty action text.",
+   "fr": "Crée l'activable lié à un trigger de chargement, avec un texte d'action vide."
+  },
+  "LoadTriggerActivatable:setText": {
+   "en": "Sets the text shown for the activation action.",
+   "fr": "Définit le texte affiché pour l'action d'activation."
+  },
+  "LoadTriggerActivatable:getIsActivatable": {
+   "en": "Returns whether the owning load trigger currently has a fillable object available.",
+   "fr": "Indique si le trigger de chargement propriétaire a actuellement un objet remplissable disponible."
+  },
+  "LoadTriggerActivatable:run": {
+   "en": "Runs the action by toggling loading on the owning load trigger.",
+   "fr": "Exécute l'action en basculant le chargement du trigger de chargement propriétaire."
+  }
+ }
+}

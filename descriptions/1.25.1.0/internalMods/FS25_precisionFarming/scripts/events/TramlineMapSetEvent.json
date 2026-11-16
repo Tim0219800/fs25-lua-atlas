@@ -1,0 +1,33 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/TramlineMapSetEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that synchronises a tramline change on one farmland: working width, direction, spacing, an enabled flag and whether to clear the fruit. Clients send it to the server, which re-broadcasts it.",
+    "fr": "Événement réseau (sous-classe de Event) qui synchronise une modification de jalonnement sur une parcelle : largeur de travail, direction, espacement, indicateur d'activation et effacement ou non de la culture. Les clients l'envoient au serveur, qui le rediffuse."
+  },
+  "fonctions": {
+    "TramlineMapSetEvent.emptyNew": {
+      "en": "Creates an empty TramlineMapSetEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de TramlineMapSetEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "TramlineMapSetEvent.new": {
+      "en": "Creates the event with the farmland id, working width, work direction, spacing, enabled flag and clearFruit flag.",
+      "fr": "Crée l'événement avec l'id de parcelle, la largeur de travail, la direction de travail, l'espacement, l'indicateur d'activation et l'indicateur clearFruit."
+    },
+    "TramlineMapSetEvent:readStream": {
+      "en": "Reads the farmland id, three 32 bit floats and two booleans (enabled, clearFruit), then calls run.",
+      "fr": "Lit l'id de parcelle, trois flottants 32 bits et deux booléens (enabled, clearFruit), puis appelle run."
+    },
+    "TramlineMapSetEvent:writeStream": {
+      "en": "Writes the same fields in the same order as readStream.",
+      "fr": "Écrit les mêmes champs dans le même ordre que readStream."
+    },
+    "TramlineMapSetEvent:run": {
+      "en": "Receiving side. The server re-broadcasts to the other clients, then every side calls tramlineMap:setFarmlandTramlines(...) with noEventSend set, if the tramline map exists.",
+      "fr": "Côté réception. Le serveur rediffuse aux autres clients, puis chaque côté appelle tramlineMap:setFarmlandTramlines(...) avec noEventSend, si la carte de jalonnement existe."
+    },
+    "TramlineMapSetEvent.sendEvent": {
+      "en": "Entry point to sync a tramline change. Server: broadcasts a new TramlineMapSetEvent to all clients; client: sends it to the server. Does nothing when noEventSend is true.",
+      "fr": "Point d'entrée pour synchroniser une modification de jalonnement. Serveur : diffuse un nouveau TramlineMapSetEvent à tous les clients ; client : l'envoie au serveur. Ne fait rien si noEventSend vaut true."
+    }
+  }
+}

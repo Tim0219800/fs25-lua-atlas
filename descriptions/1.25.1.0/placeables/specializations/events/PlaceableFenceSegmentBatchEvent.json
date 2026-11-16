@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableFenceSegmentBatchEvent.lua",
+ "module": {
+  "en": "Network event (subclass of Event, main channel) that sends many fence segments in one message during bulk construction, instead of one add-segment event each. The server already validated and charged the segments, so it carries no price and is only processed by clients.",
+  "fr": "Événement réseau (sous-classe d'Event, canal principal) qui envoie de nombreux segments de clôture en un seul message lors d'une construction en masse, au lieu d'un événement d'ajout par segment. Le serveur a déjà validé et facturé les segments, donc il ne porte pas de prix et n'est traité que par les clients."
+ },
+ "fonctions": {
+  "PlaceableFenceSegmentBatchEvent.emptyNew": {
+   "en": "Creates an empty event on `NetworkNode.CHANNEL_MAIN` for stream reading.",
+   "fr": "Crée un événement vide sur `NetworkNode.CHANNEL_MAIN` pour la lecture de flux."
+  },
+  "PlaceableFenceSegmentBatchEvent.new": {
+   "en": "Creates the event with the fence placeable and the list of segments.",
+   "fr": "Crée l'événement avec le placeable de clôture et la liste des segments."
+  },
+  "PlaceableFenceSegmentBatchEvent:readStream": {
+   "en": "Reads the placeable, logs an error and returns early if it is unknown (which would misalign the stream), then reads a count (UInt8, so at most 255) and each segment (coordinates and render flags) and creates it, then calls `run`.",
+   "fr": "Lit le placeable, journalise une erreur et revient tôt s'il est inconnu (ce qui désalignerait le flux), puis lit un nombre (UInt8, donc 255 au plus) et chaque segment (coordonnées et drapeaux de rendu) et le crée, puis appelle `run`."
+  },
+  "PlaceableFenceSegmentBatchEvent:writeStream": {
+   "en": "Writes the placeable, the segment count as UInt8 and each segment coordinates and render flags.",
+   "fr": "Écrit le placeable, le nombre de segments en UInt8 et les coordonnées et drapeaux de rendu de chaque segment."
+  },
+  "PlaceableFenceSegmentBatchEvent:run": {
+   "en": "Ignored unless received from the server and the placeable is synchronized; then queues each segment with `addSegment` (async build spread over frames) and publishes the add-segment message for it.",
+   "fr": "Ignorée sauf si reçue du serveur et si le placeable est synchronisé ; met alors chaque segment en file avec `addSegment` (construction asynchrone étalée sur plusieurs images) et publie pour lui le message d'ajout de segment."
+  }
+ }
+}

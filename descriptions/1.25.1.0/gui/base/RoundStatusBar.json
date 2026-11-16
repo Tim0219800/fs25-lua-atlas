@@ -1,0 +1,29 @@
+{
+ "fichier": "gui/base/RoundStatusBar.lua",
+ "module": {
+  "en": "Circular (ring) progress bar built from several slice overlays: two half-ring backgrounds, two half-ring value overlays rotated according to the value, an optional front overlay and an optional marker at the progress tip. Overlays are created through `g_overlayManager`. Client-side HUD element.",
+  "fr": "Barre de progression circulaire (anneau) composée de plusieurs overlays de tranches : deux demi-anneaux de fond, deux demi-anneaux de valeur tournés selon la valeur, un overlay avant optionnel et un marqueur optionnel au bout de la progression. Les overlays sont créés via `g_overlayManager`. Élément de HUD côté client."
+ },
+ "fonctions": {
+  "RoundStatusBar.new": {
+   "en": "Creates the bar from slice ids, position, sizes, radius, and colors, then sets the value to 0. Note: `overlayFront` is never assigned (the front overlay is stored as `overlayBackground`) and the marker uses the value slice id, not the marker slice id.",
+   "fr": "Crée la barre à partir d'identifiants de tranches, position, tailles, rayon et couleurs, puis fixe la valeur à 0. À noter : `overlayFront` n'est jamais affecté (l'overlay avant est stocké dans `overlayBackground`) et le marqueur utilise l'id de tranche de valeur, pas celui du marqueur."
+  },
+  "RoundStatusBar:delete": {
+   "en": "Deletes the front, background, value and marker overlays that exist. Note: because the front overlay is stored as `overlayBackground`, it is never deleted.",
+   "fr": "Supprime les overlays avant, de fond, de valeur et de marqueur existants. À noter : l'overlay avant étant stocké dans `overlayBackground`, il n'est jamais supprimé."
+  },
+  "RoundStatusBar:setPosition": {
+   "en": "Moves the bar (nil keeps a coordinate) and repositions the ring overlays with their centering offset and the front overlay if `overlayFront` exists. The marker is not moved here.",
+   "fr": "Déplace la barre (nil conserve une coordonnée) et repositionne les overlays de l'anneau avec leur décalage de centrage et l'overlay avant si `overlayFront` existe. Le marqueur n'est pas déplacé ici."
+  },
+  "RoundStatusBar:setValue": {
+   "en": "Clamps the value to 0..1, rotates the value and background half rings accordingly and places the marker on the ellipse defined by `radius`.",
+   "fr": "Borne la valeur entre 0 et 1, fait tourner les demi-anneaux de valeur et de fond en conséquence et place le marqueur sur l'ellipse définie par `radius`."
+  },
+  "RoundStatusBar:render": {
+   "en": "Draws the layers in order, depending on whether the value is above one half: backgrounds, value halves, then the front overlay and the marker when present.",
+   "fr": "Dessine les couches dans l'ordre, selon que la valeur dépasse la moitié : fonds, moitiés de valeur, puis l'overlay avant et le marqueur s'ils existent."
+  }
+ }
+}

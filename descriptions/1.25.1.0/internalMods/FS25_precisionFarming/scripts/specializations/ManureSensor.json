@@ -1,0 +1,41 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/specializations/ManureSensor.lua",
+ "module": {
+  "en": "Vehicle specialization of Precision Farming for manure sensors on sprayers/spreaders (requires Sprayer and PrecisionFarmingStatistic). It registers a 'manureSensor' configuration, attaches a sensor model, and overrides the nitrogen offset functions so that with a sensor the applied amount is exact and without one it drifts over time.",
+  "fr": "Spécialisation de véhicule de Precision Farming pour les capteurs de lisier sur épandeurs/pulvérisateurs (exige Sprayer et PrecisionFarmingStatistic). Elle enregistre une configuration 'manureSensor', fixe un modèle de capteur et surcharge les fonctions de décalage d'azote : avec capteur la dose est exacte, sans capteur elle dérive dans le temps."
+ },
+ "fonctions": {
+  "ManureSensor.prerequisitesPresent": {
+   "en": "True only if the vehicle has both the Sprayer and PrecisionFarmingStatistic specializations.",
+   "fr": "Vrai uniquement si le véhicule possède les spécialisations Sprayer et PrecisionFarmingStatistic."
+  },
+  "ManureSensor.initSpecialization": {
+   "en": "Registers the 'manureSensor' configuration type and the XML keys linkNode#node and linkNode#type (DEFAULT, LARGE, SMALL or STANDALONE) in the vehicle schema.",
+   "fr": "Enregistre le type de configuration 'manureSensor' et les clés XML linkNode#node et linkNode#type (DEFAULT, LARGE, SMALL ou STANDALONE) dans le schéma du véhicule."
+  },
+  "ManureSensor:onLoad": {
+   "en": "Initialises a random curve offset and checks if any fill unit accepts liquid manure or digestate (sensor required). Links the sensor from the selected configuration, and for configs above 1 uses linkage data from g_precisionFarming by config file name.",
+   "fr": "Initialise un décalage de courbe aléatoire et vérifie si une unité de remplissage accepte lisier ou digestat (capteur requis). Fixe le capteur de la configuration choisie et, pour les configs supérieures à 1, utilise les données de liaison de g_precisionFarming selon le fichier de config."
+  },
+  "ManureSensor:linkManureSensor": {
+   "en": "Clones a sensor node of the given type for each link node (found by node or i3d mapping name), links it, applies optional translation, rotation and scale, then marks the sensor as available.",
+   "fr": "Clone un noeud de capteur du type donné pour chaque noeud de liaison (trouvé par noeud ou nom de mapping i3d), le lie, applique translation, rotation et échelle optionnelles, puis marque le capteur comme disponible."
+  },
+  "ManureSensor:getManureSensorNitrogenOffset": {
+   "en": "Computes a time-varying nitrogen offset from three summed sine waves over g_time, scaled by lastChangeLevels and MAX_NITROGEN_OFFSET_PCT, rounded to whole steps and sign-preserved. Simulates uncertain manure nitrogen content.",
+   "fr": "Calcule un décalage d'azote variable dans le temps à partir de trois sinusoïdes sommées sur g_time, mis à l'échelle par lastChangeLevels et MAX_NITROGEN_OFFSET_PCT, arrondi en pas entiers avec le signe conservé. Simule la teneur incertaine du lisier en azote."
+  },
+  "ManureSensor:getCurrentNitrogenLevelOffset": {
+   "en": "Override. Without a required sensor it calls the parent. If a sensor is required but missing it returns the drifting offset; with a sensor it returns 0.",
+   "fr": "Surcharge. Sans capteur requis, appelle le parent. Si un capteur est requis mais absent, renvoie le décalage fluctuant ; avec capteur, renvoie 0."
+  },
+  "ManureSensor:getCurrentNitrogenUsageLevelOffset": {
+   "en": "Override. Without a required sensor it calls the parent. With a sensor it returns the drifting offset, without one it returns 0 (the opposite of the level offset above).",
+   "fr": "Surcharge. Sans capteur requis, appelle le parent. Avec capteur, renvoie le décalage fluctuant, sans capteur 0 (l'inverse du décalage de niveau ci-dessus)."
+  },
+  "ManureSensor:getIsUsingExactNitrogenAmount": {
+   "en": "Override. Returns the parent value if no sensor is required, otherwise whether a sensor is available.",
+   "fr": "Surcharge. Renvoie la valeur du parent si aucun capteur n'est requis, sinon si un capteur est disponible."
+  }
+ }
+}

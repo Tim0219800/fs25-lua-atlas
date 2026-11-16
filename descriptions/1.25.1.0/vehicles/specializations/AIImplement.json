@@ -1,0 +1,301 @@
+{
+ "fichier": "vehicles/specializations/AIImplement.lua",
+ "module": {
+  "en": "Specialization (no prerequisites) that gives tools and implements their AI data: area and size markers, collision trigger, turning radius limits, lowering and reverse-turn rules, headland and row alignment settings, and the ground, fruit and density-height requirements that decide where the AI may work. It reads the vehicle.ai XML node, optionally replaced by an aiConfigurations entry chosen by the \"ai\" configuration. It raises the onAIImplement* events (start, end, line, turn, block and so on); the code that raises most of them lives in other files. Requirements are turned into a FieldCropsQuery object, whose engine-side behaviour is UNVERIFIED.",
+  "fr": "Spécialisation (sans prérequis) qui donne aux outils et équipements leurs données IA : marqueurs de zone et de taille, déclencheur de collision, limites de rayon de braquage, règles d'abaissement et de demi-tour en marche arrière, réglages de tournières et d'alignement sur les rangs, et exigences de sol, de cultures et de hauteur de densité qui décident où l'IA peut travailler. Elle lit le nœud XML vehicle.ai, éventuellement remplacé par une entrée aiConfigurations choisie par la configuration \"ai\". Elle déclare les événements onAIImplement* (début, fin, ligne, virage, blocage, etc.) ; le code qui déclenche la plupart d'entre eux se trouve dans d'autres fichiers. Les exigences sont converties en objet FieldCropsQuery, dont le comportement côté moteur est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "AIImplement.prerequisitesPresent": {
+   "en": "Always returns true: any vehicle type can carry this specialization.",
+   "fr": "Renvoie toujours vrai : n'importe quel type de véhicule peut porter cette spécialisation."
+  },
+  "AIImplement.initSpecialization": {
+   "en": "Adds the \"ai\" vehicle configuration type and registers the vehicle.ai XML paths, plus the same paths under each aiConfiguration entry.",
+   "fr": "Ajoute le type de configuration de véhicule \"ai\" et déclare les chemins XML vehicle.ai, ainsi que les mêmes chemins sous chaque entrée aiConfiguration."
+  },
+  "AIImplement.registerAIImplementXMLPaths": {
+   "en": "Registers every AI implement XML setting under a base path: turning radius, lowering, root alignment, backward turning, vineyard flags, reverser node, turn limitation, look-ahead, coverage, headland, overlap and row alignment.",
+   "fr": "Déclare sous un chemin de base tous les réglages XML IA d'un équipement : rayon de braquage, abaissement, alignement sur la racine, virage en arrière, drapeaux vignoble, nœud inverseur, limitation de virage, anticipation, couverture, tournières, chevauchement et alignement sur les rangs."
+  },
+  "AIImplement.registerAIImplementBaseXMLPaths": {
+   "en": "Registers the area markers (left, right, back, side offset, width, validity offset) and size markers, then the collision trigger paths. Can be reused by other specializations for their own AI setups.",
+   "fr": "Déclare les marqueurs de zone (gauche, droite, arrière, décalage latéral, largeur, décalage de validité) et de taille, puis les chemins du déclencheur de collision. Réutilisable par d'autres spécialisations pour leurs propres configurations IA."
+  },
+  "AIImplement.registerAICollisionTriggerXMLPaths": {
+   "en": "Registers the collisionTrigger XML keys: useSize, node, backNode, width (default 4), height (default 3) and length (default 5).",
+   "fr": "Déclare les clés XML collisionTrigger : useSize, node, backNode, width (4 par défaut), height (3 par défaut) et length (5 par défaut)."
+  },
+  "AIImplement.registerEvents": {
+   "en": "Registers the onAIImplement* vehicle events: start, active, end, prepare for work or transport, start and end line, start, progress and end turn, side offset changed, block, continue, and the two job-vehicle block and continue events.",
+   "fr": "Enregistre les événements de véhicule onAIImplement* : début, actif, fin, préparation au travail ou au transport, début et fin de ligne, début, progression et fin de virage, changement de décalage latéral, blocage, reprise, et les deux événements de blocage et reprise du véhicule de travail."
+  },
+  "AIImplement.registerFunctions": {
+   "en": "Adds the specialization's getters, setters, requirement functions and line start and end helpers to the vehicle type.",
+   "fr": "Ajoute au type de véhicule les accesseurs, mutateurs, fonctions d'exigences et aides de début et fin de ligne de la spécialisation."
+  },
+  "AIImplement.registerOverwrittenFunctions": {
+   "en": "Overrides addVehicleToAIImplementList, getAllowTireTracks, getDoConsumePtoPower and checkMovingPartDirtyUpdateNode.",
+   "fr": "Surcharge addVehicleToAIImplementList, getAllowTireTracks, getDoConsumePtoPower et checkMovingPartDirtyUpdateNode."
+  },
+  "AIImplement.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad and onPostAIFieldCourseSettingsInitialized.",
+   "fr": "Abonne la spécialisation à onLoad, onPostLoad et onPostAIFieldCourseSettingsInitialized."
+  },
+  "AIImplement:onLoad": {
+   "en": "Warns about deprecated XML keys, picks vehicle.ai or the aiConfiguration chosen by the \"ai\" configuration, and loads all AI settings into spec_aiImplement: markers, lowering, turning, headland, overlap, row alignment (from a fruit type or explicit values), and empty requirement lists. Also reads the ground-type channels of the field ground system.",
+   "fr": "Signale les clés XML obsolètes, choisit vehicle.ai ou l'aiConfiguration sélectionnée par la configuration \"ai\", et charge tous les réglages IA dans spec_aiImplement : marqueurs, abaissement, virage, tournières, chevauchement, alignement sur les rangs (depuis un type de culture ou des valeurs explicites) et listes d'exigences vides. Lit aussi les canaux de type de sol du système de sol des champs."
+  },
+  "AIImplement:onPostLoad": {
+   "en": "Resolves the wheel indices of the turn limitation to wheel objects (warning on unknown index) and precomputes marker offsets relative to each input attacher joint for the main setup and every custom setup.",
+   "fr": "Résout les indices de roues de la limitation de virage en objets roue (avertissement si indice inconnu) et précalcule les décalages des marqueurs par rapport à chaque point d'attelage d'entrée pour la configuration principale et chaque configuration personnalisée."
+  },
+  "AIImplement:onPostAIFieldCourseSettingsInitialized": {
+   "en": "Called once the automatic field course settings are ready: copies this tool's XML values (vineyard flags, tail avoidance, straightening, side offset alternation, headland min and max count, corner cut-out, forced direction) into the given settings object.",
+   "fr": "Appelé quand les réglages automatiques du parcours de champ sont prêts : copie les valeurs XML de cet outil (drapeaux vignoble, évitement de queue, redressage, alternance du décalage latéral, nombre min et max de tournières, découpe des coins, direction forcée) dans l'objet de réglages fourni."
+  },
+  "AIImplement:loadAICollisionTriggerFromXML": {
+   "en": "Builds a collision trigger table from a key: uses the given node with width, height and length, or, with useSize, creates nodes from the vehicle size box; creates a reversed back node if missing. Returns nil when neither is defined.",
+   "fr": "Construit une table de déclencheur de collision depuis une clé : utilise le nœud indiqué avec largeur, hauteur et longueur ou, avec useSize, crée des nœuds à partir de la boîte de taille du véhicule ; crée un nœud arrière retourné s'il manque. Renvoie nil si aucun des deux n'est défini."
+  },
+  "AIImplement:loadAIImplementBaseSetupFromXML": {
+   "en": "Loads markers, side offsets, marker width (computed from the left and right markers if absent), size markers and collision trigger from a key. Without availableFunc it fills the main spec; with one it creates an alternative setup stored in aiBaseSetups. Always returns true.",
+   "fr": "Charge marqueurs, décalages latéraux, largeur des marqueurs (calculée à partir des marqueurs gauche et droit si absente), marqueurs de taille et déclencheur de collision depuis une clé. Sans availableFunc, il remplit la spec principale ; avec, il crée une configuration alternative stockée dans aiBaseSetups. Renvoie toujours vrai."
+  },
+  "AIImplement:getCustomAIImplementBaseSetup": {
+   "en": "Returns the first alternative AI setup whose availability function returns true for this vehicle, or nil if none applies.",
+   "fr": "Renvoie la première configuration IA alternative dont la fonction de disponibilité renvoie vrai pour ce véhicule, ou nil si aucune ne s'applique."
+  },
+  "AIImplement:getCanAIImplementContinueWork": {
+   "en": "Default hook returning true, false, nil; other specializations override it to report that work must pause (the meaning of the extra returns is UNVERIFIED).",
+   "fr": "Point d'extension par défaut renvoyant vrai, faux, nil ; d'autres spécialisations le surchargent pour signaler qu'il faut suspendre le travail (le sens des valeurs supplémentaires est NON VÉRIFIÉ)."
+  },
+  "AIImplement:getCanImplementBeUsedForAI": {
+   "en": "Returns true only if left, right and back AI markers are all defined.",
+   "fr": "Renvoie vrai seulement si les marqueurs IA gauche, droit et arrière sont tous définis."
+  },
+  "AIImplement:addVehicleToAIImplementList": {
+   "en": "Override: appends this vehicle to the list as {object=self} when it can be used for AI, then calls the parent so attached vehicles are added too.",
+   "fr": "Surcharge : ajoute ce véhicule à la liste sous la forme {object=self} s'il est utilisable par l'IA, puis appelle le parent pour ajouter aussi les véhicules attelés."
+  },
+  "AIImplement:getAllowTireTracks": {
+   "en": "Override: tire tracks are allowed only if the parent allows them and the vehicle is not under AI control.",
+   "fr": "Surcharge : les traces de pneus ne sont autorisées que si le parent les autorise et que le véhicule n'est pas sous contrôle de l'IA."
+  },
+  "AIImplement:getDoConsumePtoPower": {
+   "en": "Override: returns false while the root vehicle's AI is turning on the headland (to avoid slow turns); otherwise defers to the parent.",
+   "fr": "Surcharge : renvoie faux pendant que l'IA du véhicule racine tourne en tournière (pour éviter des virages lents) ; sinon délègue au parent."
+  },
+  "AIImplement:checkMovingPartDirtyUpdateNode": {
+   "en": "Override: after the parent check, logs an XML error if an AI marker, size marker or collision trigger node sits inside a moving part with a limited update distance, since that breaks AI positioning.",
+   "fr": "Surcharge : après le contrôle du parent, journalise une erreur XML si un marqueur IA, un marqueur de taille ou un déclencheur de collision se trouve dans une pièce mobile à distance de mise à jour limitée, ce qui fausserait le positionnement IA."
+  },
+  "AIImplement:getAIMinTurningRadius": {
+   "en": "Returns the minimum turning radius from XML, or nil if not defined.",
+   "fr": "Renvoie le rayon de braquage minimal défini dans le XML, ou nil s'il n'est pas défini."
+  },
+  "AIImplement:getAIMarkers": {
+   "en": "Returns left, right and back marker nodes, an inverted flag, marker width and validity offset, delegating to the first attached implement when configured so, and swapping left and right if inverted. Uses an alternative setup if one is available.",
+   "fr": "Renvoie les nœuds de marqueurs gauche, droit et arrière, un indicateur d'inversion, la largeur des marqueurs et le décalage de validité, en déléguant au premier équipement attelé si configuré ainsi, et en échangeant gauche et droite si inversé. Utilise une configuration alternative si disponible."
+  },
+  "AIImplement:updateAIMarkerWidth": {
+   "en": "Fills in a missing marker width from the left and right marker distance for the main setup and alternatives. Note: onLoad always sets the width, so these branches rarely run.",
+   "fr": "Renseigne une largeur de marqueurs manquante à partir de la distance entre marqueurs gauche et droit pour la configuration principale et les alternatives. À noter : onLoad fixe toujours la largeur, ces branches s'exécutent donc rarement."
+  },
+  "AIImplement:setAIMarkersInverted": {
+   "en": "Toggles the inverted state of the AI markers. Note: the state parameter is ignored, the flag is always flipped.",
+   "fr": "Bascule l'état inversé des marqueurs IA. À noter : le paramètre state est ignoré, l'indicateur est toujours inversé."
+  },
+  "AIImplement:calcAIMarkerAttacherJointOffset": {
+   "en": "For each input attacher joint, stores the front and back offsets of the given markers relative to the joint node, so the AI can later account for how the tool is hitched.",
+   "fr": "Pour chaque point d'attelage d'entrée, stocke les décalages avant et arrière des marqueurs donnés par rapport au nœud du point, afin que l'IA tienne compte plus tard de l'attelage de l'outil."
+  },
+  "AIImplement:getAIMarkerAttacherJointOffset": {
+   "en": "Returns the stored offset entry for the given left marker and the active input attacher joint, or nil if there is none.",
+   "fr": "Renvoie l'entrée de décalage stockée pour le marqueur gauche donné et le point d'attelage d'entrée actif, ou nil s'il n'y en a pas."
+  },
+  "AIImplement:getAIInvertMarkersOnTurn": {
+   "en": "Default hook returning false: markers are not inverted when turning; overridable.",
+   "fr": "Point d'extension par défaut renvoyant faux : les marqueurs ne sont pas inversés en virage ; surchargeable."
+  },
+  "AIImplement:getAISizeMarkers": {
+   "en": "Returns the left, right and back size marker nodes from the active setup (alternative or main).",
+   "fr": "Renvoie les nœuds de marqueurs de taille gauche, droit et arrière de la configuration active (alternative ou principale)."
+  },
+  "AIImplement:getAILookAheadSize": {
+   "en": "Returns the look-ahead size used to check the ground in front of the tool (default 3).",
+   "fr": "Renvoie la distance d'anticipation utilisée pour vérifier le sol devant l'outil (3 par défaut)."
+  },
+  "AIImplement:getAIHasNoFullCoverageArea": {
+   "en": "Returns whether the tool does not cover its full width (like plows) and the associated offset.",
+   "fr": "Renvoie si l'outil ne couvre pas toute sa largeur (comme les charrues) et le décalage associé."
+  },
+  "AIImplement:getAIAreaOverlap": {
+   "en": "Returns the line-to-line overlap from XML, or nil if undefined.",
+   "fr": "Renvoie le chevauchement entre lignes défini dans le XML, ou nil s'il n'est pas défini."
+  },
+  "AIImplement:getAIRowAlignment": {
+   "en": "Returns true plus spacing, snap angle and offset when row alignment is configured; otherwise false, 0, 0, 0.",
+   "fr": "Renvoie vrai avec l'espacement, l'angle d'alignement et le décalage quand l'alignement sur les rangs est configuré ; sinon faux, 0, 0, 0."
+  },
+  "AIImplement:getImplementAllowAutomaticSteering": {
+   "en": "Default hook returning false; implements that support steering assist override it (used by AIAutomaticSteering).",
+   "fr": "Point d'extension par défaut renvoyant faux ; les équipements qui gèrent l'assistance à la conduite le surchargent (utilisé par AIAutomaticSteering)."
+  },
+  "AIImplement:getAIImplementCollisionTrigger": {
+   "en": "Returns the collision trigger table of the active setup, or the main one if the alternative has none.",
+   "fr": "Renvoie la table du déclencheur de collision de la configuration active, ou celle de la principale si l'alternative n'en a pas."
+  },
+  "AIImplement:getAIImplementCollisionTriggers": {
+   "en": "Adds this vehicle's collision trigger, if any, to the given table keyed by vehicle.",
+   "fr": "Ajoute le déclencheur de collision de ce véhicule, s'il existe, à la table fournie, indexée par véhicule."
+  },
+  "AIImplement:getAINeedsLowering": {
+   "en": "Returns whether the AI must lower this tool to work (default true).",
+   "fr": "Renvoie si l'IA doit abaisser cet outil pour travailler (vrai par défaut)."
+  },
+  "AIImplement:getAILowerIfAnyIsLowered": {
+   "en": "Returns whether this tool should be lowered whenever any attached AI tool is lowered.",
+   "fr": "Renvoie si cet outil doit être abaissé dès qu'un autre outil IA attelé l'est."
+  },
+  "AIImplement:getAINeedsRootAlignment": {
+   "en": "Returns whether the tool has to stay aligned with the root vehicle's heading during work (default true).",
+   "fr": "Renvoie si l'outil doit pointer dans la même direction que le véhicule racine pendant le travail (vrai par défaut)."
+  },
+  "AIImplement:getAIAllowTurnBackward": {
+   "en": "Returns whether the AI may turn backward with this tool (default true).",
+   "fr": "Renvoie si l'IA peut faire demi-tour en marche arrière avec cet outil (vrai par défaut)."
+  },
+  "AIImplement:getAIBlockTurnBackward": {
+   "en": "Returns whether this tool forbids the AI from driving backward (default false).",
+   "fr": "Renvoie si cet outil interdit à l'IA de reculer (faux par défaut)."
+  },
+  "AIImplement:getAIIsVineyardTool": {
+   "en": "Returns whether AI field work with this tool is restricted to vineyards.",
+   "fr": "Renvoie si le travail de champ IA avec cet outil est limité aux vignobles."
+  },
+  "AIImplement:getAIToolReverserDirectionNode": {
+   "en": "Returns the optional reverser direction node, used as the target node when driving backward.",
+   "fr": "Renvoie le nœud de direction inverseur optionnel, utilisé comme nœud cible en marche arrière."
+  },
+  "AIImplement:getAITurnRadiusLimitation": {
+   "en": "Returns five values: the limiting radius, rotation joint node, wheel list, rotation limit factor and initial turn radius factor.",
+   "fr": "Renvoie cinq valeurs : le rayon limite, le nœud d'articulation de rotation, la liste de roues, le facteur de limite de rotation et le facteur initial de rayon de braquage."
+  },
+  "AIImplement:setAIImplementVariableSideOffset": {
+   "en": "Sets the flag telling that the tool's side offset can change while working.",
+   "fr": "Définit l'indicateur signalant que le décalage latéral de l'outil peut changer pendant le travail."
+  },
+  "AIImplement:getAIImplementSideOffset": {
+   "en": "Returns the side offset of the active setup (0 if none) and the variable side offset flag.",
+   "fr": "Renvoie le décalage latéral de la configuration active (0 s'il n'y en a pas) et l'indicateur de décalage latéral variable."
+  },
+  "AIImplement:setAIFruitRequirements": {
+   "en": "Replaces all fruit requirements with a single one: fruit type and growth state range the AI needs on the ground.",
+   "fr": "Remplace toutes les exigences de cultures par une seule : type de culture et plage d'états de croissance que l'IA doit trouver au sol."
+  },
+  "AIImplement:addAIFruitRequirement": {
+   "en": "Adds a fruit requirement (fruit type, min and max growth state, optional custom density map and channels) and rebuilds the field crops query if it already exists.",
+   "fr": "Ajoute une exigence de culture (type, états de croissance min et max, carte de densité personnalisée et canaux optionnels) et reconstruit la requête de cultures du champ si elle existe déjà."
+  },
+  "AIImplement:clearAIFruitRequirements": {
+   "en": "Removes all fruit requirements and refreshes the field crops query.",
+   "fr": "Supprime toutes les exigences de cultures et actualise la requête de cultures du champ."
+  },
+  "AIImplement:getAIFruitRequirements": {
+   "en": "Returns the list of fruit requirement tables.",
+   "fr": "Renvoie la liste des tables d'exigences de cultures."
+  },
+  "AIImplement:setAIDensityHeightTypeRequirements": {
+   "en": "Replaces the density-height (bulk material) requirements with the single given fill type.",
+   "fr": "Remplace les exigences de hauteur de densité (matière en tas) par le seul type de matière donné."
+  },
+  "AIImplement:addAIDensityHeightTypeRequirement": {
+   "en": "Adds a fill type to the density-height requirements and refreshes the field crops query.",
+   "fr": "Ajoute un type de matière aux exigences de hauteur de densité et actualise la requête de cultures du champ."
+  },
+  "AIImplement:clearAIDensityHeightTypeRequirements": {
+   "en": "Removes all density-height type requirements and refreshes the query.",
+   "fr": "Supprime toutes les exigences de type de hauteur de densité et actualise la requête."
+  },
+  "AIImplement:getAIDensityHeightTypeRequirements": {
+   "en": "Returns the list of required density-height fill types.",
+   "fr": "Renvoie la liste des types de matière de hauteur de densité exigés."
+  },
+  "AIImplement:getAIImplementUseVineSegment": {
+   "en": "Default hook returning true: the AI may use the given vine segment; overridable.",
+   "fr": "Point d'extension par défaut renvoyant vrai : l'IA peut utiliser le segment de vigne donné ; surchargeable."
+  },
+  "AIImplement:setAIFruitProhibitions": {
+   "en": "Replaces all fruit prohibitions with a single one (fruit type and growth state range where the AI must not work).",
+   "fr": "Remplace toutes les interdictions de cultures par une seule (type de culture et plage d'états de croissance où l'IA ne doit pas travailler)."
+  },
+  "AIImplement:addAIFruitProhibitions": {
+   "en": "Adds a fruit prohibition (type, growth state range, optional custom density map and channels) and refreshes the field crops query.",
+   "fr": "Ajoute une interdiction de culture (type, plage d'états de croissance, carte de densité personnalisée et canaux optionnels) et actualise la requête de cultures du champ."
+  },
+  "AIImplement:clearAIFruitProhibitions": {
+   "en": "Removes all fruit prohibitions and refreshes the query.",
+   "fr": "Supprime toutes les interdictions de cultures et actualise la requête."
+  },
+  "AIImplement:getAIFruitProhibitions": {
+   "en": "Returns the list of fruit prohibition tables.",
+   "fr": "Renvoie la liste des tables d'interdictions de cultures."
+  },
+  "AIImplement:addAITerrainDetailRequiredRange": {
+   "en": "Adds a required terrain detail value range (two detail types and a channel range, defaulting to the ground type channels) and refreshes the query.",
+   "fr": "Ajoute une plage de valeurs de détail de terrain exigée (deux types de détail et une plage de canaux, par défaut ceux du type de sol) et actualise la requête."
+  },
+  "AIImplement:addAIGroundTypeRequirements": {
+   "en": "Adds a required terrain range for each listed ground type, skipping up to six excluded types, and refreshes the query.",
+   "fr": "Ajoute une plage de terrain exigée pour chaque type de sol listé, en ignorant jusqu'à six types exclus, et actualise la requête."
+  },
+  "AIImplement:clearAITerrainDetailRequiredRange": {
+   "en": "Removes all required terrain detail ranges and refreshes the query.",
+   "fr": "Supprime toutes les plages de détail de terrain exigées et actualise la requête."
+  },
+  "AIImplement:getAITerrainDetailRequiredRange": {
+   "en": "Returns the required terrain detail ranges, taken from the first attached implement that provides them when configured to use the attached implement's attributes.",
+   "fr": "Renvoie les plages de détail de terrain exigées, prises sur le premier équipement attelé qui en fournit si la configuration utilise les attributs de l'équipement attelé."
+  },
+  "AIImplement:addAITerrainDetailProhibitedRange": {
+   "en": "Adds a prohibited terrain detail value range and refreshes the query.",
+   "fr": "Ajoute une plage de valeurs de détail de terrain interdite et actualise la requête."
+  },
+  "AIImplement:clearAITerrainDetailProhibitedRange": {
+   "en": "Removes all prohibited terrain detail ranges and refreshes the query.",
+   "fr": "Supprime toutes les plages de détail de terrain interdites et actualise la requête."
+  },
+  "AIImplement:getAITerrainDetailProhibitedRange": {
+   "en": "Returns the prohibited terrain detail ranges, delegating to the first attached implement when configured to use its attributes.",
+   "fr": "Renvoie les plages de détail de terrain interdites, en déléguant au premier équipement attelé si la configuration utilise ses attributs."
+  },
+  "AIImplement:getFieldCropsQuery": {
+   "en": "Returns the field crops query and its validity flag, creating the query on first use. The query is only valid when at least one requirement or prohibition exists.",
+   "fr": "Renvoie la requête de cultures du champ et son indicateur de validité, en créant la requête à la première utilisation. Elle n'est valide que si au moins une exigence ou interdiction existe."
+  },
+  "AIImplement:updateFieldCropsQuery": {
+   "en": "Rebuilds the field crops query only if it was already created, so unused queries are not built needlessly.",
+   "fr": "Reconstruit la requête de cultures du champ seulement si elle a déjà été créée, pour ne pas en construire inutilement."
+  },
+  "AIImplement:compareFieldCropsQuery": {
+   "en": "Returns true if every fruit requirement, fruit prohibition and terrain range of this vehicle is also present on the other vehicle; returns false if the other has no AI requirement getter. Note: the check is one-way, extra entries on the other vehicle are not detected.",
+   "fr": "Renvoie vrai si chaque exigence de culture, interdiction de culture et plage de terrain de ce véhicule existe aussi sur l'autre véhicule ; renvoie faux si l'autre n'a pas de lecteur d'exigences IA. À noter : la comparaison est à sens unique, les entrées supplémentaires de l'autre véhicule ne sont pas détectées."
+  },
+  "AIImplement:createFieldCropsQuery": {
+   "en": "Builds a FieldCropsQuery on the ground type density map from the fruit requirements, prohibitions and terrain ranges, and flags it valid when any exist. Does nothing if the ground type map is unavailable.",
+   "fr": "Construit une FieldCropsQuery sur la carte de densité du type de sol à partir des exigences et interdictions de cultures et des plages de terrain, et la marque valide si l'une existe. Ne fait rien si la carte du type de sol est indisponible."
+  },
+  "AIImplement:getIsAIImplementInLine": {
+   "en": "Returns whether the implement is currently inside a work line.",
+   "fr": "Renvoie si l'équipement se trouve actuellement dans une ligne de travail."
+  },
+  "AIImplement:aiImplementStartLine": {
+   "en": "Marks the line as started, raises onAIImplementStartLine and tells the root vehicle's action controller about it.",
+   "fr": "Marque la ligne comme commencée, déclenche onAIImplementStartLine et en informe le contrôleur d'actions du véhicule racine."
+  },
+  "AIImplement:aiImplementEndLine": {
+   "en": "Marks the line as ended, raises onAIImplementEndLine and tells the root vehicle's action controller about it.",
+   "fr": "Marque la ligne comme terminée, déclenche onAIImplementEndLine et en informe le contrôleur d'actions du véhicule racine."
+  }
+ }
+}

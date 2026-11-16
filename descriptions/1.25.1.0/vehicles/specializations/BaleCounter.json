@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/BaleCounter.lua",
+ "module": {
+  "en": "Specialization that counts the bales dropped by a baler: a resettable session counter and a lifetime counter, both saved with the vehicle and sent to joining clients. It requires the Baler specialization, overrides `dropBale`, exposes both counters as dashboard values and shows them through a HUD extension. A reset input exists inside the vehicle and at an external trigger, and the reset is sent through BaleCounterResetEvent. The onDelete and onDraw handlers are registered but have no body in the SDK dump: UNVERIFIED.",
+  "fr": "Spécialisation qui compte les balles éjectées par une presse : un compteur de session remis à zéro à la demande et un compteur à vie, tous deux sauvegardés avec le véhicule et envoyés aux clients qui rejoignent. Elle exige la spécialisation Baler, surcharge `dropBale`, expose les deux compteurs comme valeurs de tableau de bord et les affiche via une extension de HUD. Une commande de remise à zéro existe dans le véhicule et sur un déclencheur externe, et la remise à zéro passe par BaleCounterResetEvent. Les gestionnaires onDelete et onDraw sont enregistrés mais n'ont pas de corps dans le dump du SDK : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "BaleCounter.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type includes the Baler specialization.",
+   "fr": "Renvoie true seulement si le type de véhicule contient la spécialisation Baler."
+  },
+  "BaleCounter.initSpecialization": {
+   "en": "Registers the dashboard XML paths for `vehicle.baleCounter.dashboards` (sessionCounter, lifetimeCounter) and the two savegame counters.",
+   "fr": "Enregistre les chemins XML de tableau de bord pour `vehicle.baleCounter.dashboards` (sessionCounter, lifetimeCounter) et les deux compteurs de sauvegarde."
+  },
+  "BaleCounter.registerFunctions": {
+   "en": "Registers the vehicle function `doBaleCounterReset`.",
+   "fr": "Enregistre la fonction de véhicule `doBaleCounterReset`."
+  },
+  "BaleCounter.registerOverwrittenFunctions": {
+   "en": "Overrides `dropBale` so every dropped bale increments the counters.",
+   "fr": "Surcharge `dropBale` pour que chaque balle éjectée incrémente les compteurs."
+  },
+  "BaleCounter.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onDraw, onRegisterDashboardValueTypes, onReadStream, onWriteStream, onRegisterActionEvents and onRegisterExternalActionEvents.",
+   "fr": "S'abonne à onLoad, onDelete, onDraw, onRegisterDashboardValueTypes, onReadStream, onWriteStream, onRegisterActionEvents et onRegisterExternalActionEvents."
+  },
+  "BaleCounter:onLoad": {
+   "en": "Zeroes both counters, restores them from a non-reset savegame, and creates the BaleCounterHUDExtension for the vehicle.",
+   "fr": "Met les deux compteurs à zéro, les restaure depuis une sauvegarde non réinitialisée et crée la BaleCounterHUDExtension du véhicule."
+  },
+  "BaleCounter:onRegisterDashboardValueTypes": {
+   "en": "Registers the dashboard value types `baleCounter.sessionCounter` and `baleCounter.lifetimeCounter`, bound to the spec fields and not polled (updated explicitly).",
+   "fr": "Enregistre les types de valeur de tableau de bord `baleCounter.sessionCounter` et `baleCounter.lifetimeCounter`, liés aux champs du spec et non interrogés (mis à jour explicitement)."
+  },
+  "BaleCounter:saveToXMLFile": {
+   "en": "Saves the session and lifetime counters as attributes of the vehicle's `baleCounter` entry.",
+   "fr": "Sauvegarde les compteurs de session et à vie comme attributs de l'entrée `baleCounter` du véhicule."
+  },
+  "BaleCounter:onReadStream": {
+   "en": "Client join: reads both counters from the stream with `BaleCounter.SEND_NUM_BITS` bits each.",
+   "fr": "Connexion d'un client : lit les deux compteurs dans le flux avec `BaleCounter.SEND_NUM_BITS` bits chacun."
+  },
+  "BaleCounter:onWriteStream": {
+   "en": "Server side of a client join: writes both counters to the stream with `BaleCounter.SEND_NUM_BITS` bits each.",
+   "fr": "Côté serveur lors de la connexion d'un client : écrit les deux compteurs dans le flux avec `BaleCounter.SEND_NUM_BITS` bits chacun."
+  },
+  "BaleCounter:onRegisterActionEvents": {
+   "en": "On clients, registers the powered BALE_COUNTER_RESET input with high text priority when the vehicle is active for input, ignoring selection.",
+   "fr": "Sur les clients, enregistre l'entrée alimentée BALE_COUNTER_RESET avec une priorité de texte haute quand le véhicule est actif pour la saisie, sans tenir compte de la sélection."
+  },
+  "BaleCounter:onRegisterExternalActionEvents": {
+   "en": "When an external trigger is named `baleCounterReset`, registers the external action event callbacks for it.",
+   "fr": "Quand un déclencheur externe se nomme `baleCounterReset`, enregistre pour lui les callbacks d'événement d'action externe."
+  },
+  "BaleCounter.actionEventResetCounter": {
+   "en": "Input callback for the in-vehicle reset: calls `doBaleCounterReset`.",
+   "fr": "Callback d'entrée pour la remise à zéro dans le véhicule : appelle `doBaleCounterReset`."
+  },
+  "BaleCounter.externalActionEventRegister": {
+   "en": "Registers the BALE_COUNTER_RESET input for an external trigger, resetting the counter of the given vehicle, with high text priority.",
+   "fr": "Enregistre l'entrée BALE_COUNTER_RESET pour un déclencheur externe, qui remet à zéro le compteur du véhicule donné, avec une priorité de texte haute."
+  },
+  "BaleCounter.externalActionEventUpdate": {
+   "en": "Empty update hook for the external action event; does nothing.",
+   "fr": "Hook de mise à jour vide pour l'événement d'action externe ; ne fait rien."
+  },
+  "BaleCounter:doBaleCounterReset": {
+   "en": "Sets the session counter to 0 (the lifetime counter is kept) and sends BaleCounterResetEvent unless `noEventSend` is set. The dashboard value is not refreshed here.",
+   "fr": "Met le compteur de session à 0 (le compteur à vie est conservé) et envoie BaleCounterResetEvent sauf si `noEventSend` est défini. La valeur du tableau de bord n'est pas rafraîchie ici."
+  },
+  "BaleCounter:dropBale": {
+   "en": "Calls the parent `dropBale`, then adds 1 to both counters and refreshes the two dashboard values if dashboards are available. There is no server check in this function.",
+   "fr": "Appelle le `dropBale` parent, puis ajoute 1 aux deux compteurs et rafraîchit les deux valeurs de tableau de bord si les tableaux de bord sont disponibles. Aucun test serveur dans cette fonction."
+  }
+ }
+}

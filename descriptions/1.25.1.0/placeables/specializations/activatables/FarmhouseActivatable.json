@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/activatables/FarmhouseActivatable.lua",
+ "module": {
+  "en": "Activatable object on a farmhouse placeable that lets the player go to sleep. It is available when the placeable allows the local farm to sleep and nobody is already sleeping, and it opens the sleep dialog of the sleep manager.",
+  "fr": "Objet activable d'un placeable de maison de ferme qui permet au joueur d'aller dormir. Il est disponible si le placeable autorise la ferme locale à dormir et que personne ne dort déjà, et il ouvre la boîte de dialogue du gestionnaire de sommeil."
+ },
+ "fonctions": {
+  "FarmhouseActivatable.new": {
+   "en": "Creates the activatable for a placeable and sets the prompt text `ui_inGameSleep`.",
+   "fr": "Crée l'activable pour un placeable et fixe le texte `ui_inGameSleep`."
+  },
+  "FarmhouseActivatable:getIsActivatable": {
+   "en": "Returns true if the placeable allows the local farm to sleep and the sleep manager is not already sleeping.",
+   "fr": "Renvoie true si le placeable autorise la ferme locale à dormir et que le gestionnaire de sommeil ne dort pas déjà."
+  },
+  "FarmhouseActivatable:run": {
+   "en": "Opens the sleep dialog through `g_sleepManager:showDialog()`.",
+   "fr": "Ouvre la boîte de dialogue de sommeil via `g_sleepManager:showDialog()`."
+  }
+ }
+}

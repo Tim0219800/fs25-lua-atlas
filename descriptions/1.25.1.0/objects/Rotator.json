@@ -1,0 +1,21 @@
+{
+ "fichier": "objects/Rotator.lua",
+ "module": {
+  "en": "Updateable attached to an i3D node (through the onCreate user-attribute) that spins the node continuously around one axis. It reads the user attributes rpm or speed (rad/ms) and axis from the node and rotates it every frame by speed times dt, so the rotation is frame-rate independent.",
+  "fr": "Updateable attaché à un noeud i3D (via l'attribut utilisateur onCreate) qui fait tourner le noeud en continu autour d'un axe. Il lit les attributs utilisateur rpm ou speed (rad/ms) et axis sur le noeud et le fait tourner à chaque image de speed multiplié par dt, donc indépendamment du taux d'images."
+ },
+ "fonctions": {
+  "Rotator:onCreate": {
+   "en": "i3D onCreate hook: creates a Rotator for the node and adds it to the mission's updateables.",
+   "fr": "Hook onCreate d'i3D : crée un Rotator pour le noeud et l'ajoute aux updateables de la mission."
+  },
+  "Rotator.new": {
+   "en": "Reads the 'rpm' user attribute (converted to rad/ms) or else 'speed' (default 0.0012 rad/ms) and the 'axis' attribute (default 3), which selects the rotated axis. Note: if the attribute is read as a string, indexing the axis table with it is UNVERIFIED.",
+   "fr": "Lit l'attribut utilisateur 'rpm' (converti en rad/ms) ou sinon 'speed' (0,0012 rad/ms par défaut) et l'attribut 'axis' (3 par défaut), qui choisit l'axe de rotation. À noter : si l'attribut est lu comme une chaîne, l'indexation de la table d'axes avec cette valeur est NON VÉRIFIÉE."
+  },
+  "Rotator:update": {
+   "en": "Rotates the node by speed times dt around the configured axis each frame.",
+   "fr": "Fait tourner le noeud de speed multiplié par dt autour de l'axe configuré à chaque image."
+  }
+ }
+}

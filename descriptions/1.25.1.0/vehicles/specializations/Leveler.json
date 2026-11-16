@@ -1,0 +1,65 @@
+{
+ "fichier": "vehicles/specializations/Leveler.lua",
+ "module": {
+  "en": "Specialization for blades/levelers that push and spread bulk material (silage, chaff, snow-like heaps) over the height-map terrain, mainly in bunker silos. Requires FillUnit and BunkerSiloInteractor. Each `vehicle.leveler.levelerNode` picks material up while driving in the pick-up direction, drops it along a line and in front of the blade, and can smooth the ground. The simulation runs on the server; the client only receives a moved-amount percentage to drive effects.",
+  "fr": "Spécialisation pour les lames/niveleuses qui poussent et étalent des matières en vrac (ensilage, fourrage haché, tas) sur le terrain à carte de hauteur, surtout dans les silos couloirs. Requiert FillUnit et BunkerSiloInteractor. Chaque `vehicle.leveler.levelerNode` ramasse de la matière en avançant dans le sens de ramassage, la dépose le long d'une ligne et devant la lame, et peut lisser le sol. La simulation tourne côté serveur ; le client reçoit seulement un pourcentage de matière déplacée pour piloter les effets."
+ },
+ "fonctions": {
+  "Leveler.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both the FillUnit and BunkerSiloInteractor specializations.",
+   "fr": "Renvoie vrai seulement si le type de véhicule possède les spécialisations FillUnit et BunkerSiloInteractor."
+  },
+  "Leveler.initSpecialization": {
+   "en": "Registers the leveler XML schema: node, width, drop widths and offsets, height-check count, smoothing options, fill unit index, occlusion areas, force settings, `ignoreFarmlandState` and the effect paths.",
+   "fr": "Enregistre le schéma XML du leveler : nœud, largeur, largeurs et décalages de dépose, nombre de contrôles de hauteur, options de lissage, index de fill unit, zones d'occlusion, force, `ignoreFarmlandState` et chemins d'effets."
+  },
+  "Leveler.registerFunctions": {
+   "en": "Registers `getIsLevelerPickupNodeActive`, `loadLevelerNodeFromXML` and `onLevelerRaycastCallback` on the vehicle type.",
+   "fr": "Enregistre `getIsLevelerPickupNodeActive`, `loadLevelerNodeFromXML` et `onLevelerRaycastCallback` sur le type de véhicule."
+  },
+  "Leveler.registerOverwrittenFunctions": {
+   "en": "Overrides `getIsAttacherJointControlDampingAllowed` so joint damping depends on the leveler position.",
+   "fr": "Surcharge `getIsAttacherJointControlDampingAllowed` pour que l'amortissement de l'attache dépende de la position du leveler."
+  },
+  "Leveler.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onReadUpdateStream, onWriteUpdateStream and onUpdate.",
+   "fr": "S'abonne aux événements onLoad, onDelete, onReadUpdateStream, onWriteUpdateStream et onUpdate."
+  },
+  "Leveler:onLoad": {
+   "en": "Reads leveler settings and all `levelerNode` entries, initialises the moved-amount smoothing state, force node and effects (client). Removes the onUpdate listener if no valid node loaded. Note: the XML default of `maxFillLevelPerMS` is 35 here but 20 in the schema.",
+   "fr": "Lit les réglages du leveler et toutes les entrées `levelerNode`, initialise l'état de lissage de la quantité déplacée, le nœud de force et les effets (client). Retire l'écouteur onUpdate si aucun nœud valide. À noter : la valeur par défaut de `maxFillLevelPerMS` est 35 ici mais 20 dans le schéma."
+  },
+  "Leveler:onDelete": {
+   "en": "Deletes the leveler effects.",
+   "fr": "Supprime les effets du leveler."
+  },
+  "Leveler:onReadUpdateStream": {
+   "en": "Client side: when the server flagged a change, reads the quantised moved-amount percentage from the stream.",
+   "fr": "Côté client : si le serveur a signalé un changement, lit depuis le flux le pourcentage de matière déplacée quantifié."
+  },
+  "Leveler:onWriteUpdateStream": {
+   "en": "Server side: writes a flag and, if the dirty flag is set, the quantised moved-amount percentage for clients.",
+   "fr": "Côté serveur : écrit un indicateur et, si le dirty flag est levé, le pourcentage de matière déplacée quantifié pour les clients."
+  },
+  "Leveler:onUpdate": {
+   "en": "Client: starts or stops effects according to the moved-amount percentage. Server: for each node, checks farmland access, picks material up from the height map when moving in the pick-up direction, drops it under and in front of the blade, smooths ground, updates the percentage and applies a drag force. Raises the dirty flag on change.",
+   "fr": "Client : démarre ou arrête les effets selon le pourcentage déplacé. Serveur : pour chaque nœud, vérifie l'accès au terrain, ramasse la matière sur la carte de hauteur en avançant dans le sens de ramassage, la dépose sous et devant la lame, lisse le sol, met à jour le pourcentage et applique une force de traînée. Lève le dirty flag en cas de changement."
+  },
+  "Leveler:loadLevelerNodeFromXML": {
+   "en": "Loads one leveler node (geometry, drop widths and offsets, occlusion areas, smoothing, fill unit) into the given table and creates a reference-frame transform. Returns false if the node or fill unit is missing.",
+   "fr": "Charge un nœud de leveler (géométrie, largeurs et décalages de dépose, zones d'occlusion, lissage, fill unit) dans la table donnée et crée un repère de référence. Renvoie faux si le nœud ou la fill unit est absent."
+  },
+  "Leveler:getIsLevelerPickupNodeActive": {
+   "en": "Returns true if the vehicle cannot be attached or is currently attached to another vehicle; picking up is active only in that case.",
+   "fr": "Renvoie vrai si le véhicule ne peut pas être attelé ou est actuellement attelé à un autre véhicule ; le ramassage n'est actif que dans ce cas."
+  },
+  "Leveler:getIsAttacherJointControlDampingAllowed": {
+   "en": "Override: damping is allowed only if the parent allows it and the height map has material at every leveler node position.",
+   "fr": "Surcharge : l'amortissement n'est autorisé que si la fonction parente l'autorise et que la carte de hauteur contient de la matière à la position de chaque nœud."
+  },
+  "Leveler.onLevelerRaycastCallback": {
+   "en": "Raycast callback (note: called with the node table, not the vehicle). If the ray ends without hitting a non-terrain object, it registers occlusion areas and drops the remaining fill level in front of the blade, returning the leftover to be picked up later.",
+   "fr": "Callback de raycast (appelé avec la table du nœud, pas le véhicule). Si le rayon se termine sans toucher d'objet autre que le terrain, il enregistre les zones d'occlusion et dépose le contenu restant devant la lame, le reliquat étant repris plus tard."
+  }
+ }
+}

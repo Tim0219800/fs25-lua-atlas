@@ -1,0 +1,25 @@
+{
+ "fichier": "handTools/events/HandsThrowObjectEvent.lua",
+ "module": {
+  "en": "Network event that tells peers a player's hands released the held object, either simply dropped or thrown with a direction and a force. The client of the owning player sends it to the server, which re-broadcasts it to the other clients. The effect is applied through the HandToolHands specialization of the referenced hands object.",
+  "fr": "Événement réseau qui indique aux autres machines que les mains d'un joueur ont lâché l'objet tenu, soit simplement posé, soit lancé avec une direction et une force. Le client du joueur propriétaire l'envoie au serveur, qui le rediffuse aux autres clients. L'effet est appliqué via la spécialisation HandToolHands de l'objet « mains » référencé."
+ },
+ "fonctions": {
+  "HandsThrowObjectEvent.emptyNew": {
+   "en": "Creates an empty event instance, used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide, utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "HandsThrowObjectEvent:readStream": {
+   "en": "Reads the hands object, then a flag telling whether this is a throw. If so it reads a compressed direction (3 components in -1..1) and a force scalar (0..1), then calls `run`.",
+   "fr": "Lit l'objet « mains », puis un indicateur précisant s'il s'agit d'un lancer. Dans ce cas, lit une direction compressée (3 composantes entre -1 et 1) et un coefficient de force (0 à 1), puis appelle `run`."
+  },
+  "HandsThrowObjectEvent:writeStream": {
+   "en": "Writes the hands object and the throw flag; direction and force scalar are only written when the flag is set. Compression bit counts come from constants of the class defined elsewhere.",
+   "fr": "Écrit l'objet « mains » et l'indicateur de lancer ; la direction et le coefficient de force ne sont écrits que si l'indicateur est actif. Les nombres de bits de compression viennent de constantes de la classe définies ailleurs."
+  },
+  "HandsThrowObjectEvent:run": {
+   "en": "Applies the event. On the server it first rebroadcasts to other clients. A non-throw calls `dropHeldItem(true)`; a throw calls `throwHeldItemWithForceVector` with noEventSend set, so no new event is sent.",
+   "fr": "Applique l'événement. Sur le serveur, il le rediffuse d'abord aux autres clients. Sans lancer, appelle `dropHeldItem(true)` ; avec lancer, appelle `throwHeldItemWithForceVector` en désactivant l'envoi d'événement, ce qui évite une boucle."
+  }
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "fichier": "gui/elements/TableHeaderElement.lua",
+ "module": {
+  "en": "Button element (derived from ButtonElement) used as a column header of a table, with sorting state off, ascending or descending. Children named iconAscending or iconDescending in the screen XML serve as sort icons, and the header must sit outside the table. It loads targetTableId, columnName, allowSortingAsc and allowSortingDesc from XML or profile.",
+  "fr": "Élément bouton (dérivé de ButtonElement) servant d'en-tête de colonne d'un tableau, avec un état de tri désactivé, croissant ou décroissant. Les enfants nommés iconAscending ou iconDescending dans le XML d'écran servent d'icônes de tri, et l'en-tête doit se trouver hors du tableau. Il charge targetTableId, columnName, allowSortingAsc et allowSortingDesc depuis le XML ou le profil."
+ },
+ "fonctions": {
+  "TableHeaderElement.new": {
+   "en": "Constructor. Allows only the off state, empties the icon slots, sets the order to off and clears target table id and column name.",
+   "fr": "Constructeur. N'autorise que l'état désactivé, vide les emplacements d'icônes, met l'ordre sur désactivé et efface l'id du tableau cible et le nom de colonne."
+  },
+  "TableHeaderElement:loadFromXML": {
+   "en": "Loads targetTableId, columnName, allowSortingAsc and allowSortingDesc from the XML node after the parent class, keeping current values when an attribute is missing.",
+   "fr": "Charge targetTableId, columnName, allowSortingAsc et allowSortingDesc depuis le nœud XML après la classe parente, en gardant les valeurs actuelles si un attribut manque."
+  },
+  "TableHeaderElement:loadProfile": {
+   "en": "Reads columnName, allowSortingAsc and allowSortingDesc from the GUI profile, keeping current values as defaults. targetTableId is not read from profiles.",
+   "fr": "Lit columnName, allowSortingAsc et allowSortingDesc depuis le profil GUI, avec les valeurs actuelles par défaut. targetTableId n'est pas lu depuis les profils."
+  },
+  "TableHeaderElement:copyAttributes": {
+   "en": "Copies target table id, column name and allowed sorting states from a source header. Note: unpack is used on the states table, whose false entries and index keys may not be copied faithfully.",
+   "fr": "Copie l'id du tableau cible, le nom de colonne et les états de tri autorisés d'un en-tête source. À noter : unpack est utilisé sur la table des états, dont les entrées false et les clés d'index peuvent ne pas être copiées fidèlement."
+  },
+  "TableHeaderElement:onGuiSetupFinished": {
+   "en": "After the parent setup, scans child elements and registers those named for ascending or descending as the sort icons.",
+   "fr": "Après la configuration parente, parcourt les éléments enfants et enregistre comme icônes de tri ceux dont le nom correspond au tri croissant ou décroissant."
+  },
+  "TableHeaderElement:toggleSorting": {
+   "en": "Advances to the next allowed sorting state, wrapping around and ending on off at the latest, refreshes the icons if the state changed and returns the new order index.",
+   "fr": "Passe à l'état de tri autorisé suivant, en rebouclant et en s'arrêtant au pire sur désactivé, rafraîchit les icônes si l'état a changé et retourne le nouvel indice d'ordre."
+  },
+  "TableHeaderElement:disableSorting": {
+   "en": "Forces the state back to off and refreshes the icon display.",
+   "fr": "Remet l'état sur désactivé et rafraîchit l'affichage des icônes."
+  },
+  "TableHeaderElement:updateSortingDisplay": {
+   "en": "Shows only the icon for the current state and hides the others. Note: it calls setVisible on every entry in sortingIcons without a nil check, though the off state has no icon.",
+   "fr": "Affiche seulement l'icône de l'état courant et masque les autres. À noter : appelle setVisible sur chaque entrée de sortingIcons sans test nil, alors que l'état désactivé n'a pas d'icône."
+  }
+ }
+}

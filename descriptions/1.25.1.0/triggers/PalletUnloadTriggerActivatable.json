@@ -1,0 +1,25 @@
+{
+ "fichier": "triggers/PalletUnloadTriggerActivatable.lua",
+ "module": {
+  "en": "Activatable (interaction prompt) used by PalletUnloadTrigger when automatic unloading is off. It shows an unload action while pallets are in range and the local player, or the vehicle the player drives, is in the trigger. Client side.",
+  "fr": "Activable (invite d'interaction) utilisé par PalletUnloadTrigger quand le déchargement automatique est désactivé. Il propose une action de déchargement tant que des palettes sont à portée et que le joueur local, ou le véhicule qu'il conduit, est dans le trigger. Côté client."
+ },
+ "fonctions": {
+  "PalletUnloadTriggerActivatable.new": {
+   "en": "Creates the activatable for the owning pallet trigger, with the localized text of button_unload.",
+   "fr": "Crée l'activable pour le trigger de palettes propriétaire, avec le texte localisé de button_unload."
+  },
+  "PalletUnloadTriggerActivatable:getIsActivatable": {
+   "en": "Returns true only if the owner is enabled, no GUI is open, the player may access the owner, at least one pallet is in range, and the player is in range on foot or driving a vehicle in range.",
+   "fr": "Retourne true seulement si le propriétaire est actif, qu'aucune interface n'est ouverte, que le joueur a accès au propriétaire, qu'au moins une palette est à portée, et que le joueur est à portée à pied ou conduit un véhicule à portée."
+  },
+  "PalletUnloadTriggerActivatable:run": {
+   "en": "Runs the action by calling unloadPallets on the owner with the local farm id.",
+   "fr": "Exécute l'action en appelant unloadPallets sur le propriétaire avec l'identifiant de la ferme locale."
+  },
+  "PalletUnloadTriggerActivatable:getDistance": {
+   "en": "Returns the distance from the given world position to the owner's trigger node, or math.huge if the owner has no trigger node.",
+   "fr": "Retourne la distance entre la position monde donnée et le noeud trigger du propriétaire, ou math.huge si le propriétaire n'a pas de noeud trigger."
+  }
+ }
+}

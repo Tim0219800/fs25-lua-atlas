@@ -1,0 +1,61 @@
+{
+ "fichier": "vehicles/specializations/TreeSaw.lua",
+ "module": {
+  "en": "Specialization for vehicle-mounted saws that cut standing or fallen wood (distinct from the chainsaw hand tool). While turned on, the server looks for a split shape at the configured cut node, waits a delay and then cuts it with ChainsawUtil. Clients play the cut effect and sounds and receive the cutting flag through the update stream. It requires TurnOnVehicle; EffectManager and the split-shape engine functions are not in the dump, so their exact behaviour is UNVERIFIED.",
+  "fr": "Spécialisation des scies montées sur véhicule qui coupent du bois sur pied ou à terre (à ne pas confondre avec la tronçonneuse portative). Une fois allumée, le serveur cherche une forme coupable au nœud de coupe configuré, attend un délai puis la coupe avec ChainsawUtil. Les clients jouent l'effet et les sons de coupe et reçoivent l'indicateur de coupe via le flux de mise à jour. Elle exige TurnOnVehicle ; EffectManager et les fonctions moteur de découpe ne sont pas dans le dump, leur comportement exact est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "TreeSaw.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the TurnOnVehicle specialization.",
+   "fr": "Renvoie true seulement si le type de véhicule possède la spécialisation TurnOnVehicle."
+  },
+  "TreeSaw.initSpecialization": {
+   "en": "Registers the `vehicle.treeSaw` XML keys: cut and saw sounds, animation nodes, effects, and the cut node with its size, minimum lengths above/below the cut and cut delay in seconds.",
+   "fr": "Enregistre les clés XML `vehicle.treeSaw` : sons de coupe et de scie, nœuds d'animation, effets, et nœud de coupe avec sa taille, les longueurs minimales au-dessus/au-dessous de la coupe et le délai de coupe en secondes."
+  },
+  "TreeSaw.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, update streams, onUpdate, onUpdateTick, onDraw, onDeactivate, onTurnedOn and onTurnedOff.",
+   "fr": "S'abonne à onLoad, onDelete, aux flux de mise à jour, onUpdate, onUpdateTick, onDraw, onDeactivate, onTurnedOn et onTurnedOff."
+  },
+  "TreeSaw:onLoad": {
+   "en": "Loads animation nodes, effects and sounds on clients, reads the cut node parameters (delay converted to milliseconds) and resets the cutting state.",
+   "fr": "Charge les nœuds d'animation, effets et sons côté client, lit les paramètres du nœud de coupe (délai converti en millisecondes) et réinitialise l'état de coupe."
+  },
+  "TreeSaw:onDelete": {
+   "en": "Deletes the effects, sound samples and animation nodes.",
+   "fr": "Supprime les effets, échantillons sonores et nœuds d'animation."
+  },
+  "TreeSaw:onReadUpdateStream": {
+   "en": "Client only: reads the `isCutting` flag sent by the server.",
+   "fr": "Client uniquement : lit l'indicateur `isCutting` envoyé par le serveur."
+  },
+  "TreeSaw:onWriteUpdateStream": {
+   "en": "Server only: writes the `isCutting` flag every update, without using a dirty mask.",
+   "fr": "Serveur uniquement : écrit l'indicateur `isCutting` à chaque mise à jour, sans utiliser de masque dirty."
+  },
+  "TreeSaw:onUpdate": {
+   "en": "Server: drops the target if it no longer exists, counts the cut timer down and performs the cut with ChainsawUtil when it reaches 0. Client: plays the wood chip effect and cut sound while the timer is running, stops them otherwise.",
+   "fr": "Serveur : abandonne la cible si elle n'existe plus, décompte le minuteur de coupe et effectue la coupe via ChainsawUtil à 0. Client : joue l'effet de copeaux et le son de coupe tant que le minuteur tourne, les arrête sinon."
+  },
+  "TreeSaw:onUpdateTick": {
+   "en": "While turned on, looks for a split shape at the cut node, checks farm land access (otherwise sets a warning), and validates the target: the cut must be testable, not too low near the tree base, and leave minimum lengths on both sides. Starts or cancels the cut timer accordingly.",
+   "fr": "Une fois allumée, cherche une forme coupable au nœud de coupe, vérifie l'accès au terrain de la ferme (sinon active un avertissement) et valide la cible : coupe réalisable, pas trop basse près de la base de l'arbre, et longueurs minimales restantes de part et d'autre. Démarre ou annule le minuteur de coupe en conséquence."
+  },
+  "TreeSaw:onDraw": {
+   "en": "Shows the 'cutting' info text while cutting and a blinking warning when the tree is on land the farm cannot access.",
+   "fr": "Affiche le texte d'info « coupe en cours » pendant la coupe et un avertissement clignotant quand l'arbre se trouve sur un terrain inaccessible à la ferme."
+  },
+  "TreeSaw:onDeactivate": {
+   "en": "Clears the current target and cancels the cut timer.",
+   "fr": "Efface la cible courante et annule le minuteur de coupe."
+  },
+  "TreeSaw:onTurnedOn": {
+   "en": "Client only: starts the animation nodes and the saw sound.",
+   "fr": "Client uniquement : démarre les nœuds d'animation et le son de la scie."
+  },
+  "TreeSaw:onTurnedOff": {
+   "en": "Clears the target and cancels the timer; on the client also stops animations, effects and sounds.",
+   "fr": "Efface la cible et annule le minuteur ; côté client, arrête aussi animations, effets et sons."
+  }
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "fichier": "gui/elements/PagingElement.lua",
+ "module": {
+  "en": "GUI container that shows one of several page children at a time. Every child added becomes a page; named children use the localization key 'ui_' plus the name as their title. It extends GuiElement and includes IndexChangeSubjectMixin so observers learn about page and page-count changes. Pages can be disabled, in which case they are left out of the visible page mapping. Several methods (such as setPage) are absent from this dump (UNVERIFIED).",
+  "fr": "Conteneur d'interface qui affiche une seule page parmi plusieurs enfants à la fois. Chaque enfant ajouté devient une page ; les enfants nommés utilisent la clé de localisation 'ui_' suivie du nom comme titre. Il étend GuiElement et inclut IndexChangeSubjectMixin pour informer les observateurs des changements de page et du nombre de pages. Les pages peuvent être désactivées et sont alors exclues du mappage des pages visibles. Plusieurs méthodes (comme setPage) sont absentes de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PagingElement.new": {
+   "en": "Constructor. Creates the element with the index-change mixin and empty page structures: the page list, an id-to-page hash, the visible-page mapping and current page indices set to 1.",
+   "fr": "Constructeur. Crée l'élément avec le mixin de changement d'index et des structures de pages vides : liste des pages, table id vers page, mappage des pages visibles et indices de page courante à 1."
+  },
+  "PagingElement:loadFromXML": {
+   "en": "Loads the base element, then registers the onPageChange and onPageUpdate callbacks from the XML.",
+   "fr": "Charge l'élément de base, puis enregistre depuis le XML les callbacks onPageChange et onPageUpdate."
+  },
+  "PagingElement:copyAttributes": {
+   "en": "Copies the two page callbacks from a source element and clones the index-change mixin.",
+   "fr": "Copie les deux callbacks de page depuis un élément source et clone le mixin de changement d'index."
+  },
+  "PagingElement:onGuiSetupFinished": {
+   "en": "Runs the base setup-finished handling, then builds the visible page mapping.",
+   "fr": "Exécute le traitement parent de fin de construction, puis construit le mappage des pages visibles."
+  },
+  "PagingElement:addElement": {
+   "en": "Adds the child as usual and registers it as a page. If it has a name with an existing 'ui_<name>' text, the page id is the upper-cased name and the title the translation; otherwise the id is the element's string form and the title empty. addPage itself is not in this dump (UNVERIFIED).",
+   "fr": "Ajoute l'enfant comme d'habitude et l'enregistre comme page. S'il porte un nom ayant un texte 'ui_<nom>', l'id de page est le nom en majuscules et le titre la traduction ; sinon l'id est la forme texte de l'élément et le titre est vide. addPage n'est pas dans ce dump (NON VÉRIFIÉ)."
+  },
+  "PagingElement:removeElement": {
+   "en": "Removes the child through the parent, then removes any page whose root element is that child.",
+   "fr": "Retire l'enfant via le parent, puis supprime toute page dont l'élément racine est cet enfant."
+  },
+  "PagingElement:getCurrentPageId": {
+   "en": "Returns the id of the page at the current page index.",
+   "fr": "Retourne l'id de la page à l'indice de page courant."
+  },
+  "PagingElement:getPageMappingIndex": {
+   "en": "Returns the position of the given page among the visible (non-disabled) pages. Errors if the id is unknown; disabled pages report 1.",
+   "fr": "Retourne la position de la page donnée parmi les pages visibles (non désactivées). Provoque une erreur si l'id est inconnu ; les pages désactivées renvoient 1."
+  },
+  "PagingElement:getIsPageDisabled": {
+   "en": "Returns whether the page with the given id is disabled. Errors if the id is unknown.",
+   "fr": "Retourne si la page portant l'id donné est désactivée. Provoque une erreur si l'id est inconnu."
+  },
+  "PagingElement:getPageById": {
+   "en": "Returns the page table registered under the given id, or nil if none.",
+   "fr": "Retourne la table de page enregistrée sous l'id donné, ou nil s'il n'y en a pas."
+  },
+  "PagingElement:setPageDisabled": {
+   "en": "Enables or disables a page (nil page is ignored), rebuilds the visible page mapping and raises the onPageUpdate callback with the page and this element.",
+   "fr": "Active ou désactive une page (une page nil est ignorée), reconstruit le mappage des pages visibles et déclenche le callback onPageUpdate avec la page et cet élément."
+  },
+  "PagingElement:updatePageMapping": {
+   "en": "Rebuilds the list of visible page indices and titles, skipping disabled pages. If the current page became disabled it clamps the mapping index and calls setPage (unless neuterPageUpdates is set); otherwise it notifies index observers of the new count.",
+   "fr": "Reconstruit la liste des indices et titres de pages visibles en ignorant les pages désactivées. Si la page courante est devenue désactivée, borne l'indice de mappage et appelle setPage (sauf si neuterPageUpdates est défini) ; sinon notifie les observateurs du nouveau nombre."
+  }
+ }
+}

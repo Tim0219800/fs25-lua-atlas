@@ -1,0 +1,305 @@
+{
+ "fichier": "placeables/Placeable.lua",
+ "module": {
+  "en": "Base class of every placeable (buildings, fences, production points and so on), derived from `Object`. It runs the multi-step loading (pre-load, i3d load, load finished, synchronized), owns the XML schemas for placeable and savegame data, writes and reads network streams for joining clients, saves to the savegame, and raises lifecycle events (`onLoad`, `onFinalizePlacement`, `onDelete`, hourly or daily events and more) to the specializations of its placeable type. Functionality is supplied by specializations; economy, farmland and shop data come from the store item. Several helpers it calls live elsewhere or are missing from the dump (UNVERIFIED), for example `getMonetaryValue`, `getIsOnFarmland`, `getFarmlandId`, `getIsPreplaced`, `updateOwnership`, `PlaceableSystem:markPlaceableForDeletion`.",
+  "fr": "Classe de base de tous les placeables (bâtiments, clôtures, points de production, etc.), dérivée de `Object`. Elle gère le chargement en plusieurs étapes (pré-chargement, chargement i3d, fin de chargement, synchronisation), possède les schémas XML du placeable et de la sauvegarde, écrit et lit les flux réseau pour les clients qui rejoignent, sauvegarde dans la partie et déclenche des événements de cycle de vie (`onLoad`, `onFinalizePlacement`, `onDelete`, événements horaires ou quotidiens, etc.) vers les spécialisations de son type de placeable. Les fonctionnalités viennent des spécialisations ; les données d'économie, de terrain et de boutique viennent de l'objet de boutique. Plusieurs fonctions appelées ici sont ailleurs ou absentes du dump (NON VÉRIFIÉ), par exemple `getMonetaryValue`, `getIsOnFarmland`, `getFarmlandId`, `getIsPreplaced`, `updateOwnership`, `PlaceableSystem:markPlaceableForDeletion`."
+ },
+ "fonctions": {
+  "Placeable.registerEvents": {
+   "en": "Declares the events specializations can listen to on a placeable type: load steps, register, delete, save, network streams, placement, update, day/hour/minute/period/weather changes, farmland, buy, sell and owner changes.",
+   "fr": "Déclare les événements que les spécialisations peuvent écouter sur un type de placeable : étapes de chargement, enregistrement, suppression, sauvegarde, flux réseau, placement, mise à jour, changements de jour/heure/minute/période/météo, terrain, achat, vente et changement de propriétaire."
+  },
+  "Placeable.registerFunctions": {
+   "en": "Registers the base placeable functions (position, farmland, pose, owner, loading step and state, physics, naming, price, destruction, overlay color, visibility and similar) on the placeable type so that specializations can override them.",
+   "fr": "Enregistre les fonctions de base du placeable (position, terrain, pose, propriétaire, étape et état de chargement, physique, nom, prix, destruction, couleur de surbrillance, visibilité, etc.) sur le type de placeable afin que les spécialisations puissent les surcharger."
+  },
+  "Placeable.init": {
+   "en": "Fills the placeable XML schema and the savegame schema (base data, store data, i3d mappings, unique id, name, position, age, price, farm id, overwrite flags and so on), lets each specialization register its own paths, adds the `placeableSlots` store spec and registers the color configuration type.",
+   "fr": "Remplit le schéma XML du placeable et celui de la sauvegarde (données de base, données de boutique, correspondances i3d, identifiant unique, nom, position, âge, prix, identifiant de ferme, indicateurs de surcharge, etc.), laisse chaque spécialisation enregistrer ses chemins, ajoute la caractéristique de boutique `placeableSlots` et enregistre le type de configuration de couleur."
+  },
+  "Placeable.postInit": {
+   "en": "Registers the XML and savegame paths of every configuration item class once all configuration types are known, including the legacy `boughtConfiguration` savegame path.",
+   "fr": "Enregistre les chemins XML et de sauvegarde de chaque classe d'élément de configuration une fois tous les types de configuration connus, y compris l'ancien chemin de sauvegarde `boughtConfiguration`."
+  },
+  "Placeable.new": {
+   "en": "Creates a placeable object for the given server/client role with default state: loading step CREATED, state OK, property state OWNED, age 0, price 0, no unique id.",
+   "fr": "Crée un objet placeable pour le rôle serveur/client donné avec un état par défaut : étape de chargement CREATED, état OK, état de propriété OWNED, âge 0, prix 0, sans identifiant unique."
+  },
+  "Placeable:setFilename": {
+   "en": "Stores the config XML filename, its clean name, and the mod name and base directory derived from the path.",
+   "fr": "Stocke le nom du fichier XML de configuration, son nom nettoyé, ainsi que le nom du mod et le répertoire de base déduits du chemin."
+  },
+  "Placeable:setConfigurations": {
+   "en": "Stores selected and bought configurations plus optional configuration data, and builds an alphabetically sorted list of configuration names.",
+   "fr": "Stocke les configurations choisies et achetées ainsi que les données de configuration facultatives, et construit une liste triée alphabétiquement des noms de configuration."
+  },
+  "Placeable:setType": {
+   "en": "Applies the placeable type (specialization set) to this object. A `placeableType` configuration item may replace the given type; unknown names log a warning. Requires `setFilename` first.",
+   "fr": "Applique le type de placeable (jeu de spécialisations) à cet objet. Un élément de configuration `placeableType` peut remplacer le type donné ; un nom inconnu écrit un avertissement. Nécessite d'appeler `setFilename` avant."
+  },
+  "Placeable:setLoadCallback": {
+   "en": "Stores the function, target and arguments to call when loading finishes or fails.",
+   "fr": "Stocke la fonction, la cible et les arguments à appeler lorsque le chargement se termine ou échoue."
+  },
+  "Placeable:loadCallback": {
+   "en": "Calls the stored load callback with the placeable, its loading state and the arguments, then clears target and arguments.",
+   "fr": "Appelle le rappel de chargement stocké avec le placeable, son état de chargement et les arguments, puis efface la cible et les arguments."
+  },
+  "Placeable:load": {
+   "en": "Starts loading from a `PlaceableLoadingData`: opens the XML, resolves the store item, repairs configurations against the store item and configuration sets, creates spec environments, raises `onPreLoad`, then loads the i3d asynchronously or takes the preplaced node. Returns false on failure.",
+   "fr": "Démarre le chargement depuis un `PlaceableLoadingData` : ouvre le XML, résout l'objet de boutique, corrige les configurations selon l'objet de boutique et les jeux de configuration, crée les environnements de spécialisation, déclenche `onPreLoad`, puis charge l'i3d de façon asynchrone ou reprend le nœud préplacé. Retourne false en cas d'échec."
+  },
+  "Placeable:i3dFileLoaded": {
+   "en": "Callback when the i3d is ready: on failure sets the ERROR state and calls the load callback; if the placeable was deleted meanwhile sets CANCELED; otherwise stores the root node and queues `loadFinished` as an async task.",
+   "fr": "Rappel quand l'i3d est prêt : en cas d'échec met l'état ERROR et appelle le rappel de chargement ; si le placeable a été supprimé entre-temps met CANCELED ; sinon stocke le nœud racine et met `loadFinished` en file comme tâche asynchrone."
+  },
+  "Placeable:onFinishedLoading": {
+   "en": "Final loading step: makes the placeable visible and, on the server with savegame data, calls each specialization's `loadFromXMLFile` and reads name, image, age, price, farm id and overwrite flags. Then raises `onLoadFinished`, finalizes placement for savegame loads, marks it synchronized on the server, registers it if requested and calls the load callback.",
+   "fr": "Dernière étape du chargement : rend le placeable visible et, côté serveur avec des données de sauvegarde, appelle `loadFromXMLFile` de chaque spécialisation et lit nom, image, âge, prix, identifiant de ferme et indicateurs de surcharge. Déclenche ensuite `onLoadFinished`, finalise le placement pour les chargements de sauvegarde, le marque synchronisé côté serveur, l'enregistre si demandé et appelle le rappel de chargement."
+  },
+  "Placeable:onLoadingError": {
+   "en": "Logs the error (XML-aware when the XML is open) and closes the XML file, sets the ERROR loading state and calls the load callback.",
+   "fr": "Écrit l'erreur (avec contexte XML si le XML est ouvert) et ferme le fichier XML, met l'état de chargement ERROR et appelle le rappel de chargement."
+  },
+  "Placeable:createLoadingTask": {
+   "en": "Creates a loading task for the given target through `SpecializationUtil.createLoadingTask`; the placeable finishes loading only after its tasks are done.",
+   "fr": "Crée une tâche de chargement pour la cible donnée via `SpecializationUtil.createLoadingTask` ; le placeable ne termine son chargement qu'une fois ses tâches finies."
+  },
+  "Placeable:finishLoadingTask": {
+   "en": "Marks a loading task as done via `SpecializationUtil.finishLoadingTask`, which can trigger `onFinishedLoading` once everything is ready.",
+   "fr": "Marque une tâche de chargement comme terminée via `SpecializationUtil.finishLoadingTask`, ce qui peut déclencher `onFinishedLoading` quand tout est prêt."
+  },
+  "Placeable:finalizePlacement": {
+   "en": "Called when the placeable is actually placed: raises the pre, finalize and post-finalize events, adds it to physics, the placeable system and the owned items, registers pick nodes, handles farmland ownership and subscribes to day, hour, minute, weather and period messages as needed.",
+   "fr": "Appelé quand le placeable est réellement posé : déclenche les événements avant, pendant et après finalisation, l'ajoute à la physique, au système de placeables et aux objets possédés, enregistre les nœuds sélectionnables, gère la propriété du terrain et s'abonne aux messages de jour, heure, minute, météo et période selon les besoins."
+  },
+  "Placeable:delete": {
+   "en": "Deletes the placeable. Unless `immediate` is true (or the game is exiting) it is only queued via the placeable system. Otherwise raises `onPreDelete` and `onDelete`, unsubscribes messages, removes it from systems, frees the i3d and XML, and calls the parent delete. Logs an error if already deleted.",
+   "fr": "Supprime le placeable. Sauf si `immediate` vaut true (ou si le jeu se ferme), il est seulement mis en file via le système de placeables. Sinon déclenche `onPreDelete` et `onDelete`, désabonne les messages, le retire des systèmes, libère l'i3d et le XML et appelle la suppression parente. Écrit une erreur s'il est déjà supprimé."
+  },
+  "Placeable:readStream": {
+   "en": "Client side on join: reads whether it is preplaced (index) or its filename, position and rotation, then configurations and property state, builds a `PlaceableLoadingData` and starts the client-side load. Logs an error if loading was already started.",
+   "fr": "Côté client à la connexion : lit s'il est préplacé (index) ou son nom de fichier, sa position et sa rotation, puis les configurations et l'état de propriété, construit un `PlaceableLoadingData` et lance le chargement côté client. Écrit une erreur si le chargement a déjà commencé."
+  },
+  "Placeable:writeStream": {
+   "en": "Server side on join: writes the preplaced flag and index, or filename, translation and rotation of the root node, then configurations and property state.",
+   "fr": "Côté serveur à la connexion : écrit l'indicateur de préplacé et l'index, ou le nom de fichier, la translation et la rotation du nœud racine, puis les configurations et l'état de propriété."
+  },
+  "Placeable:postReadStream": {
+   "en": "Client side once loaded: finalizes placement, raises `onReadStream` (with per-spec bit counts when `Placeable.DEBUG_NETWORK` is set), reads optional custom name, l10n key and custom image, marks the placeable synchronized and requests updates.",
+   "fr": "Côté client une fois chargé : finalise le placement, déclenche `onReadStream` (avec le nombre de bits par spécialisation si `Placeable.DEBUG_NETWORK` est actif), lit le nom personnalisé, la clé l10n et l'image personnalisée facultatifs, marque le placeable synchronisé et demande les mises à jour."
+  },
+  "Placeable:postWriteStream": {
+   "en": "Server side after the client has loaded the placeable: raises `onWriteStream` (with debug sizes if enabled) and writes optional custom name, l10n key and custom image filename.",
+   "fr": "Côté serveur après chargement par le client : déclenche `onWriteStream` (avec tailles de débogage si activé) et écrit le nom personnalisé, la clé l10n et le nom de l'image personnalisée facultatifs."
+  },
+  "Placeable:readUpdateStream": {
+   "en": "Client side network update: raises `onReadUpdateStream` for specializations (with per-spec bit counts when `Placeable.DEBUG_NETWORK_UPDATE` is set).",
+   "fr": "Mise à jour réseau côté client : déclenche `onReadUpdateStream` pour les spécialisations (avec le nombre de bits par spécialisation si `Placeable.DEBUG_NETWORK_UPDATE` est actif)."
+  },
+  "Placeable:writeUpdateStream": {
+   "en": "Server side network update: raises `onWriteUpdateStream` with the dirty mask (with debug sizes when `Placeable.DEBUG_NETWORK_UPDATE` is set).",
+   "fr": "Mise à jour réseau côté serveur : déclenche `onWriteUpdateStream` avec le masque de modifications (avec tailles de débogage si `Placeable.DEBUG_NETWORK_UPDATE` est actif)."
+  },
+  "Placeable:saveToXMLFile": {
+   "en": "Writes the placeable to the savegame XML: unique id, filename, position and rotation (unless preplaced), age, price, farm id, tour id, custom name (if renamable), name l10n key, overwrite flags, custom image, configurations, then each specialization's own data.",
+   "fr": "Écrit le placeable dans le XML de sauvegarde : identifiant unique, nom de fichier, position et rotation (sauf préplacé), âge, prix, identifiant de ferme, identifiant de visite, nom personnalisé (si renommable), clé l10n du nom, indicateurs de surcharge, image personnalisée, configurations, puis les données propres à chaque spécialisation."
+  },
+  "Placeable:setPropertyState": {
+   "en": "Sets the property state (for example owned or construction preview).",
+   "fr": "Définit l'état de propriété (par exemple possédé ou aperçu de construction)."
+  },
+  "Placeable:getPropertyState": {
+   "en": "Returns the property state.",
+   "fr": "Retourne l'état de propriété."
+  },
+  "Placeable:setVisibility": {
+   "en": "Shows or hides all component root nodes of the placeable.",
+   "fr": "Affiche ou masque tous les nœuds racines des composants du placeable."
+  },
+  "Placeable:getIsSynchronized": {
+   "en": "Returns true when the loading step has reached SYNCHRONIZED.",
+   "fr": "Retourne true quand l'étape de chargement a atteint SYNCHRONIZED."
+  },
+  "Placeable:getNeedsSaving": {
+   "en": "Returns true; the base placeable is always saved (the system also skips preplaced ones separately).",
+   "fr": "Retourne true ; le placeable de base est toujours sauvegardé (le système traite à part les préplacés)."
+  },
+  "Placeable:getUniqueId": {
+   "en": "Returns the placeable's unique id, or nil if none was set.",
+   "fr": "Retourne l'identifiant unique du placeable, ou nil s'il n'en a pas."
+  },
+  "Placeable:setUniqueId": {
+   "en": "Sets the unique id. It should not be changed once set (checked only in debug builds).",
+   "fr": "Définit l'identifiant unique. Il ne devrait plus changer une fois défini (vérifié seulement dans les builds de débogage)."
+  },
+  "Placeable:update": {
+   "en": "Per-frame update; raises `onUpdate` with the delta time for specializations.",
+   "fr": "Mise à jour à chaque image ; déclenche `onUpdate` avec le delta de temps pour les spécialisations."
+  },
+  "Placeable:updateTick": {
+   "en": "Network tick update; raises `onUpdateTick` with the delta time.",
+   "fr": "Mise à jour au tick réseau ; déclenche `onUpdateTick` avec le delta de temps."
+  },
+  "Placeable:draw": {
+   "en": "Draw callback; raises `onDraw` for specializations.",
+   "fr": "Rappel de dessin ; déclenche `onDraw` pour les spécialisations."
+  },
+  "Placeable:drawDebug": {
+   "en": "Debug draw; raises `onDrawDebug` (only active with the scriptDebug start parameter, per the source comment).",
+   "fr": "Dessin de débogage ; déclenche `onDrawDebug` (actif seulement avec le paramètre de démarrage scriptDebug, d'après le commentaire du source)."
+  },
+  "Placeable:getName": {
+   "en": "Returns the display name: player custom name first, then the mapper's l10n name, then the store item name.",
+   "fr": "Retourne le nom affiché : d'abord le nom personnalisé du joueur, puis le nom l10n du cartographe, puis le nom de l'objet de boutique."
+  },
+  "Placeable:getImageFilename": {
+   "en": "Returns the custom image filename if set, else the store item's image.",
+   "fr": "Retourne le nom de l'image personnalisée si défini, sinon l'image de l'objet de boutique."
+  },
+  "Placeable:getCanBeRenamedByFarm": {
+   "en": "Returns true if the placeable can be renamed and is owned by the given farm id.",
+   "fr": "Retourne true si le placeable peut être renommé et appartient à l'identifiant de ferme donné."
+  },
+  "Placeable:setName": {
+   "en": "Sets or resets (nil) the custom name when renaming is allowed, sending a `PlaceableNameEvent` unless `noEventSend`, and notifies loading and unloading station changes. Returns false if not renamable or the name is blank.",
+   "fr": "Définit ou réinitialise (nil) le nom personnalisé si le renommage est autorisé, en envoyant un `PlaceableNameEvent` sauf si `noEventSend`, et notifie les changements des stations de chargement et de déchargement. Retourne false si non renommable ou si le nom est vide."
+  },
+  "Placeable:setNameL10nKey": {
+   "en": "Stores a name localization key (without the `$l10n_` prefix) and the translated text if the key exists for the map's custom environment; otherwise does nothing.",
+   "fr": "Stocke une clé de localisation de nom (sans le préfixe `$l10n_`) et le texte traduit si la clé existe pour l'environnement personnalisé de la carte ; sinon ne fait rien."
+  },
+  "Placeable:onBuy": {
+   "en": "Raises `onBuy`, counts the placeables owned by the local farm and tries to unlock the NumPlaceables achievement.",
+   "fr": "Déclenche `onBuy`, compte les placeables de la ferme locale et tente de débloquer le succès NumPlaceables."
+  },
+  "Placeable:onSell": {
+   "en": "Publishes `FARM_PROPERTY_CHANGED` for the owner farm and raises `onSell`.",
+   "fr": "Publie `FARM_PROPERTY_CHANGED` pour la ferme propriétaire et déclenche `onSell`."
+  },
+  "Placeable:getPrice": {
+   "en": "Returns the stored purchase price.",
+   "fr": "Retourne le prix d'achat stocké."
+  },
+  "Placeable:canBuy": {
+   "en": "Returns true unless the store item has a max item count already reached by the local farm.",
+   "fr": "Retourne true sauf si l'objet de boutique a un nombre maximal déjà atteint par la ferme locale."
+  },
+  "Placeable:getCanBePlacedAt": {
+   "en": "Base check for placing at a position for a farm: always returns true, nil (specializations may override).",
+   "fr": "Vérification de base pour poser à une position pour une ferme : retourne toujours true, nil (les spécialisations peuvent la surcharger)."
+  },
+  "Placeable:canBeSold": {
+   "en": "Base check: always returns true, nil (second value is presumably an optional reason, UNVERIFIED).",
+   "fr": "Vérification de base : retourne toujours true, nil (la seconde valeur est probablement une raison facultative, NON VÉRIFIÉ)."
+  },
+  "Placeable:getDestructionMethod": {
+   "en": "Returns `Placeable.DESTRUCTION.SELL`, the default way of removing the placeable.",
+   "fr": "Retourne `Placeable.DESTRUCTION.SELL`, la manière par défaut de retirer le placeable."
+  },
+  "Placeable:previewNodeDestructionNodes": {
+   "en": "Base hook returning nil; specializations can return the nodes that would be destroyed for a given node.",
+   "fr": "Point d'extension de base retournant nil ; les spécialisations peuvent retourner les nœuds qui seraient détruits pour un nœud donné."
+  },
+  "Placeable:performNodeDestruction": {
+   "en": "Base hook returning false, false (nothing destroyed, placeable not to be removed); specializations override it.",
+   "fr": "Point d'extension de base retournant false, false (rien de détruit, placeable à conserver) ; les spécialisations le surchargent."
+  },
+  "Placeable:onFarmlandStateChanged": {
+   "en": "On farmland ownership change, calls `updateOwnership` if the placeable is bought with farmland and sits on that farmland.",
+   "fr": "Lors d'un changement de propriétaire d'un terrain, appelle `updateOwnership` si le placeable est acheté avec le terrain et se trouve sur ce terrain."
+  },
+  "Placeable:register": {
+   "en": "Registers the object via the parent class and raises `onRegistered`.",
+   "fr": "Enregistre l'objet via la classe parente et déclenche `onRegistered`."
+  },
+  "Placeable:setOwnerFarmId": {
+   "en": "Sets the owner farm: updates farmland ownership if it buys farmland, calls the parent, raises `onOwnerChanged` after the load step, and re-registers the owned item (except in construction preview).",
+   "fr": "Définit la ferme propriétaire : met à jour la propriété du terrain s'il achète du terrain, appelle le parent, déclenche `onOwnerChanged` après l'étape de chargement et réenregistre l'objet possédé (sauf en aperçu de construction)."
+  },
+  "Placeable:setLoadingState": {
+   "en": "Sets the loading state if valid; otherwise prints the call stack and logs an error.",
+   "fr": "Définit l'état de chargement s'il est valide ; sinon affiche la pile d'appels et écrit une erreur."
+  },
+  "Placeable:collectPickObjects": {
+   "en": "Recursively collects nodes with a rigid body into `pickObjects`, used to map nodes back to the placeable.",
+   "fr": "Collecte récursivement les nœuds ayant un corps rigide dans `pickObjects`, utilisés pour relier les nœuds au placeable."
+  },
+  "Placeable:setLoadingStep": {
+   "en": "Sets the loading step through `SpecializationUtil.setLoadingStep`, which logs an error for an invalid step.",
+   "fr": "Définit l'étape de chargement via `SpecializationUtil.setLoadingStep`, qui écrit une erreur pour une étape invalide."
+  },
+  "Placeable:setOverlayColor": {
+   "en": "Sets the `placeableColorScale` shader parameter (r, g, b, alpha) on all shapes that support it, finding them once and caching them.",
+   "fr": "Règle le paramètre de shader `placeableColorScale` (r, g, b, alpha) sur toutes les formes qui le gèrent, en les cherchant une fois puis en les mettant en cache."
+  },
+  "Placeable:setOverlayColorNodes": {
+   "en": "Recursively collects shape nodes that have the `placeableColorScale` parameter and are not terrain decals into the given table.",
+   "fr": "Collecte récursivement dans la table donnée les nœuds de forme qui ont le paramètre `placeableColorScale` et ne sont pas des décalcomanies de terrain."
+  },
+  "Placeable:getDailyUpkeep": {
+   "en": "Returns the daily upkeep from the store item and configurations, increased with age up to `EconomyManager.MAX_DAILYUPKEEP_MULTIPLIER` when the item has a lifetime.",
+   "fr": "Retourne l'entretien quotidien issu de l'objet de boutique et des configurations, augmenté avec l'âge jusqu'à `EconomyManager.MAX_DAILYUPKEEP_MULTIPLIER` si l'objet a une durée de vie."
+  },
+  "Placeable:getSellPrice": {
+   "en": "Returns the sell price and a flag. Within `Placeable.UNDO_DURATION` after placement (and after the construction screen was opened) it returns the full price and true, else `getMonetaryValue()` and false.",
+   "fr": "Retourne le prix de vente et un indicateur. Dans `Placeable.UNDO_DURATION` après le placement (et après l'ouverture de l'écran de construction) retourne le prix complet et true, sinon `getMonetaryValue()` et false."
+  },
+  "Placeable:getSellAction": {
+   "en": "Returns `Placeable.SELL_AND_SPECTATOR_FARM` for preplaced placeables on public land or that cannot be deleted, or when the savegame forbids deletion; otherwise `Placeable.SELL_AND_DELETE`.",
+   "fr": "Retourne `Placeable.SELL_AND_SPECTATOR_FARM` pour les placeables préplacés sur terrain public ou non supprimables, ou si la sauvegarde interdit la suppression ; sinon `Placeable.SELL_AND_DELETE`."
+  },
+  "Placeable:addToPhysics": {
+   "en": "Adds the root node to the physics world if it exists.",
+   "fr": "Ajoute le nœud racine au monde physique s'il existe."
+  },
+  "Placeable:removeFromPhysics": {
+   "en": "Removes the root node from the physics world if it exists.",
+   "fr": "Retire le nœud racine du monde physique s'il existe."
+  },
+  "Placeable:setPreviewPosition": {
+   "en": "Moves the root node to a world position and sets only the Y rotation (rotX and rotZ are ignored).",
+   "fr": "Déplace le nœud racine à une position monde et règle uniquement la rotation Y (rotX et rotZ sont ignorés)."
+  },
+  "Placeable:getNeedWeatherChanged": {
+   "en": "Returns false; specializations override it to receive weather changes.",
+   "fr": "Retourne false ; les spécialisations la surchargent pour recevoir les changements de météo."
+  },
+  "Placeable:weatherChanged": {
+   "en": "Message handler for day/night changes (subscribed to `DAY_NIGHT_CHANGED`); raises `onWeatherChanged`.",
+   "fr": "Gestionnaire de message pour les changements jour/nuit (abonné à `DAY_NIGHT_CHANGED`) ; déclenche `onWeatherChanged`."
+  },
+  "Placeable:getNeedHourChanged": {
+   "en": "Returns false; specializations override it to receive hour changes.",
+   "fr": "Retourne false ; les spécialisations la surchargent pour recevoir les changements d'heure."
+  },
+  "Placeable:hourChanged": {
+   "en": "Message handler for hour changes; raises `onHourChanged` with the hour.",
+   "fr": "Gestionnaire de message pour les changements d'heure ; déclenche `onHourChanged` avec l'heure."
+  },
+  "Placeable:getNeedMinuteChanged": {
+   "en": "Returns false; specializations override it to receive minute changes.",
+   "fr": "Retourne false ; les spécialisations la surchargent pour recevoir les changements de minute."
+  },
+  "Placeable:minuteChanged": {
+   "en": "Message handler for minute changes; raises `onMinuteChanged` with the minute.",
+   "fr": "Gestionnaire de message pour les changements de minute ; déclenche `onMinuteChanged` avec la minute."
+  },
+  "Placeable:getNeedDayChanged": {
+   "en": "Returns false; specializations override it to receive day changes.",
+   "fr": "Retourne false ; les spécialisations la surchargent pour recevoir les changements de jour."
+  },
+  "Placeable:dayChanged": {
+   "en": "Message handler for day changes; raises `onDayChanged` with the day.",
+   "fr": "Gestionnaire de message pour les changements de jour ; déclenche `onDayChanged` avec le jour."
+  },
+  "Placeable:periodChanged": {
+   "en": "Message handler for period changes: increases the placeable's age by 1 (months) and raises `onPeriodChanged`.",
+   "fr": "Gestionnaire de message pour les changements de période : augmente l'âge du placeable de 1 (mois) et déclenche `onPeriodChanged`."
+  },
+  "Placeable.getSpecValueSlots": {
+   "en": "Store spec text for the slots used: formats the slot usage of the store item (first copy or not) as '+N $SLOTS$'.",
+   "fr": "Texte de caractéristique de boutique pour les emplacements utilisés : formate l'usage d'emplacements de l'objet de boutique (première copie ou non) sous la forme '+N $SLOTS$'."
+  }
+ }
+}

@@ -1,0 +1,53 @@
+{
+ "fichier": "vehicles/ai/AICollisionTriggerHandler.lua",
+ "module": {
+  "en": "Helper used by AI strategies to detect obstacles ahead of an AI-driven vehicle chain. On the server it gathers collision triggers from all child vehicles, periodically casts a vehicle-collision query along each trigger path, and tracks dynamic and static hit points. It reports blocked state, static collision and nearest collision distance through callbacks set by the strategy.",
+  "fr": "Utilitaire des stratégies IA pour détecter les obstacles devant un ensemble de véhicules piloté par l'IA. Côté serveur, il rassemble les déclencheurs de collision de tous les véhicules enfants, lance périodiquement une requête de collision le long de chaque trajet et suit les points d'impact dynamiques et statiques. Il signale l'état bloqué, la collision statique et la distance de collision la plus proche via des rappels fournis par la stratégie."
+ },
+ "fonctions": {
+  "AICollisionTriggerHandler.new": {
+   "en": "Constructor; sets empty trigger tables, no collision, and infinite hit distances.",
+   "fr": "Constructeur ; initialise des tables de déclencheurs vides, aucune collision et des distances d'impact infinies."
+  },
+  "AICollisionTriggerHandler:init": {
+   "en": "Server only: collects collision triggers from all child vehicles of the root vehicle via `getAICollisionTriggers` and `getAIImplementCollisionTriggers`, initializes each trigger's state and staggers their update indices.",
+   "fr": "Côté serveur uniquement : rassemble les déclencheurs de collision de tous les véhicules enfants du véhicule racine via `getAICollisionTriggers` et `getAIImplementCollisionTriggers`, initialise l'état de chaque déclencheur et échelonne leurs indices de mise à jour."
+  },
+  "AICollisionTriggerHandler:update": {
+   "en": "Updates hit distances every frame and, on each trigger's staggered turn, rebuilds its path and issues the engine `getVehicleCollisionDistance` query. Calls the distance callback with the minimum distance and draws debug lines in AI debug mode.",
+   "fr": "Met à jour les distances d'impact à chaque image et, au tour échelonné de chaque déclencheur, reconstruit son trajet et lance la requête moteur `getVehicleCollisionDistance`. Appelle le rappel de distance avec le minimum et dessine des lignes de debug en mode debug IA."
+  },
+  "AICollisionTriggerHandler:setStaticCollisionCallback": {
+   "en": "Sets the callback invoked when the presence of a static collision changes.",
+   "fr": "Définit le rappel appelé quand la présence d'une collision statique change."
+  },
+  "AICollisionTriggerHandler:updateStaticCollisionCallback": {
+   "en": "Recomputes whether any trigger has a static collision and calls the static callback only when that state changed.",
+   "fr": "Recalcule si un déclencheur a une collision statique et n'appelle le rappel statique que si cet état a changé."
+  },
+  "AICollisionTriggerHandler:setIsBlockedCallback": {
+   "en": "Sets the callback invoked when the blocked state changes.",
+   "fr": "Définit le rappel appelé quand l'état bloqué change."
+  },
+  "AICollisionTriggerHandler:updateBlockedCallback": {
+   "en": "Recomputes whether any trigger has a dynamic collision and calls the blocked callback only when that state changed.",
+   "fr": "Recalcule si un déclencheur a une collision dynamique et n'appelle le rappel de blocage que si cet état a changé."
+  },
+  "AICollisionTriggerHandler:setCollisionDistanceCallback": {
+   "en": "Sets the callback that receives the smallest collision distance each update.",
+   "fr": "Définit le rappel qui reçoit la plus petite distance de collision à chaque mise à jour."
+  },
+  "AICollisionTriggerHandler:generateTriggerPath": {
+   "en": "Fills the trigger's sampled path points along its length (front or back node depending on moving direction), placing each at terrain height plus half the trigger height.",
+   "fr": "Remplit les points échantillonnés du trajet du déclencheur sur sa longueur (nœud avant ou arrière selon le sens de marche), chacun placé à la hauteur du terrain plus la moitié de la hauteur du déclencheur."
+  },
+  "AICollisionTriggerHandler:countHitObject": {
+   "en": "Classifies a hit node: players and vehicle-group or moving-obstacle objects add to the dynamic counter, non-dynamic bodies to the static one. Own vehicles, triggers and other dynamic objects such as bales are ignored.",
+   "fr": "Classe un nœud touché : joueurs, objets du groupe véhicule ou obstacles mobiles incrémentent le compteur dynamique, les corps non dynamiques le compteur statique. Véhicules propres, déclencheurs et autres objets dynamiques comme les balles sont ignorés."
+  },
+  "AICollisionTriggerHandler:onVehicleCollisionDistanceCallback": {
+   "en": "Asynchronous engine callback of the collision query. Counts each hit, and on the last one updates the trigger's collision flags and stored hit points, then notifies the callbacks. Returns false to stop, true to continue, and ignores calls after a vehicle was deleted.",
+   "fr": "Rappel asynchrone du moteur pour la requête de collision. Compte chaque impact et, au dernier, met à jour les indicateurs de collision et les points d'impact du déclencheur, puis notifie les rappels. Retourne false pour arrêter, true pour continuer, et ignore les appels après suppression d'un véhicule."
+  }
+ }
+}

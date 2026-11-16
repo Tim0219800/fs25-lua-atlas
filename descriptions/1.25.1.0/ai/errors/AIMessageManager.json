@@ -1,0 +1,33 @@
+{
+ "fichier": "ai/errors/AIMessageManager.lua",
+ "module": {
+  "en": "Manager that registers every AI message class under an upper-case name and an index, and creates instances from that index. `loadMapData` registers the 24 error and 3 success messages of the base game; the index is what `AIJobStopEvent` sends over the network.",
+  "fr": "Gestionnaire qui enregistre chaque classe de message IA sous un nom en majuscules et un index, et crée des instances à partir de cet index. `loadMapData` enregistre les 24 messages d'erreur et 3 de succès du jeu de base ; l'index est ce que `AIJobStopEvent` envoie sur le réseau."
+ },
+ "fonctions": {
+  "AIMessageManager.new": {
+   "en": "Creates the manager instance; the tables are only filled later by `loadMapData`.",
+   "fr": "Crée l'instance du gestionnaire ; les tables ne sont remplies que plus tard par `loadMapData`."
+  },
+  "AIMessageManager:loadMapData": {
+   "en": "Resets the lookup tables and registers all base-game AI messages (ERROR_* and SUCCESS_*). The order of registration defines the network indices. Returns nothing despite the map-data convention.",
+   "fr": "Réinitialise les tables et enregistre tous les messages IA du jeu de base (ERROR_* et SUCCESS_*). L'ordre d'enregistrement définit les index réseau. Ne renvoie rien malgré la convention de chargement de carte."
+  },
+  "AIMessageManager:delete": {
+   "en": "Clears the message list and both lookup tables.",
+   "fr": "Vide la liste des messages et les deux tables de recherche."
+  },
+  "AIMessageManager:registerMessage": {
+   "en": "Registers a message class under an upper-cased name. Returns nil with a warning if the name is invalid, already used or the class is nil; otherwise returns the entry. Mods can use it to add messages.",
+   "fr": "Enregistre une classe de message sous un nom mis en majuscules. Renvoie nil avec un avertissement si le nom est invalide, déjà pris ou la classe nil ; sinon renvoie l'entrée. Les mods peuvent l'utiliser pour ajouter des messages."
+  },
+  "AIMessageManager:getMessageIndex": {
+   "en": "Returns the registration index of the class of the given message object, or nil if its class is unknown.",
+   "fr": "Renvoie l'index d'enregistrement de la classe de l'objet message donné, ou nil si sa classe est inconnue."
+  },
+  "AIMessageManager:createMessage": {
+   "en": "Instantiates the message class registered at the index by calling its `new()` without arguments. Returns nil if the index is nil or unknown. Note: classes needing constructor arguments, like `AIMessageErrorCouldNotPrepare`, get nil and rely on `readStream`.",
+   "fr": "Instancie la classe de message enregistrée à l'index en appelant son `new()` sans argument. Renvoie nil si l'index est nil ou inconnu. À noter : les classes qui exigent des arguments, comme `AIMessageErrorCouldNotPrepare`, reçoivent nil et s'appuient sur `readStream`."
+  }
+ }
+}

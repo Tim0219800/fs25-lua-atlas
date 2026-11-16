@@ -1,0 +1,13 @@
+{
+ "fichier": "animals/wildlife/instances/WildlifeInstanceSimple.lua",
+ "module": {
+  "en": "Simple wildlife instance class, a child of `WildlifeInstance`. The file only defines the despawn test based on its flee state machine.",
+  "fr": "Classe d'instance de faune simple, fille de `WildlifeInstance`. Le fichier ne définit que le test de disparition basé sur sa machine à états de fuite."
+ },
+ "fonctions": {
+  "WildlifeInstanceSimple:getCanDespawnNow": {
+   "en": "Returns true if the instance is not fleeing to despawn, has a `despawnTime`, and has lived at least that long since spawning.",
+   "fr": "Renvoie true si l'instance ne fuit pas pour disparaître, possède un `despawnTime` et a vécu au moins cette durée depuis son apparition."
+  }
+ }
+}

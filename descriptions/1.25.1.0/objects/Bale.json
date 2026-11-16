@@ -1,0 +1,333 @@
+{
+ "fichier": "objects/Bale.lua",
+ "module": {
+  "en": "A hay, straw, silage or similar bale, as a networked MountableObject that can be picked up, strapped, auto-loaded, wrapped, cut open and sold. Its properties are loaded from a bale config XML (bale.size, bale.fillTypes, bale.variations, bale.baleMeshes, mountableObject attributes) and saved to the savegame. Wrapping and fermentation are driven by the fill type info and BaleManager (not in this dump, UNVERIFIED). The file also defines BaleActivatable, the cut-bale action.",
+  "fr": "Une balle de foin, paille, ensilage ou similaire, sous forme de MountableObject réseau qui peut être ramassée, sanglée, chargée automatiquement, enrubannée, ouverte et vendue. Ses propriétés viennent d'un XML de configuration de balle (bale.size, bale.fillTypes, bale.variations, bale.baleMeshes, attributs mountableObject) et sont sauvegardées dans la partie. L'enrubannage et la fermentation dépendent des infos du type de remplissage et de BaleManager (absent de ce dump, NON VÉRIFIÉ). Le fichier définit aussi BaleActivatable, l'action de coupe de balle."
+ },
+ "fonctions": {
+  "Bale.new": {
+   "en": "Constructor. Calls the MountableObject constructor and sets defaults (straw, fill level 0, mass 0.25, not wrapped, not fermenting, can be sold, pickup allowed), reserves one dirty flag per synced property, creates the activatable and registers the bale in the slot system as a limited object.",
+   "fr": "Constructeur. Appelle celui de MountableObject et fixe les valeurs par défaut (paille, niveau 0, masse 0,25, non enrubanné, sans fermentation, vendable, ramassable), réserve un drapeau dirty par propriété synchronisée, crée l'activatable et enregistre la balle dans le système de slots comme objet limité."
+  },
+  "Bale:delete": {
+   "en": "Releases the shared i3d request, clears mesh lists, removes the activatable, stops fermentation tracking, removes the AI obstacle, the slot-system and item-system entries, unregisters the class name and calls the parent delete.",
+   "fr": "Libère la requête i3d partagée, vide les listes de maillages, retire l'activatable, arrête le suivi de fermentation, retire l'obstacle IA ainsi que les entrées du système de slots et du système d'objets, désenregistre le nom de classe et appelle le delete du parent."
+  },
+  "Bale:readUpdateStream": {
+   "en": "Client side update: for each dirty bit present reads fill type, fill level, variation, wrap textures, wrapping state (uint8 over 255), wrap color and fermentation state, applies them, then calls the parent readUpdateStream.",
+   "fr": "Mise à jour côté client : pour chaque bit dirty présent, lit type de remplissage, niveau, variation, textures d'enrubannage, état d'enrubannage (uint8 sur 255), couleur et fermentation, les applique, puis appelle le readUpdateStream du parent."
+  },
+  "Bale:writeUpdateStream": {
+   "en": "Server side update: writes a flag and the matching value for each dirty bit (fill type, level, variation, textures, wrapping state, wrap color, fermentation), then calls the parent writeUpdateStream.",
+   "fr": "Mise à jour côté serveur : écrit un indicateur et la valeur correspondante pour chaque bit dirty (type, niveau, variation, textures, état d'enrubannage, couleur, fermentation), puis appelle le writeUpdateStream du parent."
+  },
+  "Bale:readStream": {
+   "en": "Client side on join: reads the bale type index and loads the bale from its config XML if it has no node, then fill level, fill type, variation, optional wrap textures, parent data, wrapping state, color and fermentation. Also adds the bale to the item system.",
+   "fr": "Côté client à la connexion : lit l'index du type de balle et la charge depuis son XML de configuration si elle n'a pas de nœud, puis niveau, type, variation, textures d'enrubannage optionnelles, données du parent, état d'enrubannage, couleur et fermentation. Ajoute aussi la balle au système d'objets."
+  },
+  "Bale:writeStream": {
+   "en": "Server side on join: writes the bale type index (default 1), fill level, fill type, variation, optional wrap textures, parent data, wrapping state, color and fermentation. Order mirrors readStream.",
+   "fr": "Côté serveur à la connexion : écrit l'index du type de balle (1 par défaut), niveau, type, variation, textures d'enrubannage optionnelles, données du parent, état d'enrubannage, couleur et fermentation. L'ordre reflète readStream."
+  },
+  "Bale:mount": {
+   "en": "Calls the parent mount, then disables the AI obstacle of the bale.",
+   "fr": "Appelle le mount du parent, puis désactive l'obstacle IA de la balle."
+  },
+  "Bale:unmount": {
+   "en": "Calls the parent unmount. On success restores normal component mass and the AI obstacle and returns true, otherwise false.",
+   "fr": "Appelle l'unmount du parent. En cas de succès, restaure la masse normale du composant et l'obstacle IA et retourne true, sinon false."
+  },
+  "Bale:mountKinematic": {
+   "en": "Calls the parent mountKinematic, then disables the AI obstacle.",
+   "fr": "Appelle le mountKinematic du parent, puis désactive l'obstacle IA."
+  },
+  "Bale:unmountKinematic": {
+   "en": "Calls the parent unmountKinematic. On success restores normal mass and the AI obstacle and returns true, otherwise false.",
+   "fr": "Appelle l'unmountKinematic du parent. En cas de succès, restaure la masse normale et l'obstacle IA et retourne true, sinon false."
+  },
+  "Bale:mountDynamic": {
+   "en": "Calls the parent mountDynamic. Returns false if it fails, otherwise disables the AI obstacle and returns true.",
+   "fr": "Appelle le mountDynamic du parent. Retourne false en cas d'échec, sinon désactive l'obstacle IA et retourne true."
+  },
+  "Bale:unmountDynamic": {
+   "en": "Calls the parent unmountDynamic, restores normal component mass and re-enables the AI obstacle.",
+   "fr": "Appelle l'unmountDynamic du parent, restaure la masse normale du composant et réactive l'obstacle IA."
+  },
+  "Bale:setBaleAIObstacle": {
+   "en": "Adds the bale node as an obstacle to aiSystem when enabling (if none yet) or removes it when disabling.",
+   "fr": "Ajoute le nœud de la balle comme obstacle à aiSystem à l'activation (s'il n'y en a pas) ou le retire à la désactivation."
+  },
+  "Bale:createNode": {
+   "en": "Loads the i3d file through the shared manager, takes its first child, links it to the root node, deletes the loaded root and sets the child as the bale node.",
+   "fr": "Charge le fichier i3d via le gestionnaire partagé, prend son premier enfant, le rattache au nœud racine, supprime la racine chargée et définit l'enfant comme nœud de la balle."
+  },
+  "Bale:loadFromConfigXML": {
+   "en": "Loads a bale from its config XML: checks the file exists and the type is registered (or an icon generator is present), creates the node, optionally places it, loads attributes, sets uniqueId, adds it to the item system and enables the AI obstacle. Returns false and logs on failure.",
+   "fr": "Charge une balle depuis son XML de configuration : vérifie que le fichier existe et que le type est enregistré (ou qu'un générateur d'icônes est présent), crée le nœud, le place éventuellement, charge les attributs, fixe uniqueId, l'ajoute au système d'objets et active l'obstacle IA. Retourne false avec un log en cas d'échec."
+  },
+  "Bale:loadBaleAttributesFromXML": {
+   "en": "Reads mountable attributes, fill types, variations, size (round or square, rounded to 2 decimals), uvId and visual meshes from the bale config XML. Returns true.",
+   "fr": "Lit depuis le XML de configuration les attributs de montage, types de remplissage, variations, dimensions (ronde ou carrée, arrondies à 2 décimales), uvId et maillages visuels. Retourne true."
+  },
+  "Bale:getBaleMatchesSize": {
+   "en": "Returns true if the bale size equals the given values: diameter and width for round bales, width, height and length for square bales.",
+   "fr": "Retourne true si la taille de la balle égale les valeurs données : diamètre et largeur pour les balles rondes, largeur, hauteur et longueur pour les balles carrées."
+  },
+  "Bale:getSupportsWrapping": {
+   "en": "Returns whether the bale can be wrapped for its current fill type.",
+   "fr": "Retourne si la balle peut être enrubannée pour son type de remplissage actuel."
+  },
+  "Bale:loadFromXMLFile": {
+   "en": "Savegame loading: reads position, rotation and filename (returns false if missing or the file does not exist), loads the attributes, creates the bale from its config XML and applies the attributes. Returns true on success.",
+   "fr": "Chargement de sauvegarde : lit position, rotation et filename (retourne false si absents ou si le fichier n'existe pas), charge les attributs, crée la balle depuis son XML de configuration et applique les attributs. Retourne true en cas de succès."
+  },
+  "Bale.loadBaleAttributesFromXMLFile": {
+   "en": "Static: reads from a savegame node into the attributes table the filename, farmId, fill level, fill type, variation, wrap textures, fermentation, wrapping state and color, mission-bale flag and uniqueId. Returns true.",
+   "fr": "Statique : lit depuis un nœud de sauvegarde, dans la table attributes, le filename, farmId, niveau, type, variation, textures d'enrubannage, fermentation, état et couleur d'enrubannage, indicateur de balle de mission et uniqueId. Retourne true."
+  },
+  "Bale:getBaleAttributes": {
+   "en": "Returns a table with the bale's current attributes (xmlFilename, farmId, fill level and type, variation, wrap textures, wrapping state and color, mission flag, fermentation and its elapsed time).",
+   "fr": "Retourne une table des attributs actuels de la balle (xmlFilename, farmId, niveau et type, variation, textures d'enrubannage, état et couleur d'enrubannage, indicateur de mission, fermentation et son temps écoulé)."
+  },
+  "Bale.saveBaleAttributesToXMLFile": {
+   "en": "Static: writes an attributes table to the savegame XML (filename, fill level, fill type name, variation, farmId, mission flag, wrapping, optional textures and fermentation).",
+   "fr": "Statique : écrit une table d'attributs dans le XML de sauvegarde (filename, niveau, nom du type, variation, farmId, indicateur de mission, enrubannage, textures et fermentation optionnelles)."
+  },
+  "Bale:applyBaleAttributes": {
+   "en": "Applies an attributes table: owner farm, fill level and type, variation, wrap textures, wrapping state, color and mission flag. On the server it also re-registers fermentation (instant for mission bales). Returns true.",
+   "fr": "Applique une table d'attributs : ferme propriétaire, niveau et type, variation, textures d'enrubannage, état, couleur et indicateur de mission. Sur le serveur, ré-enregistre aussi la fermentation (instantanée pour les balles de mission). Retourne true."
+  },
+  "Bale:saveToXMLFile": {
+   "en": "Writes uniqueId, network filename, position, rotation, fill level and type, variation, farmId, mission flag, wrapping state and color, optional wrap textures and fermentation data to the savegame.",
+   "fr": "Écrit dans la sauvegarde uniqueId, nom de fichier réseau, position, rotation, niveau et type, variation, farmId, indicateur de mission, état et couleur d'enrubannage, textures d'enrubannage et données de fermentation optionnelles."
+  },
+  "Bale:getNeedsSaving": {
+   "en": "Returns true if needsSaving is set and the bale node is above y = -90 (the shop area at -100 is excluded).",
+   "fr": "Retourne true si needsSaving est actif et que le nœud de la balle est au-dessus de y = -90 (la zone du magasin à -100 est exclue)."
+  },
+  "Bale:getAutoLoadIsSupported": {
+   "en": "Returns true: bales can be handled by auto-loaders.",
+   "fr": "Retourne true : les balles peuvent être gérées par les chargeurs automatiques."
+  },
+  "Bale:getAutoLoadIsAllowed": {
+   "en": "Returns the result of getAllowPickup.",
+   "fr": "Retourne le résultat de getAllowPickup."
+  },
+  "Bale:getAutoLoadSize": {
+   "en": "Returns the bale footprint as three sizes: width, then diameter or height, then diameter or length depending on whether the bale is round.",
+   "fr": "Retourne l'encombrement de la balle en trois dimensions : largeur, puis diamètre ou hauteur, puis diamètre ou longueur selon que la balle est ronde ou non."
+  },
+  "Bale:autoLoad": {
+   "en": "Places the bale on the auto-loader at the given position by unmounting it first if kinematically mounted, then calling mountKinematic with centred coordinates (round bales rotated 90 degrees around Y). Returns true.",
+   "fr": "Place la balle sur le chargeur automatique à la position donnée en la démontant d'abord si elle est montée en cinématique, puis en appelant mountKinematic avec des coordonnées centrées (balles rondes tournées de 90 degrés sur Y). Retourne true."
+  },
+  "Bale:getValue": {
+   "en": "Returns the sale value: fill level times the economy price per liter of the fill type.",
+   "fr": "Retourne la valeur de vente : niveau de remplissage multiplié par le prix au litre du type selon l'économie."
+  },
+  "Bale:getMass": {
+   "en": "Returns the physics mass of the node, or 0 if the node does not exist.",
+   "fr": "Retourne la masse physique du nœud, ou 0 si le nœud n'existe pas."
+  },
+  "Bale:getDefaultMass": {
+   "en": "Returns the default mass stored for the current fill type.",
+   "fr": "Retourne la masse par défaut mémorisée pour le type de remplissage actuel."
+  },
+  "Bale:getFillType": {
+   "en": "Returns the current fill type index.",
+   "fr": "Retourne l'index du type de remplissage actuel."
+  },
+  "Bale:setReducedComponentMass": {
+   "en": "Sets the node mass to 0.1 when true, otherwise back to the default mass.",
+   "fr": "Fixe la masse du nœud à 0,1 si true, sinon la remet à la masse par défaut."
+  },
+  "Bale:getAllowComponentMassReduction": {
+   "en": "Returns true if the default mass is above 0.1.",
+   "fr": "Retourne true si la masse par défaut dépasse 0,1."
+  },
+  "Bale:setFillType": {
+   "en": "Sets the fill type: applies textures, updates wrapping support, mass and mount force from the type info, and on the server starts fermentation if the type ferments without needing wrapping. Optionally fills the bale to capacity, refreshes mesh visibility and wrapping, and raises the dirty flag.",
+   "fr": "Change le type de remplissage : applique les textures, met à jour le support d'enrubannage, la masse et la force de montage selon les infos du type et, sur le serveur, démarre la fermentation si le type fermente sans exiger l'enrubannage. Remplit éventuellement la balle à sa capacité, actualise visibilité et enrubannage et lève le drapeau dirty."
+  },
+  "Bale:setVariationIndex": {
+   "en": "Applies the variation at the given index (default 1) if it exists: stores the index, sets variation textures and, on the server, raises the dirty flag. Does nothing for an unknown index.",
+   "fr": "Applique la variation à l'index donné (1 par défaut) si elle existe : mémorise l'index, applique les textures de variation et, sur le serveur, lève le drapeau dirty. Sans effet pour un index inconnu."
+  },
+  "Bale:setVariationId": {
+   "en": "Selects a variation by id, compared case-insensitively. A nil id selects the first. Returns true if applied, false if the id is unknown.",
+   "fr": "Sélectionne une variation par son id, comparé sans tenir compte de la casse. Un id nil sélectionne la première. Retourne true si appliquée, false si l'id est inconnu."
+  },
+  "Bale:getVariationId": {
+   "en": "Returns the id of the current variation, or the string NONE if there are none or the index is invalid.",
+   "fr": "Retourne l'id de la variation actuelle, ou la chaîne NONE s'il n'y en a pas ou si l'index est invalide."
+  },
+  "Bale:getCapacity": {
+   "en": "Returns the capacity defined for the current fill type, or 0 if the type has no info.",
+   "fr": "Retourne la capacité définie pour le type de remplissage actuel, ou 0 si le type n'a pas d'infos."
+  },
+  "Bale:getFillLevel": {
+   "en": "Returns the current fill level.",
+   "fr": "Retourne le niveau de remplissage actuel."
+  },
+  "Bale:setFillLevel": {
+   "en": "Stores the fill level and, on the server, raises the fill level dirty flag.",
+   "fr": "Mémorise le niveau de remplissage et, sur le serveur, lève le drapeau dirty du niveau."
+  },
+  "Bale:getFillTypeInfo": {
+   "en": "Returns the info entry of the bale's current fill type, or nil. Note: the fillTypeIndex parameter is ignored; the comparison uses self.fillType.",
+   "fr": "Retourne l'entrée d'infos du type de remplissage actuel de la balle, ou nil. À noter : le paramètre fillTypeIndex est ignoré ; la comparaison utilise self.fillType."
+  },
+  "Bale:setCanBeSold": {
+   "en": "Sets whether the bale can be sold.",
+   "fr": "Définit si la balle peut être vendue."
+  },
+  "Bale:getCanBeSold": {
+   "en": "Returns whether the bale can be sold.",
+   "fr": "Retourne si la balle peut être vendue."
+  },
+  "Bale:setWrappingState": {
+   "en": "Sets the wrapping progress (0 to 1): updates mesh visibility and the wrappingState shader parameter, raises the dirty flag on the server, and starts fermentation at full wrapping for types that require it. Adds the cut activatable when above 0, removes it otherwise.",
+   "fr": "Fixe l'avancement de l'enrubannage (0 à 1) : met à jour la visibilité des maillages et le paramètre shader wrappingState, lève le drapeau dirty sur le serveur et démarre la fermentation à l'enrubannage complet pour les types qui l'exigent. Ajoute l'activatable de coupe au-dessus de 0, le retire sinon."
+  },
+  "Bale:setWrapTextures": {
+   "en": "Stores the wrap diffuse and normal texture paths (keeping the old ones if nil) and applies them to every mesh material when the files exist, otherwise logs a warning. Also resets wrappingState and colorScale shader parameters and raises the dirty flag on the server.",
+   "fr": "Mémorise les chemins des textures diffuse et normale d'enrubannage (en gardant les anciens si nil) et les applique au matériau de chaque maillage si les fichiers existent, sinon journalise un avertissement. Réinitialise aussi les paramètres shader wrappingState et colorScale et lève le drapeau dirty sur le serveur."
+  },
+  "Bale:setColor": {
+   "en": "Sets the wrap color (missing channels default to 1). Only when it differs from the current one it raises the dirty flag on the server and sets the colorScale shader parameter on meshes that have it.",
+   "fr": "Fixe la couleur de l'enrubannage (canaux manquants à 1). Seulement si elle diffère de l'actuelle, lève le drapeau dirty sur le serveur et fixe le paramètre shader colorScale sur les maillages qui l'ont."
+  },
+  "Bale:setIsMissionBale": {
+   "en": "Sets whether the bale comes from a field mission.",
+   "fr": "Définit si la balle provient d'une mission de champ."
+  },
+  "Bale:getMeshNodes": {
+   "en": "Returns the list of tension belt mesh nodes.",
+   "fr": "Retourne la liste des nœuds de maillage de sangle."
+  },
+  "Bale:getSupportsTensionBelts": {
+   "en": "Returns true: bales support tension belts.",
+   "fr": "Retourne true : les balles gèrent les sangles de tension."
+  },
+  "Bale:getTensionBeltNodeId": {
+   "en": "Returns the bale node as the tension belt node.",
+   "fr": "Retourne le nœud de la balle comme nœud de sangle de tension."
+  },
+  "Bale:getBaleSupportsBaleLoader": {
+   "en": "Returns true: bales can be used with bale loaders.",
+   "fr": "Retourne true : les balles peuvent être utilisées avec les chargeurs de balles."
+  },
+  "Bale:getAllowPickup": {
+   "en": "Returns the allowPickup flag.",
+   "fr": "Retourne le drapeau allowPickup."
+  },
+  "Bale:getAdditionalMountingDistance": {
+   "en": "Returns 0 for round bales, or half the height for square bales.",
+   "fr": "Retourne 0 pour les balles rondes, ou la moitié de la hauteur pour les balles carrées."
+  },
+  "Bale:getIsFermenting": {
+   "en": "Returns whether the bale is currently fermenting.",
+   "fr": "Retourne si la balle est actuellement en fermentation."
+  },
+  "Bale:getFermentingPercentage": {
+   "en": "Returns the fermentation progress in the range 0 to 1, or 0 when not fermenting.",
+   "fr": "Retourne l'avancement de la fermentation entre 0 et 1, ou 0 si la balle ne fermente pas."
+  },
+  "Bale:onFermentationUpdate": {
+   "en": "Callback from the bale manager: stores the new percentage and raises the fermentation dirty flag.",
+   "fr": "Callback du gestionnaire de balles : mémorise le nouveau pourcentage et lève le drapeau dirty de fermentation."
+  },
+  "Bale:onFermentationEnd": {
+   "en": "Callback when fermentation ends. On the server, switches the bale to the output fill type of the fermenting info, clears the fermenting flag and raises the dirty flag.",
+   "fr": "Callback à la fin de la fermentation. Sur le serveur, passe la balle au type de sortie des infos de fermentation, efface l'indicateur et lève le drapeau dirty."
+  },
+  "Bale:getCanBeOpened": {
+   "en": "Returns true only if the bale is wrapped, not fermenting and not mounted in any way.",
+   "fr": "Retourne true seulement si la balle est enrubannée, ne fermente pas et n'est montée d'aucune façon."
+  },
+  "Bale:getInteractionPosition": {
+   "en": "Returns the local player's world position, or nothing if the player is in a vehicle.",
+   "fr": "Retourne la position monde du joueur local, ou rien si le joueur est dans un véhicule."
+  },
+  "Bale:getCanInteract": {
+   "en": "Returns true if the player may access the bale and is within Bale.INTERACTION_RADIUS (constant not defined in this dump, UNVERIFIED) of it, on foot.",
+   "fr": "Retourne true si le joueur a accès à la balle et se trouve à pied à moins de Bale.INTERACTION_RADIUS (constante absente de ce dump, NON VÉRIFIÉ) de celle-ci."
+  },
+  "Bale:open": {
+   "en": "Opens the bale by setting the wrapping state to 0.",
+   "fr": "Ouvre la balle en remettant l'état d'enrubannage à 0."
+  },
+  "Bale:resetDetailVisibilityCut": {
+   "en": "Resets the visibilityXZ shader parameter of meshes that have it to a wide range (5, -5, 5, -5), removing any cut.",
+   "fr": "Remet le paramètre shader visibilityXZ des maillages qui l'ont sur une large plage (5, -5, 5, -5), ce qui supprime toute coupe."
+  },
+  "Bale:setDetailVisibilityCutNode": {
+   "en": "Applies a visibility cut on every bale mesh based on the position of a node, along the given axis and direction.",
+   "fr": "Applique une coupe de visibilité à chaque maillage de la balle d'après la position d'un nœud, selon l'axe et le sens donnés."
+  },
+  "Bale.setBaleMeshVisibilityCut": {
+   "en": "Static: sets visibilityXZ on a mesh from the local position of a node (X when axis is 1, else Z, as lower or upper bound by direction), optionally recursing into children.",
+   "fr": "Statique : fixe visibilityXZ sur un maillage d'après la position locale d'un nœud (X si l'axe vaut 1, sinon Z, en borne basse ou haute selon le sens), avec récursion optionnelle sur les enfants."
+  },
+  "Bale:doDensityMapItemAreaUpdate": {
+   "en": "Calls the given function with a parallelogram covering about 40 percent of the bale size (offset by a 0.25 grid), for round or square bales, plus extra arguments. Used to apply density-map operations under the bale.",
+   "fr": "Appelle la fonction donnée avec un parallélogramme couvrant environ 40 pour cent de la taille de la balle (décalé d'une grille de 0,25), pour balles rondes ou carrées, plus des arguments supplémentaires. Sert à appliquer des opérations de carte de densité sous la balle."
+  },
+  "Bale:showInfo": {
+   "en": "Adds lines to an info box: fill type and volume, fermentation percentage if fermenting, and mass.",
+   "fr": "Ajoute des lignes à une boîte d'infos : type et volume, pourcentage de fermentation si la balle fermente, et masse."
+  },
+  "Bale.createDummyBale": {
+   "en": "Static: builds a visual-only bale from a bale XML (no physics, unlinked) with the given fill type, variation, wrapping state and color. Returns the node id and the shared load request id; the caller must release them.",
+   "fr": "Statique : construit une balle uniquement visuelle depuis un XML de balle (sans physique, détachée) avec le type, la variation, l'état et la couleur d'enrubannage donnés. Retourne l'id du nœud et l'id de requête de chargement partagée ; l'appelant doit les libérer."
+  },
+  "Bale.loadFillTypesFromXML": {
+   "en": "Static: reads each bale.fillTypes.fillType entry into the target list: fill type index, capacity (default 1000), mass (XML value divided by 1000), force, wrapping support, materials, textures and optional fermenting output, wrapping requirement and time.",
+   "fr": "Statique : lit chaque entrée bale.fillTypes.fillType dans la liste cible : index du type, capacité (1000 par défaut), masse (valeur XML divisée par 1000), force, support d'enrubannage, matériaux, textures et sortie de fermentation optionnelle, exigence d'enrubannage et durée."
+  },
+  "Bale.loadVariationsFromXML": {
+   "en": "Static: reads bale.variations.variation entries (id and textures) into the target list. Adds a DEFAULT variation if none exist.",
+   "fr": "Statique : lit les entrées bale.variations.variation (id et textures) dans la liste cible. Ajoute une variation DEFAULT s'il n'y en a aucune."
+  },
+  "Bale.setFillTypeTextures": {
+   "en": "Static: for the matching fill type, assigns the base material (alpha material for alpha meshes), applies textures and sets the fillTypeId texture array index on each mesh. Logs a warning if a material is not found.",
+   "fr": "Statique : pour le type correspondant, assigne le matériau de base (matériau alpha pour les maillages alpha), applique les textures et fixe l'index de tableau de textures fillTypeId sur chaque maillage. Journalise un avertissement si un matériau est introuvable."
+  },
+  "Bale.setVariationTextures": {
+   "en": "Static: applies the textures of the variation with the given id (or number index) to all meshes, falling back to the first variation if not found.",
+   "fr": "Statique : applique à tous les maillages les textures de la variation d'id donné (ou d'index numérique), avec repli sur la première variation si elle n'est pas trouvée."
+  },
+  "Bale.setTexturesForNode": {
+   "en": "Static: for a shape node whose material uses the wrapBaleShader, sets diffuse, normal, alpha, bale normal and net-wrap maps from the texture data, or terrain fill type texture arrays when requested.",
+   "fr": "Statique : pour un nœud de forme dont le matériau utilise wrapBaleShader, fixe les cartes diffuse, normale, alpha, normale de balle et de filet d'après les données de texture, ou les tableaux de textures de types de la carte si demandé."
+  },
+  "Bale.loadVisualMeshesFromXML": {
+   "en": "Static: reads bale.baleMeshes.baleMesh entries (node, wrapping support, fill types, tension belt and alpha flags). Returns the mesh list and the list of tension belt mesh nodes.",
+   "fr": "Statique : lit les entrées bale.baleMeshes.baleMesh (nœud, support d'enrubannage, types de remplissage, indicateurs sangle et alpha). Retourne la liste des maillages et celle des nœuds de maillage de sangle."
+  },
+  "Bale.updateVisualMeshVisibility": {
+   "en": "Static: for meshes tied to specific fill types, shows only those matching the fill type (and, when wrapped, only wrap-capable ones) and stores the fill type visibility flag.",
+   "fr": "Statique : pour les maillages liés à des types précis, n'affiche que ceux correspondant au type (et, si enrubannée, seulement ceux compatibles avec l'enrubannage) et mémorise l'indicateur de visibilité par type."
+  },
+  "Bale.updateVisualMeshWrappingState": {
+   "en": "Static: sets the wrappingState shader parameter on all meshes and, when above 0, the colorScale parameter from the given color (default 0.85 grey).",
+   "fr": "Statique : fixe le paramètre shader wrappingState sur tous les maillages et, au-dessus de 0, le paramètre colorScale d'après la couleur donnée (gris 0,85 par défaut)."
+  },
+  "BaleActivatable.new": {
+   "en": "Creates the activatable for a bale with the cut-bale action text.",
+   "fr": "Crée l'activatable d'une balle avec le texte d'action de coupe de balle."
+  },
+  "BaleActivatable:getIsActivatable": {
+   "en": "Returns true if the player can interact with the bale and the bale can be opened.",
+   "fr": "Retourne true si le joueur peut interagir avec la balle et que la balle peut être ouverte."
+  },
+  "BaleActivatable:getDistance": {
+   "en": "Returns the horizontal (XZ) distance between the given position and the bale, or math.huge if the bale has no node.",
+   "fr": "Retourne la distance horizontale (XZ) entre la position donnée et la balle, ou math.huge si la balle n'a pas de nœud."
+  },
+  "BaleActivatable:run": {
+   "en": "Opens the bale directly on the server, or on a client sends a BaleOpenEvent to the server.",
+   "fr": "Ouvre directement la balle sur le serveur, ou envoie un BaleOpenEvent au serveur depuis un client."
+  }
+ }
+}

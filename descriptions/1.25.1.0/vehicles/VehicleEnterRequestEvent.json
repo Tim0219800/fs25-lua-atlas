@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/VehicleEnterRequestEvent.lua",
+ "module": {
+  "en": "Network event a client sends to the server to ask to enter a vehicle, with the player style, farm id and a force flag. The server validates the request, records the controller (owner connection, farm, user) and answers with `VehicleEnterResponseEvent`. Sent on the main channel.",
+  "fr": "Événement réseau qu'un client envoie au serveur pour demander à monter dans un véhicule, avec le style du joueur, l'identifiant de ferme et un indicateur de forçage. Le serveur valide la demande, enregistre le contrôleur (connexion propriétaire, ferme, utilisateur) et répond par `VehicleEnterResponseEvent`. Envoyé sur le canal principal."
+ },
+ "fonctions": {
+  "VehicleEnterRequestEvent.emptyNew": {
+   "en": "Creates an empty event instance on the main network channel.",
+   "fr": "Crée une instance d'événement vide sur le canal réseau principal."
+  },
+  "VehicleEnterRequestEvent.new": {
+   "en": "Builds the request from vehicle, `playerStyle`, `farmId` and optional `force` (defaults to false); also stores the vehicle's network object id.",
+   "fr": "Construit la demande à partir du véhicule, de `playerStyle`, `farmId` et de `force` optionnel (faux par défaut) ; stocke aussi l'identifiant réseau du véhicule."
+  },
+  "VehicleEnterRequestEvent:writeStream": {
+   "en": "Writes the vehicle object id, the farm id, the player style and the force flag.",
+   "fr": "Écrit l'identifiant réseau du véhicule, l'identifiant de ferme, le style du joueur et l'indicateur de forçage."
+  },
+  "VehicleEnterRequestEvent:readStream": {
+   "en": "Reads object id, farm id, player style (creating a `PlayerStyle` if needed) and force flag, resolves the vehicle and calls `run`.",
+   "fr": "Lit l'identifiant d'objet, la ferme, le style du joueur (crée un `PlayerStyle` si besoin) et l'indicateur de forçage, retrouve le véhicule puis appelle `run`."
+  },
+  "VehicleEnterRequestEvent:run": {
+   "en": "Server side: ignores the request if the vehicle is unsynchronized, not yet a ghost object for that connection (unless forced), lacks `spec_enterable` or is already controlled. Otherwise sets owner connection, farm and user, then sends `VehicleEnterResponseEvent` to the requester (owner) and broadcasts one to the others.",
+   "fr": "Côté serveur : ignore la demande si le véhicule n'est pas synchronisé, pas encore un objet fantôme pour cette connexion (sauf forçage), sans `spec_enterable` ou déjà contrôlé. Sinon définit connexion propriétaire, ferme et utilisateur, puis envoie `VehicleEnterResponseEvent` au demandeur (propriétaire) et en diffuse un aux autres."
+  }
+ }
+}

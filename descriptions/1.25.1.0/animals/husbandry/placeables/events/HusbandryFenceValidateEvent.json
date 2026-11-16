@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/husbandry/placeables/events/HusbandryFenceValidateEvent.lua",
+ "module": {
+  "en": "Request/response event pair for validating a husbandry fence. A client sends the placeable to the server, which tries to finalize the fence and answers with a success bool that the client publishes on the message center.",
+  "fr": "Paire requête/réponse pour valider la clôture d'un élevage. Un client envoie le placeable au serveur, qui tente de finaliser la clôture et répond par un booléen de réussite que le client publie sur le message center."
+ },
+ "fonctions": {
+  "HusbandryFenceValidateEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "HusbandryFenceValidateEvent.new": {
+   "en": "Creates the client-to-server request holding the placeable to validate. Note: `run` also calls `HusbandryFenceValidateEvent.newServerToClient`, which is not defined in this file (UNVERIFIED, may be missing in the dump or a bug).",
+   "fr": "Crée la requête client vers serveur contenant le placeable à valider. À noter : `run` appelle aussi `HusbandryFenceValidateEvent.newServerToClient`, qui n'est pas définie dans ce fichier (NON VÉRIFIÉ, absente du dump ou bug)."
+  },
+  "HusbandryFenceValidateEvent:readStream": {
+   "en": "If the sender is a client, reads the placeable node object; if the sender is the server, reads the success bool. Then runs the event.",
+   "fr": "Si l'émetteur est un client, lit l'objet-noeud du placeable ; si c'est le serveur, lit le booléen de réussite. Puis exécute l'événement."
+  },
+  "HusbandryFenceValidateEvent:writeStream": {
+   "en": "On a client connection to the server, writes the placeable node object; otherwise writes `self.success` as a bool.",
+   "fr": "Sur une connexion client vers serveur, écrit l'objet-noeud du placeable ; sinon écrit `self.success` comme booléen."
+  },
+  "HusbandryFenceValidateEvent:run": {
+   "en": "Client: publishes `HusbandryFenceValidateEvent` with the success value on `g_messageCenter`. Server: calls `tryFinalizeFence()` on the placeable and sends the result back to the requesting connection.",
+   "fr": "Client : publie `HusbandryFenceValidateEvent` avec la valeur de réussite sur `g_messageCenter`. Serveur : appelle `tryFinalizeFence()` sur le placeable et renvoie le résultat à la connexion demandeuse."
+  }
+ }
+}

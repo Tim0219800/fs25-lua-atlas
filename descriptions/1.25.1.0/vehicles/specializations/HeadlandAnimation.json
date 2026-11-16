@@ -1,0 +1,37 @@
+{
+ "fichier": "vehicles/specializations/HeadlandAnimation.lua",
+ "module": {
+  "en": "Vehicle specialization that plays configured animations when the vehicle turns on the headland, detected from the steering amount with activation and deactivation delays and thresholds. Optionally the vehicle must be above specific field ground types. It is configured under vehicle.headlandAnimation and relies on the animation system of the vehicle (playAnimation, getAnimationTime). It has no prerequisite and no network code of its own.",
+  "fr": "Spécialisation de véhicule qui joue des animations configurées quand le véhicule tourne en bout de champ, détecté d'après l'amplitude du braquage avec des seuils et des délais d'activation et de désactivation. Le véhicule peut en option devoir se trouver sur certains types de sol de champ. Elle se configure sous vehicle.headlandAnimation et s'appuie sur le système d'animation du véhicule (playAnimation, getAnimationTime). Sans prérequis ni code réseau propre."
+ },
+ "fonctions": {
+  "HeadlandAnimation.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite on other specializations.",
+   "fr": "Renvoie toujours true : aucun prérequis envers d'autres spécialisations."
+  },
+  "HeadlandAnimation.initSpecialization": {
+   "en": "Registers the XML schema under vehicle.headlandAnimation: activation and deactivation delays (time), steering thresholds (0 to 1), required ground types and the list of animations with name and speed.",
+   "fr": "Enregistre le schéma XML sous vehicle.headlandAnimation : délais d'activation et de désactivation (temps), seuils de braquage (0 à 1), types de sol requis et liste d'animations avec nom et vitesse."
+  },
+  "HeadlandAnimation.registerFunctions": {
+   "en": "Empty: the specialization adds no vehicle functions.",
+   "fr": "Vide : la spécialisation n'ajoute aucune fonction de véhicule."
+  },
+  "HeadlandAnimation.registerOverwrittenFunctions": {
+   "en": "Empty: nothing is overridden.",
+   "fr": "Vide : rien n'est surchargé."
+  },
+  "HeadlandAnimation.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad and onUpdate.",
+   "fr": "Abonne la spécialisation à onLoad et onUpdate."
+  },
+  "HeadlandAnimation:onLoad": {
+   "en": "If a headlandAnimation node exists, loads delays, angles, the required FieldGroundType names (warning on unknown names) and the animation list. Otherwise removes the onUpdate listener. Note: the ground type attribute is split without a nil check, so omitting it would raise an error.",
+   "fr": "Si un nœud headlandAnimation existe, charge les délais, angles, les noms de FieldGroundType requis (avertissement si nom inconnu) et la liste d'animations. Sinon retire l'écouteur onUpdate. À noter : l'attribut des types de sol est découpé sans test de nil, son omission provoquerait donc une erreur."
+  },
+  "HeadlandAnimation:onUpdate": {
+   "en": "Each frame, runs a timer from the steering amount (rotatedTime) and the ground type below the vehicle to decide the headland state, then plays all animations forward or in reverse when that state changes. Note: it tests spec.headlandRequiredDensityBits, which is never assigned in this file.",
+   "fr": "À chaque frame, fait tourner un minuteur selon l'amplitude de braquage (rotatedTime) et le type de sol sous le véhicule pour décider de l'état de fourrière, puis joue toutes les animations en avant ou en arrière quand cet état change. À noter : il teste spec.headlandRequiredDensityBits, jamais assigné dans ce fichier."
+  }
+ }
+}

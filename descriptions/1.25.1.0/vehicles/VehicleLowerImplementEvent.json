@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/VehicleLowerImplementEvent.lua",
+ "module": {
+  "en": "Network event synchronizing the lowering or raising of an implement on a given attacher joint. It carries the vehicle, a signed 8-bit joint index and the move-down flag, and calls `setJointMoveDown`. The server rebroadcasts events received from clients.",
+  "fr": "Événement réseau synchronisant l'abaissement ou le relevage d'un outil sur une articulation d'attelage donnée. Il transporte le véhicule, un indice d'articulation signé sur 8 bits et l'indicateur de descente, et appelle `setJointMoveDown`. Le serveur rediffuse les événements reçus des clients."
+ },
+ "fonctions": {
+  "VehicleLowerImplementEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream deserialization.",
+   "fr": "Crée une instance d'événement vide pour la désérialisation depuis un flux."
+  },
+  "VehicleLowerImplementEvent.new": {
+   "en": "Builds the event from vehicle, joint index and `moveDown` (true to lower).",
+   "fr": "Construit l'événement à partir du véhicule, de l'indice d'articulation et de `moveDown` (vrai pour abaisser)."
+  },
+  "VehicleLowerImplementEvent:readStream": {
+   "en": "Reads the vehicle, a signed 8-bit joint index and the move-down flag, then calls `run`.",
+   "fr": "Lit le véhicule, un indice d'articulation signé sur 8 bits et l'indicateur de descente, puis appelle `run`."
+  },
+  "VehicleLowerImplementEvent:writeStream": {
+   "en": "Writes the vehicle object, the signed 8-bit joint index and the move-down flag.",
+   "fr": "Écrit l'objet véhicule, l'indice d'articulation signé sur 8 bits et l'indicateur de descente."
+  },
+  "VehicleLowerImplementEvent:run": {
+   "en": "If the vehicle is synchronized, calls `setJointMoveDown(jointIndex, moveDown, true)` (no event re-sent). On the server it also rebroadcasts to the other clients.",
+   "fr": "Si le véhicule est synchronisé, appelle `setJointMoveDown(jointIndex, moveDown, true)` (sans renvoi d'événement). Sur le serveur, rediffuse aussi aux autres clients."
+  },
+  "VehicleLowerImplementEvent.sendEvent": {
+   "en": "Static helper: unless `noEventSend` is true, the server broadcasts the event and a client sends it to the server.",
+   "fr": "Aide statique : sauf si `noEventSend` est vrai, le serveur diffuse l'événement et un client l'envoie au serveur."
+  }
+ }
+}

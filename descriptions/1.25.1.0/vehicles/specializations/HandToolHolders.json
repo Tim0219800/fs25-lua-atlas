@@ -1,0 +1,53 @@
+{
+ "fichier": "vehicles/specializations/HandToolHolders.lua",
+ "module": {
+  "en": "Vehicle specialization that gives a vehicle one or more hand tool holders, created through the HandToolHolder class from the vehicle XML (optionally per configuration). It names each holder after the vehicle and brand, saves and restores their contents, synchronizes them to joining clients, and forwards the owner farm. It raises the events onHandToolStoredInHolder and onHandToolTakenFromHolder. It declares no prerequisitesPresent in this file.",
+  "fr": "Spécialisation de véhicule qui donne à un véhicule un ou plusieurs supports d'outils à main, créés via la classe HandToolHolder depuis le XML du véhicule (éventuellement par configuration). Elle nomme chaque support d'après le véhicule et la marque, sauvegarde et restaure leur contenu, les synchronise aux clients qui rejoignent et propage la ferme propriétaire. Elle déclenche les événements onHandToolStoredInHolder et onHandToolTakenFromHolder. Aucune prerequisitesPresent n'est déclarée dans ce fichier."
+ },
+ "fonctions": {
+  "HandToolHolders.registerEvents": {
+   "en": "Registers the vehicle events onHandToolStoredInHolder and onHandToolTakenFromHolder.",
+   "fr": "Enregistre les événements de véhicule onHandToolStoredInHolder et onHandToolTakenFromHolder."
+  },
+  "HandToolHolders.registerFunctions": {
+   "en": "Registers onHandToolHolderFinished as a vehicle function, used as the load-finished callback of each holder.",
+   "fr": "Enregistre onHandToolHolderFinished comme fonction de véhicule, utilisée comme callback de fin de chargement de chaque support."
+  },
+  "HandToolHolders.registerOverwrittenFunctions": {
+   "en": "Overrides setOwnerFarmId so the owner is propagated to the holders.",
+   "fr": "Surcharge setOwnerFarmId pour propager le propriétaire aux supports."
+  },
+  "HandToolHolders.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, saveToXMLFile, onWriteStream, onReadStream and onRegistered. Note: no onRegistered function is defined in this file, so that listener may be UNVERIFIED.",
+   "fr": "Abonne aux événements onLoad, onDelete, saveToXMLFile, onWriteStream, onReadStream et onRegistered. À noter : aucune fonction onRegistered n'est définie dans ce fichier, cet écouteur est donc NON VÉRIFIÉ."
+  },
+  "HandToolHolders:onLoad": {
+   "en": "Picks the holder configuration (falling back to the plain vehicle.handToolHolders node), builds a display name from brand and vehicle name, and starts loading every handToolHolder asynchronously with a loading task.",
+   "fr": "Choisit la configuration des supports (repli sur le nœud vehicle.handToolHolders), construit un nom d'affichage à partir de la marque et du véhicule et lance le chargement asynchrone de chaque handToolHolder avec une tâche de chargement."
+  },
+  "HandToolHolders:onHandToolHolderFinished": {
+   "en": "Load-finished callback: sets the holder's owner farm, hooks store and pickup callbacks to the two vehicle events, adds it to the list and restores its saved state matching its index. Always closes the loading task.",
+   "fr": "Callback de fin de chargement : définit la ferme propriétaire du support, relie ses callbacks de dépôt et de prise aux deux événements du véhicule, l'ajoute à la liste et restaure son état sauvegardé selon son indice. Termine toujours la tâche de chargement."
+  },
+  "HandToolHolders:onDelete": {
+   "en": "Deletes every hand tool holder and clears the list.",
+   "fr": "Supprime chaque support d'outil à main et vide la liste."
+  },
+  "HandToolHolders:saveToXMLFile": {
+   "en": "Saves each holder under handToolHolder entries with a 1-based index attribute, delegating the content to the holder.",
+   "fr": "Sauvegarde chaque support dans des entrées handToolHolder avec un attribut d'indice base 1, en déléguant le contenu au support."
+  },
+  "HandToolHolders:onWriteStream": {
+   "en": "Server side: writes each holder's network id and state to the connecting client and registers the holder object in that stream.",
+   "fr": "Côté serveur : écrit l'identifiant réseau et l'état de chaque support pour le client qui se connecte et enregistre l'objet dans ce flux."
+  },
+  "HandToolHolders:onReadStream": {
+   "en": "Client side: reads each holder's network id and state, then finishes registering the holder object with the client.",
+   "fr": "Côté client : lit l'identifiant réseau et l'état de chaque support, puis termine l'enregistrement de l'objet auprès du client."
+  },
+  "HandToolHolders:setOwnerFarmId": {
+   "en": "Calls the parent, then passes the same owner farm id to every holder without sending another network event.",
+   "fr": "Appelle le parent, puis transmet le même identifiant de ferme propriétaire à chaque support sans envoyer d'autre événement réseau."
+  }
+ }
+}

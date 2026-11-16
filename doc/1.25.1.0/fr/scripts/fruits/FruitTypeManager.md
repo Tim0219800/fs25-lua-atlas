@@ -1,0 +1,46 @@
+# fruits/FruitTypeManager.lua
+
+*[English version](../../../scripts/fruits/FruitTypeManager.md)*
+
+Source: `dataS/scripts/fruits/FruitTypeManager.lua` — FS25 1.25.1.0
+
+✍ Gestionnaire (parent AbstractManager) qui possède tous les types de fruits, catégories de types de fruits et convertisseurs fruit vers type de remplissage. Il charge les types de fruits depuis maps_fruitTypes.xml de base et depuis le XML de la carte, fusionne les remplacements de mods, et expose des recherches par index, nom et type de remplissage, ainsi que des aides pour catégories et convertisseurs. Il crée aussi les tables globales FruitType, FruitTypeCategory et FruitTypeConverter (nom vers index). Plusieurs méthodes qu'il appelle (addFruitType, loadMapFruitTypes, loadMapCategoriesAndConverters, loadCategoriesFromXML, loadConvertersFromXML, initializeFruitTypeConverters) ne sont pas définies dans ce dump (NON VÉRIFIÉ).
+
+- **FruitTypeManager** hérite de `AbstractManager` (l.43)
+
+## Fonctions
+
+| Fonction | Ligne | Description |
+|---|---|---|
+| `FruitTypeManager.new(customMt: table?) → any` | 49 | ✍ Constructeur. Crée le gestionnaire via AbstractManager.new avec la métatable de cette classe. |
+| `FruitTypeManager:initDataStructures()` | 57 | ✍ Réinitialise toutes les tables de recherche (types de fruits par index, nom, type de remplissage, type de densité, fichier, convertisseurs, données d'andain, catégories) et définit les globales FruitType (avec UNKNOWN = 0), FruitTypeCategory et FruitTypeConverter sur les tables nom vers index. |
+| `FruitTypeManager:loadDefaultTypes()` | 93 | ✍ Charge les types de fruits, catégories et convertisseurs du jeu de base depuis data/maps/maps_fruitTypes.xml, marqués comme types de base. |
+| `FruitTypeManager:loadMapData(xmlFileHandle: integer, missionInfo: table, baseDirectory: string?) → boolean` | 105 | ✍ Point d'entrée du chargement de carte. Charge d'abord les types de fruits de la carte (stockés comme types de fruits de mod), puis les types par défaut, puis les catégories et convertisseurs de la carte, et enfin initialise les convertisseurs. Retourne true. |
+| `FruitTypeManager:loadFruitTypes(xmlFileHandle: integer, missionInfo: table, baseDirectory: string?, isBaseType: boolean?) → boolean` | 208 | ✍ Lit des entrées de types de fruits depuis un handle XML, chacune pointant vers un XML de feuillage chargé dans un FruitTypeDesc et ajouté au gestionnaire. Un type de fruit de mod en attente de même nom remplace celui par défaut. Les types de mod restants sont ajoutés, puis catégories et convertisseurs sont lus. S'arrête à la limite réseau. |
+| `FruitTypeManager:getFruitTypeByIndex(index: integer) → table` | 303 | ✍ Retourne l'objet type de fruit pour un index, ou nil. |
+| `FruitTypeManager:getFruitTypeNameByIndex(index: integer) → string?` | 311 | ✍ Retourne le nom en majuscules d'un type de fruit par index, "UNKNOWN" pour l'index 0, ou nil si l'index est inconnu. |
+| `FruitTypeManager:getFruitTypeByName(name: string) → table` | 328 | ✍ Retourne le type de fruit pour un nom (insensible à la casse), ou nil si le nom est nil ou inconnu. |
+| `FruitTypeManager:getFruitTypes() → table` | 352 | ✍ Retourne la liste de tous les types de fruits. C'est la table interne ; ne pas la modifier. |
+| `FruitTypeManager:getFruitTypeIndexByFillTypeIndex(index: integer) → integer?` | 360 | ✍ Retourne l'index du type de fruit lié à un index de type de remplissage, ou nil si ce type de remplissage n'est pas un fruit. |
+| `FruitTypeManager:getFruitTypeByFillTypeIndex(index: integer) → table?` | 369 | ✍ Retourne l'objet type de fruit correspondant à un index de type de remplissage, ou nil. |
+| `FruitTypeManager:getFillTypeIndexByFruitTypeIndex(index: integer) → integer?` | 378 | ✍ Retourne l'index du type de remplissage d'un type de fruit, ou nil s'il n'y en a pas. |
+| `FruitTypeManager:getFillTypeByFruitTypeIndex(index: integer) → table?` | 391 | ✍ Retourne l'objet type de remplissage d'un index de type de fruit, ou nil. |
+| `FruitTypeManager:getFillTypeNameByFruitTypeIndex(index: integer) → string?` | 400 | ✍ Retourne le nom du type de remplissage d'un index de type de fruit, ou nil. À noter : la variable locale s'appelle fillTypeIndex mais contient l'objet type de remplissage. |
+| `FruitTypeManager:getCutHeightByFruitTypeIndex(index: integer, isForageCutter: boolean?) → number` | 411 | ✍ Retourne la hauteur de coupe en mètres d'un type de fruit. Avec isForageCutter, privilégie la hauteur de coupe fourragère. Vaut 0,15 par défaut si le type de fruit est inconnu. |
+| `FruitTypeManager:addFruitTypeCategory(name: string, isBaseType: boolean) → integer?` | 439 | ✍ Enregistre une catégorie de types de fruits par nom (validé, en majuscules) et retourne son index. Retourne nil avec un avertissement pour un nom invalide, ou pour un nom existant quand isBaseType vaut true ; sinon l'index de la catégorie existante est réutilisé. |
+| `FruitTypeManager:addFruitTypeToCategory(fruitTypeIndex: integer, categoryIndex: integer) → table` | 470 | ✍ Ajoute un index de type de fruit à une catégorie. Retourne true si les deux arguments sont non nil, sinon false. Ne vérifie pas que la catégorie existe et n'évite pas les doublons. |
+| `FruitTypeManager:getFruitTypesByCategoryNames(names: string, warning: string) → array` | 483 | ✍ Prend des noms de catégories séparés par des espaces et retourne la liste des types de fruits qu'elles contiennent, sans doublons. Les catégories inconnues journalisent éventuellement le format d'avertissement fourni. |
+| `FruitTypeManager:getFruitTypeIndicesByCategoryNames(names: string, warning: string) → table` | 513 | ✍ Comme getFruitTypesByCategoryNames mais retourne des index de types de fruits au lieu d'objets. |
+| `FruitTypeManager:getFruitTypesByNames(names: string, warning: string?) → array` | 529 | ✍ Prend des noms de types de fruits séparés par des espaces et retourne les types de fruits correspondants, sans doublons. Les noms inconnus journalisent éventuellement le format d'avertissement fourni. |
+| `FruitTypeManager:getFruitTypeIndicesByNames(names: string, warning: string?) → array` | 556 | ✍ Comme getFruitTypesByNames mais retourne des index de types de fruits. |
+| `FruitTypeManager:getFillTypesByFruitTypeNames(names: string, warning: string?) → table` | 572 | ✍ Prend des noms de types de fruits séparés par des espaces et retourne leurs objets types de remplissage, sans doublons. Les noms sans type de fruit ou de remplissage journalisent éventuellement le format d'avertissement. |
+| `FruitTypeManager:getFillTypeIndicesByFruitTypeNames(names: string, warning: string?) → table` | 602 | ✍ Comme getFillTypesByFruitTypeNames mais retourne des index de types de remplissage. |
+| `FruitTypeManager:getFillTypesByFruitTypeCategoryNames(fruitTypeCategoryNames: string, warning: string?) → table` | 618 | ✍ Prend des noms de catégories séparés par des espaces et retourne les types de remplissage de tous les types de fruits qu'elles contiennent, sans doublons. Les catégories inconnues journalisent éventuellement le format d'avertissement. |
+| `FruitTypeManager:getFillTypeIndicesByFruitTypeCategoryName(fruitTypeCategoryNames: string, warning: string?) → table` | 649 | ✍ Comme getFillTypesByFruitTypeCategoryNames mais retourne des index de types de remplissage. Le nom est au singulier bien qu'il accepte plusieurs noms de catégories. |
+| `FruitTypeManager:isFillTypeWindrow(index: integer) → boolean` | 665 | ✍ Retourne true si l'index de type de remplissage est enregistré comme type de remplissage d'andain ; false pour nil ou inconnu. |
+| `FruitTypeManager:getWindrowFillTypeIndexByFruitTypeIndex(index: integer) → integer?` | 677 | ✍ Retourne l'index du type de remplissage d'andain d'un type de fruit, ou nil s'il n'a pas d'andain. |
+| `FruitTypeManager:getFillTypeLiterPerSqm(fillTypeIndex: integer, defaultValue: number) → number` | 688 | ✍ Retourne les litres par mètre carré d'un type de remplissage : la valeur d'andain si son type de fruit a un andain, sinon la valeur de récolte. Retourne defaultValue si le type de remplissage n'a pas de type de fruit. |
+| `FruitTypeManager:addFruitTypeConverter(name: string, isBaseType: boolean) → integer` | 727 | ✍ Enregistre un convertisseur par nom (validé, en majuscules) et retourne son index. Retourne nil avec un avertissement pour un nom invalide ou, si isBaseType vaut true, un nom existant ; sinon réutilise l'index existant. |
+| `FruitTypeManager:addFruitTypeConversion(converter: integer, fruitTypeName: integer, fillTypeName: integer, conversionFactor: number)` | 758 | ✍ Met en file une conversion type de fruit vers type de remplissage avec un facteur pour un convertisseur. Elle est stockée sous forme de noms et résolue plus tard par initializeFruitTypeConverters (absent de ce dump). |
+| `FruitTypeManager:getConverterDataByName(converterName: string) → table` | 772 | ✍ Retourne la table de données du convertisseur pour un nom de convertisseur (insensible à la casse), ou nil. |
+| `FruitTypeManager:addModFoliageType(name: string, filename: string, requiredMapModName: string?)` | 781 | ✍ Enregistre un type de feuillage supplémentaire (nom, chemin XML, nom optionnel du mod de carte requis) à charger plus tard. Ne fait que mémoriser la demande ici ; le code de chargement n'est pas dans ce fichier. |

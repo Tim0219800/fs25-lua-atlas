@@ -1,0 +1,29 @@
+{
+ "fichier": "player/networking/PlayerLocalNetworkComponent.lua",
+ "module": {
+  "en": "Client-side network component that exists only for the player controlled locally. It records per-tick movement history so that, when the server sends back an authoritative position, the client can replay the not-yet-acknowledged movement on top of it (reconciliation).",
+  "fr": "Composant réseau côté client, présent uniquement pour le joueur contrôlé localement. Il enregistre l'historique de mouvement par tick afin que, lorsque le serveur renvoie une position faisant autorité, le client rejoue par-dessus le mouvement non encore acquitté (réconciliation)."
+ },
+ "fonctions": {
+  "PlayerLocalNetworkComponent.new": {
+   "en": "Constructor. Creates the component for the given player with an empty tick history and zeroed accumulated movement.",
+   "fr": "Constructeur. Crée le composant pour le joueur donné avec un historique de ticks vide et un mouvement cumulé nul."
+  },
+  "PlayerLocalNetworkComponent:update": {
+   "en": "Per-frame update. Opens a new history entry if a tick was requested (trimming the history to a maximum length), then accumulates the mover's position delta into both the outgoing total and the current entry.",
+   "fr": "Mise à jour à chaque frame. Ouvre une nouvelle entrée d'historique si un tick a été demandé (en limitant la taille de l'historique), puis cumule le delta de position du mover dans le total sortant et dans l'entrée courante."
+  },
+  "PlayerLocalNetworkComponent:updateTick": {
+   "en": "Per-tick hook. It only flags that a new history entry must be created on the next frame update.",
+   "fr": "Appelé à chaque tick. Se contente de signaler qu'une nouvelle entrée d'historique doit être créée à la prochaine mise à jour de frame."
+  },
+  "PlayerLocalNetworkComponent:writeUpdateStream": {
+   "en": "Sends to the server the current tick index, the accumulated movement, compressed yaw, first-person flag and crouch flag, then resets the accumulated movement. Only valid for the owning player.",
+   "fr": "Envoie au serveur l'index de tick courant, le mouvement cumulé, le lacet compressé, l'indicateur de vue à la première personne et l'indicateur d'accroupissement, puis remet le mouvement cumulé à zéro. Valable uniquement pour le joueur propriétaire."
+  },
+  "PlayerLocalNetworkComponent:readUpdateStream": {
+   "en": "Reads the server's answer (acknowledged tick, controlled/skip flags, authoritative position), sets the mover position, drops acknowledged history and re-applies the remaining history through the capsule controller, aggregated into about five steps.",
+   "fr": "Lit la réponse du serveur (tick acquitté, indicateurs controlled/skip, position faisant autorité), fixe la position du mover, supprime l'historique acquitté et ré-applique le reste via le contrôleur capsule, regroupé en environ cinq étapes."
+  }
+ }
+}

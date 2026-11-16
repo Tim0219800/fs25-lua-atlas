@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/AdditionalToolConnections.lua",
+ "module": {
+  "en": "Specialization for tools that have a moving part which must follow an extra connection point on the tractor's attacher joint (for example a second link arm). The tool declares vehicle.additionalToolConnections.connection entries with an id and a movingPartNode; the attacher joint declares additionalToolConnection entries with the same id and a target node. It requires AttacherJoints or Attachable. On attach the moving part's reference node is switched and object changes are enabled; on detach they are reverted.",
+  "fr": "Spécialisation pour les outils dont une pièce mobile doit suivre un point de connexion supplémentaire sur l'articulation d'attache du tracteur (par exemple un second bras). L'outil déclare des entrées vehicle.additionalToolConnections.connection avec un id et un movingPartNode ; l'articulation d'attache déclare des entrées additionalToolConnection avec le même id et un nœud cible. Elle exige AttacherJoints ou Attachable. À l'attelage, le nœud de référence de la pièce mobile est changé et les changements d'objet sont activés ; au dételage, ils sont annulés."
+ },
+ "fonctions": {
+  "AdditionalToolConnections.prerequisitesPresent": {
+   "en": "Returns true if the vehicle type has either AttacherJoints or Attachable.",
+   "fr": "Renvoie vrai si le type de véhicule possède AttacherJoints ou Attachable."
+  },
+  "AdditionalToolConnections.initSpecialization": {
+   "en": "Registers the XML keys for the tool-side connections (id, movingPartNode, object changes) and, through a delayed registration, the additionalToolConnection id/node keys on each attacher joint.",
+   "fr": "Déclare les clés XML des connexions côté outil (id, movingPartNode, changements d'objet) et, par enregistrement différé, les clés id/node additionalToolConnection sur chaque articulation d'attache."
+  },
+  "AdditionalToolConnections.registerFunctions": {
+   "en": "Empty: registers no new vehicle function.",
+   "fr": "Vide : n'enregistre aucune nouvelle fonction de véhicule."
+  },
+  "AdditionalToolConnections.registerOverwrittenFunctions": {
+   "en": "Overrides loadAttacherJointFromXML so that attacher joints also read their additional connections.",
+   "fr": "Surcharge loadAttacherJointFromXML pour que les articulations d'attache lisent aussi leurs connexions supplémentaires."
+  },
+  "AdditionalToolConnections.registerEventListeners": {
+   "en": "Subscribes to onPostLoad, onPostAttach and onPreDetach.",
+   "fr": "Abonne la spécialisation à onPostLoad, onPostAttach et onPreDetach."
+  },
+  "AdditionalToolConnections:onPostLoad": {
+   "en": "Reads each connection, looks up its moving part and stores id, node and object changes (initially disabled). Logs an XML warning when the id, node or moving part is missing.",
+   "fr": "Lit chaque connexion, retrouve sa pièce mobile et mémorise id, nœud et changements d'objet (désactivés au départ). Journalise un avertissement XML si l'id, le nœud ou la pièce mobile manque."
+  },
+  "AdditionalToolConnections:loadAttacherJointFromXML": {
+   "en": "Override: calls the parent loader and, if it succeeds, fills attacherJoint.additionalToolConnections with id to node pairs. Returns false when the parent fails.",
+   "fr": "Surcharge : appelle le chargeur parent et, s'il réussit, remplit attacherJoint.additionalToolConnections avec des paires id vers nœud. Renvoie faux si le parent échoue."
+  },
+  "AdditionalToolConnections:onPostAttach": {
+   "en": "For each tool connection whose id exists on the used attacher joint, points the moving part's reference node at the joint's node and enables the object changes.",
+   "fr": "Pour chaque connexion de l'outil dont l'id existe sur l'articulation utilisée, fait pointer le nœud de référence de la pièce mobile vers le nœud de l'articulation et active les changements d'objet."
+  },
+  "AdditionalToolConnections:onPreDetach": {
+   "en": "Before detaching, clears the reference node of every connection's moving part and disables the object changes.",
+   "fr": "Avant le dételage, efface le nœud de référence de la pièce mobile de chaque connexion et désactive les changements d'objet."
+  }
+ }
+}

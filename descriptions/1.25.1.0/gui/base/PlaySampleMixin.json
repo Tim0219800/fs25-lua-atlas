@@ -1,0 +1,33 @@
+{
+ "fichier": "gui/base/PlaySampleMixin.lua",
+ "module": {
+  "en": "GuiMixin that lets a GuiElement ask for UI sound samples through a replaceable callback; muting is possible per element. Sample names are expected to come from `GuiSoundPlayer.SOUND_SAMPLES` (defined elsewhere, UNVERIFIED). Client-side only.",
+  "fr": "Mixin GuiMixin permettant à un GuiElement de demander des sons d'interface via un callback remplaçable ; la coupure est possible par élément. Les noms d'échantillons doivent venir de `GuiSoundPlayer.SOUND_SAMPLES` (défini ailleurs, NON VÉRIFIÉ). Côté client uniquement."
+ },
+ "fonctions": {
+  "PlaySampleMixin.new": {
+   "en": "Creates the mixin instance through `GuiMixin.new` with its own metatable.",
+   "fr": "Crée l'instance du mixin via `GuiMixin.new` avec sa propre métatable."
+  },
+  "PlaySampleMixin:addTo": {
+   "en": "Attaches the mixin to a GuiElement and adds `setPlaySampleCallback`, `playSample` and `disablePlaySample`; the callback starts as the empty `NO_CALLBACK`. Returns whether it was added.",
+   "fr": "Attache le mixin à un GuiElement et ajoute `setPlaySampleCallback`, `playSample` et `disablePlaySample` ; le callback démarre sur `NO_CALLBACK`, vide. Renvoie si l'ajout a eu lieu."
+  },
+  "PlaySampleMixin.setPlaySampleCallback": {
+   "en": "Sets the function called with a sample name whenever the element wants to play a UI sound.",
+   "fr": "Définit la fonction appelée avec un nom d'échantillon chaque fois que l'élément veut jouer un son d'interface."
+  },
+  "PlaySampleMixin.playSample": {
+   "en": "Calls the play callback with the sample name unless the element's `soundDisabled` field is truthy.",
+   "fr": "Appelle le callback de lecture avec le nom de l'échantillon sauf si le champ `soundDisabled` de l'élément est vrai."
+  },
+  "PlaySampleMixin.disablePlaySample": {
+   "en": "Replaces the callback with `NO_CALLBACK`; a later `setPlaySampleCallback` can set a new one again.",
+   "fr": "Remplace le callback par `NO_CALLBACK` ; un `setPlaySampleCallback` ultérieur peut en définir un nouveau."
+  },
+  "PlaySampleMixin:clone": {
+   "en": "Copies the play callback from a source element to its clone.",
+   "fr": "Copie le callback de lecture d'un élément source vers son clone."
+  }
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/StumpCutterLight.lua",
+ "module": {
+  "en": "Simplified stump cutter specialization (requires TurnOnVehicle) that removes tree stumps found near a reference node. The server runs asynchronous sphere overlap checks against tree collision, and after a delay replants each found stump as a new tree and deletes the stump. It also lowers controlled-action availability when no stump is in range. Note: the dump has no 'StumpCutterLight = {}' declaration line in this file (UNVERIFIED where the table is created).",
+  "fr": "Spécialisation simplifiée de broyeur de souches (exige TurnOnVehicle) qui retire les souches trouvées près d'un node de référence. Le serveur lance des tests de recouvrement sphérique asynchrones sur la collision des arbres puis, après un délai, replante chaque souche trouvée comme nouvel arbre et supprime la souche. Elle bloque aussi les actions contrôlées quand aucune souche n'est à portée. À noter : le dump ne contient pas la ligne « StumpCutterLight = {} » dans ce fichier (création de la table NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "StumpCutterLight.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type also has the TurnOnVehicle specialization.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède aussi la spécialisation TurnOnVehicle."
+  },
+  "StumpCutterLight.initSpecialization": {
+   "en": "Registers the XML schema: cut reference node, cut radius (default 1), cut time (default 1) and the effects under vehicle.stumpCutterLight.",
+   "fr": "Enregistre le schéma XML : node de référence de coupe, rayon de coupe (1 par défaut), durée de coupe (1 par défaut) et les effets sous vehicle.stumpCutterLight."
+  },
+  "StumpCutterLight.registerFunctions": {
+   "en": "Registers removeTreeStump and stumpCutterLightOverlapCallback on the vehicle type.",
+   "fr": "Enregistre removeTreeStump et stumpCutterLightOverlapCallback sur le type de véhicule."
+  },
+  "StumpCutterLight.registerOverwrittenFunctions": {
+   "en": "Overrides getAreControlledActionsAllowed, getDirtMultiplier, getWearMultiplier and getConsumingLoad.",
+   "fr": "Surcharge getAreControlledActionsAllowed, getDirtMultiplier, getWearMultiplier et getConsumingLoad."
+  },
+  "StumpCutterLight.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdate, onDeactivate, onTurnedOn and onTurnedOff.",
+   "fr": "S'abonne à onLoad, onDelete, onUpdate, onDeactivate, onTurnedOn et onTurnedOff."
+  },
+  "StumpCutterLight:onLoad": {
+   "en": "Reads the cut node, radius and time, initializes the stump list, loads effects on clients and the 'no stump in range' warning text. Removes listeners that are useless on the current side (onUpdate on clients, effect listeners on servers without client).",
+   "fr": "Lit le node, le rayon et la durée de coupe, initialise la liste de souches, charge les effets sur les clients et le texte d'avertissement « aucune souche à portée ». Retire les écouteurs inutiles selon le côté (onUpdate sur les clients, écouteurs d'effets sur un serveur sans client)."
+  },
+  "StumpCutterLight:onDelete": {
+   "en": "Deletes the effects.",
+   "fr": "Supprime les effets."
+  },
+  "StumpCutterLight:onUpdate": {
+   "en": "Server only. While turned on, accumulates the cut timer if stumps were found and, once exceeded with no overlap pending, removes them all and turns off (via controlled actions on platforms with automatic control). Starts a new async sphere overlap when none is pending.",
+   "fr": "Serveur uniquement. Allumé, accumule la minuterie de coupe si des souches sont trouvées et, une fois dépassée sans recouvrement en attente, les retire toutes et éteint (via les actions contrôlées sur les plateformes à contrôle automatique). Lance un nouveau recouvrement sphérique asynchrone si aucun n'est en cours."
+  },
+  "StumpCutterLight:onDeactivate": {
+   "en": "Stops the effects.",
+   "fr": "Arrête les effets."
+  },
+  "StumpCutterLight:onTurnedOn": {
+   "en": "Sets the effect fill type to wood chips and starts the effects.",
+   "fr": "Règle le type de remplissage des effets sur copeaux de bois et lance les effets."
+  },
+  "StumpCutterLight:onTurnedOff": {
+   "en": "Stops the effects.",
+   "fr": "Arrête les effets."
+  },
+  "StumpCutterLight:removeTreeStump": {
+   "en": "Server only. Replants a tree of the stump's tree type at its position with a random yaw, increments the farm's plantedTreeCount stat, then deletes the stump node.",
+   "fr": "Serveur uniquement. Replante un arbre du même type que la souche à sa position avec un lacet aléatoire, incrémente la statistique plantedTreeCount de la ferme, puis supprime le node de la souche."
+  },
+  "StumpCutterLight:stumpCutterLightOverlapCallback": {
+   "en": "Async overlap callback: keeps the object if it is a mesh split shape with the user attribute isTreeStump, then marks the overlap check as finished. Ignored if the vehicle was deleted.",
+   "fr": "Callback du recouvrement asynchrone : retient l'objet s'il s'agit d'un mesh split shape avec l'attribut utilisateur isTreeStump, puis marque le test comme terminé. Ignoré si le véhicule est supprimé."
+  },
+  "StumpCutterLight:getAreControlledActionsAllowed": {
+   "en": "Override: returns false with the 'no stump in range' warning text when no stump is currently found; otherwise defers to the parent.",
+   "fr": "Surcharge : renvoie false avec le texte « aucune souche à portée » quand aucune souche n'est trouvée ; sinon délègue au parent."
+  },
+  "StumpCutterLight:getDirtMultiplier": {
+   "en": "Override adding the work dirt multiplier while turned on.",
+   "fr": "Surcharge ajoutant le multiplicateur de salissure de travail quand le véhicule est allumé."
+  },
+  "StumpCutterLight:getWearMultiplier": {
+   "en": "Override adding the work wear multiplier while turned on.",
+   "fr": "Surcharge ajoutant le multiplicateur d'usure de travail quand le véhicule est allumé."
+  },
+  "StumpCutterLight:getConsumingLoad": {
+   "en": "Override that adds one load entry: 1 while turned on, otherwise 0, and increments the count.",
+   "fr": "Surcharge qui ajoute une entrée de charge : 1 si allumé, sinon 0, et incrémente le compteur."
+  }
+ }
+}

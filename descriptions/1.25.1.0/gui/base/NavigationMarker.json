@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/base/NavigationMarker.lua",
+ "module": {
+  "en": "HUD marker pointing to a world position: it projects the position to the screen, clamps it to the screen border, draws a pulsing marker overlay with an arrow when off-screen, and prints the distance. Only the render method is in this file; the constructor and fields such as `worldPosX` come from elsewhere (UNVERIFIED).",
+  "fr": "Marqueur de HUD qui pointe vers une position du monde : il la projette à l'écran, la limite au bord de l'écran, dessine un overlay pulsant avec une flèche hors champ et affiche la distance. Seule la méthode de rendu figure dans ce fichier ; le constructeur et les champs comme `worldPosX` viennent d'ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "NavigationMarker:render": {
+   "en": "Client-side drawing: returns if hidden, without a local player or closer than `minDistance`. Projects the target via the active camera, clamps to borders, pulses alpha with `g_time`, draws marker, arrow if clamped, and the distance text.",
+   "fr": "Dessin côté client : sort si masqué, sans joueur local ou plus proche que `minDistance`. Projette la cible via la caméra active, la limite aux bords, fait pulser l'alpha avec `g_time`, dessine le marqueur, la flèche si limité, et le texte de distance."
+  }
+ }
+}

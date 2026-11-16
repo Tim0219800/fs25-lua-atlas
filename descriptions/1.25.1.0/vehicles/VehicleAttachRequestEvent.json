@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/VehicleAttachRequestEvent.lua",
+ "module": {
+  "en": "Network event a client sends to the server to request attaching an implement. It carries the attacher vehicle, the attachable and the joint description indices of both. The server then runs `attachImplementFromInfo`; the actual attach is announced to clients by `VehicleAttachEvent`.",
+  "fr": "Événement réseau qu'un client envoie au serveur pour demander l'attelage d'un outil. Il contient le véhicule porteur, l'outil attelable et les indices de description d'articulation des deux. Le serveur exécute alors `attachImplementFromInfo` ; l'attelage effectif est annoncé aux clients par `VehicleAttachEvent`."
+ },
+ "fonctions": {
+  "VehicleAttachRequestEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream deserialization.",
+   "fr": "Crée une instance d'événement vide pour la désérialisation depuis un flux."
+  },
+  "VehicleAttachRequestEvent.new": {
+   "en": "Builds the request from an info table (`attacherVehicle`, `attachable`, `attacherVehicleJointDescIndex`, `attachableJointDescIndex`).",
+   "fr": "Construit la demande à partir d'une table d'informations (`attacherVehicle`, `attachable`, `attacherVehicleJointDescIndex`, `attachableJointDescIndex`)."
+  },
+  "VehicleAttachRequestEvent:readStream": {
+   "en": "Reads both node objects and both 7-bit joint description indices, then calls `run`.",
+   "fr": "Lit les deux objets et les deux indices de description d'articulation sur 7 bits, puis appelle `run`."
+  },
+  "VehicleAttachRequestEvent:writeStream": {
+   "en": "Writes both node objects and both joint description indices (7 bits each) to the stream.",
+   "fr": "Écrit dans le flux les deux objets et les deux indices de description d'articulation (7 bits chacun)."
+  },
+  "VehicleAttachRequestEvent:run": {
+   "en": "Server only: if the attacher vehicle is synchronized, calls `attachImplementFromInfo` with this event as info. Ignored on clients.",
+   "fr": "Serveur uniquement : si le véhicule porteur est synchronisé, appelle `attachImplementFromInfo` avec cet événement comme informations. Ignoré côté client."
+  }
+ }
+}

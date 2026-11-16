@@ -1,0 +1,101 @@
+{
+ "fichier": "vehicles/specializations/PlowPacker.lua",
+ "module": {
+  "en": "Specialization for plows fitted with a packer that can be switched off. It requires the Plow, Cultivator and AnimatedVehicle specializations, reads vehicle.plow.packer from the XML and saves the packer state in the savegame. When the packer is on, the plow works as a cultivator-style packer (via FSDensityMapUtil) and AI ground requirements change. The packer is forced on before turning or folding; state changes are synchronised through PlowPackerStateEvent. The constants CULTIVATED_GROUND_TYPES and CLIENT_DM_UPDATE_RADIUS are used but not defined in the dump (UNVERIFIED).",
+  "fr": "Spécialisation pour les charrues équipées d'un rouleau packer pouvant être désactivé. Elle requiert les spécialisations Plow, Cultivator et AnimatedVehicle, lit vehicle.plow.packer dans le XML et sauvegarde l'état du packer. Packer actif, la charrue travaille comme un outil de type cultivateur (via FSDensityMapUtil) et les exigences de sol de l'IA changent. Le packer est forcé actif avant un demi-tour ou un pliage ; les changements d'état sont synchronisés par PlowPackerStateEvent. Les constantes CULTIVATED_GROUND_TYPES et CLIENT_DM_UPDATE_RADIUS sont utilisées mais non définies dans le dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlowPacker.initSpecialization": {
+   "en": "Registers the XML keys under vehicle.plow.packer (inputAction, deactivateLeft/Right animations, animationSpeed, foldingConfig, partialDeactivated, lowerAnimation) and the savegame keys packerState and lastPackerState.",
+   "fr": "Enregistre les clés XML sous vehicle.plow.packer (inputAction, animations deactivateLeft/Right, animationSpeed, foldingConfig, partialDeactivated, lowerAnimation) et les clés de sauvegarde packerState et lastPackerState."
+  },
+  "PlowPacker.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the Plow, Cultivator and AnimatedVehicle specializations.",
+   "fr": "Retourne true uniquement si le type de véhicule possède les spécialisations Plow, Cultivator et AnimatedVehicle."
+  },
+  "PlowPacker.registerFunctions": {
+   "en": "Adds setPackerState and getIsPackerAllowed to the vehicle type.",
+   "fr": "Ajoute setPackerState et getIsPackerAllowed au type de véhicule."
+  },
+  "PlowPacker.registerOverwrittenFunctions": {
+   "en": "Overrides setRotationMax, setPlowAIRequirements, setFoldState, processCultivatorArea and getUseCultivatorAIRequirements.",
+   "fr": "Surcharge setRotationMax, setPlowAIRequirements, setFoldState, processCultivatorArea et getUseCultivatorAIRequirements."
+  },
+  "PlowPacker.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onReadStream, onWriteStream, onUpdate, onUpdateTick, onRegisterActionEvents and onSetLowered.",
+   "fr": "Abonne aux événements onLoad, onPostLoad, onReadStream, onWriteStream, onUpdate, onUpdateTick, onRegisterActionEvents et onSetLowered."
+  },
+  "PlowPacker:onLoad": {
+   "en": "Reads the packer XML settings. The packer counts as available only if the folding configuration matches and both deactivate animations exist. Starts with the packer active and loads the toggle texts.",
+   "fr": "Lit les réglages XML du packer. Le packer n'est disponible que si la configuration de pliage correspond et que les deux animations de désactivation existent. Démarre avec le packer actif et charge les textes de bascule."
+  },
+  "PlowPacker:onPostLoad": {
+   "en": "Recomputes the AI requirements, then restores packerState and lastPackerState from the savegame unless vehicles are being reset. Applies the restored animation state immediately.",
+   "fr": "Recalcule les exigences IA, puis restaure packerState et lastPackerState depuis la sauvegarde sauf en cas de réinitialisation des véhicules. Applique immédiatement l'état d'animation restauré."
+  },
+  "PlowPacker:saveToXMLFile": {
+   "en": "Writes packerState, and lastPackerState when set, to the savegame, only if the packer is available.",
+   "fr": "Écrit packerState, et lastPackerState s'il est défini, dans la sauvegarde, uniquement si le packer est disponible."
+  },
+  "PlowPacker:onReadStream": {
+   "en": "Client side on join: reads the packer state bool and applies it with animation, if the packer is currently allowed.",
+   "fr": "Côté client à la connexion : lit le booléen d'état du packer et l'applique avec l'animation, si le packer est actuellement autorisé."
+  },
+  "PlowPacker:onWriteStream": {
+   "en": "Server side on join: writes the current packer state bool to the stream when the packer is available.",
+   "fr": "Côté serveur à la connexion : écrit le booléen d'état courant du packer dans le flux quand le packer est disponible."
+  },
+  "PlowPacker:onUpdate": {
+   "en": "Server only. Restores the packer to off after a turn if it was off before, runs a fold change postponed until the packer animations end, and replays the lowering animation if it is out of step.",
+   "fr": "Serveur uniquement. Remet le packer sur désactivé après un demi-tour s'il l'était avant, exécute un pliage différé une fois les animations du packer terminées, et rejoue l'animation d'abaissement si elle est désynchronisée."
+  },
+  "PlowPacker:onUpdateTick": {
+   "en": "Client only. Refreshes the text of the packer action event each tick when the packer is available.",
+   "fr": "Client uniquement. Rafraîchit à chaque tick le texte de l'événement d'action du packer quand il est disponible."
+  },
+  "PlowPacker:setRotationMax": {
+   "en": "Server: if the plow rotation target changes, remembers the packer state in lastPackerState and forces the packer on before calling the parent function.",
+   "fr": "Serveur : si la cible de rotation de la charrue change, mémorise l'état du packer dans lastPackerState et force le packer actif avant d'appeler la fonction parente."
+  },
+  "PlowPacker:setPlowAIRequirements": {
+   "en": "When the packer is on or partly deactivated, calls the parent with PlowPacker.CULTIVATED_GROUND_TYPES (not defined in the dump, UNVERIFIED) as excluded ground types; otherwise passes the given list.",
+   "fr": "Quand le packer est actif ou partiellement désactivé, appelle le parent avec PlowPacker.CULTIVATED_GROUND_TYPES (non défini dans le dump, NON VÉRIFIÉ) comme types de sol exclus ; sinon transmet la liste reçue."
+  },
+  "PlowPacker:setFoldState": {
+   "en": "When folding in a non-turn direction with the packer off, the server turns the packer on and postpones the real fold until its animations end. The fold direction event is still sent to others. Otherwise calls the parent.",
+   "fr": "Lors d'un pliage dans une direction autre que celle du retournement avec le packer désactivé, le serveur réactive le packer et diffère le pliage réel jusqu'à la fin de ses animations. L'événement de direction de pliage est quand même envoyé. Sinon appelle le parent."
+  },
+  "PlowPacker:processCultivatorArea": {
+   "en": "Replaces the cultivator work-area processing: erases tire tracks, then calls FSDensityMapUtil.updatePlowPackerArea and accumulates changed, stat and total areas. Remote clients far from the vehicle skip the update. Returns real area and area.",
+   "fr": "Remplace le traitement de zone du cultivateur : efface les traces de pneus, puis appelle FSDensityMapUtil.updatePlowPackerArea et cumule les surfaces modifiée, statistique et totale. Les clients éloignés du véhicule sautent la mise à jour. Retourne la surface réelle et la surface."
+  },
+  "PlowPacker:getUseCultivatorAIRequirements": {
+   "en": "Always returns false, so the AI never applies cultivator requirements to this plow.",
+   "fr": "Retourne toujours false : l'IA n'applique jamais les exigences de cultivateur à cette charrue."
+  },
+  "PlowPacker:setPackerState": {
+   "en": "Sets or toggles (nil) the packer state. Optionally plays the left or right deactivate animation depending on plow rotation, schedules a lowering resync, updates AI requirements and sends PlowPackerStateEvent.",
+   "fr": "Définit ou bascule (nil) l'état du packer. Joue si besoin l'animation de désactivation gauche ou droite selon la rotation de la charrue, planifie une resynchronisation de l'abaissement, met à jour les exigences IA et envoie PlowPackerStateEvent."
+  },
+  "PlowPacker:getIsPackerAllowed": {
+   "en": "Returns false while the turn animation plays, when the fold animation is not at its turn-on position, when a fold change is pending, or when no packer is available; true otherwise.",
+   "fr": "Retourne false pendant l'animation de retournement, si l'animation de pliage n'est pas à sa position de travail, si un pliage est en attente ou si aucun packer n'est disponible ; true sinon."
+  },
+  "PlowPacker:onSetLowered": {
+   "en": "If the packer is allowed and on, plays the packer lowering animation forward or in reverse to follow the lowered state.",
+   "fr": "Si le packer est autorisé et actif, joue l'animation d'abaissement du packer en avant ou en arrière pour suivre l'état abaissé."
+  },
+  "PlowPacker:onRegisterActionEvents": {
+   "en": "Client only. Clears and registers the packer toggle action event (powered, default input IMPLEMENT_EXTRA4) when the vehicle is active for input and a packer exists.",
+   "fr": "Client uniquement. Vide et enregistre l'événement d'action de bascule du packer (alimenté, entrée par défaut IMPLEMENT_EXTRA4) quand le véhicule est actif pour les entrées et qu'un packer existe."
+  },
+  "PlowPacker.updateActionEventText": {
+   "en": "Sets the action text to activate or deactivate depending on the packer state, and enables the action only while getIsPackerAllowed returns true.",
+   "fr": "Définit le texte d'action (activer ou désactiver) selon l'état du packer et n'active l'action que tant que getIsPackerAllowed retourne true."
+  },
+  "PlowPacker.actionEventPackerDeactivate": {
+   "en": "Input callback that toggles the packer by calling setPackerState with no argument.",
+   "fr": "Callback d'entrée qui bascule le packer en appelant setPackerState sans argument."
+  }
+ }
+}

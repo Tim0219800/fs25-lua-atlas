@@ -1,0 +1,73 @@
+{
+ "fichier": "placeables/specializations/PlaceableSellingStation.lua",
+ "module": {
+  "en": "Placeable specialization with no prerequisites that wraps a SellingStation (a place where players sell fill types, e.g. a market or processor). It creates the station from placeable.sellingStation, registers it with g_currentMission.storageSystem and economyManager when placed, streams it to clients and forwards savegame load/save. The SellingStation class itself is not in this file.",
+  "fr": "Spécialisation de placeable sans prérequis qui encapsule un SellingStation (lieu où les joueurs vendent des types de remplissage, par exemple un marché ou une usine). Elle crée la station depuis placeable.sellingStation, l'enregistre auprès de storageSystem et economyManager de g_currentMission à la pose, la transmet aux clients et relaie le chargement/la sauvegarde. La classe SellingStation n'est pas dans ce fichier."
+ },
+ "fonctions": {
+  "PlaceableSellingStation.prerequisitesPresent": {
+   "en": "Always returns true.",
+   "fr": "Retourne toujours true."
+  },
+  "PlaceableSellingStation.registerFunctions": {
+   "en": "Registers getSellingStation on the placeable type.",
+   "fr": "Enregistre getSellingStation sur le type de placeable."
+  },
+  "PlaceableSellingStation.registerOverwrittenFunctions": {
+   "en": "Overrides collectPickObjects.",
+   "fr": "Surcharge collectPickObjects."
+  },
+  "PlaceableSellingStation.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onFinalizePlacement, onReadStream and onWriteStream.",
+   "fr": "Abonne à onLoad, onDelete, onFinalizePlacement, onReadStream et onWriteStream."
+  },
+  "PlaceableSellingStation.registerXMLPaths": {
+   "en": "Declares the XML schema by delegating to SellingStation.registerXMLPaths under placeable.sellingStation.",
+   "fr": "Déclare le schéma XML en déléguant à SellingStation.registerXMLPaths sous placeable.sellingStation."
+  },
+  "PlaceableSellingStation.registerSavegameXMLPaths": {
+   "en": "Declares savegame XML paths via SellingStation.registerSavegameXMLPaths.",
+   "fr": "Déclare les chemins XML de sauvegarde via SellingStation.registerSavegameXMLPaths."
+  },
+  "PlaceableSellingStation.initSpecialization": {
+   "en": "Adds the shop spec type sellingStationFillTypes (input icon) for placeables, using SellingStation's load and get functions.",
+   "fr": "Ajoute le type de spécification de boutique sellingStationFillTypes (icône d'entrée) pour les placeables, avec les fonctions de chargement et d'accès de SellingStation."
+  },
+  "PlaceableSellingStation:onLoad": {
+   "en": "Creates the SellingStation and loads it from placeable.sellingStation, linking it to the first component node; the placeable is stored as owningPlaceable. The return value of load is ignored.",
+   "fr": "Crée le SellingStation et le charge depuis placeable.sellingStation, rattaché au nœud du premier composant ; le placeable est stocké dans owningPlaceable. La valeur de retour de load est ignorée."
+  },
+  "PlaceableSellingStation:onDelete": {
+   "en": "Removes the station from the storage system and the economy manager, then deletes it.",
+   "fr": "Retire la station du système de stockage et du gestionnaire d'économie, puis la supprime."
+  },
+  "PlaceableSellingStation:onFinalizePlacement": {
+   "en": "Registers the station as a network object and adds it to the storage system (as unloading station) and the economy manager.",
+   "fr": "Enregistre la station comme objet réseau et l'ajoute au système de stockage (comme station de déchargement) et au gestionnaire d'économie."
+  },
+  "PlaceableSellingStation:onReadStream": {
+   "en": "Client initial sync: reads the station's object id and data, then completes its registration with g_client.",
+   "fr": "Synchronisation initiale côté client : lit l'identifiant d'objet et les données de la station, puis termine son enregistrement auprès de g_client."
+  },
+  "PlaceableSellingStation:onWriteStream": {
+   "en": "Server initial sync: writes the station's object id and data and registers it in the stream for this connection.",
+   "fr": "Synchronisation initiale côté serveur : écrit l'identifiant d'objet et les données de la station et l'enregistre dans le flux de cette connexion."
+  },
+  "PlaceableSellingStation:getSellingStation": {
+   "en": "Returns the SellingStation object of this placeable.",
+   "fr": "Retourne l'objet SellingStation de ce placeable."
+  },
+  "PlaceableSellingStation:collectPickObjects": {
+   "en": "Skips the node when it is an unload trigger's exact fill root node; otherwise defers to the parent implementation.",
+   "fr": "Ignore le nœud s'il s'agit du nœud racine de remplissage exact d'un déclencheur de déchargement ; sinon délègue à l'implémentation parente."
+  },
+  "PlaceableSellingStation:loadFromXMLFile": {
+   "en": "Forwards savegame loading to the selling station.",
+   "fr": "Transmet le chargement de la sauvegarde à la station de vente."
+  },
+  "PlaceableSellingStation:saveToXMLFile": {
+   "en": "Forwards savegame saving to the selling station.",
+   "fr": "Transmet l'écriture de la sauvegarde à la station de vente."
+  }
+ }
+}

@@ -1,0 +1,129 @@
+{
+ "fichier": "vehicles/specializations/PushHandTool.lua",
+ "module": {
+  "en": "Specialization for walk-behind (push hand) motorized tools such as pedestrian mowers: the driver character walks behind the machine, placed by two ground raycasts and wheel positions, with a handle node, spine bending, custom IK chains and conditional animations. It also has an optional drive mode (animation, capped speed and gear ratio, own character), cutter effects driven by the mower state and network sync of drive mode and effects. Requires Enterable; the code also uses Motorized, Drivable and Foldable specs (UNVERIFIED how the type guarantees them). The class table itself is declared outside the visible dump lines.",
+  "fr": "Spécialisation pour les outils motorisés à conducteur à pied (type tondeuse à pousser) : le personnage marche derrière la machine, placé par deux raycasts au sol et la position des roues, avec un nœud de poignée, une flexion de colonne, des chaînes IK personnalisées et des animations conditionnelles. Elle propose aussi un mode de conduite optionnel (animation, vitesse et rapport limités, personnage propre), des effets de coupe pilotés par l'état de la tondeuse et la synchronisation réseau du mode et des effets. Exige Enterable ; le code utilise aussi les specs Motorized, Drivable et Foldable (NON VÉRIFIÉ : comment le type les garantit). La table de classe elle-même est déclarée hors des lignes visibles du dump."
+ },
+ "fonctions": {
+  "PushHandTool.initSpecialization": {
+   "en": "Registers the XML schema under vehicle.pushHandTool (raycast nodes and smoothing, wheels, handle limits, spine, IK chains, effects, drive mode, custom chain limits, conditional animation) and the savegame driveModeIsActive key.",
+   "fr": "Enregistre le schéma XML sous vehicle.pushHandTool (nœuds de raycast et lissage, roues, limites de poignée, colonne, chaînes IK, effets, mode de conduite, limites de chaînes personnalisées, animation conditionnelle) et la clé de sauvegarde driveModeIsActive."
+  },
+  "PushHandTool.prerequisitesPresent": {
+   "en": "Returns true only if the Enterable specialization is present.",
+   "fr": "Retourne true seulement si la spécialisation Enterable est présente."
+  },
+  "PushHandTool.registerFunctions": {
+   "en": "Registers getRaycastPosition, playerRaycastCallback, postAnimationUpdate, customVehicleCharacterLoaded and setPushHandToolDriveMode on the vehicle type.",
+   "fr": "Enregistre getRaycastPosition, playerRaycastCallback, postAnimationUpdate, customVehicleCharacterLoaded et setPushHandToolDriveMode sur le type de véhicule."
+  },
+  "PushHandTool.registerOverwrittenFunctions": {
+   "en": "Overrides setVehicleCharacter, deleteVehicleCharacter, getAllowCharacterVisibilityUpdate, setActiveCameraIndex and getIsFoldAllowed.",
+   "fr": "Surcharge setVehicleCharacter, deleteVehicleCharacter, getAllowCharacterVisibilityUpdate, setActiveCameraIndex et getIsFoldAllowed."
+  },
+  "PushHandTool.registerEventListeners": {
+   "en": "Subscribes to load, post load, delete, stream read/write, update stream read/write, update, action events, enter vehicle, camera changed and vehicle character changed events.",
+   "fr": "S'abonne aux événements de chargement, post-chargement, suppression, lecture/écriture de flux, lecture/écriture de flux de mise à jour, update, actions, entrée dans le véhicule, changement de caméra et changement de personnage."
+  },
+  "PushHandTool:onLoad": {
+   "en": "Reads all XML settings, builds animation parameters, the player target node, wheel lists, handle, spine, IK targets, cutter effects (client), custom chain limits and drive mode (stores base motor speed and gear ratio). Sets a grass test area requirement and registers a post animation callback.",
+   "fr": "Lit tous les réglages XML, construit les paramètres d'animation, le nœud cible du joueur, les listes de roues, la poignée, la colonne, les cibles IK, les effets de coupe (client), les limites de chaînes et le mode de conduite (mémorise vitesse et rapport de base du moteur). Définit une exigence de zone de test sur l'herbe et enregistre un callback post-animation."
+  },
+  "PushHandTool:onPostLoad": {
+   "en": "If the savegame says drive mode was active, re-enables it without an event and fast-forwards its animation.",
+   "fr": "Si la sauvegarde indique que le mode de conduite était actif, le réactive sans événement et avance son animation d'un coup."
+  },
+  "PushHandTool:onDelete": {
+   "en": "Deletes the cutter effects and removes the post animation callback.",
+   "fr": "Supprime les effets de coupe et retire le callback post-animation."
+  },
+  "PushHandTool:saveToXMLFile": {
+   "en": "Saves the drive mode state, only when a drive mode animation name is configured.",
+   "fr": "Sauvegarde l'état du mode de conduite, seulement si un nom d'animation de mode de conduite est configuré."
+  },
+  "PushHandTool:onReadStream": {
+   "en": "Client on join: reads the drive mode bool, applies it without an event and fast-forwards the animation.",
+   "fr": "Client à la connexion : lit le booléen du mode de conduite, l'applique sans événement et avance l'animation d'un coup."
+  },
+  "PushHandTool:onWriteStream": {
+   "en": "Server on join: writes the drive mode state.",
+   "fr": "Serveur à la connexion : écrit l'état du mode de conduite."
+  },
+  "PushHandTool:onReadUpdateStream": {
+   "en": "Client: reads whether cutter effects run, plus fruit type and growth state when they do, and stops the effects when they ended.",
+   "fr": "Client : lit si les effets de coupe tournent, avec type de culture et stade de croissance le cas échéant, et arrête les effets quand ils se terminent."
+  },
+  "PushHandTool:onWriteUpdateStream": {
+   "en": "Server: writes the effects-running flag, with fruit growth state (4 bits) and fruit type when running.",
+   "fr": "Serveur : écrit l'indicateur d'effets actifs, avec stade de croissance (4 bits) et type de culture quand ils tournent."
+  },
+  "PushHandTool:onUpdate": {
+   "en": "Per frame: drives cutter effects (server decides from the mower's last cut, client follows the stream), computes smoothed wheel speed for conditional animation parameters and updates the character animation, adjusts the spine target by direction, and moves the player node behind the tool using the two raycasts, wheel slope and smoothing. If raycasts fail while entered, hides the character and forces an outside camera.",
+   "fr": "À chaque frame : pilote les effets de coupe (le serveur décide d'après la dernière coupe de la tondeuse, le client suit le flux), calcule la vitesse lissée des roues pour les paramètres d'animation conditionnelle et met à jour l'animation du personnage, ajuste la colonne selon la direction, et déplace le nœud joueur derrière l'outil avec les deux raycasts, la pente des roues et un lissage. Si les raycasts échouent en étant entré, masque le personnage et force une caméra extérieure."
+  },
+  "PushHandTool:onRegisterActionEvents": {
+   "en": "On clients with a drive mode character, registers the IMPLEMENT_EXTRA4 powered action to toggle drive mode when active for input.",
+   "fr": "Côté client avec un personnage de mode de conduite, enregistre l'action IMPLEMENT_EXTRA4 (moteur requis) pour basculer le mode de conduite quand actif pour l'entrée."
+  },
+  "PushHandTool.actionEventToggleDriveMode": {
+   "en": "Input callback that toggles drive mode by calling setPushHandToolDriveMode without argument.",
+   "fr": "Callback d'entrée qui bascule le mode de conduite en appelant setPushHandToolDriveMode sans argument."
+  },
+  "PushHandTool:setVehicleCharacter": {
+   "en": "Overridden: reloads the normal vehicle character with customVehicleCharacterLoaded as callback, and loads the drive mode character when a player style is given. Note: the parent function is never called.",
+   "fr": "Surchargée : recharge le personnage normal avec customVehicleCharacterLoaded en callback, et charge le personnage du mode de conduite si un style de joueur est donné. À noter : la fonction parente n'est jamais appelée."
+  },
+  "PushHandTool:deleteVehicleCharacter": {
+   "en": "Overridden: calls the parent, then also unloads the drive mode character.",
+   "fr": "Surchargée : appelle le parent, puis décharge aussi le personnage du mode de conduite."
+  },
+  "PushHandTool:customVehicleCharacterLoaded": {
+   "en": "Character load callback. On success it raises onVehicleCharacterChanged, duplicates the IK chain nodes into helper transform groups, applies custom joint limits, assigns the IK targets and solvers (40 iterations), registers the conditional animation parameters and initialises the animation from vehicle.pushHandTool.playerConditionalAnimation.",
+   "fr": "Callback de chargement du personnage. En cas de succès, déclenche onVehicleCharacterChanged, duplique les nœuds des chaînes IK dans des groupes de transformation auxiliaires, applique les limites d'articulation personnalisées, affecte cibles et solveurs IK (40 itérations), enregistre les paramètres d'animation conditionnelle et initialise l'animation depuis vehicle.pushHandTool.playerConditionalAnimation."
+  },
+  "PushHandTool.driveModeVehicleCharacterLoaded": {
+   "en": "Callback for the drive mode character: on success, shows it unless the camera is inside and updates its IK chains.",
+   "fr": "Callback du personnage du mode de conduite : en cas de succès, l'affiche sauf si la caméra est intérieure et met à jour ses chaînes IK."
+  },
+  "PushHandTool:setPushHandToolDriveMode": {
+   "en": "Sets or toggles (nil) drive mode. On change: swaps motor max forward speed and min gear ratio, updates cruise control limits, plays the animation, folds the tool and hides the normal character. Always sends PushHandToolDriveModeEvent unless noEventSend, even if unchanged.",
+   "fr": "Active, désactive ou bascule (nil) le mode de conduite. En cas de changement : échange vitesse max avant et rapport mini du moteur, met à jour les limites du régulateur, joue l'animation, replie l'outil et masque le personnage normal. Envoie toujours PushHandToolDriveModeEvent sauf noEventSend, même sans changement."
+  },
+  "PushHandTool:getAllowCharacterVisibilityUpdate": {
+   "en": "Overridden: false when the parent refuses, when entered with an inside camera, when raycasts are invalid, or while drive mode is active or animating with its own character. Otherwise true.",
+   "fr": "Surchargée : false si le parent refuse, si entré avec une caméra intérieure, si les raycasts sont invalides, ou pendant le mode de conduite (actif ou en animation) avec son propre personnage. Sinon true."
+  },
+  "PushHandTool:setActiveCameraIndex": {
+   "en": "Overridden: while raycasts are invalid, replaces an inside camera index by the first outside camera before calling the parent.",
+   "fr": "Surchargée : tant que les raycasts sont invalides, remplace un index de caméra intérieure par la première caméra extérieure avant d'appeler le parent."
+  },
+  "PushHandTool:getIsFoldAllowed": {
+   "en": "Overridden: returns false while drive mode is active, else the parent result.",
+   "fr": "Surchargée : retourne false tant que le mode de conduite est actif, sinon le résultat du parent."
+  },
+  "PushHandTool:onEnterVehicle": {
+   "en": "Hides the character when controlling with an inside camera or when the raycasts are invalid.",
+   "fr": "Masque le personnage quand on contrôle avec une caméra intérieure ou quand les raycasts sont invalides."
+  },
+  "PushHandTool:onCameraChanged": {
+   "en": "When entered, hides the normal character for an inside camera and sets the drive mode character visible only for outside cameras.",
+   "fr": "Quand entré, masque le personnage normal pour une caméra intérieure et ne montre le personnage du mode de conduite que pour les caméras extérieures."
+  },
+  "PushHandTool:onVehicleCharacterChanged": {
+   "en": "When entered with an inside camera, hides the new character. When the character is removed, clears the IK node copies and the spine node.",
+   "fr": "Quand entré avec une caméra intérieure, masque le nouveau personnage. Quand le personnage est retiré, vide les copies de nœuds IK et le nœud de colonne."
+  },
+  "PushHandTool:postAnimationUpdate": {
+   "en": "Callback run after animations while active: tilts the handle from the hand-to-target distance within its limits, applies the spine rotation split by ratio over three spine nodes, then (outside drive mode) updates the IK chains, copies the duplicated IK node transforms back and applies the chain poses.",
+   "fr": "Callback exécuté après les animations pendant l'activité : incline la poignée selon la distance main-cible dans ses limites, applique la rotation de colonne répartie par ratio sur trois nœuds, puis (hors mode de conduite) met à jour les chaînes IK, recopie les transformations des nœuds IK dupliqués et applique les poses des chaînes."
+  },
+  "PushHandTool:getRaycastPosition": {
+   "en": "Casts a 2 m ray down from the node (slightly steepened along world Y) against the player collision mask. Returns the hit x, y, z and distance, or nil when nothing valid is hit (distance above 0.35 and hit lower than 0.25 below the node).",
+   "fr": "Lance un rayon de 2 m vers le bas depuis le nœud (légèrement redressé selon l'axe Y monde) avec le masque de collision joueur. Retourne x, y, z et la distance du point touché, ou nil si rien de valide n'est touché (distance supérieure à 0,35 et impact à plus de 0,25 sous le nœud)."
+  },
+  "PushHandTool:playerRaycastCallback": {
+   "en": "Raycast callback: ignores hits on this vehicle (returns true to continue), otherwise stores the hit position and distance and stops the ray by returning false.",
+   "fr": "Callback de raycast : ignore les impacts sur ce véhicule (retourne true pour continuer), sinon mémorise position et distance et arrête le rayon en retournant false."
+  }
+ }
+}

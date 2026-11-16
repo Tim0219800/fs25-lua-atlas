@@ -1,0 +1,25 @@
+{
+ "fichier": "objects/NightlightFlicker.lua",
+ "module": {
+  "en": "Updateable attached to an i3D node (through the onCreate user-attribute) that makes a light flicker with random short blackouts. It is visible only when the sun is off or it is raining, based on the environment state (Environment/Weather classes are not in the dump, UNVERIFIED). It is registered with the mission's updateables.",
+  "fr": "Updateable attaché à un noeud i3D (via l'attribut utilisateur onCreate) qui fait vaciller une lumière par de brèves extinctions aléatoires. Elle n'est visible que lorsque le soleil est couché ou qu'il pleut, d'après l'état de l'environnement (classes Environment/Weather absentes du dump, NON VÉRIFIÉ). Elle est enregistrée parmi les updateables de la mission."
+ },
+ "fonctions": {
+  "NightlightFlicker:onCreate": {
+   "en": "i3D onCreate hook: creates a NightlightFlicker for the node and adds it to the mission's updateables.",
+   "fr": "Hook onCreate d'i3D : crée un NightlightFlicker pour le noeud et l'ajoute aux updateables de la mission."
+  },
+  "NightlightFlicker.new": {
+   "en": "Creates the flicker for a node, hides it initially and subscribes to DAY_NIGHT_CHANGED. Note: it subscribes the misspelled method name oNWeatherChanged instead of onWeatherChanged, so the callback is probably never reached.",
+   "fr": "Crée le vacillement pour un noeud, le masque au départ et s'abonne à DAY_NIGHT_CHANGED. À noter : l'abonnement utilise le nom mal orthographié oNWeatherChanged au lieu de onWeatherChanged, donc le callback n'est probablement jamais atteint."
+  },
+  "NightlightFlicker:update": {
+   "en": "While visible, hides the light at random intervals (up to about 1.5 s apart) and shows it again after a short random duration (under 200 ms). Does nothing when the light is not visible.",
+   "fr": "Tant que la lumière est visible, la masque à intervalles aléatoires (jusqu'à environ 1,5 s) et la réaffiche après une courte durée aléatoire (moins de 200 ms). Sans effet si la lumière n'est pas visible."
+  },
+  "NightlightFlicker:onWeatherChanged": {
+   "en": "Sets the node visible when the sun is not on or it is raining, hidden otherwise. Skipped if the mission or environment does not exist yet.",
+   "fr": "Rend le noeud visible quand le soleil n'est pas levé ou qu'il pleut, sinon le masque. Ignorée si la mission ou l'environnement n'existe pas encore."
+  }
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/base/MultiValueTween.lua",
+ "module": {
+  "en": "Subclass of Tween that animates several numeric values at once. Start and end values are arrays and the setter receives them unpacked, optionally preceded by a target object. Used for UI animations such as position or size.",
+  "fr": "Sous-classe de Tween qui anime plusieurs valeurs numériques à la fois. Les valeurs de départ et d'arrivée sont des tableaux et le setter les reçoit dépaquetées, éventuellement précédées d'un objet cible. Utilisée pour les animations d'interface comme la position ou la taille."
+ },
+ "fonctions": {
+  "MultiValueTween.new": {
+   "en": "Creates the tween through `Tween.new` and keeps a working copy of the start values. The setter is called as setter(v1..vn), or setter(target, v1..vn) when a target is set; duration is in milliseconds.",
+   "fr": "Crée l'interpolation via `Tween.new` et garde une copie de travail des valeurs de départ. Le setter est appelé sous la forme setter(v1..vn), ou setter(cible, v1..vn) si une cible est définie ; la durée est en millisecondes."
+  },
+  "MultiValueTween:setTarget": {
+   "en": "Sets or clears the callback target and keeps the values array in sync by inserting, removing or replacing the target as first entry. The setter must then accept the target first.",
+   "fr": "Définit ou efface la cible du callback et garde le tableau de valeurs synchronisé en insérant, retirant ou remplaçant la cible en première entrée. Le setter doit alors accepter la cible en premier."
+  },
+  "MultiValueTween:tweenValue": {
+   "en": "Interpolates each start/end pair linearly with the factor shaped by the curve function at progress t, stores it in the values array (after the target slot if any) and returns that array.",
+   "fr": "Interpole linéairement chaque paire départ/arrivée avec un facteur modelé par la fonction de courbe à la progression t, le stocke dans le tableau de valeurs (après l'emplacement de la cible s'il y en a une) et renvoie ce tableau."
+  },
+  "MultiValueTween:applyValue": {
+   "en": "Calls the setter with the current values unpacked, including the target as first argument when one was set.",
+   "fr": "Appelle le setter avec les valeurs courantes dépaquetées, y compris la cible en premier argument si elle est définie."
+  }
+ }
+}

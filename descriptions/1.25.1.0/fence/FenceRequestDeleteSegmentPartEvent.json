@@ -1,0 +1,33 @@
+{
+ "fichier": "fence/FenceRequestDeleteSegmentPartEvent.lua",
+ "module": {
+  "en": "Client-to-server request to delete a single panel of a fence segment, or the whole segment, with a Bool reply from the server. The server re-checks permissions, rebuilds the remaining sub-segments, and broadcasts FenceDeleteSegmentEvent plus FenceSegmentEvent to clients. Subclass of Event on the main channel.",
+  "fr": "Requête client vers serveur pour supprimer un seul panneau d'un segment de clôture, ou le segment entier, avec une réponse booléenne du serveur. Le serveur revérifie les permissions, reconstruit les sous-segments restants et diffuse FenceDeleteSegmentEvent puis FenceSegmentEvent aux clients. Sous-classe d'Event sur le canal principal."
+ },
+ "fonctions": {
+  "FenceRequestDeleteSegmentPartEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel, for reception from a stream.",
+   "fr": "Crée un événement vide sur le canal réseau principal, pour la réception depuis un flux."
+  },
+  "FenceRequestDeleteSegmentPartEvent.newClientToServer": {
+   "en": "Builds the request: placeable, segment id, child index of the panel node, its world position as a fallback locator, and a flag choosing whole-segment deletion over a single panel.",
+   "fr": "Construit la requête : placeable, identifiant du segment, index enfant du nœud du panneau, sa position monde comme localisation de repli, et un indicateur choisissant la suppression du segment entier plutôt que d'un seul panneau."
+  },
+  "FenceRequestDeleteSegmentPartEvent.newServerToClient": {
+   "en": "Builds the server reply carrying only the success flag.",
+   "fr": "Construit la réponse du serveur, qui ne contient que l'indicateur de succès."
+  },
+  "FenceRequestDeleteSegmentPartEvent:readStream": {
+   "en": "Server side: reads placeable, UInt16 segment id and child index, three compressed world positions (using the mission's vehicle position compression params) and the whole-segment Bool. Client side: reads the success Bool. Then calls run.",
+   "fr": "Côté serveur : lit le placeable, l'identifiant de segment et l'index enfant en UInt16, trois positions monde compressées (paramètres de compression de position des véhicules de la mission) et le booléen de segment entier. Côté client : lit le booléen de succès. Puis appelle run."
+  },
+  "FenceRequestDeleteSegmentPartEvent:writeStream": {
+   "en": "Mirror of readStream: to the server writes placeable, ids, compressed hit position and whole-segment flag; to a client writes only the success Bool.",
+   "fr": "Miroir de readStream : vers le serveur, écrit le placeable, les identifiants, la position compressée et l'indicateur de segment entier ; vers un client, écrit seulement le booléen de succès."
+  },
+  "FenceRequestDeleteSegmentPartEvent:run": {
+   "en": "Client: publishes the result. Server: replies false unless the placeable is synchronized, the segment exists, deletion is allowed, and the player's farm may modify and delete it. It then resolves the panel by child index (fallback: nearest child to the hit position via findNearestChild, not defined in this file, UNVERIFIED) and calls deleteSegmentPart. It deletes the placeable if no segment remains, otherwise broadcasts the old segment's deletion and the new segments, then replies true.",
+   "fr": "Client : publie le résultat. Serveur : répond false sauf si le placeable est synchronisé, le segment existe, la suppression est autorisée et la ferme du joueur peut le modifier et le supprimer. Il résout ensuite le panneau par index enfant (repli : enfant le plus proche de la position via findNearestChild, non défini dans ce fichier, NON VÉRIFIÉ) et appelle deleteSegmentPart. Il supprime le placeable s'il ne reste aucun segment, sinon diffuse la suppression de l'ancien segment et les nouveaux segments, puis répond true."
+  }
+ }
+}

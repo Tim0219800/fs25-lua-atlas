@@ -1,0 +1,181 @@
+{
+ "fichier": "misc/TreePlantManager.lua",
+ "module": {
+  "en": "Manager (subclass of AbstractManager) for plantable and cuttable trees. It loads tree types from data/maps/maps_treeTypes.xml and the map XML (name, title, growth time, split type, growth stages with variations), plants and grows trees on the server, tracks cut trees and decaying branch/leaf state, saves and loads the tree list, and sends it to joining clients. Many engine calls (split shapes, physics, shared i3d) are used; engine and some classes are not in the dump. Constants such as MAX_NUM_TYPES, DECAY_INTERVAL and STAGE_NUM_BITS are used but not defined in this file (UNVERIFIED), and several console command handlers and onMissionStarted are also missing here.",
+  "fr": "Gestionnaire (sous-classe d'AbstractManager) des arbres plantables et abattables. Il charge les types d'arbres depuis data/maps/maps_treeTypes.xml et le XML de la carte (nom, titre, durée de croissance, type de bois, stades de croissance avec variations), plante et fait pousser les arbres côté serveur, suit les arbres coupés et l'état de déclin des branches et feuilles, sauvegarde et recharge la liste des arbres et l'envoie aux clients qui rejoignent. Il utilise de nombreux appels moteur (split shapes, physique, i3d partagés) ; le moteur et certaines classes ne sont pas dans le dump. Des constantes comme MAX_NUM_TYPES, DECAY_INTERVAL et STAGE_NUM_BITS sont utilisées mais non définies dans ce fichier (NON VÉRIFIÉ), et plusieurs gestionnaires de commandes console ainsi que onMissionStarted manquent aussi ici."
+ },
+ "fonctions": {
+  "TreePlantManager.new": {
+   "en": "Constructor: creates the manager on top of AbstractManager with the given or default metatable.",
+   "fr": "Constructeur : crée le gestionnaire à partir d'AbstractManager avec la métatable fournie ou celle par défaut."
+  },
+  "TreePlantManager:initDataStructures": {
+   "en": "Resets tree type lists and lookups (by index, name, split type), the i3d file cache, pending trunk loads, the count of trees without split shapes and the decaying split shape table.",
+   "fr": "Réinitialise les listes et recherches de types d'arbres (par indice, nom, type de bois), le cache de fichiers i3d, les chargements de troncs en attente, le compteur d'arbres sans split shapes et la table des split shapes en déclin."
+  },
+  "TreePlantManager:initialize": {
+   "en": "Creates the \"trees\" transform group linked to the scene root and the treesData structure (growing trees, split trees, client trees by server file id, cut joints, counters).",
+   "fr": "Crée le groupe de transformation \"trees\" lié à la racine de la scène et la structure treesData (arbres en croissance, arbres fendus, arbres client par identifiant de fichier serveur, joints de coupe, compteurs)."
+  },
+  "TreePlantManager:deleteTreesData": {
+   "en": "Deletes the trees root node, subtracts this data's untracked-split tree count from the manager total and resets the data structures. Does nothing if treesData was never created.",
+   "fr": "Supprime le nœud racine des arbres, retranche du total du gestionnaire le compteur d'arbres sans split de ces données et réinitialise les structures. Ne fait rien si treesData n'a jamais été créé."
+  },
+  "TreePlantManager:loadDefaultTypes": {
+   "en": "Loads the base tree types from data/maps/maps_treeTypes.xml as base types, then closes the XML file.",
+   "fr": "Charge les types d'arbres de base depuis data/maps/maps_treeTypes.xml comme types de base, puis ferme le fichier XML."
+  },
+  "TreePlantManager:loadMapData": {
+   "en": "Loads map data: registers the gsTree* console commands (server cheats and debug only), reads map.treeTypes#maxNumTrees (default 8000, clamped 1 to 30000), subscribes once to the mission start message, loads default types and then the map's treeTypes via XMLUtil. Returns the result of that load.",
+   "fr": "Charge les données de carte : enregistre les commandes console gsTree* (triche serveur et debug uniquement), lit map.treeTypes#maxNumTrees (défaut 8000, borné de 1 à 30000), s'abonne une fois au message de démarrage de mission, charge les types par défaut puis ceux de la carte via XMLUtil. Retourne le résultat de ce chargement."
+  },
+  "TreePlantManager:unloadMapData": {
+   "en": "Releases cached shared i3d requests, removes the console commands, deletes the trees data, unsubscribes from the mission start message and calls the parent unload.",
+   "fr": "Libère les requêtes i3d partagées en cache, retire les commandes console, supprime les données d'arbres, se désabonne du message de démarrage de mission et appelle le unload parent."
+  },
+  "TreePlantManager:loadTreeTypes": {
+   "en": "Reads map.treeTypes.treeType entries from an XML file (a raw file handle is wrapped first): name, title, growthTimeHours, splitType, supportsPlanting, saplingPrice and the stages with their variations (filename, pallet, planter). Invalid entries are skipped with a warning, stage and variation counts are capped, then registerTreeType is called. Uses g_splitShapeManager:getSplitTypeIndexByName, not defined in SplitShapeManager.lua (UNVERIFIED). Returns true.",
+   "fr": "Lit les entrées map.treeTypes.treeType d'un fichier XML (un handle brut est d'abord enveloppé) : name, title, growthTimeHours, splitType, supportsPlanting, saplingPrice et les stades avec leurs variations (filename, pallet, planter). Les entrées invalides sont ignorées avec un avertissement, le nombre de stades et de variations est plafonné, puis registerTreeType est appelé. Utilise g_splitShapeManager:getSplitTypeIndexByName, absent de SplitShapeManager.lua (NON VÉRIFIÉ). Retourne true."
+  },
+  "TreePlantManager:registerTreeType": {
+   "en": "Registers or updates a tree type (name uppercased). Refuses when the type limit is reached, or when a base type name already exists. A later definition of an existing name replaces stages, growth time and planting data; the sapling price is kept only if planting is supported. Returns the type table or nil.",
+   "fr": "Enregistre ou met à jour un type d'arbre (nom en majuscules). Refuse si la limite de types est atteinte ou si un nom de type de base existe déjà. Une définition ultérieure d'un nom existant remplace les stades, la durée de croissance et les données de plantation ; le prix du plant n'est conservé que si la plantation est prise en charge. Retourne la table du type ou nil."
+  },
+  "TreePlantManager:getTreeTypeFilename": {
+   "en": "Returns the i3d filename of a random variation for the given growth stage (capped to the last stage), or nil if no type description is given.",
+   "fr": "Retourne le nom de fichier i3d d'une variation aléatoire pour le stade de croissance donné (plafonné au dernier stade), ou nil si aucune description de type n'est fournie."
+  },
+  "TreePlantManager:canPlantTree": {
+   "en": "Returns true when the number of unsplit trees in the world plus trees without split shapes is below maxNumTrees, using the engine's getNumOfSplitShapes.",
+   "fr": "Retourne true quand le nombre d'arbres non fendus dans le monde plus les arbres sans split shapes est inférieur à maxNumTrees, via getNumOfSplitShapes du moteur."
+  },
+  "TreePlantManager:plantTree": {
+   "en": "Server side: loads a tree node at a position and rotation for a type, stage and variation, records it as growing (with a target growth hour, if it can still grow) or as a fixed split tree, and broadcasts a TreePlantEvent. Returns the tree node id, or nil if the type is unknown or loading failed.",
+   "fr": "Côté serveur : charge un nœud d'arbre à une position et rotation pour un type, un stade et une variation, l'enregistre comme en croissance (avec une heure cible de croissance, s'il peut encore grandir) ou comme arbre fendu fixe, et diffuse un TreePlantEvent. Retourne l'identifiant du nœud ou nil si le type est inconnu ou le chargement a échoué."
+  },
+  "TreePlantManager:loadTreeNode": {
+   "en": "Loads the i3d of a tree stage and variation, links it under the trees root, positions it, adds it to physics, keeps split shapes kinematic on clients, warns on a wrong split type, and marks the collision map and AI area dirty. Returns the node id and the split shape file id (the node id is 0 on failure).",
+   "fr": "Charge l'i3d d'un stade et d'une variation d'arbre, le lie sous la racine des arbres, le positionne, l'ajoute à la physique, garde les split shapes cinématiques côté client, avertit en cas de mauvais type de bois, et marque la carte de collision et la zone IA comme modifiées. Retourne l'identifiant du nœud et celui du fichier de split shapes (le nœud vaut 0 en cas d'échec)."
+  },
+  "TreePlantManager:loadTreeTrunk": {
+   "en": "Loads a tree and queues a two-step cut (over two frames processed in updateTrees) to produce a loose trunk of a given length oriented along a direction, optionally delimbed or reduced to a stump. If the file has no split shapes the node is deleted.",
+   "fr": "Charge un arbre et met en file une coupe en deux étapes (sur deux trames traitées dans updateTrees) pour produire un tronc libre d'une longueur donnée orienté selon une direction, éventuellement ébranché ou réduit à une souche. Si le fichier n'a pas de split shapes, le nœud est supprimé."
+  },
+  "TreePlantManager.cutTreeTrunkCallback": {
+   "en": "Split callback used by the trunk cut: registers the new shape with addingSplitShape and appends its data (shape, below/above flags, bounds) to the pending trunk's parts list.",
+   "fr": "Rappel de découpe utilisé par la coupe de tronc : enregistre la nouvelle forme avec addingSplitShape et ajoute ses données (forme, indicateurs dessous/dessus, bornes) à la liste des parties du tronc en attente."
+  },
+  "TreePlantManager:updateTrees": {
+   "en": "Main per-frame update called with dt and game-time delta. Every 60 in-game minutes it cleans up deleted trees and grows trees whose target hour passed (replace node, broadcast TreeGrowEvent). It also expires cut joints, processes queued trunk cuts, the cut-all console command, and seasonal leaf decay of active split shapes.",
+   "fr": "Mise à jour principale par trame, appelée avec dt et le delta de temps de jeu. Toutes les 60 minutes de jeu, elle nettoie les arbres supprimés et fait grandir ceux dont l'heure cible est dépassée (remplacement du nœud, diffusion d'un TreeGrowEvent). Elle gère aussi l'expiration des joints de coupe, les coupes de troncs en file, la commande console de coupe générale et le déclin saisonnier des feuilles des split shapes actives."
+  },
+  "TreePlantManager:addTreeCutJoint": {
+   "en": "Records a joint created when a tree is cut, with its direction in the shape's local space, a maximum angle and a lifetime; updateTrees removes it when the tilt exceeds the angle, the lifetime ends or the shape disappears.",
+   "fr": "Enregistre un joint créé lors de la coupe d'un arbre, avec sa direction dans l'espace local de la forme, un angle maximal et une durée de vie ; updateTrees le retire quand l'inclinaison dépasse l'angle, que la durée est écoulée ou que la forme disparaît."
+  },
+  "TreePlantManager:getIsTreeDeleted": {
+   "en": "Recursively checks a node's hierarchy and returns true if it no longer contains any split shape or shape.",
+   "fr": "Parcourt récursivement la hiérarchie d'un nœud et retourne true s'il ne contient plus aucune split shape ni forme."
+  },
+  "TreePlantManager:getTreeRigidBodyType": {
+   "en": "Recursively finds the first mesh split shape under a node and returns its rigid body type, or nil if none exists.",
+   "fr": "Trouve récursivement la première split shape de maillage sous un nœud et retourne son type de corps rigide, ou nil s'il n'y en a aucune."
+  },
+  "TreePlantManager:cleanupDeletedTrees": {
+   "en": "Removes from the growing and split tree lists every tree whose hierarchy is empty, deleting its node and adjusting the without-splits counters.",
+   "fr": "Retire des listes d'arbres en croissance et d'arbres fendus tous les arbres dont la hiérarchie est vide, supprime leur nœud et ajuste les compteurs d'arbres sans split."
+  },
+  "TreePlantManager:loadFromXMLFile": {
+   "en": "Loads the saved tree list (treePlant.tree entries with treeType, position, rotation, growthStateI, variationIndex, nextGrowthTargetHour, isGrowing, splitShapeFileId) and replants each via plantTree. Returns false if the filename is nil or the file cannot be opened; entries with an unknown type are skipped.",
+   "fr": "Charge la liste d'arbres sauvegardée (entrées treePlant.tree avec treeType, position, rotation, growthStateI, variationIndex, nextGrowthTargetHour, isGrowing, splitShapeFileId) et replante chacun via plantTree. Retourne false si le nom de fichier est nil ou si le fichier ne s'ouvre pas ; les entrées de type inconnu sont ignorées."
+  },
+  "TreePlantManager:saveToXMLFile": {
+   "en": "Cleans up deleted trees, then writes all growing and split trees to a new treePlant XML file (type name, position, rotation in degrees, stage, variation if not 1, growth target hour, growing flag, split shape file id). Returns false and logs an error if the file cannot be created.",
+   "fr": "Nettoie les arbres supprimés, puis écrit tous les arbres en croissance et fendus dans un nouveau fichier XML treePlant (nom du type, position, rotation en degrés, stade, variation si différente de 1, heure cible de croissance, indicateur de croissance, identifiant de fichier de split shapes). Retourne false et journalise une erreur si le fichier ne peut pas être créé."
+  },
+  "TreePlantManager:readFromServerStream": {
+   "en": "Client side, on join: reads the tree count, then each tree (type, position, rotation, stage, variation, server file id), loads the node locally and maps the local split shape file id to the server's.",
+   "fr": "Côté client, à la connexion : lit le nombre d'arbres puis chaque arbre (type, position, rotation, stade, variation, identifiant de fichier serveur), charge le nœud localement et associe l'identifiant de fichier de split shapes local à celui du serveur."
+  },
+  "TreePlantManager:writeToClientStream": {
+   "en": "Server side, on client join: cleans up deleted trees then writes the number of trees and, for each growing then split tree, its type, position, rotation, stage, variation and split shape file id.",
+   "fr": "Côté serveur, à la connexion d'un client : nettoie les arbres supprimés puis écrit le nombre d'arbres et, pour chaque arbre en croissance puis fendu, son type, sa position, sa rotation, son stade, sa variation et son identifiant de fichier de split shapes."
+  },
+  "TreePlantManager:getTreeTypeDescFromIndex": {
+   "en": "Returns the tree type description at an index, or nil.",
+   "fr": "Retourne la description du type d'arbre à un indice donné, ou nil."
+  },
+  "TreePlantManager:getTreeTypeNameFromIndex": {
+   "en": "Returns the tree type name for an index, or nil if unknown.",
+   "fr": "Retourne le nom du type d'arbre pour un indice, ou nil s'il est inconnu."
+  },
+  "TreePlantManager:getTreeTypeDescFromName": {
+   "en": "Returns the tree type description for a name (case-insensitive), or nil.",
+   "fr": "Retourne la description du type d'arbre pour un nom (insensible à la casse), ou nil."
+  },
+  "TreePlantManager:getTreeTypeIndexAndVariationFromName": {
+   "en": "Returns the tree type index and the variation index matching variationName (case-insensitive, \"DEFAULT\" if absent) in the given stage. Both are nil if the type or stage is unknown; the variation alone is nil if no variation matches.",
+   "fr": "Retourne l'indice du type d'arbre et l'indice de la variation correspondant à variationName (insensible à la casse, \"DEFAULT\" si absent) dans le stade donné. Les deux valent nil si le type ou le stade est inconnu ; seule la variation est nil si aucune ne correspond."
+  },
+  "TreePlantManager:getTreeTypeNameAndVariationByIndex": {
+   "en": "Returns the tree type name and the variation name (\"DEFAULT\" if unnamed) for a type, stage (default 1) and variation index, falling back to the first variation. Returns nil, nil if not found.",
+   "fr": "Retourne le nom du type d'arbre et le nom de la variation (\"DEFAULT\" si sans nom) pour un type, un stade (1 par défaut) et un indice de variation, avec repli sur la première variation. Retourne nil, nil si introuvable."
+  },
+  "TreePlantManager:getPalletStoreItemFilenameByIndex": {
+   "en": "Returns the pallet store item XML filename of a tree type, stage (default 1) and variation (falling back to the first), or nil.",
+   "fr": "Retourne le nom du fichier XML de l'article de boutique de palette pour un type d'arbre, un stade (1 par défaut) et une variation (repli sur la première), ou nil."
+  },
+  "TreePlantManager:getTreeTypeDescFromSplitType": {
+   "en": "Returns the tree type description linked to an engine split type index, or nil. If several tree types share a split type, the last registered wins.",
+   "fr": "Retourne la description du type d'arbre liée à un indice de type de bois du moteur, ou nil. Si plusieurs types d'arbres partagent un type de bois, le dernier enregistré l'emporte."
+  },
+  "TreePlantManager:getTreeTypeIndexFromName": {
+   "en": "Returns the tree type index for a name (case-insensitive), or nil.",
+   "fr": "Retourne l'indice du type d'arbre pour un nom (insensible à la casse), ou nil."
+  },
+  "TreePlantManager:addClientTree": {
+   "en": "Stores a tree node in the client trees table under its server split shape file id.",
+   "fr": "Mémorise un nœud d'arbre dans la table des arbres client sous son identifiant de fichier de split shapes du serveur."
+  },
+  "TreePlantManager:removeClientTree": {
+   "en": "Removes the client tree entry for a server split shape file id.",
+   "fr": "Supprime l'entrée d'arbre client pour un identifiant de fichier de split shapes du serveur."
+  },
+  "TreePlantManager:getClientTree": {
+   "en": "Returns the client tree node stored for a server split shape file id, or nil.",
+   "fr": "Retourne le nœud d'arbre client mémorisé pour un identifiant de fichier de split shapes du serveur, ou nil."
+  },
+  "TreePlantManager:addingSplitShape": {
+   "en": "Called when a split shape is created by a cut. Inherits or initialises its decay state (branch leaf scale) and variation, tracks it if it has children and applies the leaf shader values, then publishes MessageType.TREE_SHAPE_CUT with the old and new shapes.",
+   "fr": "Appelé quand une split shape est créée par une coupe. Hérite ou initialise son état de déclin (échelle des feuilles) et sa variation, la suit si elle a des enfants et applique les valeurs de shader des feuilles, puis publie MessageType.TREE_SHAPE_CUT avec l'ancienne et la nouvelle forme."
+  },
+  "TreePlantManager:removingSplitShape": {
+   "en": "Forgets the decay state of a split shape that is being removed.",
+   "fr": "Oublie l'état de déclin d'une split shape en cours de suppression."
+  },
+  "TreePlantManager:setSplitShapeLeafScaleAndVariation": {
+   "en": "Sets the shader parameter windSnowLeafScale recursively on a shape, with the leaf scale in the third component and the variation in the fourth.",
+   "fr": "Définit récursivement le paramètre de shader windSnowLeafScale sur une forme, avec l'échelle des feuilles dans la troisième composante et la variation dans la quatrième."
+  },
+  "TreePlantManager:consoleCommandCutTrees": {
+   "en": "Console command gsTreeCut: finds static, uncut tree split shapes within a radius (default 50) of the active camera and queues them for cutting. Returns a feedback string with the count.",
+   "fr": "Commande console gsTreeCut : trouve les split shapes d'arbres statiques non coupées dans un rayon (50 par défaut) autour de la caméra active et les met en file pour la coupe. Retourne un texte de retour avec le nombre trouvé."
+  },
+  "TreePlantManager:onTreeCutCommandOverlapCallback": {
+   "en": "Overlap callback of the cut command: keeps mesh split shapes that have a split type, are static and not yet split.",
+   "fr": "Rappel de chevauchement de la commande de coupe : conserve les split shapes de maillage qui ont un type de bois, sont statiques et pas encore fendues."
+  },
+  "TreePlantManager:onTreeCutCommandSplitCallback": {
+   "en": "Split callback of the cut command: tilts the new shape slightly, registers it as a known split shape on the mission and calls addingSplitShape as coming from a tree.",
+   "fr": "Rappel de découpe de la commande de coupe : incline légèrement la nouvelle forme, l'enregistre comme split shape connue de la mission et appelle addingSplitShape comme provenant d'un arbre."
+  },
+  "TreePlantManager:consoleCommandPlantTrees": {
+   "en": "Console command gsTreePlant: plants a number of trees of a type (default lodgepole pine, aspen or first type) in a line in front of the local player, skipping spots overlapping existing trees. Defaults to the last growth stage and a random variation. Returns a feedback string.",
+   "fr": "Commande console gsTreePlant : plante un nombre d'arbres d'un type (par défaut pin lodgepole, tremble ou premier type) en ligne devant le joueur local, en sautant les emplacements qui chevauchent des arbres existants. Par défaut, dernier stade de croissance et variation aléatoire. Retourne un texte de retour."
+  },
+  "TreePlantManager:consoleCommandLoadAll": {
+   "en": "Debug console command gsTreeLoadAll: spawns every tree type, stage and variation in rows in front of the local player with debug planes, circles and text (split type, size, wood harvester support, diameters) and loose stump trunks. Calls g_splitShapeManager:getSplitShapeAllowsHarvester, not defined in SplitShapeManager.lua (UNVERIFIED). Returns the number planted.",
+   "fr": "Commande console de debug gsTreeLoadAll : fait apparaître chaque type, stade et variation d'arbre en rangées devant le joueur local avec plans, cercles et textes de debug (type de bois, taille, compatibilité abatteuse, diamètres) et des souches de tronc libres. Appelle g_splitShapeManager:getSplitShapeAllowsHarvester, absent de SplitShapeManager.lua (NON VÉRIFIÉ). Retourne le nombre planté."
+  }
+ }
+}

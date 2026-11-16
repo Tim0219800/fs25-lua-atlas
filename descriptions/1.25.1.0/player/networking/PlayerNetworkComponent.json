@@ -1,0 +1,33 @@
+{
+ "fichier": "player/networking/PlayerNetworkComponent.lua",
+ "module": {
+  "en": "Abstract base class for the player's network components. It stores the owning player and declares empty hooks (update, updateTick, stream read/write, debugDraw) that the local, remote and server subclasses override.",
+  "fr": "Classe de base abstraite des composants réseau du joueur. Elle mémorise le joueur propriétaire et déclare des points d'entrée vides (update, updateTick, lecture/écriture de flux, debugDraw) que les sous-classes locale, distante et serveur redéfinissent."
+ },
+ "fonctions": {
+  "PlayerNetworkComponent.new": {
+   "en": "Creates an instance with the given metatable and owning player. Meant to be called only by subclass constructors.",
+   "fr": "Crée une instance avec la métatable et le joueur donnés. Destiné uniquement aux constructeurs des sous-classes."
+  },
+  "PlayerNetworkComponent:update": {
+   "en": "Empty per-frame hook, overridden by subclasses.",
+   "fr": "Point d'entrée vide appelé à chaque frame, redéfini par les sous-classes."
+  },
+  "PlayerNetworkComponent:updateTick": {
+   "en": "Empty per-tick hook, overridden by subclasses.",
+   "fr": "Point d'entrée vide appelé à chaque tick, redéfini par les sous-classes."
+  },
+  "PlayerNetworkComponent:writeUpdateStream": {
+   "en": "Empty hook that subclasses override to write their state to the outgoing stream.",
+   "fr": "Point d'entrée vide que les sous-classes redéfinissent pour écrire leur état dans le flux sortant."
+  },
+  "PlayerNetworkComponent:readUpdateStream": {
+   "en": "Empty hook that subclasses override to read their state from the incoming stream.",
+   "fr": "Point d'entrée vide que les sous-classes redéfinissent pour lire leur état depuis le flux entrant."
+  },
+  "PlayerNetworkComponent:debugDraw": {
+   "en": "Debug hook that draws nothing and returns the unchanged y position; subclasses may override it.",
+   "fr": "Point d'entrée de débogage qui n'affiche rien et retourne la position y inchangée ; les sous-classes peuvent le redéfinir."
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "fichier": "debug/elements/DebugBox.lua",
+ "module": {
+  "en": "DebugBox is a debug element for a wireframe or face-filled box, derived from DebugElement. In this dump only two setters are present; position, orientation and drawing code, including `calculateCornerPositions`, are absent (UNVERIFIED).",
+  "fr": "DebugBox est un élément de débogage pour une boîte filaire ou à faces remplies, dérivé de DebugElement. Dans ce dump, seuls deux setters sont présents ; le code de position, d'orientation et de dessin, dont `calculateCornerPositions`, est absent (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugBox:setSize": {
+   "en": "Updates the box size (nil arguments keep the current value) and recomputes the corner positions through `DebugBox.calculateCornerPositions`, which is not in this dump. Returns self.",
+   "fr": "Met à jour la taille de la boîte (un argument nil conserve la valeur actuelle) et recalcule les positions des coins via `DebugBox.calculateCornerPositions`, absent de ce dump. Renvoie self."
+  },
+  "DebugBox:setDrawFaces": {
+   "en": "Sets whether the box faces are drawn in addition to its edges. Returns self.",
+   "fr": "Définit si les faces de la boîte sont dessinées en plus de ses arêtes. Renvoie self."
+  }
+ }
+}

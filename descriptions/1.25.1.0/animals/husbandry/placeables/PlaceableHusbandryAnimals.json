@@ -1,0 +1,217 @@
+{
+ "fichier": "animals/husbandry/placeables/PlaceableHusbandryAnimals.lua",
+ "module": {
+  "en": "Placeable specialization that turns a husbandry placeable into a herd holder. It requires the `PlaceableHusbandry` specialization, reads the animal type, navigation mesh, capacity and delivery areas from `placeable.husbandry.animals`, and owns an `AnimalClusterSystem` (the animal data, server authoritative) plus an `AnimalClusterHusbandry` (the visible animals driven by the engine). It also handles reproduction on period change, health updates, riding, delivery-area checks and the shop capacity spec.",
+  "fr": "Spécialisation de placeable qui transforme un bâtiment d'élevage en détenteur de troupeau. Elle exige la spécialisation `PlaceableHusbandry`, lit le type d'animal, le maillage de navigation, la capacité et les zones de livraison sous `placeable.husbandry.animals`, et possède un `AnimalClusterSystem` (données des animaux, autoritaire côté serveur) ainsi qu'un `AnimalClusterHusbandry` (animaux visibles pilotés par le moteur). Elle gère aussi la reproduction au changement de période, la santé, l'équitation, les zones de livraison et la capacité affichée en boutique."
+ },
+ "fonctions": {
+  "PlaceableHusbandryAnimals.prerequisitesPresent": {
+   "en": "Returns true only if the `PlaceableHusbandry` specialization is among the placeable type's specializations.",
+   "fr": "Renvoie vrai uniquement si la spécialisation `PlaceableHusbandry` fait partie de celles du type de placeable."
+  },
+  "PlaceableHusbandryAnimals.registerEvents": {
+   "en": "Declares the events `onHusbandryAnimalsCreated` and `onHusbandryAnimalsUpdate` on the placeable type.",
+   "fr": "Déclare les événements `onHusbandryAnimalsCreated` et `onHusbandryAnimalsUpdate` sur le type de placeable."
+  },
+  "PlaceableHusbandryAnimals.registerFunctions": {
+   "en": "Registers the specialization's public methods (cluster access, animal counts, riding, delivery area, navigation mesh helpers) on the placeable type. Some registered methods have no body in the SDK dump.",
+   "fr": "Enregistre les méthodes publiques de la spécialisation (accès aux clusters, nombres d'animaux, équitation, zone de livraison, maillage de navigation) sur le type de placeable. Certaines méthodes enregistrées n'ont pas de corps dans le dump du SDK."
+  },
+  "PlaceableHusbandryAnimals.registerOverwrittenFunctions": {
+   "en": "Registers overrides of `getNeedDayChanged`, `updateInfo`, `updateOutput`, `canBeSold`, `getConditionInfos`, `getAnimalInfos` and `getAnimalDescription`.",
+   "fr": "Enregistre les surcharges de `getNeedDayChanged`, `updateInfo`, `updateOutput`, `canBeSold`, `getConditionInfos`, `getAnimalInfos` et `getAnimalDescription`."
+  },
+  "PlaceableHusbandryAnimals.registerEventListeners": {
+   "en": "Subscribes the specialization to `onLoad`, `onDelete`, `onFinalizePlacement`, `onReadStream`, `onWriteStream`, `onUpdate`, `onPeriodChanged` and `onDayChanged`.",
+   "fr": "Abonne la spécialisation à `onLoad`, `onDelete`, `onFinalizePlacement`, `onReadStream`, `onWriteStream`, `onUpdate`, `onPeriodChanged` et `onDayChanged`."
+  },
+  "PlaceableHusbandryAnimals.registerXMLPaths": {
+   "en": "Registers the XML keys under `husbandry.animals`: navigation nodes and external file, animal type and config file, raycast distance, max animals, area per animal, visual animal limit, loading trigger and delivery areas.",
+   "fr": "Enregistre les clés XML sous `husbandry.animals` : noeuds et fichier externe de navigation, type et fichier de configuration des animaux, distance de raycast, nombre maximal d'animaux, surface par animal, limite d'animaux visuels, déclencheur de chargement et zones de livraison."
+  },
+  "PlaceableHusbandryAnimals.registerSavegameXMLPaths": {
+   "en": "Registers the savegame XML paths of the animal clusters by delegating to `AnimalClusterSystem.registerSavegameXMLPaths` under `.clusters`.",
+   "fr": "Enregistre les chemins XML de sauvegarde des clusters d'animaux en déléguant à `AnimalClusterSystem.registerSavegameXMLPaths` sous `.clusters`."
+  },
+  "PlaceableHusbandryAnimals.initSpecialization": {
+   "en": "Adds the `numberAnimals` store spec (capacity icon) and, only in a development version, the console commands `gsHusbandryAddAnimals` and `gsHusbandryDebugToggle`.",
+   "fr": "Ajoute la spécification de boutique `numberAnimals` (icône de capacité) et, uniquement dans une version de développement, les commandes console `gsHusbandryAddAnimals` et `gsHusbandryDebugToggle`."
+  },
+  "PlaceableHusbandryAnimals:onLoad": {
+   "en": "Reads the animal type (error state if missing or unknown), navigation mesh settings, capacity values and delivery areas, creates the cluster husbandry and cluster system, and subscribes to `AnimalClusterUpdateEvent`. May start an async load of an external navigation mesh and creates the loading trigger.",
+   "fr": "Lit le type d'animal (état d'erreur s'il manque ou est inconnu), les réglages du maillage de navigation, les capacités et les zones de livraison, crée le cluster husbandry et le système de clusters, et s'abonne à `AnimalClusterUpdateEvent`. Peut lancer le chargement asynchrone d'un maillage de navigation externe et crée le déclencheur de chargement."
+  },
+  "PlaceableHusbandryAnimals:onDelete": {
+   "en": "Unsubscribes from messages, removes the navigation placement collision, removes and deletes the cluster husbandry, deletes the loading trigger and releases the shared navigation i3D file.",
+   "fr": "Se désabonne des messages, retire la collision de placement du maillage de navigation, retire et supprime le cluster husbandry, supprime le déclencheur de chargement et libère le fichier i3D partagé de navigation."
+  },
+  "PlaceableHusbandryAnimals:onFinalizePlacement": {
+   "en": "Creates the navigation mesh once placement is final; for placeables loaded from a savegame it also schedules a one-shot callback at mission start.",
+   "fr": "Crée le maillage de navigation une fois le placement finalisé ; pour un placeable chargé depuis une sauvegarde, programme aussi un rappel unique au démarrage de la mission."
+  },
+  "PlaceableHusbandryAnimals:onReadStream": {
+   "en": "Network read: lets the cluster system read the animal data sent by the server when a client joins.",
+   "fr": "Lecture réseau : le système de clusters lit les données d'animaux envoyées par le serveur quand un client rejoint."
+  },
+  "PlaceableHusbandryAnimals:onWriteStream": {
+   "en": "Network write: lets the cluster system write its animal data to the stream for a joining client.",
+   "fr": "Écriture réseau : le système de clusters écrit ses données d'animaux dans le flux pour un client qui rejoint."
+  },
+  "PlaceableHusbandryAnimals:saveToXMLFile": {
+   "en": "Saves the animal clusters under the `.clusters` key of the savegame.",
+   "fr": "Sauvegarde les clusters d'animaux sous la clé `.clusters` de la sauvegarde."
+  },
+  "PlaceableHusbandryAnimals:loadFromXMLFile": {
+   "en": "Loads the animal clusters from the `.clusters` key of the savegame.",
+   "fr": "Charge les clusters d'animaux depuis la clé `.clusters` de la sauvegarde."
+  },
+  "PlaceableHusbandryAnimals:onUpdate": {
+   "en": "Per-frame update: on the server updates the cluster system, then updates the cluster husbandry, refreshes the visual animals if flagged, and keeps the placeable active while the husbandry still needs updates.",
+   "fr": "Mise à jour par frame : sur le serveur met à jour le système de clusters, puis le cluster husbandry, rafraîchit les animaux visuels si demandé, et maintient le placeable actif tant que l'élevage a besoin de mises à jour."
+  },
+  "PlaceableHusbandryAnimals:onExternalNavigationMeshLoaded": {
+   "en": "Callback of the async external navigation file load: picks the mesh node by path, links it under the navigation root node, deletes the loaded root and finishes the loading task. Logs an error if the node is missing.",
+   "fr": "Rappel du chargement asynchrone du fichier de navigation externe : sélectionne le noeud de maillage par son chemin, le rattache sous le noeud racine de navigation, supprime la racine chargée et termine la tâche de chargement. Journalise une erreur si le noeud manque."
+  },
+  "PlaceableHusbandryAnimals:createHusbandry": {
+   "en": "Validates the navigation mesh (exists, is a navigation mesh, has surface area), then creates the engine husbandry with the single- or multiplayer animal collision mask and registers it in the husbandry system. Raises `onHusbandryAnimalsCreated` on success.",
+   "fr": "Valide le maillage de navigation (présent, de type maillage de navigation, surface non nulle), puis crée l'élevage moteur avec le masque de collision animal solo ou multijoueur et l'enregistre dans le husbandry system. Déclenche `onHusbandryAnimalsCreated` en cas de succès."
+  },
+  "PlaceableHusbandryAnimals:updateInfo": {
+   "en": "Extends the base info list with the animal count (current / maximum) and the average health percentage across all clusters.",
+   "fr": "Complète la liste d'informations de base avec le nombre d'animaux (actuel / maximum) et la santé moyenne en pourcentage de tous les clusters."
+  },
+  "PlaceableHusbandryAnimals:getNeedDayChanged": {
+   "en": "Override that always returns true, so this husbandry always asks for day-change callbacks.",
+   "fr": "Surcharge qui renvoie toujours vrai : cet élevage demande toujours les rappels de changement de jour."
+  },
+  "PlaceableHusbandryAnimals:onMissionStarted": {
+   "en": "One-shot callback at mission start that refreshes the visual animals, so a dedicated server (paused at startup) shows them to the first joining player.",
+   "fr": "Rappel unique au démarrage de la mission qui rafraîchit les animaux visuels, afin qu'un serveur dédié (en pause au démarrage) les montre au premier joueur qui rejoint."
+  },
+  "PlaceableHusbandryAnimals:updateVisualAnimals": {
+   "en": "Pushes the current clusters to the cluster husbandry so the visible animals match the data, and keeps the placeable active.",
+   "fr": "Transmet les clusters actuels au cluster husbandry pour que les animaux visibles correspondent aux données, et maintient le placeable actif."
+  },
+  "PlaceableHusbandryAnimals:getAnimalTypeIndex": {
+   "en": "Returns the animal type index of this husbandry.",
+   "fr": "Renvoie l'indice du type d'animal de cet élevage."
+  },
+  "PlaceableHusbandryAnimals:updateOutput": {
+   "en": "Override: on the server updates each cluster's health with the food factor, then calls the parent implementation.",
+   "fr": "Surcharge : sur le serveur met à jour la santé de chaque cluster avec le facteur de nourriture, puis appelle l'implémentation parente."
+  },
+  "PlaceableHusbandryAnimals:onPeriodChanged": {
+   "en": "Server only. For each cluster runs its period logic and reproduction; newborns are added as a new pending cluster, limited by the free slots, and the breeding farm stat is updated.",
+   "fr": "Serveur uniquement. Pour chaque cluster exécute sa logique de période et de reproduction ; les nouveau-nés forment un nouveau cluster en attente, limité par les places libres, et la statistique d'élevage de la ferme est mise à jour."
+  },
+  "PlaceableHusbandryAnimals:onDayChanged": {
+   "en": "Server only: calls the day-change handler of every animal cluster.",
+   "fr": "Serveur uniquement : appelle le gestionnaire de changement de jour de chaque cluster d'animaux."
+  },
+  "PlaceableHusbandryAnimals:getNumOfAnimals": {
+   "en": "Returns the total number of animals, summed over all clusters.",
+   "fr": "Renvoie le nombre total d'animaux, somme sur tous les clusters."
+  },
+  "PlaceableHusbandryAnimals:getMaxNumOfAnimals": {
+   "en": "Returns the current capacity: `spec.maxNumAnimals` if set, otherwise the base maximum from the XML.",
+   "fr": "Renvoie la capacité actuelle : `spec.maxNumAnimals` s'il est défini, sinon le maximum de base du XML."
+  },
+  "PlaceableHusbandryAnimals:getNumOfFreeAnimalSlots": {
+   "en": "Returns the number of free slots (capacity minus animals), never below zero.",
+   "fr": "Renvoie le nombre de places libres (capacité moins animaux), jamais inférieur à zéro."
+  },
+  "PlaceableHusbandryAnimals:getSupportsAnimalSubType": {
+   "en": "Returns true if the given animal subtype belongs to this husbandry's animal type.",
+   "fr": "Renvoie vrai si le sous-type d'animal donné appartient au type d'animal de cet élevage."
+  },
+  "PlaceableHusbandryAnimals:getNumOfClusters": {
+   "en": "Returns the number of animal clusters in the husbandry.",
+   "fr": "Renvoie le nombre de clusters d'animaux de l'élevage."
+  },
+  "PlaceableHusbandryAnimals:getClusters": {
+   "en": "Returns the list of animal clusters from the cluster system.",
+   "fr": "Renvoie la liste des clusters d'animaux du système de clusters."
+  },
+  "PlaceableHusbandryAnimals:getCluster": {
+   "en": "Returns the cluster at the given index from the cluster system.",
+   "fr": "Renvoie le cluster à l'indice donné dans le système de clusters."
+  },
+  "PlaceableHusbandryAnimals:getClusterById": {
+   "en": "Returns the cluster with the given id from the cluster system.",
+   "fr": "Renvoie le cluster portant l'identifiant donné dans le système de clusters."
+  },
+  "PlaceableHusbandryAnimals:addCluster": {
+   "en": "Queues a cluster as pending add in the cluster system and wakes the placeable. Does nothing if the cluster is nil.",
+   "fr": "Place un cluster en attente d'ajout dans le système de clusters et réveille le placeable. Sans effet si le cluster est nil."
+  },
+  "PlaceableHusbandryAnimals:addAnimals": {
+   "en": "Adds animals of a subtype with a given age: as one merged cluster if the cluster supports merging, otherwise as one single-animal cluster per animal.",
+   "fr": "Ajoute des animaux d'un sous-type avec un âge donné : en un seul cluster fusionné si le cluster le permet, sinon en un cluster d'un animal par animal."
+  },
+  "PlaceableHusbandryAnimals:getClusterSystem": {
+   "en": "Returns the `AnimalClusterSystem` of this husbandry.",
+   "fr": "Renvoie l'`AnimalClusterSystem` de cet élevage."
+  },
+  "PlaceableHusbandryAnimals:updatedClusters": {
+   "en": "Handler for `AnimalClusterUpdateEvent`; if it concerns this husbandry, raises `onHusbandryAnimalsUpdate`, publishes `HUSBANDRY_ANIMALS_CHANGED` and flags a visual refresh.",
+   "fr": "Gestionnaire de `AnimalClusterUpdateEvent` ; s'il concerne cet élevage, déclenche `onHusbandryAnimalsUpdate`, publie `HUSBANDRY_ANIMALS_CHANGED` et demande un rafraîchissement visuel."
+  },
+  "PlaceableHusbandryAnimals:renameAnimal": {
+   "en": "Sends an `AnimalNameEvent` (network sync unless `noEventSend`) and sets the new name on the cluster with that id.",
+   "fr": "Envoie un `AnimalNameEvent` (synchronisation réseau sauf si `noEventSend`) et applique le nouveau nom au cluster ayant cet identifiant."
+  },
+  "PlaceableHusbandryAnimals:getAnimalSupportsRiding": {
+   "en": "Returns true if the cluster with this id has a rideable vehicle file.",
+   "fr": "Renvoie vrai si le cluster portant cet identifiant possède un fichier de véhicule montable."
+  },
+  "PlaceableHusbandryAnimals:getAnimalCanBeRidden": {
+   "en": "Asks the husbandry system whether the owning farm may add another rideable animal; the cluster id is not used.",
+   "fr": "Demande au husbandry system si la ferme propriétaire peut ajouter un autre animal montable ; l'identifiant du cluster n'est pas utilisé."
+  },
+  "PlaceableHusbandryAnimals:startRiding": {
+   "en": "On a client sends an `AnimalRidingEvent` to the server. On the server removes one animal from the cluster and spawns the rideable vehicle at its position; the player enters it once loaded.",
+   "fr": "Sur un client, envoie un `AnimalRidingEvent` au serveur. Sur le serveur retire un animal du cluster et fait apparaître le véhicule montable à sa position ; le joueur y entre une fois chargé."
+  },
+  "PlaceableHusbandryAnimals:onLoadedRideable": {
+   "en": "Callback after the rideable loads: on failure gives the animal back to the cluster; on success clones the cluster with one animal, assigns it to the vehicle and sets the player to enter.",
+   "fr": "Rappel après chargement du véhicule montable : en cas d'échec rend l'animal au cluster ; en cas de succès clone le cluster avec un animal, l'assigne au véhicule et fait entrer le joueur."
+  },
+  "PlaceableHusbandryAnimals:loadDeliveryArea": {
+   "en": "Reads one delivery area (start, width and height nodes) from the XML; logs a warning and returns false if any node is missing.",
+   "fr": "Lit une zone de livraison (noeuds de départ, de largeur et de hauteur) depuis le XML ; journalise un avertissement et renvoie faux si un noeud manque."
+  },
+  "PlaceableHusbandryAnimals:getIsInAnimalDeliveryArea": {
+   "en": "Tests whether the world position (x, z) is in the delivery zone: the outdoor contour polygon if present, else any delivery parallelogram, else within 30 m of the placeable root when no area is defined.",
+   "fr": "Teste si la position monde (x, z) est dans la zone de livraison : le polygone de contour extérieur s'il existe, sinon l'un des parallélogrammes de livraison, sinon à moins de 30 m de la racine du placeable si aucune zone n'est définie."
+  },
+  "PlaceableHusbandryAnimals.loadSpecValueNumberAnimals": {
+   "en": "Store spec loader: returns the max animal count and the animal type name if the XML has `placeable.husbandry.animals`, otherwise nil.",
+   "fr": "Chargeur de spécification de boutique : renvoie le nombre maximal d'animaux et le nom du type d'animal si le XML contient `placeable.husbandry.animals`, sinon nil."
+  },
+  "PlaceableHusbandryAnimals.getSpecValueNumberAnimals": {
+   "en": "Store spec getter: returns the maximum animal count and the shop icon profile matching cow, sheep, horse, pig or chicken (nil profile for other types).",
+   "fr": "Accesseur de spécification de boutique : renvoie le nombre maximal d'animaux et le profil d'icône de boutique correspondant à vache, mouton, cheval, porc ou poule (profil nil pour les autres types)."
+  },
+  "PlaceableHusbandryAnimals:canBeSold": {
+   "en": "Override: refuses the sale with a message while the husbandry contains animals, otherwise defers to the parent.",
+   "fr": "Surcharge : refuse la vente avec un message tant que l'élevage contient des animaux, sinon délègue au parent."
+  },
+  "PlaceableHusbandryAnimals:getConditionInfos": {
+   "en": "Override: for animal types other than horse and pig, appends a productivity entry (global times local production factor, as a percentage).",
+   "fr": "Surcharge : pour les types d'animaux autres que cheval et porc, ajoute une entrée de productivité (facteur global fois facteur local, en pourcentage)."
+  },
+  "PlaceableHusbandryAnimals:getAnimalInfos": {
+   "en": "Override: gets the parent info list and lets the cluster append its own entries. Note: calls the parent without forwarding the cluster argument.",
+   "fr": "Surcharge : récupère la liste d'infos du parent et laisse le cluster y ajouter les siennes. À noter : appelle le parent sans lui transmettre l'argument cluster."
+  },
+  "PlaceableHusbandryAnimals:getAnimalDescription": {
+   "en": "Override: appends the store description of the visual matching the cluster's subtype and age to the parent text.",
+   "fr": "Surcharge : ajoute au texte du parent la description boutique du visuel correspondant au sous-type et à l'âge du cluster."
+  },
+  "PlaceableHusbandryAnimals.consoleCommandAddAnimals": {
+   "en": "Development console command `gsHusbandryAddAnimals`: raycasts below the active camera to find the husbandry, then adds animals (positive count, optional subtype) or removes them (negative count). Returns a status message.",
+   "fr": "Commande console de développement `gsHusbandryAddAnimals` : lance un raycast sous la caméra active pour trouver l'élevage, puis ajoute des animaux (nombre positif, sous-type optionnel) ou en retire (nombre négatif). Renvoie un message d'état."
+  }
+ }
+}

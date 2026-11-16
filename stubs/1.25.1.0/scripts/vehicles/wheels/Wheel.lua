@@ -1,11 +1,11 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/wheels/Wheel.lua (generated stub, FS25 Lua Atlas)
 
---- Classe (pas une spécialisation) qui représente une roue complète : elle ne contient presque pas de logique propre et orchestre des sous-objets créés dans Wheel.new (Wheel.lua:53-58) : physics (WheelPhysics), steering (WheelSteering), destruction (WheelDestruction), effects (WheelEffects) et debug (WheelDebug), plus les roues visuelles (WheelVisual) et cales (WheelChock) chargées en XML. Appelée par la spécialisation Wheels : Wheels:onUpdate (Wheels.lua:844-846) lit une fois par frame g_currentMission.environment.weather:getGroundWetness() et le passe à Wheel:update(dt, currentUpdateIndex, groundWetness) ; Wheels:onUpdateTick (Wheels.lua:935) fait de même pour Wheel:updateTick. C'est le seul accès météo de ce fichier : une valeur groundWetness, dont l'origine (Weather) est absente du dump : NON VÉRIFIÉ. Serveur/client : sur le serveur, Wheel:update lance physics:serverUpdate (contact sol, friction, frein, direction) seulement si le véhicule est dans la physique ; sur le client, physics:clientUpdate (lecture du type de sol seulement). La partie visuelle (position de roue, rotation, suspension, direction, effets) n'est exécutée que si le véhicule est plus proche que Wheel.VISUAL_WHEEL_UPDATE_DISTANCE (valeur non définie dans ce fichier : NON VÉRIFIÉ) ou si force est vrai ; les seuils de mise à jour Wheel.STEERING_ANGLE_THRESHOLD et Wheel.SUSPENSION_THRESHOLD ne sont pas non plus définis ici. Le pas de temps dt (ms) est transmis tel quel ; Wheels.lua:633 (onLoadFinished) appelle update avec dt = 99999 et force pour initialiser les positions. Particularité de répartition de charge : chaque roue a un updateIndex de 1 à 4 ((index-1) mod 4 + 1) utilisé par WheelPhysics pour ne mesurer le contact qu'une frame sur quatre. Points d'extension pour un moddeur : aucune fonction enregistrée ; accès via vehicle.spec_wheels.wheels[i] (objet Wheel) et ses champs physics / effects / destruction ; surcharge directe de Wheel.* (partagé par toutes les roues) possible.
+--- Class (not a specialization) representing a complete wheel: it has almost no logic of its own and orchestrates sub-objects created in Wheel.new (Wheel.lua:53-58): physics (WheelPhysics), steering (WheelSteering), destruction (WheelDestruction), effects (WheelEffects) and debug (WheelDebug), plus the visual wheels (WheelVisual) and chocks (WheelChock) loaded from XML. Called by the Wheels specialization: Wheels:onUpdate (Wheels.lua:844-846) reads g_currentMission.environment.weather:getGroundWetness() once per frame and passes it to Wheel:update(dt, currentUpdateIndex, groundWetness); Wheels:onUpdateTick (Wheels.lua:935) does the same for Wheel:updateTick. This is the only weather access in this file: a groundWetness value whose origin (Weather) is absent from the dump: UNVERIFIED. Server/client: on the server, Wheel:update runs physics:serverUpdate (ground contact, friction, brake, steering) only if the vehicle is in physics; on the client, physics:clientUpdate (ground type reading only). The visual part (wheel position, rotation, suspension, steering, effects) only runs if the vehicle is closer than Wheel.VISUAL_WHEEL_UPDATE_DISTANCE (value not defined in this file: UNVERIFIED) or if force is true; the thresholds Wheel.STEERING_ANGLE_THRESHOLD and Wheel.SUSPENSION_THRESHOLD are not defined here either. The time step dt (ms) is passed through unchanged; Wheels.lua:633 (onLoadFinished) calls update with dt = 99999 and force to initialize positions. Load-spreading detail: each wheel has an updateIndex from 1 to 4 ((index-1) mod 4 + 1) used by WheelPhysics to measure contact only one frame in four. Extension points for a modder: no registered function; access via vehicle.spec_wheels.wheels[i] (Wheel object) and its physics / effects / destruction fields; direct override of Wheel.* (shared by all wheels) is possible.
 ---@class Wheel
 Wheel = {}
 
---- Crée la roue : stocke véhicule, XML, objet XML de roue, indices ; initialise frein, état de synchronisation de contact (syncContactState = false) et les cinq sous-objets physics, steering, destruction, effects, debug.
+--- Creates the wheel: stores vehicle, XML, wheel XML object and indices; initializes brake, contact sync state (syncContactState = false) and the five sub-objects physics, steering, destruction, effects, debug.
 ---@param vehicle any
 ---@param xmlFile any
 ---@param baseKey any
@@ -17,74 +17,74 @@ Wheel = {}
 ---@param customMt any
 function Wheel.new(vehicle, xmlFile, baseKey, wheelKey, wheelIndex, configIndex, indexToParentIndex, baseDirectory, customMt) end
 
---- Charge la roue : nœud repr obligatoire (sinon échec), nœuds drive/link (en crée un nouveau repr si le driveNode n'est pas fourni), ratio de translation de suspension, puis délègue à physics, steering, destruction et effects ; charge matériaux, cales de roue, roue visuelle principale et roues additionnelles (jumelées) en leur transmettant la masse supplémentaire. Renvoie false si la roue n'est pas dans un composant actif ou si un sous-chargement échoue.
+--- Loads the wheel: mandatory repr node (otherwise failure), drive/link nodes (creates a new repr if no driveNode is given), suspension translation ratio, then delegates to physics, steering, destruction and effects; loads materials, wheel chocks, the main visual wheel and additional (dual) wheels, passing them the extra mass. Returns false if the wheel is not in an active component or if a sub-load fails.
 function Wheel:loadFromXML() end
 
---- Calcule la largeur et le décalage totaux de la forme physique à partir des roues visuelles, puis finalise physics, destruction et effects et libère l'objet XML.
+--- Computes the total width and offset of the physics shape from the visual wheels, then finalizes physics, destruction and effects and frees the XML object.
 function Wheel:finalize() end
 
---- Post-chargement : propage aux roues visuelles, à physics et à effects.
+--- Post-load: propagates to the visual wheels, to physics and to effects.
 function Wheel:postLoad() end
 
---- Libère roues visuelles, cales, effets (particules, traces) et débogage, ainsi que l'objet XML.
+--- Frees visual wheels, chocks, effects (particles, tracks) and debug, as well as the XML object.
 function Wheel:delete() end
 
---- Client : lit l'état réseau de la roue en le déléguant à physics:readStream (contact, position, suspension, rotation selon la configuration).
+--- Client: reads the wheel network state by delegating to physics:readStream (contact, position, suspension, rotation depending on configuration).
 ---@param streamId any
 ---@param updateInterpolation any
 function Wheel:readStream(streamId, updateInterpolation) end
 
---- Serveur : écrit l'état réseau de la roue via physics:writeStream.
+--- Server: writes the wheel network state via physics:writeStream.
 ---@param streamId any
 function Wheel:writeStream(streamId) end
 
---- Par frame. Serveur : physics:serverUpdate (si dans la physique) ; client : physics:clientUpdate. Puis, si le véhicule est proche (ou force), applique aux nœuds la direction, la rotation xDrive et la suspension issues de physics:getVisualInfo, met à jour les roues visuelles, la direction (WheelSteering), les cales, et appelle effects:update(dt, groundWetness, currentUpdateIndex). groundWetness est transmis tel quel aux effets de roue (particules humides/sèches, traces).
+--- Per frame. Server: physics:serverUpdate (if in physics); client: physics:clientUpdate. Then, if the vehicle is close (or force), applies to the nodes the steering, xDrive rotation and suspension from physics:getVisualInfo, updates the visual wheels, steering (WheelSteering), chocks, and calls effects:update(dt, groundWetness, currentUpdateIndex). groundWetness is passed unchanged to the wheel effects (wet/dry particles, tracks).
 ---@param dt any
 ---@param currentUpdateIndex any
 ---@param groundWetness any
 ---@param force any
 function Wheel:update(dt, currentUpdateIndex, groundWetness, force) end
 
---- Client : interpole les données réseau de la roue (position, suspension, rotation) via physics:updateInterpolation.
+--- Client: interpolates the wheel network data (position, suspension, rotation) via physics:updateInterpolation.
 ---@param dt any
 ---@param interpolationAlpha any
 function Wheel:updateInterpolation(dt, interpolationAlpha) end
 
---- Par tick : physics:updateTick (couleur du sol, saleté de piste, vitesse de rotation limitée) puis effects:updateTick avec groundWetness et la distance de mise à jour du véhicule.
+--- Per tick: physics:updateTick (ground color, track dirt, limited rotation speed) then effects:updateTick with groundWetness and the vehicle update distance.
 ---@param dt any
 ---@param groundWetness any
 ---@param currentUpdateDistance any
 function Wheel:updateTick(dt, groundWetness, currentUpdateDistance) end
 
---- Serveur : fait appliquer par physics les changements de position/friction en attente (un seul recalcul par frame).
+--- Server: makes physics apply the pending position/friction changes (a single recompute per frame).
 ---@param dt any
 function Wheel:postUpdate(dt) end
 
---- Fin de mise à jour : délègue à effects:onUpdateEnd (arrêt des effets).
+--- End of update: delegates to effects:onUpdateEnd (effects stop).
 ---@param dt any
 function Wheel:onUpdateEnd(dt) end
 
---- Met les cales de roue en position de stationnement forcée (update avec true) avant attelage.
+--- Puts the wheel chocks in the forced parking position (update with true) before attaching.
 function Wheel:onPreAttach() end
 
---- Remet les cales dans leur état normal (update avec false) après dételage.
+--- Returns the chocks to their normal state (update with false) after detaching.
 function Wheel:onPostDetach() end
 
---- Crée la forme de roue dans le moteur physique avec la force de freinage donnée (via physics).
+--- Creates the wheel shape in the physics engine with the given braking force (via physics).
 ---@param brakeForce any
 function Wheel:addToPhysics(brakeForce) end
 
---- Renvoie vers physics:updatePhysics pour appliquer frein/couple/direction au moteur physique.
+--- Forwards to physics:updatePhysics to apply brake/torque/steering to the physics engine.
 ---@param brakeForce any
 function Wheel:updatePhysics(brakeForce) end
 
---- Retire la roue de la physique (via physics).
+--- Removes the wheel from physics (via physics).
 function Wheel:removeFromPhysics() end
 
---- Masse de la roue : masse physique plus masse supplémentaire des roues visuelles (t).
+--- Wheel mass: physics mass plus the extra mass of the visual wheels (t).
 function Wheel:getMass() end
 
---- Transmet à physics et steering les limites et vitesses de rotation de direction.
+--- Passes the steering limits and rotation speeds to physics and steering.
 ---@param rotMin any
 ---@param rotMax any
 ---@param rotSpeed any
@@ -92,18 +92,18 @@ function Wheel:getMass() end
 ---@param inverted any
 function Wheel:setSteeringValues(rotMin, rotMax, rotSpeed, rotSpeedNeg, inverted) end
 
---- Mémorise la position de pédale (0..1) et applique frein = freinage véhicule x pédale.
+--- Stores the pedal position (0..1) and applies brake = vehicle braking x pedal.
 ---@param brakePedal any
 function Wheel:setBrakePedal(brakePedal) end
 
---- Transmet à WheelDestruction le mode « care wheel » (pas de destruction de cultures).
+--- Passes to WheelDestruction the "care wheel" mode (no crop destruction).
 ---@param isCareWheel any
 function Wheel:setIsCareWheel(isCareWheel) end
 
---- Renvoie le premier nœud de pneu trouvé parmi les roues visuelles, ou nil.
+--- Returns the first tire node found among the visual wheels, or nil.
 function Wheel:getFirstTireNode() end
 
---- Déclare les clés XML d'une roue (physics#repr, #driveNode, #linkNode, #transRatio, #material, #isLeft, #rimOffset, #filename, additionalWheel, wheelChock...) et enchaîne sur les registerXMLPaths des sous-classes (WheelPhysics, WheelSteering, WheelDestruction, WheelEffects, WheelVisual, WheelChock).
+--- Declares the XML keys of a wheel (physics#repr, #driveNode, #linkNode, #transRatio, #material, #isLeft, #rimOffset, #filename, additionalWheel, wheelChock...) and chains to the registerXMLPaths of the sub-classes (WheelPhysics, WheelSteering, WheelDestruction, WheelEffects, WheelVisual, WheelChock).
 ---@param schema XMLSchema
 ---@param key string
 function Wheel.registerXMLPaths(schema, key) end

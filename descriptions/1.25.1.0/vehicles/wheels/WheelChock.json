@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/wheels/WheelChock.lua",
+  "module": {
+    "en": "A wheel chock (cale de roue) attached to a wheel: loads a shared i3d model, then either parks it on a parking node or places it against the tire, computing position from the wheel radius and chock height. Created per wheel and driven by the vehicle (which decides whether chocks are allowed).",
+    "fr": "Une cale de roue associée à une roue : charge un modèle i3d partagé, puis la range sur un nœud de parking ou la place contre le pneu en calculant la position d'après le rayon de la roue et la hauteur de la cale. Créée par roue et pilotée par le véhicule (qui décide si les cales sont autorisées)."
+  },
+  "fonctions": {
+    "WheelChock.new": {
+      "en": "Creates a chock for the given wheel; starts not in parking position with a zero wheel radius offset.",
+      "fr": "Crée une cale pour la roue donnée ; elle n'est pas en position de rangement au départ, avec un décalage de rayon nul."
+    },
+    "WheelChock:delete": {
+      "en": "Deletes the chock node and releases the shared i3d load request.",
+      "fr": "Supprime le nœud de la cale et libère la requête de chargement i3d partagée."
+    },
+    "WheelChock:loadFromXML": {
+      "en": "Reads filename, parking node, scale, inversion, default parked state, offset and material from XML, calls the vehicle `onLoadWheelChockFromXML` hook and starts the shared i3d load. Returns false on an invalid filename.",
+      "fr": "Lit le nom de fichier, le nœud de parking, l'échelle, l'inversion, l'état rangé par défaut, le décalage et le matériau depuis le XML, appelle le hook `onLoadWheelChockFromXML` du véhicule et lance le chargement i3d partagé. Retourne false si le nom de fichier est invalide."
+    },
+    "WheelChock:onI3DLoaded": {
+      "en": "Callback after the i3d is loaded: takes the first child as the chock node, reads `posRefNode`, `parkedNode` and `linkedNode` user attributes, applies scale and material, then calls `update`. Warns if `posRefNode` is missing.",
+      "fr": "Callback après chargement du i3d : prend le premier enfant comme nœud de cale, lit les attributs utilisateur `posRefNode`, `parkedNode` et `linkedNode`, applique échelle et matériau, puis appelle `update`. Avertit si `posRefNode` manque."
+    },
+    "WheelChock:update": {
+      "en": "Places the chock either in its parking node or against the wheel (computed from tire radius, chock height and offsets) and toggles visibility of the parked/linked helper nodes. Forced to parking if the vehicle does not allow chocks. Returns true when a node exists.",
+      "fr": "Place la cale soit sur son nœud de parking, soit contre la roue (calcul selon rayon du pneu, hauteur de cale et décalages) et bascule la visibilité des nœuds auxiliaires rangé/posé. Forcée en rangement si le véhicule n'autorise pas les cales. Retourne true si un nœud existe."
+    },
+    "WheelChock.registerXMLPaths": {
+      "en": "Registers the XML schema paths of a wheel chock (filename, scale, parking node, inversion, default parked, offset) plus the vehicle material paths.",
+      "fr": "Enregistre les chemins du schéma XML d'une cale (fichier, échelle, nœud de parking, inversion, rangée par défaut, décalage) ainsi que ceux du matériau de véhicule."
+    }
+  }
+}

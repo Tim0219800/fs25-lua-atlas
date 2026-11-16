@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/VehicleDetachEvent.lua",
+ "module": {
+  "en": "Network event announcing that an implement was detached from a vehicle. Unlike most events here, the work is done directly in `readStream`; `run` is empty. The flag passed to `detachImplementByObject` differs depending on whether the sender is the server.",
+  "fr": "Événement réseau annonçant qu'un outil a été dételé d'un véhicule. Contrairement à la plupart des événements voisins, le traitement se fait directement dans `readStream` ; `run` est vide. L'argument passé à `detachImplementByObject` dépend de l'expéditeur (serveur ou non)."
+ },
+ "fonctions": {
+  "VehicleDetachEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream deserialization.",
+   "fr": "Crée une instance d'événement vide pour la désérialisation depuis un flux."
+  },
+  "VehicleDetachEvent.new": {
+   "en": "Builds the event from the vehicle and the implement to detach.",
+   "fr": "Construit l'événement à partir du véhicule et de l'outil à dételer."
+  },
+  "VehicleDetachEvent:readStream": {
+   "en": "Reads vehicle and implement, then, if the vehicle is synchronized, calls `detachImplementByObject`; passes `true` as second argument only when the sender is the server.",
+   "fr": "Lit le véhicule et l'outil puis, si le véhicule est synchronisé, appelle `detachImplementByObject` ; passe `true` en second argument seulement quand l'expéditeur est le serveur."
+  },
+  "VehicleDetachEvent:writeStream": {
+   "en": "Writes the vehicle and implement node objects to the stream.",
+   "fr": "Écrit dans le flux les objets véhicule et outil."
+  },
+  "VehicleDetachEvent:run": {
+   "en": "Empty: all processing is done in `readStream`.",
+   "fr": "Vide : tout le traitement est fait dans `readStream`."
+  }
+ }
+}

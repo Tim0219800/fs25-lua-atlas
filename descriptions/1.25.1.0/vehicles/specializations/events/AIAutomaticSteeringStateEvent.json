@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/AIAutomaticSteeringStateEvent.lua",
+ "module": {
+  "en": "Network event that switches the automatic steering of a vehicle on or off, optionally with the segment index and side to start on. Clients send it to the server, which applies it and rebroadcasts. Use `sendEvent` to emit it.",
+  "fr": "Événement réseau qui active ou désactive le guidage automatique d'un véhicule, éventuellement avec l'indice et le côté du segment de départ. Les clients l'envoient au serveur, qui l'applique et le rediffuse. Utiliser `sendEvent` pour l'émettre."
+ },
+ "fonctions": {
+  "AIAutomaticSteeringStateEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable; used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe ; utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "AIAutomaticSteeringStateEvent.new": {
+   "en": "Creates the event with vehicle, on/off state, and optional segment index and side.",
+   "fr": "Crée l'événement avec véhicule, état activé/désactivé, et indice et côté de segment optionnels."
+  },
+  "AIAutomaticSteeringStateEvent:readStream": {
+   "en": "Reads the vehicle, the state flag and an optional segment (UInt16 index plus left flag), then calls `run`.",
+   "fr": "Lit le véhicule, l'indicateur d'état et un segment optionnel (indice UInt16 plus indicateur gauche), puis appelle `run`."
+  },
+  "AIAutomaticSteeringStateEvent:writeStream": {
+   "en": "Writes vehicle, state and, if the segment index is set and above 0, the index and left flag.",
+   "fr": "Écrit véhicule, état et, si l'indice de segment est défini et supérieur à 0, l'indice et l'indicateur gauche."
+  },
+  "AIAutomaticSteeringStateEvent:run": {
+   "en": "Applies `setAIAutomaticSteeringEnabled` on a synchronized vehicle (which may return the effective segment), and when received on the server rebroadcasts a new event to clients.",
+   "fr": "Applique `setAIAutomaticSteeringEnabled` sur un véhicule synchronisé (qui peut renvoyer le segment effectif) et, si reçu sur le serveur, rediffuse un nouvel événement aux clients."
+  },
+  "AIAutomaticSteeringStateEvent.sendEvent": {
+   "en": "Sends the event unless `noEventSend` is true: the server broadcasts it, a client sends it to the server.",
+   "fr": "Envoie l'événement sauf si `noEventSend` vaut true : le serveur le diffuse, un client l'envoie au serveur."
+  }
+ }
+}

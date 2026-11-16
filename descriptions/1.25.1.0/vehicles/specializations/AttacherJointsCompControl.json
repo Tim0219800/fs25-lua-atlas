@@ -1,0 +1,61 @@
+{
+ "fichier": "vehicles/specializations/AttacherJointsCompControl.lua",
+ "module": {
+  "en": "Vehicle specialization that stiffens or softens the translation springs of a chosen component joint depending on the mass of the implement hanging on an attacher joint. It requires the AttacherJoints specialization. It adds a `dependentComponentJoint` block to each attacher joint in the vehicle XML and smooths changes with a ValueInterpolator. Everything runs on the server only.",
+  "fr": "Spécialisation de véhicule qui raidit ou assouplit les ressorts de translation d'une articulation de composant choisie selon la masse de l'outil accroché à un attache. Elle exige la spécialisation AttacherJoints. Elle ajoute un bloc `dependentComponentJoint` à chaque attache dans le XML du véhicule et lisse les changements avec un ValueInterpolator. Tout s'exécute uniquement côté serveur."
+ },
+ "fonctions": {
+  "AttacherJointsCompControl.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type includes the AttacherJoints specialization.",
+   "fr": "Renvoie true seulement si le type de véhicule contient la spécialisation AttacherJoints."
+  },
+  "AttacherJointsCompControl.initSpecialization": {
+   "en": "Registers the XML schema entries for the `dependentComponentJoint` block of an attacher joint: joint index, spring and damping factors, reference mass and attach/detach interpolation times.",
+   "fr": "Enregistre dans le schéma XML les entrées du bloc `dependentComponentJoint` d'une attache : index de l'articulation, facteurs de ressort et d'amortissement, masse de référence et durées d'interpolation à l'attelage/dételage."
+  },
+  "AttacherJointsCompControl.registerFunctions": {
+   "en": "Registers the three vehicle functions of this specialization: setDependentComponentJointBaseFactors, addDependentComponentJointData and updateDependentComponentJointValues.",
+   "fr": "Enregistre les trois fonctions de véhicule de cette spécialisation : setDependentComponentJointBaseFactors, addDependentComponentJointData et updateDependentComponentJointValues."
+  },
+  "AttacherJointsCompControl.registerOverwrittenFunctions": {
+   "en": "Overrides `addToPhysics` and `loadAttacherJointFromXML` on the vehicle type so the joint factors are initialised and read from XML.",
+   "fr": "Surcharge `addToPhysics` et `loadAttacherJointFromXML` sur le type de véhicule afin d'initialiser les facteurs des articulations et de les lire dans le XML."
+  },
+  "AttacherJointsCompControl.registerEventListeners": {
+   "en": "Subscribes the vehicle to the `onPreLoad` and `onStateChange` events.",
+   "fr": "Abonne le véhicule aux événements `onPreLoad` et `onStateChange`."
+  },
+  "AttacherJointsCompControl:onPreLoad": {
+   "en": "Creates the empty table of dependent joint data. On a non-server instance it removes the `onStateChange` listener, since the logic is server only.",
+   "fr": "Crée la table vide des données d'articulations dépendantes. Sur une instance non serveur, elle retire l'écouteur `onStateChange`, la logique étant réservée au serveur."
+  },
+  "AttacherJointsCompControl:onStateChange": {
+   "en": "On an ATTACH or DETACH vehicle state change, recomputes the dependent joint spring and damping factors.",
+   "fr": "Lors d'un changement d'état ATTACH ou DETACH du véhicule, recalcule les facteurs de ressort et d'amortissement des articulations dépendantes."
+  },
+  "AttacherJointsCompControl:setDependentComponentJointBaseFactors": {
+   "en": "Server only. Sets the base spring and damping factors of a component joint, either replacing them or multiplying the current ones, so other code can scale the joint independently of attached tools.",
+   "fr": "Serveur uniquement. Définit les facteurs de base de ressort et d'amortissement d'une articulation, en les remplaçant ou en multipliant les valeurs actuelles, pour que d'autres scripts puissent la modifier indépendamment des outils attelés."
+  },
+  "AttacherJointsCompControl:addDependentComponentJointData": {
+   "en": "Gets or creates the data record for a component joint index, with getter and setter callbacks that apply spring and damping factors to the three translation limits. Returns nil and logs an XML warning if the index is unknown.",
+   "fr": "Récupère ou crée l'enregistrement de données pour l'index d'une articulation de composant, avec des callbacks qui appliquent les facteurs aux trois limites de translation. Renvoie nil et journalise un avertissement XML si l'index est inconnu."
+  },
+  "AttacherJointsCompControl:updateDependentComponentJointValues": {
+   "en": "Recomputes target factors from the mass of each attached implement (capped at the reference mass) and starts a ValueInterpolator, or applies them at once if `skipInterpolation` is set. Note: the detach test compares the damping target with itself, so its damping half is always true.",
+   "fr": "Recalcule les facteurs cibles d'après la masse de chaque outil attelé (plafonnée à la masse de référence) et lance un ValueInterpolator, ou les applique immédiatement si `skipInterpolation` est défini. À noter : le test de dételage compare la cible d'amortissement à elle-même, donc cette moitié est toujours vraie."
+  },
+  "AttacherJointsCompControl:addToPhysics": {
+   "en": "Calls the parent function and, on the server, immediately applies the joint factors without interpolation. Returns false if the parent failed.",
+   "fr": "Appelle la fonction parente puis, sur le serveur, applique immédiatement les facteurs sans interpolation. Renvoie false si la fonction parente a échoué."
+  },
+  "AttacherJointsCompControl:loadAttacherJointFromXML": {
+   "en": "After the parent load, on the server only, reads the `dependentComponentJoint` block of the attacher joint and stores its factors, reference mass and interpolation times. Returns false if the parent failed.",
+   "fr": "Après le chargement parent, uniquement sur le serveur, lit le bloc `dependentComponentJoint` de l'attache et stocke ses facteurs, sa masse de référence et ses durées d'interpolation. Renvoie false si le parent a échoué."
+  },
+  "AttacherJointsCompControl:updateDebugValues": {
+   "en": "Adds debug display rows: implement mass against reference mass, spring and damping factors per attacher joint, and base and current factors per component joint.",
+   "fr": "Ajoute des lignes d'affichage de debug : masse de l'outil comparée à la masse de référence, facteurs de ressort et d'amortissement par attache, et facteurs de base et actuels par articulation."
+  }
+ }
+}

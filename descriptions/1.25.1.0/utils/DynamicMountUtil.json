@@ -1,0 +1,17 @@
+{
+ "fichier": "utils/DynamicMountUtil.lua",
+ "module": {
+  "en": "Signature only (no body in the SDK dump): helper for mounting objects onto a node with physics joints, normally reached through mountable classes rather than called directly. The mount types it accepts include fork, several auto-attach variants and fixed attach (names taken from the parameter list, UNVERIFIED).",
+  "fr": "Signature seule (pas de corps dans le dump du SDK) : aide pour monter des objets sur un nœud via des joints physiques, normalement appelée par les classes montables plutôt que directement. Les types de montage acceptés incluent fourche, plusieurs variantes d'auto-attache et attache fixe (noms tirés de la liste de paramètres, NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DynamicMountUtil.mountDynamic": {
+   "en": "Signature only (no body in the SDK dump): presumably mounts an object onto a node through a joint of the chosen mount type, with a force acceleration and optional second joint node, and returns a success boolean. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : monte vraisemblablement un objet sur un nœud via un joint du type choisi, avec une accélération de force et un second nœud de joint optionnel, et renvoie un booléen de succès. NON VÉRIFIÉ."
+  },
+  "DynamicMountUtil.unmountDynamic": {
+   "en": "Signature only (no body in the SDK dump): presumably releases a dynamically mounted object, with an optional flag to remove it. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : libère vraisemblablement un objet monté dynamiquement, avec un indicateur optionnel de suppression. NON VÉRIFIÉ."
+  }
+ }
+}

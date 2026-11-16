@@ -1,0 +1,41 @@
+{
+ "fichier": "shop/BrandManager.lua",
+ "module": {
+  "en": "Manager (subclass of AbstractManager) that registers machine and product brands from dataS/brands.xml and from mods, and looks them up by index or name. It also publishes a global `Brand` table mapping upper-case names to indices (for example Brand.LIZARD, used as the fallback). It registers the console command gsBrandUsageList, whose handler consoleCommandBrandUsageList is not defined in this file (UNVERIFIED).",
+  "fr": "Gestionnaire (sous-classe d'AbstractManager) qui enregistre les marques de machines et de produits depuis dataS/brands.xml et depuis les mods, et les retrouve par indice ou par nom. Il publie aussi une table globale `Brand` associant les noms en majuscules aux indices (par exemple Brand.LIZARD, utilisé comme repli). Il enregistre la commande console gsBrandUsageList, dont le gestionnaire consoleCommandBrandUsageList n'est pas défini dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "BrandManager.new": {
+   "en": "Creates the manager and registers the console command gsBrandUsageList, which prints the used brands (handler not in this file, UNVERIFIED).",
+   "fr": "Crée le gestionnaire et enregistre la commande console gsBrandUsageList, qui affiche les marques utilisées (gestionnaire absent de ce fichier, NON VÉRIFIÉ)."
+  },
+  "BrandManager:initDataStructures": {
+   "en": "Resets the brand counter and the name-to-index, name-to-brand and index-to-brand tables, and assigns the global `Brand` to the name-to-index table.",
+   "fr": "Réinitialise le compteur de marques et les tables nom vers indice, nom vers marque et indice vers marque, et affecte le global `Brand` à la table nom vers indice."
+  },
+  "BrandManager:loadMapData": {
+   "en": "Calls the parent loadMapData, then reads every brand of dataS/brands.xml (name, title with optional $l10n_ translation, images, offset) and registers it with addBrand as a non-mod brand. Returns true.",
+   "fr": "Appelle le loadMapData parent, puis lit chaque marque de dataS/brands.xml (nom, titre avec traduction $l10n_ optionnelle, images, décalage) et l'enregistre avec addBrand comme marque non-mod. Retourne true."
+  },
+  "BrandManager:addBrand": {
+   "en": "Registers a brand. The name is upper-cased and must be a valid index name; title, image and baseDir are required, and the shop-overview image defaults to the main one. Returns the brand table, false on missing data, or nil if invalid or already present.",
+   "fr": "Enregistre une marque. Le nom est mis en majuscules et doit être un nom d'indice valide ; titre, image et baseDir sont requis, et l'image de la vue d'ensemble de la boutique prend par défaut l'image principale. Retourne la table de marque, false si des données manquent, ou nil si invalide ou déjà présente."
+  },
+  "BrandManager:getBrandByIndex": {
+   "en": "Returns the brand table for an index, or nil for a nil or unknown index.",
+   "fr": "Retourne la table de marque pour un indice, ou nil pour un indice nil ou inconnu."
+  },
+  "BrandManager:getBrandIconByIndex": {
+   "en": "Returns the icon file path of the brand with the given index, or nil if the index is nil or unknown.",
+   "fr": "Retourne le chemin du fichier d'icône de la marque d'indice donné, ou nil si l'indice est nil ou inconnu."
+  },
+  "BrandManager:getBrandByName": {
+   "en": "Returns the brand table for a name, matched case-insensitively, or nil.",
+   "fr": "Retourne la table de marque pour un nom, comparé sans tenir compte de la casse, ou nil."
+  },
+  "BrandManager:getBrandIndexByName": {
+   "en": "Returns a brand index from a name. Unknown or invalid names log a warning (with a close-match suggestion) and return Brand.LIZARD. A nil name returns nil.",
+   "fr": "Retourne l'indice de marque d'un nom. Un nom inconnu ou invalide logue un avertissement (avec suggestion proche) et retourne Brand.LIZARD. Un nom nil retourne nil."
+  }
+ }
+}

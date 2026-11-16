@@ -1,0 +1,125 @@
+{
+ "fichier": "forestry/ForestryPhysicsRope.lua",
+ "module": {
+  "en": "Plain class wrapping an engine physics rope used by forestry equipment (winch, cable). It builds the chain of transform nodes, creates the rope between two actors with addPhysicsRope, drives a skinned visual rope through shader parameters, supports dynamic length, savegame persistence and network streaming of node positions and length. The constants COLLISION_GROUP, COLLISION_MASK, NUM_NODE_BITS, NUM_POSITION_BITS, NUM_LENGTH_BITS and MAX_LENGTH are used but not defined in this file (UNVERIFIED where they are set). The rope engine functions themselves are not in the dump.",
+  "fr": "Classe simple enveloppant une corde physique du moteur utilisée par les équipements forestiers (treuil, câble). Elle construit la chaîne de nœuds de transformation, crée la corde entre deux acteurs avec addPhysicsRope, pilote une corde visuelle skinnée par paramètres de shader, et gère la longueur dynamique, la sauvegarde et la synchronisation réseau des positions de nœuds et de la longueur. Les constantes COLLISION_GROUP, COLLISION_MASK, NUM_NODE_BITS, NUM_POSITION_BITS, NUM_LENGTH_BITS et MAX_LENGTH sont utilisées mais non définies dans ce fichier (origine NON VÉRIFIÉE). Les fonctions moteur de corde ne sont pas dans le dump."
+ },
+ "fonctions": {
+  "ForestryPhysicsRope.new": {
+   "en": "Constructor. Stores the vehicle, link actor and node and the server flag, and initialises empty node and visual-rope lists, no physics rope, hidden, fixed length mode, not yet initialised.",
+   "fr": "Constructeur. Mémorise le véhicule, l'acteur et le nœud de liaison ainsi que l'indicateur serveur, et initialise des listes vides de nœuds et de cordes visuelles, sans corde physique, masquée, longueur fixe, non encore initialisée."
+  },
+  "ForestryPhysicsRope.registerXMLPaths": {
+   "en": "Registers the rope XML attributes under a base key: i3d filename, rope node path, diameter, uv scale, emissive color, min and max length, segment length, node distance, mass per length, collision group and mask. Note: the declared default of #emissiveColor differs from the one used in loadFromXML.",
+   "fr": "Déclare les attributs XML de la corde sous une clé de base : fichier i3d, chemin du nœud de corde, diamètre, échelle uv, couleur émissive, longueurs min et max, longueur de segment, distance entre nœuds, masse par longueur, groupe et masque de collision. À noter : la valeur par défaut déclarée de #emissiveColor diffère de celle utilisée dans loadFromXML."
+  },
+  "ForestryPhysicsRope.registerSavegameXMLPaths": {
+   "en": "Registers the savegame key ropeNode(?)#translation used to store each rope node position.",
+   "fr": "Déclare la clé de sauvegarde ropeNode(?)#translation servant à stocker la position de chaque nœud de corde."
+  },
+  "ForestryPhysicsRope:loadFromXML": {
+   "en": "Reads the rope settings from XML (mass per length is converted from kg by a factor 0.001), warns if the segment count or length exceeds the network limits, then starts an asynchronous shared i3d load through the vehicle or g_i3DManager.",
+   "fr": "Lit les réglages de la corde dans le XML (la masse par longueur est convertie par un facteur 0,001), avertit si le nombre de segments ou la longueur dépasse les limites réseau, puis lance un chargement i3d partagé asynchrone via le véhicule ou g_i3DManager."
+  },
+  "ForestryPhysicsRope:clone": {
+   "en": "Creates a copy with the same settings, optionally with another link actor, link node or max length, reloading the cached i3d synchronously. Returns the clone, or nil if there is no i3d filename.",
+   "fr": "Crée une copie avec les mêmes réglages, éventuellement avec un autre acteur, nœud de liaison ou longueur max, en rechargeant l'i3d en cache de façon synchrone. Retourne le clone, ou nil s'il n'y a pas de fichier i3d."
+  },
+  "ForestryPhysicsRope:saveToXMLFile": {
+   "en": "If a physics rope exists, queries its active node count and writes the world translation of each active node as ropeNode entries (zero-based index) under the given key.",
+   "fr": "Si une corde physique existe, interroge son nombre de nœuds actifs et écrit la translation monde de chacun comme entrées ropeNode (index à partir de zéro) sous la clé donnée."
+  },
+  "ForestryPhysicsRope.loadPositionDataFromSavegame": {
+   "en": "Static helper: reads all ropeNode translations under a key and returns them as a list of positions, ready for applySavegamePositions.",
+   "fr": "Fonction statique : lit toutes les translations ropeNode sous une clé et les retourne en liste de positions, prête pour applySavegamePositions."
+  },
+  "ForestryPhysicsRope:delete": {
+   "en": "Removes the rope from mission updateables, deletes all nodes and, if the reference frame was created, deletes it (when it still exists) and releases the shared i3d.",
+   "fr": "Retire la corde des éléments mis à jour de la mission, supprime tous les nœuds et, si le repère de référence a été créé, le supprime (s'il existe encore) et libère l'i3d partagé."
+  },
+  "ForestryPhysicsRope:writeStream": {
+   "en": "Network write of the initial state: the active segment count, then each node's local position quantised relative to MAX_LENGTH. Writes a count of 0 if no physics rope exists.",
+   "fr": "Écriture réseau de l'état initial : le nombre de segments actifs, puis la position locale de chaque nœud quantifiée par rapport à MAX_LENGTH. Écrit un compte de 0 s'il n'y a pas de corde physique."
+  },
+  "ForestryPhysicsRope.readStream": {
+   "en": "Static counterpart of writeStream. Reads the quantised positions and returns them as a list of {x, y, z}, in reverse order when invert is true.",
+   "fr": "Pendant statique de writeStream. Lit les positions quantifiées et les retourne en liste de {x, y, z}, dans l'ordre inverse si invert vaut true."
+  },
+  "ForestryPhysicsRope:writeUpdateStream": {
+   "en": "Network write of the current rope length, clamped to MAX_LENGTH and quantised, preceded by a bool telling whether a physics rope exists.",
+   "fr": "Écriture réseau de la longueur courante de la corde, bornée à MAX_LENGTH et quantifiée, précédée d'un booléen indiquant si une corde physique existe."
+  },
+  "ForestryPhysicsRope:readUpdateStream": {
+   "en": "Network read of the length sent by writeUpdateStream; stores it and applies it as the physics rope max length if the rope exists.",
+   "fr": "Lecture réseau de la longueur envoyée par writeUpdateStream ; la mémorise et l'applique comme longueur max de la corde physique si elle existe."
+  },
+  "ForestryPhysicsRope:update": {
+   "en": "Per-frame update. In dynamic length mode it adjusts the rope length from target movement. It pins first and last nodes to custom nodes, refreshes visual rope shader data and bounding sphere when length or node count changes, and on first valid nodes marks the rope initialised, shows it, applies a pending length and fires the creation callback.",
+   "fr": "Mise à jour à chaque image. En mode longueur dynamique, ajuste la longueur selon le déplacement de la cible. Cale premier et dernier nœuds sur des nœuds personnalisés, met à jour le shader et la sphère englobante de la corde visuelle quand la longueur ou le nombre de nœuds change, et, aux premiers nœuds valides, marque la corde initialisée, l'affiche, applique une longueur en attente et appelle le callback de création."
+  },
+  "ForestryPhysicsRope:updateAnchorNodes": {
+   "en": "Re-sets the two physics rope anchors (start on the current link actor, end, index 999999, on the current target actor) from the current node world positions.",
+   "fr": "Redéfinit les deux ancrages de la corde physique (début sur l'acteur de liaison courant, fin, index 999999, sur l'acteur cible courant) à partir des positions monde actuelles des nœuds."
+  },
+  "ForestryPhysicsRope:setUseDynamicLength": {
+   "en": "Enables or disables automatic length adjustment in update and resets its tracking data from the current target node position.",
+   "fr": "Active ou désactive l'ajustement automatique de la longueur dans update et réinitialise ses données de suivi à partir de la position courante du nœud cible."
+  },
+  "ForestryPhysicsRope:applySavegamePositions": {
+   "en": "Applies a list of saved positions as local translations to the rope nodes, in order, skipping missing nodes.",
+   "fr": "Applique une liste de positions sauvegardées comme translations locales aux nœuds de la corde, dans l'ordre, en ignorant les nœuds manquants."
+  },
+  "ForestryPhysicsRope:copyNodePositions": {
+   "en": "Copies world positions of another rope's nodes onto this rope's nodes, optionally in reverse order.",
+   "fr": "Copie les positions monde des nœuds d'une autre corde sur les nœuds de cette corde, éventuellement dans l'ordre inverse."
+  },
+  "ForestryPhysicsRope:create": {
+   "en": "Creates the engine physics rope between a link and a target (swapped when inverted), registers for updates, hides the rope until nodes are valid and stores an optional callback. Returns true if the rope was created.",
+   "fr": "Crée la corde physique du moteur entre une liaison et une cible (inversées si inverted), s'inscrit aux mises à jour, masque la corde tant que les nœuds ne sont pas valides et mémorise un callback optionnel. Retourne true si la corde a été créée."
+  },
+  "ForestryPhysicsRope:setCustomVisualNodes": {
+   "en": "Sets optional nodes that the last and first rope nodes follow each frame in update, to align the visual ends with specific points.",
+   "fr": "Définit des nœuds optionnels que les derniers et premiers nœuds de la corde suivent à chaque image dans update, pour aligner les extrémités visuelles sur des points précis."
+  },
+  "ForestryPhysicsRope:destroy": {
+   "en": "Removes the engine physics rope and resets lengths, actors, nodes, flags and callback, unregisters from updates and hides the rope. The object can be reused with create.",
+   "fr": "Supprime la corde physique du moteur et réinitialise longueurs, acteurs, nœuds, indicateurs et callback, se désinscrit des mises à jour et masque la corde. L'objet peut être réutilisé avec create."
+  },
+  "ForestryPhysicsRope:setMaxLength": {
+   "en": "Sets the maximum length and logs warnings if it implies too many segments or exceeds the global maximum length. It does not resize existing nodes.",
+   "fr": "Définit la longueur maximale et journalise des avertissements si elle implique trop de segments ou dépasse la longueur maximale globale. Ne redimensionne pas les nœuds existants."
+  },
+  "ForestryPhysicsRope:generateNodes": {
+   "en": "Deletes existing rope nodes and creates new transform groups under the link node, enough for the max length divided by segment length, plus one.",
+   "fr": "Supprime les nœuds existants et crée de nouveaux groupes de transformation sous le nœud de liaison, en nombre suffisant pour la longueur max divisée par la longueur de segment, plus un."
+  },
+  "ForestryPhysicsRope:getRopeDirectLengthPercentage": {
+   "en": "Returns the straight distance between link and target nodes as a fraction of the min-to-max length range (optional reference max). Values above 1 mean the rope is taut beyond its max. Returns 0 without a physics rope.",
+   "fr": "Retourne la distance en ligne droite entre les nœuds de liaison et cible, en fraction de la plage longueur min à max (max de référence optionnel). Au-delà de 1, la corde est tendue au-delà de son maximum. Retourne 0 sans corde physique."
+  },
+  "ForestryPhysicsRope:getLength": {
+   "en": "Returns the current physics rope length from the engine, or 0 if there is no physics rope.",
+   "fr": "Retourne la longueur courante de la corde physique selon le moteur, ou 0 s'il n'y en a pas."
+  },
+  "ForestryPhysicsRope:setLength": {
+   "en": "Sets the rope max length now if initialised; otherwise stores it and applies it on the first valid update.",
+   "fr": "Définit la longueur max immédiatement si la corde est initialisée ; sinon la mémorise et l'applique à la première mise à jour valide."
+  },
+  "ForestryPhysicsRope:adjustLength": {
+   "en": "Adds a delta to the rope length, clamped between min and max, optionally accumulating on a stored running length. Returns the sign of the change, or 0 if there is no rope or no segments.",
+   "fr": "Ajoute un delta à la longueur de la corde, borné entre min et max, éventuellement en cumulant sur une longueur courante mémorisée. Retourne le signe du changement, ou 0 s'il n'y a pas de corde ou de segments."
+  },
+  "ForestryPhysicsRope:setVisibility": {
+   "en": "Stores the visibility flag and applies it to the visual reference frame if it still exists.",
+   "fr": "Mémorise l'indicateur de visibilité et l'applique au repère visuel s'il existe encore."
+  },
+  "ForestryPhysicsRope:setEmissiveColor": {
+   "en": "Changes the rope emissive color and updates the ropeEmissiveColor shader parameter of every visual rope, only if the value differs from the current one.",
+   "fr": "Change la couleur émissive de la corde et met à jour le paramètre de shader ropeEmissiveColor de chaque corde visuelle, seulement si la valeur diffère de l'actuelle."
+  },
+  "ForestryPhysicsRope:onI3DLoaded": {
+   "en": "Callback of the shared i3d load. Creates a reference frame under the link node, moves the visual rope shapes into it with their shader parameters, unlinks the joint nodes and stores them as rope nodes, then deletes the temporary root. Does nothing on failure.",
+   "fr": "Rappel du chargement de l'i3d partagé. Crée un repère de référence sous le nœud de liaison, y déplace les formes de corde visuelle avec leurs paramètres de shader, détache les nœuds d'articulation et les mémorise comme nœuds de corde, puis supprime la racine temporaire. Ne fait rien en cas d'échec."
+  }
+ }
+}

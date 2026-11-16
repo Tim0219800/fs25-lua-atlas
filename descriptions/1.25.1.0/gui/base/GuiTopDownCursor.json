@@ -1,0 +1,37 @@
+{
+ "fichier": "gui/base/GuiTopDownCursor.lua",
+ "module": {
+  "en": "Cursor helper for top-down (construction-style) views: shows a 3D cursor node, listens to input mode changes and tracks a mouse or screen-centre position. In this dump most method bodies are blank, so only the listed lifecycle, input and mouse handlers are visible.",
+  "fr": "Aide de curseur pour les vues du dessus (type construction) : affiche un nœud de curseur 3D, écoute les changements de mode d'entrée et suit une position de souris ou de centre d'écran. Dans ce dump la plupart des corps de méthodes sont vides ; seuls les gestionnaires listés (cycle de vie, entrées, souris) sont visibles."
+ },
+ "fonctions": {
+  "GuiTopDownCursor:delete": {
+   "en": "Deactivates the cursor if active, deletes the cursor overlay and the root node, and cancels a pending I3D stream request. Call it when the owning screen is destroyed.",
+   "fr": "Désactive le curseur s'il est actif, supprime l'overlay du curseur et le nœud racine, et annule une requête de streaming I3D en attente. À appeler à la destruction de l'écran propriétaire."
+  },
+  "GuiTopDownCursor:activate": {
+   "en": "Marks the cursor active, applies the current input mode, loads its shapes on first use, shows the root node according to its visibility flag, registers action events and subscribes to INPUT_MODE_CHANGED.",
+   "fr": "Marque le curseur actif, applique le mode d'entrée courant, charge ses formes au premier usage, affiche le nœud racine selon son indicateur de visibilité, enregistre les événements d'action et s'abonne à INPUT_MODE_CHANGED."
+  },
+  "GuiTopDownCursor:deactivate": {
+   "en": "Hides the root node, unsubscribes from all message center subscriptions, removes the registered action events and clears the active flag.",
+   "fr": "Masque le nœud racine, se désabonne de tous les messages du centre de messages, retire les événements d'action enregistrés et efface l'indicateur d'activité."
+  },
+  "GuiTopDownCursor:registerActionEvents": {
+   "en": "Registers the AXIS_CONSTRUCTION_CURSOR_ROTATE action to the `onRotate` handler, sets it active only if rotation is enabled and gives its help text normal priority. `onRotate` itself is not visible in this dump (UNVERIFIED).",
+   "fr": "Enregistre l'action AXIS_CONSTRUCTION_CURSOR_ROTATE sur le gestionnaire `onRotate`, ne l'active que si la rotation est autorisée et donne une priorité normale à son texte d'aide. `onRotate` n'est pas visible dans ce dump (NON VÉRIFIÉ)."
+  },
+  "GuiTopDownCursor:removeActionEvents": {
+   "en": "Forgets the rotate event id and removes every action event registered with this cursor as target.",
+   "fr": "Oublie l'identifiant de l'événement de rotation et retire tous les événements d'action enregistrés avec ce curseur pour cible."
+  },
+  "GuiTopDownCursor:mouseEvent": {
+   "en": "Raw mouse handler ignored when the mouse is disabled or an action fired this frame. If the cursor was captured it restores the locked position and the system cursor, otherwise it stores the mouse position in mouse mode.",
+   "fr": "Gestionnaire souris brut, ignoré si la souris est désactivée ou si une action a eu lieu dans cette image. Si le curseur était capturé, il restaure la position verrouillée et le curseur système ; sinon il mémorise la position en mode souris."
+  },
+  "GuiTopDownCursor:onInputModeChanged": {
+   "en": "Callback for input mode changes: mouse mode is true when the first entry equals the keyboard help mode. Outside mouse mode the stored cursor position is reset to the screen centre (0.5, 0.5).",
+   "fr": "Callback de changement de mode d'entrée : le mode souris est vrai quand la première entrée vaut le mode d'aide clavier. Hors mode souris, la position stockée du curseur est remise au centre de l'écran (0.5, 0.5)."
+  }
+ }
+}

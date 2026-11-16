@@ -1,0 +1,149 @@
+{
+ "fichier": "vehicles/specializations/Locomotive.lua",
+ "module": {
+  "en": "Specialization for railroad locomotives running on a spline. Requires SplineVehicle and Drivable. It holds a state machine (automatic travel, manual active/inactive, requested position, braking toward a position), replaces the vehicle physics with a simple 1D speed model (tractive effort, brake force, slope force), fakes engine RPM for the HUD, and can move a power arm toward an electricity spline. Server runs the physics; the state is broadcast with `LocomotiveStateEvent`. The `Locomotive.STATE_*` constants are defined outside this file (UNVERIFIED where).",
+  "fr": "Spécialisation pour les locomotives circulant sur une spline. Requiert SplineVehicle et Drivable. Elle contient une machine à états (déplacement automatique, manuel actif/inactif, position demandée, freinage vers une position), remplace la physique du véhicule par un modèle de vitesse 1D simple (effort de traction, freinage, force de pente), simule le régime moteur pour le HUD et peut déplacer un bras de prise de courant vers une spline électrique. Le serveur exécute la physique ; l'état est diffusé via `LocomotiveStateEvent`. Les constantes `Locomotive.STATE_*` sont définies hors de ce fichier (NON VÉRIFIÉ où)."
+ },
+ "fonctions": {
+  "Locomotive.prerequisitesPresent": {
+   "en": "Returns true only if both SplineVehicle and Drivable specializations are present.",
+   "fr": "Renvoie vrai seulement si les spécialisations SplineVehicle et Drivable sont présentes."
+  },
+  "Locomotive.initSpecialization": {
+   "en": "Registers the XML path `vehicle.locomotive.powerArm#node`.",
+   "fr": "Enregistre le chemin XML `vehicle.locomotive.powerArm#node`."
+  },
+  "Locomotive.registerEvents": {
+   "en": "Registers the specialization event `onAutomatedTrainTravelActive`, raised every update during automatic travel on the server.",
+   "fr": "Enregistre l'événement de spécialisation `onAutomatedTrainTravelActive`, levé à chaque mise à jour pendant le déplacement automatique côté serveur."
+  },
+  "Locomotive.registerFunctions": {
+   "en": "Registers the slope force, speed, requested position, state and automated travel functions on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les fonctions de force de pente, vitesse, position demandée, état et déplacement automatique."
+  },
+  "Locomotive.registerOverwrittenFunctions": {
+   "en": "Overrides motor state, physics, train system, name, sounds, stats, enterability, map hotspot, reset, stop-on-leave and real RPM functions.",
+   "fr": "Surcharge les fonctions d'état moteur, de physique, de système de train, de nom, de sons, de statistiques, d'accès, de hotspot de carte, de réinitialisation, d'arrêt à la sortie et de régime réel."
+  },
+  "Locomotive.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onReadStream, onWriteStream, onUpdate, onLeaveVehicle and onEnterVehicle.",
+   "fr": "S'abonne aux événements onLoad, onDelete, onReadStream, onWriteStream, onUpdate, onLeaveVehicle et onEnterVehicle."
+  },
+  "Locomotive:onLoad": {
+   "en": "Loads the power arm node, sets `serverMass` to 1 to avoid divisions by zero, initialises speed and RPM state, sets the idle state and subscribes to player farm changed and player created messages.",
+   "fr": "Charge le nœud du bras de prise de courant, fixe `serverMass` à 1 pour éviter les divisions par zéro, initialise vitesse et régime, passe à l'état inactif et s'abonne aux messages de changement de ferme et de création du joueur."
+  },
+  "Locomotive:onDelete": {
+   "en": "Unsubscribes from all message center messages.",
+   "fr": "Se désabonne de tous les messages du message center."
+  },
+  "Locomotive:onReadStream": {
+   "en": "Client join: reads the locomotive state directly from the stream.",
+   "fr": "Connexion client : lit directement l'état de la locomotive depuis le flux."
+  },
+  "Locomotive:onWriteStream": {
+   "en": "Server join: writes the locomotive state to the stream.",
+   "fr": "Connexion côté serveur : écrit l'état de la locomotive dans le flux."
+  },
+  "Locomotive:onUpdate": {
+   "en": "Once a train system exists, starts automatic travel or manual state (if rented). On the server drives the physics each frame for automatic travel, requested position (with braking-point computation), braking, and inactive manual state; clients only keep the vehicle active.",
+   "fr": "Dès qu'un système de train existe, lance le déplacement automatique ou l'état manuel (si loué). Côté serveur, pilote la physique à chaque frame pour le déplacement automatique, la position demandée (avec calcul du point de freinage), le freinage et l'état manuel inactif ; les clients maintiennent seulement le véhicule actif."
+  },
+  "Locomotive:setTrainSystem": {
+   "en": "Override: after the parent, prepares the electricity spline data (length difference and search time) used to position the power arm, if the arm and spline exist.",
+   "fr": "Surcharge : après le parent, prépare les données de la spline électrique (écart de longueur et temps de recherche) utilisées pour positionner le bras, si bras et spline existent."
+  },
+  "Locomotive:getFullName": {
+   "en": "Override: returns the store item name for this vehicle's config file (the call is not nil-checked).",
+   "fr": "Surcharge : renvoie le nom de l'article de boutique correspondant au fichier de configuration du véhicule (appel sans contrôle de nil)."
+  },
+  "Locomotive:getAreSurfaceSoundsActive": {
+   "en": "Override: surface sounds are active when the last speed exceeds 0.1.",
+   "fr": "Surcharge : les sons de surface sont actifs quand la dernière vitesse dépasse 0,1."
+  },
+  "Locomotive:getTraveledDistanceStatsActive": {
+   "en": "Override: distance statistics count only in the manual travel active state.",
+   "fr": "Surcharge : les statistiques de distance ne comptent que dans l'état de déplacement manuel actif."
+  },
+  "Locomotive:getIsEnterable": {
+   "en": "Override: enterable only if the parent allows it, the train is within driveable range, and the state is manual (active or inactive).",
+   "fr": "Surcharge : accessible seulement si le parent l'autorise, si le train est à portée de conduite et si l'état est manuel (actif ou inactif)."
+  },
+  "Locomotive:getIsMapHotspotVisible": {
+   "en": "Override: hotspot is visible only if the parent allows it, the train is in driveable range and its position lies inside the terrain bounds.",
+   "fr": "Surcharge : le hotspot n'est visible que si le parent l'autorise, si le train est à portée de conduite et si sa position est dans les limites du terrain."
+  },
+  "Locomotive:getMapHotspotPosition": {
+   "en": "Override: returns the train position from the train system, or 0, 0, 0 without one.",
+   "fr": "Surcharge : renvoie la position du train donnée par le système de train, ou 0, 0, 0 sans système."
+  },
+  "Locomotive:getMotorRpmReal": {
+   "en": "Override: returns the simulated (virtual) RPM value instead of a real engine value.",
+   "fr": "Surcharge : renvoie le régime simulé (virtuel) au lieu d'une valeur moteur réelle."
+  },
+  "Locomotive:setRequestedSplinePosition": {
+   "en": "Sets a target spline position (0 to 1, wrapped to the nearer lap), switches to the requested position state and starts the motor on the server. `noEventSend` is accepted but unused.",
+   "fr": "Définit une position cible sur la spline (0 à 1, ramenée au tour le plus proche), passe à l'état de position demandée et démarre le moteur côté serveur. `noEventSend` est accepté mais inutilisé."
+  },
+  "Locomotive:getDistanceToRequestedPosition": {
+   "en": "Returns the remaining distance to the requested position in spline length units while moving or braking toward it, 0 otherwise or if the position was overshot.",
+   "fr": "Renvoie la distance restante jusqu'à la position demandée, en unités de longueur de spline, pendant le déplacement ou le freinage ; 0 sinon ou si la position est dépassée."
+  },
+  "Locomotive:setLocomotiveState": {
+   "en": "Sets the state; entering automatic travel picks a random vehicle character and manual active restores it. On the server it broadcasts `LocomotiveStateEvent` unless `noEventSend` is set.",
+   "fr": "Définit l'état ; le déplacement automatique choisit un personnage de véhicule aléatoire et le manuel actif le restaure. Côté serveur, diffuse `LocomotiveStateEvent` sauf si `noEventSend` est vrai."
+  },
+  "Locomotive:startAutomatedTrainTravel": {
+   "en": "Switches to automatic travel and starts the motor.",
+   "fr": "Passe en déplacement automatique et démarre le moteur."
+  },
+  "Locomotive:notifyPlayerFarmChanged": {
+   "en": "Message callback: makes the locomotive tabbable only when the train is rented by the local player's farm.",
+   "fr": "Callback de message : rend la locomotive sélectionnable par Tab seulement si le train est loué par la ferme du joueur local."
+  },
+  "Locomotive:onLeaveVehicle": {
+   "en": "Unless in automatic travel, schedules an automatic-drive start time if ready, sets the manual inactive state and clears any requested position.",
+   "fr": "Sauf en déplacement automatique, planifie l'heure de départ automatique si prêt, passe à l'état manuel inactif et efface la position demandée."
+  },
+  "Locomotive:onEnterVehicle": {
+   "en": "Clears requested position and scheduled start, restarts the motor if automatic motor start is off and the train was moving by itself, then sets manual active state.",
+   "fr": "Efface la position demandée et le départ planifié, redémarre le moteur si le démarrage automatique est désactivé et que le train roulait seul, puis passe à l'état manuel actif."
+  },
+  "Locomotive:getIsReadyForAutomatedTrainTravel": {
+   "en": "Override: not ready while a player controls the locomotive; otherwise defers to the parent.",
+   "fr": "Surcharge : pas prête tant qu'un joueur contrôle la locomotive ; sinon s'en remet au parent."
+  },
+  "Locomotive:getIsMotorStarted": {
+   "en": "Override: the motor counts as started also in automatic travel, requested position and requested position braking states.",
+   "fr": "Surcharge : le moteur est aussi considéré comme démarré dans les états de déplacement automatique, de position demandée et de freinage vers position."
+  },
+  "Locomotive:getDownhillForce": {
+   "en": "Returns the force along the track from gravity (server mass times 9.81 times the sine of the slope angle, positive when pointing downhill).",
+   "fr": "Renvoie la force de gravité le long de la voie (masse serveur fois 9,81 fois le sinus de l'angle de pente, positive en descente)."
+  },
+  "Locomotive:getLocomotiveSpeed": {
+   "en": "Returns the simulated locomotive speed (m/s, sign gives direction).",
+   "fr": "Renvoie la vitesse simulée de la locomotive (m/s, le signe donne le sens)."
+  },
+  "Locomotive.getBrakeAcceleration": {
+   "en": "Helper (called with the vehicle): returns the deceleration with brake force (18 percent of weight, much weaker while driven at speed) plus slope force. Uses 95 percent of the slope force if the sum is near zero.",
+   "fr": "Fonction utilitaire (appelée avec le véhicule) : renvoie la décélération due au freinage (18 pour cent du poids, bien plus faible en conduite à vitesse) et à la pente. Utilise 95 pour cent de la force de pente si la somme est proche de zéro."
+  },
+  "Locomotive:updateVehiclePhysics": {
+   "en": "Override: calls the parent, then updates the simulated speed from tractive effort (capped at 300000 and at the brake force), braking, slope and cruise control, clamps it to the motor limits and updates a fake RPM pushed to the motor.",
+   "fr": "Surcharge : appelle le parent, puis met à jour la vitesse simulée selon l'effort de traction (plafonné à 300000 et à la force de freinage), le freinage, la pente et le régulateur, la borne aux limites du moteur et met à jour un régime fictif transmis au moteur."
+  },
+  "Locomotive:alignToSplineTime": {
+   "en": "Override: after the parent, when the power arm is within 50 m of the active camera, snaps its height to the closest point on the electricity spline. Clients also refresh the map hotspot.",
+   "fr": "Surcharge : après le parent, quand le bras est à moins de 50 m de la caméra active, cale sa hauteur sur le point le plus proche de la spline électrique. Les clients rafraîchissent aussi le hotspot de carte."
+  },
+  "Locomotive:getCanBeReset": {
+   "en": "Override: always false, locomotives cannot be reset.",
+   "fr": "Surcharge : toujours faux, les locomotives ne peuvent pas être réinitialisées."
+  },
+  "Locomotive:getStopMotorOnLeave": {
+   "en": "Override: the motor stops on leaving only in the manual states.",
+   "fr": "Surcharge : le moteur ne s'arrête à la sortie que dans les états manuels."
+  }
+ }
+}

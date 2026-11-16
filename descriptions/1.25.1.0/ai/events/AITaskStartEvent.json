@@ -1,0 +1,29 @@
+{
+ "fichier": "ai/events/AITaskStartEvent.lua",
+ "module": {
+  "en": "Event synchronizing the start of one task of an AI job: it carries the job id, the task index (uint8), and calls `job:startTask(task)` on the receiver.",
+  "fr": "Événement qui synchronise le démarrage d'une tâche d'un job IA : il transporte l'id du job, l'index de la tâche (uint8), et appelle `job:startTask(task)` chez le récepteur."
+ },
+ "fonctions": {
+  "AITaskStartEvent.emptyNew": {
+   "en": "Creates an empty event for stream reconstruction.",
+   "fr": "Crée un événement vide pour la reconstruction depuis un flux."
+  },
+  "AITaskStartEvent.new": {
+   "en": "Creates the event for a job and task.",
+   "fr": "Crée l'événement pour un job et une tâche."
+  },
+  "AITaskStartEvent:readStream": {
+   "en": "Reads job id and task index, resolves the job with `aiSystem:getJobById` and the task with `job:getTaskByIndex`, then runs the event.",
+   "fr": "Lit l'id du job et l'index de tâche, retrouve le job via `aiSystem:getJobById` et la tâche via `job:getTaskByIndex`, puis exécute l'événement."
+  },
+  "AITaskStartEvent:writeStream": {
+   "en": "Writes the job id (int32) and the task index (uint8).",
+   "fr": "Écrit l'id du job (int32) et l'index de la tâche (uint8)."
+  },
+  "AITaskStartEvent:run": {
+   "en": "Logs a dev warning and returns if the job is unknown; otherwise calls `job:startTask(task)`.",
+   "fr": "Journalise un avertissement de développement et sort si le job est inconnu ; sinon appelle `job:startTask(task)`."
+  }
+ }
+}

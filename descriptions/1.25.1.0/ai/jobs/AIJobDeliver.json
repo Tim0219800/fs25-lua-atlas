@@ -1,0 +1,85 @@
+{
+ "fichier": "ai/jobs/AIJobDeliver.lua",
+ "module": {
+  "en": "Job in which an AI driver waits for its trailer to be filled, drives to an unloading station and discharges, optionally looping. Tasks are `AITaskDriveTo` (loading position), `AITaskWaitForFilling`, `AITaskDriveTo` (unloading) and `AITaskDischarge`; parameters are vehicle, unloading station, looping and a position/angle for loading. Discharge nodes of the vehicle and its children are collected and sorted by Z offset.",
+  "fr": "Job où un conducteur IA attend que sa remorque soit remplie, roule vers une station de déchargement et décharge, éventuellement en boucle. Les tâches sont `AITaskDriveTo` (position de chargement), `AITaskWaitForFilling`, `AITaskDriveTo` (déchargement) et `AITaskDischarge` ; les paramètres sont véhicule, station de déchargement, boucle et position/angle de chargement. Les points de déchargement du véhicule et de ses éléments attelés sont collectés et triés par décalage Z."
+ },
+ "fonctions": {
+  "AIJobDeliver.new": {
+   "en": "Creates the four tasks, the vehicle, unloading station, looping and position-angle parameters (snap 5 degrees) and their UI groups.",
+   "fr": "Crée les quatre tâches, les paramètres véhicule, station de déchargement, boucle et position-angle (pas de 5 degrés) et leurs groupes d'interface."
+  },
+  "AIJobDeliver:setValues": {
+   "en": "Rebuilds task data from the parameters: sets the vehicle on all tasks, collects the discharge nodes (sorted by Z offset) and allowed fill types of the station, sets target offsets and the loading position and direction. Returns early if vehicle, station or discharge nodes are missing.",
+   "fr": "Reconstruit les données des tâches à partir des paramètres : fixe le véhicule sur toutes les tâches, collecte les points de déchargement (triés par décalage Z) et les types acceptés par la station, règle les décalages de cible et la position et direction de chargement. Sort tôt si véhicule, station ou points de déchargement manquent."
+  },
+  "AIJobDeliver:validate": {
+   "en": "Validates vehicle (must have discharge nodes), unloading station and loading position, marking each invalid parameter. Returns the global result and the first error text.",
+   "fr": "Valide le véhicule (il doit avoir des points de déchargement), la station de déchargement et la position de chargement, en marquant chaque paramètre invalide. Renvoie le résultat global et le premier texte d'erreur."
+  },
+  "AIJobDeliver:applyCurrentState": {
+   "en": "Initializes from the vehicle: enables looping, reuses station, looping and position from the vehicle's last `AIJobDeliver` if any, else uses the vehicle's position and heading. Lists accessible unloading stations that support AI fill types, sorted by name.",
+   "fr": "Initialise à partir du véhicule : active la boucle, reprend station, boucle et position du dernier `AIJobDeliver` du véhicule s'il existe, sinon utilise sa position et son cap. Liste les stations de déchargement accessibles qui gèrent des types IA, triées par nom."
+  },
+  "AIJobDeliver:start": {
+   "en": "Base start, then on the server creates the AI agent for the vehicle and calls `vehicle:aiJobStarted`.",
+   "fr": "Démarrage de base, puis sur le serveur crée l'agent IA du véhicule et appelle `vehicle:aiJobStarted`."
+  },
+  "AIJobDeliver:stop": {
+   "en": "On the server deletes the agent and calls `vehicle:aiJobFinished`, then runs the base stop and clears the discharge node list.",
+   "fr": "Sur le serveur supprime l'agent et appelle `vehicle:aiJobFinished`, puis exécute l'arrêt de base et vide la liste des points de déchargement."
+  },
+  "AIJobDeliver:startTask": {
+   "en": "When the wait-for-filling task starts, marks all discharge node infos dirty again, then runs the base `startTask`.",
+   "fr": "Quand la tâche d'attente de remplissage démarre, remarque tous les points de déchargement comme à traiter, puis exécute `startTask` de base."
+  },
+  "AIJobDeliver:getStartTaskIndex": {
+   "en": "Chooses the entry task: if the vehicle is within 1 m of the target position it starts at waiting (skipping it if no fill unit is empty); otherwise it starts by driving to loading, skipping driving and waiting when nothing is empty.",
+   "fr": "Choisit la tâche d'entrée : si le véhicule est à moins de 1 m de la position cible il commence par l'attente (sautée si aucune unité n'est vide) ; sinon il commence par rouler vers le chargement, en sautant conduite et attente si rien n'est vide."
+  },
+  "AIJobDeliver:getNextTaskIndex": {
+   "en": "After waiting or discharging, looks for dirty discharge nodes with content: repeats discharge for the same trigger, or sets up the drive to the unloading position for the next fill type. Nodes whose fill type the station does not support are dropped; otherwise defers to the base index.",
+   "fr": "Après l'attente ou le déchargement, cherche des points de déchargement à traiter avec contenu : répète le déchargement pour le même déclencheur, ou prépare le trajet vers la position de déchargement du type suivant. Les points dont le type n'est pas géré par la station sont écartés ; sinon se rabat sur l'index de base."
+  },
+  "AIJobDeliver:canContinueWork": {
+   "en": "Fails with `AIMessageErrorVehicleDeleted` or `AIMessageErrorUnloadingStationDeleted` when those no longer exist. During the waiting task it fails with `AIMessageErrorUnloadingStationFull` if no loaded fill type has free capacity in the station.",
+   "fr": "Échoue avec `AIMessageErrorVehicleDeleted` ou `AIMessageErrorUnloadingStationDeleted` si l'un n'existe plus. Pendant l'attente, échoue avec `AIMessageErrorUnloadingStationFull` si aucun type chargé n'a de capacité libre dans la station."
+  },
+  "AIJobDeliver:getHasLoadedValidFillType": {
+   "en": "True if any discharge fill unit holds more than 1 unit of a fill type that the unloading station supports for AI.",
+   "fr": "Vrai si une unité de remplissage de déchargement contient plus de 1 unité d'un type que la station de déchargement accepte pour l'IA."
+  },
+  "AIJobDeliver:getCanSkipTask": {
+   "en": "True only while the wait-for-filling task is running and unfinished and a valid fill type is already loaded, letting the player stop waiting.",
+   "fr": "Vrai seulement pendant l'attente de remplissage non terminée avec un type valide déjà chargé, ce qui permet au joueur d'arrêter d'attendre."
+  },
+  "AIJobDeliver:skipCurrentTask": {
+   "en": "Skips the wait-for-filling task if it is the current one; other tasks are not skippable here.",
+   "fr": "Ignore la tâche d'attente de remplissage si elle est courante ; les autres tâches ne sont pas ignorables ici."
+  },
+  "AIJobDeliver:getIsAvailableForVehicle": {
+   "en": "Requires `createAgent`, `setAITarget`, AI start capability and support for this job class, plus at least one AI discharge node on the vehicle or one of its children.",
+   "fr": "Exige `createAgent`, `setAITarget`, la capacité de démarrer l'IA et la prise en charge de cette classe de job, plus au moins un point de déchargement IA sur le véhicule ou un de ses éléments attelés."
+  },
+  "AIJobDeliver:getTitle": {
+   "en": "Returns the vehicle name from the vehicle parameter, or an empty string when there is no vehicle.",
+   "fr": "Renvoie le nom du véhicule du paramètre véhicule, ou une chaîne vide s'il n'y en a pas."
+  },
+  "AIJobDeliver:getIsLooping": {
+   "en": "Returns the value of the looping parameter.",
+   "fr": "Renvoie la valeur du paramètre de boucle."
+  },
+  "AIJobDeliver:getIsStartable": {
+   "en": "Server-side check before starting: refuses if the AI limit is reached, the vehicle is gone, the player lacks the `hireAssistant` permission, or the vehicle is in use. Returns true plus `AIJob.START_SUCCESS`, else false plus a `AIJobDeliver.START_ERROR_*` state.",
+   "fr": "Contrôle côté serveur avant démarrage : refuse si la limite d'IA est atteinte, si le véhicule a disparu, si le joueur n'a pas la permission `hireAssistant` ou si le véhicule est utilisé. Renvoie true plus `AIJob.START_SUCCESS`, sinon false plus un état `AIJobDeliver.START_ERROR_*`."
+  },
+  "AIJobDeliver:getDescription": {
+   "en": "Appends to the base description a localized text for the current task: driving to loading, waiting for filling, driving to unloading or unloading.",
+   "fr": "Ajoute à la description de base un texte localisé pour la tâche courante : trajet vers le chargement, attente de remplissage, trajet vers le déchargement ou déchargement."
+  },
+  "AIJobDeliver.getIsStartErrorText": {
+   "en": "Maps a start state returned by `getIsStartable` to a localized text: limit reached, vehicle deleted, no permission, vehicle in use, otherwise the success text. The `AIJobDeliver.START_ERROR_*` constants are not defined in this file (UNVERIFIED).",
+   "fr": "Convertit un état de démarrage renvoyé par `getIsStartable` en texte localisé : limite atteinte, véhicule supprimé, pas de permission, véhicule utilisé, sinon le texte de succès. Les constantes `AIJobDeliver.START_ERROR_*` ne sont pas définies dans ce fichier (NON VÉRIFIÉ)."
+  }
+ }
+}

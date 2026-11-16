@@ -1,0 +1,45 @@
+{
+ "fichier": "utils/ObjectChangeUtil.lua",
+ "module": {
+  "en": "Handles the objectChange XML feature: a node can have one set of values when a configuration is active and another when inactive (visibility, translation, rotation, scale, shader parameter, mass, center of mass, parent node, rigid body type, compound child, deletion). It loads these entries, applies them with optional interpolation through ValueInterpolator, and registers the schema paths. The helper loadValueType it calls is not defined in this file (UNVERIFIED).",
+  "fr": "Gère la fonctionnalité XML objectChange : un noeud peut avoir un jeu de valeurs quand une configuration est active et un autre quand elle est inactive (visibilité, translation, rotation, échelle, paramètre de shader, masse, centre de masse, noeud parent, type de corps rigide, enfant composé, suppression). Elle charge ces entrées, les applique avec interpolation optionnelle via ValueInterpolator et enregistre les chemins du schéma. L'aide loadValueType qu'elle appelle n'est pas définie dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "ObjectChangeUtil.loadObjectChangeFromXML": {
+   "en": "Reads every objectChange child under a key, resolves its node (using the parent's i3dMappings if any) and loads its values. Returns the given or a new table of change objects, or nil when none was loaded.",
+   "fr": "Lit chaque enfant objectChange sous une clé, résout son noeud (avec les i3dMappings du parent s'il y en a) et charge ses valeurs. Renvoie la table fournie ou une nouvelle table d'objets de changement, ou nil si rien n'a été chargé."
+  },
+  "ObjectChangeUtil.loadValuesFromXML": {
+   "en": "Fills a change object from one XML entry: interpolation settings and active/inactive values for parent, delete, transform, shader parameter, center of mass, mass (in the XML unit divided by 1000), visibility, compound child and rigid body type. Calls the parent's loadObjectChangeValuesFromXML if it exists.",
+   "fr": "Remplit un objet de changement depuis une entrée XML : réglages d'interpolation et valeurs actif/inactif pour parent, suppression, transformation, paramètre de shader, centre de masse, masse (unité XML divisée par 1000), visibilité, enfant composé et type de corps rigide. Appelle loadObjectChangeValuesFromXML du parent s'il existe."
+  },
+  "ObjectChangeUtil.setObjectChanges": {
+   "en": "Applies setObjectChange to every object of a table in the given active or inactive state. Does nothing if the table is nil.",
+   "fr": "Applique setObjectChange à chaque objet d'une table dans l'état actif ou inactif donné. Ne fait rien si la table est nil."
+  },
+  "ObjectChangeUtil.setObjectChange": {
+   "en": "Applies the active or inactive values of one change object, either directly or through a ValueInterpolator when interpolation is on and not skipped, then sets the rigid body type. Finally calls target:setObjectChangeValues and the update function if given.",
+   "fr": "Applique les valeurs actives ou inactives d'un objet de changement, soit directement, soit via un ValueInterpolator si l'interpolation est activée et non ignorée, puis règle le type de corps rigide. Appelle enfin target:setObjectChangeValues et la fonction de mise à jour si fournies."
+  },
+  "ObjectChangeUtil.updateObjectChanges": {
+   "en": "Loops over the numbered objectChange blocks under a key, sets all non-selected configurations inactive first and the one chosen by the config index active last, so it wins on conflicts. The config index is 1-based.",
+   "fr": "Parcourt les blocs objectChange numérotés sous une clé, met d'abord inactives toutes les configurations non retenues puis active celle choisie par l'index de configuration, qui l'emporte donc en cas de conflit. L'index de configuration commence à 1."
+  },
+  "ObjectChangeUtil.registerObjectChangeXMLPaths": {
+   "en": "Registers the schema paths for a single objectChange group at the base path, using a shared registration named ObjectChange_single.",
+   "fr": "Enregistre les chemins du schéma pour un groupe objectChange unique au chemin de base, via l'enregistrement partagé nommé ObjectChange_single."
+  },
+  "ObjectChangeUtil.registerObjectChangesXMLPaths": {
+   "en": "Registers the schema paths for multiple objectChange entries under an objectChanges sub-element, using a shared registration named ObjectChange_multiple.",
+   "fr": "Enregistre les chemins du schéma pour plusieurs entrées objectChange sous un sous-élément objectChanges, via l'enregistrement partagé nommé ObjectChange_multiple."
+  },
+  "ObjectChangeUtil.registerObjectChangeSingleXMLPaths": {
+   "en": "Declares every objectChange attribute: node, interpolation and its time, and the Active/Inactive pairs for delete, visibility, translation, rotation, scale, shaderParameter, mass, centerOfMass, compoundChild, rigidBodyType and parentNode. Note: deleteInactive is registered with the same description text as deleteActive.",
+   "fr": "Déclare chaque attribut objectChange : node, interpolation et sa durée, et les paires Active/Inactive pour delete, visibility, translation, rotation, scale, shaderParameter, mass, centerOfMass, compoundChild, rigidBodyType et parentNode. À noter : deleteInactive est enregistré avec le même texte descriptif que deleteActive."
+  },
+  "ObjectChangeUtil.addAdditionalObjectChangeXMLPaths": {
+   "en": "Queues a function to be run later to register extra objectChange paths, through the schema's delayed registration under the name ObjectChange.",
+   "fr": "Met en file une fonction chargée d'enregistrer plus tard des chemins objectChange supplémentaires, via l'enregistrement différé du schéma sous le nom ObjectChange."
+  }
+ }
+}

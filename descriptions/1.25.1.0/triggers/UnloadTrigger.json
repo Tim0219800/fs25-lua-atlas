@@ -1,0 +1,77 @@
+{
+ "fichier": "triggers/UnloadTrigger.lua",
+ "module": {
+  "en": "Base class (subclass of Object) for unload triggers, such as sell points and storages: it mimics a fill unit so vehicles can discharge into it, forwarding the fill to a target object that provides getIsFillTypeAllowed, getIsToolTypeAllowed, addFillLevelFromTool and getFreeCapacity. It reads accepted fill types, tool types, price scale, AI node and optional fill type conversions with a ratio. PalletUnloadTrigger and WoodUnloadTrigger derive from it. Parts of the file are empty in the dump, so some methods are not visible (UNVERIFIED).",
+  "fr": "Classe de base (sous-classe de Object) des triggers de déchargement, comme les points de vente et les stockages : elle imite une unité de remplissage pour que les véhicules puissent s'y décharger, en relayant le remplissage vers un objet cible qui fournit getIsFillTypeAllowed, getIsToolTypeAllowed, addFillLevelFromTool et getFreeCapacity. Elle lit types acceptés, types d'outils, échelle de prix, noeud IA et conversions de types optionnelles avec un ratio. PalletUnloadTrigger et WoodUnloadTrigger en dérivent. Des parties du fichier sont vides dans le dump, certaines méthodes ne sont donc pas visibles (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "UnloadTrigger.registerXMLPaths": {
+   "en": "Registers the XML attributes of an unload trigger: exactFillRootNode, priceScale, acceptedToolTypes, the shared fill type config paths, aiNode, and repeated fillTypeConversion entries (incomingFillType, outgoingFillType, ratio default 1).",
+   "fr": "Enregistre les attributs XML d'un trigger de déchargement : exactFillRootNode, priceScale, acceptedToolTypes, les chemins de configuration de types partagés, aiNode, et les entrées répétées fillTypeConversion (incomingFillType, outgoingFillType, ratio 1 par défaut)."
+  },
+  "UnloadTrigger.new": {
+   "en": "Creates the unload trigger as a network Object with empty fill type, tool type and conversion tables.",
+   "fr": "Crée le trigger de déchargement comme objet réseau avec des tables vides de types, d'outils et de conversions."
+  },
+  "UnloadTrigger:load": {
+   "en": "Reads the exact fill root node (must have the FILLABLE collision group, else returns false) and registers it as a node object. Reads aiNode, priceScale, fill type conversions (ratio clamped 0.01 to 10000), sets the target if given, loads fill and tool types and enables the trigger. Returns true.",
+   "fr": "Lit le noeud de remplissage exact (doit avoir le groupe de collision FILLABLE, sinon retourne false) et l'enregistre comme objet de noeud. Lit aiNode, priceScale, les conversions de types (ratio borné de 0,01 à 10000), définit la cible si fournie, charge types et outils et active le trigger. Retourne true."
+  },
+  "UnloadTrigger:delete": {
+   "en": "Removes the exact fill root node from the mission's node objects if there is one, then calls the parent delete.",
+   "fr": "Retire le noeud de remplissage exact des objets de noeud de la mission s'il existe, puis appelle le delete du parent."
+  },
+  "UnloadTrigger:loadAcceptedToolType": {
+   "en": "Parses the acceptedToolTypes attribute into a set of tool type indices. If the attribute is absent, acceptedToolTypes is set to nil, meaning every tool type passes this filter.",
+   "fr": "Analyse l'attribut acceptedToolTypes en un ensemble d'indices de types d'outils. Si l'attribut est absent, acceptedToolTypes passe à nil, ce qui signifie que tout type d'outil passe ce filtre."
+  },
+  "UnloadTrigger:loadFillTypes": {
+   "en": "Loads the combined fill types from the XML config through g_fillTypeManager into a set. If none are configured the set becomes nil, which means no restriction by this trigger.",
+   "fr": "Charge les types combinés depuis la configuration XML via g_fillTypeManager dans un ensemble. S'il n'y en a pas, l'ensemble devient nil, ce qui signifie aucune restriction par ce trigger."
+  },
+  "UnloadTrigger:setTarget": {
+   "en": "Sets the object that receives the unloaded goods. Asserts it implements getIsFillTypeAllowed, getIsToolTypeAllowed, addFillLevelFromTool and getFreeCapacity; it errors otherwise.",
+   "fr": "Définit l'objet qui reçoit les marchandises déchargées. Vérifie par assert qu'il implémente getIsFillTypeAllowed, getIsToolTypeAllowed, addFillLevelFromTool et getFreeCapacity ; erreur sinon."
+  },
+  "UnloadTrigger:getFillUnitIndexFromNode": {
+   "en": "Fill unit emulation: always returns 1, whatever the node.",
+   "fr": "Émulation d'unité de remplissage : retourne toujours 1, quel que soit le noeud."
+  },
+  "UnloadTrigger:getFillUnitExactFillRootNode": {
+   "en": "Fill unit emulation: returns the exact fill root node, ignoring the fill unit index.",
+   "fr": "Émulation d'unité de remplissage : retourne le noeud de remplissage exact, sans tenir compte de l'index d'unité."
+  },
+  "UnloadTrigger:addFillUnitFillLevel": {
+   "en": "Passes a delivery to the target via addFillLevelFromTool and returns the amount accepted, in incoming units. If a conversion exists for the fill type, the amount is multiplied by the ratio and sent as the outgoing type, and the result is divided back.",
+   "fr": "Transmet une livraison à la cible via addFillLevelFromTool et retourne la quantité acceptée, en unités entrantes. Si une conversion existe pour le type, la quantité est multipliée par le ratio et envoyée sous le type sortant, puis le résultat est divisé en retour."
+  },
+  "UnloadTrigger:getFillUnitAllowsFillType": {
+   "en": "Fill unit emulation: returns whether the fill type is allowed, delegating to getIsFillTypeAllowed; the index is ignored.",
+   "fr": "Émulation d'unité de remplissage : retourne si le type est autorisé, en déléguant à getIsFillTypeAllowed ; l'index est ignoré."
+  },
+  "UnloadTrigger:getIsFillTypeAllowed": {
+   "en": "Returns whether the fill type is allowed, which currently just delegates to getIsFillTypeSupported.",
+   "fr": "Retourne si le type est autorisé, ce qui délègue simplement à getIsFillTypeSupported."
+  },
+  "UnloadTrigger:getIsFillTypeSupported": {
+   "en": "Returns false if a type list exists and does not contain the type. Otherwise, if a target exists, converts the type through the conversion table and asks the target getIsFillTypeAllowed. True when no check rejects it.",
+   "fr": "Retourne false si une liste de types existe et ne contient pas le type. Sinon, si une cible existe, convertit le type via la table de conversions et interroge getIsFillTypeAllowed de la cible. True si aucun test ne le rejette."
+  },
+  "UnloadTrigger:getFillUnitFreeCapacity": {
+   "en": "Returns the target's free capacity for the fill type and farm, divided by the ratio when a conversion applies, so it is expressed in incoming units. Returns 0 if the target has no getFreeCapacity.",
+   "fr": "Retourne la capacité libre de la cible pour le type et la ferme, divisée par le ratio si une conversion s'applique, donc exprimée en unités entrantes. Retourne 0 si la cible n'a pas getFreeCapacity."
+  },
+  "UnloadTrigger:getIsToolTypeAllowed": {
+   "en": "Returns false if an accepted tool type list exists and lacks the tool type; otherwise returns the target's own getIsToolTypeAllowed answer.",
+   "fr": "Retourne false si une liste de types d'outils acceptés existe et n'inclut pas l'outil ; sinon retourne la réponse de getIsToolTypeAllowed de la cible."
+  },
+  "UnloadTrigger:getCustomDischargeNotAllowedWarning": {
+   "en": "Returns the custom warning text shown when discharging is refused (nil by default, set by subclasses or other code).",
+   "fr": "Retourne le texte d'avertissement personnalisé affiché quand le déchargement est refusé (nil par défaut, défini par des sous-classes ou d'autres codes)."
+  },
+  "UnloadTrigger.loadSpecValueFillTypes": {
+   "en": "Signature only (no body in the SDK dump): by its name and parameters it likely returns the set of fill type names an unload trigger supports, read from the XML at the given path, for use in specification displays. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom et ses paramètres, elle retourne probablement l'ensemble des noms de types qu'un trigger de déchargement supporte, lus dans le XML au chemin donné, pour les affichages de spécifications. NON VÉRIFIÉ."
+  }
+ }
+}

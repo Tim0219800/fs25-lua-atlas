@@ -1,0 +1,53 @@
+{
+ "fichier": "vehicles/specializations/activatables/WinchAttachTreeActivatable.lua",
+ "module": {
+  "en": "Activatable for the forestry winch: lets the owner player toggle attach mode and attach a tree to one rope of the vehicle `spec_winch`. One instance exists per rope. It registers its own action events while selected and delegates all actual work to winch methods on the vehicle (UNVERIFIED: those methods are defined in Winch.lua, not in this file).",
+  "fr": "Activatable du treuil forestier : permet au joueur propriétaire de basculer le mode d'attache et d'attacher un arbre à un câble du `spec_winch` du véhicule. Il existe une instance par câble. Il enregistre ses propres événements d'action lorsqu'il est sélectionné et délègue le travail réel aux méthodes de treuil du véhicule (NON VÉRIFIÉ : ces méthodes sont définies dans Winch.lua, pas ici)."
+ },
+ "fonctions": {
+  "WinchAttachTreeActivatable.new": {
+   "en": "Creates the activatable for one winch rope; caches the winch texts and rope list from `spec_winch` and keeps an empty prompt text.",
+   "fr": "Crée l'activatable pour un câble de treuil ; met en cache les textes et la liste des câbles de `spec_winch` et garde un texte d'invite vide."
+  },
+  "WinchAttachTreeActivatable:registerCustomInput": {
+   "en": "Registers the winch attach-mode toggle (`WINCH_ATTACH_MODE`) and tree attach (`WINCH_ATTACH`) action events with very high text priority, then forces a refresh via `update`.",
+   "fr": "Enregistre les événements d'action de bascule du mode d'attache (`WINCH_ATTACH_MODE`) et d'attache d'arbre (`WINCH_ATTACH`) avec une priorité de texte très haute, puis force un rafraîchissement via `update`."
+  },
+  "WinchAttachTreeActivatable:removeCustomInput": {
+   "en": "Removes every input action event registered by this object (all events bound to it as target).",
+   "fr": "Retire tous les événements d'action d'entrée enregistrés par cet objet (tous ceux dont il est la cible)."
+  },
+  "WinchAttachTreeActivatable:onToggleAttachTreeMode": {
+   "en": "Input callback: asks the vehicle to switch the attach mode of this rope via `setWinchTreeAttachMode`.",
+   "fr": "Callback d'entrée : demande au véhicule de basculer le mode d'attache de ce câble via `setWinchTreeAttachMode`."
+  },
+  "WinchAttachTreeActivatable:onAttachTree": {
+   "en": "Input callback: if `getCanAttachWinchTree` allows it for this rope, calls `onAttachTreeInputEvent` on the vehicle.",
+   "fr": "Callback d'entrée : si `getCanAttachWinchTree` l'autorise pour ce câble, appelle `onAttachTreeInputEvent` sur le véhicule."
+  },
+  "WinchAttachTreeActivatable:update": {
+   "en": "Per-frame refresh of the prompts: toggle text shows start or stop attach mode, and the attach action is enabled only when a tree can be attached.",
+   "fr": "Rafraîchissement par frame des invites : le texte de bascule indique démarrer ou arrêter le mode d'attache, et l'action d'attache n'est active que si un arbre peut être attaché."
+  },
+  "WinchAttachTreeActivatable:getIsActivatable": {
+   "en": "False if the vehicle belongs to another farm, the rope already holds its maximum number of trees, or another rope is in attach mode; true otherwise.",
+   "fr": "False si le véhicule appartient à une autre ferme, si le câble porte déjà son nombre maximal d'arbres, ou si un autre câble est en mode d'attache ; true sinon."
+  },
+  "WinchAttachTreeActivatable:activate": {
+   "en": "Empty hook; nothing happens when the activatable becomes the selected one.",
+   "fr": "Fonction vide ; rien ne se passe quand l'activatable devient celui sélectionné."
+  },
+  "WinchAttachTreeActivatable:deactivate": {
+   "en": "Empty hook; nothing happens when the activatable stops being the selected one.",
+   "fr": "Fonction vide ; rien ne se passe quand l'activatable n'est plus celui sélectionné."
+  },
+  "WinchAttachTreeActivatable:getDistance": {
+   "en": "Returns 0 while this rope is in attach mode (so it always wins selection); otherwise the 3D distance from the point to the rope node.",
+   "fr": "Renvoie 0 tant que ce câble est en mode d'attache (il gagne donc toujours la sélection) ; sinon la distance 3D entre le point et le nœud du câble."
+  },
+  "WinchAttachTreeActivatable:draw": {
+   "en": "Empty hook; this activatable draws nothing on screen.",
+   "fr": "Fonction vide ; cet activatable n'affiche rien à l'écran."
+  }
+ }
+}

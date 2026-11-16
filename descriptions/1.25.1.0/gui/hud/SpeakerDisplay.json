@@ -1,0 +1,21 @@
+{
+ "fichier": "gui/hud/SpeakerDisplay.lua",
+ "module": {
+  "en": "Multiplayer HUD display (extends HUDDisplay) listing the users who are currently speaking in voice chat, shown at the top-right under the side notifications. A speaker stays listed for 500 time units after the last voice activity. It reads g_currentMission.userManager users and VoiceChatUtil. Client-side only.",
+  "fr": "Affichage HUD multijoueur (étend HUDDisplay) listant les utilisateurs en train de parler en chat vocal, en haut à droite sous les notifications latérales. Un locuteur reste listé 500 unités de temps après sa dernière activité vocale. Il lit les utilisateurs de g_currentMission.userManager et VoiceChatUtil. Côté client uniquement."
+ },
+ "fonctions": {
+  "SpeakerDisplay.new": {
+   "en": "Creates the display with three-part background overlays, talk and muted icons at half alpha, and an empty per-user speaking timer table.",
+   "fr": "Crée l'affichage avec des overlays de fond en trois parties, des icônes de parole et de sourdine à demi-opacité, et une table vide de minuteurs de parole par utilisateur."
+  },
+  "SpeakerDisplay:storeScaledValues": {
+   "en": "Anchors the display below the top-right anchor (offset -300 px) and converts the reference-pixel sizes of background parts, text, spacing and icons to screen units.",
+   "fr": "Ancre l'affichage sous l'ancrage haut-droit (décalage de -300 px) et convertit en unités écran les tailles en pixels de référence du fond, du texte, de l'espacement et des icônes."
+  },
+  "SpeakerDisplay:draw": {
+   "en": "For each user, sets the speaking timer to 500 when voice activity is detected and the user is not blocked, then draws a rounded row with muted or talk icon and the upper-cased nickname while the timer entry exists. Returns early without users. Note: the timer is set here but never decreased in this file, so UNVERIFIED whether entries ever expire.",
+   "fr": "Pour chaque utilisateur, met le minuteur de parole à 500 quand une activité vocale est détectée et que l'utilisateur n'est pas bloqué, puis dessine une ligne arrondie avec l'icône de sourdine ou de parole et le pseudo en majuscules tant que l'entrée existe. Retourne tôt sans utilisateurs. À noter : le minuteur est posé ici mais jamais décrémenté dans ce fichier, donc NON VÉRIFIÉ que les entrées expirent un jour."
+  }
+ }
+}

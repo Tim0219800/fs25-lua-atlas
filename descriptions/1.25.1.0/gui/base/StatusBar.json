@@ -1,0 +1,37 @@
+{
+ "fichier": "gui/base/StatusBar.lua",
+ "module": {
+  "en": "Simple horizontal progress bar drawn from plain-colour overlays: a background, a value fill and an optional marker. The value is a fraction between 0 and 1. Pure rendering helper with no event handling.",
+  "fr": "Barre de progression horizontale simple dessinée avec des overlays de couleur unie : un fond, un remplissage de valeur et un marqueur optionnel. La valeur est une fraction entre 0 et 1. Simple utilitaire d'affichage, sans gestion d'événements."
+ },
+ "fonctions": {
+  "StatusBar.new": {
+   "en": "Creates a bar at x, y with the given size, background colour and value colour (colour tables are unpacked). A markerSize table {w, h} adds a marker overlay centred on the fill edge. Starts at value 0.",
+   "fr": "Crée une barre en x, y avec la taille, la couleur de fond et la couleur de valeur données (tables de couleurs dépaquetées). Une table markerSize {l, h} ajoute un marqueur centré sur le bord du remplissage. Démarre à la valeur 0."
+  },
+  "StatusBar:delete": {
+   "en": "Deletes the background, value and marker overlays that exist.",
+   "fr": "Supprime les overlays de fond, de valeur et de marqueur qui existent."
+  },
+  "StatusBar:setDisabled": {
+   "en": "Sets the disabled flag; while disabled only the background is rendered.",
+   "fr": "Définit l'état désactivé ; tant qu'il est actif, seul le fond est affiché."
+  },
+  "StatusBar:setPosition": {
+   "en": "Moves the bar and its overlays to x, y, keeping the marker vertically centred on the bar. Note: the marker goes to the bar's left edge, not the current value position, until setValue is called again.",
+   "fr": "Déplace la barre et ses overlays en x, y, en gardant le marqueur centré verticalement. À noter : le marqueur va au bord gauche de la barre, pas à la position de la valeur, jusqu'au prochain appel de setValue."
+  },
+  "StatusBar:setColor": {
+   "en": "Sets the colour of the value fill and of the marker; the background keeps its colour.",
+   "fr": "Définit la couleur du remplissage et du marqueur ; le fond garde sa couleur."
+  },
+  "StatusBar:setValue": {
+   "en": "Stores the value clamped to 0..1 and resizes the fill and moves the marker. Note: the overlay width and marker use the unclamped newValue, so out-of-range inputs draw outside the bar.",
+   "fr": "Stocke la valeur bornée à 0..1, redimensionne le remplissage et déplace le marqueur. À noter : la largeur de l'overlay et le marqueur utilisent newValue non borné, donc une valeur hors plage dépasse de la barre."
+  },
+  "StatusBar:render": {
+   "en": "Draws the background, then the fill and marker unless the bar is disabled.",
+   "fr": "Dessine le fond, puis le remplissage et le marqueur sauf si la barre est désactivée."
+  }
+ }
+}

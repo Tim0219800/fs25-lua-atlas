@@ -1,0 +1,41 @@
+{
+ "fichier": "player/PlayerCCT.lua",
+ "module": {
+  "en": "Thin wrapper around the engine character controller (CCT) capsule of a player, covering creation, removal, movement, position and grounded checks, with debug output. It stores capsule size, slope and step limits and collision groups/masks; `rootNode`, `getSkinWidth`, `getBottomOffsetY`, `setMass` and similar accessors are not defined in this file (UNVERIFIED where they come from). Used by Player as `capsuleController`.",
+  "fr": "Fine enveloppe autour de la capsule du contrôleur de personnage (CCT) du moteur pour un joueur : création, suppression, déplacement, position et test de contact avec le sol, plus l'affichage de debug. Elle conserve la taille de la capsule, les limites de pente et de marche et les groupes/masques de collision ; `rootNode`, `getSkinWidth`, `getBottomOffsetY`, `setMass` et accesseurs similaires ne sont pas définis dans ce fichier (origine NON VÉRIFIÉE). Utilisée par Player comme `capsuleController`."
+ },
+ "fonctions": {
+  "PlayerCCT.new": {
+   "en": "Creates the CCT wrapper with default radius 0.35, slope limit 60, step offset 0.4, mass 0 and the default collision groups and masks. No engine capsule exists until `rebuild` is called.",
+   "fr": "Crée l'enveloppe CCT avec rayon 0,35, limite de pente 60, hauteur de marche 0,4, masse 0 et les groupes et masques de collision par défaut. Aucune capsule moteur n'existe avant l'appel de `rebuild`."
+  },
+  "PlayerCCT:delete": {
+   "en": "Removes the engine CCT with `removeCCT` if one exists and clears its id.",
+   "fr": "Supprime le CCT du moteur avec `removeCCT` s'il existe et efface son id."
+  },
+  "PlayerCCT:rebuild": {
+   "en": "Removes any existing capsule and creates a new one with `createCCT` on the root node using the stored size, limits, groups and mass. The current height becomes the desired height.",
+   "fr": "Supprime toute capsule existante et en crée une nouvelle avec `createCCT` sur le noeud racine, avec la taille, les limites, les groupes et la masse stockés. La hauteur actuelle devient la hauteur souhaitée."
+  },
+  "PlayerCCT:move": {
+   "en": "Moves the capsule by a displacement in metres per axis with `moveCCT`, using the movement collision group and mask.",
+   "fr": "Déplace la capsule d'un déplacement en mètres par axe avec `moveCCT`, selon le groupe et le masque de collision de déplacement."
+  },
+  "PlayerCCT:getPosition": {
+   "en": "Returns the world position of the player's feet: root node x and z, with y shifted by the bottom offset.",
+   "fr": "Retourne la position monde des pieds du joueur : x et z du noeud racine, avec y décalé du décalage inférieur."
+  },
+  "PlayerCCT:setPosition": {
+   "en": "Sets the capsule position from a foot position with `setCCTPosition`; if the last argument is true, the root node is also moved to the matching position.",
+   "fr": "Place la capsule à partir d'une position des pieds avec `setCCTPosition` ; si le dernier argument est true, le noeud racine est aussi déplacé à la position correspondante."
+  },
+  "PlayerCCT:calculateIfBottomTouchesGround": {
+   "en": "Returns the third value of `getCCTCollisionFlags`, i.e. whether the capsule bottom touches the ground.",
+   "fr": "Retourne la troisième valeur de `getCCTCollisionFlags`, c'est-à-dire si le bas de la capsule touche le sol."
+  },
+  "PlayerCCT:debugDraw": {
+   "en": "Draws debug text lines for the capsule height, the physics height and the desired height, and returns the next y screen position.",
+   "fr": "Affiche des lignes de texte de debug pour la hauteur de capsule, la hauteur physique et la hauteur souhaitée, et retourne la position y d'écran suivante."
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "fichier": "objects/football/FootballFieldActivatable.lua",
+ "module": {
+  "en": "Activatable used to reset the football. This file only defines the distance function; the rest of the class (constructor, run) is not in the dump and is UNVERIFIED.",
+  "fr": "Activatable servant à remettre le ballon en jeu. Ce fichier ne définit que la fonction de distance ; le reste de la classe (constructeur, run) n'est pas dans le dump et reste NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "FootballFieldResetActivatable:getDistance": {
+   "en": "Returns the distance from the given point to the field's reset trigger node, or `math.huge` if the field has no such node.",
+   "fr": "Renvoie la distance entre le point donné et le noeud de trigger de remise en jeu du terrain, ou `math.huge` si ce noeud n'existe pas."
+  }
+ }
+}

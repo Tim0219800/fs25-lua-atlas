@@ -1,0 +1,209 @@
+{
+ "fichier": "vehicles/specializations/PowerTakeOffs.lua",
+ "module": {
+  "en": "Specialization that builds and animates the visible PTO shafts. Output PTOs sit on a vehicle with attacher joints, input PTOs on an attachable, and local PTOs link two nodes of one vehicle. It requires AttacherJoints or Attachable, reads vehicle.powerTakeOffs (optionally per configuration), and loads the shaft model from a PTO XML/i3d file in three flavours: single joint, double joint or basic. It is mostly client-side visuals, linked to attach and detach events. PowerTakeOffs.DEFAULT_MAX_UPDATE_DISTANCE is used but not defined in the dump (UNVERIFIED).",
+  "fr": "Spécialisation qui construit et anime les arbres de prise de force visibles. Les prises de sortie se trouvent sur un véhicule avec attaches, les prises d'entrée sur un outil attelable, et les prises locales relient deux nœuds d'un même véhicule. Elle requiert AttacherJoints ou Attachable, lit vehicle.powerTakeOffs (éventuellement par configuration) et charge le modèle d'arbre depuis un fichier XML/i3d de prise de force en trois variantes : simple cardan, double cardan ou basique. Elle concerne surtout le visuel côté client, lié aux événements d'attelage et de dételage. PowerTakeOffs.DEFAULT_MAX_UPDATE_DISTANCE est utilisé mais non défini dans le dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PowerTakeOffs.prerequisitesPresent": {
+   "en": "Returns true if the vehicle type has AttacherJoints or Attachable.",
+   "fr": "Retourne true si le type de véhicule possède AttacherJoints ou Attachable."
+  },
+  "PowerTakeOffs.initSpecialization": {
+   "en": "Registers the vehicle XML keys (output/input/local, ignoreInvalidJointIndices, maxUpdateDistance, sounds, moving part/tool PTO indices, dashboard index) and builds a separate XML schema for PTO shaft files (nodes, size, min length, max angle, materials, joint parts).",
+   "fr": "Enregistre les clés XML du véhicule (sortie/entrée/locale, ignoreInvalidJointIndices, maxUpdateDistance, sons, indices de prise pour pièces et outils mobiles, indice de tableau de bord) et construit un schéma XML distinct pour les fichiers d'arbres de prise de force (nœuds, taille, longueur min, angle max, matériaux, pièces d'articulation)."
+  },
+  "PowerTakeOffs.registerXMLPaths": {
+   "en": "Registers the output, input and local PTO XML paths below a given base path.",
+   "fr": "Enregistre les chemins XML des prises de sortie, d'entrée et locales sous un chemin de base donné."
+  },
+  "PowerTakeOffs.registerOutputXMLPaths": {
+   "en": "Registers XML attributes of an output PTO: output node, attacher joints (by index or node), ptoName, skip-to-input index, animation nodes, object changes and the dashboard state value.",
+   "fr": "Enregistre les attributs XML d'une prise de sortie : nœud de sortie, attaches (par indice ou nœud), ptoName, indice de saut vers l'entrée, nœuds d'animation, changements d'objets et valeur d'état de tableau de bord."
+  },
+  "PowerTakeOffs.registerInputXMLPaths": {
+   "en": "Registers XML attributes of an input PTO: input node, input attacher joints, detach node, aboveAttacher, material templates, predefined length, PTO config filename (default Walterscheid file), ptoName, animation nodes and object changes.",
+   "fr": "Enregistre les attributs XML d'une prise d'entrée : nœud d'entrée, attaches d'entrée, nœud de rangement, aboveAttacher, modèles de matériau, longueur prédéfinie, fichier de configuration de prise (fichier Walterscheid par défaut), ptoName, nœuds d'animation et changements d'objets."
+  },
+  "PowerTakeOffs.registerFunctions": {
+   "en": "Adds the PTO API to the vehicle type: loaders, update, attach/detach, park, collision check, lookup by joint index and name, and the typed (single, double, basic) shaft functions.",
+   "fr": "Ajoute l'API des prises de force au type de véhicule : chargeurs, mise à jour, attelage/dételage, rangement, test de collision, recherche par indice d'attache et nom, et fonctions des arbres typés (simple, double, basique)."
+  },
+  "PowerTakeOffs.registerOverwrittenFunctions": {
+   "en": "Overrides loadExtraDependentParts and updateExtraDependentParts so moving parts and tools can drive PTO updates.",
+   "fr": "Surcharge loadExtraDependentParts et updateExtraDependentParts afin que les pièces et outils mobiles puissent piloter les mises à jour des prises de force."
+  },
+  "PowerTakeOffs.registerEventListeners": {
+   "en": "Subscribes to onPreLoad, onLoad, onPostLoad, onDelete, onUpdateInterpolation, onUpdateEnd and the pre/post attach and pre detach implement events.",
+   "fr": "Abonne aux événements onPreLoad, onLoad, onPostLoad, onDelete, onUpdateInterpolation, onUpdateEnd et aux événements d'attelage et de dételage d'outil (avant/après)."
+  },
+  "PowerTakeOffs:onPreLoad": {
+   "en": "Stores the PTO configuration index returned by getPowerTakeOffConfigIndex.",
+   "fr": "Mémorise l'indice de configuration de prise de force retourné par getPowerTakeOffConfigIndex."
+  },
+  "PowerTakeOffs:onLoad": {
+   "en": "Creates the output, input and local PTO tables, reads ignoreInvalidJointIndices and maxUpdateDistance, and on clients loads the turnedOn sounds. On a server without client it removes the interpolation listener.",
+   "fr": "Crée les tables de prises de sortie, d'entrée et locales, lit ignoreInvalidJointIndices et maxUpdateDistance, et charge côté client les sons turnedOn. Sur un serveur sans client, retire l'écouteur d'interpolation."
+  },
+  "PowerTakeOffs:onPostLoad": {
+   "en": "Loads the PTOs from vehicle.powerTakeOffs, then from the selected configuration entry if it exists. Done after load so all attacher joints already exist.",
+   "fr": "Charge les prises depuis vehicle.powerTakeOffs, puis depuis l'entrée de configuration sélectionnée si elle existe. Fait après le chargement pour que toutes les attaches existent déjà."
+  },
+  "PowerTakeOffs:onDelete": {
+   "en": "Releases PTO XML files and shared i3d requests, deletes animation nodes and PTO nodes of outputs, inputs and local PTOs, and deletes the turnedOn sounds.",
+   "fr": "Libère les fichiers XML et les requêtes i3d partagées des prises, supprime les nœuds d'animation et les nœuds des prises de sortie, d'entrée et locales, et supprime les sons turnedOn."
+  },
+  "PowerTakeOffs:onUpdateInterpolation": {
+   "en": "Client only, within maxUpdateDistance: updates input PTO shafts of connected vehicles in the same update loop, and those of attached implements. When the active state changes it starts or stops animations and the turnedOn sound.",
+   "fr": "Client uniquement, dans la limite de maxUpdateDistance : met à jour les arbres des prises d'entrée des véhicules connectés de la même boucle de mise à jour, ainsi que ceux des outils attelés. Quand l'état actif change, démarre ou arrête les animations et le son turnedOn."
+  },
+  "PowerTakeOffs:onUpdateEnd": {
+   "en": "Runs onUpdateInterpolation one last time before the physics goes to sleep.",
+   "fr": "Exécute onUpdateInterpolation une dernière fois avant la mise en veille de la physique."
+  },
+  "PowerTakeOffs:getPowerTakeOffConfigIndex": {
+   "en": "Returns 1 by default; meant to be overridden by a specialization that selects a PTO configuration.",
+   "fr": "Retourne 1 par défaut ; destinée à être surchargée par une spécialisation qui choisit une configuration de prise de force."
+  },
+  "PowerTakeOffs:loadPowerTakeOffsFromXML": {
+   "en": "Iterates the output (if AttacherJoints), input (if Attachable) and local entries under a key and stores each successfully loaded PTO in its list.",
+   "fr": "Parcourt les entrées output (si AttacherJoints), input (si Attachable) et local sous une clé et range chaque prise chargée avec succès dans sa liste."
+  },
+  "PowerTakeOffs:loadOutputPowerTakeOff": {
+   "en": "Loads one output PTO: output node (or skip-to-input index), attacher joints by index or node, name, animations and object changes, and registers a dashboard 'powerTakeOffs.state' value. Returns false if nothing valid is configured.",
+   "fr": "Charge une prise de sortie : nœud de sortie (ou indice de saut vers l'entrée), attaches par indice ou nœud, nom, animations et changements d'objets, et enregistre une valeur de tableau de bord « powerTakeOffs.state ». Retourne false si rien de valide n'est configuré."
+  },
+  "PowerTakeOffs:loadInputPowerTakeOff": {
+   "en": "Loads one input PTO: input node, input attacher joints, optional detach node (when Platform.gameplay.hasDetachedPowerTakeOffs), materials, name, animations, object changes and the shaft config file. Returns false without valid node or joints.",
+   "fr": "Charge une prise d'entrée : nœud d'entrée, attaches d'entrée, nœud de rangement optionnel (quand Platform.gameplay.hasDetachedPowerTakeOffs), matériaux, nom, animations, changements d'objets et fichier de configuration de l'arbre. Retourne false sans nœud ou attache valide."
+  },
+  "PowerTakeOffs:loadLocalPowerTakeOff": {
+   "en": "Loads a local PTO between startNode and endNode of the same vehicle, with optional materials and predefined length, then loads its shaft config file. Returns false if a node is missing.",
+   "fr": "Charge une prise locale entre startNode et endNode d'un même véhicule, avec matériaux et longueur prédéfinie optionnels, puis charge son fichier de configuration d'arbre. Retourne false si un nœud manque."
+  },
+  "PowerTakeOffs:placeLocalPowerTakeOff": {
+   "en": "Once the i3d is loaded, links the shaft to the end node the first time, computes its length, then updates its pose.",
+   "fr": "Une fois l'i3d chargé, relie l'arbre au nœud de fin la première fois, calcule sa longueur, puis met à jour sa pose."
+  },
+  "PowerTakeOffs:updatePowerTakeOff": {
+   "en": "Calls the shaft's own update function (single or double joint) if its i3d is loaded and it is linked or placed.",
+   "fr": "Appelle la fonction de mise à jour propre à l'arbre (simple ou double cardan) si son i3d est chargé et qu'il est relié ou placé."
+  },
+  "PowerTakeOffs:updateAttachedPowerTakeOffs": {
+   "en": "Updates the input PTO shafts of this implement that are connected to the given attacher vehicle, when both share the same update loop index.",
+   "fr": "Met à jour les arbres des prises d'entrée de cet outil connectés au véhicule porteur donné, quand les deux partagent le même indice de boucle de mise à jour."
+  },
+  "PowerTakeOffs:updatePowerTakeOffLength": {
+   "en": "Recomputes the shaft length through its distance function when the i3d is loaded.",
+   "fr": "Recalcule la longueur de l'arbre via sa fonction de distance lorsque l'i3d est chargé."
+  },
+  "PowerTakeOffs:getOutputPowerTakeOffsByJointDescIndex": {
+   "en": "Returns the output PTOs linked to an attacher joint index. If one is a skip-to-input entry, the lookup is redirected to the attacher vehicle of this vehicle.",
+   "fr": "Retourne les prises de sortie liées à un indice d'attache. Si l'une est une entrée de saut vers l'entrée, la recherche est redirigée vers le véhicule porteur de ce véhicule."
+  },
+  "PowerTakeOffs:getOutputPowerTakeOffs": {
+   "en": "Returns the table of output PTOs.",
+   "fr": "Retourne la table des prises de sortie."
+  },
+  "PowerTakeOffs:getInputPowerTakeOffsByJointDescIndexAndName": {
+   "en": "Returns input PTOs matching an input joint index and a PTO name. If none, follows skip-to-input outputs to the next implement in the chain.",
+   "fr": "Retourne les prises d'entrée correspondant à un indice d'attache d'entrée et à un nom de prise. S'il n'y en a pas, suit les sorties de saut vers l'entrée jusqu'à l'outil suivant dans la chaîne."
+  },
+  "PowerTakeOffs:getInputPowerTakeOffs": {
+   "en": "Returns the table of input PTOs.",
+   "fr": "Retourne la table des prises d'entrée."
+  },
+  "PowerTakeOffs:getIsPowerTakeOffActive": {
+   "en": "Returns false by default; specializations override it to say when the shaft should animate and play sound.",
+   "fr": "Retourne false par défaut ; les spécialisations la surchargent pour indiquer quand l'arbre doit s'animer et émettre du son."
+  },
+  "PowerTakeOffs:attachPowerTakeOff": {
+   "en": "Pairs each output PTO of the joint with the matching input PTO (same ptoName) of the attached object and queues the mounting. Always returns true.",
+   "fr": "Associe chaque prise de sortie de l'attache à la prise d'entrée correspondante (même ptoName) de l'objet attelé et met le montage en file d'attente. Retourne toujours true."
+  },
+  "PowerTakeOffs:detachPowerTakeOff": {
+   "en": "Clears queued mountings, calls each connected input's detach function, stops output animations, resets the connections and turns off object changes. Always returns true.",
+   "fr": "Vide les montages en attente, appelle la fonction de dételage de chaque prise d'entrée connectée, arrête les animations de sortie, réinitialise les connexions et désactive les changements d'objets. Retourne toujours true."
+  },
+  "PowerTakeOffs:checkPowerTakeOffCollision": {
+   "en": "For trailer-type joints only, detaches the PTO if its output lies on the wrong side (below or above) of the attacher joint compared with the input's aboveAttacher setting.",
+   "fr": "Pour les attaches de type remorque uniquement, détache la prise si sa sortie se trouve du mauvais côté (dessous ou dessus) de l'attache par rapport au réglage aboveAttacher de l'entrée."
+  },
+  "PowerTakeOffs:parkPowerTakeOff": {
+   "en": "Stores the shaft when unattached: hangs it on the detach node if there is one, otherwise hides both ends inside the vehicle. Resets the end offsets.",
+   "fr": "Range l'arbre quand il n'est pas attelé : l'accroche au nœud de rangement s'il existe, sinon cache les deux extrémités à l'intérieur du véhicule. Réinitialise les décalages d'extrémité."
+  },
+  "PowerTakeOffs:onPreAttachImplement": {
+   "en": "Calls attachPowerTakeOff just before an implement is attached.",
+   "fr": "Appelle attachPowerTakeOff juste avant l'attelage d'un outil."
+  },
+  "PowerTakeOffs:onPostAttachImplement": {
+   "en": "After attach, runs the queued mountings for that joint: calls the input's attach function and enables the object changes of input and output.",
+   "fr": "Après l'attelage, exécute les montages en attente pour cette attache : appelle la fonction d'attelage de la prise d'entrée et active les changements d'objets de l'entrée et de la sortie."
+  },
+  "PowerTakeOffs:onPreDetachImplement": {
+   "en": "Calls detachPowerTakeOff before an implement is detached and stops the turnedOn sound on clients.",
+   "fr": "Appelle detachPowerTakeOff avant le dételage d'un outil et arrête le son turnedOn côté client."
+  },
+  "PowerTakeOffs:loadPowerTakeOffFromConfigFile": {
+   "en": "Opens a PTO shaft XML file and requests its i3d asynchronously as a shared i3d, with onPowerTakeOffI3DLoaded as callback. Warns if the file or i3d name is missing.",
+   "fr": "Ouvre un fichier XML d'arbre de prise de force et demande son i3d de façon asynchrone comme i3d partagé, avec onPowerTakeOffI3DLoaded en rappel. Avertit si le fichier ou le nom de l'i3d manque."
+  },
+  "PowerTakeOffs:onPowerTakeOffI3DLoaded": {
+   "en": "Async callback: reads size, min length, max angle and offset, loads animations, applies materials, picks the single, double or basic loader, links the start node, parks or places the shaft, then deletes the temporary i3d node and XML file.",
+   "fr": "Rappel asynchrone : lit taille, longueur min, angle max et décalage, charge les animations, applique les matériaux, choisit le chargeur simple, double ou basique, relie le nœud de départ, range ou place l'arbre, puis supprime le nœud i3d temporaire et le fichier XML."
+  },
+  "PowerTakeOffs:loadSingleJointPowerTakeOff": {
+   "en": "Loads the nodes of a single-joint shaft (joints, scale and translation parts, decal, link node), computes base lengths and sets the single-joint update, distance, attach and detach functions.",
+   "fr": "Charge les nœuds d'un arbre à cardan simple (articulations, pièces d'échelle et de translation, décalcomanie, nœud de liaison), calcule les longueurs de base et définit les fonctions de mise à jour, de distance, d'attelage et de dételage de ce type."
+  },
+  "PowerTakeOffs:updateSingleJointPowerTakeOff": {
+   "en": "Orients the start joint toward the link node, sets the end joint distance, and scales the scale part to match the span.",
+   "fr": "Oriente l'articulation de départ vers le nœud de liaison, règle la distance de l'articulation de fin et met à l'échelle la pièce d'échelle pour suivre l'écart."
+  },
+  "PowerTakeOffs:loadDoubleJointPowerTakeOff": {
+   "en": "Loads the nodes of a double-joint shaft (two start and two end joints, scale and translation parts, decal, link node) and sets its update, distance, attach and detach functions.",
+   "fr": "Charge les nœuds d'un arbre à double cardan (deux articulations de départ et deux de fin, pièces d'échelle et de translation, décalcomanie, nœud de liaison) et définit ses fonctions de mise à jour, de distance, d'attelage et de dételage."
+  },
+  "PowerTakeOffs:updateDoubleJointPowerTakeOff": {
+   "en": "Orients the four joints so both universal joints share the bend, sets the end joint distance and scales the scale part.",
+   "fr": "Oriente les quatre articulations pour que les deux cardans se partagent la courbure, règle la distance de l'articulation de fin et met à l'échelle la pièce d'échelle."
+  },
+  "PowerTakeOffs:loadBasicPowerTakeOff": {
+   "en": "Loads a basic shaft: only start and link nodes, with the typed attach and detach functions and no update function.",
+   "fr": "Charge un arbre basique : seulement les nœuds de départ et de liaison, avec les fonctions d'attelage et de dételage typées et sans fonction de mise à jour."
+  },
+  "PowerTakeOffs:updateDistanceOfTypedPowerTakeOff": {
+   "en": "Scales the telescopic translation part to the current start-to-link distance (or predefined length) and fits or hides the decal depending on the available length.",
+   "fr": "Met à l'échelle la partie télescopique selon la distance actuelle départ-liaison (ou la longueur prédéfinie) et ajuste ou masque la décalcomanie selon la longueur disponible."
+  },
+  "PowerTakeOffs:attachTypedPowerTakeOff": {
+   "en": "If the attachment is valid, links the shaft between the output node and the input node, sets offsets, updates pose and length, shows it and marks it linked.",
+   "fr": "Si l'attelage est valide, relie l'arbre entre le nœud de sortie et le nœud d'entrée, définit les décalages, met à jour la pose et la longueur, l'affiche et le marque comme relié."
+  },
+  "PowerTakeOffs:detachTypedPowerTakeOff": {
+   "en": "Parks the shaft via parkPowerTakeOff when it is detached.",
+   "fr": "Range l'arbre via parkPowerTakeOff lorsqu'il est détaché."
+  },
+  "PowerTakeOffs:validatePowerTakeOffAttachment": {
+   "en": "Returns false if a node is missing, the output-to-input distance is below minLength, or the vertical angle exceeds maxAngle; otherwise true.",
+   "fr": "Retourne false si un nœud manque, si la distance sortie-entrée est inférieure à minLength ou si l'angle vertical dépasse maxAngle ; sinon true."
+  },
+  "PowerTakeOffs:loadExtraDependentParts": {
+   "en": "After the parent loader, reads the powerTakeOffs#indices and #localIndices lists on a moving part or tool. Returns false if the parent failed.",
+   "fr": "Après le chargeur parent, lit les listes powerTakeOffs#indices et #localIndices d'une pièce ou d'un outil mobile. Retourne false si le parent a échoué."
+  },
+  "PowerTakeOffs:updateExtraDependentParts": {
+   "en": "After the parent update, refreshes the listed input and local PTOs of the part; an unknown index is dropped with a warning once loading has finished.",
+   "fr": "Après la mise à jour parente, rafraîchit les prises d'entrée et locales listées de la pièce ; un indice inconnu est retiré avec un avertissement une fois le chargement terminé."
+  },
+  "PowerTakeOffs.consoleCommandTestConnection": {
+   "en": "Debug console handler: for one attacher joint index, shows a magenta test shaft, object changes, a debug line and a label on matching outputs, and clears them on the others.",
+   "fr": "Gestionnaire de commande console de débogage : pour un indice d'attache, affiche sur les sorties correspondantes un arbre de test magenta, les changements d'objets, une ligne et une étiquette de débogage, et les retire sur les autres."
+  },
+  "PowerTakeOffs.consoleCommandDebug": {
+   "en": "Debug console handler: lays out every PTO shaft XML found under data/shared/assets/powerTakeOffs in front of the player in three variants (plain, colored, animated and moving), using dummy vehicle objects. Replaces any previous debug set.",
+   "fr": "Gestionnaire de commande console de débogage : dispose devant le joueur tous les XML d'arbres de prise de force trouvés sous data/shared/assets/powerTakeOffs en trois variantes (simple, colorée, animée et mobile), avec des objets véhicules factices. Remplace tout jeu de débogage précédent."
+  }
+ }
+}

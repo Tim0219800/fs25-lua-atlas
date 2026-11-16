@@ -1,0 +1,89 @@
+{
+ "fichier": "vehicles/specializations/StumpCutter.lua",
+ "module": {
+  "en": "Specialization for stump cutters that grind tree trunks (split shapes) and clear decoration density-map areas. It requires TurnOnVehicle and declares a 'stumpCutter' work area type. Each cut node scans for a split shape in its cut plane, then the server cuts or crushes it after timers; the client drives wood-chip effects, sounds and animations. It also adds dirt/wear and engine load while cutting.",
+  "fr": "Spécialisation des broyeurs de souches qui broient les troncs (split shapes) et nettoient des zones décoratives de la density map. Elle exige TurnOnVehicle et déclare un type de zone de travail « stumpCutter ». Chaque cut node cherche un split shape dans son plan de coupe, puis le serveur coupe ou broie après des minuteries ; le client pilote effets de copeaux, sons et animations. Elle ajoute aussi salissure, usure et charge moteur pendant la coupe."
+ },
+ "fonctions": {
+  "StumpCutter.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type also has the TurnOnVehicle specialization.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède aussi la spécialisation TurnOnVehicle."
+  },
+  "StumpCutter.initSpecialization": {
+   "en": "Registers the 'stumpCutter' work area type and the XML schema: cut nodes (size, timers, thresholds, work area index, duration, effects), sounds, global effects and animation nodes.",
+   "fr": "Enregistre le type de zone de travail « stumpCutter » et le schéma XML : cut nodes (taille, minuteries, seuils, index de zone de travail, durée, effets), sons, effets globaux et animation nodes."
+  },
+  "StumpCutter.registerFunctions": {
+   "en": "Registers crushSplitShape, stumpCutterSplitShapeCallback and processStumpCutterArea on the vehicle type.",
+   "fr": "Enregistre crushSplitShape, stumpCutterSplitShapeCallback et processStumpCutterArea sur le type de véhicule."
+  },
+  "StumpCutter.registerOverwrittenFunctions": {
+   "en": "Overrides getDirtMultiplier, getWearMultiplier, getCultivatorLimitToField, getPlowLimitToField, getPlowForceLimitToField and getConsumingLoad.",
+   "fr": "Surcharge getDirtMultiplier, getWearMultiplier, getCultivatorLimitToField, getPlowLimitToField, getPlowForceLimitToField et getConsumingLoad."
+  },
+  "StumpCutter.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdateTick, onDeactivate, onTurnedOn and onTurnedOff.",
+   "fr": "S'abonne à onLoad, onDelete, onUpdateTick, onDeactivate, onTurnedOn et onTurnedOff."
+  },
+  "StumpCutter:onLoad": {
+   "en": "Reads every vehicle.stumpCutter.cutNode(i) (node, cut sizes, timers, thresholds, work area index, effects) until one is missing, and on clients loads sounds, global effects and animations. Warns on old FS17-FS22 XML keys.",
+   "fr": "Lit chaque vehicle.stumpCutter.cutNode(i) (node, tailles de coupe, minuteries, seuils, index de zone de travail, effets) jusqu'au premier manquant, et charge sur les clients sons, effets globaux et animations. Avertit pour les anciennes clés XML FS17 à FS22."
+  },
+  "StumpCutter:onDelete": {
+   "en": "Deletes sound samples, animations, the global effects and the effects of every cut node.",
+   "fr": "Supprime les échantillons sonores, les animations, les effets globaux et ceux de chaque cut node."
+  },
+  "StumpCutter:onUpdateTick": {
+   "en": "While turned on, processes one cut node per tick in rotation: finds a split shape in its plane, and on the server counts down and then crushes the tree or splits it. Clients start or stop wood-chip effects and the work sound.",
+   "fr": "Quand le véhicule est allumé, traite un cut node par tick en rotation : cherche un split shape dans son plan ; côté serveur, décompte puis broie l'arbre ou le scinde. Les clients lancent ou arrêtent les effets de copeaux et le son de travail."
+  },
+  "StumpCutter:onDeactivate": {
+   "en": "Client only: stops the global effects and the effects of every cut node.",
+   "fr": "Client uniquement : arrête les effets globaux et ceux de chaque cut node."
+  },
+  "StumpCutter:onTurnedOn": {
+   "en": "Client only: stops running samples, plays the start sound followed by idle, and starts the animation nodes.",
+   "fr": "Client uniquement : arrête les sons en cours, joue le son start suivi de idle et lance les animation nodes."
+  },
+  "StumpCutter:onTurnedOff": {
+   "en": "Client only: resets the work fade time, stops all effects and samples, plays the stop sound and stops the animations.",
+   "fr": "Client uniquement : remet à zéro le fondu de travail, arrête tous les effets et sons, joue le son stop et arrête les animations."
+  },
+  "StumpCutter:crushSplitShape": {
+   "en": "Server only: deletes the split shape and marks a 10 m square around it dirty in the height collision map and the AI system.",
+   "fr": "Serveur uniquement : supprime le split shape et marque une zone carrée de 10 m autour comme modifiée dans la carte de collision de hauteur et le système d'IA."
+  },
+  "StumpCutter:stumpCutterSplitShapeCallback": {
+   "en": "Callback of splitShape. Crushes the upper piece if shorter than 1 m, otherwise registers it with the tree plant manager. The lower piece is crushed if its cut centre is below terrain, else it is kept as the current shape.",
+   "fr": "Callback de splitShape. Broie la partie haute si elle fait moins de 1 m, sinon l'enregistre auprès du gestionnaire d'arbres. La partie basse est broyée si le centre de coupe est sous le terrain, sinon conservée comme forme courante."
+  },
+  "StumpCutter:processStumpCutterArea": {
+   "en": "Work area callback: for cut nodes tied to this area, clears decoration density-map area (FSDensityMapUtil.clearDecoArea) and refreshes their last work time. Returns area and total area. Distant clients return 0, 0. Note: CLIENT_DM_UPDATE_RADIUS is not defined in this file (UNVERIFIED where it is set).",
+   "fr": "Callback de zone de travail : pour les cut nodes liés à cette zone, nettoie la zone décorative de la density map (FSDensityMapUtil.clearDecoArea) et met à jour leur dernier temps de travail. Renvoie surface et surface totale ; 0, 0 pour un client éloigné. À noter : CLIENT_DM_UPDATE_RADIUS n'est pas défini dans ce fichier (origine NON VÉRIFIÉ)."
+  },
+  "StumpCutter:getDirtMultiplier": {
+   "en": "Override adding the work dirt multiplier while a split shape is held in the specialization state.",
+   "fr": "Surcharge ajoutant le multiplicateur de salissure de travail tant qu'un split shape est mémorisé dans l'état de la spécialisation."
+  },
+  "StumpCutter:getWearMultiplier": {
+   "en": "Override adding the work wear multiplier while a split shape is held in the specialization state.",
+   "fr": "Surcharge ajoutant le multiplicateur d'usure de travail tant qu'un split shape est mémorisé dans l'état de la spécialisation."
+  },
+  "StumpCutter:getCultivatorLimitToField": {
+   "en": "Override that always returns false.",
+   "fr": "Surcharge qui renvoie toujours false."
+  },
+  "StumpCutter:getPlowLimitToField": {
+   "en": "Returns false: the stump cutter is not limited to fields for plow logic.",
+   "fr": "Renvoie false : le broyeur de souches n'est pas limité aux champs pour la logique de charrue."
+  },
+  "StumpCutter:getPlowForceLimitToField": {
+   "en": "Returns true, so the limit-to-field choice is forced.",
+   "fr": "Renvoie true : le choix de limitation au champ est imposé."
+  },
+  "StumpCutter:getConsumingLoad": {
+   "en": "Override that adds one load entry: 1 if any cut node worked in the last 500 ms, otherwise 0 (idle), and increments the count.",
+   "fr": "Surcharge qui ajoute une entrée de charge : 1 si un cut node a travaillé dans les 500 dernières ms, sinon 0 (ralenti), et incrémente le compteur."
+  }
+ }
+}

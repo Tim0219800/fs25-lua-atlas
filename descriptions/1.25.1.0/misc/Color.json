@@ -1,0 +1,105 @@
+{
+ "fichier": "misc/Color.lua",
+ "module": {
+  "en": "RGBA colour value class with channels from 0 to 1. It converts to and from packed 32-bit integers, hex strings, vectors, 0..255 RGBA values and named presets (Color.PRESETS is referenced but defined outside this file, UNVERIFIED). Its metatable adds numeric indexing (1 to 4), swizzling such as color.rgb, and multiplication with numbers, tables or other colours.",
+  "fr": "Classe de couleur RGBA avec des canaux de 0 à 1. Elle convertit depuis et vers des entiers 32 bits, des chaînes hexadécimales, des vecteurs, des valeurs RGBA 0..255 et des présélections nommées (Color.PRESETS est utilisé mais défini hors de ce fichier, NON VÉRIFIÉ). Sa métatable ajoute l'indexation numérique (1 à 4), le swizzle comme color.rgb et la multiplication avec des nombres, tables ou autres couleurs."
+ },
+ "fonctions": {
+  "Color_mt.__index": {
+   "en": "Index metamethod: looks in the instance, then in the Color class, then maps numeric keys 1 to 4 to r, g, b, a, and finally tries swizzling the key (for example a string of channel letters).",
+   "fr": "Métaméthode d'indexation : cherche dans l'instance, puis dans la classe Color, puis associe les clés numériques 1 à 4 à r, g, b, a, et enfin tente un swizzle de la clé (par exemple une chaîne de lettres de canaux)."
+  },
+  "Color_mt.__mul": {
+   "en": "Multiplication metamethod. Two tables multiply their RGB channels (alpha too when both have it), a number scales all four channels; results are clamped to 0..1 and returned as a new Color. Other operand types raise Assert.fail.",
+   "fr": "Métaméthode de multiplication. Deux tables multiplient leurs canaux RGB (et l'alpha si les deux en ont), un nombre met à l'échelle les quatre canaux ; les résultats sont bornés à 0..1 et renvoyés dans une nouvelle Color. Les autres types déclenchent Assert.fail."
+  },
+  "Color.new": {
+   "en": "Constructor taking r, g, b, a in 0..1; missing channels default to 0, alpha to 1 (solid black). Range checks exist only in debug builds.",
+   "fr": "Constructeur prenant r, g, b, a dans 0..1 ; les canaux absents valent 0 et l'alpha 1 (noir opaque). Les contrôles de plage n'existent que dans les builds de debug."
+  },
+  "Color:copy": {
+   "en": "Returns a new Color with the same four channels.",
+   "fr": "Renvoie une nouvelle Color avec les mêmes quatre canaux."
+  },
+  "Color:copyTo": {
+   "en": "Writes this colour's four channels into an existing Color, overwriting it.",
+   "fr": "Écrit les quatre canaux de cette couleur dans une Color existante, en l'écrasant."
+  },
+  "Color.parseFromString": {
+   "en": "Parses a string into a Color or returns nil. The code tries, in this order: hex (starts with #), packed integer, space-separated vector of 3 or more numbers, brand colour via g_vehicleMaterialManager if present, then preset name. Note: the in-code doc lists a different order. ignoreAlpha forces alpha to 1.",
+   "fr": "Analyse une chaîne en Color ou renvoie nil. Le code essaie dans cet ordre : hexadécimal (commence par #), entier packé, vecteur de 3 nombres ou plus séparés par des espaces, couleur de marque via g_vehicleMaterialManager s'il existe, puis nom de présélection. À noter : la doc du code indique un ordre différent. ignoreAlpha force l'alpha à 1."
+  },
+  "Color.fromPresetName": {
+   "en": "Looks up a preset colour by name, case-insensitive (name uppercased, then read from Color.PRESETS); nil for non-strings or unknown names.",
+   "fr": "Cherche une couleur prédéfinie par nom, sans tenir compte de la casse (nom mis en majuscules puis lu dans Color.PRESETS) ; nil pour un non-texte ou un nom inconnu."
+  },
+  "Color.fromPackedValue": {
+   "en": "Unpacks a 32-bit integer (or numeric string) into a Color, with red in the lowest byte and alpha in the highest, each divided by 255. Returns nil if it is not a number.",
+   "fr": "Décompose un entier 32 bits (ou une chaîne numérique) en Color, avec le rouge dans l'octet de poids faible et l'alpha dans le plus fort, chacun divisé par 255. Renvoie nil si ce n'est pas un nombre."
+  },
+  "Color:toPackedValue": {
+   "en": "Packs the colour into a 32-bit integer (red lowest byte, alpha highest), each channel scaled by 255 and rounded up with math.ceil.",
+   "fr": "Compacte la couleur en entier 32 bits (rouge dans l'octet de poids faible, alpha dans le plus fort), chaque canal multiplié par 255 et arrondi à l'entier supérieur avec math.ceil."
+  },
+  "Color.fromHex": {
+   "en": "Builds a Color from a hex string with or without a leading #, interpreting it as the packed layout (not plain RRGGBB order). Returns nil for non-strings or unparsable text.",
+   "fr": "Construit une Color à partir d'une chaîne hexadécimale avec ou sans # initial, interprétée selon la disposition packée (et non l'ordre RRGGBB habituel). Renvoie nil pour un non-texte ou un texte illisible."
+  },
+  "Color:toHex": {
+   "en": "Returns the packed value as a hex string, optionally prefixed with #. Note: the format is %x without zero padding, so the length can vary.",
+   "fr": "Renvoie la valeur packée sous forme de chaîne hexadécimale, avec # optionnel. À noter : le format est %x sans remplissage de zéros, la longueur peut donc varier."
+  },
+  "Color.fromVector": {
+   "en": "Builds a Color from an array of channels in 0..1. Returns nil if the argument is not a table or is shorter than minLength; entries beyond maxLength are replaced by defaults (0, alpha 1).",
+   "fr": "Construit une Color à partir d'un tableau de canaux dans 0..1. Renvoie nil si l'argument n'est pas une table ou est plus court que minLength ; les entrées au-delà de maxLength sont remplacées par les valeurs par défaut (0, alpha 1)."
+  },
+  "Color:unpack": {
+   "en": "Returns r, g, b, a as four values in 0..1.",
+   "fr": "Renvoie r, g, b, a comme quatre valeurs dans 0..1."
+  },
+  "Color:unpack3": {
+   "en": "Returns r, g, b as three values in 0..1.",
+   "fr": "Renvoie r, g, b comme trois valeurs dans 0..1."
+  },
+  "Color:toVector3": {
+   "en": "Returns a new array {r, g, b}.",
+   "fr": "Renvoie un nouveau tableau {r, g, b}."
+  },
+  "Color:toVector4": {
+   "en": "Returns a new array {r, g, b, a}.",
+   "fr": "Renvoie un nouveau tableau {r, g, b, a}."
+  },
+  "Color.fromRGBA": {
+   "en": "Builds a Color from 0..255 integers by dividing by 255; missing r, g, b default to 0 and alpha to 255.",
+   "fr": "Construit une Color à partir d'entiers 0..255 en divisant par 255 ; r, g, b absents valent 0 et l'alpha 255."
+  },
+  "Color:unpackRGBA": {
+   "en": "Returns the four channels as integers 0..255, scaled by 255 and rounded up with math.ceil.",
+   "fr": "Renvoie les quatre canaux sous forme d'entiers 0..255, multipliés par 255 et arrondis à l'entier supérieur avec math.ceil."
+  },
+  "Color.fromVectorRGBA": {
+   "en": "Like fromVector but for 0..255 values: returns nil for an invalid or too short table, ignores entries beyond maxLength, then calls fromRGBA.",
+   "fr": "Comme fromVector mais pour des valeurs 0..255 : renvoie nil pour une table invalide ou trop courte, ignore les entrées au-delà de maxLength, puis appelle fromRGBA."
+  },
+  "Color:toVectorRGB": {
+   "en": "Returns a new array of three integers 0..255 (red, green, blue), rounded up.",
+   "fr": "Renvoie un nouveau tableau de trois entiers 0..255 (rouge, vert, bleu), arrondis à l'entier supérieur."
+  },
+  "Color:toVectorRGBA": {
+   "en": "Returns a new array of four integers 0..255 (red, green, blue, alpha), rounded up.",
+   "fr": "Renvoie un nouveau tableau de quatre entiers 0..255 (rouge, vert, bleu, alpha), arrondis à l'entier supérieur."
+  },
+  "Color.blend": {
+   "en": "Linear interpolation between two colours on all four channels via MathUtil.lerp; alpha 0 gives the first, 1 the second. Returns a new Color.",
+   "fr": "Interpolation linéaire entre deux couleurs sur les quatre canaux via MathUtil.lerp ; alpha 0 donne la première, 1 la seconde. Renvoie une nouvelle Color."
+  },
+  "Color:swizzle": {
+   "en": "Builds an array from a key of 1 to 4 channel letters (for example rg); returns nil if the key is not a string, has a bad length or contains a letter that is not a field of the colour.",
+   "fr": "Construit un tableau à partir d'une clé de 1 à 4 lettres de canaux (par exemple rg) ; renvoie nil si la clé n'est pas un texte, a une mauvaise longueur ou contient une lettre qui n'est pas un champ de la couleur."
+  },
+  "Color.writeStreamRGB": {
+   "en": "Writes r, g, b to a network stream as three 10-bit unsigned values (each clamped to 0..1 and scaled by 1023); alpha is not sent.",
+   "fr": "Écrit r, g, b dans un flux réseau sous forme de trois valeurs non signées de 10 bits (chacune bornée à 0..1 puis multipliée par 1023) ; l'alpha n'est pas envoyé."
+  }
+ }
+}

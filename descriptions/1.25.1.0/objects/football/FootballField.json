@@ -1,0 +1,25 @@
+{
+ "fichier": "objects/football/FootballField.lua",
+ "module": {
+  "en": "Football field object created from the map (onCreate) and registered in the onCreateObjectSystem. It owns the ball, goal triggers, game area, reset trigger, score and sounds; only creation, deletion and join streaming are in this dump, while `load` and the rest are UNVERIFIED here. It extends Object and is multiplayer-aware.",
+  "fr": "Objet de terrain de football créé depuis la carte (onCreate) et enregistré dans onCreateObjectSystem. Il possède le ballon, les triggers de buts, la zone de jeu, le trigger de remise en jeu, le score et les sons ; seuls la création, la suppression et l'envoi à la connexion sont dans ce dump, `load` et le reste sont NON VÉRIFIÉS ici. Étend Object et gère le multijoueur."
+ },
+ "fonctions": {
+  "FootballField.onCreate": {
+   "en": "i3d onCreate callback: creates the field for the local server/client roles, calls `load(id)`, then registers it in the on-create object system and the network, or deletes it if loading failed.",
+   "fr": "Callback onCreate de l'i3d : crée le terrain selon les rôles serveur/client locaux, appelle `load(id)`, puis l'enregistre dans le système d'objets onCreate et le réseau, ou le supprime si le chargement échoue."
+  },
+  "FootballField.new": {
+   "en": "Constructor: builds the Object, registers the class name `FootballField` and initializes empty `i3dMappings` and `components` tables.",
+   "fr": "Constructeur : construit l'Object, enregistre le nom de classe `FootballField` et initialise des tables `i3dMappings` et `components` vides."
+  },
+  "FootballField:delete": {
+   "en": "Deletes the ball, removes the goal, game area and reset triggers, resets the ball timer, frees sounds, removes the reset activatable and the `gsFootballFieldReload` console command, then calls the parent delete.",
+   "fr": "Supprime le ballon, retire les triggers de buts, de zone de jeu et de remise en jeu, réinitialise le minuteur du ballon, libère les sons, retire l'activatable de remise en jeu et la commande console `gsFootballFieldReload`, puis appelle le delete parent."
+  },
+  "FootballField:writeStream": {
+   "en": "Server side on client join: after the parent data it writes the ball object id, the ball's own stream, registers the ball with the server for that connection, and sends both scores as UInt8.",
+   "fr": "Côté serveur à la connexion d'un client : après les données parent, écrit l'identifiant du ballon, son propre flux, enregistre le ballon auprès du serveur pour cette connexion et envoie les deux scores en UInt8."
+  }
+ }
+}

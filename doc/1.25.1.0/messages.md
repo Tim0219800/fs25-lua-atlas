@@ -1,5 +1,7 @@
 # MessageType
 
+*[Version française](fr/messages.md)*
+
 | Message | Published by | Subscribers |
 |---|---|---|
 | `MessageType.AI_JOB_REMOVED` | ai/AISystem.lua | 0 |

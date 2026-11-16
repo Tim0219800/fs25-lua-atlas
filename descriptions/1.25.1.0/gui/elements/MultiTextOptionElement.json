@@ -1,0 +1,117 @@
+{
+ "fichier": "gui/elements/MultiTextOptionElement.lua",
+ "module": {
+  "en": "GUI element for a multiple-choice option: a left button, a right button and a text (or icon) showing the current entry of a list of texts. It extends GuiElement and includes IndexChangeSubjectMixin and PlaySampleMixin. Child elements are found by their name (left, right, label, text, icon, gradient, background), and missing ones can be created from default profiles. Supports wrapping, held-button repeat with faster steps, gamepad and mouse/touch input.",
+  "fr": "Élément d'interface à choix multiple : un bouton gauche, un bouton droit et un texte (ou une icône) qui affiche l'entrée courante d'une liste de textes. Il étend GuiElement et inclut IndexChangeSubjectMixin et PlaySampleMixin. Les éléments enfants sont retrouvés par leur nom (left, right, label, text, icon, gradient, background) et ceux qui manquent peuvent être créés à partir de profils par défaut. Gère le bouclage, la répétition à bouton maintenu avec pas accélérés, et les entrées manette, souris et tactile."
+ },
+ "fonctions": {
+  "MultiTextOptionElement.new": {
+   "en": "Constructor. Creates the element, mixes in the index-change and sound mixins and sets defaults: state 1, wrapping on, no texts, and no child element references yet.",
+   "fr": "Constructeur. Crée l'élément, y ajoute les mixins de changement d'index et de son, et initialise les valeurs par défaut : état 1, bouclage actif, aucun texte, aucune référence d'enfant."
+  },
+  "MultiTextOptionElement:loadFromXML": {
+   "en": "Loads the element from XML after the parent loader, setting the mod environment first for l10n. Reads callbacks (onClick, onFocus, onLeave), wrap and button-visibility flags, scroll timing, and a '|'-separated texts string whose $l10n_ parts are translated.",
+   "fr": "Charge l'élément depuis le XML après le chargeur parent, en fixant d'abord l'environnement du mod pour la traduction. Lit les callbacks (onClick, onFocus, onLeave), les options de bouclage et de visibilité des boutons, les délais de défilement et une chaîne de textes séparés par '|' dont les parties $l10n_ sont traduites."
+  },
+  "MultiTextOptionElement:loadProfile": {
+   "en": "Applies a GUI profile after the parent: same options as the XML loader plus the default profiles for buttons, text and backgrounds, autoAddDefaultElements, and a texts list. Note: $l10n_ texts here are translated without the mod custom environment.",
+   "fr": "Applique un profil GUI après le parent : mêmes options que le chargeur XML, plus les profils par défaut des boutons, du texte et des fonds, autoAddDefaultElements et une liste de textes. À noter : les textes $l10n_ sont ici traduits sans l'environnement personnalisé du mod."
+  },
+  "MultiTextOptionElement:clone": {
+   "en": "Clones the element through the parent clone, then adds missing default child elements and re-links the clone's children by name.",
+   "fr": "Clone l'élément via le clone du parent, puis ajoute les éléments enfants par défaut manquants et relie les enfants du clone par leur nom."
+  },
+  "MultiTextOptionElement:copyAttributes": {
+   "en": "Copies state, flags, timing, default profiles, callbacks and all texts from a source element, and clones the two mixins from it.",
+   "fr": "Copie l'état, les options, les délais, les profils par défaut, les callbacks et tous les textes depuis un élément source, et clone les deux mixins depuis celui-ci."
+  },
+  "MultiTextOptionElement:onGuiSetupFinished": {
+   "en": "Called once the GUI is built: adds default children if enabled, binds children by name, refreshes absolute position and silences the click sound of the left and right buttons.",
+   "fr": "Appelé une fois l'interface construite : ajoute les enfants par défaut si activé, associe les enfants par nom, met à jour la position absolue et coupe le son de clic des boutons gauche et droit."
+  },
+  "MultiTextOptionElement:setElementsByName": {
+   "en": "Scans the children and binds them by name: left/right buttons (rewired to this element's click handlers, replacing duplicates), label, text, icon, gradients and background (resized to the element width). Logs a warning and stops at the first unnamed child.",
+   "fr": "Parcourt les enfants et les associe par nom : boutons left/right (reliés aux gestionnaires de clic de cet élément, les doublons étant supprimés), label, text, icon, gradients et background (redimensionné à la largeur de l'élément). Journalise un avertissement et s'arrête au premier enfant sans nom."
+  },
+  "MultiTextOptionElement:addDefaultElements": {
+   "en": "If autoAddDefaultElements is set, creates any missing background (round, three-part or bitmap by profile), left button, right button and text child, and applies the matching default profile.",
+   "fr": "Si autoAddDefaultElements est actif, crée les enfants manquants : fond (arrondi, trois parties ou bitmap selon le profil), bouton gauche, bouton droit et texte, puis applique le profil par défaut correspondant."
+  },
+  "MultiTextOptionElement:setState": {
+   "en": "Sets the current index, clamped between 1 and the number of texts, refreshes the display and notifies index observers. With forceEvent it also raises the click callback.",
+   "fr": "Définit l'index courant, borné entre 1 et le nombre de textes, met à jour l'affichage et notifie les observateurs d'index. Avec forceEvent, déclenche aussi le callback de clic."
+  },
+  "MultiTextOptionElement:getState": {
+   "en": "Returns the current 1-based index.",
+   "fr": "Retourne l'index courant (base 1)."
+  },
+  "MultiTextOptionElement:disableButtonSounds": {
+   "en": "Disables automatic sample playback on the left and right child buttons.",
+   "fr": "Désactive la lecture automatique de sons sur les boutons enfants gauche et droit."
+  },
+  "MultiTextOptionElement:addText": {
+   "en": "Appends a text, or inserts it at index i, refreshes the display, recomputes the dynamic fast-scroll step (texts/5, max 10) unless disabled, and notifies index observers.",
+   "fr": "Ajoute un texte à la fin, ou à l'index i, met à jour l'affichage, recalcule le pas de défilement rapide dynamique (textes/5, max 10) sauf s'il est désactivé, et notifie les observateurs."
+  },
+  "MultiTextOptionElement:setTexts": {
+   "en": "Replaces the whole text list (nil empties it), leaves image mode, clamps the state to the new size, refreshes the display, updates the dynamic scroll step and notifies observers.",
+   "fr": "Remplace toute la liste de textes (nil la vide), quitte le mode image, borne l'état à la nouvelle taille, met à jour l'affichage et le pas de défilement dynamique, puis notifie les observateurs."
+  },
+  "MultiTextOptionElement:setIcons": {
+   "en": "Uses the list as icon entries (image filenames) instead of texts and enables image mode, so the icon child shows the entry when the file exists. Clamps the state and notifies observers.",
+   "fr": "Utilise la liste comme entrées d'icônes (noms de fichiers image) au lieu de textes et active le mode image : l'élément icon affiche l'entrée si le fichier existe. Borne l'état et notifie les observateurs."
+  },
+  "MultiTextOptionElement:setLabel": {
+   "en": "Sets the header label text if a label child exists; otherwise does nothing.",
+   "fr": "Définit le texte de l'étiquette d'en-tête si un enfant label existe ; sinon ne fait rien."
+  },
+  "MultiTextOptionElement:mouseEvent": {
+   "en": "Handles mouse input: tracks which arrow button is held (starting the repeat timer), releases input when no button is pressed, and manages hover highlight through FocusManager. Returns whether the event was used.",
+   "fr": "Gère la souris : détecte quel bouton fléché est maintenu (et lance le minuteur de répétition), relâche l'entrée si aucun bouton n'est pressé et gère la surbrillance au survol via FocusManager. Retourne si l'événement a été consommé."
+  },
+  "MultiTextOptionElement:touchEvent": {
+   "en": "Touch counterpart of mouseEvent with the same held-button and highlight logic, using the element hotspot for hit testing.",
+   "fr": "Équivalent tactile de mouseEvent, avec la même logique de bouton maintenu et de surbrillance, en utilisant le hotspot de l'élément pour le test de zone."
+  },
+  "MultiTextOptionElement:inputEvent": {
+   "en": "Handles gamepad/keyboard actions: left/right axis beyond the analog tolerance and page prev/next trigger inputLeft/inputRight and press the matching button visually. Returns true when consumed.",
+   "fr": "Gère les actions manette/clavier : l'axe gauche/droite au-delà de la tolérance analogique et les actions page précédente/suivante appellent inputLeft/inputRight et pressent visuellement le bouton correspondant. Retourne true si consommé."
+  },
+  "MultiTextOptionElement:update": {
+   "en": "Per-frame update: while an arrow is held and the delay has elapsed it repeats the step, accumulates continuous-trigger time, and releases the buttons when no input event arrived for a frame. inputLeft, inputRight and releaseInput are not in the dump (UNVERIFIED).",
+   "fr": "Mise à jour par image : tant qu'une flèche est maintenue et que le délai est écoulé, répète le pas, cumule le temps de déclenchement continu, et relâche les boutons si aucun événement d'entrée n'est arrivé pendant une image. inputLeft, inputRight et releaseInput ne sont pas dans le dump (NON VÉRIFIÉ)."
+  },
+  "MultiTextOptionElement:onRightButtonClicked": {
+   "en": "Moves the state forward by steps (default 1, or the fast step after a long hold), wrapping or clamping, plays a click sound if it changed, optionally focuses the element, then refreshes, raises the click callback with false and notifies observers.",
+   "fr": "Avance l'état de steps pas (1 par défaut, ou le pas rapide après un maintien long), avec bouclage ou blocage, joue un clic si l'état change, donne éventuellement le focus, puis met à jour, déclenche le callback de clic avec false et notifie les observateurs."
+  },
+  "MultiTextOptionElement:onLeftButtonClicked": {
+   "en": "Moves the state backward, same logic as the right-button handler, but raises the click callback with true. Note: the boolean passed to the callback differs between the two directions.",
+   "fr": "Recule l'état, avec la même logique que le gestionnaire du bouton droit, mais déclenche le callback de clic avec true. À noter : le booléen passé au callback diffère entre les deux directions."
+  },
+  "MultiTextOptionElement:getCanChangeState": {
+   "en": "Returns whether the user is currently allowed to change the state with the buttons.",
+   "fr": "Retourne si l'utilisateur peut actuellement changer l'état avec les boutons."
+  },
+  "MultiTextOptionElement:setCanChangeState": {
+   "en": "Enables or blocks state changes made through the left and right buttons.",
+   "fr": "Active ou bloque les changements d'état faits via les boutons gauche et droit."
+  },
+  "MultiTextOptionElement:canReceiveFocus": {
+   "en": "Returns true when the element is enabled, visible, handles focus and, if disableButtonsOnSingleText is set, has more than one text.",
+   "fr": "Retourne true si l'élément est actif, visible, gère le focus et, si disableButtonsOnSingleText est actif, possède plus d'un texte."
+  },
+  "MultiTextOptionElement:onFocusLeave": {
+   "en": "Runs the parent focus-leave handling and raises the onLeaveCallback with this element.",
+   "fr": "Exécute le traitement parent de perte de focus et déclenche onLeaveCallback avec cet élément."
+  },
+  "MultiTextOptionElement:onFocusEnter": {
+   "en": "Runs the parent focus-enter handling and raises the onFocusCallback with this element.",
+   "fr": "Exécute le traitement parent de prise de focus et déclenche onFocusCallback avec cet élément."
+  },
+  "MultiTextOptionElement:updateContentElement": {
+   "en": "Refreshes the visuals for the current state: shows the icon (when in image mode and the texture file exists) or the text, toggles gradients, disables the element when it has at most one text if configured, and hides arrows at the limits when not wrapping.",
+   "fr": "Met à jour l'affichage pour l'état courant : montre l'icône (en mode image si le fichier de texture existe) ou le texte, bascule les dégradés, désactive l'élément s'il a au plus un texte si configuré, et masque les flèches aux limites sans bouclage."
+  }
+ }
+}

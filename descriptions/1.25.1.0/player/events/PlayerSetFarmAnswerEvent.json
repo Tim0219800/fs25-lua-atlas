@@ -1,0 +1,29 @@
+{
+ "fichier": "player/events/PlayerSetFarmAnswerEvent.lua",
+ "module": {
+  "en": "Server-to-client answer to a `PlayerSetFarmEvent`. It carries a result state (the `STATE` table, defined elsewhere, e.g. OK or PASSWORD_REQUIRED), the farm id and, on success, the password used. On the client it is republished through the message center.",
+  "fr": "Réponse serveur vers client à un `PlayerSetFarmEvent`. Elle contient un état de résultat (table `STATE`, définie ailleurs, p. ex. OK ou PASSWORD_REQUIRED), l'identifiant de la ferme et, en cas de succès, le mot de passe utilisé. Côté client, elle est republiée via le message center."
+ },
+ "fonctions": {
+  "PlayerSetFarmAnswerEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture depuis un flux."
+  },
+  "PlayerSetFarmAnswerEvent.new": {
+   "en": "Builds an answer with the state, farm id and optional password that was used in the request.",
+   "fr": "Construit une réponse avec l'état, l'identifiant de ferme et le mot de passe optionnel utilisé dans la requête."
+  },
+  "PlayerSetFarmAnswerEvent:writeStream": {
+   "en": "Writes the state and farm id as fixed-width integers. The password is written (behind a boolean flag) only when the state is OK and a password is set.",
+   "fr": "Écrit l'état et l'identifiant de ferme sous forme d'entiers à largeur fixe. Le mot de passe n'est écrit (derrière un booléen) que si l'état est OK et qu'un mot de passe existe."
+  },
+  "PlayerSetFarmAnswerEvent:readStream": {
+   "en": "Reads state, farm id and the optional password, then runs the event.",
+   "fr": "Lit l'état, l'identifiant de ferme et le mot de passe optionnel, puis exécute l'événement."
+  },
+  "PlayerSetFarmAnswerEvent:run": {
+   "en": "Client only: for OK or PASSWORD_REQUIRED, publishes the `PlayerSetFarmAnswerEvent` message on `g_messageCenter` (the password is passed only for OK). On the server it only logs a dev warning.",
+   "fr": "Client uniquement : pour OK ou PASSWORD_REQUIRED, publie le message `PlayerSetFarmAnswerEvent` sur `g_messageCenter` (le mot de passe n'est transmis que pour OK). Sur le serveur, seul un avertissement de développement est journalisé."
+  }
+ }
+}

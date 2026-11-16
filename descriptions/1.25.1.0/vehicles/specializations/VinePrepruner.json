@@ -1,0 +1,65 @@
+{
+ "fichier": "vehicles/specializations/VinePrepruner.lua",
+ "module": {
+  "en": "Specialization for vine prepruners. It requires `VineDetector` as a prerequisite and reads the fruit type (default `FruitType.GRAPE`), pruner nodes that slide according to the detected distance, an optional pole animation and an effect. The server decides the effect state (on for one second after the last work time) and syncs pruner node targets and the effect flag by compressed stream values. The overrides it registers (speed limit, vine detection, AI segment use) and `loadPreprunerNodeFromXML`/`getIsPreprunerNodeActive` have no body in this file (UNVERIFIED).",
+  "fr": "Spécialisation pour les prétailleuses de vigne. Elle exige `VineDetector` comme prérequis et lit le type de fruit (`FruitType.GRAPE` par défaut), des nœuds de taille qui coulissent selon la distance détectée, une animation de piquet facultative et un effet. Le serveur décide de l'état de l'effet (actif une seconde après le dernier travail) et synchronise les cibles des nœuds et le drapeau d'effet par des valeurs compressées. Les surcharges enregistrées (limite de vitesse, détection de vigne, usage du segment par l'IA) et `loadPreprunerNodeFromXML`/`getIsPreprunerNodeActive` n'ont pas de corps dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "VinePrepruner.initSpecialization": {
+   "en": "Registers the XML paths for the fruit type, pruner nodes (node, offset, axis, direction, min/max translation, speed, sync bits), the pole animation (name, speed scale, pole threshold) and the effect.",
+   "fr": "Enregistre les chemins XML du type de fruit, des nœuds de taille (nœud, décalage, axe, sens, translation min/max, vitesse, bits de synchro), de l'animation de piquet (nom, échelle de vitesse, seuil) et de l'effet."
+  },
+  "VinePrepruner.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the `VineDetector` specialization.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède la spécialisation `VineDetector`."
+  },
+  "VinePrepruner.registerFunctions": {
+   "en": "Registers `loadPreprunerNodeFromXML` and `getIsPreprunerNodeActive` on the vehicle type; their implementations are not in this file (UNVERIFIED).",
+   "fr": "Enregistre `loadPreprunerNodeFromXML` et `getIsPreprunerNodeActive` sur le type de véhicule ; leurs implémentations ne sont pas dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "VinePrepruner.registerOverwrittenFunctions": {
+   "en": "Registers overrides for doCheckSpeedLimit, getCanStartVineDetection, getIsValidVinePlaceable, handleVinePlaceable and getAIImplementUseVineSegment (bodies not in this file, UNVERIFIED).",
+   "fr": "Enregistre des surcharges pour doCheckSpeedLimit, getCanStartVineDetection, getIsValidVinePlaceable, handleVinePlaceable et getAIImplementUseVineSegment (corps absents de ce fichier, NON VÉRIFIÉ)."
+  },
+  "VinePrepruner.registerEventListeners": {
+   "en": "Subscribes to load, delete, the four stream events, onUpdate, onTurnedOff and onAnimationPartChanged. Only some have bodies here (onTurnedOff and onAnimationPartChanged are not defined in this file).",
+   "fr": "S'abonne au chargement, à la suppression, aux quatre événements de flux, à onUpdate, onTurnedOff et onAnimationPartChanged. Seuls certains ont un corps ici (onTurnedOff et onAnimationPartChanged ne sont pas définis dans ce fichier)."
+  },
+  "VinePrepruner:onLoad": {
+   "en": "Loads the fruit type, the pruner nodes (through `loadPreprunerNodeFromXML`), the pole animation settings and, on the client, the effects. Allocates a dirty flag and sets `lastWorkTime` far in the past.",
+   "fr": "Charge le type de fruit, les nœuds de taille (via `loadPreprunerNodeFromXML`), les réglages de l'animation de piquet et, côté client, les effets. Alloue un drapeau de modification et place `lastWorkTime` loin dans le passé."
+  },
+  "VinePrepruner:onDelete": {
+   "en": "Deletes the effects through the effect manager (not guarded by isClient, so on a server the effects table is nil; UNVERIFIED whether the manager tolerates nil).",
+   "fr": "Supprime les effets via le gestionnaire d'effets (sans test isClient, donc la table d'effets est nil sur un serveur ; NON VÉRIFIÉ que le gestionnaire accepte nil)."
+  },
+  "VinePrepruner:onReadStream": {
+   "en": "Client join: reads pruner node positions and the effect state, forcing the nodes to those positions immediately.",
+   "fr": "Connexion d'un client : lit les positions des nœuds de taille et l'état de l'effet, en forçant les nœuds à ces positions immédiatement."
+  },
+  "VinePrepruner:onWriteStream": {
+   "en": "Server side on join: writes the pruner node targets and the effect state.",
+   "fr": "Côté serveur lors d'une connexion : écrit les cibles des nœuds de taille et l'état de l'effet."
+  },
+  "VinePrepruner:onReadUpdateStream": {
+   "en": "Client: if the server flagged a change, reads the pruner state; targets are approached smoothly in onUpdate.",
+   "fr": "Client : si le serveur a signalé un changement, lit l'état ; les cibles sont rejointes progressivement dans onUpdate."
+  },
+  "VinePrepruner:onWriteUpdateStream": {
+   "en": "Server: writes a boolean telling whether the dirty flag is set, and the pruner state when it is.",
+   "fr": "Serveur : écrit un booléen indiquant si le drapeau de modification est posé, puis l'état de la prétailleuse si oui."
+  },
+  "VinePrepruner.readPrePrunerFromStream": {
+   "en": "Reads each node target as an N-bit integer scaled between transMin and transMax, optionally applying it at once (`forceState`), then reads the effect boolean and starts or stops the effects, with the fruit type as effect info.",
+   "fr": "Lit la cible de chaque nœud comme entier sur N bits mis à l'échelle entre transMin et transMax, l'applique immédiatement si `forceState`, puis lit le booléen d'effet et démarre ou arrête les effets avec le type de fruit comme information."
+  },
+  "VinePrepruner.writePrePrunerToStream": {
+   "en": "Writes each node target as an N-bit integer normalized between transMin and transMax, then the effect boolean.",
+   "fr": "Écrit la cible de chaque nœud comme entier sur N bits normalisé entre transMin et transMax, puis le booléen d'effet."
+  },
+  "VinePrepruner:onUpdate": {
+   "en": "Moves each active pruner node toward its target translation at `transSpeed` (the step uses dt directly, so unit handling depends on the XML value). On the server, switches the effect on if work happened within the last second, starts/stops it locally and raises the dirty flag.",
+   "fr": "Déplace chaque nœud de taille actif vers sa translation cible à `transSpeed` (le pas utilise dt directement, l'unité dépend donc de la valeur XML). Sur le serveur, active l'effet si du travail a eu lieu dans la dernière seconde, le démarre/arrête localement et pose le drapeau de modification."
+  }
+ }
+}

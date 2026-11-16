@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/SetTurnedOnEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the turned-on state of a vehicle or implement between server and clients. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise l'état allumé/en marche d'un véhicule ou d'un outil entre serveur et clients. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "SetTurnedOnEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "SetTurnedOnEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a boolean turned-on state); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un booléen d'état allumé) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "SetTurnedOnEvent:readStream": {
+      "en": "Reads a node object and a boolean turned-on state from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un booléen d'état allumé depuis le flux, puis appelle `run(connection)`."
+    },
+    "SetTurnedOnEvent:writeStream": {
+      "en": "Writes a node object and a boolean turned-on state to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un booléen d'état allumé dans le flux (même ordre que `readStream`)."
+    },
+    "SetTurnedOnEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself to the other clients, then calls `setIsTurnedOn(state, true)` on the object if synchronized.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet aux autres clients, puis appelle `setIsTurnedOn(état, true)` sur l'objet s'il est synchronisé."
+    },
+    "SetTurnedOnEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

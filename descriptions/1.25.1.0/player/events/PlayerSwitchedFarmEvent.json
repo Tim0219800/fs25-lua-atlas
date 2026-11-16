@@ -1,0 +1,25 @@
+{
+ "fichier": "player/events/PlayerSwitchedFarmEvent.lua",
+ "module": {
+  "en": "Server-to-client notice that a user moved from one farm to another. Clients update the farm user lists and publish `PLAYER_FARM_CHANGED`. It is broadcast by `PlayerSetFarmEvent` on the server.",
+  "fr": "Notification serveur vers clients indiquant qu'un utilisateur est passé d'une ferme à une autre. Les clients mettent à jour les listes d'utilisateurs des fermes et publient `PLAYER_FARM_CHANGED`. Elle est diffusée par `PlayerSetFarmEvent` sur le serveur."
+ },
+ "fonctions": {
+  "PlayerSwitchedFarmEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading. Note: this file defines no `new`, although `run` and `PlayerSetFarmEvent` call `PlayerSwitchedFarmEvent.new` (UNVERIFIED whether it is defined elsewhere).",
+   "fr": "Crée une instance d'événement vide pour la lecture depuis un flux. À noter : ce fichier ne définit pas de `new`, alors que `run` et `PlayerSetFarmEvent` appellent `PlayerSwitchedFarmEvent.new` (NON VÉRIFIÉ s'il est défini ailleurs)."
+  },
+  "PlayerSwitchedFarmEvent:writeStream": {
+   "en": "Writes the new farm id, the old farm id and the user id.",
+   "fr": "Écrit l'identifiant de la nouvelle ferme, celui de l'ancienne et l'identifiant utilisateur."
+  },
+  "PlayerSwitchedFarmEvent:readStream": {
+   "en": "Reads new farm id, old farm id and user id, then runs the event.",
+   "fr": "Lit l'identifiant de la nouvelle ferme, celui de l'ancienne et l'identifiant utilisateur, puis exécute l'événement."
+  },
+  "PlayerSwitchedFarmEvent:run": {
+   "en": "Client: removes the user from the old farm and adds it to the new one (when valid and found), then publishes `PLAYER_FARM_CHANGED` for that user's player. Server: re-broadcasts to all clients. Note: the broadcast passes the ids in a different order than the constructor call in `PlayerSetFarmEvent`.",
+   "fr": "Client : retire l'utilisateur de l'ancienne ferme et l'ajoute à la nouvelle (si valides et trouvées), puis publie `PLAYER_FARM_CHANGED` pour le joueur concerné. Serveur : rediffuse à tous les clients. À noter : la diffusion passe les identifiants dans un ordre différent de l'appel du constructeur dans `PlayerSetFarmEvent`."
+  }
+ }
+}

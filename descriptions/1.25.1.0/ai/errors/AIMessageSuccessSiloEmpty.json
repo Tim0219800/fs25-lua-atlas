@@ -1,0 +1,21 @@
+{
+ "fichier": "ai/errors/AIMessageSuccessSiloEmpty.lua",
+ "module": {
+  "en": "AI message class for the non-error ending where the silo is empty so the job ended. It extends `AIMessage` and reports `AIMessageType.OK`.",
+  "fr": "Classe de message IA pour une fin sans erreur où le silo est vide, donc le travail s'est arrêté. Elle étend `AIMessage` et signale `AIMessageType.OK`."
+ },
+ "fonctions": {
+  "AIMessageSuccessSiloEmpty.new": {
+   "en": "Constructor of the success message meaning: the silo is empty so the job ended. Inherits from `AIMessage`, no extra state.",
+   "fr": "Constructeur du message de succès signifiant : le silo est vide, donc le travail s'est arrêté. Hérite de `AIMessage`, sans état supplémentaire."
+  },
+  "AIMessageSuccessSiloEmpty:getI18NText": {
+   "en": "Returns the localized text for the key `ai_messageSuccessSiloEmpty` via `g_i18n`.",
+   "fr": "Renvoie le texte localisé de la clé `ai_messageSuccessSiloEmpty` via `g_i18n`."
+  },
+  "AIMessageSuccessSiloEmpty:getType": {
+   "en": "Returns `AIMessageType.OK`, marking the message as a non-error outcome.",
+   "fr": "Renvoie `AIMessageType.OK`, ce qui marque le message comme une issue sans erreur."
+  }
+ }
+}

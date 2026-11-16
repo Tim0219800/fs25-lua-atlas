@@ -1,0 +1,45 @@
+{
+ "fichier": "ai/tasks/AITaskDischarge.lua",
+ "module": {
+  "en": "AI task that drives a vehicle to an unload trigger and then makes a discharge vehicle unload there. Positioning is server-only: the target comes from the trigger's AI target position and direction, shifted by an offset. If the discharge cannot start, the job is stopped with an unloading-station-full error message.",
+  "fr": "Tâche IA qui conduit un véhicule jusqu'à un déclencheur de déchargement puis fait décharger un véhicule de déchargement à cet endroit. Le positionnement n'a lieu que sur le serveur : la cible vient de la position et de la direction IA du déclencheur, décalées d'un offset. Si le déchargement ne peut pas démarrer, le job est arrêté avec le message d'erreur de station pleine."
+ },
+ "fonctions": {
+  "AITaskDischarge.new": {
+   "en": "Creates the task with no vehicle or trigger, a zero offset, a max speed of 5 and the driving state. The speed unit is UNVERIFIED (set by the AI target call).",
+   "fr": "Crée la tâche sans véhicule ni déclencheur, avec un offset nul, une vitesse maximale de 5 et l'état de conduite. L'unité de vitesse est NON VÉRIFIÉE (elle dépend de l'appel de cible IA)."
+  },
+  "AITaskDischarge:reset": {
+   "en": "Clears the vehicle, trigger, discharge vehicle and node, resets the offset and driving state, then runs the parent reset.",
+   "fr": "Efface le véhicule, le déclencheur, le véhicule de déchargement et le noeud, remet l'offset et l'état de conduite, puis exécute le reset du parent."
+  },
+  "AITaskDischarge:setVehicle": {
+   "en": "Sets the vehicle that is driven to the unload trigger.",
+   "fr": "Définit le véhicule conduit jusqu'au déclencheur de déchargement."
+  },
+  "AITaskDischarge:setUnloadTrigger": {
+   "en": "Sets the unload trigger the vehicle drives to. It must provide getAITargetPositionAndDirection.",
+   "fr": "Définit le déclencheur de déchargement vers lequel le véhicule roule. Il doit fournir getAITargetPositionAndDirection."
+  },
+  "AITaskDischarge:setDischargeNode": {
+   "en": "Stores the discharge node and its vehicle. If a vehicle is given, it also stores the Z offset and selects the node index as the vehicle's current discharge node.",
+   "fr": "Mémorise le noeud de déchargement et son véhicule. Si un véhicule est fourni, mémorise aussi l'offset Z et sélectionne l'index du noeud comme noeud de déchargement courant du véhicule."
+  },
+  "AITaskDischarge:start": {
+   "en": "On the server, computes the trigger target shifted back by the offset, reads the terrain height and sets an AI target on the vehicle, then enters the driving state. Always runs the parent start.",
+   "fr": "Sur le serveur, calcule la cible du déclencheur reculée de l'offset, lit la hauteur du terrain et définit une cible IA sur le véhicule, puis passe à l'état de conduite. Exécute toujours le start du parent."
+  },
+  "AITaskDischarge:onTargetReached": {
+   "en": "Callback when the vehicle arrives: clears the AI target and, if the discharge vehicle allows an AI discharge, starts it. Otherwise it stops the job with an unloading-station-full error.",
+   "fr": "Callback à l'arrivée du véhicule : efface la cible IA puis, si le véhicule de déchargement autorise un déchargement IA, le lance. Sinon le job est arrêté avec une erreur de station pleine."
+  },
+  "AITaskDischarge:onError": {
+   "en": "Empty callback for AI errors; nothing is done with the message.",
+   "fr": "Callback vide pour les erreurs IA ; le message n'est pas traité."
+  },
+  "AITaskDischarge:finishedDischarge": {
+   "en": "Called by the discharging vehicle when it is done; marks the task as finished.",
+   "fr": "Appelé par le véhicule de déchargement quand il a terminé ; marque la tâche comme terminée."
+  }
+ }
+}

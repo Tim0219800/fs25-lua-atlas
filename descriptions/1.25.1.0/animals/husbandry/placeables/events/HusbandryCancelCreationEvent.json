@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/husbandry/placeables/events/HusbandryCancelCreationEvent.lua",
+ "module": {
+  "en": "Network event sent from a client to the server when the player cancels the husbandry creation step, so that the server creates the placeable without a meadow. It is client-to-server only; the run method asserts that it is not received from a server connection.",
+  "fr": "Événement réseau envoyé par un client au serveur quand le joueur annule l'étape de création de l'élevage ; le serveur crée alors le placeable sans prairie. Il ne va que du client vers le serveur : `run` vérifie par assertion qu'il ne vient pas d'une connexion serveur."
+ },
+ "fonctions": {
+  "HusbandryCancelCreationEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "HusbandryCancelCreationEvent.new": {
+   "en": "Creates the event and stores the given value in `placeableId`, which `writeStream` later sends as a node object id. Note: the caller is expected to pass an id (UNVERIFIED, no caller in this file).",
+   "fr": "Crée l'événement et range la valeur donnée dans `placeableId`, que `writeStream` enverra comme identifiant d'objet-noeud. À noter : l'appelant doit fournir un identifiant (NON VÉRIFIÉ, aucun appelant dans ce fichier)."
+  },
+  "HusbandryCancelCreationEvent:readStream": {
+   "en": "Reads a node object id from the stream into `self.placeable`, then runs the event immediately. Note: it uses `readNodeObjectId`, so whether `self.placeable` is an object or a raw id depends on that function (UNVERIFIED, not in the dump).",
+   "fr": "Lit un identifiant d'objet-noeud dans le flux, le range dans `self.placeable`, puis exécute aussitôt l'événement. À noter : `readNodeObjectId` est utilisé, donc `self.placeable` est un objet ou un simple identifiant selon cette fonction (NON VÉRIFIÉ, absente du dump)."
+  },
+  "HusbandryCancelCreationEvent:writeStream": {
+   "en": "Writes `self.placeableId` to the stream with `NetworkUtil.writeNodeObjectId`.",
+   "fr": "Écrit `self.placeableId` dans le flux avec `NetworkUtil.writeNodeObjectId`."
+  },
+  "HusbandryCancelCreationEvent:run": {
+   "en": "Server side: if the placeable exists and has `createMeadow`, calls `createMeadow(false)` to finish creation without a meadow, as if the meadow dialog had been dismissed. Asserts the event comes from a client.",
+   "fr": "Côté serveur : si le placeable existe et possède `createMeadow`, appelle `createMeadow(false)` pour terminer la création sans prairie, comme si la boîte de dialogue avait été fermée. Vérifie par assertion que l'événement vient d'un client."
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "fichier": "vehicles/ai/AIDriveStrategy.lua",
+ "module": {
+  "en": "Base class for AI drive strategies. It stores the controlled vehicle and defines empty hooks (`update`, `getDriveData`, `updateDriving`) that concrete strategies override. `getDriveData` is expected to return five values, all nil here, meaning no override.",
+  "fr": "Classe de base des stratégies de conduite de l'IA. Elle mémorise le véhicule piloté et définit des crochets vides (`update`, `getDriveData`, `updateDriving`) que les stratégies concrètes surchargent. `getDriveData` doit retourner cinq valeurs, toutes nil ici, ce qui signifie aucune consigne."
+ },
+ "fonctions": {
+  "AIDriveStrategy.new": {
+   "en": "Constructor; creates the strategy table with the given metatable (the reconstruction data argument is unused here).",
+   "fr": "Constructeur ; crée la table de la stratégie avec la métatable donnée (l'argument de données de reconstruction est inutilisé ici)."
+  },
+  "AIDriveStrategy:delete": {
+   "en": "Empty cleanup hook for subclasses.",
+   "fr": "Crochet de nettoyage vide pour les sous-classes."
+  },
+  "AIDriveStrategy:setAIVehicle": {
+   "en": "Stores the AI vehicle this strategy controls.",
+   "fr": "Mémorise le véhicule IA contrôlé par cette stratégie."
+  },
+  "AIDriveStrategy:update": {
+   "en": "Empty per-frame hook for subclasses.",
+   "fr": "Crochet vide appelé à chaque image, pour les sous-classes."
+  },
+  "AIDriveStrategy:getDriveData": {
+   "en": "Default drive data query returning five nils (no steering, speed or stop request). Subclasses override it to return their driving targets.",
+   "fr": "Requête de données de conduite par défaut, retourne cinq nil (aucune consigne de direction, vitesse ou arrêt). Les sous-classes la surchargent pour fournir leurs consignes."
+  },
+  "AIDriveStrategy:updateDriving": {
+   "en": "Empty hook called while driving, for subclasses.",
+   "fr": "Crochet vide appelé pendant la conduite, pour les sous-classes."
+  },
+  "AIDriveStrategy:debugPrint": {
+   "en": "Prints a formatted debug line prefixed with AI DEBUG, only when the vehicle debug state is the AI mode.",
+   "fr": "Affiche une ligne de debug formatée préfixée AI DEBUG, uniquement quand l'état de debug des véhicules est le mode IA."
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/ShopCategoriesFrame.lua",
+ "module": {
+  "en": "Shop frame of the in-game menu that shows categories or brands as a tile layout (extends `TabbedMenuFrameElement`). Its XML is `dataS/gui/ShopCategoriesFrame.xml`.",
+  "fr": "Cadre de boutique du menu en jeu affichant catégories ou marques sous forme de tuiles (étend `TabbedMenuFrameElement`). Son XML est `dataS/gui/ShopCategoriesFrame.xml`."
+ },
+ "fonctions": {
+  "ShopCategoriesFrame.register": {
+   "en": "Creates a new frame instance and loads `dataS/gui/ShopCategoriesFrame.xml` through `g_gui:loadGui` under the name `ShopCategoriesFrame`. Called once at GUI setup.",
+   "fr": "Crée une nouvelle instance du cadre et charge `dataS/gui/ShopCategoriesFrame.xml` via `g_gui:loadGui` sous le nom `ShopCategoriesFrame`. Appelée une fois lors de l'initialisation de l'interface."
+  }
+ }
+}

@@ -1,0 +1,61 @@
+{
+ "fichier": "placeables/specializations/PlaceableBuyingStation.lua",
+ "module": {
+  "en": "Placeable specialization that wraps a `BuyingStation` (loaded from `placeable.buyingStation`) where players load purchased goods. It registers the station as a loading station in the storage system, syncs it to joining clients, and declares a store spec showing the fill types it sells.",
+  "fr": "Spécialisation de placeable qui encapsule un `BuyingStation` (chargé depuis `placeable.buyingStation`) où les joueurs chargent les marchandises achetées. Elle enregistre la station comme station de chargement dans le système de stockage, la synchronise vers les clients qui rejoignent et déclare une caractéristique de boutique affichant les types de remplissage vendus."
+ },
+ "fonctions": {
+  "PlaceableBuyingStation.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableBuyingStation.registerFunctions": {
+   "en": "Registers `getBuyingStation`.",
+   "fr": "Enregistre `getBuyingStation`."
+  },
+  "PlaceableBuyingStation.registerOverwrittenFunctions": {
+   "en": "Overrides `collectPickObjects`.",
+   "fr": "Surcharge `collectPickObjects`."
+  },
+  "PlaceableBuyingStation.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete`, `onFinalizePlacement`, `onReadStream` and `onWriteStream`.",
+   "fr": "S'abonne à `onLoad`, `onDelete`, `onFinalizePlacement`, `onReadStream` et `onWriteStream`."
+  },
+  "PlaceableBuyingStation.registerXMLPaths": {
+   "en": "Declares the `buyingStation` XML keys by delegating to `BuyingStation.registerXMLPaths`.",
+   "fr": "Déclare les clés XML `buyingStation` en déléguant à `BuyingStation.registerXMLPaths`."
+  },
+  "PlaceableBuyingStation.initSpecialization": {
+   "en": "Adds the store spec type `buyingStationFillTypes` (icon `shopListAttributeIconOutput`) for placeables, using the `BuyingStation` spec value loader and getter.",
+   "fr": "Ajoute le type de caractéristique de boutique `buyingStationFillTypes` (icône `shopListAttributeIconOutput`) pour les placeables, avec le chargeur et l'accesseur de valeur de `BuyingStation`."
+  },
+  "PlaceableBuyingStation:onLoad": {
+   "en": "Creates and loads the `BuyingStation`; on success stores it, sets its owning placeable and registers it as a loading station. On failure logs an XML error and deletes it.",
+   "fr": "Crée et charge le `BuyingStation` ; en cas de succès, le mémorise, définit son placeable propriétaire et l'enregistre comme station de chargement. En cas d'échec, journalise une erreur XML et le supprime."
+  },
+  "PlaceableBuyingStation:onDelete": {
+   "en": "Unregisters the loading station from the storage system and deletes the `BuyingStation`, if loaded.",
+   "fr": "Désenregistre la station de chargement du système de stockage et supprime le `BuyingStation`, s'il est chargé."
+  },
+  "PlaceableBuyingStation:onFinalizePlacement": {
+   "en": "Registers the `BuyingStation` network object, if loaded.",
+   "fr": "Enregistre l'objet réseau `BuyingStation`, s'il est chargé."
+  },
+  "PlaceableBuyingStation:onReadStream": {
+   "en": "Client side join: reads the buying station object id and stream and finishes its registration.",
+   "fr": "Connexion côté client : lit l'id d'objet et le flux de la station d'achat et termine son enregistrement."
+  },
+  "PlaceableBuyingStation:onWriteStream": {
+   "en": "Server side join: writes the buying station object id and stream and registers it in the connection's stream.",
+   "fr": "Connexion côté serveur : écrit l'id d'objet et le flux de la station d'achat et l'enregistre dans le flux de la connexion."
+  },
+  "PlaceableBuyingStation:collectPickObjects": {
+   "en": "Skips picking nodes that are one of the buying station's load trigger nodes; other nodes go to the parent implementation.",
+   "fr": "Ignore les nœuds de sélection qui sont un nœud de déclencheur de chargement de la station d'achat ; les autres nœuds sont transmis au parent."
+  },
+  "PlaceableBuyingStation:getBuyingStation": {
+   "en": "Returns the `BuyingStation` object (nil if it failed to load).",
+   "fr": "Renvoie l'objet `BuyingStation` (nil s'il n'a pas pu être chargé)."
+  }
+ }
+}

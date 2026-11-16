@@ -1,88 +1,337 @@
 {
  "fichier": "vehicles/specializations/Baler.lua",
- "module": "Spécialisation des presses (balles rondes ou carrées, avec ou sans ramasseur, avec tampon de chargement continu nonStopBaling, plateforme, éjection par animation). Prérequis : FillUnit, WorkArea, TurnOnVehicle, AnimatedVehicle, Consumable. LOGIQUE DE BALES (résumé, non relu en détail) : le ramassage remplit une unité de remplissage ; la balle est finie quand elle est pleine, créée (createBale, BalerCreateBaleEvent), déplacée sur la courbe d'animation (moveBales/setBaleTime) et déposée (dropBale) ; une balle factice (dummyBale) visualise la balle en formation. EFFETS (client) : fillEffects (vehicle.baler.fillEffect : fourrage entrant dans le ramasseur), additiveEffects (additif liquide), buffer.overloadingEffects (déchargement du tampon), plus animationNodes et unloadAnimationNodes. Classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT du fillEffect (onUpdateTick, client, uniquement si la presse est allumée) : tant que le serveur signale du ramassage (lastAreaBiggerZero) ET qu'un type de matière est connu (fillEffectType), un compteur de 500 ms est réarmé ; l'effet reste actif tant que ce compteur est > 0, puis s'arrête (décompte en dt réel). Pendant qu'il est actif : setEffectTypeInfo(effets, fillEffectType) puis startEffects puis setDensity(effets, max(charge, 0.40)) où charge = litres ramassés sur 1 s (ValueBuffer de 750 ms de capacité) / maxPickupLitersPerSecond (500 par défaut) : l'intensité visuelle suit donc le débit de matière ramassée, plancher 40 %. Le type d'entrée est le dernier type de matière trouvé par processBalerArea (fillEffectType, serveur) ; aucune culture ni stade. Additifs : jouent un effet LIQUIDFERTILIZER 250 ms à chaque ramassage additivé (serveur : consomme l'additif et augmente de 5 % les litres, pondéré par la disponibilité). RÉSEAU : dirtyFlag unique pour lastAreaBiggerZero, fillEffectTypeSent (SEND_NUM_BITS), alerte de limite de balles, état de déchargement du tampon et état des additifs ; lu dans onReadUpdateStream (client) ; flux initial sur plusieurs champs (non relu entièrement). Le client ne recalcule pas le ramassage. CONDITIONS : zone active si : nombre de balles sous la limite du slotSystem (quand allumé), unité de remplissage non pleine, ramasseur autorisé (allowPickingUp de Pickup, non relu), consommables de filet/film disponibles (rond ET carré), et pour les presses à ouverture, pas de balles en attente ni déchargement. Allumage requis pour que l'effet s'active (onUpdateTick), mais pas testé dans getIsWorkAreaActive de ce fichier. Traitement de zone sauté pour un client éloigné (> Baler.CLIENT_DM_UPDATE_RADIUS, constante non définie ici : NON VÉRIFIÉ). TERRAIN : ramassage dans la carte de hauteur (DensityMapHeightUtil.tipToGroundAroundLine avec -infini), types de remplissage de pickupFillTypes ; aucune modification de carte de culture. MÉTÉO/HUMIDITÉ : aucune lecture dans ce fichier. dt : compteurs d'effet et de nettoyage des noeuds en ms de temps de jeu. POINTS D'EXTENSION : fonctions registerFunctions (setBaleTypeIndex, isUnloadingAllowed, handleUnloadingBaleEvent, dropBaleFromPlatform, getBalerBaleOwnerFarmId, setIsUnloadingBale, getIsBaleUnloading, getTimeFromLevel, moveBales, moveBale, setBaleTime, finishBale, createBale, dropBale, dummy bales, getCanUnloadUnfinishedBale, setBalerAutomaticDrop, processBalerArea) ; surcharges doCheckSpeedLimit, getIsWorkAreaActive, getConsumingLoad, getRequiresPower, getCanBeTurnedOn, getCanBeSelected, getIsAttachedTo, getIsFoldAllowed, addToPhysics, removeFromPhysics, getAlarmTriggerIsActive ; événements onTurnedOn/Off, onFillUnitFillLevelChanged, onChangedFillType, onRootVehicleChanged, onStart/EndWorkAreaProcessing, onConsumableVariationChanged. Événements enregistrés par registerEvents (liste non relue). Vitesse limite par défaut : 25 ; une vitesse variable (variableSpeedLimit) peut moduler la limite d'après les litres ramassés par seconde (serveur, dans onUpdate).",
+ "module": {
+  "en": "Specialization of balers (round or square bales, with or without pickup, with nonStopBaling continuous loading buffer, platform, animation-driven ejection). Prerequisites: FillUnit, WorkArea, TurnOnVehicle, AnimatedVehicle, Consumable. BALE LOGIC (summary, not re-read in detail): picking up fills a fill unit; the bale is finished when full, created (createBale, BalerCreateBaleEvent), moved along the animation curve (moveBales/setBaleTime) and dropped (dropBale); a dummy bale (dummyBale) visualizes the bale being formed. EFFECTS (client): fillEffects (vehicle.baler.fillEffect: forage entering the pickup), additiveEffects (liquid additive), buffer.overloadingEffects (buffer unloading), plus animationNodes and unloadAnimationNodes. Effect classes are absent from the dump: rendering UNVERIFIED. fillEffect TRIGGER (onUpdateTick, client, only if the baler is turned on): as long as the server reports pickup (lastAreaBiggerZero) AND a material type is known (fillEffectType), a 500 ms counter is re-armed; the effect stays active while this counter is > 0, then stops (countdown in real dt). While active: setEffectTypeInfo(effects, fillEffectType) then startEffects then setDensity(effects, max(load, 0.40)) where load = litres picked up over 1 s (ValueBuffer of 750 ms capacity) / maxPickupLitersPerSecond (500 by default): the visual intensity therefore follows the flow of picked-up material, with a 40 % floor. The input type is the last material type found by processBalerArea (fillEffectType, server); no crop nor growth state. Additives: play a LIQUIDFERTILIZER effect for 250 ms at each additive pickup (server: consumes the additive and increases litres by 5 %, weighted by availability). NETWORK: a single dirtyFlag for lastAreaBiggerZero, fillEffectTypeSent (SEND_NUM_BITS), bale limit alert, buffer unloading state and additive state; read in onReadUpdateStream (client); initial stream over several fields (not fully re-read). The client does not recompute the pickup. CONDITIONS: area active if: number of bales under the slotSystem limit (when turned on), fill unit not full, pickup allowed (allowPickingUp of Pickup, not re-read), net/film consumables available (round AND square), and for opening balers, no pending bales nor unloading. Turning on is required for the effect to activate (onUpdateTick), but is not tested in getIsWorkAreaActive of this file. Area processing is skipped for a distant client (> Baler.CLIENT_DM_UPDATE_RADIUS, constant not defined here: UNVERIFIED). TERRAIN: pickup from the height map (DensityMapHeightUtil.tipToGroundAroundLine with -infinity), fill types from pickupFillTypes; no crop map modification. WEATHER/WETNESS: no reading in this file. dt: effect and node cleanup counters in ms of game time. EXTENSION POINTS: functions from registerFunctions (setBaleTypeIndex, isUnloadingAllowed, handleUnloadingBaleEvent, dropBaleFromPlatform, getBalerBaleOwnerFarmId, setIsUnloadingBale, getIsBaleUnloading, getTimeFromLevel, moveBales, moveBale, setBaleTime, finishBale, createBale, dropBale, dummy bales, getCanUnloadUnfinishedBale, setBalerAutomaticDrop, processBalerArea); overrides doCheckSpeedLimit, getIsWorkAreaActive, getConsumingLoad, getRequiresPower, getCanBeTurnedOn, getCanBeSelected, getIsAttachedTo, getIsFoldAllowed, addToPhysics, removeFromPhysics, getAlarmTriggerIsActive; events onTurnedOn/Off, onFillUnitFillLevelChanged, onChangedFillType, onRootVehicleChanged, onStart/EndWorkAreaProcessing, onConsumableVariationChanged. Events registered by registerEvents (list not re-read). Default speed limit: 25; a variable speed (variableSpeedLimit) can modulate the limit according to litres picked up per second (server, in onUpdate).",
+  "fr": "Spécialisation des presses (balles rondes ou carrées, avec ou sans ramasseur, avec tampon de chargement continu nonStopBaling, plateforme, éjection par animation). Prérequis : FillUnit, WorkArea, TurnOnVehicle, AnimatedVehicle, Consumable. LOGIQUE DE BALES (résumé, non relu en détail) : le ramassage remplit une unité de remplissage ; la balle est finie quand elle est pleine, créée (createBale, BalerCreateBaleEvent), déplacée sur la courbe d'animation (moveBales/setBaleTime) et déposée (dropBale) ; une balle factice (dummyBale) visualise la balle en formation. EFFETS (client) : fillEffects (vehicle.baler.fillEffect : fourrage entrant dans le ramasseur), additiveEffects (additif liquide), buffer.overloadingEffects (déchargement du tampon), plus animationNodes et unloadAnimationNodes. Classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT du fillEffect (onUpdateTick, client, uniquement si la presse est allumée) : tant que le serveur signale du ramassage (lastAreaBiggerZero) ET qu'un type de matière est connu (fillEffectType), un compteur de 500 ms est réarmé ; l'effet reste actif tant que ce compteur est > 0, puis s'arrête (décompte en dt réel). Pendant qu'il est actif : setEffectTypeInfo(effets, fillEffectType) puis startEffects puis setDensity(effets, max(charge, 0.40)) où charge = litres ramassés sur 1 s (ValueBuffer de 750 ms de capacité) / maxPickupLitersPerSecond (500 par défaut) : l'intensité visuelle suit donc le débit de matière ramassée, plancher 40 %. Le type d'entrée est le dernier type de matière trouvé par processBalerArea (fillEffectType, serveur) ; aucune culture ni stade. Additifs : jouent un effet LIQUIDFERTILIZER 250 ms à chaque ramassage additivé (serveur : consomme l'additif et augmente de 5 % les litres, pondéré par la disponibilité). RÉSEAU : dirtyFlag unique pour lastAreaBiggerZero, fillEffectTypeSent (SEND_NUM_BITS), alerte de limite de balles, état de déchargement du tampon et état des additifs ; lu dans onReadUpdateStream (client) ; flux initial sur plusieurs champs (non relu entièrement). Le client ne recalcule pas le ramassage. CONDITIONS : zone active si : nombre de balles sous la limite du slotSystem (quand allumé), unité de remplissage non pleine, ramasseur autorisé (allowPickingUp de Pickup, non relu), consommables de filet/film disponibles (rond ET carré), et pour les presses à ouverture, pas de balles en attente ni déchargement. Allumage requis pour que l'effet s'active (onUpdateTick), mais pas testé dans getIsWorkAreaActive de ce fichier. Traitement de zone sauté pour un client éloigné (> Baler.CLIENT_DM_UPDATE_RADIUS, constante non définie ici : NON VÉRIFIÉ). TERRAIN : ramassage dans la carte de hauteur (DensityMapHeightUtil.tipToGroundAroundLine avec -infini), types de remplissage de pickupFillTypes ; aucune modification de carte de culture. MÉTÉO/HUMIDITÉ : aucune lecture dans ce fichier. dt : compteurs d'effet et de nettoyage des noeuds en ms de temps de jeu. POINTS D'EXTENSION : fonctions registerFunctions (setBaleTypeIndex, isUnloadingAllowed, handleUnloadingBaleEvent, dropBaleFromPlatform, getBalerBaleOwnerFarmId, setIsUnloadingBale, getIsBaleUnloading, getTimeFromLevel, moveBales, moveBale, setBaleTime, finishBale, createBale, dropBale, dummy bales, getCanUnloadUnfinishedBale, setBalerAutomaticDrop, processBalerArea) ; surcharges doCheckSpeedLimit, getIsWorkAreaActive, getConsumingLoad, getRequiresPower, getCanBeTurnedOn, getCanBeSelected, getIsAttachedTo, getIsFoldAllowed, addToPhysics, removeFromPhysics, getAlarmTriggerIsActive ; événements onTurnedOn/Off, onFillUnitFillLevelChanged, onChangedFillType, onRootVehicleChanged, onStart/EndWorkAreaProcessing, onConsumableVariationChanged. Événements enregistrés par registerEvents (liste non relue). Vitesse limite par défaut : 25 ; une vitesse variable (variableSpeedLimit) peut moduler la limite d'après les litres ramassés par seconde (serveur, dans onUpdate)."
+ },
  "fonctions": {
-  "Baler.initSpecialization": "Déclare la configuration baler, la stratégie IA AIDriveStrategyBaler, le type de zone baler et le schéma XML (effets, animations, types de balles, tampon, additifs, plateforme, débit maximal...). Non relu clé par clé.",
-  "Baler.registerBalerXMLPaths": "Enregistre les clés XML de vehicle.baler (et configurations) : fillEffect, additiveEffects, animationNodes, unloadAnimationNodes, buffer.overloadingEffect, #maxPickupLitersPerSecond, animations de nouage et compactage, types de balles... Non relu clé par clé.",
-  "Baler.prerequisitesPresent": "Exige FillUnit, WorkArea, TurnOnVehicle, AnimatedVehicle et Consumable.",
-  "Baler.registerEvents": "Déclare les événements propres à la presse (liste non relue).",
-  "Baler.registerFunctions": "Enregistre les fonctions de gestion de balles, de déchargement, de plateforme et processBalerArea.",
-  "Baler.registerOverwrittenFunctions": "Surcharge doCheckSpeedLimit, getIsWorkAreaActive, getConsumingLoad, getRequiresPower, getCanBeTurnedOn, getCanBeSelected, getIsAttachedTo, getIsFoldAllowed, addToPhysics, removeFromPhysics et autres (liste non relue ligne à ligne).",
-  "Baler.registerEventListeners": "S'abonne à onLoad, onPostLoad, onLoadFinished, onDelete, flux, onUpdate, onUpdateTick, onTurnedOn/Off, onFillUnitFillLevelChanged, onChangedFillType, onRootVehicleChanged, onStart/EndWorkAreaProcessing, onRegisterActionEvents et onConsumableVariationChanged (liste non relue ligne à ligne).",
-  "Baler:onLoad": "Charge types de balles, animations, effets (fillEffect, additifs, tampon), son, paramètres du tampon, plateforme, vitesse variable et débit maximal de ramassage (500 l/s par défaut, tampon de 750 ms) ; initialise états de déchargement, listes de balles et drapeau réseau. Lecture détaillée non relue.",
-  "Baler:onPostLoad": "Restaure depuis la sauvegarde les balles en cours et l'état de la presse (non relu en détail).",
-  "Baler:onLoadFinished": "Étape de finalisation de chargement (balle factice, configuration de balle ; non relu en détail).",
-  "Baler:onDelete": "Libère sons, effets (fill, additifs, tampon), animations, balles factices et balles en cours.",
-  "Baler:saveToXMLFile": "Sauvegarde les balles en formation, l'état de déchargement et les options (non relu en détail).",
-  "Baler:onReadStream": "Lit à la connexion l'état de ramassage, le type d'effet, les balles et l'état de déchargement (non relu en détail ; lastAreaBiggerZero lu à la ligne 865).",
-  "Baler:onWriteStream": "Écrit l'état correspondant au flux initial.",
-  "Baler:onReadUpdateStream": "Côté client : lit lastAreaBiggerZero, fillEffectType, alerte de limite de balles, état de déchargement du tampon (démarre/arrête effets, sons, animations de débordement) et état des additifs (démarre/arrête additiveEffects).",
-  "Baler:onWriteUpdateStream": "Côté serveur : écrit ces valeurs quand dirtyFlag est levé.",
-  "Baler:onUpdate": "Anime les balles, applique les coupes de visibilité de détail, et, côté serveur, finalise la balle au frame suivant (finishBale) et ajuste la limite de vitesse variable selon les litres ramassés par seconde (spec.variableSpeedLimit).",
-  "Baler:onUpdateTick": "Pilote les effets d'entrée (voir module : compteur de 500 ms, densité = charge de ramassage, plancher 0.40), le nettoyage de nouage sonore, le compactage, le déchargement du tampon et la logique de déchargement automatique ; serveur : alimente le tampon de litres ramassés, gère le minuteur des additifs (250 ms) et l'alerte de limite de balles.",
-  "Baler:getIsFoldAllowed": "Interdit le pliage si des balles sont chargées, la presse allumée ou la plateforme occupée (avec avertissement).",
-  "Baler:onChangedFillType": "Recalcule le fichier XML et l'indice de balle à partir du type de matière courant et du type de balle (balle factice comprise).",
-  "Baler:onFillUnitFillLevelChanged": "Met à jour la balle factice et l'animation de remplissage selon le niveau ; serveur : déclenche la fin de balle quand l'unité est pleine (non relu en détail).",
-  "Baler:onConsumableVariationChanged": "Retient la variation de balle (bale_variation) fournie par le consommable.",
-  "Baler:onTurnedOn": "Plie la presse en position d'allumage si repliable, lance animations et son de travail.",
-  "Baler:onTurnedOff": "Client : coupe fillEffects, additiveEffects, effets du tampon, animations et sons.",
-  "Baler:onRootVehicleChanged": "Enregistre/met à jour l'action « baleUnload » de l'actionController.",
-  "Baler:actionControllerBaleUnloadEvent": "Callback d'actionController : déclenche le déchargement quand direction < 0 si permis.",
-  "Baler:doCheckSpeedLimit": "Applique la limite de vitesse si l'outil est allumé et abaissé.",
-  "Baler:setBaleTypeIndex": "Choisit le type de balle (immédiatement si vide ou forcé, sinon mémorisé) ; non relu en détail.",
-  "Baler:isUnloadingAllowed": "Dit si le déchargement manuel est permis (plateforme, allumage, déchargement en cours ; en cas de presse-enrubanneuse, selon allowsGrabbingBale).",
-  "Baler:handleUnloadingBaleEvent": "Ouvre ou ferme le déchargement selon l'état, si permis.",
-  "Baler:dropBaleFromPlatform": "Lance l'animation de chute de la plateforme et démonte les objets montés dynamiquement (serveur).",
-  "Baler:getBalerBaleOwnerFarmId": "Détermine la ferme propriétaire de la balle (propriétaire du terrain ou dernière ferme touchée, repli sur le propriétaire de la presse).",
-  "Baler:setIsUnloadingBale": "Démarre/arrête l'ouverture de la presse (avec balle inachevée si permis) et propage l'état.",
-  "Baler:getIsBaleUnloading": "Renvoie vrai pendant le déchargement.",
-  "Baler:getTimeFromLevel": "Convertit une quantité de matière en avance de temps sur la courbe d'animation de balle.",
-  "Baler:moveBales": "Avance toutes les balles du temps donné.",
-  "Baler:moveBale": "Avance une balle du temps donné.",
-  "Baler:setBaleTime": "Place une balle sur la courbe d'animation (noeud et joint côté serveur) et traite la fin de course (temps >= 1).",
-  "Baler:finishBale": "Termine la balle : vide l'unité de remplissage, remet à zéro les compteurs de matière, crée la balle et diffuse BalerCreateBaleEvent (serveur).",
-  "Baler:createBale": "Crée l'objet balle, son joint physique et sa position initiale (anime le nouage).",
-  "Baler:dropBale": "Dépose la balle de la liste : notifie la mission, retire le joint et libère l'objet (serveur).",
-  "Baler:updateDummyBale": "Crée/met à l'échelle/supprime la balle factice selon niveau et capacité ; renvoie vrai si une nouvelle a été créée.",
-  "Baler:deleteDummyBale": "Supprime la balle factice et libère sa demande de chargement partagée.",
-  "Baler:createDummyBale": "Charge la balle factice depuis le XML de balle courant et la lie au noeud de balle.",
-  "Baler:getCanUnloadUnfinishedBale": "Vrai si l'éjection d'une balle inachevée est configurée et que le niveau dépasse le seuil.",
-  "Baler:setBalerAutomaticDrop": "Active/désactive la chute automatique (plateforme ou classique) et rafraîchit les actions.",
-  "Baler:getCanBeTurnedOn": "Refuse l'allumage pendant un déchargement de balle.",
-  "Baler:loadSpeedRotatingPartFromXML": "Lit l'option rotateOnlyIfFillLevelIncreased d'une pièce tournante.",
-  "Baler:getIsSpeedRotatingPartActive": "Ne fait tourner une pièce marquée que tant que le compteur de ramassage lastAreaBiggerZeroTime est > 0.",
-  "Baler.getDefaultSpeedLimit": "Limite de vitesse par défaut : 25.",
-  "Baler:getIsWorkAreaActive": "Inactive si la limite de balles est atteinte (allumé), si l'unité est pleine, si le ramasseur n'autorise pas, si un consommable manque, ou si une balle attend/est en déchargement (presses à ouverture sans tampon).",
-  "Baler:getConsumingLoad": "Ajoute la charge de ramassage (litres sur 1 s / débit maximal) à la charge consommée.",
-  "Baler:getRequiresPower": "Vrai si le tampon doit se vider, si le déchargement est en cours ou si la presse est allumée.",
-  "Baler:getCanBeSelected": "Renvoie vrai : l'outil est sélectionnable.",
-  "Baler:getIsAttachedTo": "Considère aussi les balles montées comme attachées à la presse.",
-  "Baler:getAllowDynamicMountFillLevelInfo": "Renvoie faux.",
-  "Baler:getAlarmTriggerIsActive": "Désactive une alarme marquée needsBaleLoaded tant qu'aucune balle n'est chargée.",
-  "Baler:loadAlarmTrigger": "Lit l'option needsBaleLoaded d'une alarme.",
-  "Baler:getShowConsumableEmptyWarning": "N'affiche l'avertissement de consommable vide (filet/film) que si la presse est allumée.",
-  "Baler:addToPhysics": "Remet les balles et leurs joints physiques dans la simulation.",
-  "Baler:removeFromPhysics": "Retire balles et joints de la simulation.",
-  "Baler:processBalerArea": "Ramasse le fourrage sous la zone (aspiration par type de pickupFillTypes), mémorise fillEffectType (serveur, type de la matière trouvée), applique l'additif (serveur), cumule les litres de la passe et renvoie litres ramassés (deux fois) ; client lointain ignoré.",
-  "Baler:onRegisterActionEvents": "Enregistre les actions de déchargement, de basculement de taille et de chute automatique.",
-  "Baler:onRegisterExternalActionEvents": "Relie les déclencheurs externes balerDrop, balerAutomaticDrop et balerBaleSize aux actions correspondantes.",
-  "Baler:onStartWorkAreaProcessing": "Serveur : remet lastAreaBiggerZero et les litres ramassés à zéro avant la passe.",
-  "Baler:onEndWorkAreaProcessing": "Serveur : choisit le type de matière dominant, met lastAreaBiggerZero à vrai si du ramassage a eu lieu, ajoute les litres à l'unité (ou au tampon), anime les balles, met à jour la vitesse variable et lève dirtyFlag si lastAreaBiggerZero ou fillEffectType ont changé.",
-  "Baler.actionEventUnloading": "Callback d'entrée : lance le déchargement ou la chute de plateforme.",
-  "Baler.actionEventToggleSize": "Callback d'entrée : change le type de balle (non relu en détail).",
-  "Baler.actionEventToggleAutomaticDrop": "Callback d'entrée : bascule la chute automatique.",
-  "Baler.updateActionEvents": "Met à jour textes et activations des actions de la presse.",
-  "Baler.externalActionEventUnloadRegister": "Enregistre l'action externe de déchargement (déclencheur de zone).",
-  "Baler.externalActionEventUnloadUpdate": "Met à jour l'action externe de déchargement.",
-  "Baler.externalActionEventAutomaticUnloadRegister": "Enregistre l'action externe de chute automatique.",
-  "Baler.externalActionEventAutomaticUnloadUpdate": "Met à jour l'action externe de chute automatique.",
-  "Baler.externalActionEventBaleTypeRegister": "Enregistre l'action externe de choix du type de balle.",
-  "Baler.externalActionEventBaleTypeUpdate": "Met à jour l'action externe de choix du type de balle.",
-  "Baler.loadSpecValueBaleSize": "Lit pour la boutique les dimensions de balles (non relu en détail).",
-  "Baler.getSpecValueBaleSize": "Formate pour la boutique les dimensions de balles.",
-  "Baler.loadSpecValueBaleSizeRound": "Lit pour la boutique les diamètres de balles rondes.",
-  "Baler.loadSpecValueBaleSizeSquare": "Lit pour la boutique les dimensions de balles carrées.",
-  "Baler.getSpecValueBaleSizeRound": "Formate pour la boutique les tailles de balles rondes.",
-  "Baler.getSpecValueBaleSizeSquare": "Formate pour la boutique les tailles de balles carrées."
+  "Baler.initSpecialization": {
+   "en": "Declares the baler configuration, the AI strategy AIDriveStrategyBaler, the baler area type and the XML schema (effects, animations, bale types, buffer, additives, platform, maximum flow...). Not re-read key by key.",
+   "fr": "Déclare la configuration baler, la stratégie IA AIDriveStrategyBaler, le type de zone baler et le schéma XML (effets, animations, types de balles, tampon, additifs, plateforme, débit maximal...). Non relu clé par clé."
+  },
+  "Baler.registerBalerXMLPaths": {
+   "en": "Registers the XML keys of vehicle.baler (and configurations): fillEffect, additiveEffects, animationNodes, unloadAnimationNodes, buffer.overloadingEffect, #maxPickupLitersPerSecond, tying and compaction animations, bale types... Not re-read key by key.",
+   "fr": "Enregistre les clés XML de vehicle.baler (et configurations) : fillEffect, additiveEffects, animationNodes, unloadAnimationNodes, buffer.overloadingEffect, #maxPickupLitersPerSecond, animations de nouage et compactage, types de balles... Non relu clé par clé."
+  },
+  "Baler.prerequisitesPresent": {
+   "en": "Requires FillUnit, WorkArea, TurnOnVehicle, AnimatedVehicle and Consumable.",
+   "fr": "Exige FillUnit, WorkArea, TurnOnVehicle, AnimatedVehicle et Consumable."
+  },
+  "Baler.registerEvents": {
+   "en": "Declares the events specific to the baler (list not re-read).",
+   "fr": "Déclare les événements propres à la presse (liste non relue)."
+  },
+  "Baler.registerFunctions": {
+   "en": "Registers the bale handling, unloading and platform functions and processBalerArea.",
+   "fr": "Enregistre les fonctions de gestion de balles, de déchargement, de plateforme et processBalerArea."
+  },
+  "Baler.registerOverwrittenFunctions": {
+   "en": "Overrides doCheckSpeedLimit, getIsWorkAreaActive, getConsumingLoad, getRequiresPower, getCanBeTurnedOn, getCanBeSelected, getIsAttachedTo, getIsFoldAllowed, addToPhysics, removeFromPhysics and others (list not re-read line by line).",
+   "fr": "Surcharge doCheckSpeedLimit, getIsWorkAreaActive, getConsumingLoad, getRequiresPower, getCanBeTurnedOn, getCanBeSelected, getIsAttachedTo, getIsFoldAllowed, addToPhysics, removeFromPhysics et autres (liste non relue ligne à ligne)."
+  },
+  "Baler.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onLoadFinished, onDelete, streams, onUpdate, onUpdateTick, onTurnedOn/Off, onFillUnitFillLevelChanged, onChangedFillType, onRootVehicleChanged, onStart/EndWorkAreaProcessing, onRegisterActionEvents and onConsumableVariationChanged (list not re-read line by line).",
+   "fr": "S'abonne à onLoad, onPostLoad, onLoadFinished, onDelete, flux, onUpdate, onUpdateTick, onTurnedOn/Off, onFillUnitFillLevelChanged, onChangedFillType, onRootVehicleChanged, onStart/EndWorkAreaProcessing, onRegisterActionEvents et onConsumableVariationChanged (liste non relue ligne à ligne)."
+  },
+  "Baler:onLoad": {
+   "en": "Loads bale types, animations, effects (fillEffect, additives, buffer), sound, buffer parameters, platform, variable speed and maximum pickup flow (500 l/s by default, 750 ms buffer); initializes unloading states, bale lists and network flag. Detailed reading not re-read.",
+   "fr": "Charge types de balles, animations, effets (fillEffect, additifs, tampon), son, paramètres du tampon, plateforme, vitesse variable et débit maximal de ramassage (500 l/s par défaut, tampon de 750 ms) ; initialise états de déchargement, listes de balles et drapeau réseau. Lecture détaillée non relue."
+  },
+  "Baler:onPostLoad": {
+   "en": "Restores from the savegame the bales in progress and the baler state (not re-read in detail).",
+   "fr": "Restaure depuis la sauvegarde les balles en cours et l'état de la presse (non relu en détail)."
+  },
+  "Baler:onLoadFinished": {
+   "en": "Load finalization step (dummy bale, bale configuration; not re-read in detail).",
+   "fr": "Étape de finalisation de chargement (balle factice, configuration de balle ; non relu en détail)."
+  },
+  "Baler:onDelete": {
+   "en": "Frees sounds, effects (fill, additives, buffer), animations, dummy bales and bales in progress.",
+   "fr": "Libère sons, effets (fill, additifs, tampon), animations, balles factices et balles en cours."
+  },
+  "Baler:saveToXMLFile": {
+   "en": "Saves the bales being formed, the unloading state and the options (not re-read in detail).",
+   "fr": "Sauvegarde les balles en formation, l'état de déchargement et les options (non relu en détail)."
+  },
+  "Baler:onReadStream": {
+   "en": "On connection, reads the pickup state, the effect type, the bales and the unloading state (not re-read in detail; lastAreaBiggerZero read at line 865).",
+   "fr": "Lit à la connexion l'état de ramassage, le type d'effet, les balles et l'état de déchargement (non relu en détail ; lastAreaBiggerZero lu à la ligne 865)."
+  },
+  "Baler:onWriteStream": {
+   "en": "Writes the state matching the initial stream.",
+   "fr": "Écrit l'état correspondant au flux initial."
+  },
+  "Baler:onReadUpdateStream": {
+   "en": "Client side: reads lastAreaBiggerZero, fillEffectType, bale limit alert, buffer unloading state (starts/stops effects, sounds, overflow animations) and additive state (starts/stops additiveEffects).",
+   "fr": "Côté client : lit lastAreaBiggerZero, fillEffectType, alerte de limite de balles, état de déchargement du tampon (démarre/arrête effets, sons, animations de débordement) et état des additifs (démarre/arrête additiveEffects)."
+  },
+  "Baler:onWriteUpdateStream": {
+   "en": "Server side: writes these values when dirtyFlag is raised.",
+   "fr": "Côté serveur : écrit ces valeurs quand dirtyFlag est levé."
+  },
+  "Baler:onUpdate": {
+   "en": "Animates the bales, applies the detail visibility cuts and, on the server side, finishes the bale on the next frame (finishBale) and adjusts the variable speed limit according to litres picked up per second (spec.variableSpeedLimit).",
+   "fr": "Anime les balles, applique les coupes de visibilité de détail, et, côté serveur, finalise la balle au frame suivant (finishBale) et ajuste la limite de vitesse variable selon les litres ramassés par seconde (spec.variableSpeedLimit)."
+  },
+  "Baler:onUpdateTick": {
+   "en": "Drives the input effects (see module: 500 ms counter, density = pickup load, floor 0.40), the sound tying cleanup, compaction, buffer unloading and the automatic unloading logic; server: feeds the buffer of picked-up litres, handles the additive timer (250 ms) and the bale limit alert.",
+   "fr": "Pilote les effets d'entrée (voir module : compteur de 500 ms, densité = charge de ramassage, plancher 0.40), le nettoyage de nouage sonore, le compactage, le déchargement du tampon et la logique de déchargement automatique ; serveur : alimente le tampon de litres ramassés, gère le minuteur des additifs (250 ms) et l'alerte de limite de balles."
+  },
+  "Baler:getIsFoldAllowed": {
+   "en": "Forbids folding if bales are loaded, the baler is turned on or the platform is occupied (with a warning).",
+   "fr": "Interdit le pliage si des balles sont chargées, la presse allumée ou la plateforme occupée (avec avertissement)."
+  },
+  "Baler:onChangedFillType": {
+   "en": "Recomputes the XML file and the bale index from the current material type and bale type (dummy bale included).",
+   "fr": "Recalcule le fichier XML et l'indice de balle à partir du type de matière courant et du type de balle (balle factice comprise)."
+  },
+  "Baler:onFillUnitFillLevelChanged": {
+   "en": "Updates the dummy bale and the fill animation according to the level; server: triggers the end of the bale when the unit is full (not re-read in detail).",
+   "fr": "Met à jour la balle factice et l'animation de remplissage selon le niveau ; serveur : déclenche la fin de balle quand l'unité est pleine (non relu en détail)."
+  },
+  "Baler:onConsumableVariationChanged": {
+   "en": "Stores the bale variation (bale_variation) supplied by the consumable.",
+   "fr": "Retient la variation de balle (bale_variation) fournie par le consommable."
+  },
+  "Baler:onTurnedOn": {
+   "en": "Folds the baler into the turn-on position if foldable, starts working animations and sound.",
+   "fr": "Plie la presse en position d'allumage si repliable, lance animations et son de travail."
+  },
+  "Baler:onTurnedOff": {
+   "en": "Client: stops fillEffects, additiveEffects, buffer effects, animations and sounds.",
+   "fr": "Client : coupe fillEffects, additiveEffects, effets du tampon, animations et sons."
+  },
+  "Baler:onRootVehicleChanged": {
+   "en": "Registers/updates the \"baleUnload\" action of the actionController.",
+   "fr": "Enregistre/met à jour l'action « baleUnload » de l'actionController."
+  },
+  "Baler:actionControllerBaleUnloadEvent": {
+   "en": "actionController callback: triggers unloading when direction < 0 if allowed.",
+   "fr": "Callback d'actionController : déclenche le déchargement quand direction < 0 si permis."
+  },
+  "Baler:doCheckSpeedLimit": {
+   "en": "Applies the speed limit if the tool is turned on and lowered.",
+   "fr": "Applique la limite de vitesse si l'outil est allumé et abaissé."
+  },
+  "Baler:setBaleTypeIndex": {
+   "en": "Chooses the bale type (immediately if empty or forced, otherwise stored); not re-read in detail.",
+   "fr": "Choisit le type de balle (immédiatement si vide ou forcé, sinon mémorisé) ; non relu en détail."
+  },
+  "Baler:isUnloadingAllowed": {
+   "en": "Tells whether manual unloading is allowed (platform, turn on, unloading in progress; for a baler-wrapper, according to allowsGrabbingBale).",
+   "fr": "Dit si le déchargement manuel est permis (plateforme, allumage, déchargement en cours ; en cas de presse-enrubanneuse, selon allowsGrabbingBale)."
+  },
+  "Baler:handleUnloadingBaleEvent": {
+   "en": "Opens or closes unloading depending on the state, if allowed.",
+   "fr": "Ouvre ou ferme le déchargement selon l'état, si permis."
+  },
+  "Baler:dropBaleFromPlatform": {
+   "en": "Starts the platform drop animation and unmounts the dynamically mounted objects (server).",
+   "fr": "Lance l'animation de chute de la plateforme et démonte les objets montés dynamiquement (serveur)."
+  },
+  "Baler:getBalerBaleOwnerFarmId": {
+   "en": "Determines the farm owning the bale (land owner or last farm touched, falling back to the baler owner).",
+   "fr": "Détermine la ferme propriétaire de la balle (propriétaire du terrain ou dernière ferme touchée, repli sur le propriétaire de la presse)."
+  },
+  "Baler:setIsUnloadingBale": {
+   "en": "Starts/stops opening the baler (with unfinished bale if allowed) and propagates the state.",
+   "fr": "Démarre/arrête l'ouverture de la presse (avec balle inachevée si permis) et propage l'état."
+  },
+  "Baler:getIsBaleUnloading": {
+   "en": "Returns true during unloading.",
+   "fr": "Renvoie vrai pendant le déchargement."
+  },
+  "Baler:getTimeFromLevel": {
+   "en": "Converts an amount of material into a time advance on the bale animation curve.",
+   "fr": "Convertit une quantité de matière en avance de temps sur la courbe d'animation de balle."
+  },
+  "Baler:moveBales": {
+   "en": "Advances all bales by the given time.",
+   "fr": "Avance toutes les balles du temps donné."
+  },
+  "Baler:moveBale": {
+   "en": "Advances one bale by the given time.",
+   "fr": "Avance une balle du temps donné."
+  },
+  "Baler:setBaleTime": {
+   "en": "Places a bale on the animation curve (node and joint on the server side) and handles the end of travel (time >= 1).",
+   "fr": "Place une balle sur la courbe d'animation (noeud et joint côté serveur) et traite la fin de course (temps >= 1)."
+  },
+  "Baler:finishBale": {
+   "en": "Finishes the bale: empties the fill unit, resets the material counters, creates the bale and broadcasts BalerCreateBaleEvent (server).",
+   "fr": "Termine la balle : vide l'unité de remplissage, remet à zéro les compteurs de matière, crée la balle et diffuse BalerCreateBaleEvent (serveur)."
+  },
+  "Baler:createBale": {
+   "en": "Creates the bale object, its physics joint and its initial position (animates the tying).",
+   "fr": "Crée l'objet balle, son joint physique et sa position initiale (anime le nouage)."
+  },
+  "Baler:dropBale": {
+   "en": "Drops the bale from the list: notifies the mission, removes the joint and frees the object (server).",
+   "fr": "Dépose la balle de la liste : notifie la mission, retire le joint et libère l'objet (serveur)."
+  },
+  "Baler:updateDummyBale": {
+   "en": "Creates/scales/deletes the dummy bale according to level and capacity; returns true if a new one was created.",
+   "fr": "Crée/met à l'échelle/supprime la balle factice selon niveau et capacité ; renvoie vrai si une nouvelle a été créée."
+  },
+  "Baler:deleteDummyBale": {
+   "en": "Deletes the dummy bale and frees its shared loading request.",
+   "fr": "Supprime la balle factice et libère sa demande de chargement partagée."
+  },
+  "Baler:createDummyBale": {
+   "en": "Loads the dummy bale from the current bale XML and links it to the bale node.",
+   "fr": "Charge la balle factice depuis le XML de balle courant et la lie au noeud de balle."
+  },
+  "Baler:getCanUnloadUnfinishedBale": {
+   "en": "True if ejection of an unfinished bale is configured and the level exceeds the threshold.",
+   "fr": "Vrai si l'éjection d'une balle inachevée est configurée et que le niveau dépasse le seuil."
+  },
+  "Baler:setBalerAutomaticDrop": {
+   "en": "Enables/disables automatic drop (platform or classic) and refreshes the actions.",
+   "fr": "Active/désactive la chute automatique (plateforme ou classique) et rafraîchit les actions."
+  },
+  "Baler:getCanBeTurnedOn": {
+   "en": "Refuses turning on during a bale unloading.",
+   "fr": "Refuse l'allumage pendant un déchargement de balle."
+  },
+  "Baler:loadSpeedRotatingPartFromXML": {
+   "en": "Reads the rotateOnlyIfFillLevelIncreased option of a rotating part.",
+   "fr": "Lit l'option rotateOnlyIfFillLevelIncreased d'une pièce tournante."
+  },
+  "Baler:getIsSpeedRotatingPartActive": {
+   "en": "Only rotates a marked part while the pickup counter lastAreaBiggerZeroTime is > 0.",
+   "fr": "Ne fait tourner une pièce marquée que tant que le compteur de ramassage lastAreaBiggerZeroTime est > 0."
+  },
+  "Baler.getDefaultSpeedLimit": {
+   "en": "Default speed limit: 25.",
+   "fr": "Limite de vitesse par défaut : 25."
+  },
+  "Baler:getIsWorkAreaActive": {
+   "en": "Inactive if the bale limit is reached (turned on), if the unit is full, if the pickup does not allow, if a consumable is missing, or if a bale is waiting/being unloaded (opening balers without buffer).",
+   "fr": "Inactive si la limite de balles est atteinte (allumé), si l'unité est pleine, si le ramasseur n'autorise pas, si un consommable manque, ou si une balle attend/est en déchargement (presses à ouverture sans tampon)."
+  },
+  "Baler:getConsumingLoad": {
+   "en": "Adds the pickup load (litres over 1 s / maximum flow) to the consumed load.",
+   "fr": "Ajoute la charge de ramassage (litres sur 1 s / débit maximal) à la charge consommée."
+  },
+  "Baler:getRequiresPower": {
+   "en": "True if the buffer must empty, if unloading is in progress or if the baler is turned on.",
+   "fr": "Vrai si le tampon doit se vider, si le déchargement est en cours ou si la presse est allumée."
+  },
+  "Baler:getCanBeSelected": {
+   "en": "Returns true: the tool is selectable.",
+   "fr": "Renvoie vrai : l'outil est sélectionnable."
+  },
+  "Baler:getIsAttachedTo": {
+   "en": "Also considers mounted bales as attached to the baler.",
+   "fr": "Considère aussi les balles montées comme attachées à la presse."
+  },
+  "Baler:getAllowDynamicMountFillLevelInfo": {
+   "en": "Returns false.",
+   "fr": "Renvoie faux."
+  },
+  "Baler:getAlarmTriggerIsActive": {
+   "en": "Disables an alarm marked needsBaleLoaded as long as no bale is loaded.",
+   "fr": "Désactive une alarme marquée needsBaleLoaded tant qu'aucune balle n'est chargée."
+  },
+  "Baler:loadAlarmTrigger": {
+   "en": "Reads the needsBaleLoaded option of an alarm.",
+   "fr": "Lit l'option needsBaleLoaded d'une alarme."
+  },
+  "Baler:getShowConsumableEmptyWarning": {
+   "en": "Only shows the empty consumable warning (net/film) if the baler is turned on.",
+   "fr": "N'affiche l'avertissement de consommable vide (filet/film) que si la presse est allumée."
+  },
+  "Baler:addToPhysics": {
+   "en": "Puts the bales and their physics joints back into the simulation.",
+   "fr": "Remet les balles et leurs joints physiques dans la simulation."
+  },
+  "Baler:removeFromPhysics": {
+   "en": "Removes bales and joints from the simulation.",
+   "fr": "Retire balles et joints de la simulation."
+  },
+  "Baler:processBalerArea": {
+   "en": "Picks up the forage under the area (suction by type of pickupFillTypes), stores fillEffectType (server, type of the material found), applies the additive (server), accumulates the litres of the pass and returns picked-up litres (twice); distant client ignored.",
+   "fr": "Ramasse le fourrage sous la zone (aspiration par type de pickupFillTypes), mémorise fillEffectType (serveur, type de la matière trouvée), applique l'additif (serveur), cumule les litres de la passe et renvoie litres ramassés (deux fois) ; client lointain ignoré."
+  },
+  "Baler:onRegisterActionEvents": {
+   "en": "Registers the unloading, size toggle and automatic drop actions.",
+   "fr": "Enregistre les actions de déchargement, de basculement de taille et de chute automatique."
+  },
+  "Baler:onRegisterExternalActionEvents": {
+   "en": "Links the external triggers balerDrop, balerAutomaticDrop and balerBaleSize to the matching actions.",
+   "fr": "Relie les déclencheurs externes balerDrop, balerAutomaticDrop et balerBaleSize aux actions correspondantes."
+  },
+  "Baler:onStartWorkAreaProcessing": {
+   "en": "Server: resets lastAreaBiggerZero and picked-up litres to zero before the pass.",
+   "fr": "Serveur : remet lastAreaBiggerZero et les litres ramassés à zéro avant la passe."
+  },
+  "Baler:onEndWorkAreaProcessing": {
+   "en": "Server: chooses the dominant material type, sets lastAreaBiggerZero to true if pickup occurred, adds litres to the unit (or to the buffer), animates the bales, updates the variable speed and raises dirtyFlag if lastAreaBiggerZero or fillEffectType changed.",
+   "fr": "Serveur : choisit le type de matière dominant, met lastAreaBiggerZero à vrai si du ramassage a eu lieu, ajoute les litres à l'unité (ou au tampon), anime les balles, met à jour la vitesse variable et lève dirtyFlag si lastAreaBiggerZero ou fillEffectType ont changé."
+  },
+  "Baler.actionEventUnloading": {
+   "en": "Input callback: starts unloading or the platform drop.",
+   "fr": "Callback d'entrée : lance le déchargement ou la chute de plateforme."
+  },
+  "Baler.actionEventToggleSize": {
+   "en": "Input callback: changes the bale type (not re-read in detail).",
+   "fr": "Callback d'entrée : change le type de balle (non relu en détail)."
+  },
+  "Baler.actionEventToggleAutomaticDrop": {
+   "en": "Input callback: toggles automatic drop.",
+   "fr": "Callback d'entrée : bascule la chute automatique."
+  },
+  "Baler.updateActionEvents": {
+   "en": "Updates the texts and activations of the baler actions.",
+   "fr": "Met à jour textes et activations des actions de la presse."
+  },
+  "Baler.externalActionEventUnloadRegister": {
+   "en": "Registers the external unloading action (area trigger).",
+   "fr": "Enregistre l'action externe de déchargement (déclencheur de zone)."
+  },
+  "Baler.externalActionEventUnloadUpdate": {
+   "en": "Updates the external unloading action.",
+   "fr": "Met à jour l'action externe de déchargement."
+  },
+  "Baler.externalActionEventAutomaticUnloadRegister": {
+   "en": "Registers the external automatic drop action.",
+   "fr": "Enregistre l'action externe de chute automatique."
+  },
+  "Baler.externalActionEventAutomaticUnloadUpdate": {
+   "en": "Updates the external automatic drop action.",
+   "fr": "Met à jour l'action externe de chute automatique."
+  },
+  "Baler.externalActionEventBaleTypeRegister": {
+   "en": "Registers the external bale type selection action.",
+   "fr": "Enregistre l'action externe de choix du type de balle."
+  },
+  "Baler.externalActionEventBaleTypeUpdate": {
+   "en": "Updates the external bale type selection action.",
+   "fr": "Met à jour l'action externe de choix du type de balle."
+  },
+  "Baler.loadSpecValueBaleSize": {
+   "en": "Reads the bale dimensions for the shop (not re-read in detail).",
+   "fr": "Lit pour la boutique les dimensions de balles (non relu en détail)."
+  },
+  "Baler.getSpecValueBaleSize": {
+   "en": "Formats the bale dimensions for the shop.",
+   "fr": "Formate pour la boutique les dimensions de balles."
+  },
+  "Baler.loadSpecValueBaleSizeRound": {
+   "en": "Reads the round bale diameters for the shop.",
+   "fr": "Lit pour la boutique les diamètres de balles rondes."
+  },
+  "Baler.loadSpecValueBaleSizeSquare": {
+   "en": "Reads the square bale dimensions for the shop.",
+   "fr": "Lit pour la boutique les dimensions de balles carrées."
+  },
+  "Baler.getSpecValueBaleSizeRound": {
+   "en": "Formats the round bale sizes for the shop.",
+   "fr": "Formate pour la boutique les tailles de balles rondes."
+  },
+  "Baler.getSpecValueBaleSizeSquare": {
+   "en": "Formats the square bale sizes for the shop.",
+   "fr": "Formate pour la boutique les tailles de balles carrées."
+  }
  }
 }

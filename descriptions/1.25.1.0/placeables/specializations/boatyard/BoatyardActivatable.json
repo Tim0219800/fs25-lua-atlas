@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/boatyard/BoatyardActivatable.lua",
+ "module": {
+  "en": "Activatable object that offers to buy a boatyard that has no owner yet. The prompt includes the boatyard name, and running it requests the purchase if the boatyard is still unowned.",
+  "fr": "Objet activable qui propose d'acheter un chantier naval qui n'a pas encore de propriétaire. Le texte inclut le nom du chantier et son exécution demande l'achat s'il est toujours sans propriétaire."
+ },
+ "fonctions": {
+  "BoatyardActivatable.new": {
+   "en": "Creates the activatable for a boatyard and builds the prompt from `action_buyOBJECT` and the boatyard name.",
+   "fr": "Crée l'activable pour un chantier naval et construit le texte à partir de `action_buyOBJECT` et du nom du chantier."
+  },
+  "BoatyardActivatable:getIsActivatable": {
+   "en": "Returns true only while the boatyard owner is the unowned marker (`AccessHandler.EVERYONE`).",
+   "fr": "Renvoie true seulement tant que le propriétaire du chantier est le marqueur sans propriétaire (`AccessHandler.EVERYONE`)."
+  },
+  "BoatyardActivatable:run": {
+   "en": "If the boatyard is still unowned, calls its `buyRequest`.",
+   "fr": "Si le chantier est toujours sans propriétaire, appelle son `buyRequest`."
+  }
+ }
+}

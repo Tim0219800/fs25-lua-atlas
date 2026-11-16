@@ -1,0 +1,10 @@
+{"fichier": "gui/elements/MultiOptionElement.lua",
+ "module": {"en": "MultiOptionElement is a thin subclass of MultiTextOptionElement for multiple-choice text controls. It adds an empty options table and otherwise only forwards to the parent; the real behaviour lives in MultiTextOptionElement, which is not part of this file.", "fr": "MultiOptionElement est une sous-classe mince de MultiTextOptionElement pour les contrôles de choix multiple en texte. Elle ajoute une table options vide et ne fait sinon que transmettre au parent ; le vrai comportement est dans MultiTextOptionElement, absent de ce fichier."},
+ "fonctions": {
+  "MultiOptionElement.new": {"en": "Constructor. Builds a MultiTextOptionElement and adds an empty options table.", "fr": "Constructeur. Crée un MultiTextOptionElement et ajoute une table options vide."},
+  "MultiOptionElement:loadFromXML": {"en": "Only calls the parent loadFromXML, no extra keys.", "fr": "Appelle seulement le loadFromXML du parent, sans clé supplémentaire."},
+  "MultiOptionElement:loadProfile": {"en": "Only calls the parent loadProfile, no extra values.", "fr": "Appelle seulement le loadProfile du parent, sans valeur supplémentaire."},
+  "MultiOptionElement:copyAttributes": {"en": "Only calls the parent copyAttributes.", "fr": "Appelle seulement le copyAttributes du parent."},
+  "MultiOptionElement:setState": {"en": "Forwards the state and the force-event flag to the parent setState.", "fr": "Transmet l'état et l'indicateur de forçage d'événement au setState du parent."},
+  "MultiOptionElement:getState": {"en": "Returns the current state field (selected option index).", "fr": "Renvoie le champ d'état courant (index de l'option sélectionnée)."}
+ }}

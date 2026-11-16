@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/dialogs/MultiOptionDialog.lua",
+ "module": {
+  "en": "Dialog offering up to four choices mapped to the menu activate, accept, back and cancel actions, derived from MessageDialog. Only the Android back-key handling is defined in this file; the rest is inherited. Client-side GUI only.",
+  "fr": "Boîte de dialogue proposant jusqu'à quatre choix liés aux actions de menu activer, accepter, retour et annuler, dérivée de MessageDialog. Seule la gestion de la touche retour Android est définie ici ; le reste est hérité. Interface côté client uniquement."
+ },
+ "fonctions": {
+  "MultiOptionDialog:inputEvent": {
+   "en": "Extends the parent input handling; on Android, once the input lock delay has expired, the back action triggers `onNo` and the event is always consumed so no other focused element reacts.",
+   "fr": "Étend la gestion d'entrée du parent ; sous Android, une fois le délai de blocage écoulé, l'action de retour déclenche `onNo` et l'événement est toujours consommé pour qu'aucun autre élément focalisé ne réagisse."
+  }
+ }
+}

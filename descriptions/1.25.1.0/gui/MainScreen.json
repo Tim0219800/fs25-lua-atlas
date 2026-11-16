@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/MainScreen.lua",
+ "module": {
+  "en": "Main menu screen shown at game start (extends `ScreenElement`). Only the input handling override is described here.",
+  "fr": "Écran du menu principal affiché au lancement du jeu (étend `ScreenElement`). Seule la surcharge de gestion des entrées est décrite ici."
+ },
+ "fonctions": {
+  "MainScreen:inputEvent": {
+   "en": "Calls the parent input handler, then on Android turns MENU_BACK into a yes/no quit dialog (`onYesNoEnd`) and always marks the event as used. Returns the event-used flag.",
+   "fr": "Appelle le gestionnaire d'entrées parent puis, sur Android, transforme MENU_BACK en boîte de dialogue oui/non pour quitter (`onYesNoEnd`) et marque toujours l'événement comme consommé. Renvoie l'indicateur d'événement utilisé."
+  }
+ }
+}

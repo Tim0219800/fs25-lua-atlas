@@ -1,0 +1,33 @@
+{
+ "fichier": "handTools/events/FlashlightToggleLightEvent.lua",
+ "module": {
+  "en": "Network event that synchronizes the on/off state of a flashlight hand tool. A client sends it to the server, which rebroadcasts it to the others; a server calls `sendEvent` to broadcast directly.",
+  "fr": "Événement réseau qui synchronise l'état allumé/éteint d'un outil à main lampe torche. Un client l'envoie au serveur, qui le rediffuse aux autres ; un serveur appelle `sendEvent` pour diffuser directement."
+ },
+ "fonctions": {
+  "FlashlightToggleLightEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "FlashlightToggleLightEvent.new": {
+   "en": "Creates the event for a flashlight hand tool and a boolean telling whether it is on.",
+   "fr": "Crée l'événement pour un outil lampe torche et un booléen indiquant s'il est allumé."
+  },
+  "FlashlightToggleLightEvent:readStream": {
+   "en": "Reads the flashlight (node object) and the active flag from the stream, then runs the event.",
+   "fr": "Lit la lampe torche (objet-noeud) et l'indicateur d'activation dans le flux, puis exécute l'événement."
+  },
+  "FlashlightToggleLightEvent:writeStream": {
+   "en": "Writes the flashlight as a node object and the active flag to the stream.",
+   "fr": "Écrit la lampe torche comme objet-noeud et l'indicateur d'activation dans le flux."
+  },
+  "FlashlightToggleLightEvent:run": {
+   "en": "If received by the server, rebroadcasts it to the other clients. When the flashlight exists and is synchronized, calls `setFlashlightIsActive(isActive, true)`.",
+   "fr": "Si le serveur le reçoit, le rediffuse aux autres clients. Quand la lampe existe et est synchronisée, appelle `setFlashlightIsActive(isActive, true)`."
+  },
+  "FlashlightToggleLightEvent.sendEvent": {
+   "en": "Helper unless `noEventSend` is true: a server broadcasts the event to all clients, a client sends it to the server.",
+   "fr": "Aide, sauf si `noEventSend` est vrai : un serveur diffuse l'événement à tous les clients, un client l'envoie au serveur."
+  }
+ }
+}

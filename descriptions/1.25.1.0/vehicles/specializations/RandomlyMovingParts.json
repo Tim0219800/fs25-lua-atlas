@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/RandomlyMovingParts.lua",
+ "module": {
+  "en": "Vehicle specialization that wiggles nodes (rotation and/or translation) in a pseudo-random way while the vehicle drives, e.g. sowing machine parts bouncing over the ground. Configured under vehicle.randomlyMovingParts in the vehicle XML, with presets for the noise shape. Client-only at runtime: the update listener is removed on servers without client or when no part loads. Optionally tied to a ground reference node of another specialization.",
+  "fr": "Spécialisation de véhicule qui fait osciller des nœuds (rotation et/ou translation) de façon pseudo-aléatoire pendant le déplacement, par exemple des éléments de semoir qui sautillent sur le sol. Elle se configure sous vehicle.randomlyMovingParts dans le XML du véhicule, avec des préréglages pour la forme du bruit. Uniquement côté client à l'exécution : l'écouteur d'update est retiré s'il n'y a pas de client ou si aucune pièce n'est chargée. Peut dépendre d'un nœud de référence au sol d'une autre spécialisation."
+ },
+ "fonctions": {
+  "RandomlyMovingParts.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisite on other specializations.",
+   "fr": "Retourne toujours true : cette spécialisation n'exige aucune autre spécialisation."
+  },
+  "RandomlyMovingParts.initSpecialization": {
+   "en": "Registers the vehicle XML schema entries for randomlyMovingParts: max update distance, per-part node, speed, fade, preset, noise, bump, rotation and translation settings, and sub-nodes that follow the same value.",
+   "fr": "Enregistre dans le schéma XML du véhicule les entrées randomlyMovingParts : distance d'update max, nœud, vitesse, fondu, préréglage, bruit, secousses, rotation et translation, ainsi que les sous-nœuds qui suivent la même valeur."
+  },
+  "RandomlyMovingParts.registerFunctions": {
+   "en": "Registers loadRandomlyMovingPartFromXML, updateRandomlyMovingPart and getIsRandomlyMovingPartActive on the vehicle type.",
+   "fr": "Enregistre loadRandomlyMovingPartFromXML, updateRandomlyMovingPart et getIsRandomlyMovingPartActive sur le type de véhicule."
+  },
+  "RandomlyMovingParts.registerEventListeners": {
+   "en": "Subscribes the specialization to the onLoad and onUpdate vehicle events.",
+   "fr": "Abonne la spécialisation aux événements de véhicule onLoad et onUpdate."
+  },
+  "RandomlyMovingParts:onLoad": {
+   "en": "Reads the max update distance and every randomlyMovingPart entry from the XML into spec.nodes. Removes the onUpdate listener if not a client or if no part was loaded.",
+   "fr": "Lit la distance d'update max et chaque entrée randomlyMovingPart du XML dans spec.nodes. Retire l'écouteur onUpdate si ce n'est pas un client ou si aucune pièce n'a été chargée."
+  },
+  "RandomlyMovingParts:onUpdate": {
+   "en": "Each frame, if the vehicle is closer than the max update distance and its last speed exceeds 0.1, updates every part through updateRandomlyMovingPart.",
+   "fr": "À chaque frame, si le véhicule est plus proche que la distance d'update max et que sa dernière vitesse dépasse 0,1, met à jour chaque pièce via updateRandomlyMovingPart."
+  },
+  "RandomlyMovingParts:loadRandomlyMovingPartFromXML": {
+   "en": "Loads one part: node, optional ground reference node (index starts at 0 in the XML key, 0 triggers a warning), speed scale with random variance, fade time, noise preset, bumps, rotation and translation limits and linked sub-nodes. Returns false if the node is unknown or no axis is given. Note: sub-node rotation and translation attributes are read from the part key, not the sub-node key, which looks like a bug.",
+   "fr": "Charge une pièce : nœud, nœud de référence au sol optionnel (l'index commence à 0 dans la clé XML, 0 provoque un avertissement), échelle de vitesse avec variance aléatoire, temps de fondu, préréglage de bruit, secousses, limites de rotation et de translation et sous-nœuds liés. Retourne false si le nœud est inconnu ou sans axe. À noter : les attributs de rotation et de translation des sous-nœuds sont lus sur la clé de la pièce et non du sous-nœud, ce qui ressemble à un bug."
+  },
+  "RandomlyMovingParts:updateRandomlyMovingPart": {
+   "en": "Advances one part: computes speed (from moved distance, or from dt if not speed dependent), fades the weight in or out depending on activity, handles random bumps, sums three sine waves into a delta and applies it to the part and its sub-nodes through a local helper (updateNodeData, whose body is not in the dump).",
+   "fr": "Fait avancer une pièce : calcule la vitesse (distance parcourue, ou dt si non dépendante de la vitesse), fait entrer ou sortir le poids en fondu selon l'activité, gère les secousses aléatoires, additionne trois sinusoïdes en un delta et l'applique à la pièce et à ses sous-nœuds via une fonction locale (updateNodeData, dont le corps n'est pas dans le dump)."
+  },
+  "RandomlyMovingParts:getIsRandomlyMovingPartActive": {
+   "en": "Returns true, or, when the part has a ground reference node, whether that node is currently active via getIsGroundReferenceNodeActive.",
+   "fr": "Retourne true, ou, si la pièce a un nœud de référence au sol, l'état actif de ce nœud via getIsGroundReferenceNodeActive."
+  }
+ }
+}

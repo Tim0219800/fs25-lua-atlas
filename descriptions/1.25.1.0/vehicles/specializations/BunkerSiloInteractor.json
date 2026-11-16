@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/BunkerSiloInteractor.lua",
+ "module": {
+  "en": "Small specialization that lets a bunker silo hook into a vehicle: the silo stores a callback on the vehicle and the vehicle calls it to report fill level changes with a world position. The class itself does not decide when to notify; other specializations or the silo code call notifiyBunkerSilo (the spelling is in the source).",
+  "fr": "Petite spécialisation permettant à un silo-tranchée de se brancher sur un véhicule : le silo enregistre un rappel sur le véhicule, et celui-ci l'appelle pour signaler un changement de niveau avec une position monde. La classe ne décide pas quand notifier ; d'autres spécialisations ou le code du silo appellent notifiyBunkerSilo (l'orthographe est celle de la source)."
+ },
+ "fonctions": {
+  "BunkerSiloInteractor.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "BunkerSiloInteractor.registerFunctions": {
+   "en": "Registers setBunkerSiloInteractorCallback and notifiyBunkerSilo on the vehicle type.",
+   "fr": "Enregistre setBunkerSiloInteractorCallback et notifiyBunkerSilo sur le type de véhicule."
+  },
+  "BunkerSiloInteractor.registerEventListeners": {
+   "en": "Registers the onLoad listener only.",
+   "fr": "Enregistre uniquement l'écouteur onLoad."
+  },
+  "BunkerSiloInteractor:onLoad": {
+   "en": "Resets the stored callback and its target to nil.",
+   "fr": "Remet à nil le rappel mémorisé et sa cible."
+  },
+  "BunkerSiloInteractor:setBunkerSiloInteractorCallback": {
+   "en": "Stores the function and target object to invoke later; passing nil values clears the link. Only one callback is kept at a time.",
+   "fr": "Mémorise la fonction et l'objet cible à appeler plus tard ; passer nil supprime le lien. Un seul rappel est conservé à la fois."
+  },
+  "BunkerSiloInteractor:notifiyBunkerSilo": {
+   "en": "If a callback is set, calls it with the target, this vehicle, the changed fill level, the fill type and the x, y, z position. Does nothing otherwise.",
+   "fr": "Si un rappel est défini, l'appelle avec la cible, ce véhicule, le niveau modifié, le type de remplissage et la position x, y, z. Sinon ne fait rien."
+  }
+ }
+}

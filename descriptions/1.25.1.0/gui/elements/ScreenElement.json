@@ -1,0 +1,49 @@
+{
+ "fichier": "gui/elements/ScreenElement.lua",
+ "module": {
+  "en": "Base class of full-screen GUI views, extending FrameElement. It tracks open state, shows the mouse cursor while open and restores it on close, and centralizes shared input handling: page prev/next for a page selector, list scrolling actions forwarded to the focused element, and dispatch to button actions. A few helpers it references (such as callButtonsWithAction, onPagePrevious, onPageNext) are not in this dump (UNVERIFIED).",
+  "fr": "Classe de base des vues d'interface plein écran, qui étend FrameElement. Elle suit l'état d'ouverture, affiche le curseur de la souris pendant l'ouverture et le restaure à la fermeture, et centralise la gestion d'entrée commune : page précédente/suivante pour un sélecteur de pages, actions de défilement de liste transmises à l'élément focalisé, et envoi vers les actions de boutons. Quelques aides qu'elle référence (callButtonsWithAction, onPagePrevious, onPageNext) ne sont pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "ScreenElement.new": {
+   "en": "Constructor. Builds a FrameElement and sets defaults: back allowed, cursor handling on, no return screen class, closed, not initialized, click sound not muted.",
+   "fr": "Constructeur. Construit un FrameElement et définit les valeurs par défaut : retour autorisé, gestion du curseur active, pas de classe d'écran de retour, fermé, non initialisé, son de clic non coupé."
+  },
+  "ScreenElement:onOpen": {
+   "en": "Called when the screen opens: runs initializeScreen once, remembers the current mouse cursor visibility, forces the cursor visible through g_inputBinding and sets the open flag.",
+   "fr": "Appelé à l'ouverture de l'écran : exécute initializeScreen une seule fois, mémorise la visibilité courante du curseur, force le curseur visible via g_inputBinding et active l'indicateur d'ouverture."
+  },
+  "ScreenElement:initializeScreen": {
+   "en": "One-time setup marking the screen as initialized; if a pageSelector exists, disables the click sounds of its buttons since paging sounds are handled elsewhere.",
+   "fr": "Initialisation unique qui marque l'écran comme initialisé ; si un pageSelector existe, désactive les sons de clic de ses boutons car les sons de pagination sont gérés ailleurs."
+  },
+  "ScreenElement:onClose": {
+   "en": "Called when the screen closes: restores the previous mouse cursor state if handleCursorVisibility is set and clears the open flag.",
+   "fr": "Appelé à la fermeture de l'écran : restaure l'état précédent du curseur si handleCursorVisibility est actif et efface l'indicateur d'ouverture."
+  },
+  "ScreenElement:invalidateScreen": {
+   "en": "Empty hook for subclasses to refresh their content; does nothing here.",
+   "fr": "Point d'accroche vide que les sous-classes peuvent surcharger pour rafraîchir leur contenu ; ne fait rien ici."
+  },
+  "ScreenElement:inputEvent": {
+   "en": "Handles input after the parent: page prev/next actions call onPagePrevious/onPageNext when a pageSelector exists (always consumed), list start/end/page actions call the matching scroll method on the focused element if present, and remaining actions are tried on child buttons. Does nothing while inputDisableTime is positive.",
+   "fr": "Gère l'entrée après le parent : les actions page précédente/suivante appellent onPagePrevious/onPageNext si un pageSelector existe (toujours consommées), les actions de début/fin/page de liste appellent la méthode de défilement correspondante de l'élément focalisé si elle existe, et les actions restantes sont essayées sur les boutons enfants. Sans effet tant que inputDisableTime est positif."
+  },
+  "ScreenElement:setReturnScreenClass": {
+   "en": "Stores which screen class gets opened when the user goes back from this screen.",
+   "fr": "Mémorise la classe d'écran qui sera ouverte quand l'utilisateur revient en arrière depuis cet écran."
+  },
+  "ScreenElement:getIsOpen": {
+   "en": "Returns whether the screen is currently open.",
+   "fr": "Retourne si l'écran est actuellement ouvert."
+  },
+  "ScreenElement:canReceiveFocus": {
+   "en": "Returns true only when the screen is visible and every child element can itself receive focus.",
+   "fr": "Retourne true seulement si l'écran est visible et si chaque élément enfant peut lui-même recevoir le focus."
+  },
+  "ScreenElement:setNextScreenClickSoundMuted": {
+   "en": "Sets the flag that mutes the next click sound, used to override sounds for activate and cancel actions. Called without argument it sets true.",
+   "fr": "Définit l'indicateur qui coupe le prochain son de clic, utilisé pour remplacer les sons des actions d'activation et d'annulation. Sans argument, il vaut true."
+  }
+ }
+}

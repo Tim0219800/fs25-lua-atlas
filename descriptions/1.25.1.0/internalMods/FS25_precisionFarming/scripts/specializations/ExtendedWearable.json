@@ -1,0 +1,17 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/specializations/ExtendedWearable.lua",
+ "module": {
+  "en": "Vehicle specialization of the Precision Farming internal mod. It requires Wearable and PrecisionFarmingStatistic, and turns wear damage into repair costs recorded in the farmland statistics while the vehicle is on a field.",
+  "fr": "Spécialisation de véhicule du mod interne Precision Farming. Elle exige Wearable et PrecisionFarmingStatistic, et convertit l'usure en coûts de réparation inscrits dans les statistiques de parcelle quand le véhicule est sur un champ."
+ },
+ "fonctions": {
+  "ExtendedWearable.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both the Wearable and PrecisionFarmingStatistic specializations.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède les spécialisations Wearable et PrecisionFarmingStatistic."
+  },
+  "ExtendedWearable:onPostUpdateTick": {
+   "en": "Compares the current wear damage with the previous tick, computes the repair price difference via Wearable.calculateRepairPrice, and if positive and the vehicle is on a field adds it to the 'vehicleCosts' statistic. Stores the damage for the next tick. Relies on spec fields set up in code absent from this file (UNVERIFIED).",
+   "fr": "Compare l'usure actuelle à celle du tick précédent, calcule la différence de prix de réparation via Wearable.calculateRepairPrice et, si elle est positive et que le véhicule est sur un champ, l'ajoute à la statistique 'vehicleCosts'. Mémorise l'usure pour le tick suivant. Dépend de champs de spec initialisés dans du code absent de ce fichier (NON VÉRIFIÉ)."
+  }
+ }
+}

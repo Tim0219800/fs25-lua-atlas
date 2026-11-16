@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/extensions/BaleCounterHUDExtension.lua",
+ "module": {
+  "en": "HUD extension panel for the vehicle info HUD: shows the session and lifetime bale counters. It is a plain class (not a HUDDisplay subclass) built per vehicle by the HUD; only the constructor is defined here, the remaining methods are supplied elsewhere (UNVERIFIED which file).",
+  "fr": "Panneau d'extension du HUD d'informations véhicule : affiche les compteurs de balles de la session et à vie. C'est une classe simple (pas une sous-classe de HUDDisplay) instanciée par véhicule par le HUD ; seul le constructeur est défini ici, les autres méthodes viennent d'ailleurs (fichier NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "BaleCounterHUDExtension.new": {
+   "en": "Builds the extension for the given vehicle with priority GS_PRIO_NORMAL: creates the background overlays and the session/lifetime icons, keeps the vehicle reference and the uppercase localized title, calls storeScaledValues and re-calls it whenever the UI scale setting changes via the message center.",
+   "fr": "Construit l'extension pour le véhicule donné avec la priorité GS_PRIO_NORMAL : crée les overlays de fond et les icônes session/vie, conserve la référence du véhicule et le titre localisé en majuscules, appelle storeScaledValues puis le rappelle à chaque changement du réglage d'échelle de l'interface via le message center."
+  }
+ }
+}

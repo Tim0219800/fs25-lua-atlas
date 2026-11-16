@@ -1,0 +1,29 @@
+{
+ "fichier": "fence/FenceSegmentEvent.lua",
+ "module": {
+  "en": "Network event, sent by the server to all clients, that announces a newly built fence segment. Carries the fence placeable, the segment template index and the segment's own serialized data. Subclass of Event on the main channel.",
+  "fr": "Événement réseau envoyé par le serveur à tous les clients pour annoncer un segment de clôture nouvellement construit. Il transporte le placeable de clôture, l'index du modèle de segment et les données sérialisées du segment. Sous-classe d'Event sur le canal principal."
+ },
+ "fonctions": {
+  "FenceSegmentEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel, for use when reading from a stream.",
+   "fr": "Crée un événement vide sur le canal réseau principal, à utiliser lors de la lecture depuis un flux."
+  },
+  "FenceSegmentEvent.new": {
+   "en": "Creates an event holding the given fence placeable and segment, ready to be broadcast.",
+   "fr": "Crée un événement contenant le placeable de clôture et le segment donnés, prêt à être diffusé."
+  },
+  "FenceSegmentEvent:readStream": {
+   "en": "Reads the placeable and a UInt8 template index, asks the fence to create a segment for that template, lets the segment read its own data, then calls run.",
+   "fr": "Lit le placeable et un index de modèle UInt8, demande à la clôture de créer un segment pour ce modèle, laisse le segment lire ses données, puis appelle run."
+  },
+  "FenceSegmentEvent:writeStream": {
+   "en": "Writes the placeable, the UInt8 template index looked up from the segment id, then the segment's own data.",
+   "fr": "Écrit le placeable, l'index de modèle UInt8 retrouvé à partir de l'identifiant du segment, puis les données propres du segment."
+  },
+  "FenceSegmentEvent:run": {
+   "en": "If the placeable is synchronized, updates the segment meshes (flags true, false) and finalizes it. No validation here: the server is assumed to have validated it already.",
+   "fr": "Si le placeable est synchronisé, met à jour les maillages du segment (indicateurs true, false) et le finalise. Aucune validation ici : le serveur est supposé l'avoir déjà faite."
+  }
+ }
+}

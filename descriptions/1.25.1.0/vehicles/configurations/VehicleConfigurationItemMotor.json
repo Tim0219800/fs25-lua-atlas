@@ -1,0 +1,21 @@
+{
+ "fichier": "vehicles/configurations/VehicleConfigurationItemMotor.lua",
+ "module": {
+  "en": "Configuration item (subclass of VehicleConfigurationItem) for motor options. It only adds values shown in the shop (power in hp, max speed) and an index of the consumer configuration to use.",
+  "fr": "Entrée de configuration (sous-classe de VehicleConfigurationItem) pour les options de moteur. Elle ajoute seulement des valeurs affichées en boutique (puissance en ch, vitesse max) et un indice de configuration des consommateurs à utiliser."
+ },
+ "fonctions": {
+  "VehicleConfigurationItemMotor.new": {
+   "en": "Constructor, calls the parent constructor. Note: the customMt argument is ignored, the class metatable is always passed to the parent constructor.",
+   "fr": "Constructeur, appelle le constructeur parent. À noter : l'argument customMt est ignoré, la métatable de la classe est toujours transmise au constructeur parent."
+  },
+  "VehicleConfigurationItemMotor:loadFromXML": {
+   "en": "Loads the parent data, then #hp, #maxSpeed and #consumerConfigurationIndex. Returns false if the parent load fails.",
+   "fr": "Charge les données parentes, puis #hp, #maxSpeed et #consumerConfigurationIndex. Renvoie false si le chargement parent échoue."
+  },
+  "VehicleConfigurationItemMotor.registerXMLPaths": {
+   "en": "Static. Registers the parent XML paths plus hp, maxSpeed and consumerConfigurationIndex.",
+   "fr": "Statique. Enregistre les chemins XML parents ainsi que hp, maxSpeed et consumerConfigurationIndex."
+  }
+ }
+}

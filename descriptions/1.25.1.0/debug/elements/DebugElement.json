@@ -1,0 +1,41 @@
+{
+ "fichier": "debug/elements/DebugElement.lua",
+ "module": {
+  "en": "DebugElement is the base class of all Debug* elements: it stores position, colour, optional text, visibility, clip distance and whether to hide when a GUI is open. Setters return self so they can be chained, and `addToManager` registers the element with `g_debugManager`, which calls `getShouldBeDrawn` and `draw` each frame.",
+  "fr": "DebugElement est la classe de base de tous les éléments Debug* : elle stocke position, couleur, texte optionnel, visibilité, distance de clip et le masquage quand une interface est ouverte. Les setters renvoient self pour le chaînage, et `addToManager` enregistre l'élément auprès de `g_debugManager`, qui appelle `getShouldBeDrawn` et `draw` à chaque image."
+ },
+ "fonctions": {
+  "DebugElement.new": {
+   "en": "Creates an element at the origin with a white colour, no text, visible, no clip distance and hidden while a GUI is open. Subclasses pass their own metatable.",
+   "fr": "Crée un élément à l'origine, de couleur blanche, sans texte, visible, sans distance de clip et masqué quand une interface est ouverte. Les sous-classes passent leur propre métatable."
+  },
+  "DebugElement:getShouldBeDrawn": {
+   "en": "Tells the manager whether to call `draw`: false when invisible, when a GUI other than ConstructionScreen is shown and hiding is on, or when the active camera is farther than the clip distance. Note: the invisible case returns nil, not false.",
+   "fr": "Indique au gestionnaire s'il faut appeler `draw` : faux si l'élément est invisible, si une interface autre que ConstructionScreen est affichée et que le masquage est actif, ou si la caméra active est plus loin que la distance de clip. À noter : le cas invisible renvoie nil et non false."
+  },
+  "DebugElement:draw": {
+   "en": "Empty base implementation; subclasses override it to render.",
+   "fr": "Implémentation de base vide ; les sous-classes la redéfinissent pour le rendu."
+  },
+  "DebugElement:addToManager": {
+   "en": "Registers the element with `g_debugManager`, optionally in a named group, with a lifetime in ms and a per-group maximum count (oldest removed first). Returns self.",
+   "fr": "Enregistre l'élément auprès de `g_debugManager`, éventuellement dans un groupe nommé, avec une durée de vie en ms et un nombre maximal par groupe (le plus ancien est retiré en premier). Renvoie self."
+  },
+  "DebugElement:setColorRGBA": {
+   "en": "Replaces the colour with a new Color built from r, g, b and an optional alpha, each from 0 to 1. Returns self.",
+   "fr": "Remplace la couleur par un nouvel objet Color construit à partir de r, g, b et d'un alpha optionnel, chacun de 0 à 1. Renvoie self."
+  },
+  "DebugElement:setIsVisible": {
+   "en": "Shows or hides the element. Returns self.",
+   "fr": "Affiche ou masque l'élément. Renvoie self."
+  },
+  "DebugElement:setVisbileWhenGUIOpen": {
+   "en": "Chooses whether the element stays visible while a GUI is open (stored inverted as `hideWhenGuiIsOpen`). The method name contains a typo, Visbile. Returns self.",
+   "fr": "Choisit si l'élément reste visible lorsqu'une interface est ouverte (stocké inversé dans `hideWhenGuiIsOpen`). Le nom de la méthode contient une faute, Visbile. Renvoie self."
+  },
+  "DebugElement:setClipDistance": {
+   "en": "Sets the maximum camera distance at which the element is drawn; nil disables clipping. Returns self.",
+   "fr": "Définit la distance maximale à la caméra à laquelle l'élément est dessiné ; nil désactive le clipping. Renvoie self."
+  }
+ }
+}

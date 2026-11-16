@@ -1,0 +1,53 @@
+{
+ "fichier": "player/stateMachine/PlayerStateJump.lua",
+ "module": {
+  "en": "On-foot player state for being airborne after a jump, before it counts as falling. It tracks time jumping and time spent descending and hands over to the falling state. Constants such as the thresholds and speeds are defined outside the dump (UNVERIFIED values).",
+  "fr": "État à pied du joueur lorsqu'il est en l'air après un saut, avant d'être considéré comme en chute. Il suit le temps de saut et le temps de descente et passe la main à l'état de chute. Les constantes (seuils, vitesses) sont définies hors du dump (valeurs NON VÉRIFIÉES)."
+ },
+ "fonctions": {
+  "PlayerStateJump.new": {
+   "en": "Creates the state with the time-jumping and time-falling-down timers at zero.",
+   "fr": "Crée l'état avec les chronos de saut et de descente à zéro."
+  },
+  "PlayerStateJump:createTransitions": {
+   "en": "Adds the transition from jumping to falling.",
+   "fr": "Ajoute la transition de jumping vers falling."
+  },
+  "PlayerStateJump:calculateIfFalling": {
+   "en": "True once the time spent descending has reached this state's own fall threshold, so the rising part of a jump never counts as a fall.",
+   "fr": "Vrai une fois que le temps de descente a atteint le seuil de chute propre à cet état, de sorte que la montée d'un saut ne compte jamais comme une chute."
+  },
+  "PlayerStateJump:calculateIfJumping": {
+   "en": "Owner: true if jump input times the jump multiplier is positive and the player has been grounded long enough. Others: true on upward vertical velocity with the same ground-time condition.",
+   "fr": "Propriétaire : vrai si l'entrée de saut multipliée par le multiplicateur de saut est positive et si le joueur est au sol depuis assez longtemps. Autres : vrai si la vitesse verticale est ascendante, avec la même condition de temps au sol."
+  },
+  "PlayerStateJump:calculateIfTakingOff": {
+   "en": "True while jump time is within the take-off threshold and vertical velocity is still upward.",
+   "fr": "Vrai tant que le temps de saut est dans le seuil de décollage et que la vitesse verticale est encore ascendante."
+  },
+  "PlayerStateJump:calculateIfLanding": {
+   "en": "True when the ground distance is within the landing distance and the player is no longer taking off.",
+   "fr": "Vrai quand la distance au sol est dans la distance d'atterrissage et que le joueur ne décolle plus."
+  },
+  "PlayerStateJump:onStateEntered": {
+   "en": "Sets the mover's vertical velocity to the jump up-force times the player's jump multiplier and resets the timers.",
+   "fr": "Fixe la vitesse verticale du mover à la force de saut multipliée par le multiplicateur de saut du joueur et réinitialise les chronos."
+  },
+  "PlayerStateJump:onStateExited": {
+   "en": "Clears the mover's current up force and resets the timers.",
+   "fr": "Remet à zéro la force ascendante courante du mover et réinitialise les chronos."
+  },
+  "PlayerStateJump:resetTimers": {
+   "en": "Zeroes the descending-time and jump-time timers.",
+   "fr": "Remet à zéro les chronos de descente et de saut."
+  },
+  "PlayerStateJump:updateAsCurrent": {
+   "en": "Accumulates jump time and, while moving downward, descent time (both in seconds). Re-determines the state once grounded and past take-off; otherwise tries the valid transitions.",
+   "fr": "Cumule le temps de saut et, en descente, le temps de descente (en secondes). Redétermine l'état dès que le joueur est au sol et a fini de décoller ; sinon essaie les transitions valides."
+  },
+  "PlayerStateJump:calculateDesiredHorizontalVelocity": {
+   "en": "Returns the horizontal velocity in m/s: input direction times a smoothed speed up to the jump maximum, scaled by the super speed factor when that command is on.",
+   "fr": "Retourne la vélocité horizontale en m/s : direction d'entrée multipliée par une vitesse lissée jusqu'au maximum de saut, mise à l'échelle par le facteur de super vitesse si cette commande est active."
+  }
+ }
+}

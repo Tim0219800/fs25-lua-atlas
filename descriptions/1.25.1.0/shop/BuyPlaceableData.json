@@ -1,0 +1,69 @@
+{
+ "fichier": "shop/BuyPlaceableData.lua",
+ "module": {
+  "en": "Data holder for buying a placeable: store item, configurations, owner, price, terrain leveling options, position and rotation. It is serialized for multiplayer (readStream/writeStream, using g_placeableConfigurationManager) and executes the purchase through PlaceableLoadingData. The onLoaded callback used by buy is not defined in this file (UNVERIFIED).",
+  "fr": "Conteneur de données pour l'achat d'un placeable : article de boutique, configurations, propriétaire, prix, options de nivellement du terrain, position et rotation. Il est sérialisé pour le multijoueur (readStream/writeStream, avec g_placeableConfigurationManager) et exécute l'achat via PlaceableLoadingData. Le callback onLoaded utilisé par buy n'est pas défini dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "BuyPlaceableData.new": {
+   "en": "Creates empty purchase data: no item, empty configuration tables, owner EVERYONE, zero price and displacement costs, no terrain modification, realign enabled, position and rotation zeroed.",
+   "fr": "Crée des données d'achat vides : pas d'article, tables de configuration vides, propriétaire EVERYONE, prix et coûts de déplacement à zéro, pas de modification du terrain, réalignement activé, position et rotation à zéro."
+  },
+  "BuyPlaceableData:isValid": {
+   "en": "Returns true when a store item is set; on console builds its XML file must also exist.",
+   "fr": "Retourne true quand un article de boutique est défini ; sur les versions console, son fichier XML doit aussi exister."
+  },
+  "BuyPlaceableData:setStoreItem": {
+   "en": "Sets the store item to buy.",
+   "fr": "Définit l'article de boutique à acheter."
+  },
+  "BuyPlaceableData:setIsFreeOfCharge": {
+   "en": "Sets whether the placeable is given for free, for example as a reward.",
+   "fr": "Définit si le placeable est offert gratuitement, par exemple comme récompense."
+  },
+  "BuyPlaceableData:setConfigurations": {
+   "en": "Stores the selected and bought configurations (nil keeps the current ones) and marks every selected configuration index as bought.",
+   "fr": "Enregistre les configurations choisies et achetées (nil conserve les actuelles) et marque comme acheté chaque indice de configuration choisi."
+  },
+  "BuyPlaceableData:setConfigurationData": {
+   "en": "Stores the per-configuration extra data; nil keeps the current value.",
+   "fr": "Enregistre les données supplémentaires par configuration ; nil conserve la valeur actuelle."
+  },
+  "BuyPlaceableData:setOwnerFarmId": {
+   "en": "Sets the id of the farm that will own the placeable.",
+   "fr": "Définit l'id de la ferme qui sera propriétaire du placeable."
+  },
+  "BuyPlaceableData:setPrice": {
+   "en": "Sets the purchase price directly, overriding any computed price.",
+   "fr": "Définit directement le prix d'achat, en remplaçant tout prix calculé."
+  },
+  "BuyPlaceableData:updatePrice": {
+   "en": "Recomputes the price from the economy manager's buy price for the store item and its current configurations.",
+   "fr": "Recalcule le prix à partir du prix d'achat du gestionnaire d'économie pour l'article de boutique et ses configurations actuelles."
+  },
+  "BuyPlaceableData:setDisplacementCosts": {
+   "en": "Sets the displacement (terrain moving) costs, sent with the purchase data. They are not added to the price in this file.",
+   "fr": "Définit les coûts de déplacement (terrassement), envoyés avec les données d'achat. Ils ne sont pas ajoutés au prix dans ce fichier."
+  },
+  "BuyPlaceableData:setModifyTerrain": {
+   "en": "Sets whether the terrain is modified (leveled) when placing the placeable.",
+   "fr": "Définit si le terrain est modifié (nivelé) lors de la pose du placeable."
+  },
+  "BuyPlaceableData:setRealignToTerrainAfterLeveling": {
+   "en": "Sets whether the placeable is realigned to the terrain after leveling; the default is true.",
+   "fr": "Définit si le placeable est réaligné sur le terrain après nivellement ; la valeur par défaut est true."
+  },
+  "BuyPlaceableData:readStream": {
+   "en": "Reads from a network stream the store item (by lower-cased XML filename), position, rotation, configurations, owner farm, free flag, displacement costs and the terrain flags. The price is not transmitted.",
+   "fr": "Lit depuis un flux réseau l'article de boutique (par nom de fichier XML en minuscules), la position, la rotation, les configurations, la ferme propriétaire, le drapeau de gratuité, les coûts de déplacement et les drapeaux de terrain. Le prix n'est pas transmis."
+  },
+  "BuyPlaceableData:writeStream": {
+   "en": "Writes the same fields as readStream, in the same order, to a network stream.",
+   "fr": "Écrit dans un flux réseau les mêmes champs que readStream, dans le même ordre."
+  },
+  "BuyPlaceableData:buy": {
+   "en": "Starts the purchase by loading the placeable with a PlaceableLoadingData configured with the item, configurations, owner, position and rotation. The optional callback is wrapped and called through self.onLoaded, not defined here (UNVERIFIED).",
+   "fr": "Lance l'achat en chargeant le placeable avec un PlaceableLoadingData configuré avec l'article, les configurations, le propriétaire, la position et la rotation. Le callback optionnel est encapsulé et appelé via self.onLoaded, non défini ici (NON VÉRIFIÉ)."
+  }
+ }
+}

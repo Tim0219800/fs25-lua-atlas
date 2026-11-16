@@ -1,117 +1,117 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Windrower.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation des andaineurs : ramasse le fourrage étalé (types listés par vehicle.windrower#fillTypes / #fillTypeCategories) sur la zone de travail via la carte de hauteur (DensityMapHeightUtil.tipToGroundAroundLine avec -infini) et le redépose en andain dans une zone de dépôt (dropWindrowWorkAreaIndex). Même architecture que Tedder. EFFETS : animationNodes (client, démarrés à l'allumage) et liste vehicle.windrower.effects.effect(?) chargés par g_effectManager:loadEffect, chacun lié à une zone (workAreaIndex) et optionnellement à une zone de dépôt (dropAreaIndex), fenêtre d'activité 250 ms ; si l'effet expose setWorkAreaIndex, la zone lui est communiquée. Classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT (serveur) : dans processWindrowerArea, quand la zone a ramassé des litres, si le dépôt a effectivement déposé de la matière (dropped > 0) et que la vitesse (getLastSpeed(true)) dépasse 0.5, les effets de la zone dont dropAreaIndex correspond sont armés (activeTime = temps + 250 ms), démarrés au besoin et recalés sur le type déposé (setEffectTypeInfo). Aucune densité réglée (contrairement à Tedder). Le type transmis est celui du dernier andain ramassé (lastValidPickupFillType), jamais un stade de culture. Chaque ramassage appelle aussi setTestAreaRequirements(nil, type, nil) avec le type ramassé (rôle exact dans le rendu NON VÉRIFIÉ : fonction hors fichier). CONDITIONS : isWorking = vitesse > 0.5 au traitement d'une zone ; doCheckSpeedLimit s'applique si allumé (ou sans TurnOnVehicle) et chaîne abaissée ; aucun test d'allumage dans la zone elle-même (getIsWorkAreaActive non surchargé ici : NON VÉRIFIÉ). Traitement sauté pour un client éloigné (> Windrower.CLIENT_DM_UPDATE_RADIUS, constante non définie ici : NON VÉRIFIÉ). ARRÊT : onUpdateTick (côté serveur) coupe les effets expirés et lève effectDirtyFlag ; onTurnedOff coupe tout. Sur serveur dédié, g_effectManager est appelé sans garde isClient (inoffensif ? non vérifié). MÉTÉO/HUMIDITÉ : aucune donnée lue. RÉSEAU : types de remplissage par zone (fillTypesDirtyFlag) et booléen par effet (effectDirtyFlag), diffusés au flux initial et en mise à jour ; le client applique type et démarrage/arrêt. dt : 250 ms de temps de jeu ; pas de dt dans la physique du dépôt. À noter : onPostLoad utilise table.insert(spec.effects, i) au lieu de table.remove pour un indice invalide (Windrower.lua:171), vraisemblable faute (non vérifié en jeu). particleSystemIndex est lu dans loadWorkAreaFromXML mais jamais utilisé dans ce fichier (reliquat de l'ancien système de particules ; les clés vehicle.windrowerParticleSystems sont signalées obsolètes). POINTS D'EXTENSION : fonctions processWindrowerArea, processDropArea ; surcharges doCheckSpeedLimit, loadWorkAreaFromXML (type WINDROWER), getDirtMultiplier, getWearMultiplier ; événements onLoad, onPostLoad, flux, onUpdateTick, onTurnedOn/Off, onStart/EndWorkAreaProcessing, onAIFieldCourseSettingsInitialized. Vitesse limite par défaut : 15.
+--- Windrower specialization: picks up the spread forage (types listed by vehicle.windrower#fillTypes / #fillTypeCategories) on the work area via the height map (DensityMapHeightUtil.tipToGroundAroundLine with -infinity) and deposits it as a windrow in a drop area (dropWindrowWorkAreaIndex). Same architecture as Tedder. EFFECTS: animationNodes (client, started on switch-on) and a list vehicle.windrower.effects.effect(?) loaded by g_effectManager:loadEffect, each bound to an area (workAreaIndex) and optionally to a drop area (dropAreaIndex), activity window 250 ms; if the effect exposes setWorkAreaIndex, the area is communicated to it. Effect classes absent from the dump: rendering UNVERIFIED. TRIGGER (server): in processWindrowerArea, when the area picked up liters, if the drop actually deposited material (dropped > 0) and the speed (getLastSpeed(true)) exceeds 0.5, the effects of the area whose dropAreaIndex matches are armed (activeTime = time + 250 ms), started if needed and set to the deposited type (setEffectTypeInfo). No density set (unlike Tedder). The type passed is that of the last windrow picked up (lastValidPickupFillType), never a crop stage. Each pickup also calls setTestAreaRequirements(nil, type, nil) with the picked-up type (exact role in rendering UNVERIFIED: function outside this file). CONDITIONS: isWorking = speed > 0.5 when an area is processed; doCheckSpeedLimit applies if on (or without TurnOnVehicle) and the chain is lowered; no switch-on test in the area itself (getIsWorkAreaActive not overridden here: UNVERIFIED). Processing skipped for a distant client (> Windrower.CLIENT_DM_UPDATE_RADIUS, constant not defined here: UNVERIFIED). STOP: onUpdateTick (server side) cuts expired effects and raises effectDirtyFlag; onTurnedOff cuts everything. On a dedicated server, g_effectManager is called without an isClient guard (harmless? not verified). WEATHER/MOISTURE: no data read. NETWORK: fill types per area (fillTypesDirtyFlag) and a boolean per effect (effectDirtyFlag), broadcast in the initial stream and in updates; the client applies type and start/stop. dt: 250 ms of game time; no dt in the drop physics. Note: onPostLoad uses table.insert(spec.effects, i) instead of table.remove for an invalid index (Windrower.lua:171), likely a mistake (not verified in game). particleSystemIndex is read in loadWorkAreaFromXML but never used in this file (leftover of the old particle system; the vehicle.windrowerParticleSystems keys are flagged obsolete). EXTENSION POINTS: functions processWindrowerArea, processDropArea; overrides doCheckSpeedLimit, loadWorkAreaFromXML (WINDROWER type), getDirtMultiplier, getWearMultiplier; events onLoad, onPostLoad, streams, onUpdateTick, onTurnedOn/Off, onStart/EndWorkAreaProcessing, onAIFieldCourseSettingsInitialized. Default speed limit: 15.
 ---@class Windrower
 Windrower = {}
 
---- Déclare le type de zone windrower et le schéma XML : effets, animationNodes, types de remplissage supportés, limitToLineHeight, sons. Non relu clé par clé.
+--- Declares the windrower area type and the XML schema: effects, animationNodes, supported fill types, limitToLineHeight, sounds. Not reread key by key.
 function Windrower.initSpecialization() end
 
---- Exige la spécialisation WorkArea (seule).
+--- Requires the WorkArea specialization (only).
 ---@param specializations any
 function Windrower.prerequisitesPresent(specializations) end
 
---- Enregistre processWindrowerArea et processDropArea.
+--- Registers processWindrowerArea and processDropArea.
 ---@param vehicleType any
 function Windrower.registerFunctions(vehicleType) end
 
---- Surcharge doCheckSpeedLimit, loadWorkAreaFromXML, getDirtMultiplier et getWearMultiplier.
+--- Overrides doCheckSpeedLimit, loadWorkAreaFromXML, getDirtMultiplier and getWearMultiplier.
 ---@param vehicleType any
 function Windrower.registerOverwrittenFunctions(vehicleType) end
 
---- S'abonne à onLoad, onPostLoad, onDelete, aux quatre événements de flux, onUpdateTick, onTurnedOn/Off, onStart/EndWorkAreaProcessing et onAIFieldCourseSettingsInitialized (liste non relue ligne à ligne).
+--- Subscribes to onLoad, onPostLoad, onDelete, the four stream events, onUpdateTick, onTurnedOn/Off, onStart/EndWorkAreaProcessing and onAIFieldCourseSettingsInitialized (list not reread line by line).
 ---@param vehicleType any
 function Windrower.registerEventListeners(vehicleType) end
 
---- Charge animations et effets (client), lit limitToLineHeight et la liste des types supportés, initialise multiplicateur d'usure de pierres (type WINDROWER) et drapeaux réseau, déclare à l'IA les types de hauteur requis.
+--- Loads animations and effects (client), reads limitToLineHeight and the supported types list, initializes the stone wear multiplier (WINDROWER type) and the network flags, declares to the AI the required height types.
 ---@param savegame any
 function Windrower:onLoad(savegame) end
 
---- Rattache chaque effet à sa zone de travail et à l'indice de type de la zone ; avertit si indice invalide (avec l'insertion fautive signalée dans le module).
+--- Binds each effect to its work area and to the area's type index; warns if the index is invalid (with the faulty insertion noted in the module).
 ---@param savegame any
 function Windrower:onPostLoad(savegame) end
 
---- Libère animations et effets.
+--- Releases animations and effects.
 function Windrower:onDelete() end
 
---- Lit les types de remplissage par zone puis l'état de chaque effet ; démarre ou arrête les effets avec le type de la zone.
+--- Reads the fill types per area then the state of each effect; starts or stops the effects with the area's type.
 ---@param streamId any
 ---@param connection any
 function Windrower:onReadStream(streamId, connection) end
 
---- Écrit les types par zone puis l'état envoyé de chaque effet.
+--- Writes the types per area then the sent state of each effect.
 ---@param streamId any
 ---@param connection any
 function Windrower:onWriteStream(streamId, connection) end
 
---- Côté client : lit si présents types et états d'effets, applique démarrage/arrêt avec setEffectTypeInfo.
+--- Client side: reads effect types and states if present, applies start/stop with setEffectTypeInfo.
 ---@param streamId any
 ---@param timestamp any
 ---@param connection any
 function Windrower:onReadUpdateStream(streamId, timestamp, connection) end
 
---- Côté serveur : écrit types (fillTypesDirtyFlag) et états (effectDirtyFlag).
+--- Server side: writes types (fillTypesDirtyFlag) and states (effectDirtyFlag).
 ---@param streamId any
 ---@param connection any
 ---@param dirtyMask any
 function Windrower:onWriteUpdateStream(streamId, connection, dirtyMask) end
 
---- Serveur : coupe les effets dont la fenêtre de 250 ms a expiré et lève effectDirtyFlag.
+--- Server: cuts the effects whose 250 ms window has expired and raises effectDirtyFlag.
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function Windrower:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Client : lance le son de travail et les animationNodes.
+--- Client: starts the work sound and the animationNodes.
 function Windrower:onTurnedOn() end
 
---- Coupe tous les effets (sans garde client) et arrête les animations.
+--- Cuts all the effects (without a client guard) and stops the animations.
 function Windrower:onTurnedOff() end
 
---- Applique la limite de vitesse si la chaîne d'outils est abaissée et l'outil allumé (ou non allumable).
+--- Applies the speed limit if the implement chain is lowered and the implement is on (or cannot be turned on).
 ---@param superFunc any
 function Windrower:doCheckSpeedLimit(superFunc) end
 
---- Limite de vitesse par défaut : 15.
+--- Default speed limit: 15.
 function Windrower.getDefaultSpeedLimit() end
 
---- Force le type WINDROWER si DEFAULT ; pour une zone WINDROWER lit particleSystemIndex (inutilisé) et la zone de dépôt, initialise litres et type, réserve un emplacement dans windrowerWorkAreaFillTypes.
+--- Forces the WINDROWER type if DEFAULT; for a WINDROWER area reads particleSystemIndex (unused) and the drop area, initializes liters and type, reserves a slot in windrowerWorkAreaFillTypes.
 ---@param superFunc any
 ---@param workArea any
 ---@param xmlFile any
 ---@param key any
 function Windrower:loadWorkAreaFromXML(superFunc, workArea, xmlFile, key) end
 
---- Ajoute la salissure de travail pondérée vitesse/limite quand isWorking.
+--- Adds the work dirt weighted by speed/limit when isWorking.
 ---@param superFunc any
 function Windrower:getDirtMultiplier(superFunc) end
 
---- Ajoute l'usure de travail pondérée vitesse/limite et par le multiplicateur de pierres.
+--- Adds the work wear weighted by speed/limit and by the stone multiplier.
 ---@param superFunc any
 function Windrower:getWearMultiplier(superFunc) end
 
---- Remet à zéro, pour chaque zone, type valide ramassé, litres ramassés et déposés ; isWorking = faux.
+--- Resets, for each area, the picked-up valid type, picked-up and deposited liters; isWorking = false.
 ---@param dt any
 ---@param workAreas any
 function Windrower:onStartWorkAreaProcessing(dt, workAreas) end
 
---- Client sans TurnOnVehicle : démarre/arrête le son de travail selon isWorking. Pas d'effet visuel ici.
+--- Client without TurnOnVehicle: starts/stops the work sound according to isWorking. No visual effect here.
 ---@param dt any
 ---@param workAreas any
 function Windrower:onEndWorkAreaProcessing(dt, workAreas) end
 
---- Paramètres de parcours IA : bordures d'abord, segment initial travaillé.
+--- AI course settings: borders first, initial segment worked.
 ---@param fieldCourseSettings any
 function Windrower:onAIFieldCourseSettingsInitialized(fieldCourseSettings) end
 
---- Ramasse l'andain sous la zone : cherche un type supporté (ou reprend le dernier type, herbe fraîche et sèche équivalentes), mémorise lastValidPickupFillType et appelle setTestAreaRequirements, cumule litres à déposer, dépose via processDropArea et, côté serveur à vitesse > 0.5 avec dépôt réel, met à jour le type par zone et arme/démarre les effets. Renvoie litres déposés et surface (largeur * distance parcourue).
+--- Picks up the windrow under the area: looks for a supported type (or reuses the last type, fresh and dry grass being equivalent), remembers lastValidPickupFillType and calls setTestAreaRequirements, accumulates liters to deposit, deposits via processDropArea and, on the server at speed > 0.5 with an actual drop, updates the type per area and arms/starts the effects. Returns deposited liters and area (width * distance traveled).
 ---@param workArea any
 ---@param dt any
 function Windrower:processWindrowerArea(workArea, dt) end
 
---- Dépose les litres sur la ligne de la zone de dépôt (tipToGroundAroundLine), mémorise le décalage de ligne et renvoie les litres réellement déposés.
+--- Deposits the liters on the line of the drop area (tipToGroundAroundLine), remembers the line offset and returns the liters actually deposited.
 ---@param dropArea any
 ---@param litersToDrop any
 ---@param fillType any

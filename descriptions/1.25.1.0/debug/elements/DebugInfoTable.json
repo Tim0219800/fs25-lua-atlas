@@ -1,0 +1,13 @@
+{
+ "fichier": "debug/elements/DebugInfoTable.lua",
+ "module": {
+  "en": "DebugInfoTable renders a titled name/value information table as 3D text in the world, facing the camera by default. Derived from DebugElement but only this static function is present here.",
+  "fr": "DebugInfoTable affiche un tableau d'informations titré (noms/valeurs) sous forme de texte 3D dans le monde, face à la caméra par défaut. Dérivé de DebugElement, mais seule cette fonction statique est présente ici."
+ },
+ "fonctions": {
+  "DebugInfoTable.renderAtPosition": {
+   "en": "Renders groups of rows ({title, content={{name, value, color?, sizeFactor?}}}) as 3D text stacked upward from a world position, last group first, with right-aligned names, 4-decimal numbers and bold centred titles. Without rotation it faces the camera via `DebugUtil.getYRotatationToCamera` (not in this dump).",
+   "fr": "Affiche des groupes de lignes ({title, content={{name, value, color?, sizeFactor?}}}) en texte 3D empilé vers le haut depuis une position monde, dernier groupe en premier, avec noms alignés à droite, nombres à 4 décimales et titres gras centrés. Sans rotation, il fait face à la caméra via `DebugUtil.getYRotatationToCamera` (absent de ce dump)."
+  }
+ }
+}

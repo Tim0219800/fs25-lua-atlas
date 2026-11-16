@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/wheels/WheelVisualPartTire.lua",
+  "module": {
+    "en": "Visual wheel part for the tire (subclass of WheelVisualPart). It can show tire pressure deformation by driving the `morphPos`/`prevMorphPos` shader parameters on tire shapes from the suspension length, when the platform setting `wheelVisualPressure` is on; it also adds the deformation to the returned suspension length.",
+    "fr": "Partie visuelle de roue pour le pneu (sous-classe de WheelVisualPart). Elle peut montrer la déformation due à la pression en pilotant les paramètres shader `morphPos`/`prevMorphPos` des shapes du pneu d'après la longueur de suspension, quand le réglage de plateforme `wheelVisualPressure` est actif ; elle ajoute aussi la déformation à la longueur de suspension retournée."
+  },
+  "fonctions": {
+    "WheelVisualPartTire.new": {
+      "en": "Creates a tire part through the parent constructor with deformation 0. Note: the customMt argument is ignored.",
+      "fr": "Crée une partie pneu via le constructeur parent avec une déformation de 0. À noter : l'argument customMt est ignoré."
+    },
+    "WheelVisualPartTire:loadFromXML": {
+      "en": "Calls the parent loader, then reads maxDeformation and initialDeformation (default min(0.04, 60 percent of the max)). Returns false if the parent load fails.",
+      "fr": "Appelle le chargeur parent, puis lit maxDeformation et initialDeformation (par défaut min(0,04 ; 60 % du maximum)). Retourne false si le chargement parent échoue."
+    },
+    "WheelVisualPartTire:update": {
+      "en": "When pressure visuals are enabled, computes a clamped deformation from the suspension length, updates the morph shader parameters when it changed past a platform threshold, and returns the changed flag and suspension length increased by the deformation.",
+      "fr": "Si la pression visuelle est activée, calcule une déformation bornée d'après la longueur de suspension, met à jour les paramètres shader de morphing quand elle dépasse un seuil de plateforme, et retourne l'indicateur de changement et la longueur de suspension augmentée de la déformation."
+    },
+    "WheelVisualPartTire:setNode": {
+      "en": "Calls the parent `setNode`, collects the shapes having a `morphPos` (or legacy `morphPosition`) shader parameter and initializes their morph parameters, converting the old FS22 format.",
+      "fr": "Appelle le `setNode` parent, collecte les shapes possédant un paramètre shader `morphPos` (ou l'ancien `morphPosition`) et initialise leurs paramètres de morphing, en convertissant l'ancien format FS22."
+    },
+    "WheelVisualPartTire.registerXMLPaths": {
+      "en": "Registers the XML paths of the tire part; currently just forwards to the parent registration.",
+      "fr": "Enregistre les chemins XML de la partie pneu ; se contente actuellement de déléguer à l'enregistrement parent."
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+ "fichier": "player/stateMachine/PlayerStateCrouch.lua",
+ "module": {
+  "en": "On-foot player state active while the crouch input is held. It lowers the capsule, applies a smoothed camera offset and limits the move speed. Constants such as the thresholds and speeds are defined outside the dump (UNVERIFIED values).",
+  "fr": "État à pied du joueur actif tant que l'entrée d'accroupissement est maintenue. Il abaisse la capsule, applique un décalage caméra progressif et limite la vitesse de déplacement. Les constantes (seuils, vitesses) sont définies hors du dump (valeurs NON VÉRIFIÉES)."
+ },
+ "fonctions": {
+  "PlayerStateCrouch.new": {
+   "en": "Creates the state with a zero camera offset, crouch timer and transition timer.",
+   "fr": "Crée l'état avec un décalage caméra, un chrono d'accroupissement et un chrono de transition à zéro."
+  },
+  "PlayerStateCrouch:createTransitions": {
+   "en": "Adds transitions from crouching to idle, walking and jumping, using those states' check functions.",
+   "fr": "Ajoute les transitions de l'accroupissement vers idle, walking et jumping, via les fonctions de test de ces états."
+  },
+  "PlayerStateCrouch:calculateIfValidEntryState": {
+   "en": "True if the player is crouching, grounded and not submerged enough to swim. Used to pick this state after a forced state or vehicle.",
+   "fr": "Vrai si le joueur est accroupi, au sol et pas assez immergé pour nager. Sert à choisir cet état après un état forcé ou un véhicule."
+  },
+  "PlayerStateCrouch:calculateIfCrouching": {
+   "en": "For the owner: true if crouch is pressed, any held hand tool allows crouching and water submersion is below 1. For non-owners it always returns false (crouching over the network is marked TODO in the code).",
+   "fr": "Pour le propriétaire : vrai si l'accroupissement est pressé, si l'outil à main tenu l'autorise et si l'immersion dans l'eau est inférieure à 1. Pour les non-propriétaires, retourne toujours false (l'accroupissement en réseau est marqué TODO dans le code)."
+  },
+  "PlayerStateCrouch:onStateEntered": {
+   "en": "Sets the mover to crouching and resets the timers.",
+   "fr": "Met le mover en position accroupie et réinitialise les chronos."
+  },
+  "PlayerStateCrouch:onStateExited": {
+   "en": "Clears the mover's crouching flag and resets the timers.",
+   "fr": "Retire l'indicateur d'accroupissement du mover et réinitialise les chronos."
+  },
+  "PlayerStateCrouch:resetTimers": {
+   "en": "Zeroes the crouch timer, transition timer and camera y offset.",
+   "fr": "Remet à zéro le chrono d'accroupissement, le chrono de transition et le décalage vertical de la caméra."
+  },
+  "PlayerStateCrouch:updateAsCurrent": {
+   "en": "Sets the capsule height to crouched or standing depending on input, advances or rewinds the smoothing timer and derives the camera offset from the progress. Allows leaving the state only once fully standing again with the transition timer at zero.",
+   "fr": "Règle la hauteur de la capsule (accroupie ou debout) selon l'entrée, fait avancer ou reculer le chrono de lissage et en déduit le décalage caméra. Ne permet de quitter l'état qu'une fois le joueur de nouveau debout et le chrono de transition à zéro."
+  },
+  "PlayerStateCrouch:calculateDesiredHorizontalVelocity": {
+   "en": "Returns the desired x and z velocity in m/s: the input direction times a smoothed speed capped at the crouch maximum.",
+   "fr": "Retourne la vélocité x et z désirée en m/s : la direction d'entrée multipliée par une vitesse lissée plafonnée à la vitesse maximale accroupie."
+  }
+ }
+}

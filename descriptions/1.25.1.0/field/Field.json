@@ -1,0 +1,21 @@
+{
+ "fichier": "field/Field.lua",
+ "module": {
+  "en": "Wraps one map field defined in the map i3d: its polygon, area, label position, farmland link and mission flags. Created and loaded by FieldManager. It holds a FieldState instance that is filled with the sampled ground data.",
+  "fr": "Représente un champ de la carte défini dans l'i3d : polygone, surface, position de l'étiquette, lien avec la parcelle et indicateurs de missions. Créé et chargé par FieldManager. Il contient une instance de FieldState remplie avec les données de sol échantillonnées."
+ },
+ "fonctions": {
+  "Field.new": {
+   "en": "Constructor. Initialises empty polygon data, area of 1 ha, no farmland, no current mission, planned fruit type unknown, missions allowed, and a new FieldState.",
+   "fr": "Constructeur. Initialise un polygone vide, une surface de 1 ha, aucune parcelle, aucune mission en cours, culture prévue inconnue, missions autorisées et un nouveau FieldState."
+  },
+  "Field:load": {
+   "en": "Reads the field from an i3d node through user attributes (name, polygonIndex, angle, missionAllowed, missionOnlyGrass, indicator nodes). Computes area in ha and label position; returns false if polygonIndex is missing or unresolved, true otherwise.",
+   "fr": "Lit le champ depuis un noeud i3d via les attributs utilisateur (name, polygonIndex, angle, missionAllowed, missionOnlyGrass, noeuds indicateurs). Calcule la surface en ha et la position de l'étiquette ; renvoie false si polygonIndex manque ou est introuvable, sinon true."
+  },
+  "Field:delete": {
+   "en": "Unsubscribes this object from all message center subscriptions. Does not delete the polygon nodes.",
+   "fr": "Désabonne cet objet de tous les abonnements du message center. Ne supprime pas les noeuds du polygone."
+  }
+ }
+}

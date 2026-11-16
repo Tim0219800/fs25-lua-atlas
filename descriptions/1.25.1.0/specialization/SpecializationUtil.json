@@ -1,0 +1,65 @@
+{
+ "fichier": "specialization/SpecializationUtil.lua",
+ "module": {
+  "en": "Static helper functions shared by every object type built from specializations (vehicles, placeables...). They register functions, overwritten functions, events and event listeners on a type table, and dispatch events to the listening specializations of an object. A second group manages a simple loading-task counter and the loading step of a type class.",
+  "fr": "Fonctions utilitaires statiques partagées par tous les types d'objets construits à partir de spécialisations (véhicules, placeables...). Elles enregistrent fonctions, fonctions surchargées, événements et écouteurs sur une table de type, et distribuent les événements aux spécialisations à l'écoute d'un objet. Un second groupe gère un compteur de tâches de chargement et l'étape de chargement d'une classe de type."
+ },
+ "fonctions": {
+  "SpecializationUtil.raiseAsyncEvent": {
+   "en": "Like raiseEvent, but each listener call is queued on the object via addAsyncTask instead of running immediately. Arguments are captured first; an unregistered event logs an error with callstack.",
+   "fr": "Comme raiseEvent, mais chaque appel d'écouteur est mis en file sur l'objet via addAsyncTask au lieu d'être exécuté immédiatement. Les arguments sont capturés au préalable ; un événement non enregistré journalise une erreur avec la pile d'appels."
+  },
+  "SpecializationUtil.raiseEvent": {
+   "en": "Calls the event function of every specialization listening to the event on this object, in registration order, passing the object and the extra arguments. Logs an error and returns if the event is not registered for the type.",
+   "fr": "Appelle la fonction d'événement de chaque spécialisation à l'écoute de l'événement sur cet objet, dans l'ordre d'enregistrement, avec l'objet et les arguments supplémentaires. Journalise une erreur et retourne si l'événement n'est pas enregistré pour le type."
+  },
+  "SpecializationUtil.registerFunction": {
+   "en": "Adds a function to the type's function table under the given name. Errors (and does nothing) if the name is empty, the function is nil, or the name is already used as a function or event.",
+   "fr": "Ajoute une fonction à la table de fonctions du type sous le nom donné. Erreur (sans effet) si le nom est vide, la fonction nil, ou le nom déjà utilisé comme fonction ou événement."
+  },
+  "SpecializationUtil.registerOverwrittenFunction": {
+   "en": "Wraps an already registered type function with a replacement through Utils.overwrittenFunction. If no function with that name exists, nothing happens and no error is raised.",
+   "fr": "Enveloppe une fonction de type déjà enregistrée avec un remplacement via Utils.overwrittenFunction. Si aucune fonction de ce nom n'existe, rien ne se passe et aucune erreur n'est levée."
+  },
+  "SpecializationUtil.registerEvent": {
+   "en": "Declares a new event on the type and creates its empty listener list. Errors if the name is empty or already registered as a function or event.",
+   "fr": "Déclare un nouvel événement sur le type et crée sa liste d'écouteurs vide. Erreur si le nom est vide ou déjà enregistré comme fonction ou événement."
+  },
+  "SpecializationUtil.registerEventListener": {
+   "en": "Appends a specialization class to the listeners of an event on the type. The class must define a function named like the event and must not already be registered; an event unknown to the type is silently ignored.",
+   "fr": "Ajoute une classe de spécialisation aux écouteurs d'un événement du type. La classe doit définir une fonction du même nom que l'événement et ne pas être déjà enregistrée ; un événement inconnu du type est ignoré silencieusement."
+  },
+  "SpecializationUtil.removeEventListener": {
+   "en": "Removes a specialization class from the listener list of an event on a specific object (instance-level, not type-level). Does nothing if the event has no list.",
+   "fr": "Retire une classe de spécialisation de la liste d'écouteurs d'un événement sur un objet précis (niveau instance, pas type). Sans effet si l'événement n'a pas de liste."
+  },
+  "SpecializationUtil.hasSpecialization": {
+   "en": "Returns true if the given specialization class appears in the given list of specializations.",
+   "fr": "Retourne true si la classe de spécialisation donnée figure dans la liste de spécialisations fournie."
+  },
+  "SpecializationUtil.initSpecializationsIntoTypeClass": {
+   "en": "Copies the type definition's references (type, name, specializations, names, by-name map) onto the target object and gives it its own clone (depth 2) of the event listener tables. Returns the typeDef.",
+   "fr": "Copie les références de la définition de type (type, nom, spécialisations, noms, table par nom) sur l'objet cible et lui donne son propre clone (profondeur 2) des tables d'écouteurs d'événements. Retourne le typeDef."
+  },
+  "SpecializationUtil.copyTypeFunctionsInto": {
+   "en": "Copies every function registered on the type definition into the target table, overwriting same-named fields.",
+   "fr": "Copie chaque fonction enregistrée sur la définition de type dans la table cible, en écrasant les champs de même nom."
+  },
+  "SpecializationUtil.createLoadingTask": {
+   "en": "Appends a new task entry holding the given target to the type class's loadingTasks list and returns it. The class must already have a loadingTasks table.",
+   "fr": "Ajoute une nouvelle entrée de tâche contenant la cible donnée à la liste loadingTasks de la classe de type et la retourne. La classe doit déjà avoir une table loadingTasks."
+  },
+  "SpecializationUtil.finishLoadingTask": {
+   "en": "Removes a task from loadingTasks (warns if it was not there). If readyForFinishLoading is set and no task remains, calls the class's onFinishedLoading.",
+   "fr": "Retire une tâche de loadingTasks (avertit si elle n'y était pas). Si readyForFinishLoading est vrai et qu'aucune tâche ne reste, appelle onFinishedLoading de la classe."
+  },
+  "SpecializationUtil.setLoadingStep": {
+   "en": "Stores the loading step on the type class after validating it against SpecializationLoadStep; an invalid value logs an error with callstack and changes nothing.",
+   "fr": "Enregistre l'étape de chargement sur la classe de type après validation contre SpecializationLoadStep ; une valeur invalide journalise une erreur avec pile d'appels et ne change rien."
+  },
+  "SpecializationUtil.getIsValidLoadingStep": {
+   "en": "Returns true if the value equals one of the values of the SpecializationLoadStep enum (defined elsewhere, UNVERIFIED here).",
+   "fr": "Retourne true si la valeur égale l'une des valeurs de l'énumération SpecializationLoadStep (définie ailleurs, NON VÉRIFIÉ ici)."
+  }
+ }
+}

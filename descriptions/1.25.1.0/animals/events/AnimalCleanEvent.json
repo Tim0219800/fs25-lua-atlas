@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/events/AnimalCleanEvent.lua",
+ "module": {
+  "en": "Network event that lowers the dirt level of one animal cluster (horse) in a husbandry. It carries the husbandry, the cluster id and a non-negative dirt delta, and applies the change through the cluster's changeDirt when it runs.",
+  "fr": "Événement réseau qui réduit le niveau de saleté d'un groupe d'animaux (cheval) dans un élevage. Il transporte l'élevage, l'identifiant du groupe et un delta de saleté positif, et applique le changement via changeDirt du groupe à l'exécution."
+ },
+ "fonctions": {
+  "AnimalCleanEvent.emptyNew": {
+   "en": "Creates an empty event instance, used before reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée avant la lecture depuis un flux."
+  },
+  "AnimalCleanEvent.new": {
+   "en": "Creates the event for a husbandry, cluster id and dirt amount (stored as the absolute value of the floored delta).",
+   "fr": "Crée l'événement pour un élevage, un identifiant de groupe et une quantité de saleté (stockée comme valeur absolue du delta arrondi à l'entier inférieur)."
+  },
+  "AnimalCleanEvent:readStream": {
+   "en": "Reads the husbandry, the cluster id and the delta (bit width AnimalClusterHorse.NUM_BITS_DIRT), then runs the event immediately.",
+   "fr": "Lit l'élevage, l'identifiant du groupe et le delta (largeur en bits AnimalClusterHorse.NUM_BITS_DIRT), puis exécute l'événement aussitôt."
+  },
+  "AnimalCleanEvent:writeStream": {
+   "en": "Writes the husbandry, cluster id and dirt delta to the stream.",
+   "fr": "Écrit l'élevage, l'identifiant du groupe et le delta de saleté dans le flux."
+  },
+  "AnimalCleanEvent:run": {
+   "en": "Finds the cluster by id in the husbandry and, if it has changeDirt, reduces its dirt by the delta. Nothing is rebroadcast here.",
+   "fr": "Retrouve le groupe par identifiant dans l'élevage et, s'il possède changeDirt, réduit sa saleté du delta. Rien n'est rediffusé ici."
+  }
+ }
+}

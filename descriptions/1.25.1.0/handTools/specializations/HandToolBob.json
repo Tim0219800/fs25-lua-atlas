@@ -1,0 +1,49 @@
+{
+ "fichier": "handTools/specializations/HandToolBob.lua",
+ "module": {
+  "en": "Hand tool specialization that adds a procedural first-person bob to chosen nodes of the tool: a constant slow idle sway plus a walking sway that scales with the player's speed. It is only applied for the local player in first person, and the node is restored to its rest position otherwise. Nodes are configured under `handTool.bob.node(?)`; HandToolMotorized can overwrite `updateBobNode` to add its vibration.",
+  "fr": "Spécialisation d'outil à main qui ajoute un balancement procédural en vue à la première personne à des nœuds choisis de l'outil : un léger mouvement permanent à l'arrêt plus un balancement de marche proportionnel à la vitesse du joueur. Il n'est appliqué que pour le joueur local en première personne ; sinon le nœud revient à sa position de repos. Les nœuds se configurent sous `handTool.bob.node(?)` ; HandToolMotorized peut surcharger `updateBobNode` pour y ajouter ses vibrations."
+ },
+ "fonctions": {
+  "HandToolBob.registerXMLPaths": {
+   "en": "Registers the XML schema entries for `handTool.bob.node(?)`: target node, vertical/horizontal amplitudes, frequency, reference speed and the three idle parameters, with the class constants as defaults.",
+   "fr": "Enregistre les entrées de schéma XML de `handTool.bob.node(?)` : nœud cible, amplitudes verticale et horizontale, fréquence, vitesse de référence et les trois paramètres d'inactivité, avec les constantes de la classe comme valeurs par défaut."
+  },
+  "HandToolBob.registerFunctions": {
+   "en": "Registers the specialization functions `getIsBobActive`, `updateBobNode` and `resetBobNode` on the hand tool type.",
+   "fr": "Enregistre sur le type d'outil à main les fonctions `getIsBobActive`, `updateBobNode` et `resetBobNode`."
+  },
+  "HandToolBob.registerEventListeners": {
+   "en": "Subscribes the specialization to `onLoad`, `onUpdate` and `onHeldEnd`.",
+   "fr": "Abonne la spécialisation à `onLoad`, `onUpdate` et `onHeldEnd`."
+  },
+  "HandToolBob.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisite.",
+   "fr": "Renvoie toujours true : cette spécialisation n'a aucun prérequis."
+  },
+  "HandToolBob:onLoad": {
+   "en": "Reads every `handTool.bob.node` entry, resolves its node (warning and skipping if missing), stores its rest translation and parameters, and initialises phase state. Reference speed is clamped to at least 0.0001.",
+   "fr": "Lit chaque entrée `handTool.bob.node`, résout son nœud (avertissement et saut s'il est introuvable), mémorise sa translation de repos et ses paramètres, puis initialise l'état de phase. La vitesse de référence est bornée à 0,0001 minimum."
+  },
+  "HandToolBob:onUpdate": {
+   "en": "Each frame, if the tool has bob nodes, determines whether bobbing is active and gets the carrying player's graphical speed, then calls `updateBobNode` for every node.",
+   "fr": "À chaque image, si l'outil a des nœuds de balancement, détermine si l'effet est actif et lit la vitesse graphique du joueur porteur, puis appelle `updateBobNode` pour chaque nœud."
+  },
+  "HandToolBob:onHeldEnd": {
+   "en": "Resets all bob nodes to their rest pose when the tool stops being held, since `onUpdate` no longer runs then.",
+   "fr": "Remet tous les nœuds à leur pose de repos quand l'outil n'est plus tenu, car `onUpdate` ne s'exécute plus alors."
+  },
+  "HandToolBob:getIsBobActive": {
+   "en": "Returns true only when the tool is held by the local player and that player's camera is in first person.",
+   "fr": "Renvoie true uniquement si l'outil est tenu par le joueur local et que sa caméra est en première personne."
+  },
+  "HandToolBob:updateBobNode": {
+   "en": "Advances one node's idle and walk phases, smooths the speed factor, and sets the node translation to rest plus sinusoidal X/Y offsets. When inactive it resets the node once. The `speed` argument is in m/s.",
+   "fr": "Fait avancer les phases d'inactivité et de marche d'un nœud, lisse le facteur de vitesse et place le nœud à sa position de repos plus des décalages sinusoïdaux en X et Y. Si inactif, il le réinitialise une fois. `speed` est en m/s."
+  },
+  "HandToolBob:resetBobNode": {
+   "en": "Puts the node back to its stored rest translation and clears phase, speed factor, bobbing flag and offsets.",
+   "fr": "Replace le nœud à sa translation de repos mémorisée et remet à zéro la phase, le facteur de vitesse, l'indicateur et les décalages."
+  }
+ }
+}

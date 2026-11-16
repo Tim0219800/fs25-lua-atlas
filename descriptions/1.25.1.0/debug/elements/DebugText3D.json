@@ -1,0 +1,25 @@
+{
+ "fichier": "debug/elements/DebugText3D.lua",
+ "module": {
+  "en": "DebugText3D is a debug element drawing text as a 3D object in the world with a given rotation (via the engine `renderText3D`), centred by default. Unlike DebugText it has no shadow and is not projected to the screen.",
+  "fr": "DebugText3D est un élément de débogage qui dessine du texte comme un objet 3D dans le monde avec une rotation donnée (via le moteur `renderText3D`), centré par défaut. Contrairement à DebugText, il n'a pas d'ombre et n'est pas projeté à l'écran."
+ },
+ "fonctions": {
+  "DebugText3D.new": {
+   "en": "Creates a 3D text element with centre alignment, middle vertical alignment and size 0.1.",
+   "fr": "Crée un élément de texte 3D avec alignement centré, alignement vertical médian et taille 0,1."
+  },
+  "DebugText3D:draw": {
+   "en": "Renders the text at the stored position and rotation with the element's colour, size and alignments.",
+   "fr": "Affiche le texte à la position et rotation mémorisées avec la couleur, la taille et les alignements de l'élément."
+  },
+  "DebugText3D.renderAtPosition": {
+   "en": "Draws text in 3D at a world position with Euler rotation (default white, centred), then resets alignment and colour. Note: the doc comment mentions terrain alignment with nil Y, but the code does not implement it.",
+   "fr": "Dessine du texte en 3D à une position monde avec rotation d'Euler (blanc, centré par défaut), puis réinitialise alignement et couleur. À noter : le commentaire de la source mentionne un alignement terrain avec Y nil, mais le code ne l'implémente pas."
+  },
+  "DebugText3D.renderAtNode": {
+   "en": "Draws 3D text at a node's world position using the node's world rotation.",
+   "fr": "Dessine du texte 3D à la position monde d'un noeud en utilisant sa rotation monde."
+  }
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "fichier": "objects/AnimatedObject.lua",
+ "module": {
+  "en": "Networked Object subclass for placeable or map animated objects such as doors, gates and barriers. An animation has a normalised time from 0 to 1 and a direction (-1, 0, 1) driven by the server: node keyframes (translation, rotation, scale, visibility), shader parameter keyframes, an optional i3d clip and rolling gate animations. Optional features: player trigger with input actions, opening hours linked to the hour-changed message, moving and end sounds. The file also holds AnimatedObjectBuilder, a helper to build an animated object from code, and the XML schema registration.",
+  "fr": "Sous-classe d'Object en réseau pour les objets animés de carte ou de placeable : portes, portails, barrières. Une animation a un temps normalisé de 0 à 1 et une direction (-1, 0, 1) pilotée par le serveur : keyframes de nœuds (translation, rotation, échelle, visibilité), keyframes de paramètres de shader, clip i3d optionnel et animations de portail roulant. Fonctions optionnelles : déclencheur joueur avec actions d'entrée, horaires d'ouverture liés au message de changement d'heure, sons de mouvement et de fin. Le fichier contient aussi AnimatedObjectBuilder, un assistant pour construire un objet animé par code, et l'enregistrement du schéma XML."
+ },
+ "fonctions": {
+  "AnimatedObject.new": {
+   "en": "Constructor: creates the Object with its server/client flags and initialises the controls table, network time and animation-time interpolators, and an AnimatedObjectActivatable bound to this object.",
+   "fr": "Constructeur : crée l'Object avec ses indicateurs serveur/client et initialise la table controls, les interpolateurs réseau de temps et de temps d'animation, ainsi qu'un AnimatedObjectActivatable lié à cet objet."
+  },
+  "AnimatedObject:load": {
+   "en": "Loads the object from an XML key: reads saveId, animation duration, part and shader keyframes (normalised by the largest key time into animation curves), optional clip (shared i3d loaded asynchronously), rolling gates, initialTime, openingHours, trigger node with posAction/negAction controls, and sounds on clients. Static rigid-body parts are skipped with a warning. Calls applyAnimation and onSharedAnimationFileLoaded, which are not defined in this file (UNVERIFIED). Returns true.",
+   "fr": "Charge l'objet depuis une clé XML : lit saveId, durée d'animation, keyframes de pièces et de shaders (normalisées par le plus grand temps de clé en courbes d'animation), clip optionnel (i3d partagé chargé en asynchrone), portails roulants, initialTime, openingHours, nœud déclencheur avec contrôles posAction/negAction, et sons côté client. Les pièces à corps rigide statique sont ignorées avec un avertissement. Appelle applyAnimation et onSharedAnimationFileLoaded, absents de ce fichier (NON VÉRIFIÉ). Retourne true."
+  },
+  "AnimatedObject:loadFrameValues": {
+   "en": "Reads one keyframe from XML and returns ten values (translation, rotation, scale, visibility 1 or 0). Any missing component defaults to the node's current transform; visibility defaults to visible.",
+   "fr": "Lit une keyframe depuis le XML et retourne dix valeurs (translation, rotation, échelle, visibilité 1 ou 0). Toute composante absente prend la transformation actuelle du nœud ; la visibilité est visible par défaut."
+  },
+  "AnimatedObject:delete": {
+   "en": "Releases everything the object owns: trigger callbacks, sounds, the shared i3d request, the activatable registration and message-center subscriptions, flags it deleted, then calls the parent delete.",
+   "fr": "Libère tout ce que possède l'objet : rappels de déclencheur, sons, requête i3d partagée, enregistrement de l'activatable et abonnements au centre de messages, le marque supprimé puis appelle le delete parent."
+  },
+  "AnimatedObject:readStream": {
+   "en": "Client side, when joining: after the parent read, reads the animation time (float32) and direction (2 bits, stored as direction + 1), applies the time at once and resets the network interpolators.",
+   "fr": "Côté client, à la connexion : après la lecture parente, lit le temps d'animation (float32) et la direction (2 bits, stockée comme direction + 1), applique le temps immédiatement et réinitialise les interpolateurs réseau."
+  },
+  "AnimatedObject:writeStream": {
+   "en": "Server side, when a client joins: after the parent write, sends the current animation time (float32) and direction (2 bits, direction + 1).",
+   "fr": "Côté serveur, quand un client se connecte : après l'écriture parente, envoie le temps d'animation courant (float32) et la direction (2 bits, direction + 1)."
+  },
+  "AnimatedObject:readUpdateStream": {
+   "en": "Client side: when the dirty bit is set, starts a new network interpolation phase and reads the target animation time and direction sent by the server.",
+   "fr": "Côté client : si le bit de modification est présent, démarre une nouvelle phase d'interpolation réseau et lit le temps d'animation cible et la direction envoyés par le serveur."
+  },
+  "AnimatedObject:writeUpdateStream": {
+   "en": "Server side: writes a bool for the object's dirty flag, and if set, the last sent animation time (animation.timeSend) and the direction.",
+   "fr": "Côté serveur : écrit un booléen pour le drapeau de modification de l'objet et, s'il est actif, le dernier temps d'animation envoyé (animation.timeSend) et la direction."
+  },
+  "AnimatedObject:loadFromXMLFile": {
+   "en": "Restores state from a savegame key: if #time exists, applies it (and #direction, default 0), then re-evaluates the opening hours. Returns true.",
+   "fr": "Restaure l'état depuis une clé de sauvegarde : si #time existe, l'applique (ainsi que #direction, 0 par défaut), puis réévalue les horaires d'ouverture. Retourne true."
+  },
+  "AnimatedObject:update": {
+   "en": "Per-frame update. Server: advances the animation time by direction * dt / duration (ms), stops at 0 or 1, reopens the AI blocking region when it ends, and raises the dirty flag when time changed. Client: interpolates toward the network time. Both manage moving and end sounds and keep the object active while moving.",
+   "fr": "Mise à jour par trame. Serveur : avance le temps d'animation de direction * dt / durée (ms), s'arrête à 0 ou 1, met à jour la zone de blocage de l'IA en fin de course et lève le drapeau de modification si le temps a changé. Client : interpole vers le temps réseau. Les deux gèrent les sons de mouvement et de fin et gardent l'objet actif tant qu'il bouge."
+  },
+  "AnimatedObject:setAnimTime": {
+   "en": "Clamps t to 0..1 and applies it to every part (translation, rotation, scale, visibility), shader parameter, i3d clip and rolling gate, then stores the time and flags the object as moving. Returns the clamped time. The omitSound argument is not used in the body.",
+   "fr": "Borne t entre 0 et 1 et l'applique à chaque pièce (translation, rotation, échelle, visibilité), paramètre de shader, clip i3d et portail roulant, puis mémorise le temps et marque l'objet en mouvement. Retourne le temps borné. L'argument omitSound n'est pas utilisé dans le corps."
+  },
+  "AnimatedObject:setFrameValues": {
+   "en": "Applies a table of ten values (translation, rotation, scale, visibility flag) directly to a node.",
+   "fr": "Applique directement à un nœud une table de dix valeurs (translation, rotation, échelle, indicateur de visibilité)."
+  },
+  "AnimatedObject:hourChanged": {
+   "en": "Server only. Compares the environment's current hour with the opening hours: starts opening (direction 1) or closing (direction -1) once on each transition and, if disableIfClosed is set, toggles isEnabled. Does nothing without opening hours or an environment.",
+   "fr": "Serveur uniquement. Compare l'heure courante de l'environnement aux horaires d'ouverture : lance l'ouverture (direction 1) ou la fermeture (direction -1) une fois à chaque transition et, si disableIfClosed est actif, bascule isEnabled. Ne fait rien sans horaires ni environnement."
+  },
+  "AnimatedObject:triggerCallback": {
+   "en": "Trigger callback. In career savegames only, when the local player's root node enters or leaves the trigger, adds or removes the activatable from the activatable objects system and keeps the object active.",
+   "fr": "Rappel de déclencheur. Uniquement dans les parties carrière, quand le nœud racine du joueur local entre dans le déclencheur ou en sort, ajoute ou retire l'activatable du système d'objets activables et garde l'objet actif."
+  },
+  "AnimatedObject.registerXMLPaths": {
+   "en": "Registers the XML schema paths of an animatedObject entry: saveId, animation (parts, shaders, clip, rolling gate, duration, initialTime), openingHours, controls and sounds.",
+   "fr": "Enregistre les chemins du schéma XML d'une entrée animatedObject : saveId, animation (pièces, shaders, clip, portail roulant, durée, initialTime), openingHours, controls et sons."
+  },
+  "AnimatedObject.registerSavegameXMLPaths": {
+   "en": "Registers the savegame XML attributes #time (float) and #direction (int, default 0).",
+   "fr": "Enregistre les attributs XML de sauvegarde #time (flottant) et #direction (entier, 0 par défaut)."
+  },
+  "AnimatedObjectBuilder.registerXMLPaths": {
+   "en": "Registers only the sound sample paths (moving, posEnd, negEnd) under the given base path for builder-created objects.",
+   "fr": "Enregistre uniquement les chemins des échantillons sonores (moving, posEnd, negEnd) sous le chemin de base donné pour les objets créés par le builder."
+  },
+  "AnimatedObjectBuilder.new": {
+   "en": "Creates a builder for an existing animated object: sets its base directory, mod name and saveId, and gives it an empty animation (duration 1000 ms, time 0, direction 0) and isEnabled = true.",
+   "fr": "Crée un builder pour un objet animé existant : définit son répertoire de base, son nom de mod et son saveId, et lui donne une animation vide (durée 1000 ms, temps 0, direction 0) avec isEnabled = true."
+  },
+  "AnimatedObjectBuilder:build": {
+   "en": "Finalises construction: applies animation time 0, subscribes to the hour-changed message if opening hours exist, registers trigger callbacks on the trigger node and its children, and allocates the dirty flag. Returns true. The rootNodeId argument is unused.",
+   "fr": "Finalise la construction : applique le temps d'animation 0, s'abonne au message de changement d'heure s'il y a des horaires d'ouverture, enregistre les rappels de déclencheur sur le nœud déclencheur et ses enfants, et alloue le drapeau de modification. Retourne true. L'argument rootNodeId n'est pas utilisé."
+  },
+  "AnimatedObjectBuilder:setTrigger": {
+   "en": "Stores the player trigger node on the animated object.",
+   "fr": "Mémorise le nœud déclencheur du joueur sur l'objet animé."
+  },
+  "AnimatedObjectBuilder:setActions": {
+   "en": "Sets the positive and optional negative input actions and their texts (translated when a matching l10n entry exists). Unknown action names produce a warning and are ignored.",
+   "fr": "Définit les actions d'entrée positive et éventuellement négative ainsi que leurs textes (traduits si une entrée l10n correspond). Les noms d'action inconnus provoquent un avertissement et sont ignorés."
+  },
+  "AnimatedObjectBuilder:addSimplePart": {
+   "en": "Adds a node animated between its current transform (time 0) and the given open rotation and/or translation (time 1), with scale unchanged and visibility on.",
+   "fr": "Ajoute un nœud animé entre sa transformation actuelle (temps 0) et la rotation et/ou translation d'ouverture donnée (temps 1), avec échelle inchangée et visibilité active."
+  },
+  "AnimatedObjectBuilder:setDuration": {
+   "en": "Sets the animation duration. The value is stored as is; elsewhere in the file it is treated in milliseconds (the builder default is 1000).",
+   "fr": "Définit la durée d'animation. La valeur est stockée telle quelle ; ailleurs dans le fichier elle est traitée en millisecondes (le défaut du builder est 1000)."
+  },
+  "AnimatedObjectBuilder:setSounds": {
+   "en": "On clients only, loads the moving, posEnd and negEnd samples from an XML key, attached to the given root node (i3d mappings are not supported here).",
+   "fr": "Uniquement côté client, charge les échantillons moving, posEnd et negEnd depuis une clé XML, attachés au nœud racine donné (les i3dMappings ne sont pas pris en charge ici)."
+  },
+  "AnimatedObjectBuilder:setOpeningTimes": {
+   "en": "Stores opening hours (start, end, disableIfClosed, closed text) when both start and end are given; without them the object is always usable.",
+   "fr": "Mémorise des horaires d'ouverture (début, fin, disableIfClosed, texte de fermeture) quand début et fin sont fournis ; sans eux l'objet est toujours utilisable."
+  }
+ }
+}

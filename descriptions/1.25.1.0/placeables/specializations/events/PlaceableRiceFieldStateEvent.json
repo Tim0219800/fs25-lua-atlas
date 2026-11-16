@@ -1,0 +1,33 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableRiceFieldStateEvent.lua",
+ "module": {
+  "en": "Request/response network event used by the rice field dialog: a client asks the server for the crop state of one field, and the server answers with the fruit type and growth state indices, which the client republishes through the message center. The direction is detected with `connection:getIsServer()`.",
+  "fr": "Événement réseau requête/réponse utilisé par le dialogue de rizière : un client demande au serveur l'état de culture d'un champ, et le serveur répond avec les index du type de culture et de l'état de croissance, que le client republie via le message center. Le sens est détecté avec `connection:getIsServer()`."
+ },
+ "fonctions": {
+  "PlaceableRiceFieldStateEvent.emptyNew": {
+   "en": "Creates an empty event using the class metatable, with the default channel.",
+   "fr": "Crée un événement vide avec la métatable de la classe, sur le canal par défaut."
+  },
+  "PlaceableRiceFieldStateEvent.new": {
+   "en": "Builds the client-to-server request: the rice field placeable and the index of the field whose crop state is wanted.",
+   "fr": "Construit la requête client vers serveur : le placeable de rizière et l'index du champ dont l'état de culture est demandé."
+  },
+  "PlaceableRiceFieldStateEvent.newServerToClient": {
+   "en": "Builds the server answer carrying the field index, the fruit type index and the growth state index of the field.",
+   "fr": "Construit la réponse du serveur contenant l'index du champ, l'index du type de culture et l'index de l'état de croissance."
+  },
+  "PlaceableRiceFieldStateEvent:readStream": {
+   "en": "Reads the rice field and field index; fruit type (`FruitTypeManager.SEND_NUM_BITS` bits) and growth state are only read when the data comes from the server. Then runs the event.",
+   "fr": "Lit la rizière et l'index du champ ; le type de culture (`FruitTypeManager.SEND_NUM_BITS` bits) et l'état de croissance ne sont lus que si les données viennent du serveur. Puis exécute l'événement."
+  },
+  "PlaceableRiceFieldStateEvent:writeStream": {
+   "en": "Writes the rice field and field index; when sending to a client it also writes the fruit type and growth state. Mirrors `readStream`.",
+   "fr": "Écrit la rizière et l'index du champ ; lors d'un envoi vers un client, écrit aussi le type de culture et l'état de croissance. Miroir de `readStream`."
+  },
+  "PlaceableRiceFieldStateEvent:run": {
+   "en": "On the server, queries `getRiceFieldState` and replies to the sender with a server-to-client event; on a client, publishes the fruit type and growth state on `g_messageCenter` (used by the rice field dialog). Skipped if the field is not synchronized.",
+   "fr": "Sur le serveur, interroge `getRiceFieldState` et répond à l'expéditeur par un événement serveur vers client ; sur un client, publie le type de culture et l'état de croissance sur `g_messageCenter` (utilisé par le dialogue de rizière). Ignoré si le champ n'est pas synchronisé."
+  }
+ }
+}

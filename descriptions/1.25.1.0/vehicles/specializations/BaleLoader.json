@@ -1,0 +1,341 @@
+{
+ "fichier": "vehicles/specializations/BaleLoader.lua",
+ "module": {
+  "en": "Specialization for automatic bale loaders (trailers that pick up bales with a grabber, stack them on a rotating platform and drop them in rows). It requires `FillUnit`: each loaded bale adds one unit to the fill level. Gameplay is a state machine driven by the server, which broadcasts `BaleLoaderStateEvent` with CHANGE_* ids that every machine replays through `doStateChange`, mostly by playing animations of `AnimatedVehicle`. Bales are attached either kinematically, rigidly or via dynamic joints (`dynamicMount`), can be glued together during unloading, and are saved in the vehicle savegame. Loads many `vehicle.baleLoader` XML keys (bale types with size ranges, bale places, animations, sounds, effects). Pickup uses a trigger and is limited by farm ownership and bale type.",
+  "fr": "Spécialisation des ramasseuses-chargeuses de balles automatiques (remorques qui saisissent les balles avec un grappin, les empilent sur une plateforme rotative et les déposent en rangées). Elle exige `FillUnit` : chaque balle chargée ajoute une unité au niveau de remplissage. Le fonctionnement est une machine à états pilotée par le serveur, qui diffuse des `BaleLoaderStateEvent` avec des identifiants CHANGE_* que chaque machine rejoue via `doStateChange`, essentiellement en lançant des animations d'`AnimatedVehicle`. Les balles sont attachées de façon cinématique, rigide ou par joints dynamiques (`dynamicMount`), peuvent être liées entre elles au déchargement, et sont sauvegardées avec le véhicule. Lit de nombreuses clés XML `vehicle.baleLoader` (types de balles avec plages de tailles, emplacements, animations, sons, effets). Le ramassage utilise un trigger et dépend de la propriété de la ferme et du type de balle."
+ },
+ "fonctions": {
+  "BaleLoader.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the `FillUnit` specialization.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède la spécialisation `FillUnit`."
+  },
+  "BaleLoader.initSpecialization": {
+   "en": "Declares two shop spec types (round and square bale size) and registers the whole `vehicle.baleLoader` XML schema plus the savegame schema for state, bale type and each loaded bale.",
+   "fr": "Déclare deux types de spécifications de boutique (taille des balles rondes et carrées) et enregistre tout le schéma XML `vehicle.baleLoader` ainsi que le schéma de sauvegarde (état, type de balle, chaque balle chargée)."
+  },
+  "BaleLoader.registerAnimationXMLPaths": {
+   "en": "Registers the animation name keys (platform, grabber, pusher, front platform, bale places, empty rotate, grippers) under a base path. Reused for the default config and for each bale type.",
+   "fr": "Enregistre les clés XML de noms d'animations (plateforme, grappin, pousseur, plateforme avant, emplacements de balles, rotation de vidage, pinces) sous un chemin de base. Réutilisé pour la config par défaut et pour chaque type de balle."
+  },
+  "BaleLoader.registerFunctions": {
+   "en": "Registers the bale loader's vehicle functions: XML loaders, bale joints, state changes, pickup, mount/unmount, folding animations, automatic unloading and unload triggers.",
+   "fr": "Enregistre les fonctions du véhicule : chargement XML, joints entre balles, changements d'état, ramassage, montage/démontage, animations de pliage, déchargement automatique et triggers de déchargement."
+  },
+  "BaleLoader.registerOverwrittenFunctions": {
+   "en": "Overrides selection, AI readiness, fold permission, PTO power and load, dynamic-mount fill info and physics add/remove so bales follow the vehicle.",
+   "fr": "Surcharge la sélection, la disponibilité IA, l'autorisation de pliage, la puissance et la charge PTO, l'info de remplissage du montage dynamique et l'ajout/retrait de la physique pour que les balles suivent le véhicule."
+  },
+  "BaleLoader.registerEventListeners": {
+   "en": "Subscribes to load, stream, update, draw, input, activation, root vehicle change, fill level change, fold, baler unloading and animation value type events.",
+   "fr": "S'abonne aux événements de chargement, de flux réseau, de mise à jour, d'affichage, d'entrées, d'activation, de changement de véhicule racine, de niveau de remplissage, de pliage, de déchargement de presse et de types de valeurs d'animation."
+  },
+  "BaleLoader:onLoad": {
+   "en": "Reads all `vehicle.baleLoader` settings: texts, automatic and dynamic mount options, grabber and its trigger (error if missing), effects and sounds (client), animations, bale places, bale types, folding animations, unloading mover and packer. Logs XML errors if bale types or places are missing.",
+   "fr": "Lit tous les réglages `vehicle.baleLoader` : textes, options de déchargement automatique et de montage dynamique, grappin et son trigger (erreur s'il manque), effets et sons (client), animations, emplacements, types de balles, animations de pliage, tapis de déchargement et emballeur. Journalise des erreurs XML si types ou emplacements manquent."
+  },
+  "BaleLoader:onPostLoad": {
+   "en": "From the savegame, restores bale type, folding animation and work/transport position, then queues each saved bale (with place index, position and attributes) in a list for creation. Warns on corrupt entries.",
+   "fr": "Depuis la sauvegarde, restaure le type de balle, l'animation de pliage et la position travail/transport, puis met en file chaque balle sauvegardée (indice d'emplacement, position, attributs) pour création. Avertit si une entrée est corrompue."
+  },
+  "BaleLoader:onLoadFinished": {
+   "en": "After the vehicle is in physics, creates, registers and mounts each queued bale on its place (dynamically or by normal mount), flags it as not sellable and records its network id in the place.",
+   "fr": "Une fois le véhicule en physique, crée, enregistre et monte chaque balle en file sur son emplacement (dynamiquement ou par montage classique), la marque non vendable et enregistre son identifiant réseau dans l'emplacement."
+  },
+  "BaleLoader:onDelete": {
+   "en": "Unmounts all loaded and grabbed bales (making them sellable again, and deleting them if the vehicle is only being reconfigured), removes triggers and delete listeners, and frees animations, effects and sounds.",
+   "fr": "Démonte toutes les balles chargées et saisies (les rend à nouveau vendables, et les supprime si le véhicule est seulement reconfiguré), retire triggers et écouteurs de suppression, et libère animations, effets et sons."
+  },
+  "BaleLoader:saveToXMLFile": {
+   "en": "Saves work position, bale type, folding animation and every bale with its place index (helper index for the start row). Unmounts the bale in the grabber so it is saved as an ordinary bale and flags it for remounting.",
+   "fr": "Sauvegarde la position de travail, le type de balle, l'animation de pliage et chaque balle avec son indice d'emplacement (indice d'aide pour la rangée de départ). Démonte la balle du grappin pour qu'elle soit sauvegardée comme balle normale et la signale pour remontage."
+  },
+  "BaleLoader:onReadStream": {
+   "en": "Client join: reads position state, directions, bale type, empty state, grabbed bale and bale ids per place (with quantised positions if not dynamic mount), schedules mounting, then replays the unloading sequence up to the received state.",
+   "fr": "Connexion d'un client : lit l'état de position, les directions, le type de balle, l'état de vidage, la balle saisie et les identifiants de balles par emplacement (positions quantifiées hors montage dynamique), planifie leur montage, puis rejoue la séquence de déchargement jusqu'à l'état reçu."
+  },
+  "BaleLoader:onWriteStream": {
+   "en": "Server join: writes the same state read by `onReadStream`. Bale positions are quantised on `numBitsPosition` bits and a warning is logged if one exceeds `maxPosition`.",
+   "fr": "Connexion côté serveur : écrit l'état lu par `onReadStream`. Les positions des balles sont quantifiées sur `numBitsPosition` bits et un avertissement est journalisé si l'une dépasse `maxPosition`."
+  },
+  "BaleLoader:onReadUpdateStream": {
+   "en": "Client side: reads the unloading mover flag and starts or stops its animation nodes and sound when it changes.",
+   "fr": "Côté client : lit l'indicateur du tapis de déchargement et démarre ou arrête ses nœuds d'animation et son son quand il change."
+  },
+  "BaleLoader:onWriteUpdateStream": {
+   "en": "Server side: writes the unloading mover active flag when its dirty flag is set.",
+   "fr": "Côté serveur : écrit l'indicateur d'activité du tapis de déchargement quand son drapeau dirty est levé."
+  },
+  "BaleLoader.updateBalePlacesAnimations": {
+   "en": "Puts the bale places and row animations in the position matching the current loading count, instantly. Triggers a platform rotation if the start row is full.",
+   "fr": "Place instantanément les animations des emplacements et des rangées dans la position correspondant au chargement actuel. Déclenche la rotation de la plateforme si la rangée de départ est pleine."
+  },
+  "BaleLoader:onUpdate": {
+   "en": "Mounts bales whose objects have now arrived, stops grabber effects after their delay, and on any machine checks for a bale to pick up (server calls `pickupBale`, client may show a not-supported warning). The server also advances the state machine by broadcasting events when the matching animations end.",
+   "fr": "Monte les balles dont l'objet est enfin disponible, arrête les effets du grappin après leur délai, et sur toute machine cherche une balle à ramasser (le serveur appelle `pickupBale`, le client peut afficher un avertissement). Le serveur fait aussi avancer la machine à états en diffusant des événements quand les animations se terminent."
+  },
+  "BaleLoader:onUpdateTick": {
+   "en": "Updates action event texts and visibility (client). Server: automatic unloading, joint removal after unloading, unloading mover shutdown, dynamic-mount joint interpolation and mass handling, delayed platform movement and push offset. Note: the check `useUnloadingMoverTrigger == nil` can never be true with default false, so animation-based joint release is only evaluated when that option is true.",
+   "fr": "Met à jour textes et visibilité des actions (client). Serveur : déchargement automatique, retrait des joints après déchargement, arrêt du tapis, interpolation des joints et gestion de la masse en montage dynamique, mouvement différé de la plateforme et décalage de poussée. À noter : le test `useUnloadingMoverTrigger == nil` ne peut jamais être vrai (valeur par défaut false), donc la libération par animation n'est évaluée que si cette option est vraie."
+  },
+  "BaleLoader:onDraw": {
+   "en": "Shows a blinking warning when a bale is in range but not supported by the loader.",
+   "fr": "Affiche un avertissement clignotant quand une balle à portée n'est pas prise en charge par la machine."
+  },
+  "BaleLoader.getBaleInRange": {
+   "en": "Returns the nearest valid bale in the trigger within pickup range, its matching bale type (nil if refused) and a warning text. Rejects bales already loaded, mounted elsewhere, of another type or fill type, unsupported, or owned by another farm (unless combined with a baler).",
+   "fr": "Renvoie la balle valide la plus proche dans le trigger et à portée de ramassage, son type de balle correspondant (nil si refusée) et un texte d'avertissement. Rejette les balles déjà chargées, montées ailleurs, d'un autre type ou type de remplissage, non prises en charge, ou d'une autre ferme (sauf combinaison avec une presse)."
+  },
+  "BaleLoader:onActivate": {
+   "en": "Starts the work animation nodes and work sound if the loader is in work position and not blocked.",
+   "fr": "Démarre les nœuds d'animation et le son de travail si la machine est en position de travail et non bloquée."
+  },
+  "BaleLoader:onDeactivate": {
+   "en": "Stops grabber effects, work animation nodes and the work sound.",
+   "fr": "Arrête les effets du grappin, les nœuds d'animation de travail et le son de travail."
+  },
+  "BaleLoader:onRootVehicleChanged": {
+   "en": "Registers (or re-parents) the `baleLoaderWorkstate` controlled action on the root vehicle's action controller, finished when in work position, with an AI listener for transport preparation. Removes it when there is no controller.",
+   "fr": "Enregistre (ou rattache à nouveau) l'action contrôlée `baleLoaderWorkstate` sur le contrôleur d'actions du véhicule racine, terminée en position de travail, avec un écouteur IA pour la préparation au transport. La retire s'il n'y a plus de contrôleur."
+  },
+  "BaleLoader.actionControllerEvent": {
+   "en": "Action controller callback: toggles between work and transport position when the requested direction differs from the current state and nothing is moving. Returns true if the toggle was requested.",
+   "fr": "Callback du contrôleur d'actions : bascule entre position de travail et de transport quand la direction demandée diffère de l'état actuel et que rien ne bouge. Renvoie true si la bascule a été demandée."
+  },
+  "BaleLoader:onFillUnitFillLevelChanged": {
+   "en": "Refreshes the folding animation choice when the fill level of the loader's fill unit changes.",
+   "fr": "Réactualise le choix de l'animation de pliage quand le niveau de remplissage de l'unité du chargeur change."
+  },
+  "BaleLoader:onFoldStateChanged": {
+   "en": "When `useFoldingState` is on, the server broadcasts a move-to-work or move-to-transport event according to the fold direction.",
+   "fr": "Quand `useFoldingState` est actif, le serveur diffuse un événement de passage en travail ou en transport selon la direction de pliage."
+  },
+  "BaleLoader:onBalerUnloadingStarted": {
+   "en": "With full automatic unloading, remembers how many more bales are coming from a connected baler so unloading waits for them.",
+   "fr": "Avec le déchargement entièrement automatique, retient le nombre de balles encore attendues d'une presse attelée pour que le déchargement les attende."
+  },
+  "BaleLoader:onRegisterAnimationValueTypes": {
+   "en": "Registers the `baleLoaderAnimationNodes` animation value type, which blocks or allows the work animation nodes and sound from an animated part.",
+   "fr": "Enregistre le type de valeur d'animation `baleLoaderAnimationNodes`, qui bloque ou autorise les nœuds d'animation et le son de travail depuis une pièce animée."
+  },
+  "BaleLoader:loadBaleTypeFromXML": {
+   "en": "Loads one bale type: size ranges (round: width and diameter; square: width, height, length, rounded to 2 decimals), mixed fill type flag, fill unit, object changes, bale places and animations. Returns false if animations fail.",
+   "fr": "Charge un type de balle : plages de tailles (ronde : largeur et diamètre ; carrée : largeur, hauteur, longueur, arrondies à 2 décimales), indicateur de mélange de types, unité de remplissage, changements d'objets, emplacements et animations. Renvoie false si les animations échouent."
+  },
+  "BaleLoader:loadBaleLoaderAnimationsFromXML": {
+   "en": "Reads all animation names and speeds into `target.animations`, falling back to the default target then to built-in names. Always returns true.",
+   "fr": "Lit tous les noms et vitesses d'animations dans `target.animations`, avec repli sur la cible par défaut puis sur des noms intégrés. Renvoie toujours true."
+  },
+  "BaleLoader:loadBalePlacesFromXML": {
+   "en": "Reads the start bale place (counts its child nodes and stores their original transforms) and the list of bale place nodes. Returns true if both exist, meaning the places are shared by all bale types.",
+   "fr": "Lit l'emplacement de départ (compte ses nœuds enfants et mémorise leurs transformations d'origine) et la liste des nœuds d'emplacements. Renvoie true si les deux existent, c'est-à-dire que les emplacements sont partagés par tous les types de balles."
+  },
+  "BaleLoader:createBaleToBaleJoints": {
+   "en": "Builds physics joints between bales of the dropped rows (along rows and between rows at the start or end) according to the `dynamicBaleUnloading` settings, so the stack stays together until released.",
+   "fr": "Crée des joints physiques entre les balles des rangées déposées (le long des rangées et entre rangées au début ou à la fin) selon `dynamicBaleUnloading`, pour que la pile reste groupée jusqu'à la libération."
+  },
+  "BaleLoader:createBaleToBaleJoint": {
+   "en": "Creates one joint between two bales with the given translation and rotation limits, aligned on the bale place rotation, and keeps its index in the joint list.",
+   "fr": "Crée un joint entre deux balles avec les limites de translation et de rotation données, aligné sur la rotation de l'emplacement, et garde son indice dans la liste des joints."
+  },
+  "BaleLoader:doStateChange": {
+   "en": "Central state machine. Applies a CHANGE_* id: grab bale, move grabber, drop bale on platform, rotate platform, move to work or transport, run the unloading steps, drop bales (optionally joint or packed) and handle button requests. Button cases are server only.",
+   "fr": "Machine à états centrale. Applique un identifiant CHANGE_* : saisie de balle, mouvement du grappin, dépôt sur la plateforme, rotation, passage travail ou transport, étapes de déchargement, dépôt des balles (éventuellement liées ou emballées) et demandes de boutons. Les cas de boutons ne s'exécutent que sur le serveur."
+  },
+  "BaleLoader.getAllowsStartUnloading": {
+   "en": "Returns true when the loader holds bales and no platform, pusher, grabber or unloading step is currently in progress.",
+   "fr": "Renvoie true quand la machine contient des balles et qu'aucun mouvement de plateforme, de pousseur, de grappin ou étape de déchargement n'est en cours."
+  },
+  "BaleLoader.rotatePlatform": {
+   "en": "Starts the platform rotation animation and, if needed, the animation that shifts the bale places.",
+   "fr": "Lance l'animation de rotation de la plateforme et, si nécessaire, celle qui décale les emplacements de balles."
+  },
+  "BaleLoader.moveToWorkPosition": {
+   "en": "Plays the folding animation toward work and opens the grippers. On load it runs at a very high speed to jump straight to the end.",
+   "fr": "Joue l'animation de pliage vers le travail et ouvre les pinces. Au chargement, elle tourne à très grande vitesse pour atteindre directement la fin."
+  },
+  "BaleLoader.moveToTransportPosition": {
+   "en": "Plays the folding animation backwards and closes the grippers.",
+   "fr": "Joue l'animation de pliage en sens inverse et ferme les pinces."
+  },
+  "BaleLoader:getBaleGrabberDropBaleAnimName": {
+   "en": "Returns the drop-bale animation specific to the current start place count if it exists, otherwise the generic drop animation.",
+   "fr": "Renvoie l'animation de dépôt propre au nombre actuel de balles sur la rangée de départ si elle existe, sinon l'animation de dépôt générique."
+  },
+  "BaleLoader:getIsBaleGrabbingAllowed": {
+   "en": "Returns true only in work position with nothing moving, start row not full, free capacity and no unloading in progress.",
+   "fr": "Renvoie true seulement en position de travail, sans mouvement en cours, rangée de départ non pleine, capacité libre et aucun déchargement en cours."
+  },
+  "BaleLoader:pickupBale": {
+   "en": "Server: records the pickup time, selects the bale type and broadcasts a grab-bale state event for the given bale.",
+   "fr": "Serveur : enregistre l'heure du ramassage, sélectionne le type de balle et diffuse un événement d'état de saisie pour la balle donnée."
+  },
+  "BaleLoader:setBaleLoaderBaleType": {
+   "en": "Switches to the bale type at the given index (or the first): updates animations, places, fill unit, HUD fill unit display and object changes. Does nothing if the type is unchanged.",
+   "fr": "Passe au type de balle à l'indice donné (ou au premier) : met à jour animations, emplacements, unité de remplissage, affichage HUD et changements d'objets. Sans effet si le type ne change pas."
+  },
+  "BaleLoader:getBaleTypeByBale": {
+   "en": "Returns the first bale type whose size ranges contain the bale's dimensions (diameter and width for round, width, height and length for square), or nil.",
+   "fr": "Renvoie le premier type de balle dont les plages de tailles contiennent les dimensions de la balle (diamètre et largeur pour une ronde, largeur, hauteur et longueur pour une carrée), ou nil."
+  },
+  "BaleLoader:baleGrabberTriggerCallback": {
+   "en": "Grabber trigger callback: counts the shapes of each `Bale` in the trigger (dynamic bodies on the server, kinematic ones on the client).",
+   "fr": "Callback du trigger du grappin : compte les formes de chaque `Bale` présente dans le trigger (corps dynamiques côté serveur, cinématiques côté client)."
+  },
+  "BaleLoader:baleLoaderMoveTriggerCallback": {
+   "en": "Unloading mover trigger callback: tracks dynamic bales inside it (with a delete listener) so the mover stays active while they remain.",
+   "fr": "Callback du trigger du tapis de déchargement : suit les balles dynamiques qui s'y trouvent (avec écouteur de suppression) pour garder le tapis actif tant qu'elles y restent."
+  },
+  "BaleLoader:mountDynamicBale": {
+   "en": "Server only: attaches a bale by a physics joint to a joint node under the given node, optionally interpolating its position, applying translation limits and lowering its mass. Reuses the joint if it exists.",
+   "fr": "Serveur uniquement : attache une balle par un joint physique à un nœud de joint sous le nœud donné, avec interpolation de position facultative, limites de translation et masse réduite. Réutilise le joint s'il existe."
+  },
+  "BaleLoader:unmountDynamicBale": {
+   "en": "Server only: detaches a dynamically mounted bale, deletes its joint node, clears interpolation entries, restores its mass and marks it saveable again.",
+   "fr": "Serveur uniquement : détache une balle montée dynamiquement, supprime son nœud de joint, vide les entrées d'interpolation, restaure sa masse et la rend à nouveau sauvegardable."
+  },
+  "BaleLoader:mountBale": {
+   "en": "Mounts a bale on a node with an offset, kinematically (collisions with the vehicle disabled) or by simple mount, and marks it not saveable. Removes it from the mover trigger list.",
+   "fr": "Monte une balle sur un nœud avec un décalage, en cinématique (collisions avec le véhicule désactivées) ou par montage simple, et la marque non sauvegardable. La retire de la liste du trigger du tapis."
+  },
+  "BaleLoader:unmountBale": {
+   "en": "Unmounts a bale according to its mount type (simple or kinematic), re-enabling collisions in the kinematic case, and marks it saveable.",
+   "fr": "Démonte une balle selon son type de montage (simple ou cinématique), réactive les collisions dans le cas cinématique, et la rend sauvegardable."
+  },
+  "BaleLoader:setBalePairCollision": {
+   "en": "Enables or disables collision between the bale and every vehicle component and every kinematically mounted bale.",
+   "fr": "Active ou désactive la collision entre la balle et chaque composant du véhicule et chaque balle montée en cinématique."
+  },
+  "BaleLoader:getLoadedBales": {
+   "en": "Returns a new table of all bale objects currently on bale places or on the start row.",
+   "fr": "Renvoie une nouvelle table de tous les objets balle actuellement sur les emplacements ou sur la rangée de départ."
+  },
+  "BaleLoader:startAutomaticBaleUnloading": {
+   "en": "Flags automatic unloading as running and sends the empty-button event to the server via the client connection.",
+   "fr": "Signale le déchargement automatique comme en cours et envoie l'événement du bouton de vidage au serveur par la connexion client."
+  },
+  "BaleLoader:getIsAutomaticBaleUnloadingInProgress": {
+   "en": "Returns whether an automatic unloading is in progress.",
+   "fr": "Indique si un déchargement automatique est en cours."
+  },
+  "BaleLoader:getIsAutomaticBaleUnloadingAllowed": {
+   "en": "Returns true if no automatic unloading is running, the last pickup is older than 15 seconds and unloading can start.",
+   "fr": "Renvoie true si aucun déchargement automatique n'est en cours, si le dernier ramassage date de plus de 15 secondes et si le déchargement peut démarrer."
+  },
+  "BaleLoader:playBaleLoaderFoldingAnimation": {
+   "en": "Plays the current folding animation at the given speed from its current time (negative speed folds back).",
+   "fr": "Joue l'animation de pliage actuelle à la vitesse donnée depuis son temps courant (vitesse négative : repliage)."
+  },
+  "BaleLoader:getIsBaleLoaderFoldingPlaying": {
+   "en": "Returns whether the current folding animation is playing.",
+   "fr": "Indique si l'animation de pliage actuelle est en cours de lecture."
+  },
+  "BaleLoader:getCurrentFoldingAnimation": {
+   "en": "Returns the folding animation name: the default one, or the last chosen one if several conditional animations are defined.",
+   "fr": "Renvoie le nom de l'animation de pliage : celle par défaut, ou la dernière choisie si plusieurs animations conditionnelles sont définies."
+  },
+  "BaleLoader:updateFoldingAnimation": {
+   "en": "Chooses the folding animation matching bale type, fill level and bales on the start row, and copies the current animation time to the new one when it changes.",
+   "fr": "Choisit l'animation de pliage correspondant au type de balle, au niveau de remplissage et au nombre de balles sur la rangée de départ, et recopie le temps d'animation courant vers la nouvelle quand elle change."
+  },
+  "BaleLoader:onBaleMoverBaleRemoved": {
+   "en": "Delete listener: removes a deleted bale from the unloading mover trigger list.",
+   "fr": "Écouteur de suppression : retire une balle supprimée de la liste du trigger du tapis de déchargement."
+  },
+  "BaleLoader.onBaleUnloadTriggerDeleted": {
+   "en": "Delete listener: forgets an unload trigger that was deleted.",
+   "fr": "Écouteur de suppression : oublie un trigger de déchargement qui a été supprimé."
+  },
+  "BaleLoader:addBaleUnloadTrigger": {
+   "en": "Registers an unload trigger (reference counted) with a delete listener and wakes the vehicle so it checks automatic unloading.",
+   "fr": "Enregistre un trigger de déchargement (avec compteur de références) et un écouteur de suppression, et réveille le véhicule pour qu'il vérifie le déchargement automatique."
+  },
+  "BaleLoader:removeBaleUnloadTrigger": {
+   "en": "Decrements the reference count of an unload trigger and drops it and its delete listener at zero.",
+   "fr": "Décrémente le compteur de références d'un trigger de déchargement et le supprime avec son écouteur à zéro."
+  },
+  "BaleLoader:getCanBeSelected": {
+   "en": "Override: always returns true, so the bale loader can be selected.",
+   "fr": "Surcharge : renvoie toujours true, la ramasseuse peut donc être sélectionnée."
+  },
+  "BaleLoader:getAllowDynamicMountFillLevelInfo": {
+   "en": "Override: returns false when dynamic mount is enabled, otherwise the parent result.",
+   "fr": "Surcharge : renvoie false quand le montage dynamique est actif, sinon le résultat du parent."
+  },
+  "BaleLoader:getAreControlledActionsAllowed": {
+   "en": "Override: returns false while an automatic unloading is in progress, otherwise the parent result.",
+   "fr": "Surcharge : renvoie false pendant un déchargement automatique, sinon le résultat du parent."
+  },
+  "BaleLoader:getIsAIReadyToDrive": {
+   "en": "Override: not ready for AI driving while in work position or while the grabber moves.",
+   "fr": "Surcharge : pas prête pour la conduite IA tant qu'elle est en position de travail ou que le grappin bouge."
+  },
+  "BaleLoader:getIsAIPreparingToDrive": {
+   "en": "Override: returns true while the grabber is moving, otherwise the parent result.",
+   "fr": "Surcharge : renvoie true pendant que le grappin bouge, sinon le résultat du parent."
+  },
+  "BaleLoader:getIsFoldAllowed": {
+   "en": "Override: folding is refused while the loader still holds bales, otherwise the parent decides.",
+   "fr": "Surcharge : le pliage est refusé tant que la machine contient des balles, sinon le parent décide."
+  },
+  "BaleLoader:getDoConsumePtoPower": {
+   "en": "Override: true while `consumePtoPower` is on and the loader is in work position or moving; otherwise the parent result.",
+   "fr": "Surcharge : vrai tant que `consumePtoPower` est actif et que la machine est en position de travail ou en mouvement ; sinon le résultat du parent."
+  },
+  "BaleLoader:getConsumingLoad": {
+   "en": "Override: adds a full load (1) for one more consumer while in work position or moving with PTO consumption on, on top of the parent values.",
+   "fr": "Surcharge : ajoute une charge complète (1) pour un consommateur de plus en position de travail ou en mouvement avec consommation PTO, en plus des valeurs du parent."
+  },
+  "BaleLoader:getIsPowerTakeOffActive": {
+   "en": "Override: true while PTO consumption is on and the loader is in work position or moving; otherwise the parent result.",
+   "fr": "Surcharge : vrai tant que la consommation PTO est active et que la machine est en position de travail ou en mouvement ; sinon le résultat du parent."
+  },
+  "BaleLoader:addToPhysics": {
+   "en": "Override: after the parent adds the vehicle, re-adds every loaded bale to physics and remounts it on its place. Returns false if the parent fails.",
+   "fr": "Surcharge : après l'ajout du véhicule par le parent, rajoute chaque balle chargée à la physique et la remonte sur son emplacement. Renvoie false si le parent échoue."
+  },
+  "BaleLoader:removeFromPhysics": {
+   "en": "Override: after the parent removes the vehicle, unmounts every loaded bale and removes it from physics. Returns false if the parent fails.",
+   "fr": "Surcharge : après le retrait du véhicule par le parent, démonte chaque balle chargée et la retire de la physique. Renvoie false si le parent échoue."
+  },
+  "BaleLoader:onRegisterActionEvents": {
+   "en": "Client: registers the work/transport, unload and abort inputs (the first only without folding state, the others only without full automatic unloading).",
+   "fr": "Client : enregistre les entrées travail/transport, déchargement et annulation (la première seulement sans état de pliage, les autres sans déchargement entièrement automatique)."
+  },
+  "BaleLoader.actionEventEmpty": {
+   "en": "Input callback: sends the empty-button event to the server if the minimum fill level is reached or unloading is running, otherwise shows a blinking warning.",
+   "fr": "Callback d'entrée : envoie l'événement du bouton de vidage au serveur si le niveau minimal est atteint ou si le déchargement est en cours, sinon affiche un avertissement clignotant."
+  },
+  "BaleLoader.actionEventAbortEmpty": {
+   "en": "Input callback: sends the abort-unloading event to the server.",
+   "fr": "Callback d'entrée : envoie l'événement d'annulation du déchargement au serveur."
+  },
+  "BaleLoader.actionEventWorkTransport": {
+   "en": "Input callback: sends the work/transport toggle event to the server.",
+   "fr": "Callback d'entrée : envoie l'événement de bascule travail/transport au serveur."
+  },
+  "BaleLoader.loadSpecValueBaleSize": {
+   "en": "Scans the baleType entries of the XML root and collects min and max diameter and length for round or square loaders. Returns the table, or nil if nothing matches.",
+   "fr": "Parcourt les entrées baleType de la racine XML et relève diamètre et longueur min et max pour les chargeurs ronds ou carrés. Renvoie la table, ou nil si rien ne correspond."
+  },
+  "BaleLoader.getSpecValueBaleSize": {
+   "en": "Shop display of the supported bale size in cm (diameter for round, length for square), as a text or raw numbers with unit. Returns empty values if the spec is missing.",
+   "fr": "Affichage boutique de la taille de balle prise en charge en cm (diamètre pour rondes, longueur pour carrées), sous forme de texte ou de nombres bruts avec unité. Renvoie des valeurs vides si la spec manque."
+  },
+  "BaleLoader.loadSpecValueBaleSizeRound": {
+   "en": "Shop loader for round bale sizes; delegates to `loadSpecValueBaleSize`.",
+   "fr": "Chargeur de boutique pour les tailles de balles rondes ; délègue à `loadSpecValueBaleSize`."
+  },
+  "BaleLoader.loadSpecValueBaleSizeSquare": {
+   "en": "Shop loader for square bale sizes; delegates to `loadSpecValueBaleSize`.",
+   "fr": "Chargeur de boutique pour les tailles de balles carrées ; délègue à `loadSpecValueBaleSize`."
+  },
+  "BaleLoader.getSpecValueBaleSizeRound": {
+   "en": "Shop getter for round bale size, nil if the item has no such spec.",
+   "fr": "Accesseur boutique pour la taille des balles rondes, nil si l'objet n'a pas cette spec."
+  },
+  "BaleLoader.getSpecValueBaleSizeSquare": {
+   "en": "Shop getter for square bale size, nil if the item has no such spec.",
+   "fr": "Accesseur boutique pour la taille des balles carrées, nil si l'objet n'a pas cette spec."
+  }
+ }
+}

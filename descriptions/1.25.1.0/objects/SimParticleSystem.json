@@ -1,0 +1,17 @@
+{
+ "fichier": "objects/SimParticleSystem.lua",
+ "module": {
+  "en": "Map object created from an i3d node (onCreate) that pre-simulates a precipitation-type particle system so it already looks established when the game starts. It is registered as a non-updateable in the current mission and has no update or delete logic.",
+  "fr": "Objet de carte créé depuis un noeud i3d (onCreate) qui pré-simule un système de particules de type précipitation afin qu'il paraisse déjà établi au démarrage du jeu. Il est enregistré comme non-updatable dans la mission courante et n'a ni mise à jour ni suppression."
+ },
+ "fonctions": {
+  "SimParticleSystem:onCreate": {
+   "en": "i3d onCreate callback: builds a SimParticleSystem for the node and registers it with `g_currentMission:addNonUpdateable`.",
+   "fr": "Callback onCreate de l'i3d : construit un SimParticleSystem pour le noeud et l'enregistre via `g_currentMission:addNonUpdateable`."
+  },
+  "SimParticleSystem.new": {
+   "en": "Constructor. If the node is a shape whose geometry has the precipitation class id, it reads the particle system lifespan and advances the simulation by that duration. Engine calls themselves are UNVERIFIED (not in the dump).",
+   "fr": "Constructeur. Si le noeud est une forme dont la géométrie a la classe précipitation, lit la durée de vie du système de particules et avance la simulation de cette durée. Les appels moteur eux-mêmes sont NON VÉRIFIÉS (absents du dump)."
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/specializations/AIVehicleObstacle.lua",
+ "module": {
+  "en": "Specialization intended to make a vehicle an obstacle for AI navigation. In this SDK dump only the prerequisite check and the event listener registration remain; all handler bodies (onLoad, onDelete, onUpdate, onEnterVehicle, onLeaveVehicle) are stripped, so the actual behaviour is UNVERIFIED.",
+  "fr": "Spécialisation destinée à faire d'un véhicule un obstacle pour la navigation IA. Dans ce dump du SDK, seuls le test des prérequis et l'enregistrement des écouteurs subsistent ; tous les corps des gestionnaires (onLoad, onDelete, onUpdate, onEnterVehicle, onLeaveVehicle) sont supprimés, le comportement réel est donc NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "AIVehicleObstacle.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours vrai : aucune spécialisation prérequise."
+  },
+  "AIVehicleObstacle.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdate, onEnterVehicle and onLeaveVehicle. The handler bodies are not in the dump (UNVERIFIED).",
+   "fr": "Abonne la spécialisation à onLoad, onDelete, onUpdate, onEnterVehicle et onLeaveVehicle. Les corps des gestionnaires ne sont pas dans le dump (NON VÉRIFIÉ)."
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "fichier": "vehicles/specializations/components/StaticLightCompound.lua",
+ "module": {
+  "en": "A group of shape nodes whose shader exposes 16 light slots (`lightIds0..3`), used to drive a whole multi-function lamp (headlight, indicator, daytime light...) with one object. It maps light functions to UV slots (overridable from the XML or a `SharedLight`), computes the per-slot state, type and UV offset from the active light types mask, and writes them to every node's shader parameters. Helper methods such as `getStateValueByFunction` are called but not defined here (UNVERIFIED). Client-side visual.",
+  "fr": "Groupe de nœuds de forme dont le shader expose 16 slots de lumière (`lightIds0..3`), servant à piloter une lampe multifonction complète (phare, clignotant, feu de jour...) avec un seul objet. Il associe les fonctions de lumière à des slots UV (modifiable depuis le XML ou une `SharedLight`), calcule l'état, le type et le décalage UV de chaque slot d'après le masque de types actifs et les écrit dans les paramètres shader de chaque nœud. Des méthodes comme `getStateValueByFunction` sont appelées mais non définies ici (NON VÉRIFIÉ). Visuel côté client."
+ },
+ "fonctions": {
+  "StaticLightCompound.new": {
+   "en": "Creates an empty static light compound for a vehicle.",
+   "fr": "Crée une lumière statique composée vide pour un véhicule."
+  },
+  "StaticLightCompound.loadFunctionMappingData": {
+   "en": "Reads `.function` entries under a XML key (function name, UV slot 1-16, UV offset, intensity scale, light type) into a list, warning on unknown names or out-of-range slots.",
+   "fr": "Lit les entrées `.function` sous une clé XML (nom de fonction, slot UV 1-16, décalage UV, échelle d'intensité, type de lumière) dans une liste, avec avertissement pour les noms inconnus ou les slots hors plage."
+  },
+  "StaticLightCompound:loadFromXML": {
+   "en": "Loads the compound: reads options, builds the function-to-UV-slot mapping (XML mapping then shared light overrides, unused slots get a default entry), validates each node (shape, `lightIds` parameter, inside the shared light root), and inits the 16 state arrays. Returns false if no valid node remains.",
+   "fr": "Charge le composé : lit les options, construit le mappage fonction vers slot UV (mappage XML puis surcharges de la lumière partagée, les slots inutilisés reçoivent une entrée par défaut), valide chaque nœud (forme, paramètre `lightIds`, dans la racine de la lumière partagée) et initialise les 16 tableaux d'état. Renvoie false s'il ne reste aucun nœud valide."
+  },
+  "StaticLightCompound:setLightTypes": {
+   "en": "Stores the main light types and excluded types when the given tables are non-empty.",
+   "fr": "Mémorise les types de lumière principaux et types exclus lorsque les tables fournies ne sont pas vides."
+  },
+  "StaticLightCompound:setOverwriteSettings": {
+   "en": "Stores the turn left/right and reverse role flags and appends the matching additional light types from `spec_lights` to the compound's light types.",
+   "fr": "Mémorise les indicateurs de rôle clignotant gauche/droit et recul et ajoute les types de lumière supplémentaires correspondants de `spec_lights` aux types de lumière du composé."
+  },
+  "StaticLightCompound:setLightTypesMask": {
+   "en": "Recomputes slot states from the active light types mask (slot 1 from the compound's own types, the others via function mapping and intensity scales) and writes `lightIds`, `lightTypeBitMask` and `lightUvOffsetBitMask` to each node, or zeros for nodes whose light is inactive for the vehicle. The `vehicle` argument is required.",
+   "fr": "Recalcule les états des slots d'après le masque de types actifs (slot 1 d'après les types propres du composé, les autres via le mappage de fonctions et les échelles d'intensité) et écrit `lightIds`, `lightTypeBitMask` et `lightUvOffsetBitMask` sur chaque nœud, ou des zéros pour les nœuds dont la lumière est inactive pour le véhicule. L'argument `vehicle` est obligatoire."
+  },
+  "StaticLightCompound.registerXMLPaths": {
+   "en": "Registers the XML paths of a static light compound (options, function mappings, nodes).",
+   "fr": "Enregistre les chemins XML d'une lumière statique composée (options, mappages de fonctions, nœuds)."
+  }
+ }
+}

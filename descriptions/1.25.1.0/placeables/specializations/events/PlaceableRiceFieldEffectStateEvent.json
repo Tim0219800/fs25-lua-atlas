@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableRiceFieldEffectStateEvent.lua",
+ "module": {
+  "en": "Network event that carries the effect visibility of one rice field (filling or emptying water effects) of a PlaceableRiceField, so that the effects appear on the receiving side. It derives from `Event` with the default channel and has no sender helper; it is created by the placeable code, which is not part of this file.",
+  "fr": "Événement réseau qui transporte la visibilité des effets d'une rizière (effets d'eau de remplissage ou de vidage) d'un PlaceableRiceField, afin que les effets apparaissent côté récepteur. Il dérive de `Event` avec le canal par défaut et n'a pas de fonction d'envoi ; il est créé par le code du placeable, absent de ce fichier."
+ },
+ "fonctions": {
+  "PlaceableRiceFieldEffectStateEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable, used by the network layer before reading a stream.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe, utilisée par la couche réseau avant la lecture d'un flux."
+  },
+  "PlaceableRiceFieldEffectStateEvent.new": {
+   "en": "Builds the event with the rice field placeable, a field index and two booleans telling whether water effects for filling or emptying are shown.",
+   "fr": "Construit l'événement avec le placeable de rizière, un index de champ et deux booléens indiquant si les effets d'eau de remplissage ou de vidage sont affichés."
+  },
+  "PlaceableRiceFieldEffectStateEvent:readStream": {
+   "en": "Reads the rice field object, a UInt8 field index and the two flags, then runs the event immediately. No server/client branching in the code.",
+   "fr": "Lit l'objet rizière, un index de champ UInt8 et les deux indicateurs, puis exécute l'événement immédiatement. Aucune distinction serveur/client dans le code."
+  },
+  "PlaceableRiceFieldEffectStateEvent:writeStream": {
+   "en": "Writes the rice field object, the UInt8 field index and the two boolean flags, mirroring `readStream`.",
+   "fr": "Écrit l'objet rizière, l'index de champ UInt8 et les deux indicateurs booléens, en miroir de `readStream`."
+  },
+  "PlaceableRiceFieldEffectStateEvent:run": {
+   "en": "Ignored if the rice field is nil or not yet synchronized; otherwise calls `setEffectVisibility` on it with the field index and the filling/emptying flags.",
+   "fr": "Ignoré si la rizière est nil ou pas encore synchronisée ; sinon appelle `setEffectVisibility` dessus avec l'index du champ et les indicateurs de remplissage/vidage."
+  }
+ }
+}

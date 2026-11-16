@@ -1,0 +1,45 @@
+{
+ "fichier": "placeables/specializations/PlaceableWeighingStation.lua",
+ "module": {
+  "en": "Placeable specialization for a vehicle weighing station (weighbridge). A trigger tracks vehicle nodes on the platform and the total mass is shown on one or more digit displays configured under `placeable.weighingStation.display`. Display fonts come from the material manager.",
+  "fr": "Spécialisation de placeable pour une station de pesée de véhicules (pont-bascule). Un déclencheur suit les nœuds de véhicules sur la plateforme et la masse totale s'affiche sur un ou plusieurs afficheurs à chiffres configurés sous `placeable.weighingStation.display`. Les polices viennent du gestionnaire de matériaux."
+ },
+ "fonctions": {
+  "PlaceableWeighingStation.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableWeighingStation.registerFunctions": {
+   "en": "Registers `updateWeightDisplay`, `setWeightDisplay` and `onWeighingTriggerCallback` on the placeable type.",
+   "fr": "Enregistre `updateWeightDisplay`, `setWeightDisplay` et `onWeighingTriggerCallback` sur le type de placeable."
+  },
+  "PlaceableWeighingStation.registerEventListeners": {
+   "en": "Subscribes to onLoad and onDelete.",
+   "fr": "S'abonne à onLoad et onDelete."
+  },
+  "PlaceableWeighingStation.registerXMLPaths": {
+   "en": "Declares the weighing station XML keys (trigger node and display settings such as node, font, alignment, size, mask, colors).",
+   "fr": "Déclare les clés XML de la station de pesée (nœud de déclencheur et réglages d'afficheur : nœud, police, alignement, taille, masque, couleurs)."
+  },
+  "PlaceableWeighingStation:onLoad": {
+   "en": "Reads the trigger node (logs an error and stops if missing), registers it, and builds each display (font material, alignment, size, scale, mask, colors) as a character line. Starts by showing 0.",
+   "fr": "Lit le nœud de déclencheur (erreur journalisée et arrêt s'il manque), l'enregistre, et construit chaque afficheur (matériau de police, alignement, taille, échelle, masque, couleurs) sous forme de ligne de caractères. Affiche 0 au départ."
+  },
+  "PlaceableWeighingStation:onDelete": {
+   "en": "Removes the trigger node.",
+   "fr": "Retire le nœud de déclencheur."
+  },
+  "PlaceableWeighingStation:updateWeightDisplay": {
+   "en": "Resolves tracked trigger nodes to vehicles (dropping nodes that no longer exist), sums their total mass and shows the sum multiplied by 1000 (so presumably tonnes to kilograms, assumption).",
+   "fr": "Résout les nœuds suivis en véhicules (écartant ceux qui n'existent plus), additionne leur masse totale et affiche la somme multipliée par 1000 (donc probablement des tonnes en kilogrammes, hypothèse)."
+  },
+  "PlaceableWeighingStation:setWeightDisplay": {
+   "en": "Formats the given number with each display mask (integer and decimal part) and writes the text to its character line.",
+   "fr": "Formate le nombre donné avec le masque de chaque afficheur (partie entière et décimale) et écrit le texte sur sa ligne de caractères."
+  },
+  "PlaceableWeighingStation:onWeighingTriggerCallback": {
+   "en": "Trigger callback: on enter or leave, adds or removes the other node from the tracked set and refreshes the displayed weight.",
+   "fr": "Callback du déclencheur : à l'entrée ou à la sortie, ajoute ou retire l'autre nœud de l'ensemble suivi et actualise le poids affiché."
+  }
+ }
+}

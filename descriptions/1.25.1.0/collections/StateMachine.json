@@ -1,0 +1,69 @@
+{
+ "fichier": "collections/StateMachine.lua",
+ "module": {
+  "en": "Abstract base for a state machine that manages BaseStateMachineState objects stored in a `states` table. It tracks the current and default state, a passive flag that stops automatic transitions, and per-frame updates in which a state may force a switch. A machine can also act as a state by copying the state interface. Subclasses must fill states and defaultState; some helpers used here (initialiseStateNames, getHasMappings, createStateIndexNameMapping) are not defined in this file (UNVERIFIED).",
+  "fr": "Base abstraite d'une machine à états qui gère des objets BaseStateMachineState stockés dans une table `states`. Elle suit l'état courant et l'état par défaut, un drapeau passif qui bloque les transitions automatiques, et des mises à jour par image où un état peut imposer un changement. Une machine peut aussi servir d'état en copiant l'interface d'état. Les sous-classes doivent remplir states et defaultState ; certains assistants utilisés ici (initialiseStateNames, getHasMappings, createStateIndexNameMapping) ne sont pas définis dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "StateMachine.new": {
+   "en": "Creates a machine with no current or default state, an empty states table and passive set to false. Intended to be called by a derived class.",
+   "fr": "Crée une machine sans état courant ni par défaut, avec une table d'états vide et le mode passif à false. Destiné à être appelé par une classe dérivée."
+  },
+  "StateMachine:implementStateInterface": {
+   "en": "Called on a class table to copy every BaseStateMachineState member it does not already define, so the machine can itself be used as a state of another machine.",
+   "fr": "Appelé sur une table de classe pour copier tous les membres de BaseStateMachineState qu'elle ne définit pas encore, afin que la machine puisse servir d'état d'une autre machine."
+  },
+  "StateMachine:changeState": {
+   "en": "Sets the new current state, calls onStateExited on the previous one and onStateEntered on the new one with extra arguments. Errors if there is no current state yet, since the previous state is called without a nil check.",
+   "fr": "Définit le nouvel état courant, appelle onStateExited sur l'ancien et onStateEntered sur le nouveau avec les arguments supplémentaires. Provoque une erreur s'il n'y a pas encore d'état courant, l'ancien état étant appelé sans test de nil."
+  },
+  "StateMachine:initialiseStateTransitions": {
+   "en": "Calls createTransitions on every state, forwarding the given arguments. Not called automatically by the base class.",
+   "fr": "Appelle createTransitions sur chaque état en transmettant les arguments donnés. Non appelé automatiquement par la classe de base."
+  },
+  "StateMachine:determineState": {
+   "en": "Switches to the first state whose calculateIfValidEntryState returns true (in unspecified `pairs` order), else to the default state.",
+   "fr": "Passe au premier état dont calculateIfValidEntryState retourne true (dans l'ordre non spécifié de `pairs`), sinon à l'état par défaut."
+  },
+  "StateMachine:resolveCurrentState": {
+   "en": "Returns the current state, or when that state is itself a machine with resolveCurrentState, the deepest resolved state.",
+   "fr": "Retourne l'état courant, ou, quand cet état est lui-même une machine avec resolveCurrentState, l'état le plus profond résolu."
+  },
+  "StateMachine:getCurrentStateName": {
+   "en": "Returns the name of the current state through getNameOfState.",
+   "fr": "Retourne le nom de l'état courant via getNameOfState."
+  },
+  "StateMachine:getNameOfState": {
+   "en": "Returns the state's name, or the text \"No state\" for nil. If the name is empty it first calls initialiseStateNames, which is not defined in this file (UNVERIFIED).",
+   "fr": "Retourne le nom de l'état, ou le texte \"No state\" pour nil. Si le nom est vide, appelle d'abord initialiseStateNames, non défini dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "StateMachine:getCurrentStateIndex": {
+   "en": "Returns the index of the current state in the alphabetically sorted state list, via getIndexOfState.",
+   "fr": "Retourne l'indice de l'état courant dans la liste d'états triée alphabétiquement, via getIndexOfState."
+  },
+  "StateMachine:getIndexOfState": {
+   "en": "Returns the index of a state in the sorted state list, or nil if absent. It first builds the mappings through createStateIndexNameMapping if missing, defined outside this file (UNVERIFIED).",
+   "fr": "Retourne l'indice d'un état dans la liste triée des états, ou nil s'il est absent. Il construit d'abord les correspondances via createStateIndexNameMapping si besoin, définie hors de ce fichier (NON VÉRIFIÉ)."
+  },
+  "StateMachine:getStateByIndex": {
+   "en": "Returns the state at a given index of the sorted state list, or nil. Builds the index mappings first if needed (helper defined elsewhere, UNVERIFIED).",
+   "fr": "Retourne l'état à un indice donné de la liste triée, ou nil. Construit d'abord les correspondances d'indices si besoin (assistant défini ailleurs, NON VÉRIFIÉ)."
+  },
+  "StateMachine:getIsPassive": {
+   "en": "Returns whether the machine is passive, meaning it does not change state on its own during updates.",
+   "fr": "Retourne si la machine est passive, c'est-à-dire qu'elle ne change pas d'état d'elle-même pendant les mises à jour."
+  },
+  "StateMachine:setIsPassive": {
+   "en": "Sets the passive flag; only the value true enables it, anything else becomes false.",
+   "fr": "Définit le drapeau passif ; seule la valeur true l'active, toute autre valeur devient false."
+  },
+  "StateMachine:update": {
+   "en": "Per-frame update (dt in ms). When not passive, switches to the first other state whose calculateIfShouldBeForced is true; then calls updateAsCurrent on the current state and updateAsInactive on all others.",
+   "fr": "Mise à jour par image (dt en ms). Hors mode passif, passe au premier autre état dont calculateIfShouldBeForced est true ; puis appelle updateAsCurrent sur l'état courant et updateAsInactive sur tous les autres."
+  },
+  "StateMachine:callStateFunction": {
+   "en": "Calls the method with the given name on every state that has it, passing the extra arguments. Return values are ignored.",
+   "fr": "Appelle la méthode portant le nom donné sur chaque état qui la possède, en passant les arguments supplémentaires. Les valeurs de retour sont ignorées."
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "fichier": "debug/elements/DebugFunction.lua",
+ "module": {
+  "en": "DebugFunction is a lightweight debug element that runs a user-supplied draw function each frame, so custom debug rendering can be registered with the DebugManager. It does not inherit from DebugElement.",
+  "fr": "DebugFunction est un élément de débogage léger qui exécute à chaque image une fonction de dessin fournie par l'utilisateur, ce qui permet d'enregistrer un rendu de débogage personnalisé auprès du DebugManager. Il n'hérite pas de DebugElement."
+ },
+ "fonctions": {
+  "DebugFunction:getShouldBeDrawn": {
+   "en": "Always returns true, so the manager always calls `draw`.",
+   "fr": "Renvoie toujours true, le gestionnaire appelle donc toujours `draw`."
+  },
+  "DebugFunction:draw": {
+   "en": "Calls the stored `drawFunc` with the element as argument if one is set; otherwise does nothing.",
+   "fr": "Appelle le `drawFunc` mémorisé avec l'élément en argument s'il existe ; sinon ne fait rien."
+  }
+ }
+}

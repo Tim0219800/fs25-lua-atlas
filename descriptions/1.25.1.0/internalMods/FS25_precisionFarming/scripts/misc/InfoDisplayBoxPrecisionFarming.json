@@ -1,0 +1,13 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/misc/InfoDisplayBoxPrecisionFarming.lua",
+ "module": {
+  "en": "HUD info box class for Precision Farming, derived from InfoDisplayKeyValueBox. It only provides a constructor and adds no behaviour of its own in this dump.",
+  "fr": "Classe de boîte d'information HUD de Precision Farming, dérivée de InfoDisplayKeyValueBox. Elle ne fournit qu'un constructeur et n'ajoute aucun comportement propre dans ce dump."
+ },
+ "fonctions": {
+  "InfoDisplayBoxPrecisionFarming.new": {
+   "en": "Creates the box by calling InfoDisplayKeyValueBox.new with this class's metatable. Returns the new instance.",
+   "fr": "Crée la boîte en appelant InfoDisplayKeyValueBox.new avec la métatable de cette classe. Renvoie la nouvelle instance."
+  }
+ }
+}

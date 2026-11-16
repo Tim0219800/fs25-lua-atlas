@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/events/DogFetchItemEvent.lua",
+ "module": {
+  "en": "Network event sent by a client asking the server to make a dog fetch an item (a ball) thrown by a player. On run it calls Dog:fetchItem if the dog, player and item all resolved.",
+  "fr": "Événement réseau envoyé par un client pour demander au serveur de faire rapporter un objet (une balle) lancé par un joueur à un chien. À l'exécution il appelle Dog:fetchItem si le chien, le joueur et l'objet ont été résolus."
+ },
+ "fonctions": {
+  "DogFetchItemEvent.emptyNew": {
+   "en": "Creates an empty event instance, used before reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée avant la lecture depuis un flux."
+  },
+  "DogFetchItemEvent.new": {
+   "en": "Creates the event for a dog, the throwing player and the item.",
+   "fr": "Crée l'événement pour un chien, le joueur qui lance et l'objet."
+  },
+  "DogFetchItemEvent:readStream": {
+   "en": "Reads the dog, player and item node objects, then runs the event.",
+   "fr": "Lit le chien, le joueur et l'objet (objets de noeud), puis exécute l'événement."
+  },
+  "DogFetchItemEvent:writeStream": {
+   "en": "Writes the dog, player and item node objects to the stream.",
+   "fr": "Écrit le chien, le joueur et l'objet (objets de noeud) dans le flux."
+  },
+  "DogFetchItemEvent:run": {
+   "en": "If dog, player and item are all non-nil, calls fetchItem on the dog.",
+   "fr": "Si le chien, le joueur et l'objet sont tous non nil, appelle fetchItem sur le chien."
+  }
+ }
+}

@@ -1,0 +1,177 @@
+{
+ "fichier": "vehicles/specializations/PalletFiller.lua",
+ "module": {
+  "en": "Specialization for tools that carry pallets while a harvester or machine fills them (pallet fillers on a platform). It has no prerequisites. The server holds pallets on physics joints in slots along a row node, moves them by fill step, loads from a pickup trigger, unloads, and can buy new pallets through VehicleLoadingData; the state is IDLE, LOADING or UNLOADING (PalletFillerState, not in this dump). The client handles animations, sound, action events and a warning when the pallets are full. The class table itself is declared outside the visible lines of this dump.",
+  "fr": "Spécialisation des outils qui portent des palettes pendant qu'une récolteuse ou une machine les remplit (remplisseurs de palettes sur plateforme). Aucun prérequis. Le serveur retient les palettes sur des joints physiques dans des emplacements le long d'un nœud de rangée, les déplace selon les étapes de remplissage, charge depuis un trigger de ramassage, décharge, et peut acheter de nouvelles palettes via VehicleLoadingData ; l'état est IDLE, LOADING ou UNLOADING (PalletFillerState, absent du dump). Le client gère animations, son, événements d'action et un avertissement quand les palettes sont pleines. La table de la classe est déclarée hors des lignes visibles de ce dump."
+ },
+ "fonctions": {
+  "PalletFiller.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Retourne toujours true : aucune autre spécialisation n'est requise."
+  },
+  "PalletFiller.initSpecialization": {
+   "en": "Registers the XML paths under vehicle.palletFiller (pickup trigger, pallet file and spacing, pallet row with limits and fill steps, deflector and platform animations, folding limits, sounds, animation nodes) and the savegame state and slot entries.",
+   "fr": "Enregistre les chemins XML sous vehicle.palletFiller (trigger de ramassage, fichier et espacement des palettes, rangée avec limites et étapes de remplissage, animations de déflecteur et de plateforme, limites de pliage, sons, nœuds d'animation) et les entrées sauvegardées d'état et d'emplacements."
+  },
+  "PalletFiller.registerFunctions": {
+   "en": "Registers the pallet load, unload, buy, state, deflector, fill step and movement direction functions on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les fonctions de chargement, déchargement, achat, état, déflecteur, étape de remplissage et direction de mouvement des palettes."
+  },
+  "PalletFiller.registerOverwrittenFunctions": {
+   "en": "Overrides discharge toggles, removeFromPhysics, fold permission, fill level information, mounted object test, AI continue check and combine verification.",
+   "fr": "Surcharge les bascules de décharge, removeFromPhysics, l'autorisation de pliage, les informations de niveau, le test d'objet monté, la vérification de poursuite de l'IA et la vérification de la moissonneuse."
+  },
+  "PalletFiller.registerEventListeners": {
+   "en": "Subscribes to load, load-finished, delete, stream read/write, update, update tick, animation finish, fold time and action event registration events.",
+   "fr": "S'abonne aux événements de chargement, fin de chargement, suppression, lecture/écriture de flux, mise à jour, tick de mise à jour, fin d'animation, temps de pliage et enregistrement des actions."
+  },
+  "PalletFiller:onLoad": {
+   "en": "Reads the XML: pickup trigger (accepts vehicles whose config file matches the pallet), pallet store item, pallet row with slots (one joint node each), fill steps, limits, animations, sounds. Drops update listeners that the current role does not need.",
+   "fr": "Lit le XML : trigger de ramassage (accepte les véhicules dont le fichier de config correspond à la palette), objet de boutique de la palette, rangée avec emplacements (un nœud de joint chacun), étapes de remplissage, limites, animations, sons. Retire les écouteurs de mise à jour inutiles pour le rôle courant."
+  },
+  "PalletFiller:onLoadFinished": {
+   "en": "Overrides the combine loading delay slots when a loadingDelay is set, resets the platform animation, then restores state, deflector and pallet slot assignments from the savegame (pallets are re-attached later by unique id) or applies the initial state.",
+   "fr": "Remplace les emplacements de délai de chargement de la moissonneuse si loadingDelay est défini, réinitialise l'animation de plateforme, puis restaure depuis la sauvegarde l'état, le déflecteur et les emplacements de palettes (les palettes sont rattachées plus tard par identifiant unique) ou applique l'état initial."
+  },
+  "PalletFiller:saveToXMLFile": {
+   "en": "Saves the state, the deflector state and, per occupied slot, the slot index, the pallet's unique id and the joint node translation and rotation.",
+   "fr": "Sauvegarde l'état, l'état du déflecteur et, pour chaque emplacement occupé, l'indice, l'identifiant unique de la palette et la translation et la rotation du nœud de joint."
+  },
+  "PalletFiller:onDelete": {
+   "en": "Removes the pickup trigger and delete listeners, deletes samples and unloads every pallet from its slot.",
+   "fr": "Supprime le trigger de ramassage et les écouteurs de suppression, supprime les échantillons sonores et décharge toutes les palettes de leurs emplacements."
+  },
+  "PalletFiller:onReadStream": {
+   "en": "Client on join: reads the state, the deflector state and the pallet object in each slot.",
+   "fr": "Client à la connexion : lit l'état, l'état du déflecteur et l'objet palette de chaque emplacement."
+  },
+  "PalletFiller:onWriteStream": {
+   "en": "Server on join: writes the state, the deflector state and the pallet object of each slot.",
+   "fr": "Serveur à la connexion : écrit l'état, l'état du déflecteur et l'objet palette de chaque emplacement."
+  },
+  "PalletFiller:onReadUpdateStream": {
+   "en": "Client only: reads the moving flag and the pallet objects of each slot (resolving them later if not yet synchronized), starts or stops animation and sound, and refreshes deflector and action texts.",
+   "fr": "Client uniquement : lit l'indicateur de mouvement et les objets palette de chaque emplacement (résolus plus tard s'ils ne sont pas encore synchronisés), démarre ou arrête animation et son, et rafraîchit déflecteur et textes d'action."
+  },
+  "PalletFiller:onWriteUpdateStream": {
+   "en": "Server only: when the dirty flag is set, writes the moving flag and the pallet object of each slot.",
+   "fr": "Serveur uniquement : quand le drapeau dirty est levé, écrit l'indicateur de mouvement et l'objet palette de chaque emplacement."
+  },
+  "PalletFiller:onUpdate": {
+   "en": "Server only: attaches savegame pallets, picks up one pallet at a time from the trigger in LOADING state, picks the current fill step and discharge node, then interpolates or moves each pallet joint, unloads pallets in UNLOADING state, auto-returns to IDLE and sets the moving flag.",
+   "fr": "Serveur uniquement : rattache les palettes de la sauvegarde, ramasse une palette à la fois depuis le trigger en état LOADING, choisit l'étape de remplissage et le point de décharge, puis interpole ou déplace chaque joint de palette, décharge en état UNLOADING, repasse seul en IDLE et met à jour l'indicateur de mouvement."
+  },
+  "PalletFiller:onUpdateTick": {
+   "en": "For the active player with the tool turned on and idle, shows a blinking warning if no pallet has free capacity. On clients it also resolves pallet object ids that were not yet synchronized.",
+   "fr": "Pour le joueur actif avec l'outil en marche et inactif, affiche un avertissement clignotant si aucune palette n'a de capacité libre. Sur les clients, résout aussi les identifiants de palettes pas encore synchronisés."
+  },
+  "PalletFiller:onFinishAnimation": {
+   "en": "When the platform animation ends, refreshes the fill deflector state.",
+   "fr": "À la fin de l'animation de plateforme, rafraîchit l'état du déflecteur."
+  },
+  "PalletFiller:onFoldTimeChanged": {
+   "en": "Refreshes the action event texts when the fold time changes.",
+   "fr": "Rafraîchit les textes d'action quand le temps de pliage change."
+  },
+  "PalletFiller:loadPalletFillerPallet": {
+   "en": "Takes a pallet vehicle into a free slot (or the slot saved in the data table): creates a physics joint with start limits, sets the mount type to dynamic, and starts the pickup interpolation unless restoring from a savegame. Returns true if a slot was used. Note: the rotation test applies the normalized x value to a pi/2 comparison, which looks suspicious.",
+   "fr": "Prend un véhicule palette dans un emplacement libre (ou celui indiqué par la table de données) : crée un joint physique avec les limites de départ, passe le type de montage en dynamique et lance l'interpolation de ramassage sauf en restauration de sauvegarde. Retourne true si un emplacement a été utilisé. À noter : le test de rotation compare la valeur x normalisée à pi/2, ce qui semble douteux."
+  },
+  "PalletFiller:unloadPalletFillerPallet": {
+   "en": "Frees the slot holding the given pallet, removes its joint, sets the pallet mount type back to NONE, then flags the update and refreshes action texts.",
+   "fr": "Libère l'emplacement contenant la palette donnée, supprime son joint, remet le type de montage de la palette à NONE, puis lève le drapeau de mise à jour et rafraîchit les textes d'action."
+  },
+  "PalletFiller:buyPalletFillerPallets": {
+   "en": "Server: spawns a new pallet at each empty slot through VehicleLoadingData. Client: marks the slots as pending and sends PalletFillerBuyPalletEvent unless noEventSend is true.",
+   "fr": "Serveur : fait apparaître une nouvelle palette dans chaque emplacement vide via VehicleLoadingData. Client : marque les emplacements en attente et envoie PalletFillerBuyPalletEvent sauf si noEventSend vaut true."
+  },
+  "PalletFiller.onCreatePalletFinished": {
+   "en": "Loading callback for a bought pallet: re-adds it to physics, loads it into its slot, and on success charges the store price to the owner farm (PURCHASE_PALLETS); otherwise deletes the vehicle.",
+   "fr": "Callback de chargement d'une palette achetée : la remet dans la physique, la charge dans son emplacement et, en cas de succès, débite le prix de boutique de la ferme propriétaire (PURCHASE_PALLETS) ; sinon supprime le véhicule."
+  },
+  "PalletFiller:getCanChangePalletFillerState": {
+   "en": "Checks whether the requested state change is allowed (slots free or occupied, lowered when required, fold time within limits, no unload in progress). Returns false, with a warning text when relevant.",
+   "fr": "Vérifie si le changement d'état demandé est autorisé (emplacements libres ou occupés, outil abaissé si requis, pliage dans les limites, pas de déchargement en cours). Retourne false, avec un texte d'avertissement si pertinent."
+  },
+  "PalletFiller:getCanBuyPalletFillerPallets": {
+   "en": "Returns true if the fold time is within limits; otherwise false with an unfold-the-tool warning.",
+   "fr": "Retourne true si le temps de pliage est dans les limites ; sinon false avec un avertissement de dépliage de l'outil."
+  },
+  "PalletFiller:setPalletFillerState": {
+   "en": "Sets the state and plays the platform animation toward the matching time (0 loading, 1 unloading, middle time idle). Refreshes action texts and sends PalletFillerStateEvent unless noEventSend is true.",
+   "fr": "Fixe l'état et joue l'animation de plateforme vers le temps correspondant (0 chargement, 1 déchargement, temps médian au repos). Rafraîchit les textes d'action et envoie PalletFillerStateEvent sauf si noEventSend vaut true."
+  },
+  "PalletFiller.updatePalletFillerDeflectorState": {
+   "en": "Static helper: turns the deflector on while the platform is off its middle position or pallets are moving, and applies the change when needed.",
+   "fr": "Fonction statique : active le déflecteur tant que la plateforme n'est pas à sa position médiane ou que des palettes bougent, et applique le changement si nécessaire."
+  },
+  "PalletFiller:setPalletFillerDeflectorState": {
+   "en": "Stores the deflector state and plays its animation forward or backward; optionally jumps the animation to the end at once.",
+   "fr": "Mémorise l'état du déflecteur et joue son animation en avant ou en arrière ; peut optionnellement placer l'animation immédiatement à sa fin."
+  },
+  "PalletFiller:getPalletFillerFillStep": {
+   "en": "Returns the fill step for the first slot whose pallet still has free capacity; otherwise the first empty slot's step, otherwise the first step.",
+   "fr": "Retourne l'étape de remplissage du premier emplacement dont la palette a encore de la capacité ; sinon celle du premier emplacement vide, sinon la première étape."
+  },
+  "PalletFiller:getPalletFillerMovementDirection": {
+   "en": "Returns 1 while LOADING, -1 while UNLOADING and 0 otherwise.",
+   "fr": "Retourne 1 en LOADING, -1 en UNLOADING et 0 sinon."
+  },
+  "PalletFiller:getCanToggleDischargeToObject": {
+   "en": "Always false: discharge to object cannot be toggled on this tool.",
+   "fr": "Toujours false : la décharge vers un objet ne peut pas être basculée sur cet outil."
+  },
+  "PalletFiller:getCanToggleDischargeToGround": {
+   "en": "Always false: discharge to ground cannot be toggled on this tool.",
+   "fr": "Toujours false : la décharge au sol ne peut pas être basculée sur cet outil."
+  },
+  "PalletFiller:removeFromPhysics": {
+   "en": "Unloads all pallets from their slots before the parent removes the vehicle from physics.",
+   "fr": "Décharge toutes les palettes de leurs emplacements avant que le parent retire le véhicule de la physique."
+  },
+  "PalletFiller:getIsFoldAllowed": {
+   "en": "Forbids folding unless the state is IDLE and every slot is empty with no pallet pending, returning a warning text; otherwise defers to the parent.",
+   "fr": "Interdit le pliage sauf si l'état est IDLE et que tous les emplacements sont vides sans palette en attente, avec un texte d'avertissement ; sinon délègue au parent."
+  },
+  "PalletFiller:getFillLevelInformation": {
+   "en": "Calls the parent, then adds one HUD entry summing fill level and capacity of all pallets in the slots, with the last known fill type.",
+   "fr": "Appelle le parent, puis ajoute une entrée HUD cumulant niveau et capacité de toutes les palettes des emplacements, avec le dernier type de remplissage connu."
+  },
+  "PalletFiller:getHasObjectMounted": {
+   "en": "Returns true if the parent finds the object, or if it is one of the slot pallets or mounted on one of them.",
+   "fr": "Retourne true si le parent trouve l'objet, ou s'il s'agit d'une palette d'un emplacement ou s'il est monté sur l'une d'elles."
+  },
+  "PalletFiller:getCanAIImplementContinueWork": {
+   "en": "If the loaded pallets have no free capacity, stops the AI with a pallets-full message, or a no-pallets-loaded message when none are loaded; otherwise defers to the parent.",
+   "fr": "Si les palettes chargées n'ont plus de capacité libre, arrête l'IA avec un message de palettes pleines, ou de palettes absentes quand aucune n'est chargée ; sinon délègue au parent."
+  },
+  "PalletFiller:verifyCombine": {
+   "en": "Rejects the output fill type if a loaded pallet does not accept it (returning the pallet's fill type), returns nil when no free capacity remains, otherwise defers to the parent.",
+   "fr": "Rejette le type de sortie si une palette chargée ne l'accepte pas (en retournant le type de la palette), retourne nil s'il ne reste aucune capacité, sinon délègue au parent."
+  },
+  "PalletFiller:onRegisterActionEvents": {
+   "en": "Client: registers the load platform, unload platform and buy pallets action events (the latter only if a pallet store item exists) and refreshes their texts.",
+   "fr": "Client : enregistre les événements d'action de chargement, de déchargement de la plateforme et d'achat de palettes (ce dernier seulement si un objet de boutique existe) et rafraîchit leurs textes."
+  },
+  "PalletFiller.updateActionEventTexts": {
+   "en": "Static helper: sets text and visibility of the load, unload and buy actions according to the state, allowed transitions and number of empty slots.",
+   "fr": "Fonction statique : fixe le texte et la visibilité des actions de chargement, déchargement et achat selon l'état, les transitions permises et le nombre d'emplacements vides."
+  },
+  "PalletFiller.actionEventLowerPlatformLoad": {
+   "en": "Input callback: toggles between IDLE and LOADING if allowed, otherwise shows the warning in a blinking message.",
+   "fr": "Callback d'entrée : bascule entre IDLE et LOADING si autorisé, sinon affiche l'avertissement dans un message clignotant."
+  },
+  "PalletFiller.actionEventLowerPlatformUnload": {
+   "en": "Input callback: toggles between IDLE and UNLOADING if allowed, otherwise shows the warning in a blinking message.",
+   "fr": "Callback d'entrée : bascule entre IDLE et UNLOADING si autorisé, sinon affiche l'avertissement dans un message clignotant."
+  },
+  "PalletFiller.actionEventBuyPallets": {
+   "en": "Input callback: if buying is allowed, shows a yes/no dialog with the number of empty slots and the total price, and buys the pallets on confirmation; otherwise shows the warning.",
+   "fr": "Callback d'entrée : si l'achat est autorisé, affiche un dialogue oui/non avec le nombre d'emplacements vides et le prix total, et achète les palettes sur confirmation ; sinon affiche l'avertissement."
+  },
+  "PalletFiller.onObjectDeleted": {
+   "en": "Delete listener: removes the deleted object from the pickup trigger's tracked objects, keyed by root node.",
+   "fr": "Écouteur de suppression : retire l'objet supprimé des objets suivis par le trigger de ramassage, indexés par nœud racine."
+  }
+ }
+}

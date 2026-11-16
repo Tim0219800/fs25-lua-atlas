@@ -1,0 +1,33 @@
+{
+ "fichier": "player/events/PlayerSetStyleEvent.lua",
+ "module": {
+  "en": "Event that synchronizes a player's appearance (`PlayerStyle`). It is used both for a client announcing its style to the server, which relays it to the others, and for the server answering a `PlayerRequestStyleEvent`.",
+  "fr": "Événement qui synchronise l'apparence (`PlayerStyle`) d'un joueur. Il sert aussi bien à un client annonçant son style au serveur, qui le relaie aux autres, qu'au serveur répondant à un `PlayerRequestStyleEvent`."
+ },
+ "fonctions": {
+  "PlayerSetStyleEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture depuis un flux."
+  },
+  "PlayerSetStyleEvent.new": {
+   "en": "Builds the event with a player, a style object and optionally the player's network object id (used instead of the player when set).",
+   "fr": "Construit l'événement avec un joueur, un objet style et éventuellement l'identifiant d'objet réseau du joueur (utilisé à la place du joueur s'il est défini)."
+  },
+  "PlayerSetStyleEvent:writeStream": {
+   "en": "Writes the player's network object id (the stored id if given, else the player node object) and then the style through its own `writeStream`.",
+   "fr": "Écrit l'identifiant d'objet réseau du joueur (l'identifiant stocké s'il existe, sinon l'objet joueur) puis le style via son propre `writeStream`."
+  },
+  "PlayerSetStyleEvent:readStream": {
+   "en": "Reads the player object id, resolves the player, builds a new `PlayerStyle` and reads it from the stream, then runs the event.",
+   "fr": "Lit l'identifiant de l'objet joueur, résout le joueur, crée un nouveau `PlayerStyle` et le lit depuis le flux, puis exécute l'événement."
+  },
+  "PlayerSetStyleEvent:run": {
+   "en": "On the server, re-broadcasts to the other clients. Then applies the style with `player:setStyleAsync`, with the event-send flag off. Crashes if the player object could not be resolved (no nil check).",
+   "fr": "Sur le serveur, rediffuse aux autres clients. Puis applique le style via `player:setStyleAsync`, sans renvoi d'événement. Provoque une erreur si le joueur n'a pas pu être résolu (pas de test nil)."
+  },
+  "PlayerSetStyleEvent.sendEvent": {
+   "en": "Unless `noEventSend` is true, the server broadcasts the event (excluding the player's own connection) and a client sends it to the server.",
+   "fr": "Sauf si `noEventSend` est vrai, le serveur diffuse l'événement (hors connexion du joueur concerné) et un client l'envoie au serveur."
+  }
+ }
+}

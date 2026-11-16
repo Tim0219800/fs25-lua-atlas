@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/specializations/BalerStationary.lua",
+ "module": {
+  "en": "Specialization stub for stationary balers. In this dump the file only defines the prerequisites and the event registration: the table BalerStationary is never created here and the onLoad, onDelete and onDraw listeners it registers have no function bodies. UNVERIFIED: the rest of the behaviour (the file is probably truncated by the SDK dump).",
+  "fr": "Spécialisation minimale pour les presses stationnaires. Dans ce dump, le fichier ne définit que les prérequis et l'enregistrement des événements : la table BalerStationary n'est jamais créée ici et les écouteurs onLoad, onDelete et onDraw enregistrés n'ont aucun corps de fonction. NON VÉRIFIÉ : le reste du comportement (fichier probablement tronqué par le dump du SDK)."
+ },
+ "fonctions": {
+  "BalerStationary.prerequisitesPresent": {
+   "en": "Returns true only when the vehicle type has the Baler, BaleWrapper and FoldableSteps specializations all together.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède à la fois les spécialisations Baler, BaleWrapper et FoldableSteps."
+  },
+  "BalerStationary.registerEventListeners": {
+   "en": "Registers onLoad, onDelete and onDraw for this specialization. Note: the dump contains no matching BalerStationary:onLoad/onDelete/onDraw definitions, so their behaviour is UNVERIFIED.",
+   "fr": "Enregistre onLoad, onDelete et onDraw pour cette spécialisation. À noter : le dump ne contient aucune définition BalerStationary:onLoad/onDelete/onDraw correspondante, leur comportement est donc NON VÉRIFIÉ."
+  }
+ }
+}

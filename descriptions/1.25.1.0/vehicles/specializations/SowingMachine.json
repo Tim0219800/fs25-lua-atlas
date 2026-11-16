@@ -1,63 +1,237 @@
 {
  "fichier": "vehicles/specializations/SowingMachine.lua",
- "module": "Spécialisation des semoirs et planteuses (semis classique, semis direct, semis en eau, semis sur billons). Prérequis : FillUnit, WorkArea, TurnOnVehicle. EFFETS (client) : deux groupes chargés par g_effectManager:loadEffect : effects (vehicle.sowingMachine.effects : graines au sol, pilotés en continu) et fillEffects (vehicle.sowingMachine.fillEffects : effet de remplissage), plus animationNodes et sons (soufflerie airBlower à l'allumage, son de travail). Classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT : onUpdate (client uniquement : l'abonnement est retiré hors client) démarre les effects avec le type de matière forcée de l'unité de remplissage (getFillUnitForcedMaterialFillType, donc le type de graine affiché, pas le fruit) tant que spec.isProcessing est vrai, sinon les arrête, à chaque image. isProcessing est posé dans processSowingMachineArea, après toutes les gardes : vitesse > 0.5 (isWorking), semoir allumé (ou activation non requise), graines disponibles (ou IA qui achète les graines), fruit plantable (type possédant une carte de terrain ET période de plantation valide, sauf getCanPlantOutsideSeason), semis en eau cohérent avec l'eau (isInWater), et distance client <= SowingMachine.CLIENT_DM_UPDATE_RADIUS (constante non définie ici : NON VÉRIFIÉ). Un client ne reçoit AUCUN état d'effet par le réseau : il recalcule isProcessing localement, donc les effets de semis d'un client dépendent de sa propre exécution de processSowingMachineArea, et un semoir éloigné n'émet pas (retour anticipé avant isProcessing). Les fillEffects sont pilotés par onFillUnitFillLevelChanged (client) : démarrés si l'unité contient quelque chose, avec le type forcé ou le type reçu, arrêtés si vide. Aucun stade de croissance ni largeur n'est transmis aux effets. TERRAIN : FSDensityMapUtil.updateSowingArea (semis classique) ou updateDirectSowingArea (semis direct) avec fruit, type de sol de champ cible, option billons et angle de rangée (angle de la direction de l'outil, arrondi à directionSnapAngle du fruit s'il est non nul) ; corps absents du dump : conséquences NON VÉRIFIÉES. eraseTireTrack est appelé après les gardes. Contrôle de culture : fruitTypeDesc.seedRequiredFieldType (riz) comparé à FSDensityMapUtil.getFieldTypeAtWorldPos. SAISON : getIsPlantableInPeriod(growthMode, environment.currentPeriod) (période du calendrier), AUCUNE lecture de météo, de pluie ni d'humidité du sol. CONSOMMATION : serveur, en fin de passe, seedUsagePerSqm * surface * seedUsageScale (majoré par les dégâts du véhicule) soustrait de l'unité de remplissage ou du consommable, ou facturé à l'IA si les graines sont achetées. dt : seulement pour le temps semé (statistique sownTime). RÉSEAU : seul l'indice de graine est synchronisé (flux initial, SetSeedIndexEvent) ; les effets ne le sont pas. Avertissement : onStateChange teste `... or VehicleStateChange.FILLTYPE_CHANGE`, expression toujours vraie (SowingMachine.lua:1131) : la mise à jour des sources de graines s'exécute donc à chaque changement d'état (non vérifié en jeu). Le `updateCultivatorEnabledState` appelé par ce fichier est discuté dans Cultivator. POINTS D'EXTENSION : fonctions setSeedIndex, changeSeedIndex, setSeedFruitType, getIsSeedChangeAllowed, getSowingMachineFillUnitIndex, getSowingMachineSeedFillTypeIndex, getCurrentSeedTypeIcon, processSowingMachineArea, updateMissionSowingWarning, getUseSowingMachineAIRequirements, setFillTypeSourceDisplayFillType, getCanPlantOutsideSeason, getSowingMachineCanConsume, getAllowFillFromAir, getDirectionSnapAngle ; surcharges addFillUnitFillLevel, getFillUnitAllowsFillType, getCanBeTurnedOn, getCanToggleTurnedOn, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML (type SOWINGMACHINE), getCanAIImplementContinueWork ; événements onTurnedOn/Off, onStart/EndWorkAreaProcessing, onFillUnitFillLevelChanged, onChangedFillType, onStateChange. Vitesse limite par défaut : 15.",
+ "module": {
+  "en": "Specialization for seeders and planters (conventional sowing, direct sowing, water sowing, ridge sowing). Prerequisites: FillUnit, WorkArea, TurnOnVehicle. EFFECTS (client): two groups loaded by g_effectManager:loadEffect: effects (vehicle.sowingMachine.effects: seeds on the ground, driven continuously) and fillEffects (vehicle.sowingMachine.fillEffects: fill effect), plus animationNodes and sounds (airBlower fan on turn-on, work sound). Effect classes are absent from the dump: rendering UNVERIFIED. TRIGGERING: onUpdate (client only: the subscription is removed off-client) starts the effects with the forced material fill type of the fill unit (getFillUnitForcedMaterialFillType, so the displayed seed type, not the fruit) as long as spec.isProcessing is true, otherwise stops them, every frame. isProcessing is set in processSowingMachineArea, after all the guards: speed > 0.5 (isWorking), seeder turned on (or activation not required), seeds available (or AI buying seeds), plantable fruit (type having a terrain map AND a valid planting period, except getCanPlantOutsideSeason), water sowing consistent with water (isInWater), and client distance <= SowingMachine.CLIENT_DM_UPDATE_RADIUS (constant not defined here: UNVERIFIED). A client receives NO effect state over the network: it recomputes isProcessing locally, so a client's sowing effects depend on its own execution of processSowingMachineArea, and a distant seeder does not emit (early return before isProcessing). The fillEffects are driven by onFillUnitFillLevelChanged (client): started if the unit contains something, with the forced type or the received type, stopped if empty. No growth stage or width is passed to the effects. TERRAIN: FSDensityMapUtil.updateSowingArea (conventional sowing) or updateDirectSowingArea (direct sowing) with fruit, target field ground type, ridge option and row angle (angle of the tool direction, rounded to the fruit's directionSnapAngle if non-zero); bodies absent from the dump: consequences UNVERIFIED. eraseTireTrack is called after the guards. Crop check: fruitTypeDesc.seedRequiredFieldType (rice) compared with FSDensityMapUtil.getFieldTypeAtWorldPos. SEASON: getIsPlantableInPeriod(growthMode, environment.currentPeriod) (calendar period), NO reading of weather, rain or soil moisture. CONSUMPTION: server, at the end of the pass, seedUsagePerSqm * area * seedUsageScale (increased by vehicle damage) subtracted from the fill unit or the consumable, or charged to the AI if seeds are bought. dt: only for the sown time (sownTime statistic). NETWORK: only the seed index is synchronized (initial stream, SetSeedIndexEvent); the effects are not. Warning: onStateChange tests `... or VehicleStateChange.FILLTYPE_CHANGE`, an always-true expression (SowingMachine.lua:1131): the seed sources update therefore runs on every state change (not verified in game). The `updateCultivatorEnabledState` called by this file is discussed in Cultivator. EXTENSION POINTS: functions setSeedIndex, changeSeedIndex, setSeedFruitType, getIsSeedChangeAllowed, getSowingMachineFillUnitIndex, getSowingMachineSeedFillTypeIndex, getCurrentSeedTypeIcon, processSowingMachineArea, updateMissionSowingWarning, getUseSowingMachineAIRequirements, setFillTypeSourceDisplayFillType, getCanPlantOutsideSeason, getSowingMachineCanConsume, getAllowFillFromAir, getDirectionSnapAngle; overrides addFillUnitFillLevel, getFillUnitAllowsFillType, getCanBeTurnedOn, getCanToggleTurnedOn, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML (SOWINGMACHINE type), getCanAIImplementContinueWork; events onTurnedOn/Off, onStart/EndWorkAreaProcessing, onFillUnitFillLevelChanged, onChangedFillType, onStateChange. Default speed limit: 15.",
+  "fr": "Spécialisation des semoirs et planteuses (semis classique, semis direct, semis en eau, semis sur billons). Prérequis : FillUnit, WorkArea, TurnOnVehicle. EFFETS (client) : deux groupes chargés par g_effectManager:loadEffect : effects (vehicle.sowingMachine.effects : graines au sol, pilotés en continu) et fillEffects (vehicle.sowingMachine.fillEffects : effet de remplissage), plus animationNodes et sons (soufflerie airBlower à l'allumage, son de travail). Classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT : onUpdate (client uniquement : l'abonnement est retiré hors client) démarre les effects avec le type de matière forcée de l'unité de remplissage (getFillUnitForcedMaterialFillType, donc le type de graine affiché, pas le fruit) tant que spec.isProcessing est vrai, sinon les arrête, à chaque image. isProcessing est posé dans processSowingMachineArea, après toutes les gardes : vitesse > 0.5 (isWorking), semoir allumé (ou activation non requise), graines disponibles (ou IA qui achète les graines), fruit plantable (type possédant une carte de terrain ET période de plantation valide, sauf getCanPlantOutsideSeason), semis en eau cohérent avec l'eau (isInWater), et distance client <= SowingMachine.CLIENT_DM_UPDATE_RADIUS (constante non définie ici : NON VÉRIFIÉ). Un client ne reçoit AUCUN état d'effet par le réseau : il recalcule isProcessing localement, donc les effets de semis d'un client dépendent de sa propre exécution de processSowingMachineArea, et un semoir éloigné n'émet pas (retour anticipé avant isProcessing). Les fillEffects sont pilotés par onFillUnitFillLevelChanged (client) : démarrés si l'unité contient quelque chose, avec le type forcé ou le type reçu, arrêtés si vide. Aucun stade de croissance ni largeur n'est transmis aux effets. TERRAIN : FSDensityMapUtil.updateSowingArea (semis classique) ou updateDirectSowingArea (semis direct) avec fruit, type de sol de champ cible, option billons et angle de rangée (angle de la direction de l'outil, arrondi à directionSnapAngle du fruit s'il est non nul) ; corps absents du dump : conséquences NON VÉRIFIÉES. eraseTireTrack est appelé après les gardes. Contrôle de culture : fruitTypeDesc.seedRequiredFieldType (riz) comparé à FSDensityMapUtil.getFieldTypeAtWorldPos. SAISON : getIsPlantableInPeriod(growthMode, environment.currentPeriod) (période du calendrier), AUCUNE lecture de météo, de pluie ni d'humidité du sol. CONSOMMATION : serveur, en fin de passe, seedUsagePerSqm * surface * seedUsageScale (majoré par les dégâts du véhicule) soustrait de l'unité de remplissage ou du consommable, ou facturé à l'IA si les graines sont achetées. dt : seulement pour le temps semé (statistique sownTime). RÉSEAU : seul l'indice de graine est synchronisé (flux initial, SetSeedIndexEvent) ; les effets ne le sont pas. Avertissement : onStateChange teste `... or VehicleStateChange.FILLTYPE_CHANGE`, expression toujours vraie (SowingMachine.lua:1131) : la mise à jour des sources de graines s'exécute donc à chaque changement d'état (non vérifié en jeu). Le `updateCultivatorEnabledState` appelé par ce fichier est discuté dans Cultivator. POINTS D'EXTENSION : fonctions setSeedIndex, changeSeedIndex, setSeedFruitType, getIsSeedChangeAllowed, getSowingMachineFillUnitIndex, getSowingMachineSeedFillTypeIndex, getCurrentSeedTypeIcon, processSowingMachineArea, updateMissionSowingWarning, getUseSowingMachineAIRequirements, setFillTypeSourceDisplayFillType, getCanPlantOutsideSeason, getSowingMachineCanConsume, getAllowFillFromAir, getDirectionSnapAngle ; surcharges addFillUnitFillLevel, getFillUnitAllowsFillType, getCanBeTurnedOn, getCanToggleTurnedOn, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML (type SOWINGMACHINE), getCanAIImplementContinueWork ; événements onTurnedOn/Off, onStart/EndWorkAreaProcessing, onFillUnitFillLevelChanged, onChangedFillType, onStateChange. Vitesse limite par défaut : 15."
+ },
  "fonctions": {
-  "SowingMachine.initSpecialization": "Déclare le type de zone sowingMachine et le schéma XML : effets, fillEffects, animationNodes, graines (catégories ou types), semis direct/eau/billons, unité de remplissage, consommable, usage. Non relu clé par clé.",
-  "SowingMachine.prerequisitesPresent": "Exige FillUnit, WorkArea et TurnOnVehicle.",
-  "SowingMachine.registerFunctions": "Enregistre les fonctions de gestion des graines, de traitement de zone, d'avertissement de mission, de besoins IA et de consommation (liste non relue ligne à ligne).",
-  "SowingMachine.registerOverwrittenFunctions": "Surcharge addFillUnitFillLevel, getFillUnitAllowsFillType, getCanBeTurnedOn, getCanToggleTurnedOn, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML, getCanAIImplementContinueWork et d'autres (liste non relue ligne à ligne).",
-  "SowingMachine.registerEventListeners": "S'abonne à onLoad, onPostLoad, onDelete, flux initial, onUpdate, onUpdateTick, onRegisterActionEvents, onTurnedOn/Off, onStart/EndWorkAreaProcessing, onDeactivate, onStateChange, onChangedFillType, onFillUnitFillLevelChanged et onAIFieldCourseSettingsInitialized.",
-  "SowingMachine:onLoad": "Charge sons, animations et effets (client), lit les fruits semables, le type de graine, l'activation requise (faux par défaut), le semis direct/eau/billons, l'unité de remplissage, le consommable et l'échelle d'usage ; sélectionne la graine par défaut ou celle de la sauvegarde ; retire onUpdate/onUpdateTick hors client ; active needWaterInfo.",
-  "SowingMachine:onPostLoad": "Calcule les paramètres IA initiaux.",
-  "SowingMachine:onDelete": "Libère sons, animations et effets (client : sons, effects, fillEffects, animations).",
-  "SowingMachine:saveToXMLFile": "Sauvegarde la graine sélectionnée et l'autorisation de changer de graine.",
-  "SowingMachine:onReadStream": "Lit l'indice de graine à la connexion et l'applique sans renvoi d'événement.",
-  "SowingMachine:onWriteStream": "Écrit l'indice de graine courant.",
-  "SowingMachine:onUpdate": "Client : démarre les effets de semis avec le type de matière forcée de l'unité de remplissage tant que isProcessing est vrai (si ce type est connu), sinon les arrête. Exécuté à chaque image, sans temporisation.",
-  "SowingMachine:onUpdateTick": "Client : active/désactive l'action de changement de graine et affiche les avertissements clignotants (fruit non plantable, mauvaise graine de mission, mauvaise période, eau requise/interdite, type de champ).",
-  "SowingMachine:setSeedIndex": "Choisit la graine (bornée), envoie SetSeedIndexEvent, met à jour le type affiché de l'unité de remplissage et des sources, les besoins IA et le texte de l'action.",
-  "SowingMachine:changeSeedIndex": "Passe à la graine suivante ou précédente de façon circulaire.",
-  "SowingMachine:setSeedFruitType": "Sélectionne la graine correspondant à un indice de fruit.",
-  "SowingMachine:getIsSeedChangeAllowed": "Renvoie allowsSeedChanging.",
-  "SowingMachine:getSowingMachineFillUnitIndex": "Renvoie l'indice de l'unité de remplissage des graines.",
-  "SowingMachine:getSowingMachineSeedFillTypeIndex": "Renvoie le type de remplissage correspondant à la graine courante.",
-  "SowingMachine:getCurrentSeedTypeIcon": "Renvoie le fichier d'icône HUD du type de remplissage de la graine courante (nil si inconnu).",
-  "SowingMachine:processSowingMachineArea": "Cœur du semis : applique les gardes (eau, activation, graines, fruit plantable, type de champ), efface les traces de pneus, pose isProcessing (pilote les effets) et appelle le semis classique ou direct dans la carte de densité ; lit la présence de pierres et prépare l'avertissement de mission. Renvoie surface modifiée et totale.",
-  "SowingMachine:updateMissionSowingWarning": "Signale un mauvais fruit si le semoir travaille sur un champ de mission de semis non loué.",
-  "SowingMachine:getUseSowingMachineAIRequirements": "Vrai si l'IA doit allumer le semoir ou si celui-ci est allumé.",
-  "SowingMachine:setFillTypeSourceDisplayFillType": "Met à jour le type de remplissage affiché sur les véhicules sources de graines (remorques) pour la graine sélectionnée.",
-  "SowingMachine:getDrawFirstFillText": "Demande d'afficher « remplir d'abord » quand le semoir est sélectionné et vide.",
-  "SowingMachine:getAreControlledActionsAllowed": "Interdit les actions contrôlées tant qu'un semoir à remplissage obligatoire est vide.",
-  "SowingMachine:getFillUnitAllowsFillType": "Accepte le type de graine configuré ou le type déjà présent dans l'unité.",
-  "SowingMachine:getCanBeTurnedOn": "Refuse l'allumage si needsActivation est faux.",
-  "SowingMachine:getCanToggleTurnedOn": "Refuse le basculement manuel si needsActivation est faux.",
-  "SowingMachine:getCanPlantOutsideSeason": "Renvoie faux ; point de surcharge pour ignorer la période de plantation.",
-  "SowingMachine:getSowingMachineCanConsume": "Dit si le semoir a de quoi consommer (consommable disponible ou niveau > 0).",
-  "SowingMachine:getAllowFillFromAir": "Interdit le remplissage depuis l'air quand allumé si l'option allowFillFromAirWhileTurnedOn est fausse.",
-  "SowingMachine:getDirectionSnapAngle": "Prend le plus grand de l'angle d'accrochage du fruit courant et du parent.",
-  "SowingMachine:addFillUnitFillLevel": "Force le type de graine de l'unité de remplissage (matière forcée) avant d'ajouter la quantité ; c'est ce type forcé que lit onUpdate pour les effets.",
-  "SowingMachine:doCheckSpeedLimit": "Applique la limite de vitesse quand la chaîne d'outils est abaissée et, si activation requise, quand l'outil est allumé.",
-  "SowingMachine:getDirtMultiplier": "Ajoute la salissure de travail (marche avant, isWorking, allumé si requis) pondérée par la vitesse.",
-  "SowingMachine:getWearMultiplier": "Idem pour l'usure, avec facteur de pierres.",
-  "SowingMachine:loadWorkAreaFromXML": "Force le type de zone SOWINGMACHINE si DEFAULT.",
-  "SowingMachine:getCanBeSelected": "Renvoie vrai : l'outil est sélectionnable.",
-  "SowingMachine:getCanAIImplementContinueWork": "L'IA s'arrête si la graine n'est pas plantable à la période courante (sauf plantation hors saison autorisée).",
-  "SowingMachine:onRegisterActionEvents": "Enregistre les actions de changement de graine (suivante/précédente) s'il y a plusieurs graines.",
-  "SowingMachine.updateChooseSeedActionEvent": "Met à jour le texte de l'action de choix de graine avec le nom du type de remplissage courant.",
-  "SowingMachine:onTurnedOn": "Client : lance la soufflerie et les animations ; serveur : allume les véhicules sources de graines ; recalcule les besoins IA.",
-  "SowingMachine:onTurnedOff": "Symétrique : arrête soufflerie et animations, éteint les sources, recalcule les besoins IA.",
-  "SowingMachine:onStartWorkAreaProcessing": "Avant la passe : isWorking/isProcessing = faux ; choisit le véhicule source de graines, calcule l'angle de rangée, le fruit plantable, la période de plantation (calendrier) et les avertissements, et remplit workAreaParameters.",
-  "SowingMachine:onEndWorkAreaProcessing": "Serveur : calcule la consommation de graines (ou la facture IA), met à jour statistiques et surface ; client : démarre/arrête le son de travail selon isWorking.",
-  "SowingMachine:onDeactivate": "Coupe les sons de travail et de soufflerie.",
-  "SowingMachine:onStateChange": "Reconstruit les sources de graines et le type affiché à chaque changement d'état (condition toujours vraie, voir module).",
-  "SowingMachine:onChangedFillType": "Transmet le nouveau type de remplissage aux animations.",
-  "SowingMachine:onFillUnitFillLevelChanged": "Client : démarre les fillEffects (avec le type forcé ou reçu) si l'unité contient quelque chose, sinon les arrête.",
-  "SowingMachine:onAIFieldCourseSettingsInitialized": "Pour un semis en type PLANTED : bordures d'abord et segment initial travaillé.",
-  "SowingMachine.updateAiParameters": "Recalcule les besoins IA (types de sol requis ou exclus, cultures) selon la graine, la présence d'une source et l'état allumé (lignes 1192-1270 non relues en détail).",
-  "SowingMachine.getDefaultSpeedLimit": "Limite de vitesse par défaut : 15.",
-  "SowingMachine.actionEventToggleSeedType": "Callback d'entrée : graine suivante.",
-  "SowingMachine.actionEventToggleSeedTypeBack": "Callback d'entrée : graine précédente.",
-  "SowingMachine.loadSpecValueSeedFillTypes": "Lit pour la boutique les types de graines d'un semoir depuis son XML.",
-  "SowingMachine.getSpecValueSeedFillTypes": "Formate pour la boutique la liste des types de graines."
+  "SowingMachine.initSpecialization": {
+   "en": "Declares the sowingMachine area type and the XML schema: effects, fillEffects, animationNodes, seeds (categories or types), direct/water/ridge sowing, fill unit, consumable, usage. Not re-read key by key.",
+   "fr": "Déclare le type de zone sowingMachine et le schéma XML : effets, fillEffects, animationNodes, graines (catégories ou types), semis direct/eau/billons, unité de remplissage, consommable, usage. Non relu clé par clé."
+  },
+  "SowingMachine.prerequisitesPresent": {
+   "en": "Requires FillUnit, WorkArea and TurnOnVehicle.",
+   "fr": "Exige FillUnit, WorkArea et TurnOnVehicle."
+  },
+  "SowingMachine.registerFunctions": {
+   "en": "Registers the functions for seed management, area processing, mission warning, AI requirements and consumption (list not re-read line by line).",
+   "fr": "Enregistre les fonctions de gestion des graines, de traitement de zone, d'avertissement de mission, de besoins IA et de consommation (liste non relue ligne à ligne)."
+  },
+  "SowingMachine.registerOverwrittenFunctions": {
+   "en": "Overrides addFillUnitFillLevel, getFillUnitAllowsFillType, getCanBeTurnedOn, getCanToggleTurnedOn, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML, getCanAIImplementContinueWork and others (list not re-read line by line).",
+   "fr": "Surcharge addFillUnitFillLevel, getFillUnitAllowsFillType, getCanBeTurnedOn, getCanToggleTurnedOn, doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML, getCanAIImplementContinueWork et d'autres (liste non relue ligne à ligne)."
+  },
+  "SowingMachine.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, initial stream, onUpdate, onUpdateTick, onRegisterActionEvents, onTurnedOn/Off, onStart/EndWorkAreaProcessing, onDeactivate, onStateChange, onChangedFillType, onFillUnitFillLevelChanged and onAIFieldCourseSettingsInitialized.",
+   "fr": "S'abonne à onLoad, onPostLoad, onDelete, flux initial, onUpdate, onUpdateTick, onRegisterActionEvents, onTurnedOn/Off, onStart/EndWorkAreaProcessing, onDeactivate, onStateChange, onChangedFillType, onFillUnitFillLevelChanged et onAIFieldCourseSettingsInitialized."
+  },
+  "SowingMachine:onLoad": {
+   "en": "Loads sounds, animations and effects (client), reads the sowable fruits, the seed type, the required activation (false by default), direct/water/ridge sowing, the fill unit, the consumable and the usage scale; selects the default seed or the savegame one; removes onUpdate/onUpdateTick off-client; enables needWaterInfo.",
+   "fr": "Charge sons, animations et effets (client), lit les fruits semables, le type de graine, l'activation requise (faux par défaut), le semis direct/eau/billons, l'unité de remplissage, le consommable et l'échelle d'usage ; sélectionne la graine par défaut ou celle de la sauvegarde ; retire onUpdate/onUpdateTick hors client ; active needWaterInfo."
+  },
+  "SowingMachine:onPostLoad": {
+   "en": "Computes the initial AI parameters.",
+   "fr": "Calcule les paramètres IA initiaux."
+  },
+  "SowingMachine:onDelete": {
+   "en": "Frees sounds, animations and effects (client: sounds, effects, fillEffects, animations).",
+   "fr": "Libère sons, animations et effets (client : sons, effects, fillEffects, animations)."
+  },
+  "SowingMachine:saveToXMLFile": {
+   "en": "Saves the selected seed and the permission to change seed.",
+   "fr": "Sauvegarde la graine sélectionnée et l'autorisation de changer de graine."
+  },
+  "SowingMachine:onReadStream": {
+   "en": "Reads the seed index on join and applies it without sending an event back.",
+   "fr": "Lit l'indice de graine à la connexion et l'applique sans renvoi d'événement."
+  },
+  "SowingMachine:onWriteStream": {
+   "en": "Writes the current seed index.",
+   "fr": "Écrit l'indice de graine courant."
+  },
+  "SowingMachine:onUpdate": {
+   "en": "Client: starts the sowing effects with the forced material type of the fill unit as long as isProcessing is true (if this type is known), otherwise stops them. Runs every frame, with no throttling.",
+   "fr": "Client : démarre les effets de semis avec le type de matière forcée de l'unité de remplissage tant que isProcessing est vrai (si ce type est connu), sinon les arrête. Exécuté à chaque image, sans temporisation."
+  },
+  "SowingMachine:onUpdateTick": {
+   "en": "Client: enables/disables the seed change action and shows the blinking warnings (non-plantable fruit, wrong mission seed, wrong period, water required/forbidden, field type).",
+   "fr": "Client : active/désactive l'action de changement de graine et affiche les avertissements clignotants (fruit non plantable, mauvaise graine de mission, mauvaise période, eau requise/interdite, type de champ)."
+  },
+  "SowingMachine:setSeedIndex": {
+   "en": "Chooses the seed (clamped), sends SetSeedIndexEvent, updates the displayed type of the fill unit and of the sources, the AI requirements and the action text.",
+   "fr": "Choisit la graine (bornée), envoie SetSeedIndexEvent, met à jour le type affiché de l'unité de remplissage et des sources, les besoins IA et le texte de l'action."
+  },
+  "SowingMachine:changeSeedIndex": {
+   "en": "Moves to the next or previous seed in a circular way.",
+   "fr": "Passe à la graine suivante ou précédente de façon circulaire."
+  },
+  "SowingMachine:setSeedFruitType": {
+   "en": "Selects the seed matching a fruit index.",
+   "fr": "Sélectionne la graine correspondant à un indice de fruit."
+  },
+  "SowingMachine:getIsSeedChangeAllowed": {
+   "en": "Returns allowsSeedChanging.",
+   "fr": "Renvoie allowsSeedChanging."
+  },
+  "SowingMachine:getSowingMachineFillUnitIndex": {
+   "en": "Returns the index of the seed fill unit.",
+   "fr": "Renvoie l'indice de l'unité de remplissage des graines."
+  },
+  "SowingMachine:getSowingMachineSeedFillTypeIndex": {
+   "en": "Returns the fill type matching the current seed.",
+   "fr": "Renvoie le type de remplissage correspondant à la graine courante."
+  },
+  "SowingMachine:getCurrentSeedTypeIcon": {
+   "en": "Returns the HUD icon file of the current seed fill type (nil if unknown).",
+   "fr": "Renvoie le fichier d'icône HUD du type de remplissage de la graine courante (nil si inconnu)."
+  },
+  "SowingMachine:processSowingMachineArea": {
+   "en": "Core of sowing: applies the guards (water, activation, seeds, plantable fruit, field type), erases tire tracks, sets isProcessing (drives the effects) and calls conventional or direct sowing in the density map; reads stone presence and prepares the mission warning. Returns modified and total area.",
+   "fr": "Cœur du semis : applique les gardes (eau, activation, graines, fruit plantable, type de champ), efface les traces de pneus, pose isProcessing (pilote les effets) et appelle le semis classique ou direct dans la carte de densité ; lit la présence de pierres et prépare l'avertissement de mission. Renvoie surface modifiée et totale."
+  },
+  "SowingMachine:updateMissionSowingWarning": {
+   "en": "Reports a wrong fruit if the seeder works on a field of an unleased sowing mission.",
+   "fr": "Signale un mauvais fruit si le semoir travaille sur un champ de mission de semis non loué."
+  },
+  "SowingMachine:getUseSowingMachineAIRequirements": {
+   "en": "True if the AI must turn the seeder on or if it is turned on.",
+   "fr": "Vrai si l'IA doit allumer le semoir ou si celui-ci est allumé."
+  },
+  "SowingMachine:setFillTypeSourceDisplayFillType": {
+   "en": "Updates the fill type displayed on the seed source vehicles (trailers) for the selected seed.",
+   "fr": "Met à jour le type de remplissage affiché sur les véhicules sources de graines (remorques) pour la graine sélectionnée."
+  },
+  "SowingMachine:getDrawFirstFillText": {
+   "en": "Asks to display \"fill first\" when the seeder is selected and empty.",
+   "fr": "Demande d'afficher « remplir d'abord » quand le semoir est sélectionné et vide."
+  },
+  "SowingMachine:getAreControlledActionsAllowed": {
+   "en": "Forbids controlled actions while a seeder with mandatory filling is empty.",
+   "fr": "Interdit les actions contrôlées tant qu'un semoir à remplissage obligatoire est vide."
+  },
+  "SowingMachine:getFillUnitAllowsFillType": {
+   "en": "Accepts the configured seed type or the type already in the unit.",
+   "fr": "Accepte le type de graine configuré ou le type déjà présent dans l'unité."
+  },
+  "SowingMachine:getCanBeTurnedOn": {
+   "en": "Refuses turning on if needsActivation is false.",
+   "fr": "Refuse l'allumage si needsActivation est faux."
+  },
+  "SowingMachine:getCanToggleTurnedOn": {
+   "en": "Refuses manual toggling if needsActivation is false.",
+   "fr": "Refuse le basculement manuel si needsActivation est faux."
+  },
+  "SowingMachine:getCanPlantOutsideSeason": {
+   "en": "Returns false; override point to ignore the planting period.",
+   "fr": "Renvoie faux ; point de surcharge pour ignorer la période de plantation."
+  },
+  "SowingMachine:getSowingMachineCanConsume": {
+   "en": "Tells whether the seeder has something to consume (consumable available or level > 0).",
+   "fr": "Dit si le semoir a de quoi consommer (consommable disponible ou niveau > 0)."
+  },
+  "SowingMachine:getAllowFillFromAir": {
+   "en": "Forbids filling from the air when turned on if the allowFillFromAirWhileTurnedOn option is false.",
+   "fr": "Interdit le remplissage depuis l'air quand allumé si l'option allowFillFromAirWhileTurnedOn est fausse."
+  },
+  "SowingMachine:getDirectionSnapAngle": {
+   "en": "Takes the larger of the snap angle of the current fruit and of the parent.",
+   "fr": "Prend le plus grand de l'angle d'accrochage du fruit courant et du parent."
+  },
+  "SowingMachine:addFillUnitFillLevel": {
+   "en": "Forces the seed type of the fill unit (forced material) before adding the quantity; this forced type is what onUpdate reads for the effects.",
+   "fr": "Force le type de graine de l'unité de remplissage (matière forcée) avant d'ajouter la quantité ; c'est ce type forcé que lit onUpdate pour les effets."
+  },
+  "SowingMachine:doCheckSpeedLimit": {
+   "en": "Applies the speed limit when the tool chain is lowered and, if activation is required, when the tool is turned on.",
+   "fr": "Applique la limite de vitesse quand la chaîne d'outils est abaissée et, si activation requise, quand l'outil est allumé."
+  },
+  "SowingMachine:getDirtMultiplier": {
+   "en": "Adds the work dirt (forward driving, isWorking, turned on if required) weighted by speed.",
+   "fr": "Ajoute la salissure de travail (marche avant, isWorking, allumé si requis) pondérée par la vitesse."
+  },
+  "SowingMachine:getWearMultiplier": {
+   "en": "Same for wear, with a stone factor.",
+   "fr": "Idem pour l'usure, avec facteur de pierres."
+  },
+  "SowingMachine:loadWorkAreaFromXML": {
+   "en": "Forces the SOWINGMACHINE area type if DEFAULT.",
+   "fr": "Force le type de zone SOWINGMACHINE si DEFAULT."
+  },
+  "SowingMachine:getCanBeSelected": {
+   "en": "Returns true: the tool is selectable.",
+   "fr": "Renvoie vrai : l'outil est sélectionnable."
+  },
+  "SowingMachine:getCanAIImplementContinueWork": {
+   "en": "The AI stops if the seed is not plantable in the current period (unless out-of-season planting is allowed).",
+   "fr": "L'IA s'arrête si la graine n'est pas plantable à la période courante (sauf plantation hors saison autorisée)."
+  },
+  "SowingMachine:onRegisterActionEvents": {
+   "en": "Registers the seed change actions (next/previous) if there are several seeds.",
+   "fr": "Enregistre les actions de changement de graine (suivante/précédente) s'il y a plusieurs graines."
+  },
+  "SowingMachine.updateChooseSeedActionEvent": {
+   "en": "Updates the text of the seed choice action with the name of the current fill type.",
+   "fr": "Met à jour le texte de l'action de choix de graine avec le nom du type de remplissage courant."
+  },
+  "SowingMachine:onTurnedOn": {
+   "en": "Client: starts the fan and the animations; server: turns on the seed source vehicles; recomputes the AI requirements.",
+   "fr": "Client : lance la soufflerie et les animations ; serveur : allume les véhicules sources de graines ; recalcule les besoins IA."
+  },
+  "SowingMachine:onTurnedOff": {
+   "en": "Symmetric: stops fan and animations, turns off the sources, recomputes the AI requirements.",
+   "fr": "Symétrique : arrête soufflerie et animations, éteint les sources, recalcule les besoins IA."
+  },
+  "SowingMachine:onStartWorkAreaProcessing": {
+   "en": "Before the pass: isWorking/isProcessing = false; chooses the seed source vehicle, computes the row angle, the plantable fruit, the planting period (calendar) and the warnings, and fills workAreaParameters.",
+   "fr": "Avant la passe : isWorking/isProcessing = faux ; choisit le véhicule source de graines, calcule l'angle de rangée, le fruit plantable, la période de plantation (calendrier) et les avertissements, et remplit workAreaParameters."
+  },
+  "SowingMachine:onEndWorkAreaProcessing": {
+   "en": "Server: computes seed consumption (or the AI bill), updates statistics and area; client: starts/stops the work sound depending on isWorking.",
+   "fr": "Serveur : calcule la consommation de graines (ou la facture IA), met à jour statistiques et surface ; client : démarre/arrête le son de travail selon isWorking."
+  },
+  "SowingMachine:onDeactivate": {
+   "en": "Stops the work and fan sounds.",
+   "fr": "Coupe les sons de travail et de soufflerie."
+  },
+  "SowingMachine:onStateChange": {
+   "en": "Rebuilds the seed sources and the displayed type on every state change (always-true condition, see module).",
+   "fr": "Reconstruit les sources de graines et le type affiché à chaque changement d'état (condition toujours vraie, voir module)."
+  },
+  "SowingMachine:onChangedFillType": {
+   "en": "Passes the new fill type to the animations.",
+   "fr": "Transmet le nouveau type de remplissage aux animations."
+  },
+  "SowingMachine:onFillUnitFillLevelChanged": {
+   "en": "Client: starts the fillEffects (with the forced or received type) if the unit contains something, otherwise stops them.",
+   "fr": "Client : démarre les fillEffects (avec le type forcé ou reçu) si l'unité contient quelque chose, sinon les arrête."
+  },
+  "SowingMachine:onAIFieldCourseSettingsInitialized": {
+   "en": "For PLANTED type sowing: headlands first and initial segment worked.",
+   "fr": "Pour un semis en type PLANTED : bordures d'abord et segment initial travaillé."
+  },
+  "SowingMachine.updateAiParameters": {
+   "en": "Recomputes the AI requirements (required or excluded ground types, crops) depending on the seed, the presence of a source and the turned-on state (lines 1192-1270 not re-read in detail).",
+   "fr": "Recalcule les besoins IA (types de sol requis ou exclus, cultures) selon la graine, la présence d'une source et l'état allumé (lignes 1192-1270 non relues en détail)."
+  },
+  "SowingMachine.getDefaultSpeedLimit": {
+   "en": "Default speed limit: 15.",
+   "fr": "Limite de vitesse par défaut : 15."
+  },
+  "SowingMachine.actionEventToggleSeedType": {
+   "en": "Input callback: next seed.",
+   "fr": "Callback d'entrée : graine suivante."
+  },
+  "SowingMachine.actionEventToggleSeedTypeBack": {
+   "en": "Input callback: previous seed.",
+   "fr": "Callback d'entrée : graine précédente."
+  },
+  "SowingMachine.loadSpecValueSeedFillTypes": {
+   "en": "Reads for the shop the seed types of a seeder from its XML.",
+   "fr": "Lit pour la boutique les types de graines d'un semoir depuis son XML."
+  },
+  "SowingMachine.getSpecValueSeedFillTypes": {
+   "en": "Formats the list of seed types for the shop.",
+   "fr": "Formate pour la boutique la liste des types de graines."
+  }
  }
 }

@@ -1,0 +1,113 @@
+{
+ "fichier": "vehicles/specializations/Pickup.lua",
+ "module": {
+  "en": "Specialization for implements with a pickup that can be lowered on its own (forage wagon, baler and similar). It requires AnimatedVehicle. It stores the lowered state, plays a configurable lift or lower animation, syncs the state through PickupSetStateEvent, adds a LOWER_IMPLEMENT action, registers a controlled action for the root vehicle's action controller, and raises dirt and wear while the pickup is lowered and working.",
+  "fr": "Spécialisation des outils dont le pick-up peut être abaissé indépendamment (autochargeuse, presse et similaires). Elle exige AnimatedVehicle. Elle mémorise l'état abaissé, joue une animation de levage ou d'abaissement configurable, synchronise l'état via PickupSetStateEvent, ajoute une action LOWER_IMPLEMENT, enregistre une action contrôlée auprès du contrôleur d'actions du véhicule racine, et augmente salissure et usure quand le pick-up est abaissé et travaille."
+ },
+ "fonctions": {
+  "Pickup.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the AnimatedVehicle specialization.",
+   "fr": "Retourne true seulement si le type de véhicule possède la spécialisation AnimatedVehicle."
+  },
+  "Pickup.initSpecialization": {
+   "en": "Registers the XML paths of the pickup animation (name, lowerSpeed, liftSpeed, isDefaultLowered) under the key held in Pickup.PICKUP_XML_KEY, which is defined outside the lines visible in this dump (UNVERIFIED value).",
+   "fr": "Enregistre les chemins XML de l'animation du pick-up (name, lowerSpeed, liftSpeed, isDefaultLowered) sous la clé contenue dans Pickup.PICKUP_XML_KEY, définie hors des lignes visibles de ce dump (valeur NON VÉRIFIÉE)."
+  },
+  "Pickup.registerFunctions": {
+   "en": "Registers allowPickingUp, setPickupState, loadPickupFromXML and getCanChangePickupState on the vehicle type.",
+   "fr": "Enregistre allowPickingUp, setPickupState, loadPickupFromXML et getCanChangePickupState sur le type de véhicule."
+  },
+  "Pickup.registerOverwrittenFunctions": {
+   "en": "Overrides getIsLowered, dirt and wear multipliers, both lowering action event registrations, and the ground and object discharge checks.",
+   "fr": "Surcharge getIsLowered, les multiplicateurs de salissure et d'usure, les deux enregistrements d'actions d'abaissement et les contrôles de décharge au sol et vers un objet."
+  },
+  "Pickup.registerEventListeners": {
+   "en": "Subscribes to load, post-load, stream read/write, lower-all, root vehicle changed and fold time changed events.",
+   "fr": "S'abonne aux événements de chargement, post-chargement, lecture/écriture de flux, abaissement général, changement de véhicule racine et changement de temps de pliage."
+  },
+  "Pickup:onLoad": {
+   "en": "Loads the pickup settings from the vehicle.pickup XML key into the spec via loadPickupFromXML.",
+   "fr": "Charge les réglages du pick-up depuis la clé XML vehicle.pickup dans la spec via loadPickupFromXML."
+  },
+  "Pickup:onPostLoad": {
+   "en": "If an animation exists, jumps it to its end position at once: lowered when default-lowered is set (and marks the state lowered), lifted otherwise.",
+   "fr": "Si une animation existe, la place immédiatement à sa position finale : abaissée si isDefaultLowered est défini (et marque l'état abaissé), relevée sinon."
+  },
+  "Pickup:onReadStream": {
+   "en": "Client on join: reads the lowered flag and applies it with setPickupState without sending an event.",
+   "fr": "Client à la connexion : lit l'indicateur d'abaissement et l'applique avec setPickupState sans envoyer d'événement."
+  },
+  "Pickup:onWriteStream": {
+   "en": "Server on join: writes the current lowered flag.",
+   "fr": "Serveur à la connexion : écrit l'indicateur d'abaissement courant."
+  },
+  "Pickup:onSetLoweredAll": {
+   "en": "Follows the lower-all command of the vehicle chain by setting the pickup state to the requested lowering value.",
+   "fr": "Suit la commande d'abaissement général de la chaîne de véhicules en fixant l'état du pick-up à la valeur demandée."
+  },
+  "Pickup:onRootVehicleChanged": {
+   "en": "Registers (or re-parents) a lowerPickup controlled action on the new root vehicle's action controller, saved with AI line-start and end listeners if the AI needs lowering; removes it when no controller applies. Skipped when there is no animation.",
+   "fr": "Enregistre (ou rattache de nouveau) une action contrôlée lowerPickup sur le contrôleur d'actions du nouveau véhicule racine, sauvegardée, avec des écouteurs IA de début et fin de ligne si l'IA doit abaisser ; la retire si aucun contrôleur ne s'applique. Ignoré s'il n'y a pas d'animation."
+  },
+  "Pickup:onFoldTimeChanged": {
+   "en": "Refreshes the lowering action event text and availability when the fold time changes.",
+   "fr": "Rafraîchit le texte et la disponibilité de l'action d'abaissement quand le temps de pliage change."
+  },
+  "Pickup:actionControllerLowerPickupEvent": {
+   "en": "Action controller callback: lowers the pickup when the direction is positive, lifts it otherwise, and returns true.",
+   "fr": "Callback du contrôleur d'actions : abaisse le pick-up si la direction est positive, le relève sinon, et retourne true."
+  },
+  "Pickup:setPickupState": {
+   "en": "Changes the lowered state if it differs, sends PickupSetStateEvent unless noEventSend, plays the lower or lift animation from the current time and refreshes the action event.",
+   "fr": "Change l'état abaissé s'il diffère, envoie PickupSetStateEvent sauf si noEventSend, joue l'animation d'abaissement ou de levage depuis le temps courant et rafraîchit l'événement d'action."
+  },
+  "Pickup:allowPickingUp": {
+   "en": "Returns true while the pickup is lowered, meaning crop can be picked up.",
+   "fr": "Retourne true tant que le pick-up est abaissé, c'est-à-dire que la récolte peut être ramassée."
+  },
+  "Pickup:getIsLowered": {
+   "en": "Returns the pickup's own lowered state, ignoring the default argument and the parent.",
+   "fr": "Retourne l'état abaissé propre du pick-up, en ignorant l'argument par défaut et le parent."
+  },
+  "Pickup:loadPickupFromXML": {
+   "en": "Reads the animation name and speeds from a given key into the given spec table. If the animation is missing, the name is cleared and the state is lowered. The lift speed defaults to the negated lower speed. Always returns true.",
+   "fr": "Lit le nom et les vitesses de l'animation depuis une clé donnée dans la table de spec fournie. Si l'animation n'existe pas, le nom est vidé et l'état est abaissé. La vitesse de levage vaut par défaut l'opposé de celle d'abaissement. Retourne toujours true."
+  },
+  "Pickup:getCanChangePickupState": {
+   "en": "Hook that always returns true; it takes the spec table and the new state as arguments and can be overridden by other code to restrict toggling.",
+   "fr": "Point d'extension qui retourne toujours true ; il reçoit la table de spec et le nouvel état et peut être surchargé par d'autres codes pour restreindre la bascule."
+  },
+  "Pickup:getDirtMultiplier": {
+   "en": "While the pickup is lowered and the vehicle is on (or cannot be turned on), adds the work dirt multiplier scaled by speed over the speed limit to the parent value.",
+   "fr": "Tant que le pick-up est abaissé et que le véhicule est en marche (ou ne peut pas être allumé), ajoute au résultat du parent le multiplicateur de salissure de travail pondéré par la vitesse rapportée à la limite."
+  },
+  "Pickup:getWearMultiplier": {
+   "en": "While the pickup is lowered and the vehicle is on (or cannot be turned on), adds the work wear multiplier scaled by speed over the speed limit to the parent value.",
+   "fr": "Tant que le pick-up est abaissé et que le véhicule est en marche (ou ne peut pas être allumé), ajoute au résultat du parent le multiplicateur d'usure de travail pondéré par la vitesse rapportée à la limite."
+  },
+  "Pickup:registerLoweringActionEvent": {
+   "en": "When an animation exists, registers a powered LOWER_IMPLEMENT toggle action for the pickup and skips the parent registration if that input is the requested one; otherwise calls the parent.",
+   "fr": "Si une animation existe, enregistre une action motorisée LOWER_IMPLEMENT pour basculer le pick-up et saute l'enregistrement du parent si c'est l'entrée demandée ; sinon appelle le parent."
+  },
+  "Pickup:registerSelfLoweringActionEvent": {
+   "en": "Delegates to the same logic as registerLoweringActionEvent.",
+   "fr": "Délègue à la même logique que registerLoweringActionEvent."
+  },
+  "Pickup:getCanDischargeToGround": {
+   "en": "Returns false while the pickup is lowered, unless spec_pickup.allowWhileTipping is set (not set anywhere in this file); otherwise defers to the parent.",
+   "fr": "Retourne false tant que le pick-up est abaissé, sauf si spec_pickup.allowWhileTipping est défini (nulle part dans ce fichier) ; sinon délègue au parent."
+  },
+  "Pickup:getCanDischargeToObject": {
+   "en": "Returns false while the pickup is lowered, unless spec_pickup.allowWhileTipping is set (not set anywhere in this file); otherwise defers to the parent.",
+   "fr": "Retourne false tant que le pick-up est abaissé, sauf si spec_pickup.allowWhileTipping est défini (nulle part dans ce fichier) ; sinon délègue au parent."
+  },
+  "Pickup.updateActionEvents": {
+   "en": "Static helper: sets the lift or lower text on the LOWER_IMPLEMENT action and enables it according to getCanChangePickupState; only when an animation exists.",
+   "fr": "Fonction statique : fixe le texte de levage ou d'abaissement de l'action LOWER_IMPLEMENT et l'active selon getCanChangePickupState ; seulement si une animation existe."
+  },
+  "Pickup.actionEventTogglePickup": {
+   "en": "Input callback: toggles the pickup state if getCanChangePickupState allows it.",
+   "fr": "Callback d'entrée : bascule l'état du pick-up si getCanChangePickupState l'autorise."
+  }
+ }
+}

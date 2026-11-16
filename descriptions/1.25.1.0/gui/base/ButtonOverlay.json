@@ -1,0 +1,29 @@
+{
+ "fichier": "gui/base/ButtonOverlay.lua",
+ "module": {
+  "en": "Overlay helper that draws a keyboard key button (left cap, stretched middle, right cap) with text on top. Uses overlays `gui.button_left`, `gui.button_middle` and `gui.button_right` from `g_overlayManager`.",
+  "fr": "Utilitaire d'overlay qui dessine un bouton de touche de clavier (extrémité gauche, milieu étiré, extrémité droite) avec du texte dessus. Utilise les overlays `gui.button_left`, `gui.button_middle` et `gui.button_right` de `g_overlayManager`."
+ },
+ "fonctions": {
+  "ButtonOverlay.new": {
+   "en": "Constructor: creates the three button overlays, sets the text size and offset ratios and the default white colour. `minWidth` and `debugEnabled` start as nil.",
+   "fr": "Constructeur : crée les trois overlays du bouton, définit les ratios de taille et de décalage du texte et la couleur blanche par défaut. `minWidth` et `debugEnabled` valent nil au départ."
+  },
+  "ButtonOverlay:delete": {
+   "en": "Deletes the three overlays and sets their references to nil. Safe to call when some are already nil.",
+   "fr": "Supprime les trois overlays et met leurs références à nil. Sans danger si certains sont déjà nil."
+  },
+  "ButtonOverlay:setColor": {
+   "en": "Sets text colour (r,g,b,a) and optional background colour (r2..a2, defaulting to the text colour or the previous background), keeping old values for nil arguments; applies the background to all three overlays.",
+   "fr": "Définit la couleur du texte (r,g,b,a) et, en option, celle du fond (r2..a2, par défaut la couleur du texte ou l'ancien fond), en conservant les anciennes valeurs pour les arguments nil ; applique le fond aux trois overlays."
+  },
+  "ButtonOverlay:renderButton": {
+   "en": "Draws the button background and the upper-cased key text at the given position and height, with optional clip area, left offset and grey custom text. Returns the total width; draws debug frames if UI debug is on. Note: calls `self:renderBackground`, not defined in this file (UNVERIFIED).",
+   "fr": "Dessine le fond du bouton et le texte de la touche en majuscules à la position et hauteur données, avec zone de découpe, décalage gauche et texte personnalisé gris optionnels. Renvoie la largeur totale ; cadres de debug si le debug UI est actif. À noter : appelle `self:renderBackground`, absent de ce fichier (NON VÉRIFIÉ)."
+  },
+  "ButtonOverlay:getButtonWidth": {
+   "en": "Computes the button width for a key text and height from the bold text width plus padding, custom left offset and custom text width, respecting `minWidth`. Returns the full width and the width without offset.",
+   "fr": "Calcule la largeur du bouton pour un texte de touche et une hauteur à partir de la largeur du texte gras, du remplissage, du décalage gauche et du texte personnalisé, en respectant `minWidth`. Renvoie la largeur totale et la largeur sans décalage."
+  }
+ }
+}

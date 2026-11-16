@@ -1,0 +1,61 @@
+{
+ "fichier": "gui/elements/ToggleButtonElement.lua",
+ "module": {
+  "en": "Two-state toggle button derived from BitmapElement. Its first child element is shown when checked and its second when unchecked; children's clicks are routed to onButtonClicked, which flips the state and calls the onClick callback. XML keys: onClick, isChecked. Focus handling is forwarded to the children.",
+  "fr": "Bouton à deux états dérivé de BitmapElement. Son premier élément enfant s'affiche quand il est coché et le second quand il est décoché ; les clics des enfants sont redirigés vers onButtonClicked, qui inverse l'état et appelle le callback onClick. Clés XML : onClick, isChecked. La gestion du focus est transmise aux enfants."
+ },
+ "fonctions": {
+  "ToggleButtonElement.new": {
+   "en": "Constructor. Creates the element on BitmapElement, initially unchecked.",
+   "fr": "Constructeur. Crée l'élément sur BitmapElement, initialement décoché."
+  },
+  "ToggleButtonElement:loadFromXML": {
+   "en": "Loads the onClick callback and the isChecked flag from XML and applies the state.",
+   "fr": "Charge depuis le XML le callback onClick et l'indicateur isChecked, puis applique l'état."
+  },
+  "ToggleButtonElement:loadProfile": {
+   "en": "Loads isChecked from a GUI profile and applies the state.",
+   "fr": "Charge isChecked depuis un profil GUI et applique l'état."
+  },
+  "ToggleButtonElement:copyAttributes": {
+   "en": "Copies the checked state and click callback from a source element.",
+   "fr": "Copie l'état coché et le callback de clic depuis un élément source."
+  },
+  "ToggleButtonElement:setIsChecked": {
+   "en": "Stores the state and shows the first child when checked, the second when not. Does not call the click callback.",
+   "fr": "Mémorise l'état et affiche le premier enfant si coché, le second sinon. N'appelle pas le callback de clic."
+  },
+  "ToggleButtonElement:addElement": {
+   "en": "Adds a child; for the first two children it makes the toggle their target, redirects their click callback to onButtonClicked and re-applies checked and disabled state.",
+   "fr": "Ajoute un enfant ; pour les deux premiers, il en fait la cible, redirige leur callback de clic vers onButtonClicked et réapplique les états coché et désactivé."
+  },
+  "ToggleButtonElement:mouseEvent": {
+   "en": "When active, highlights the button on hover (or unhighlights) and passes the event to the parent. Returns false when inactive.",
+   "fr": "Lorsqu'il est actif, met le bouton en surbrillance au survol (ou l'enlève) et transmet l'événement au parent. Renvoie false s'il est inactif."
+  },
+  "ToggleButtonElement:onButtonClicked": {
+   "en": "Flips the checked state, then calls onClickCallback as (target, self, isChecked) or (self, isChecked) when no target is set.",
+   "fr": "Inverse l'état coché, puis appelle onClickCallback avec (target, self, isChecked) ou (self, isChecked) si aucune cible n'est définie."
+  },
+  "ToggleButtonElement:canReceiveFocus": {
+   "en": "True unless the button is disabled or not visible.",
+   "fr": "Vrai sauf si le bouton est désactivé ou invisible."
+  },
+  "ToggleButtonElement:getFocusTarget": {
+   "en": "Always returns the toggle itself as the focus target, overriding parent behaviour.",
+   "fr": "Renvoie toujours le bouton lui-même comme cible de focus, en remplaçant le comportement du parent."
+  },
+  "ToggleButtonElement:onFocusLeave": {
+   "en": "Forwards the focus-leave event to both child elements if present.",
+   "fr": "Transmet l'événement de perte de focus aux deux éléments enfants s'ils existent."
+  },
+  "ToggleButtonElement:onFocusEnter": {
+   "en": "Forwards the focus-enter event to both child elements if present.",
+   "fr": "Transmet l'événement de prise de focus aux deux éléments enfants s'ils existent."
+  },
+  "ToggleButtonElement:onFocusActivate": {
+   "en": "Activation via focus (e.g. confirm button) toggles the state like a click.",
+   "fr": "L'activation via le focus (ex. bouton de validation) bascule l'état comme un clic."
+  }
+ }
+}

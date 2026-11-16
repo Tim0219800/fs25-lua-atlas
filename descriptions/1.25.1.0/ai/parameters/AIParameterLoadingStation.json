@@ -1,0 +1,65 @@
+{
+ "fichier": "ai/parameters/AIParameterLoadingStation.lua",
+ "module": {
+  "en": "AI job parameter holding a reference to a loading station, stored as a network object id and chosen from a list of valid stations. It is saved by owning placeable unique id plus station index, and resolved lazily after savegame placeables have loaded.",
+  "fr": "Paramètre de job IA qui référence une station de chargement, stockée comme id d'objet réseau et choisie dans une liste de stations valides. Il est sauvegardé par id unique du placeable propriétaire plus index de station, et résolu plus tard une fois les placeables de la sauvegarde chargés."
+ },
+ "fonctions": {
+  "AIParameterLoadingStation.new": {
+   "en": "Creates the parameter with type LOADING_STATION, no selection and an empty list.",
+   "fr": "Crée le paramètre de type LOADING_STATION, sans sélection et avec une liste vide."
+  },
+  "AIParameterLoadingStation:saveToXMLFile": {
+   "en": "Writes `#stationUniqueId` (owning placeable) and `#stationIndex` for the selected station, only if both can be determined.",
+   "fr": "Écrit `#stationUniqueId` (placeable propriétaire) et `#stationIndex` pour la station sélectionnée, seulement si les deux sont déterminables."
+  },
+  "AIParameterLoadingStation:loadFromXMLFile": {
+   "en": "Reads unique id and index and resolves the station; if the placeable is not loaded yet, subscribes one-shot to `LOADED_ALL_SAVEGAME_PLACEABLES` to retry.",
+   "fr": "Lit l'id unique et l'index et résout la station ; si le placeable n'est pas encore chargé, s'abonne une fois à `LOADED_ALL_SAVEGAME_PLACEABLES` pour réessayer."
+  },
+  "AIParameterLoadingStation:onPlaceableLoaded": {
+   "en": "Message callback that retries resolving the station from the stored unique id and index.",
+   "fr": "Callback de message qui retente de résoudre la station à partir de l'id unique et de l'index mémorisés."
+  },
+  "AIParameterLoadingStation:setLoadingStationFromUniqueId": {
+   "en": "Looks up the placeable by unique id and its loading station by index in the storage system, selects it and returns true; returns false if the placeable is not found.",
+   "fr": "Cherche le placeable par id unique et sa station de chargement par index dans le système de stockage, la sélectionne et renvoie true ; renvoie false si le placeable est introuvable."
+  },
+  "AIParameterLoadingStation:readStream": {
+   "en": "Reads an optional network node object id for the station.",
+   "fr": "Lit un id d'objet réseau optionnel pour la station."
+  },
+  "AIParameterLoadingStation:writeStream": {
+   "en": "Writes a presence flag and, if set, the network node object id.",
+   "fr": "Écrit un drapeau de présence et, si défini, l'id d'objet réseau."
+  },
+  "AIParameterLoadingStation:setLoadingStation": {
+   "en": "Stores the network object id of the given station.",
+   "fr": "Mémorise l'id d'objet réseau de la station donnée."
+  },
+  "AIParameterLoadingStation:getLoadingStation": {
+   "en": "Resolves the station from its id; returns it only if its owning placeable exists and is synchronized, otherwise nil.",
+   "fr": "Résout la station depuis son id ; ne la renvoie que si son placeable propriétaire existe et est synchronisé, sinon nil."
+  },
+  "AIParameterLoadingStation:getString": {
+   "en": "Returns the station name, or an empty string.",
+   "fr": "Renvoie le nom de la station, ou une chaîne vide."
+  },
+  "AIParameterLoadingStation:setValidLoadingStations": {
+   "en": "Replaces the selectable stations by their network ids, keeping the current one if still present, otherwise selecting the first.",
+   "fr": "Remplace les stations sélectionnables par leurs ids réseau, en gardant la courante si elle y est encore, sinon en sélectionnant la première."
+  },
+  "AIParameterLoadingStation:setNextItem": {
+   "en": "Selects the next station in the list, wrapping around.",
+   "fr": "Sélectionne la station suivante de la liste, en bouclant."
+  },
+  "AIParameterLoadingStation:setPreviousItem": {
+   "en": "Selects the previous station in the list, wrapping around.",
+   "fr": "Sélectionne la station précédente de la liste, en bouclant."
+  },
+  "AIParameterLoadingStation:validate": {
+   "en": "Fails with localized errors if none is selected, it no longer exists, the fill type is not AI-supported, or its fill level for the farm is 0 or less. Fill type checks only run when a fill type index is given.",
+   "fr": "Échoue avec des erreurs localisées si aucune n'est sélectionnée, si elle n'existe plus, si le type n'est pas géré par l'IA, ou si son niveau pour la ferme est 0 ou moins. Les contrôles de type ne s'exécutent que si un index de type est donné."
+  }
+ }
+}

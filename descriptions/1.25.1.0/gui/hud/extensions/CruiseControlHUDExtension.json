@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/extensions/CruiseControlHUDExtension.lua",
+ "module": {
+  "en": "HUD extension panel for the vehicle info HUD: shows the cruise control controls. It is a plain class (not a HUDDisplay subclass) built per vehicle by the HUD; only the constructor is defined here, the remaining methods are supplied elsewhere (UNVERIFIED which file).",
+  "fr": "Panneau d'extension du HUD d'informations véhicule : affiche les commandes du régulateur de vitesse. C'est une classe simple (pas une sous-classe de HUDDisplay) instanciée par véhicule par le HUD ; seul le constructeur est défini ici, les autres méthodes viennent d'ailleurs (fichier NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "CruiseControlHUDExtension.new": {
+   "en": "Builds the extension for the given vehicle with priority GS_PRIO_VERY_LOW: creates the background overlays and a separator line, keeps the vehicle reference and the uppercase \"change speed\" text (toggle/change input elements start as nil), calls storeScaledValues and re-calls it whenever the UI scale setting changes via the message center.",
+   "fr": "Construit l'extension pour le véhicule donné avec la priorité GS_PRIO_VERY_LOW : crée les overlays de fond et une ligne de séparation, conserve la référence du véhicule et le texte « changer la vitesse » en majuscules (les éléments d'entrée toggle/change valent nil au départ), appelle storeScaledValues puis le rappelle à chaque changement du réglage d'échelle de l'interface via le message center."
+  }
+ }
+}

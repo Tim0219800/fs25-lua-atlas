@@ -1,124 +1,124 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Tedder.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation des faneuses : ramasse l'andain/le fourrage sous la zone de travail (carte de hauteur, DensityMapHeightUtil) et le redépose étalé dans une zone de dépôt, en convertissant le type de remplissage (fillTypeConverter : par ex. herbe vers foin sec, noms non relus). Prérequis : WorkArea et TurnOnVehicle. EFFETS (client) : animationNodes (vehicle.tedder.animationNodes, démarrés à l'allumage, arrêtés à l'extinction) et une liste d'effets vehicle.tedder.effects.effect(?) chargés par g_effectManager:loadEffect, chacun lié à une zone par workAreaIndex, fenêtre d'activité de 250 ms. Classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT (serveur) : dans processTedderArea, si des litres ont été effectivement redéposés (dropped > 0) et que la vitesse (getLastSpeed(true)) est > 0.5, les effets de la zone sont armés (activeTime = temps + 250 ms), démarrés au besoin et recalés sur le type de remplissage déposé (setEffectTypeInfo au démarrage ou quand le type change). La densité d'effet est réglée à max(vitesse / limite de vitesse, 0.6) sur l'hôte-joueur (g_effectManager:setDensity) ; sur un client distant, le flux réseau ne transporte que le type et l'état actif : la densité n'est pas réglée (onReadUpdateStream applique setEffectTypeInfo et startEffects, puis gère les sons), donc l'effet y tourne à la densité par défaut de la définition XML (NON VÉRIFIÉ : comportement de EffectManager absent). Autrement dit, la poussière/le fourrage projeté ne part que si de la matière est réellement ramassée ET redéposée, pas à vide. Les effets reçoivent donc le type de remplissage converti (cible), jamais de stade de culture. ARRÊT : onUpdateTick (serveur seulement, l'abonnement est retiré sinon) coupe les effets expirés et lève effectDirtyFlag. MÉTÉO/HUMIDITÉ : aucune donnée lue. RÉSEAU : tableau des types de remplissage par zone (fillTypesDirtyFlag, SEND_NUM_BITS) et booléen d'effet actif par effet (effectDirtyFlag) ; le client applique type + démarrage/arrêt à la réception ; le client ne recalcule pas l'effet. CONDITIONS : active selon le type de zone TEDDER (aucun test d'allumage dans getIsWorkAreaActive : non surchargé ici, la logique d'activation vient d'ailleurs, NON VÉRIFIÉ) ; doCheckSpeedLimit s'applique si allumé et chaîne d'outils abaissée. isWorking = litres déposés dans la passe > 0 (onEndWorkAreaProcessing). Ramassage : tipToGroundAroundLine avec -infini sur chaque type d'entrée ; traitement sauté pour un client éloigné (> Tedder.CLIENT_DM_UPDATE_RADIUS, constante non définie ici, NON VÉRIFIÉ). dt : fenêtres de 250 ms en temps de jeu (g_currentMission.time). À noter : onPostLoad, pour un workAreaIndex invalide, appelle table.insert(spec.effects, i) au lieu de table.remove (Tedder.lua:166), ce qui semble une faute (non vérifié en jeu). La table tedderWorkAreaFillTypes est initialisée avec FruitType.UNKNOWN alors qu'elle contient des types de remplissage. POINTS D'EXTENSION : fonctions registerFunctions (preprocessTedderArea, processTedderArea, processDropArea) ; surcharges loadWorkAreaFromXML (ajoute dropWindrowWorkAreaIndex et les champs d'effet de zone), getDirtMultiplier, getWearMultiplier, doCheckSpeedLimit ; événements onLoad, onPostLoad, flux, onUpdateTick, onTurnedOn/Off, onStart/EndWorkAreaProcessing, onDeactivate. Vitesse limite par défaut : 15.
+--- Tedder specialization: picks up the windrow/forage under the work area (height map, DensityMapHeightUtil) and drops it again spread out in a drop area, converting the fill type (fillTypeConverter: e.g. grass to dry hay, names not re-read). Prerequisites: WorkArea and TurnOnVehicle. EFFECTS (client): animationNodes (vehicle.tedder.animationNodes, started on turn-on, stopped on turn-off) and a list of effects vehicle.tedder.effects.effect(?) loaded by g_effectManager:loadEffect, each tied to an area by workAreaIndex, with a 250 ms activity window. Effect classes are absent from the dump: rendering UNVERIFIED. TRIGGER (server): in processTedderArea, if litres were actually dropped again (dropped > 0) and speed (getLastSpeed(true)) is > 0.5, the area's effects are armed (activeTime = time + 250 ms), started if needed and set to the dropped fill type (setEffectTypeInfo at start or when the type changes). The effect density is set to max(speed / speed limit, 0.6) on the player host (g_effectManager:setDensity); on a remote client, the network stream only carries the type and the active state: density is not set (onReadUpdateStream applies setEffectTypeInfo and startEffects, then handles sounds), so the effect runs there at the default density of the XML definition (UNVERIFIED: EffectManager behaviour is absent). In other words, the thrown dust/forage only appears if material is really picked up AND dropped, not when running empty. The effects therefore receive the converted (target) fill type, never a crop stage. STOP: onUpdateTick (server only, the listener is removed otherwise) stops expired effects and raises effectDirtyFlag. WEATHER/WETNESS: no data read. NETWORK: array of fill types per area (fillTypesDirtyFlag, SEND_NUM_BITS) and an active-effect boolean per effect (effectDirtyFlag); the client applies type + start/stop on reception; the client does not recompute the effect. CONDITIONS: active according to the TEDDER area type (no turn-on test in getIsWorkAreaActive: not overridden here, the activation logic comes from elsewhere, UNVERIFIED); doCheckSpeedLimit applies if turned on and implement chain lowered. isWorking = litres dropped during the pass > 0 (onEndWorkAreaProcessing). Pickup: tipToGroundAroundLine with -infinity on each input type; processing skipped for a distant client (> Tedder.CLIENT_DM_UPDATE_RADIUS, a constant not defined here, UNVERIFIED). dt: 250 ms windows in game time (g_currentMission.time). Note: onPostLoad, for an invalid workAreaIndex, calls table.insert(spec.effects, i) instead of table.remove (Tedder.lua:166), which looks like a mistake (not verified in game). The tedderWorkAreaFillTypes table is initialised with FruitType.UNKNOWN although it holds fill types. EXTENSION POINTS: registerFunctions functions (preprocessTedderArea, processTedderArea, processDropArea); overrides loadWorkAreaFromXML (adds dropWindrowWorkAreaIndex and the area effect fields), getDirtMultiplier, getWearMultiplier, doCheckSpeedLimit; events onLoad, onPostLoad, streams, onUpdateTick, onTurnedOn/Off, onStart/EndWorkAreaProcessing, onDeactivate. Default speed limit: 15.
 ---@class Tedder
 Tedder = {}
 
---- Déclare le type de zone tedder et le schéma XML : effets (vehicle.tedder.effects.effect(?)), animationNodes, converter de types, sons. Non relu clé par clé.
+--- Declares the tedder area type and the XML schema: effects (vehicle.tedder.effects.effect(?)), animationNodes, type converter, sounds. Not re-read key by key.
 function Tedder.initSpecialization() end
 
---- Exige WorkArea et TurnOnVehicle.
+--- Requires WorkArea and TurnOnVehicle.
 ---@param specializations any
 function Tedder.prerequisitesPresent(specializations) end
 
---- Enregistre preprocessTedderArea, processTedderArea et processDropArea.
+--- Registers preprocessTedderArea, processTedderArea and processDropArea.
 ---@param vehicleType any
 function Tedder.registerFunctions(vehicleType) end
 
---- Surcharge loadWorkAreaFromXML, getDirtMultiplier, getWearMultiplier et doCheckSpeedLimit (liste non relue ligne à ligne).
+--- Overrides loadWorkAreaFromXML, getDirtMultiplier, getWearMultiplier and doCheckSpeedLimit (list not re-read line by line).
 ---@param vehicleType any
 function Tedder.registerOverwrittenFunctions(vehicleType) end
 
---- S'abonne à onLoad, onPostLoad, onDelete, aux quatre événements de flux, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOn/Off, onAIFieldCourseSettingsInitialized et onDeactivate (liste non relue ligne à ligne).
+--- Subscribes to onLoad, onPostLoad, onDelete, the four stream events, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOn/Off, onAIFieldCourseSettingsInitialized and onDeactivate (list not re-read line by line).
 ---@param vehicleType any
 function Tedder.registerEventListeners(vehicleType) end
 
---- Charge le convertisseur de types (avertit s'il manque), les animations et effets (client), initialise litres déposés, multiplicateur d'usure de pierres (type TEDDER) et drapeaux réseau ; déclare à l'IA l'exigence d'un andain d'herbe.
+--- Loads the type converter (warns if missing), the animations and effects (client), initialises dropped litres, the stone wear multiplier (TEDDER type) and network flags; declares to the AI the requirement of a grass windrow.
 ---@param savegame any
 function Tedder:onLoad(savegame) end
 
---- Rattache chaque effet à sa zone (workAreaToEffects) et à l'indice de type de remplissage de la zone ; retire l'abonnement onUpdateTick hors serveur. À noter : insertion au lieu de suppression pour un indice invalide.
+--- Links each effect to its area (workAreaToEffects) and to the area's fill type index; removes the onUpdateTick listener off the server. Note: insertion instead of removal for an invalid index.
 ---@param savegame any
 function Tedder:onPostLoad(savegame) end
 
---- Libère les effets et les animations.
+--- Releases the effects and animations.
 function Tedder:onDelete() end
 
---- Lit les types de remplissage par zone puis l'état de chaque effet, et démarre/arrête les effets avec le type de la zone.
+--- Reads the fill types per area then the state of each effect, and starts/stops the effects with the area's type.
 ---@param streamId any
 ---@param connection any
 function Tedder:onReadStream(streamId, connection) end
 
---- Écrit les types de remplissage par zone puis l'état envoyé de chaque effet.
+--- Writes the fill types per area then the sent state of each effect.
 ---@param streamId any
 ---@param connection any
 function Tedder:onWriteStream(streamId, connection) end
 
---- Côté client : lit si présents les types par zone et l'état de chaque effet, applique type et démarrage/arrêt puis pilote les sons de travail ; ne règle pas la densité.
+--- Client side: reads, if present, the types per area and the state of each effect, applies type and start/stop then drives the work sounds; does not set the density.
 ---@param streamId any
 ---@param timestamp any
 ---@param connection any
 function Tedder:onReadUpdateStream(streamId, timestamp, connection) end
 
---- Côté serveur : écrit types (fillTypesDirtyFlag) et états d'effets (effectDirtyFlag).
+--- Server side: writes types (fillTypesDirtyFlag) and effect states (effectDirtyFlag).
 ---@param streamId any
 ---@param connection any
 ---@param dirtyMask any
 function Tedder:onWriteUpdateStream(streamId, connection, dirtyMask) end
 
---- Serveur : coupe les effets dont la fenêtre de 250 ms a expiré, met à jour isActiveSent et les drapeaux ; sur l'hôte-joueur, appelle stopEffects.
+--- Server: stops the effects whose 250 ms window has expired, updates isActiveSent and the flags; on the player host, calls stopEffects.
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function Tedder:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Force le type TEDDER si DEFAULT ; pour une zone TEDDER, lit la zone de dépôt (dropWindrowWorkAreaIndex) et initialise litres à déposer, type du dernier dépôt et drapeaux de particules, et réserve un emplacement dans tedderWorkAreaFillTypes.
+--- Forces the TEDDER type if DEFAULT; for a TEDDER area, reads the drop area (dropWindrowWorkAreaIndex) and initialises litres to drop, the last drop type and particle flags, and reserves a slot in tedderWorkAreaFillTypes.
 ---@param superFunc any
 ---@param workArea any
 ---@param xmlFile any
 ---@param key any
 function Tedder:loadWorkAreaFromXML(superFunc, workArea, xmlFile, key) end
 
---- Ajoute la salissure de travail pondérée vitesse/limite quand isWorking.
+--- Adds the work dirt weighted by speed/limit when isWorking.
 ---@param superFunc any
 function Tedder:getDirtMultiplier(superFunc) end
 
---- Ajoute l'usure de travail pondérée vitesse/limite et par le multiplicateur de pierres.
+--- Adds the work wear weighted by speed/limit and by the stone multiplier.
 ---@param superFunc any
 function Tedder:getWearMultiplier(superFunc) end
 
---- Applique la limite de vitesse si l'outil est allumé et la chaîne d'outils abaissée.
+--- Applies the speed limit if the tool is turned on and the implement chain is lowered.
 ---@param superFunc any
 function Tedder:doCheckSpeedLimit(superFunc) end
 
---- Remet à zéro litres ramassés et déposés de la zone avant le traitement.
+--- Resets the picked-up and dropped litres of the area before processing.
 ---@param workArea any
 function Tedder:preprocessTedderArea(workArea) end
 
---- Ramasse sur la ligne de la zone chaque type d'entrée du convertisseur, ajoute les litres à déposer, les redépose via processDropArea et, côté serveur à vitesse > 0.5, met à jour type par zone, arme et démarre les effets (avec densité). Lit aussi la présence de pierres si l'outil roule. Renvoie la surface (largeur de ligne * distance parcourue) deux fois.
+--- Picks up each converter input type along the area's line, adds the litres to drop, drops them again via processDropArea and, on the server at speed > 0.5, updates the type per area, arms and starts the effects (with density). Also reads stone presence if the tool is moving. Returns the area (line width * distance travelled) twice.
 ---@param workArea any
 ---@param dt any
 function Tedder:processTedderArea(workArea, dt) end
 
---- Dépose les litres convertis sur la ligne de la zone de dépôt (tipToGroundAroundLine) et mémorise le décalage de ligne ; renvoie les litres réellement déposés (0, 0 pour un client éloigné : valeur de retour non homogène).
+--- Drops the converted litres on the drop area's line (tipToGroundAroundLine) and stores the line offset; returns the litres actually dropped (0, 0 for a distant client: the return value is not uniform).
 ---@param dropArea any
 ---@param fillType any
 ---@param litersToDrop any
 function Tedder:processDropArea(dropArea, fillType, litersToDrop) end
 
---- Remet à zéro spec.lastDroppedLiters avant la passe.
+--- Resets spec.lastDroppedLiters before the pass.
 ---@param dt any
 function Tedder:onStartWorkAreaProcessing(dt) end
 
---- isWorking devient vrai si des litres ont été déposés pendant la passe.
+--- isWorking becomes true if litres were dropped during the pass.
 ---@param dt any
 ---@param hasProcessed any
 function Tedder:onEndWorkAreaProcessing(dt, hasProcessed) end
 
---- Client : démarre les animationNodes.
+--- Client: starts the animationNodes.
 function Tedder:onTurnedOn() end
 
---- Client : arrête les animations et coupe tous les effets.
+--- Client: stops the animations and all effects.
 function Tedder:onTurnedOff() end
 
---- Paramètres de parcours IA : bordures d'abord, segment initial travaillé.
+--- AI course settings: borders first, initial segment worked.
 ---@param fieldCourseSettings any
 function Tedder:onAIFieldCourseSettingsInitialized(fieldCourseSettings) end
 
---- Client : coupe tous les effets.
+--- Client: stops all effects.
 function Tedder:onDeactivate() end
 
---- Limite de vitesse par défaut : 15.
+--- Default speed limit: 15.
 function Tedder.getDefaultSpeedLimit() end

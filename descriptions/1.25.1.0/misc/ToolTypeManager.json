@@ -1,0 +1,37 @@
+{
+ "fichier": "misc/ToolTypeManager.lua",
+ "module": {
+  "en": "Manager (subclass of AbstractManager) that registers tool type names and numbers them in registration order. Five are built in: undefined, dischargeable, pallet, trigger, bale. initDataStructures publishes the global table ToolType (NAME to index) so scripts can write ToolType.BALE.",
+  "fr": "Gestionnaire (sous-classe d'AbstractManager) qui enregistre des noms de types d'outil et les numérote dans l'ordre d'enregistrement. Cinq sont intégrés : undefined, dischargeable, pallet, trigger, bale. initDataStructures publie la table globale ToolType (NOM vers indice) pour écrire par exemple ToolType.BALE."
+ },
+ "fonctions": {
+  "ToolTypeManager.new": {
+   "en": "Constructor: creates the manager on top of AbstractManager with the given or default metatable.",
+   "fr": "Constructeur : crée le gestionnaire à partir d'AbstractManager avec la métatable fournie ou celle par défaut."
+  },
+  "ToolTypeManager:initDataStructures": {
+   "en": "Resets the index-to-name and name-to-index tables and assigns the global ToolType to the name-to-index table.",
+   "fr": "Réinitialise les tables indice vers nom et nom vers indice et affecte la globale ToolType à la table nom vers indice."
+  },
+  "ToolTypeManager:loadMapData": {
+   "en": "Calls the parent loader then registers the five built-in tool types (undefined, dischargeable, pallet, trigger, bale), giving them indices 1 to 5. Returns true.",
+   "fr": "Appelle le chargeur parent puis enregistre les cinq types d'outil intégrés (undefined, dischargeable, pallet, trigger, bale), avec les indices 1 à 5. Retourne true."
+  },
+  "ToolTypeManager:addToolType": {
+   "en": "Registers a tool type under its uppercased name and returns its index; an existing name is not duplicated. Warns and returns nil if the name is not a valid index name.",
+   "fr": "Enregistre un type d'outil sous son nom en majuscules et retourne son indice ; un nom existant n'est pas dupliqué. Avertit et retourne nil si le nom n'est pas un nom d'indice valide."
+  },
+  "ToolTypeManager:getToolTypeNameByIndex": {
+   "en": "Returns the tool type name for an index, or \"UNDEFINED\" when the index is unknown.",
+   "fr": "Retourne le nom du type d'outil pour un indice, ou \"UNDEFINED\" si l'indice est inconnu."
+  },
+  "ToolTypeManager:getToolTypeIndexByName": {
+   "en": "Returns the tool type index for a name (case-insensitive), or the index of UNDEFINED when the name is unknown.",
+   "fr": "Retourne l'indice du type d'outil pour un nom (insensible à la casse), ou l'indice de UNDEFINED si le nom est inconnu."
+  },
+  "ToolTypeManager:getNumberOfToolTypes": {
+   "en": "Returns how many tool types are registered.",
+   "fr": "Retourne le nombre de types d'outil enregistrés."
+  }
+ }
+}

@@ -1,0 +1,61 @@
+{
+ "fichier": "ai/parameters/AIParameterFillType.lua",
+ "module": {
+  "en": "AI job parameter for choosing a fill type from a list of valid types, each shown with its available level in liters. It is saved to XML by fill type name and streamed by fill type index; used for example by `AIJobLoadAndDeliver`.",
+  "fr": "Paramètre de job IA pour choisir un type de remplissage dans une liste de types valides, chacun affiché avec son niveau disponible en litres. Il est sauvegardé en XML par nom de type et transmis par index de type ; utilisé par exemple par `AIJobLoadAndDeliver`."
+ },
+ "fonctions": {
+  "AIParameterFillType.new": {
+   "en": "Creates the parameter with type FILLTYPE, an empty list and no selection.",
+   "fr": "Crée le paramètre de type FILLTYPE, avec une liste vide et aucune sélection."
+  },
+  "AIParameterFillType:saveToXMLFile": {
+   "en": "Writes the selected fill type name to the `#fillType` attribute, if one is selected.",
+   "fr": "Écrit le nom du type sélectionné dans l'attribut `#fillType`, s'il y en a un."
+  },
+  "AIParameterFillType:loadFromXMLFile": {
+   "en": "Reads `#fillType` and converts the name to a fill type index through `g_fillTypeManager`.",
+   "fr": "Lit `#fillType` et convertit le nom en index de type via `g_fillTypeManager`."
+  },
+  "AIParameterFillType:readStream": {
+   "en": "Reads an optional fill type index (`FillTypeManager.SEND_NUM_BITS` bits) and selects it.",
+   "fr": "Lit un index de type optionnel (`FillTypeManager.SEND_NUM_BITS` bits) et le sélectionne."
+  },
+  "AIParameterFillType:writeStream": {
+   "en": "Writes a presence flag and, if selected, the fill type index.",
+   "fr": "Écrit un drapeau de présence et, si sélectionné, l'index de type."
+  },
+  "AIParameterFillType:setValidFillTypes": {
+   "en": "Replaces the list from a table of fill type index to level, with titles like \"Name (N l)\" sorted alphabetically. If the current selection is not in the list, selects a fill type with level above 0 or the first entry. Note: `maxFillLevel` is never updated, so the chosen one is the last iterated with stock, not the highest (apparent bug).",
+   "fr": "Remplace la liste à partir d'une table index de type vers niveau, avec des titres « Nom (N l) » triés alphabétiquement. Si la sélection courante n'est plus dans la liste, sélectionne un type avec un niveau supérieur à 0 ou la première entrée. À noter : `maxFillLevel` n'est jamais mis à jour, donc le type retenu est le dernier parcouru avec du stock, pas le plus élevé (bug apparent)."
+  },
+  "AIParameterFillType:setNextItem": {
+   "en": "Selects the next entry in the list, wrapping to the first.",
+   "fr": "Sélectionne l'entrée suivante de la liste, en revenant à la première."
+  },
+  "AIParameterFillType:setPreviousItem": {
+   "en": "Selects the previous entry in the list, wrapping to the last.",
+   "fr": "Sélectionne l'entrée précédente de la liste, en revenant à la dernière."
+  },
+  "AIParameterFillType:setFillTypeByIndex": {
+   "en": "Selects the fill type at the given list position; clears the selection if the position does not exist.",
+   "fr": "Sélectionne le type à la position de liste donnée ; efface la sélection si la position n'existe pas."
+  },
+  "AIParameterFillType:setFillTypeIndex": {
+   "en": "Sets the selected fill type index directly, without checking the list.",
+   "fr": "Fixe directement l'index du type sélectionné, sans vérifier la liste."
+  },
+  "AIParameterFillType:getFillTypeIndex": {
+   "en": "Returns the selected fill type index, or nil.",
+   "fr": "Renvoie l'index du type sélectionné, ou nil."
+  },
+  "AIParameterFillType:getString": {
+   "en": "Returns the list title of the selected fill type, or an empty string.",
+   "fr": "Renvoie le titre de liste du type sélectionné, ou une chaîne vide."
+  },
+  "AIParameterFillType:validate": {
+   "en": "Returns false plus a localized \"no fill type\" error if nothing is selected, otherwise true and nil.",
+   "fr": "Renvoie false plus une erreur localisée « aucun type de remplissage » si rien n'est sélectionné, sinon true et nil."
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "fichier": "gui/hud/extensions/AIModeHUDExtension.lua",
+ "module": {
+  "en": "HUD extension panel for the vehicle info HUD: shows the selected AI mode and AI state of a vehicle. It is a plain class (not a HUDDisplay subclass) built per vehicle by the HUD; only the constructor is defined here, the remaining methods are supplied elsewhere (UNVERIFIED which file).",
+  "fr": "Panneau d'extension du HUD d'informations véhicule : affiche le mode IA choisi et l'état de l'IA d'un véhicule. C'est une classe simple (pas une sous-classe de HUDDisplay) instanciée par véhicule par le HUD ; seul le constructeur est défini ici, les autres méthodes viennent d'ailleurs (fichier NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AIModeHUDExtension.new": {
+   "en": "Builds the extension for the given vehicle with priority GS_PRIO_VERY_HIGH: creates the background overlays, a separator line, keeps the vehicle plus its aiModeSelection and aiDrivable specs and caches the localized mode/state texts, calls storeScaledValues and re-calls it whenever the UI scale setting changes via the message center.",
+   "fr": "Construit l'extension pour le véhicule donné avec la priorité GS_PRIO_VERY_HIGH : crée les overlays de fond, une ligne de séparation, conserve le véhicule et ses spécialisations aiModeSelection et aiDrivable, et met en cache les textes localisés des modes et états, appelle storeScaledValues puis le rappelle à chaque changement du réglage d'échelle de l'interface via le message center."
+  }
+ }
+}

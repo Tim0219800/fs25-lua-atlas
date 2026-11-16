@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/specializations/TireTracks.lua",
+ "module": {
+  "en": "Specialization (no prerequisites) that manages tire track decals left by wheels. Other code (wheels, speed rotating parts) registers track nodes here; each one owns a track in g_currentMission.tireTrackSystem. Each update, the track grows with ground colour, depth and dirt data from the wheel physics, or is cut when conditions fail. The engine call getTyreTracksSegmentsCoeff gates it (behaviour of the track system classes itself is UNVERIFIED, not in the dump).",
+  "fr": "Spécialisation (sans prérequis) qui gère les traces de pneus laissées par les roues. D'autres codes (roues, speed rotating parts) y enregistrent des nodes de trace ; chacun possède une trace dans g_currentMission.tireTrackSystem. À chaque mise à jour, la trace s'allonge avec couleur du sol, profondeur et salissure issues de la physique de roue, ou est coupée si les conditions ne sont plus remplies. L'appel moteur getTyreTracksSegmentsCoeff la conditionne (comportement des classes du système de traces NON VÉRIFIÉ, absentes du dump)."
+ },
+ "fonctions": {
+  "TireTracks.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "TireTracks.initSpecialization": {
+   "en": "Empty: registers nothing.",
+   "fr": "Vide : n'enregistre rien."
+  },
+  "TireTracks.registerFunctions": {
+   "en": "Registers getAllowTireTracks, addTireTrackNode, removeTireTrackNode and updateTireTrackNode.",
+   "fr": "Enregistre getAllowTireTracks, addTireTrackNode, removeTireTrackNode et updateTireTrackNode."
+  },
+  "TireTracks.registerOverwrittenFunctions": {
+   "en": "Empty: registers no overridden functions.",
+   "fr": "Vide : n'enregistre aucune fonction surchargée."
+  },
+  "TireTracks.registerEventListeners": {
+   "en": "Subscribes to onPreLoad, onDelete and onUpdate.",
+   "fr": "S'abonne à onPreLoad, onDelete et onUpdate."
+  },
+  "TireTracks:onPreLoad": {
+   "en": "Initializes the track node list, reads the engine segments coefficient and caches the mission's tire track system.",
+   "fr": "Initialise la liste de nodes de trace, lit le coefficient de segments du moteur et met en cache le système de traces de la mission."
+  },
+  "TireTracks:onDelete": {
+   "en": "Destroys every track created by this vehicle in the tire track system.",
+   "fr": "Détruit chaque trace créée par ce véhicule dans le système de traces."
+  },
+  "TireTracks:onUpdate": {
+   "en": "While the vehicle is active and has track nodes, updates every track node with the current allow-tracks state.",
+   "fr": "Tant que le véhicule est actif et possède des nodes de trace, met à jour chaque node avec l'état courant d'autorisation des traces."
+  },
+  "TireTracks:getAllowTireTracks": {
+   "en": "Returns true when the vehicle is closer than TireTracks.MAX_CREATION_DISTANCE (not defined in this file, UNVERIFIED) and the segments coefficient is above 0.",
+   "fr": "Renvoie true quand le véhicule est plus proche que TireTracks.MAX_CREATION_DISTANCE (non défini dans ce fichier, NON VÉRIFIÉ) et que le coefficient de segments est supérieur à 0."
+  },
+  "TireTracks:addTireTrackNode": {
+   "en": "Registers a track node for a wheel (parent, link node, atlas index, width, radius, inverted flag, optional active callback) and creates its track. Returns the node index, or nil if creation failed.",
+   "fr": "Enregistre un node de trace pour une roue (parent, link node, index d'atlas, largeur, rayon, indicateur d'inversion, callback d'activité optionnel) et crée sa trace. Renvoie l'index du node, ou nil en cas d'échec."
+  },
+  "TireTracks:removeTireTrackNode": {
+   "en": "Clears the track node at the index and updates the has-nodes flag. Note: it does not destroy the track in the track system; that happens in onDelete.",
+   "fr": "Efface le node de trace à l'index donné et met à jour l'indicateur de présence de nodes. À noter : il ne détruit pas la trace dans le système de traces ; cela se fait dans onDelete."
+  },
+  "TireTracks:updateTireTrackNode": {
+   "en": "Cuts the track if disallowed, inactive, not in contact, on a surface that forbids tracks or without dirt; otherwise adds a track point at the tire's ground contact with colour, dirt, depth, direction and contact type.",
+   "fr": "Coupe la trace si elle est interdite, inactive, sans contact, sur une surface qui l'interdit ou sans salissure ; sinon ajoute un point de trace au contact du pneu avec le sol, avec couleur, salissure, profondeur, direction et type de contact."
+  }
+ }
+}

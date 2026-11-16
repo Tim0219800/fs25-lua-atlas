@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/hud/GamePausedDisplay.lua",
+ "module": {
+  "en": "Full-width HUD banner showing a pause text over a dark strip at the screen centre, optionally over a splash background. Derived from HUDDisplay. The default text is the hard-coded German word for paused, changeable with setPauseText.",
+  "fr": "Bandeau HUD pleine largeur affichant un texte de pause sur une bande sombre au centre de l'écran, éventuellement sur un fond d'écran de démarrage. Dérivé de HUDDisplay. Le texte par défaut est le mot allemand pour pause, codé en dur, modifiable avec setPauseText."
+ },
+ "fonctions": {
+  "GamePausedDisplay.new": {
+   "en": "Constructor. Creates the splash background overlay and sets the default uppercase pause text. Note: it calls SideNotification:superClass().new instead of its own superclass, which looks like a copy-paste slip.",
+   "fr": "Constructeur. Crée l'overlay de fond d'écran de démarrage et définit le texte de pause par défaut en majuscules. À noter : il appelle SideNotification:superClass().new au lieu de sa propre superclasse, ce qui ressemble à un copier-coller."
+  },
+  "GamePausedDisplay:storeScaledValues": {
+   "en": "Centres the banner on screen and computes its height (75 px scaled), text size and text offset.",
+   "fr": "Centre le bandeau à l'écran et calcule sa hauteur (75 px à l'échelle), la taille et le décalage du texte."
+  },
+  "GamePausedDisplay:draw": {
+   "en": "When visible, optionally renders the background, then draws a translucent black strip across the screen and the bold centred pause text.",
+   "fr": "Lorsqu'il est visible, affiche éventuellement le fond, puis dessine une bande noire translucide sur tout l'écran et le texte de pause gras centré."
+  },
+  "GamePausedDisplay:setPauseText": {
+   "en": "Replaces the pause text, converted to uppercase.",
+   "fr": "Remplace le texte de pause, converti en majuscules."
+  }
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "fichier": "internalMods/FS25_precisionFarming/scripts/misc/CropSensorLinkageData.lua",
+ "module": {
+  "en": "Precision Farming data holder that links the crop sensor to vehicles. It loads CropSensorLinkageData.xml (vehicle filenames, link nodes, price) and a sensor i3d file, offers cloned sensor nodes, and injects a yes/no cropSensor configuration into matching vehicles by overriding ConfigurationUtil.getConfigurationsFromXML.",
+  "fr": "Conteneur de données de Precision Farming qui relie le capteur de culture aux véhicules. Il charge CropSensorLinkageData.xml (noms de fichiers de véhicules, nœuds de liaison, prix) et un fichier i3d de capteurs, fournit des nœuds de capteur clonés et ajoute une configuration oui/non cropSensor aux véhicules concernés en surchargeant ConfigurationUtil.getConfigurationsFromXML."
+ },
+ "fonctions": {
+  "CropSensorLinkageData:delete": {
+   "en": "Deletes the loaded sensor nodes and clears the sensor and linkage data tables.",
+   "fr": "Supprime les nœuds de capteurs chargés et vide les tables de données de capteurs et de liaison."
+  },
+  "CropSensorLinkageData:loadFromXML": {
+   "en": "Map load hook: loads the linkage data once if not already loaded. Arguments are ignored and nothing is returned.",
+   "fr": "Crochet de chargement de la carte : charge les données de liaison une seule fois si ce n'est pas déjà fait. Les arguments sont ignorés et rien n'est renvoyé."
+  },
+  "CropSensorLinkageData:loadLinkageData": {
+   "en": "Reads CropSensorLinkageData.xml: configuration price, vehicle entries with link nodes and rotation nodes, and optionally starts async loading of the sensors i3d. Flags can disable vehicle or sensor loading. Returns true.",
+   "fr": "Lit CropSensorLinkageData.xml : prix de configuration, entrées de véhicules avec nœuds de liaison et de rotation, et lance éventuellement le chargement asynchrone de l'i3d des capteurs. Des indicateurs peuvent désactiver le chargement des véhicules ou des capteurs. Renvoie true."
+  },
+  "CropSensorLinkageData:onSensorDataLoaded": {
+   "en": "Async callback: records each sensor (node, type, measurement node path, daylight requirement, rotation nodes), unlinks the nodes, deletes the loaded i3d root and the XML file.",
+   "fr": "Callback asynchrone : enregistre chaque capteur (nœud, type, chemin du nœud de mesure, besoin de lumière du jour, nœuds de rotation), détache les nœuds, supprime la racine i3d chargée et le fichier XML."
+  },
+  "CropSensorLinkageData:getCropSensorLinkageData": {
+   "en": "Returns the vehicle linkage entry whose filename is the end of the given config file name, or nil.",
+   "fr": "Renvoie l'entrée de liaison du véhicule dont le nom de fichier termine le nom de fichier de configuration donné, ou nil."
+  },
+  "CropSensorLinkageData:getClonedCropSensorNode": {
+   "en": "Finds the sensor of the given type (case-insensitive) and returns a copy of its data with a cloned node and resolved rotation and measurement nodes, or nil if the type is unknown.",
+   "fr": "Cherche le capteur du type donné (insensible à la casse) et renvoie une copie de ses données avec un nœud cloné et les nœuds de rotation et de mesure résolus, ou nil si le type est inconnu."
+  },
+  "CropSensorLinkageData:overwriteGameFunctions": {
+   "en": "Overrides VehicleSystem.consoleCommandReloadVehicle (reloads vehicle linkage data first) and ConfigurationUtil.getConfigurationsFromXML (adds a cropSensor yes/no configuration with the XML price to listed vehicles).",
+   "fr": "Surcharge VehicleSystem.consoleCommandReloadVehicle (recharge d'abord les données de liaison) et ConfigurationUtil.getConfigurationsFromXML (ajoute une configuration cropSensor oui/non au prix du XML aux véhicules listés)."
+  },
+  "CropSensorLinkageData:registerXMLPaths": {
+   "en": "Registers the XML schema paths for sensors, vehicles, link nodes, rotation nodes and configuration price used by CropSensorLinkageData.xml.",
+   "fr": "Enregistre les chemins de schéma XML des capteurs, véhicules, nœuds de liaison, nœuds de rotation et du prix de configuration utilisés par CropSensorLinkageData.xml."
+  }
+ }
+}

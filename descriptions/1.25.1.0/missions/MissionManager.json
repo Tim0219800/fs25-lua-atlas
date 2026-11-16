@@ -1,0 +1,197 @@
+{
+ "fichier": "missions/MissionManager.lua",
+ "module": {
+  "en": "Manager of contracts (missions), a subclass of AbstractManager. It keeps the registered mission types and their data, the list of generated and active missions, a per-pixel mission access map (InfoLayer) and the vehicle groups lent for field missions. On the server it generates missions on a timer, starts, cancels and dismisses them, and saves and loads them. Mission classes register themselves through registerMissionType (done elsewhere).",
+  "fr": "Gestionnaire des contrats (missions), sous-classe de AbstractManager. Il garde les types de mission enregistrés et leurs données, la liste des missions générées et actives, une carte d'accès aux missions par pixel (InfoLayer) et les groupes de véhicules prêtés pour les missions de champ. Sur le serveur, il génère des missions selon une minuterie, les démarre, annule et clôt, et les sauvegarde et charge. Les classes de mission s'enregistrent via registerMissionType (fait ailleurs)."
+ },
+ "fonctions": {
+  "MissionManager.new": {
+   "en": "Constructor. Sets a 512 by 512 mission map with 4 channels, on top of AbstractManager.new.",
+   "fr": "Constructeur. Définit une carte de missions de 512 par 512 avec 4 canaux, au-dessus de AbstractManager.new."
+  },
+  "MissionManager:initDataStructures": {
+   "en": "Resets mission lists, type tables, unique id index, mission map, generation indices and timer, vehicle group tables and the generated-mission counter.",
+   "fr": "Réinitialise les listes de missions, les tables de types, l'index des ids uniques, la carte des missions, les indices et la minuterie de génération, les tables de groupes de véhicules et le compteur de missions générées."
+  },
+  "MissionManager:delete": {
+   "en": "Removes the debug bit vector map element from the debug manager if it exists.",
+   "fr": "Retire l'élément de debug bit vector map du gestionnaire de debug s'il existe."
+  },
+  "MissionManager:loadMapData": {
+   "en": "Reads map.missions from the map XML (enabled flag, per-type maxNumInstances, vehicleFilename), creates the mission map, calls each mission class loadMapData, adds the manager as updateable on the server, loads vehicle groups (map, then pending mod and DLC files) and registers gsMission* test commands. Returns nothing (not true) when missions are disabled.",
+   "fr": "Lit map.missions dans le XML de la carte (activation, maxNumInstances par type, vehicleFilename), crée la carte des missions, appelle le loadMapData de chaque classe de mission, ajoute le gestionnaire comme updateable sur le serveur, charge les groupes de véhicules (carte, puis fichiers en attente des mods et DLC) et enregistre les commandes de test gsMission*. Ne renvoie rien (pas true) quand les missions sont désactivées."
+  },
+  "MissionManager:unloadMapData": {
+   "en": "Unsubscribes from messages, removes the updateable, calls each mission class unloadMapData, destroys the mission map, removes the gsMission* commands and calls the parent.",
+   "fr": "Se désabonne des messages, retire l'updateable, appelle le unloadMapData de chaque classe de mission, détruit la carte des missions, retire les commandes gsMission* et appelle le parent."
+  },
+  "MissionManager:saveToXMLFile": {
+   "en": "Writes the missions file: per-type metadata, a version number, then every mission under missions.<typeName>(n). Note: always returns false, even on success.",
+   "fr": "Écrit le fichier des missions : métadonnées par type, numéro de version, puis chaque mission sous missions.<typeName>(n). À noter : renvoie toujours false, même en cas de succès."
+  },
+  "MissionManager:loadFromXMLFile": {
+   "en": "Reads saved missions if the version matches MissionManager.VERSION (otherwise warns and skips). Creates each mission from its type class, loads, registers and adds it, or queues it for deletion if loading fails or its farm no longer exists.",
+   "fr": "Lit les missions sauvegardées si la version correspond à MissionManager.VERSION (sinon avertit et ignore). Crée chaque mission depuis la classe de son type, la charge, l'enregistre et l'ajoute, ou la met en file de suppression si le chargement échoue ou si sa ferme n'existe plus."
+  },
+  "MissionManager:getCanStartNewMissionGeneration": {
+   "en": "True when no generation is in progress, the mission count is below MAX_MISSIONS and the generation timer has run below zero.",
+   "fr": "Vrai quand aucune génération n'est en cours, que le nombre de missions est inférieur à MAX_MISSIONS et que la minuterie de génération est passée sous zéro."
+  },
+  "MissionManager:update": {
+   "en": "Server only, when the platform supports missions: decreases the generation timer by dt scaled with the effective time scale, updates missions and runs the generation state machine, one mission type per frame.",
+   "fr": "Serveur seulement, si la plateforme gère les missions : diminue la minuterie de génération de dt multiplié par l'échelle de temps effective, met à jour les missions et fait avancer la génération, un type de mission par frame."
+  },
+  "MissionManager:updateMissions": {
+   "en": "Queues CREATED missions that fail validate for deletion, then deletes every mission in the deletion queue. The dt argument is not used.",
+   "fr": "Met en file de suppression les missions CREATED dont validate échoue, puis supprime toutes les missions de la file. L'argument dt n'est pas utilisé."
+  },
+  "MissionManager:startMissionGeneration": {
+   "en": "Publishes MISSION_GENERATION_START, picks a random starting mission type and marks generation as in progress.",
+   "fr": "Publie MISSION_GENERATION_START, choisit un type de mission de départ au hasard et marque la génération comme en cours."
+  },
+  "MissionManager:finishMissionGeneration": {
+   "en": "Publishes MISSION_GENERATION_END, resets the timer to MISSION_GENERATION_INTERVAL and clears the in-progress flag.",
+   "fr": "Publie MISSION_GENERATION_END, remet la minuterie à MISSION_GENERATION_INTERVAL et efface l'indicateur de génération en cours."
+  },
+  "MissionManager:generateMission": {
+   "en": "One step of generation: asks the current type tryGenerateMission, registers any mission returned, moves to the next type (wrapping), and finishes after a success or after a full cycle.",
+   "fr": "Une étape de génération : demande tryGenerateMission au type courant, enregistre la mission renvoyée, passe au type suivant (avec bouclage) et termine après un succès ou un cycle complet."
+  },
+  "MissionManager:registerMission": {
+   "en": "Sets the mission type, registers the mission, adds it to the list and publishes MISSION_GENERATED with it.",
+   "fr": "Définit le type de la mission, l'enregistre, l'ajoute à la liste et publie MISSION_GENERATED avec elle."
+  },
+  "MissionManager:addMission": {
+   "en": "Adds a mission to the list and unique id index, giving it a unique id if none. Warns and ignores a mission whose unique id already exists.",
+   "fr": "Ajoute une mission à la liste et à l'index des ids uniques en lui donnant un id unique si elle n'en a pas. Avertit et ignore une mission dont l'id unique existe déjà."
+  },
+  "MissionManager:removeMission": {
+   "en": "Removes a mission from the list and from the unique id index.",
+   "fr": "Retire une mission de la liste et de l'index des ids uniques."
+  },
+  "MissionManager:markMissionForDeletion": {
+   "en": "Adds the mission to the deletion queue, processed in updateMissions.",
+   "fr": "Ajoute la mission à la file de suppression, traitée dans updateMissions."
+  },
+  "MissionManager:getMissionByUniqueId": {
+   "en": "Returns the mission with the given unique id, or nil.",
+   "fr": "Renvoie la mission portant l'id unique donné, ou nil."
+  },
+  "MissionManager:startMission": {
+   "en": "Server only (asserts). Starts a mission for a farm and returns a MissionStartState: NO_ACCESS for spectators, LIMIT_REACHED, ALREADY_STARTED, PENDING_MISSION if another is preparing, NOT_AVAILABLE_ANYMORE (mission deleted), CANNOT_BE_STARTED_NOW, or OK after publishing MissionStartedEvent.",
+   "fr": "Serveur seulement (assert). Démarre une mission pour une ferme et renvoie un MissionStartState : NO_ACCESS pour les spectateurs, LIMIT_REACHED, ALREADY_STARTED, PENDING_MISSION si une autre se prépare, NOT_AVAILABLE_ANYMORE (mission supprimée), CANNOT_BE_STARTED_NOW, ou OK après publication de MissionStartedEvent."
+  },
+  "MissionManager:cancelMission": {
+   "en": "Server only (asserts). Finishes an unfinished mission with MissionFinishState.CANCELED and returns true; false otherwise.",
+   "fr": "Serveur seulement (assert). Termine une mission non terminée avec MissionFinishState.CANCELED et renvoie true ; false sinon."
+  },
+  "MissionManager:dismissMission": {
+   "en": "Server only (asserts). Calls dismiss on the mission (money settlement) then deletes it. Returns true.",
+   "fr": "Serveur seulement (assert). Appelle dismiss sur la mission (règlement financier) puis la supprime. Renvoie true."
+  },
+  "MissionManager:getMissions": {
+   "en": "Returns the internal list of all missions (not a copy).",
+   "fr": "Renvoie la liste interne de toutes les missions (pas une copie)."
+  },
+  "MissionManager:getMissionsByFarmId": {
+   "en": "Returns a filtered list of missions that have no farm yet or belong to the given farm, used by the contracts menu.",
+   "fr": "Renvoie une liste filtrée des missions sans ferme ou appartenant à la ferme donnée, utilisée par le menu des contrats."
+  },
+  "MissionManager:getIsMissionRunningOnFarmland": {
+   "en": "True if a mission whose getFarmlandId matches the farmland id is in progress. False for a nil farmland. For field missions that value is the field id (see AbstractFieldMission).",
+   "fr": "Vrai si une mission dont getFarmlandId correspond à l'id de la parcelle est en cours. False pour une parcelle nil. Pour les missions de champ, cette valeur est l'id du champ (voir AbstractFieldMission)."
+  },
+  "MissionManager:getMissionsByType": {
+   "en": "Returns the missions that are instances of the class of the mission type at the given index, or nil if the index is unknown.",
+   "fr": "Renvoie les missions instances de la classe du type de mission à l'index donné, ou nil si l'index est inconnu."
+  },
+  "MissionManager:hasFarmReachedMissionLimit": {
+   "en": "True when the number of started missions of the farm reaches MAX_MISSIONS_PER_FARM.",
+   "fr": "Vrai quand le nombre de missions démarrées de la ferme atteint MAX_MISSIONS_PER_FARM."
+  },
+  "MissionManager:createMissionMap": {
+   "en": "Creates the mission access InfoLayer; on the server sets it as the growth mask so mission fields do not grow. Optionally creates a debug view.",
+   "fr": "Crée l'InfoLayer d'accès aux missions ; sur le serveur, le définit comme masque de croissance pour que les champs de mission ne poussent pas. Crée éventuellement une vue de debug."
+  },
+  "MissionManager:destroyMissionMap": {
+   "en": "On the server resets the growth mask, then deletes the mission map.",
+   "fr": "Sur le serveur, réinitialise le masque de croissance, puis supprime la carte des missions."
+  },
+  "MissionManager:setMissionMapActiveMissionId": {
+   "en": "Writes a mission id into the mission map over the given area (polygon); does nothing if there is no map.",
+   "fr": "Écrit un id de mission dans la carte des missions sur la zone donnée (polygone) ; ne fait rien sans carte."
+  },
+  "MissionManager:getMissionMapActiveMissionIdAtWorldPosition": {
+   "en": "Returns the active mission id stored in the map at a world X/Z position, or 0 when there is no map.",
+   "fr": "Renvoie l'id de mission active stocké dans la carte à une position monde X/Z, ou 0 sans carte."
+  },
+  "MissionManager:getMissionAtWorldPosition": {
+   "en": "Returns the mission whose active id is stored at the world position, or nil.",
+   "fr": "Renvoie la mission dont l'id actif est stocké à la position monde, ou nil."
+  },
+  "MissionManager:getMissionByActiveMissionId": {
+   "en": "Linear search for the mission with the given activeMissionId; nil if none.",
+   "fr": "Recherche linéaire de la mission portant l'activeMissionId donné ; nil sinon."
+  },
+  "MissionManager:getFreeActiveMissionId": {
+   "en": "Returns the first id from 1 to MAX_MISSIONS not used by a mission, or 0 if all are taken.",
+   "fr": "Renvoie le premier id de 1 à MAX_MISSIONS non utilisé par une mission, ou 0 si tous sont pris."
+  },
+  "MissionManager:getIsMissionWorkAllowed": {
+   "en": "True if the mission at the position belongs to the farm and its getIsWorkAllowed accepts the work area type and vehicle.",
+   "fr": "Vrai si la mission à la position appartient à la ferme et que son getIsWorkAllowed accepte le type de zone de travail et le véhicule."
+  },
+  "MissionManager:registerMissionType": {
+   "en": "Adds a mission type (name, class, sequential typeId, data with numInstances and maxNumInstances, default max 2) and indexes it by upper-case name. Ignored if class or name is nil.",
+   "fr": "Ajoute un type de mission (nom, classe, typeId séquentiel, données avec numInstances et maxNumInstances, maximum 2 par défaut) et l'indexe par nom en majuscules. Ignoré si la classe ou le nom est nil."
+  },
+  "MissionManager:unregisterMissionType": {
+   "en": "Removes a type from the list. Note: it uses self.missionType (singular, nil) instead of self.missionTypes, so a match would raise an error; it also leaves nameToMissionType untouched.",
+   "fr": "Retire un type de la liste. À noter : utilise self.missionType (singulier, nil) au lieu de self.missionTypes, donc une correspondance provoquerait une erreur ; nameToMissionType reste inchangé."
+  },
+  "MissionManager:getMissionType": {
+   "en": "Returns the mission type table for a name (case-insensitive), or nil.",
+   "fr": "Renvoie la table du type de mission pour un nom (insensible à la casse), ou nil."
+  },
+  "MissionManager:getMissionTypeById": {
+   "en": "Returns the mission type at the given list index, or nil.",
+   "fr": "Renvoie le type de mission à l'index donné de la liste, ou nil."
+  },
+  "MissionManager:getMissionTypeDataByName": {
+   "en": "Returns the data table (numInstances, maxNumInstances, plus values added by the class) of a type by name; nil with a dev error if the name is nil, or nil if unknown.",
+   "fr": "Renvoie la table de données (numInstances, maxNumInstances, plus les valeurs ajoutées par la classe) d'un type par nom ; nil avec une erreur de dev si le nom est nil, ou nil si inconnu."
+  },
+  "MissionManager:getMissionBySplitShape": {
+   "en": "Returns the first mission whose getIsMissionSplitShape accepts the shape, or nil. Nil for a nil or 0 shape.",
+   "fr": "Renvoie la première mission dont getIsMissionSplitShape accepte la forme, ou nil. Nil pour une forme nil ou 0."
+  },
+  "MissionManager:getIsShapeCutAllowed": {
+   "en": "Asks missions in order and returns the first non-nil answer of getIsShapeCutAllowed, or nil if none decides.",
+   "fr": "Interroge les missions dans l'ordre et renvoie la première réponse non nil de getIsShapeCutAllowed, ou nil si aucune ne tranche."
+  },
+  "MissionManager:getIsMissionDestructible": {
+   "en": "True if any mission reports through getDestructibleIsInMissionArea that the node is in its area for that farm.",
+   "fr": "Vrai si une mission indique via getDestructibleIsInMissionArea que le noeud est dans sa zone pour cette ferme."
+  },
+  "MissionManager:addPendingMissionVehiclesFile": {
+   "en": "Queues a mission vehicles XML file and its base directory, used by mods and DLC, to be loaded in loadMapData.",
+   "fr": "Met en file un fichier XML de véhicules de mission et son répertoire de base, utilisé par les mods et DLC, pour chargement dans loadMapData."
+  },
+  "MissionManager:loadVehicleGroups": {
+   "en": "Parses a missionVehicles XML: per mission type, groups by size (default medium) with rewardScale, variant and vehicles (store item filename plus configurations). Invalid groups are skipped with errors. Returns false if the file cannot be loaded.",
+   "fr": "Analyse un XML missionVehicles : par type de mission, des groupes par taille (medium par défaut) avec rewardScale, variant et véhicules (fichier d'article de boutique plus configurations). Les groupes invalides sont ignorés avec erreurs. Renvoie false si le fichier ne peut pas être chargé."
+  },
+  "MissionManager:getRandomVehicleGroup": {
+   "en": "Returns a random vehicle list for a mission type, size and optional variant, plus the group identifier. Returns nil and 1 if none matches.",
+   "fr": "Renvoie une liste de véhicules aléatoire pour un type de mission, une taille et une variante optionnelle, plus l'identifiant du groupe. Renvoie nil et 1 si rien ne correspond."
+  },
+  "MissionManager:getVehicleGroupFromIdentifier": {
+   "en": "Client-safe lookup of a group by type, field size and identifier. Returns vehicles, rewardScale, an error message and the group; with nil vehicles, rewardScale 1 and a message when missing.",
+   "fr": "Recherche sûre côté client d'un groupe par type, taille de champ et identifiant. Renvoie véhicules, rewardScale, un message d'erreur et le groupe ; avec véhicules nil, rewardScale 1 et un message s'il manque."
+  },
+  "MissionManager:assignGenerationTime": {
+   "en": "Gives the mission an increasing generationTime (a per-run counter, not saved) used to sort missions identically on server and clients.",
+   "fr": "Donne à la mission un generationTime croissant (compteur par exécution, non sauvegardé) servant à trier les missions de façon identique sur serveur et clients."
+  }
+ }
+}

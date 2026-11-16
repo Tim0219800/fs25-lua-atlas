@@ -1,0 +1,33 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/PrecisionFarmingSettingsEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that propagates a changed Precision Farming setting. A setting is identified by its index (settingIndexNumBits bits) plus a boolean state; only boolean settings are supported.",
+    "fr": "Événement réseau (sous-classe de Event) qui propage un réglage Precision Farming modifié. Un réglage est identifié par son indice (settingIndexNumBits bits) plus un état booléen ; seuls les réglages booléens sont gérés."
+  },
+  "fonctions": {
+    "PrecisionFarmingSettingsEvent.emptyNew": {
+      "en": "Creates an empty PrecisionFarmingSettingsEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de PrecisionFarmingSettingsEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "PrecisionFarmingSettingsEvent.new": {
+      "en": "Creates the event for a setting table.",
+      "fr": "Crée l'événement pour une table de réglage."
+    },
+    "PrecisionFarmingSettingsEvent:readStream": {
+      "en": "Reads the setting index and the boolean state, writes the state into the matching setting of g_precisionFarming.precisionFarmingSettings, then calls run.",
+      "fr": "Lit l'indice du réglage et l'état booléen, écrit l'état dans le réglage correspondant de g_precisionFarming.precisionFarmingSettings, puis appelle run."
+    },
+    "PrecisionFarmingSettingsEvent:writeStream": {
+      "en": "Writes the setting index and its state as a boolean (anything other than true is written as false).",
+      "fr": "Écrit l'indice du réglage et son état sous forme de booléen (toute valeur autre que true est écrite comme false)."
+    },
+    "PrecisionFarmingSettingsEvent:run": {
+      "en": "Receiving side. The server re-broadcasts to the other clients, then every side calls precisionFarmingSettings:onSettingChanged(setting, true) so no new event is sent.",
+      "fr": "Côté réception. Le serveur rediffuse aux autres clients, puis chaque côté appelle precisionFarmingSettings:onSettingChanged(setting, true), sans nouvel événement."
+    },
+    "PrecisionFarmingSettingsEvent.sendEvent": {
+      "en": "Entry point to sync a changed setting. Server: broadcasts to all clients; client: sends it to the server. Does nothing when noEventSend is true.",
+      "fr": "Point d'entrée pour synchroniser un réglage modifié. Serveur : diffuse à tous les clients ; client : l'envoie au serveur. Ne fait rien si noEventSend vaut true."
+    }
+  }
+}

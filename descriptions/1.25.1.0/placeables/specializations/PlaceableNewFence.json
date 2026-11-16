@@ -1,0 +1,165 @@
+{
+ "fichier": "placeables/specializations/PlaceableNewFence.lua",
+ "module": {
+  "en": "Placeable specialization for the segment-based fence system: it wraps a Fence object (created from placeable.fence and the i3d at placeable.base.filename), forwards network, update and savegame handling to it, and merges into an already existing instance of the same fence config. Ownership always follows the farmland, picking is per segment, destruction is per node, and a counted build lock prevents selling a fence while a build run uses it. Several functions it registers (getFence, onSegmentCreated, getIsOnFarmland, getOwnerFarmId, deletePanel, getNodesToDeleteForPanel) are not defined in this file: UNVERIFIED where they come from.",
+  "fr": "Spécialisation de placeable pour le système de clôtures par segments : elle encapsule un objet Fence (créé depuis placeable.fence et l'i3d de placeable.base.filename), lui transmet réseau, mise à jour et sauvegarde, et fusionne avec une instance existante de la même configuration de clôture. Le propriétaire suit toujours la parcelle, la sélection se fait par segment, la destruction par nœud, et un verrou de construction compté empêche de vendre une clôture utilisée par une construction. Plusieurs fonctions qu'elle enregistre (getFence, onSegmentCreated, getIsOnFarmland, getOwnerFarmId, deletePanel, getNodesToDeleteForPanel) ne sont pas définies dans ce fichier : origine NON VÉRIFIÉE."
+ },
+ "fonctions": {
+  "PlaceableNewFence.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization is required.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableNewFence.registerEvents": {
+   "en": "Registers the placeable event onCreateSegment.",
+   "fr": "Enregistre l'événement de placeable onCreateSegment."
+  },
+  "PlaceableNewFence.registerFunctions": {
+   "en": "Registers fence-related functions on the placeable type (getFence, onSegmentCreated, panel and snap getters, updateDirtyAreas, build lock accessors). getFence and onSegmentCreated have no definition in this file.",
+   "fr": "Enregistre sur le type de placeable les fonctions liées aux clôtures (getFence, onSegmentCreated, accesseurs de panneau et d'aimantation, updateDirtyAreas, verrou de construction). getFence et onSegmentCreated n'ont pas de définition dans ce fichier."
+  },
+  "PlaceableNewFence.registerOverwrittenFunctions": {
+   "en": "Overrides getIsOnFarmland, collectPickObjects, getDestructionMethod, performNodeDestruction, previewNodeDestructionNodes, setOwnerFarmId, getOwnerFarmId and canBeSold. getIsOnFarmland and getOwnerFarmId are not defined in this file.",
+   "fr": "Surcharge getIsOnFarmland, collectPickObjects, getDestructionMethod, performNodeDestruction, previewNodeDestructionNodes, setOwnerFarmId, getOwnerFarmId et canBeSold. getIsOnFarmland et getOwnerFarmId ne sont pas définies dans ce fichier."
+  },
+  "PlaceableNewFence.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onReadStream, onWriteStream, onUpdate and onFinalizePlacement (no onFinalizePlacement handler is defined in this file).",
+   "fr": "S'abonne à onLoad, onDelete, onReadStream, onWriteStream, onUpdate et onFinalizePlacement (aucun gestionnaire onFinalizePlacement n'est défini dans ce fichier)."
+  },
+  "PlaceableNewFence.registerXMLPaths": {
+   "en": "Declares the XML keys by delegating to Fence.registerXMLPaths.",
+   "fr": "Déclare les clés XML en déléguant à Fence.registerXMLPaths."
+  },
+  "PlaceableNewFence.registerSavegameXMLPaths": {
+   "en": "Declares the savegame XML keys by delegating to Fence.registerSavegameXMLPaths.",
+   "fr": "Déclare les clés XML de sauvegarde en déléguant à Fence.registerSavegameXMLPaths."
+  },
+  "PlaceableNewFence:onLoad": {
+   "en": "Initialises the build lock count, requires placeable.base.filename (ERROR state otherwise), and returns early if another placeable with the same config exists (merge mode). Otherwise creates a segments transform group and the Fence object, and for preplaced fences deletes the map's pre-existing segment and static fence child nodes.",
+   "fr": "Initialise le compteur de verrou de construction, exige placeable.base.filename (état ERROR sinon) et s'arrête si un autre placeable de même configuration existe (mode fusion). Sinon crée un groupe de transformation des segments et l'objet Fence, et pour une clôture préplacée supprime les nœuds enfants de segments et de clôture statique déjà présents sur la carte."
+  },
+  "PlaceableNewFence:onDelete": {
+   "en": "Deletes the Fence object if one was created.",
+   "fr": "Supprime l'objet Fence s'il a été créé."
+  },
+  "PlaceableNewFence:onReadStream": {
+   "en": "Client side on join: lets the Fence read its stream data. Note: no nil check on the fence, which is nil when the placeable merged into an existing instance.",
+   "fr": "Côté client à la connexion : fait lire à la Fence ses données de flux. À noter : pas de test de nil sur la clôture, qui est nil si le placeable a fusionné avec une instance existante."
+  },
+  "PlaceableNewFence:onWriteStream": {
+   "en": "Server side on join: lets the Fence write its stream data. Note: no nil check on the fence (see onReadStream).",
+   "fr": "Côté serveur à la connexion : fait écrire à la Fence ses données de flux. À noter : pas de test de nil sur la clôture (voir onReadStream)."
+  },
+  "PlaceableNewFence:onUpdate": {
+   "en": "Per-frame update: forwards dt to the Fence if it exists.",
+   "fr": "Mise à jour à chaque image : transmet dt à la Fence si elle existe."
+  },
+  "PlaceableNewFence:setOwnerFarmId": {
+   "en": "Override that intentionally does nothing: a fence never takes an owner farm directly, it follows the farmland.",
+   "fr": "Surcharge qui ne fait volontairement rien : une clôture ne reçoit jamais de ferme propriétaire directement, elle suit la parcelle."
+  },
+  "PlaceableNewFence:loadFromXMLFile": {
+   "en": "Savegame loading: loads into this fence, or into the existing instance's fence when this placeable was merged.",
+   "fr": "Chargement de sauvegarde : charge dans cette clôture, ou dans celle de l'instance existante si ce placeable a été fusionné."
+  },
+  "PlaceableNewFence:saveToXMLFile": {
+   "en": "Savegame saving: delegates to the Fence object.",
+   "fr": "Écriture de sauvegarde : délègue à l'objet Fence."
+  },
+  "PlaceableNewFence:getSegmentLength": {
+   "en": "Returns the horizontal distance between a segment's two end points (x1/z1 to x2/z2).",
+   "fr": "Renvoie la distance horizontale entre les deux extrémités d'un segment (x1/z1 vers x2/z2)."
+  },
+  "PlaceableNewFence:getPanelLength": {
+   "en": "Returns spec.panelLength. Note: this file never assigns that field, so it is probably nil unless set elsewhere (UNVERIFIED).",
+   "fr": "Renvoie spec.panelLength. À noter : ce fichier n'affecte jamais ce champ, il est donc probablement nil sauf s'il est défini ailleurs (NON VÉRIFIÉ)."
+  },
+  "PlaceableNewFence:getIsPanelLengthFixed": {
+   "en": "Returns spec.panelLengthFixed, a field not assigned in this file (UNVERIFIED).",
+   "fr": "Renvoie spec.panelLengthFixed, champ non affecté dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "PlaceableNewFence:updateDirtyAreas": {
+   "en": "Marks the bounding box of the given line segment as dirty in the density-map collision map and in the AI navigation system.",
+   "fr": "Marque la boîte englobante du segment donné comme modifiée dans la carte de collision des density maps et dans le système de navigation IA."
+  },
+  "PlaceableNewFence:getNumSequments": {
+   "en": "Returns the number of fence segments from the Fence object (the name is misspelled in the source).",
+   "fr": "Renvoie le nombre de segments de clôture fourni par l'objet Fence (le nom est mal orthographié dans la source)."
+  },
+  "PlaceableNewFence:getMaxVerticalAngle": {
+   "en": "Returns spec.maxVerticalAngle, not assigned in this file (UNVERIFIED); not registered via registerFunctions here.",
+   "fr": "Renvoie spec.maxVerticalAngle, non affecté dans ce fichier (NON VÉRIFIÉ) ; non enregistrée via registerFunctions ici."
+  },
+  "PlaceableNewFence:getMaxVerticalGateAngle": {
+   "en": "Returns spec.maxVerticalGateAngle, not assigned in this file (UNVERIFIED); not registered via registerFunctions here.",
+   "fr": "Renvoie spec.maxVerticalGateAngle, non affecté dans ce fichier (NON VÉRIFIÉ) ; non enregistrée via registerFunctions ici."
+  },
+  "PlaceableNewFence:getSnapDistance": {
+   "en": "Returns the snap distance in meters from the first segment, or from the first segment template (parallel snapping value first, else its snapDistance); nil if there is no fence or template.",
+   "fr": "Renvoie la distance d'aimantation en mètres du premier segment, ou du premier modèle de segment (valeur de parallelSnapping d'abord, sinon snapDistance) ; nil s'il n'y a ni clôture ni modèle."
+  },
+  "PlaceableNewFence:getSnapAngle": {
+   "en": "Deprecated stub: always returns nil.",
+   "fr": "Fonction obsolète : renvoie toujours nil."
+  },
+  "PlaceableNewFence:getSnapCheckDistance": {
+   "en": "Deprecated stub: always returns nil.",
+   "fr": "Fonction obsolète : renvoie toujours nil."
+  },
+  "PlaceableNewFence:getAllowExtendingOnly": {
+   "en": "Deprecated stub: always returns nil.",
+   "fr": "Fonction obsolète : renvoie toujours nil."
+  },
+  "PlaceableNewFence:getMaxCornerAngle": {
+   "en": "Deprecated stub: always returns nil.",
+   "fr": "Fonction obsolète : renvoie toujours nil."
+  },
+  "PlaceableNewFence:getHasParallelSnapping": {
+   "en": "Deprecated stub: always returns false.",
+   "fr": "Fonction obsolète : renvoie toujours false."
+  },
+  "PlaceableNewFence:getSupportsParallelSnapping": {
+   "en": "Deprecated stub: always returns false.",
+   "fr": "Fonction obsolète : renvoie toujours false."
+  },
+  "PlaceableNewFence:addPickingNodesForSegment": {
+   "en": "Registers the segment's rigid-body nodes as node objects of this placeable so they can be picked; ignores the preview segment and resets overlayColorNodes.",
+   "fr": "Enregistre les nœuds à corps rigide du segment comme objets-nœuds de ce placeable pour qu'ils soient sélectionnables ; ignore le segment d'aperçu et remet overlayColorNodes à nil."
+  },
+  "PlaceableNewFence:removePickingNodesForSegment": {
+   "en": "Removes the segment's rigid-body nodes from the mission's node objects; ignores the preview segment.",
+   "fr": "Retire les nœuds à corps rigide du segment des objets-nœuds de la mission ; ignore le segment d'aperçu."
+  },
+  "PlaceableNewFence:recursivelyAddPickingNodes": {
+   "en": "Recursively collects into the given table every node under (and including) the given node whose rigid body type is not NONE.",
+   "fr": "Collecte récursivement dans la table donnée chaque nœud sous (et y compris) le nœud donné dont le type de corps rigide n'est pas NONE."
+  },
+  "PlaceableNewFence:getDestructionMethod": {
+   "en": "Override: returns Placeable.DESTRUCTION.PER_NODE, so a fence is demolished piece by piece rather than at once.",
+   "fr": "Surcharge : renvoie Placeable.DESTRUCTION.PER_NODE, la clôture est donc démolie morceau par morceau et non d'un coup."
+  },
+  "PlaceableNewFence:previewNodeDestructionNodes": {
+   "en": "Override: returns the nodes of the panel containing the given node via getNodesToDeleteForPanel (defined elsewhere, UNVERIFIED).",
+   "fr": "Surcharge : renvoie les nœuds du panneau contenant le nœud donné via getNodesToDeleteForPanel (défini ailleurs, NON VÉRIFIÉ)."
+  },
+  "PlaceableNewFence:performNodeDestruction": {
+   "en": "Override: deletes the panel of the given node via deletePanel (defined elsewhere, UNVERIFIED) and returns the destroyed node plus true when no segments remain, so the placeable is removed.",
+   "fr": "Surcharge : supprime le panneau du nœud donné via deletePanel (défini ailleurs, NON VÉRIFIÉ) et renvoie le nœud détruit plus true s'il ne reste aucun segment, afin de supprimer le placeable."
+  },
+  "PlaceableNewFence:collectPickObjects": {
+   "en": "Override that does nothing: default picking is disabled because picking nodes are added per segment.",
+   "fr": "Surcharge qui ne fait rien : la sélection par défaut est désactivée car les nœuds sélectionnables sont ajoutés par segment."
+  },
+  "PlaceableNewFence:canBeSold": {
+   "en": "Override: returns false with an 'object in use' message while a build lock is held, otherwise defers to the parent.",
+   "fr": "Surcharge : renvoie false avec un message « objet utilisé » tant qu'un verrou de construction est tenu, sinon délègue au parent."
+  },
+  "PlaceableNewFence:getIsBuildLocked": {
+   "en": "Returns true while at least one build run holds a lock on this fence.",
+   "fr": "Renvoie true tant qu'au moins une construction tient un verrou sur cette clôture."
+  },
+  "PlaceableNewFence:setBuildLocked": {
+   "en": "Takes (true) or releases (false) one build lock; the count never goes below zero, so overlapping runs do not unlock each other.",
+   "fr": "Prend (true) ou relâche (false) un verrou de construction ; le compteur ne descend jamais sous zéro, donc des constructions simultanées ne se déverrouillent pas mutuellement."
+  }
+ }
+}

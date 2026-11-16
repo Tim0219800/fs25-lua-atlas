@@ -1,0 +1,53 @@
+{
+ "fichier": "materials/CharacterLine.lua",
+ "module": {
+  "en": "Text line made of cloned character shapes that use a FontMaterial, for in-world text such as signs and displays. It creates a transform group linked to a node, one shape per available character slot, and lays out the text from right to left with alignment, size, scale, thickness, color and spacing options. Character data and shader work are delegated to FontMaterial.",
+  "fr": "Ligne de texte composée de formes de caractères clonées utilisant un FontMaterial, pour du texte dans le monde comme panneaux et afficheurs. Elle crée un groupe de transformation lié à un noeud, une forme par emplacement de caractère, et dispose le texte de droite à gauche avec options d'alignement, taille, échelle, épaisseur, couleur et espacement. Les données de caractères et le travail de shader sont délégués à FontMaterial."
+ },
+ "fonctions": {
+  "CharacterLine.new": {
+   "en": "Constructor: creates a root group linked to the node, clones one shape per character slot (shadow casting off), sets defaults (right and bottom alignment, thickness 1, normal map on) and sets an empty text.",
+   "fr": "Constructeur : crée un groupe racine lié au noeud, clone une forme par emplacement de caractère (ombres désactivées), fixe les valeurs par défaut (alignement droite et bas, épaisseur 1, normal map activée) et définit un texte vide."
+  },
+  "CharacterLine:setSizeAndScale": {
+   "en": "Sets text size and X/Y scale; nil arguments keep the current values. The layout is applied at the next `setText`.",
+   "fr": "Définit la taille du texte et l'échelle X/Y ; les arguments nil conservent les valeurs actuelles. La mise en page s'applique au prochain `setText`."
+  },
+  "CharacterLine:setTextAlignment": {
+   "en": "Sets the horizontal alignment (nil keeps current); applied at the next `setText`.",
+   "fr": "Définit l'alignement horizontal (nil conserve l'actuel) ; appliqué au prochain `setText`."
+  },
+  "CharacterLine:setTextVerticalAlignment": {
+   "en": "Sets the vertical alignment (nil keeps current); applied at the next `setText`.",
+   "fr": "Définit l'alignement vertical (nil conserve l'actuel) ; appliqué au prochain `setText`."
+  },
+  "CharacterLine:setFontThickness": {
+   "en": "Stores the thickness, converts it to a shader value `(t-1)/8+1` and writes the `alphaErosion` shader parameter on every character shape.",
+   "fr": "Mémorise l'épaisseur, la convertit en valeur de shader `(t-1)/8+1` et écrit le paramètre de shader `alphaErosion` sur chaque forme de caractère."
+  },
+  "CharacterLine:setColor": {
+   "en": "Updates text color, hidden color, emissive scale and hidden alpha (nil keeps current) and applies the text color to every character through the font material.",
+   "fr": "Met à jour la couleur du texte, la couleur masquée, l'échelle émissive et l'alpha masqué (nil conserve l'actuel) et applique la couleur du texte à chaque caractère via le matériau de police."
+  },
+  "CharacterLine:setDecalLayer": {
+   "en": "Sets the decal layer on all character shapes (0 if nil).",
+   "fr": "Définit la couche de décalque de toutes les formes de caractères (0 si nil)."
+  },
+  "CharacterLine:setCastShadowmap": {
+   "en": "Enables or disables shadow map casting for all character shapes.",
+   "fr": "Active ou désactive la projection d'ombres de toutes les formes de caractères."
+  },
+  "CharacterLine:setUseNormalMap": {
+   "en": "Sets whether the font material uses a normal map and reassigns the font material to every character shape.",
+   "fr": "Définit si le matériau de police utilise une normal map et réaffecte le matériau à chaque forme de caractère."
+  },
+  "CharacterLine:setCharacterSpacing": {
+   "en": "Stores a spacing multiplier used in the next layout (nil means 1).",
+   "fr": "Mémorise un multiplicateur d'espacement utilisé à la prochaine mise en page (nil vaut 1)."
+  },
+  "CharacterLine:setText": {
+   "en": "Fills each slot with the characters of the text taken from the end (unused slots get a space), and when `updateAlignment` is not false scales and positions each shape leftward and offsets the root for the chosen alignment. Note: `realSpacingX` falls back to `spacingY`, which looks like a typo.",
+   "fr": "Remplit chaque emplacement avec les caractères du texte pris par la fin (les emplacements inutilisés reçoivent un espace) et, si `updateAlignment` n'est pas false, met à l'échelle et positionne chaque forme vers la gauche puis décale la racine selon l'alignement. À noter : `realSpacingX` retombe sur `spacingY`, ce qui ressemble à une faute de frappe."
+  }
+ }
+}

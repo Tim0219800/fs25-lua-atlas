@@ -1,0 +1,45 @@
+{
+ "fichier": "placeables/specializations/PlaceableHotspots.lua",
+ "module": {
+  "en": "Placeable specialization that attaches one or more map hotspots (PlaceableHotspot) to a building, with type, name, world position and optional teleport position. Hotspots are added to the mission on post-finalize and refreshed through updateHotspots when ownership changes. It has no prerequisites.",
+  "fr": "Spécialisation de placeable qui attache un ou plusieurs points d'intérêt de carte (PlaceableHotspot) à un bâtiment, avec type, nom, position monde et position de téléportation optionnelle. Les points sont ajoutés à la mission après la finalisation et rafraîchis par updateHotspots lors d'un changement de propriétaire. Aucun prérequis."
+ },
+ "fonctions": {
+  "PlaceableHotspots.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableHotspots.registerFunctions": {
+   "en": "Registers getHotspot, updateHotspots and setHotspotVisible. The last two have no body in the SDK dump (UNVERIFIED).",
+   "fr": "Enregistre getHotspot, updateHotspots et setHotspotVisible. Les deux derniers n'ont pas de corps dans le dump du SDK (NON VÉRIFIÉ)."
+  },
+  "PlaceableHotspots.registerEventListeners": {
+   "en": "Subscribes to load, delete, post-finalize-placement and owner-changed events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, suppression, post-finalisation du placement et changement de propriétaire."
+  },
+  "PlaceableHotspots.registerXMLPaths": {
+   "en": "Declares hotspot entries: linkNode, teleportNode, type (default UNLOADING), worldPosition, teleportWorldPosition and text.",
+   "fr": "Déclare les entrées hotspot : linkNode, teleportNode, type (UNLOADING par défaut), worldPosition, teleportWorldPosition et text."
+  },
+  "PlaceableHotspots:onLoad": {
+   "en": "Creates one PlaceableHotspot per XML entry. Unknown types fall back to UNLOADING with a warning. Position comes from the link node (or placeable root) unless worldPosition is given; an explicit teleport position is raised to at least the terrain height. Translates the text with the mod's i18n.",
+   "fr": "Crée un PlaceableHotspot par entrée XML. Un type inconnu retombe sur UNLOADING avec un avertissement. La position vient du noeud de liaison (ou de la racine) sauf si worldPosition est donné ; une position de téléportation explicite est relevée au moins à la hauteur du terrain. Le texte est traduit avec l'i18n du mod."
+  },
+  "PlaceableHotspots:onDelete": {
+   "en": "Unsubscribes from the message center, removes each hotspot from the mission map and deletes it.",
+   "fr": "Se désabonne du centre de messages, retire chaque point de la carte de la mission et le supprime."
+  },
+  "PlaceableHotspots:onPostFinalizePlacement": {
+   "en": "Adds every hotspot to the mission map and calls updateHotspots.",
+   "fr": "Ajoute chaque point à la carte de la mission et appelle updateHotspots."
+  },
+  "PlaceableHotspots:onOwnerChanged": {
+   "en": "Calls updateHotspots after an owner change.",
+   "fr": "Appelle updateHotspots après un changement de propriétaire."
+  },
+  "PlaceableHotspots:getHotspot": {
+   "en": "Returns the hotspot at the given 1-based index, or the first one when no index is given.",
+   "fr": "Renvoie le point à l'index donné (base 1), ou le premier si aucun index n'est fourni."
+  }
+ }
+}

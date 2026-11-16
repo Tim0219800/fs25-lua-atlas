@@ -1,0 +1,37 @@
+{
+ "fichier": "placeables/specializations/PlaceableDynamicallyLoadedParts.lua",
+ "module": {
+  "en": "Placeable specialization that loads extra parts from external i3d files at load time and links them into the placeable. Per part, the XML gives the file, source node, link node, position, rotation, a shader parameter and object changes; skinned meshes are validated so a mesh and its bones are always linked together, which avoids an engine crash.",
+  "fr": "Spécialisation de placeable qui charge au chargement des éléments supplémentaires depuis des fichiers i3d externes et les attache au placeable. Pour chaque élément, le XML donne le fichier, le nœud source, le nœud d'attache, la position, la rotation, un paramètre de shader et des changements d'objet ; les maillages skinnés sont validés pour qu'un maillage et ses os soient toujours liés ensemble, ce qui évite un plantage du moteur."
+ },
+ "fonctions": {
+  "PlaceableDynamicallyLoadedParts.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableDynamicallyLoadedParts.registerFunctions": {
+   "en": "Registers `onDynamicallyPartI3DLoaded`, the async load callback.",
+   "fr": "Enregistre `onDynamicallyPartI3DLoaded`, le rappel de chargement asynchrone."
+  },
+  "PlaceableDynamicallyLoadedParts.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete` and `onFinalizePlacement`; no `onFinalizePlacement` body appears in the dump (UNVERIFIED).",
+   "fr": "S'abonne à `onLoad`, `onDelete` et `onFinalizePlacement` ; aucun corps d'`onFinalizePlacement` n'apparaît dans le dump (NON VÉRIFIÉ)."
+  },
+  "PlaceableDynamicallyLoadedParts.registerXMLPaths": {
+   "en": "Declares `dynamicallyLoadedParts.dynamicallyLoadedPart(?)` keys: `filename`, `node`, `linkNode`, `position`, `rotationNode`, `rotation`, `shaderParameterName`, `shaderParameter`, plus object-change keys.",
+   "fr": "Déclare les clés `dynamicallyLoadedParts.dynamicallyLoadedPart(?)` : `filename`, `node`, `linkNode`, `position`, `rotationNode`, `rotation`, `shaderParameterName`, `shaderParameter`, ainsi que les clés de changement d'objet."
+  },
+  "PlaceableDynamicallyLoadedParts:onLoad": {
+   "en": "For each part with a filename, creates a loading task and requests the shared i3d asynchronously (callback `onDynamicallyPartI3DLoaded`); warns about parts without a filename.",
+   "fr": "Pour chaque élément ayant un nom de fichier, crée une tâche de chargement et demande le i3d partagé de façon asynchrone (rappel `onDynamicallyPartI3DLoaded`) ; avertit pour les éléments sans nom de fichier."
+  },
+  "PlaceableDynamicallyLoadedParts:onDynamicallyPartI3DLoaded": {
+   "en": "Async callback: finds the node, rejects the part if skinned shapes and their bones are not all included, then removes it from physics, applies position, rotation, shader parameter and object changes, links it under the link node and records it. Always finishes the loading task; returns true on success, false otherwise.",
+   "fr": "Rappel asynchrone : trouve le nœud, rejette l'élément si les shapes skinnés et leurs os ne sont pas tous inclus, puis le retire de la physique, applique position, rotation, paramètre de shader et changements d'objet, l'attache sous le nœud d'attache et l'enregistre. Termine toujours la tâche de chargement ; renvoie true en cas de succès, false sinon."
+  },
+  "PlaceableDynamicallyLoadedParts:onDelete": {
+   "en": "Releases the shared i3d load requests and deletes the nodes of all loaded parts.",
+   "fr": "Libère les demandes de chargement i3d partagées et supprime les nœuds de tous les éléments chargés."
+  }
+ }
+}

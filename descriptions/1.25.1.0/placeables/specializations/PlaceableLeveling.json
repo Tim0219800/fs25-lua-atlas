@@ -1,0 +1,57 @@
+{
+ "fichier": "placeables/specializations/PlaceableLeveling.lua",
+ "module": {
+  "en": "Placeable specialization describing how the ground is leveled and painted around a building when it is placed. It loads level areas (flattened, optionally painted with a ground type), paint-only areas and the smoothing parameters, then builds TerrainDeformation objects and queues them through the terrain deformation queue. It has no prerequisites; the deformation is run on demand by the placement code.",
+  "fr": "Spécialisation de placeable décrivant comment le terrain est nivelé et peint autour d'un bâtiment lors de son placement. Elle charge les zones de nivellement (aplanies, avec un type de sol optionnel), les zones de peinture seule et les paramètres de lissage, puis construit des objets TerrainDeformation mis en file dans la file de déformation du terrain. Aucun prérequis ; la déformation est lancée à la demande par le code de placement."
+ },
+ "fonctions": {
+  "PlaceableLeveling.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableLeveling.registerFunctions": {
+   "en": "Registers the leveling methods: area loaders, deformation objects, add area, apply, and the two leveling getters.",
+   "fr": "Enregistre les méthodes de nivellement : chargeurs de zones, objets de déformation, ajout de zone, application et les deux accesseurs."
+  },
+  "PlaceableLeveling.registerEventListeners": {
+   "en": "Subscribes to the load event.",
+   "fr": "Abonne la spécialisation à l'événement de chargement."
+  },
+  "PlaceableLeveling.registerXMLPaths": {
+   "en": "Declares leveling attributes (requireLeveling, maxSmoothDistance, maxSlope, maxEdgeAngle, smoothingGroundType, realignAfterLeveling) and the levelArea and paintArea entries with start, width, height nodes and groundType.",
+   "fr": "Déclare les attributs de nivellement (requireLeveling, maxSmoothDistance, maxSlope, maxEdgeAngle, smoothingGroundType, realignAfterLeveling) et les entrées levelArea et paintArea avec noeuds début, largeur, hauteur et groundType."
+  },
+  "PlaceableLeveling:onLoad": {
+   "en": "Reads leveling settings (maxSmoothDistance is clamped to 0 to 10 with a warning, slope and edge angle default to 45), warns if the leveling block is missing and loads level and paint areas. Also checks for the deprecated rampAreas element.",
+   "fr": "Lit les réglages de nivellement (maxSmoothDistance est borné entre 0 et 10 avec un avertissement, pente et angle d'arête valent 45 par défaut), avertit si le bloc leveling manque et charge les zones de nivellement et de peinture. Vérifie aussi l'ancien élément rampAreas."
+  },
+  "PlaceableLeveling:loadLevelArea": {
+   "en": "Reads a level area (three nodes and an optional groundType) into the table; returns false with a warning if a node is missing.",
+   "fr": "Lit une zone de nivellement (trois noeuds et un groundType optionnel) dans la table ; renvoie false avec un avertissement si un noeud manque."
+  },
+  "PlaceableLeveling:loadPaintArea": {
+   "en": "Same as loadLevelArea but for paint-only areas, with warnings worded for paint areas.",
+   "fr": "Comme loadLevelArea mais pour les zones de peinture seule, avec des avertissements adaptés."
+  },
+  "PlaceableLeveling:getDeformationObjects": {
+   "en": "Builds the TerrainDeformation objects for a terrain node: one for all level areas (blocked-area map, outside smoothing brush and limits, collision mask, small max displacements) and, unless blocking-only, one painting object for paint areas. Returns an empty list without a valid terrain root. Caller owns and deletes them.",
+   "fr": "Construit les objets TerrainDeformation pour un noeud de terrain : un pour toutes les zones de nivellement (carte de zones bloquées, brosse et limites de lissage extérieur, masque de collision, petits déplacements maximaux) et, hors mode blocage seul, un objet de peinture pour les zones de peinture. Renvoie une liste vide sans racine de terrain valide. L'appelant en est propriétaire et les supprime."
+  },
+  "PlaceableLeveling:addDeformationArea": {
+   "en": "Converts an area's three nodes to world coordinates, builds the two edge vectors from the start corner and adds the parallelogram to the deformation object with the brush id and the blocked-area-map write flag.",
+   "fr": "Convertit les trois noeuds d'une zone en coordonnées monde, calcule les deux vecteurs d'arête depuis le coin de départ et ajoute le parallélogramme à l'objet de déformation avec l'id de brosse et l'indicateur d'écriture de la carte de zones bloquées."
+  },
+  "PlaceableLeveling:getRequiresLeveling": {
+   "en": "Returns whether the placeable asks for ground leveling.",
+   "fr": "Indique si le placeable demande un nivellement du terrain."
+  },
+  "PlaceableLeveling:getRequiresRealignAfterLeveling": {
+   "en": "Returns whether the placeable is realigned in height after leveling (default true).",
+   "fr": "Indique si le placeable est réaligné en hauteur après le nivellement (vrai par défaut)."
+  },
+  "PlaceableLeveling:applyDeformation": {
+   "en": "Runs the deformation objects one after another through g_terrainDeformationQueue, either as a preview or for real, summing the displaced volume. The callback receives the state, total volume and a blocking object name on failure, and objects are deleted through the async task manager. Calls the callback at once with success if there is nothing to do.",
+   "fr": "Exécute les objets de déformation l'un après l'autre via g_terrainDeformationQueue, en aperçu ou pour de bon, en cumulant le volume déplacé. Le callback reçoit l'état, le volume total et un nom d'objet bloquant en cas d'échec, et les objets sont supprimés via le gestionnaire de tâches asynchrones. Appelle le callback immédiatement avec succès s'il n'y a rien à faire."
+  }
+ }
+}

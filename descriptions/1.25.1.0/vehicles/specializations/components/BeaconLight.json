@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/components/BeaconLight.lua",
+ "module": {
+  "en": "Rotating or blinking beacon light for vehicles. It is loaded either from a shared beacon XML/i3d asset (with selectable variation and mount type) or from inline `staticLight` entries in the vehicle XML. It drives a rotator node, a real light source, and shader-based static lights whose intensity can depend on camera distance; the real light follows the `REAL_BEACON_LIGHTS` game setting. Client-side visual object; the vehicle calls `setIsActive`. Device data comes from `BeaconLightManager` (defined elsewhere, UNVERIFIED).",
+  "fr": "Gyrophare tournant ou clignotant pour véhicules. Il est chargé soit depuis un asset XML/i3d de gyrophare partagé (avec variation et type de montage au choix), soit depuis des entrées `staticLight` en ligne dans le XML du véhicule. Il pilote un nœud rotatif, une source de lumière réelle et des lumières statiques par shader dont l'intensité peut dépendre de la distance à la caméra ; la lumière réelle suit le réglage `REAL_BEACON_LIGHTS`. Objet visuel côté client ; le véhicule appelle `setIsActive`. Les données d'appareil viennent de `BeaconLightManager` (défini ailleurs, NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "BeaconLight.new": {
+   "en": "Creates a beacon light for a vehicle (may be nil for debug use) with default speed 1, intensity 1, real light range scale 1, inactive.",
+   "fr": "Crée un gyrophare pour un véhicule (peut être nil pour le debug) avec vitesse 1, intensité 1, échelle de portée de la lumière réelle 1, inactif."
+  },
+  "BeaconLight:delete": {
+   "en": "Deletes the beacon node, releases the shared i3d request and removes the object from the mission updateables.",
+   "fr": "Supprime le nœud du gyrophare, libère la requête i3d partagée et retire l'objet des updateables de la mission."
+  },
+  "BeaconLight:setCallback": {
+   "en": "Stores a callback (and optional target) called with the success flag once loading is done.",
+   "fr": "Mémorise un callback (et une cible optionnelle) appelé avec l'indicateur de succès une fois le chargement terminé."
+  },
+  "BeaconLight.loadFromVehicleXML": {
+   "en": "Creates a beacon light from a vehicle XML key and, on success, appends it to `targetTable`. With `#filename` it loads the shared asset at `#node` (refusing runtime-loaded reference nodes); without it, it reads inline `staticLight` entries. Returns the object or nil.",
+   "fr": "Crée un gyrophare depuis une clé XML de véhicule et, en cas de succès, l'ajoute à `targetTable`. Avec `#filename` il charge l'asset partagé à `#node` (en refusant les nœuds de référence chargés à l'exécution) ; sans, il lit des entrées `staticLight` en ligne. Renvoie l'objet ou nil."
+  },
+  "BeaconLight:setXMLSettings": {
+   "en": "Stores speed, intensity, mount type and variation name from the XML; nil speed or intensity keep the current values.",
+   "fr": "Mémorise vitesse, intensité, type de montage et nom de variation issus du XML ; une vitesse ou intensité nil conserve la valeur actuelle."
+  },
+  "BeaconLight:setRealLight": {
+   "en": "Sets whether a real light is used, an optional external light node replacing the asset's one, and the range scale applied to it.",
+   "fr": "Définit si une lumière réelle est utilisée, un nœud de lumière externe optionnel remplaçant celui de l'asset, et l'échelle de portée appliquée."
+  },
+  "BeaconLight:loadFromXML": {
+   "en": "Loads the beacon asset XML and starts the asynchronous shared i3d load, linking later to `linkNode`. Returns false and calls `onFinished(false)` when the XML or the i3d filename is missing.",
+   "fr": "Charge le XML de l'asset de gyrophare et lance le chargement i3d partagé asynchrone, lié ensuite à `linkNode`. Renvoie false et appelle `onFinished(false)` si le XML ou le nom i3d manque."
+  },
+  "BeaconLight:onI3DLoaded": {
+   "en": "Async callback: picks the requested variation and mount type, deletes the unused variation and mount nodes, loads variation settings, links the root under the link node with the mount y offset. Note: success is reported as node present AND has static lights, so assets without static lights count as failed.",
+   "fr": "Callback asynchrone : choisit la variation et le type de montage demandés, supprime les nœuds inutilisés, charge les réglages de variation, lie la racine sous le nœud d'attache avec le décalage y du montage. À noter : le succès est `nœud présent ET lumières statiques`, donc un asset sans lumière statique compte comme échec."
+  },
+  "BeaconLight:onFinished": {
+   "en": "Initialises shader parameters of static lights, randomises the rotator start angle, sets up or removes the real light node (range scaling, shadow priority 0.25, hidden), then calls the callback.",
+   "fr": "Initialise les paramètres shader des lumières statiques, randomise l'angle de départ du rotateur, prépare ou retire la lumière réelle (échelle de portée, priorité d'ombre 0.25, masquée), puis appelle le callback."
+  },
+  "BeaconLight:loadVariationFromXML": {
+   "en": "Reads rotator, real light, static lights, device (via `BeaconLightManager`) and an optional material from one XML key (base or a variation) and applies the material to the node.",
+   "fr": "Lit rotateur, lumière réelle, lumières statiques, appareil (via `BeaconLightManager`) et un matériau optionnel depuis une clé XML (base ou variation) et applique le matériau au nœud."
+  },
+  "BeaconLight:update": {
+   "en": "Spins the rotator, animates the real light colour for multi-blink patterns, and refreshes distance-dependent intensity and minimum-distance visibility of static lights when the camera distance changed by more than 1.",
+   "fr": "Fait tourner le rotateur, anime la couleur de la lumière réelle pour les motifs multi-clignotements, et rafraîchit l'intensité dépendante de la distance et la visibilité à distance minimale des lumières statiques quand la distance caméra a changé de plus de 1."
+  },
+  "BeaconLight:setIsActive": {
+   "en": "Turns the beacon on or off: registers or unregisters per-frame updates if needed, toggles the real light (only when the beacon real-light setting is on) and sets each static light's shader intensity.",
+   "fr": "Allume ou éteint le gyrophare : enregistre ou retire les mises à jour par frame si nécessaire, bascule la lumière réelle (seulement si le réglage de lumières réelles est actif) et fixe l'intensité shader de chaque lumière statique."
+  },
+  "BeaconLight:onLightsRealBeaconLightChanged": {
+   "en": "Reacts to a change of the real beacon light game setting by updating the visibility of the real light node.",
+   "fr": "Réagit à un changement du réglage de lumières réelles de gyrophare en mettant à jour la visibilité du nœud de lumière réelle."
+  },
+  "BeaconLight.spawnDebugBeacons": {
+   "en": "Debug helper: scans the `data/shared/assets/beaconLights` folder, spawns every mount type and variation of each XML in a grid under `rootNode`, labels them and logs how many loaded or failed.",
+   "fr": "Aide de debug : parcourt le dossier `data/shared/assets/beaconLights`, fait apparaître chaque type de montage et variation de chaque XML en grille sous `rootNode`, les étiquette et journalise combien ont chargé ou échoué."
+  },
+  "BeaconLight.registerXMLPaths": {
+   "en": "Registers the XML paths of the beacon asset: base and per-variation settings plus i3d mappings.",
+   "fr": "Enregistre les chemins XML de l'asset de gyrophare : réglages de base et par variation, plus les mappings i3d."
+  },
+  "BeaconLight.registerVariationPaths": {
+   "en": "Registers the material and device XML paths for a beacon variation key.",
+   "fr": "Enregistre les chemins XML de matériau et d'appareil pour une clé de variation de gyrophare."
+  },
+  "BeaconLight.registerVehicleXMLPaths": {
+   "en": "Registers the vehicle-side XML paths for a beacon light (filename, node, speed, real light, intensity, mount type, variation, inline static lights).",
+   "fr": "Enregistre les chemins XML côté véhicule pour un gyrophare (fichier, nœud, vitesse, lumière réelle, intensité, type de montage, variation, lumières statiques en ligne)."
+  }
+ }
+}

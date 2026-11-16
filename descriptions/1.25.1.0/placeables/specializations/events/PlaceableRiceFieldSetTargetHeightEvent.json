@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableRiceFieldSetTargetHeightEvent.lua",
+ "module": {
+  "en": "Network event that changes the water target height of one rice field of a PlaceableRiceField. A client sends it to the server, which applies it and rebroadcasts it to every client.",
+  "fr": "Événement réseau qui modifie la hauteur d'eau cible d'une rizière d'un PlaceableRiceField. Un client l'envoie au serveur, qui l'applique et le rediffuse à tous les clients."
+ },
+ "fonctions": {
+  "PlaceableRiceFieldSetTargetHeightEvent.emptyNew": {
+   "en": "Creates an empty event using the class metatable; unlike sibling events, no channel is passed (default channel).",
+   "fr": "Crée un événement vide avec la métatable de la classe ; contrairement aux événements voisins, aucun canal n'est passé (canal par défaut)."
+  },
+  "PlaceableRiceFieldSetTargetHeightEvent.new": {
+   "en": "Builds the event from the rice field placeable, a field index and a target water height.",
+   "fr": "Construit l'événement à partir du placeable de rizière, d'un index de champ et d'une hauteur d'eau cible."
+  },
+  "PlaceableRiceFieldSetTargetHeightEvent:readStream": {
+   "en": "Reads the rice field object, a UInt8 field index and a Float32 target height, then runs the event.",
+   "fr": "Lit l'objet rizière, un index de champ UInt8 et une hauteur cible Float32, puis exécute l'événement."
+  },
+  "PlaceableRiceFieldSetTargetHeightEvent:writeStream": {
+   "en": "Writes the rice field object, the UInt8 field index and the Float32 target height.",
+   "fr": "Écrit l'objet rizière, l'index de champ UInt8 et la hauteur cible Float32."
+  },
+  "PlaceableRiceFieldSetTargetHeightEvent:run": {
+   "en": "If the rice field is synchronized, calls `setWaterHeightTarget` with the field index, the target height and a flag set to true; on the server it then rebroadcasts the event to all clients.",
+   "fr": "Si la rizière est synchronisée, appelle `setWaterHeightTarget` avec l'index du champ, la hauteur cible et un indicateur à true ; sur le serveur, il rediffuse ensuite l'événement à tous les clients."
+  }
+ }
+}

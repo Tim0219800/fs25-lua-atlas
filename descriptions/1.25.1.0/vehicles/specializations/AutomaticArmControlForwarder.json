@@ -1,0 +1,129 @@
+{
+ "fichier": "vehicles/specializations/AutomaticArmControlForwarder.lua",
+ "module": {
+  "en": "Specialization that lets the crane of a forwarder align itself automatically on the best tree (log) found in tree triggers. It requires Cylindered and drives its moving tools through an X, Y and Z alignment sequence, with an optional easy-arm-control requirement and fold-time limits. The server runs the alignment; clients send the input and show a tree marker, with a dirty flag for synchronisation. It is configurable per vehicle configuration. The state constants and NEXT_STATE table are defined outside the dumped code: UNVERIFIED.",
+  "fr": "Spécialisation qui permet à la grue d'un porteur forestier de s'aligner automatiquement sur le meilleur arbre (grume) trouvé dans des triggers. Elle exige Cylindered et pilote ses outils mobiles par une séquence d'alignement X, Y et Z, avec une exigence optionnelle de contrôle de bras facile et des limites de temps de pliage. Le serveur exécute l'alignement ; les clients envoient l'entrée et affichent un marqueur d'arbre, avec un indicateur dirty pour la synchronisation. Elle est configurable par configuration du véhicule. Les constantes d'état et la table NEXT_STATE sont définies hors du code présent dans le dump : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "AutomaticArmControlForwarder.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the Cylindered specialization.",
+   "fr": "Renvoie true seulement si le type de véhicule possède la spécialisation Cylindered."
+  },
+  "AutomaticArmControlForwarder.initSpecialization": {
+   "en": "Adds the `automaticArmControlForwarder` shop configuration type and registers the XML paths both directly under `vehicle.automaticArmControlForwarder` and inside each configuration entry.",
+   "fr": "Ajoute le type de configuration de boutique `automaticArmControlForwarder` et enregistre les chemins XML à la fois directement sous `vehicle.automaticArmControlForwarder` et dans chaque entrée de configuration."
+  },
+  "AutomaticArmControlForwarder.registerXMLPaths": {
+   "en": "Registers one set of XML keys: easy-arm requirement, fold limits, root node, tree triggers, X, Y, Z and X-tool alignment settings, and the tree marker with its target and too-thick colours.",
+   "fr": "Enregistre un jeu de clés XML : exigence du contrôle de bras facile, limites de pliage, noeud racine, triggers d'arbres, réglages d'alignement X, Y, Z et outil X, et marqueur d'arbre avec ses couleurs cible et trop épais."
+  },
+  "AutomaticArmControlForwarder.registerFunctions": {
+   "en": "Registers the alignment API (allowed check, input, `doTreeArmAlignment`, reset, active/finished queries, target tree getters, best-tree search) and the tree trigger callback.",
+   "fr": "Enregistre l'API d'alignement (test d'autorisation, entrée, `doTreeArmAlignment`, réinitialisation, requêtes actif/terminé, accesseurs d'arbre cible, recherche du meilleur arbre) et le callback du trigger d'arbres."
+  },
+  "AutomaticArmControlForwarder.registerOverwrittenFunctions": {
+   "en": "Empty: no vehicle function is overridden.",
+   "fr": "Vide : aucune fonction de véhicule n'est surchargée."
+  },
+  "AutomaticArmControlForwarder.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, onReadUpdateStream, onWriteUpdateStream, onUpdate, `onAutoLoadForwaderMountedTree` and onRegisterActionEvents.",
+   "fr": "S'abonne à onLoad, onPostLoad, onDelete, onReadUpdateStream, onWriteUpdateStream, onUpdate, `onAutoLoadForwaderMountedTree` et onRegisterActionEvents."
+  },
+  "AutomaticArmControlForwarder:onLoad": {
+   "en": "Picks the configuration, reads nodes, alignment settings, fold limits and the tree marker, and adds the tree triggers. Without a root node it removes its onDelete, onUpdate and action listeners. Also drops the action listener if automatic vehicle control is on.",
+   "fr": "Choisit la configuration, lit les noeuds, les réglages d'alignement, les limites de pliage et le marqueur d'arbre, et ajoute les triggers d'arbres. Sans noeud racine, retire ses écouteurs onDelete, onUpdate et d'actions. Retire aussi l'écouteur d'actions si le contrôle automatique du véhicule est actif."
+  },
+  "AutomaticArmControlForwarder:onPostLoad": {
+   "en": "Resolves the moving tool objects of the X, Z, Y and X-tool alignment from their nodes.",
+   "fr": "Résout les objets d'outils mobiles des alignements X, Z, Y et outil X à partir de leurs noeuds."
+  },
+  "AutomaticArmControlForwarder:onDelete": {
+   "en": "Deletes the tree marker and removes all tree triggers.",
+   "fr": "Supprime le marqueur d'arbre et retire tous les triggers d'arbres."
+  },
+  "AutomaticArmControlForwarder:onReadUpdateStream": {
+   "en": "Network read. The server reads the client's control input and holds it for 250 ms; a client reads whether the server found a valid target.",
+   "fr": "Lecture réseau. Le serveur lit l'entrée de contrôle du client et la conserve 250 ms ; un client lit si le serveur a trouvé une cible valide."
+  },
+  "AutomaticArmControlForwarder:onWriteUpdateStream": {
+   "en": "Network write, mirror of the read: a client sends its control input, the server sends the valid-target flag, both only when the dirty flag is set.",
+   "fr": "Écriture réseau, miroir de la lecture : un client envoie son entrée de contrôle, le serveur envoie l'indicateur de cible valide, dans les deux cas seulement si l'indicateur dirty est levé."
+  },
+  "AutomaticArmControlForwarder:onUpdate": {
+   "en": "Each update finds the best tree target when allowed, caching its position, direction and radius. Clients show the marker and toggle the input. The server raises the dirty flag and resets the state when target validity changes, and replays held input.",
+   "fr": "À chaque mise à jour, trouve la meilleure cible d'arbre si c'est permis et met en cache sa position, sa direction et son rayon. Les clients affichent le marqueur et activent l'entrée. Le serveur lève l'indicateur dirty et réinitialise l'état quand la validité de la cible change, et rejoue l'entrée maintenue."
+  },
+  "AutomaticArmControlForwarder:onAutoLoadForwaderMountedTree": {
+   "en": "Event handler: removes the just-mounted tree from the list of trees found in the triggers.",
+   "fr": "Gestionnaire d'événement : retire l'arbre qui vient d'être monté de la liste des arbres trouvés dans les triggers."
+  },
+  "AutomaticArmControlForwarder:onRegisterActionEvents": {
+   "en": "On clients, registers the TREE_AUTOMATIC_ALIGN powered action with very high text priority, initially inactive. Only registered when automatic vehicle control is not available.",
+   "fr": "Sur les clients, enregistre l'action alimentée TREE_AUTOMATIC_ALIGN avec une priorité de texte très haute, initialement inactive. N'est enregistrée que si le contrôle automatique du véhicule n'est pas disponible."
+  },
+  "AutomaticArmControlForwarder.actionEvent": {
+   "en": "Input callback: forwards the input value to `setTreeArmAlignmentInput`.",
+   "fr": "Callback d'entrée : transmet la valeur d'entrée à `setTreeArmAlignmentInput`."
+  },
+  "AutomaticArmControlForwarder.updateActionEvents": {
+   "en": "Enables or disables the TREE_AUTOMATIC_ALIGN action event according to the given state.",
+   "fr": "Active ou désactive l'événement d'action TREE_AUTOMATIC_ALIGN selon l'état donné."
+  },
+  "AutomaticArmControlForwarder:getIsAutoTreeAlignmentAllowed": {
+   "en": "Returns false if the vehicle is not controlled, if easy arm control is required but off, or if the fold animation time is outside the configured limits; true otherwise.",
+   "fr": "Renvoie false si le véhicule n'est pas contrôlé, si le contrôle de bras facile est requis mais désactivé, ou si le temps d'animation de pliage est hors des limites configurées ; true sinon."
+  },
+  "AutomaticArmControlForwarder:setTreeArmAlignmentInput": {
+   "en": "Server: while input is positive, not finished and a target exists, runs the alignment towards it; input 0 resets the state. Client: stores the input and flags the vehicle dirty to send it to the server.",
+   "fr": "Serveur : tant que l'entrée est positive, que ce n'est pas terminé et qu'une cible existe, lance l'alignement vers elle ; une entrée 0 réinitialise l'état. Client : mémorise l'entrée et marque le véhicule dirty pour l'envoyer au serveur."
+  },
+  "AutomaticArmControlForwarder:doTreeArmAlignment": {
+   "en": "Steps the alignment state machine towards a target point and direction: move up, then X (and X tool), Z, Y, driving each moving tool through `externalMove`. `direction` is 1 or -1 and `forceMoveUp` forces the move-up step.",
+   "fr": "Fait avancer la machine à états d'alignement vers un point et une direction cibles : montée, puis X (et outil X), Z, Y, en pilotant chaque outil mobile via `externalMove`. `direction` vaut 1 ou -1 et `forceMoveUp` force l'étape de montée."
+  },
+  "AutomaticArmControlForwarder.movingToolXAlignment": {
+   "en": "Rotates a moving tool about its axis towards a target world point. Returns the move command and true once the angle is under the threshold; `allowInversion` lets it aim the opposite way when that is shorter.",
+   "fr": "Fait tourner un outil mobile autour de son axe vers un point cible du monde. Renvoie la commande de mouvement et true une fois l'angle sous le seuil ; `allowInversion` lui permet de viser dans le sens opposé si c'est plus court."
+  },
+  "AutomaticArmControlForwarder.calculateMovingToolTargetMove": {
+   "en": "Predicts where the tool would stop given its speed and acceleration, and returns -1, 0 or 1 (times the speed sign) so it does not overshoot the target rotation. Uses `g_currentDt`.",
+   "fr": "Prédit où l'outil s'arrêterait compte tenu de sa vitesse et de son accélération, et renvoie -1, 0 ou 1 (selon le signe de la vitesse) afin de ne pas dépasser la rotation cible. Utilise `g_currentDt`."
+  },
+  "AutomaticArmControlForwarder:resetAutomaticAlignment": {
+   "en": "Resets the alignment state machine to its initial state.",
+   "fr": "Remet la machine à états d'alignement à son état initial."
+  },
+  "AutomaticArmControlForwarder:getIsAutomaticAlignmentActive": {
+   "en": "Returns true while the alignment is neither idle nor finished.",
+   "fr": "Renvoie true tant que l'alignement n'est ni au repos ni terminé."
+  },
+  "AutomaticArmControlForwarder:getIsAutomaticAlignmentFinished": {
+   "en": "Returns true when the alignment state is the finished state.",
+   "fr": "Renvoie true quand l'état d'alignement est l'état terminé."
+  },
+  "AutomaticArmControlForwarder:getAutomaticAlignmentTargetTree": {
+   "en": "Returns the node id of the tree currently targeted, or nil.",
+   "fr": "Renvoie l'identifiant de noeud de l'arbre actuellement ciblé, ou nil."
+  },
+  "AutomaticArmControlForwarder:getAutomaticAlignmentAvailableTargetTree": {
+   "en": "Recomputes and returns the best tree in range without using the cached target, or nil if none.",
+   "fr": "Recalcule et renvoie le meilleur arbre à portée sans utiliser la cible en cache, ou nil s'il n'y en a pas."
+  },
+  "AutomaticArmControlForwarder:getAutomaticAlignmentCurrentTarget": {
+   "en": "Returns the target position (x, y, z) and direction (dx, dy, dz) when a valid target exists, otherwise six nil values.",
+   "fr": "Renvoie la position (x, y, z) et la direction (dx, dy, dz) de la cible quand une cible valide existe, sinon six valeurs nil."
+  },
+  "AutomaticArmControlForwarder:getBestTreeToAutoAlign": {
+   "en": "Scores unmounted trees by angle, distance and height relative to a reference node and returns the id with the lowest score, or nil. Mounted logs are skipped.",
+   "fr": "Note les arbres non montés selon l'angle, la distance et la hauteur par rapport à un noeud de référence et renvoie l'identifiant au score le plus bas, ou nil. Les grumes montées sont ignorées."
+  },
+  "AutomaticArmControlForwarder:onTreeAutoTriggerCallback": {
+   "en": "Trigger callback: for mesh split shapes, adds the tree to the found list on enter and removes it on leave.",
+   "fr": "Callback de trigger : pour les formes de maillage découpable, ajoute l'arbre à la liste des arbres trouvés à l'entrée et l'en retire à la sortie."
+  },
+  "AutomaticArmControlForwarder.drawDebugCircleRange": {
+   "en": "Debug helper: draws a red arc of line segments around a node between two angles. Not called anywhere in this file.",
+   "fr": "Outil de debug : dessine un arc rouge de segments de ligne autour d'un noeud entre deux angles. Non appelé dans ce fichier."
+  }
+ }
+}

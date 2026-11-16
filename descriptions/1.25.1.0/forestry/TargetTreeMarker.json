@@ -1,0 +1,45 @@
+{
+ "fichier": "forestry/TargetTreeMarker.lua",
+ "module": {
+  "en": "Plain class for the coloured ring or band drawn around a tree to show the target of a forestry tool. It loads a marker i3d, shows or hides it, sets its emissive color through a shader parameter, optionally pulses it with a sine-based flash in the per-frame update, and positions it on the tree with a width and radius.",
+  "fr": "Classe simple pour l'anneau ou la bande colorée dessinée autour d'un arbre pour indiquer la cible d'un outil forestier. Elle charge un i3d de marqueur, l'affiche ou le masque, règle sa couleur émissive via un paramètre de shader, le fait éventuellement clignoter selon un sinus dans la mise à jour, et le positionne sur l'arbre avec une largeur et un rayon."
+ },
+ "fonctions": {
+  "TargetTreeMarker.new": {
+   "en": "Constructor. Stores the vehicle (may be nil) and link node; the marker starts inactive, not flashing, with a minimum flash intensity of 0.1.",
+   "fr": "Constructeur. Mémorise le véhicule (peut être nil) et le nœud de liaison ; le marqueur démarre inactif, sans clignotement, avec une intensité minimale de clignotement de 0,1."
+  },
+  "TargetTreeMarker.registerXMLPaths": {
+   "en": "Registers the marker XML attributes: i3d filename, width, offset from the tree and emissive color.",
+   "fr": "Déclare les attributs XML du marqueur : fichier i3d, largeur, décalage par rapport à l'arbre et couleur émissive."
+  },
+  "TargetTreeMarker:loadFromXML": {
+   "en": "Reads filename, width, offset and color, then starts an asynchronous shared i3d load through the vehicle if present, otherwise through g_i3DManager. onI3DLoaded completes the setup.",
+   "fr": "Lit fichier, largeur, décalage et couleur, puis lance un chargement i3d partagé asynchrone via le véhicule s'il existe, sinon via g_i3DManager. onI3DLoaded termine l'initialisation."
+  },
+  "TargetTreeMarker:delete": {
+   "en": "Deletes the marker node and releases the shared i3d if loaded, and removes the marker from mission updateables.",
+   "fr": "Supprime le nœud du marqueur et libère l'i3d partagé s'il est chargé, et retire le marqueur des éléments mis à jour de la mission."
+  },
+  "TargetTreeMarker:setIsActive": {
+   "en": "Stores the active state and shows or hides the marker node accordingly if it is loaded.",
+   "fr": "Mémorise l'état actif et affiche ou masque en conséquence le nœud du marqueur s'il est chargé."
+  },
+  "TargetTreeMarker:setColor": {
+   "en": "Sets the RGB emissive color. When isFlashing is given and changes, it turns flashing on (registering for updates and restarting the timer) or off, and can set the minimum flash intensity.",
+   "fr": "Définit la couleur émissive RVB. Quand isFlashing est fourni et change, active le clignotement (inscription aux mises à jour et redémarrage du minuteur) ou le désactive, et peut régler l'intensité minimale de clignotement."
+  },
+  "TargetTreeMarker:update": {
+   "en": "Flash animation: advances the timer by dt and scales the emissive color and alpha by a sine-based factor between the minimum intensity and 1. Only runs while flashing is enabled.",
+   "fr": "Animation de clignotement : avance le minuteur de dt et module couleur émissive et alpha par un facteur sinusoïdal entre l'intensité minimale et 1. Ne s'exécute que lorsque le clignotement est activé."
+  },
+  "TargetTreeMarker:setPosition": {
+   "en": "Places the marker at a world position shifted along a direction by an offset (default minus half the width), orients it along that direction and writes the width and diameter (2 x radius) into the shader.",
+   "fr": "Place le marqueur à une position monde décalée le long d'une direction par un décalage (par défaut moins la moitié de la largeur), l'oriente selon cette direction et écrit largeur et diamètre (2 x rayon) dans le shader."
+  },
+  "TargetTreeMarker:onI3DLoaded": {
+   "en": "Callback of the shared i3d load. Takes the nested first child as marker node, links it under the link node, applies visibility and color, and deletes the temporary i3d root.",
+   "fr": "Rappel du chargement de l'i3d partagé. Prend le premier enfant imbriqué comme nœud du marqueur, le lie sous le nœud de liaison, applique visibilité et couleur, et supprime la racine i3d temporaire."
+  }
+ }
+}

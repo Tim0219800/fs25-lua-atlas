@@ -1,0 +1,45 @@
+{
+ "fichier": "ai/parameters/AIParameterPosition.lua",
+ "module": {
+  "en": "AI job parameter holding a 2D world position (x, z). It is saved as XML float attributes, streamed as two float32 values, and validated against the AI system's reachability check. `AIParameterPositionAngle` extends it with a heading.",
+  "fr": "Paramètre de job IA qui contient une position monde 2D (x, z). Il est sauvegardé en attributs XML flottants, transmis en deux float32 et validé par le test d'accessibilité du système IA. `AIParameterPositionAngle` l'étend avec un cap."
+ },
+ "fonctions": {
+  "AIParameterPosition.new": {
+   "en": "Creates the parameter with type POSITION and no position.",
+   "fr": "Crée le paramètre de type POSITION, sans position."
+  },
+  "AIParameterPosition:saveToXMLFile": {
+   "en": "Writes `#x` and `#z` when a position is set.",
+   "fr": "Écrit `#x` et `#z` quand une position est définie."
+  },
+  "AIParameterPosition:loadFromXMLFile": {
+   "en": "Reads `#x` and `#z`, keeping current values if absent.",
+   "fr": "Lit `#x` et `#z`, en gardant les valeurs courantes si absentes."
+  },
+  "AIParameterPosition:readStream": {
+   "en": "Reads a presence flag and, if set, x and z as float32.",
+   "fr": "Lit un drapeau de présence et, si défini, x et z en float32."
+  },
+  "AIParameterPosition:writeStream": {
+   "en": "Writes a presence flag and, if a position is set, x and z as float32.",
+   "fr": "Écrit un drapeau de présence et, si une position est définie, x et z en float32."
+  },
+  "AIParameterPosition:setPosition": {
+   "en": "Stores the x and z world coordinates.",
+   "fr": "Mémorise les coordonnées monde x et z."
+  },
+  "AIParameterPosition:getPosition": {
+   "en": "Returns x and z, both nil when unset.",
+   "fr": "Renvoie x et z, tous deux nil si non définis."
+  },
+  "AIParameterPosition:getString": {
+   "en": "Returns the position formatted as \"< x , z >\" with one decimal. It errors if the position is nil (no nil check).",
+   "fr": "Renvoie la position formatée « < x , z > » avec une décimale. Provoque une erreur si la position est nil (aucun contrôle de nil)."
+  },
+  "AIParameterPosition:validate": {
+   "en": "Returns false with a localized error if the position is missing or `aiSystem:getIsPositionReachable(x, 0, z)` says it is blocked; otherwise true and nil. That AI system method is not in this file (UNVERIFIED).",
+   "fr": "Renvoie false avec une erreur localisée si la position manque ou si `aiSystem:getIsPositionReachable(x, 0, z)` la dit bloquée ; sinon true et nil. Cette méthode du système IA n'est pas dans ce fichier (NON VÉRIFIÉ)."
+  }
+ }
+}

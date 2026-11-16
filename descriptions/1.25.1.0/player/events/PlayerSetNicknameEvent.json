@@ -1,0 +1,29 @@
+{
+ "fichier": "player/events/PlayerSetNicknameEvent.lua",
+ "module": {
+  "en": "Event that propagates a player's nickname change. Both server and client simply forward the data to `g_currentMission:setPlayerNickname`; the client side passes an extra flag, probably to avoid re-sending (UNVERIFIED, the function lives in a class missing from the dump).",
+  "fr": "Événement qui propage le changement de pseudo d'un joueur. Serveur et client transmettent simplement les données à `g_currentMission:setPlayerNickname` ; le client passe un indicateur supplémentaire, probablement pour éviter un renvoi (NON VÉRIFIÉ, la fonction est dans une classe absente du dump)."
+ },
+ "fonctions": {
+  "PlayerSetNicknameEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture depuis un flux."
+  },
+  "PlayerSetNicknameEvent.new": {
+   "en": "Builds the event with the player, new nickname and user id.",
+   "fr": "Construit l'événement avec le joueur, le nouveau pseudo et l'identifiant utilisateur."
+  },
+  "PlayerSetNicknameEvent:writeStream": {
+   "en": "Writes the player node object, the nickname string and the user id.",
+   "fr": "Écrit l'objet joueur, la chaîne du pseudo et l'identifiant utilisateur."
+  },
+  "PlayerSetNicknameEvent:readStream": {
+   "en": "Reads player, nickname and user id, then runs the event.",
+   "fr": "Lit le joueur, le pseudo et l'identifiant utilisateur, puis exécute l'événement."
+  },
+  "PlayerSetNicknameEvent:run": {
+   "en": "Calls `g_currentMission:setPlayerNickname` with the data; on the client a fourth argument `true` is added. Its further effects are UNVERIFIED.",
+   "fr": "Appelle `g_currentMission:setPlayerNickname` avec les données ; côté client, un quatrième argument `true` est ajouté. Ses autres effets sont NON VÉRIFIÉS."
+  }
+ }
+}

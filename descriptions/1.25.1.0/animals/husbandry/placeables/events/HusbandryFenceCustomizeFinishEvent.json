@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/husbandry/placeables/events/HusbandryFenceCustomizeFinishEvent.lua",
+ "module": {
+  "en": "Network event announcing that a player has finished customizing the fence of a husbandry placeable, with a success flag. A client sends it to the server, which rebroadcasts it to the other clients and applies it locally.",
+  "fr": "Événement réseau annonçant qu'un joueur a terminé la personnalisation de la clôture d'un placeable d'élevage, avec un indicateur de réussite. Un client l'envoie au serveur, qui le rediffuse aux autres clients et l'applique localement."
+ },
+ "fonctions": {
+  "HusbandryFenceCustomizeFinishEvent.emptyNew": {
+   "en": "Creates an empty event instance for the network layer to fill in `readStream`.",
+   "fr": "Crée une instance d'événement vide que la couche réseau remplira dans `readStream`."
+  },
+  "HusbandryFenceCustomizeFinishEvent.new": {
+   "en": "Creates the event for the given husbandry placeable and a boolean telling whether the customization succeeded.",
+   "fr": "Crée l'événement pour le placeable d'élevage donné et un booléen indiquant si la personnalisation a réussi."
+  },
+  "HusbandryFenceCustomizeFinishEvent:readStream": {
+   "en": "Reads the placeable (node object) and the success bool from the stream, then runs the event.",
+   "fr": "Lit le placeable (objet-noeud) et le booléen de réussite dans le flux, puis exécute l'événement."
+  },
+  "HusbandryFenceCustomizeFinishEvent:writeStream": {
+   "en": "Writes the placeable as a node object and the success bool to the stream.",
+   "fr": "Écrit le placeable comme objet-noeud et le booléen de réussite dans le flux."
+  },
+  "HusbandryFenceCustomizeFinishEvent:run": {
+   "en": "If received by the server, rebroadcasts it to other clients. When the placeable is synchronized, resolves the sending user (server only) and calls `finishFenceCustomization(user, success, true)`.",
+   "fr": "Si le serveur le reçoit, le rediffuse aux autres clients. Quand le placeable est synchronisé, retrouve l'utilisateur émetteur (serveur seulement) et appelle `finishFenceCustomization(user, success, true)`."
+  }
+ }
+}

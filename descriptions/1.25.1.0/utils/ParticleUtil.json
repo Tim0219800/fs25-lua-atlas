@@ -1,12 +1,169 @@
 {
  "fichier": "utils/ParticleUtil.lua",
- "module": "Utilitaires de systèmes de particules : chargement depuis le XML ou un nœud I3D, émission, vitesses, échelles, durée de vie, matériau et copie. ⚠ Le dump du SDK ne contient que les signatures : le comportement interne n'est pas lisible. Les descriptions ci-dessous viennent de l'usage observé dans le code vanilla (WorkParticles notamment) ; le reste est NON VÉRIFIÉ. Les fonctions qui portent sur « particleSystem » prennent la table renvoyée par les fonctions de chargement, pas un id de nœud.",
+ "module": {
+  "en": "Particle system utilities: loading from XML or an I3D node, emission, speeds, scales, lifetime, material and copying. Warning: the SDK dump only contains signatures, so the internal behaviour is not readable. The descriptions below come from observed vanilla usage (mainly WorkParticles); anything else is UNVERIFIED. Functions taking a \"particleSystem\" expect the table returned by the loading functions, not a node id.",
+  "fr": "Utilitaires de systèmes de particules : chargement depuis le XML ou un nœud I3D, émission, vitesses, échelles, durée de vie, matériau et copie. ⚠ Le dump du SDK ne contient que les signatures : le comportement interne n'est pas lisible. Les descriptions ci-dessous viennent de l'usage observé dans le code vanilla (WorkParticles notamment) ; le reste est NON VÉRIFIÉ. Les fonctions qui portent sur « particleSystem » prennent la table renvoyée par les fonctions de chargement, pas un id de nœud."
+ },
  "fonctions": {
-  "ParticleUtil.loadParticleSystemFromNode": "Initialise la table particleSystem à partir d'un nœud I3D déjà chargé. Usage vanilla (WorkParticles) : émission initiale désactivée et worldSpace=true, de sorte que les particules restent en coordonnées monde après leur émission.",
-  "ParticleUtil.deleteParticleSystem": "Supprime un système de particules chargé ; appelé dans les onDelete (WorkParticles:onDelete).",
-  "ParticleUtil.setEmittingState": "Active ou coupe l'émission d'un système. WorkParticles l'appelle à chaque tick avec l'état calculé ; les paramètres resetStartTimer/resetStopTimer ne sont pas utilisés dans ce cas.",
-  "ParticleUtil.setMaterial": "Applique un matériau à un système. Usage vanilla : matériau de particule propre au type de remplissage (g_materialManager:getParticleMaterial).",
-  "ParticleUtil.copyParticleSystem": "Duplique un système de référence (venant de g_particleSystemManager) et l'attache à emitterShape, avec des surcharges lues sous la clé XML ; renvoie la table du nouveau système (usage : WorkParticles:loadGroundParticleMapping).",
-  "ParticleUtil.registerParticleCopyXMLPaths": "Enregistre dans un schéma XML les attributs acceptés par copyParticleSystem (appelé depuis WorkParticles.registerGroundParticleMappingXMLPaths)."
+  "ParticleUtil.loadParticleSystemData": {
+   "en": "Signature only (no body in the SDK dump): reads particle system data from an XML file under baseString into the data table, apparently without creating the system. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : lit les données d'un système de particules depuis un fichier XML sous baseString dans la table data, apparemment sans créer le système. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.loadParticleSystem": {
+   "en": "Signature only (no body in the SDK dump): loads a particle system from an XML file and a base key into the particleSystem table, with link nodes, default emitting state and default file. Used by Motorized for exhaust particles. Internal behaviour UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : charge un système de particules depuis un XML et une clé de base dans la table particleSystem, avec nœuds de liaison, état d'émission par défaut et fichier par défaut. Utilisé par Motorized pour les particules d'échappement. Comportement interne NON VÉRIFIÉ."
+  },
+  "ParticleUtil.loadParticleSystemFromData": {
+   "en": "Signature only (no body in the SDK dump): same idea as loadParticleSystem but from a data table previously filled by loadParticleSystemData. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : même principe que loadParticleSystem mais depuis une table de données remplie auparavant par loadParticleSystemData. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.particleI3DFileLoaded": {
+   "en": "Signature only (no body in the SDK dump): callback of asynchronous I3D loading (i3dNode, failedReason, args), presumably finishing the system setup once the file is loaded. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : rappel du chargement I3D asynchrone (i3dNode, failedReason, args), qui termine sans doute la mise en place du système une fois le fichier chargé. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.loadParticleSystemFromNode": {
+   "en": "Initialises the particleSystem table from an already loaded I3D node. Vanilla usage (WorkParticles): initial emission disabled and worldSpace=true, so particles stay in world coordinates once emitted.",
+   "fr": "Initialise la table particleSystem à partir d'un nœud I3D déjà chargé. Usage vanilla (WorkParticles) : émission initiale désactivée et worldSpace=true, de sorte que les particules restent en coordonnées monde après leur émission."
+  },
+  "ParticleUtil.deleteParticleSystem": {
+   "en": "Deletes a loaded particle system; called from onDelete handlers (WorkParticles:onDelete).",
+   "fr": "Supprime un système de particules chargé ; appelé dans les onDelete (WorkParticles:onDelete)."
+  },
+  "ParticleUtil.deleteParticleSystems": {
+   "en": "Signature only (no body in the SDK dump): deletes a list of particle systems; called by Motorized:onDelete for the exhaust. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : supprime une liste de systèmes de particules ; appelée par Motorized:onDelete pour l'échappement. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setEmittingState": {
+   "en": "Turns a system's emission on or off. WorkParticles calls it every tick with the computed state; the resetStartTimer/resetStopTimer parameters are not used in that case.",
+   "fr": "Active ou coupe l'émission d'un système. WorkParticles l'appelle à chaque tick avec l'état calculé ; les paramètres resetStartTimer/resetStopTimer ne sont pas utilisés dans ce cas."
+  },
+  "ParticleUtil.getParticleSystemAverageSpeed": {
+   "en": "Signature only (no body in the SDK dump): by its name, returns an average speed of the system's particles. Unit and computation UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, renvoie une vitesse moyenne des particules du système. Unité et calcul NON VÉRIFIÉS."
+  },
+  "ParticleUtil.setParticleSystemTimeScale": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the time scale of a particle system. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, règle l'échelle de temps d'un système de particules. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setEmitCountScale": {
+   "en": "Signature only (no body in the SDK dump): by its name, scales the number of particles emitted. Motorized calls it for the exhaust with the RPM ratio. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, met à l'échelle le nombre de particules émises. Motorized l'appelle pour l'échappement avec le ratio de régime. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleLifespan": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the particle lifespan (unit presumably ms, UNVERIFIED).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe la durée de vie des particules (unité probablement ms, NON VÉRIFIÉ)."
+  },
+  "ParticleUtil.addParticleSystemSimulationTime": {
+   "en": "Signature only (no body in the SDK dump): by its name, adds simulation time to the system (to advance it as if it had run). UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, ajoute du temps de simulation au système (pour l'avancer comme s'il avait tourné). NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleStartStopTime": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the start and stop times of the particle emission. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe les instants de début et de fin de l'émission. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemSpeed": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the initial speed of the particles. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit la vitesse initiale des particules. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemSpeed": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the initial speed of the particles. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe la vitesse initiale des particules. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemSpeedRandom": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the random component of the particle speed. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit la composante aléatoire de la vitesse des particules. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemSpeedRandom": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the random component of the particle speed. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe la composante aléatoire de la vitesse des particules. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemNormalSpeed": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the speed along the emitter normal. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit la vitesse selon la normale de l'émetteur. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemNormalSpeed": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the speed along the emitter normal. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe la vitesse selon la normale de l'émetteur. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemTangentSpeed": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the tangential speed. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit la vitesse tangentielle. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemTangentSpeed": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the tangential speed. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe la vitesse tangentielle. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemSpriteScaleX": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the sprite scale along X. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit l'échelle du sprite sur X. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemSpriteScaleX": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the sprite scale along X. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe l'échelle du sprite sur X. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemSpriteScaleY": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the sprite scale along Y. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit l'échelle du sprite sur Y. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemSpriteScaleY": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the sprite scale along Y. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe l'échelle du sprite sur Y. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemSpriteScaleXGain": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the gain (change over the particle's life) of the X sprite scale. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit le gain (variation au cours de la vie de la particule) de l'échelle X du sprite. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemSpriteScaleXGain": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the gain of the X sprite scale. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe le gain de l'échelle X du sprite. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemSpriteScaleYGain": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the gain of the Y sprite scale. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit le gain de l'échelle Y du sprite. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemSpriteScaleYGain": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the gain of the Y sprite scale. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe le gain de l'échelle Y du sprite. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.getParticleSystemVelocityScale": {
+   "en": "Signature only (no body in the SDK dump): by its name, reads the velocity scale, i.e. the share of the emitter's velocity transmitted to the particles. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, lit l'échelle de vélocité, c'est-à-dire la part de la vitesse de l'émetteur transmise aux particules. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setParticleSystemVelocityScale": {
+   "en": "Signature only (no body in the SDK dump): by its name, sets the velocity scale, i.e. the share of the emitter's velocity transmitted to the particles. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, fixe l'échelle de vélocité, c'est-à-dire la part de la vitesse de l'émetteur transmise aux particules. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.resetNumOfEmittedParticles": {
+   "en": "Signature only (no body in the SDK dump): by its name, resets the counter of emitted particles. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, remet à zéro le compteur de particules émises. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setEmitterShape": {
+   "en": "Signature only (no body in the SDK dump): by its name, assigns the emitter shape (node id) of the system. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, affecte la forme d'émission (id de nœud) du système. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.initEmitterScale": {
+   "en": "Signature only (no body in the SDK dump): by its name, initialises the scale of the emitter. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, initialise l'échelle de l'émetteur. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setMaxNumOfParticlesToEmitScale": {
+   "en": "Signature only (no body in the SDK dump): by its name, scales the maximum number of particles to emit. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, met à l'échelle le nombre maximal de particules à émettre. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.setMaterial": {
+   "en": "Applies a material to a system. Vanilla usage: the particle material specific to the fill type (g_materialManager:getParticleMaterial).",
+   "fr": "Applique un matériau à un système. Usage vanilla : matériau de particule propre au type de remplissage (g_materialManager:getParticleMaterial)."
+  },
+  "ParticleUtil.copyParticleSystem": {
+   "en": "Duplicates a reference system (coming from g_particleSystemManager) and attaches it to emitterShape, with overrides read under the XML key; returns the table of the new system (used in WorkParticles:loadGroundParticleMapping).",
+   "fr": "Duplique un système de référence (venant de g_particleSystemManager) et l'attache à emitterShape, avec des surcharges lues sous la clé XML ; renvoie la table du nouveau système (usage : WorkParticles:loadGroundParticleMapping)."
+  },
+  "ParticleUtil.registerParticleXMLPaths": {
+   "en": "Signature only (no body in the SDK dump): by its name, registers in an XML schema the particle system attributes under basePath/name. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : d'après son nom, enregistre dans un schéma XML les attributs d'un système de particules sous basePath/name. NON VÉRIFIÉ."
+  },
+  "ParticleUtil.registerParticleCopyXMLPaths": {
+   "en": "Registers in an XML schema the attributes accepted by copyParticleSystem (called from WorkParticles.registerGroundParticleMappingXMLPaths).",
+   "fr": "Enregistre dans un schéma XML les attributs acceptés par copyParticleSystem (appelé depuis WorkParticles.registerGroundParticleMappingXMLPaths)."
+  }
  }
 }

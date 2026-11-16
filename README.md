@@ -9,7 +9,7 @@ of the globals that actually exist at runtime.
 **Game version covered: 1.25.1.0.**
 
 > Unofficial project, not affiliated with or endorsed by GIANTS Software GmbH. See [LEGAL.md](LEGAL.md).
-> The written descriptions are in **French**; signatures, types, events and stubs are language-neutral.
+> Every function has a written description in **English** (main site, stubs) and **French** ([French site](https://tim0219800.github.io/fs25-lua-atlas/1.25.1.0/fr/)).
 
 ## What's inside
 | Folder | Content |
@@ -21,8 +21,8 @@ of the globals that actually exist at runtime.
 | [`doc/1.25.1.0/moteur.md`](doc/1.25.1.0/moteur.md) | Engine functions (signatures from `scriptBinding.xml`) |
 | [`doc/1.25.1.0/releve.md`](doc/1.25.1.0/releve.md) | In-game scan: classes and functions present at runtime but missing from the SDK sources (`Weather`, `Environment`, `FSBaseMission`…) |
 | `stubs/1.25.1.0/` | `---@meta` stubs: `scripts/` (same tree as `dataS/scripts`), `moteur.lua`, `releve/` |
-| `descriptions/1.25.1.0/` | Hand-written descriptions (JSON, French), merged by the generator |
-| `outils/` | `extraire.py`, `generer.py`, `importer_releve.py`, `empaqueter.py`, `mod_releve/` |
+| `descriptions/1.25.1.0/` | Written descriptions (JSON, English + French), merged by the generator |
+| `outils/` | `extraire.py`, `generer.py`, `verifier_descriptions.py`, `importer_releve.py`, `empaqueter.py`, `mod_releve/` |
 
 ### Coverage
 | Layer | Content |
@@ -30,10 +30,10 @@ of the globals that actually exist at runtime.
 | SDK sources | 961 files, 13,390 functions (signatures, types, inheritance, `file:line` references) |
 | Engine functions | 819 signatures |
 | In-game scan | 4,308 globals, 2,651 of them missing from the SDK sources (names only) |
-| Written descriptions ✍ | 35 files, 1,325 functions: effects, particles, wheels, weather and wetness, motor, lights, soil-working and harvesting tools |
+| Written descriptions ✍ | **all 961 files, 13,390 functions**, in English and French |
 
-Descriptions were written first for the visual-effect and environment systems.
-They also point out apparent game bugs spotted while reading the code ("à noter…").
+Descriptions also point out apparent game bugs spotted while reading the code ("Note: …").
+The French pages live under `doc/1.25.1.0/fr/`.
 
 ## Using the stubs in VS Code
 1. Install the **Lua** extension (sumneko / LuaLS).
@@ -67,7 +67,8 @@ Moving to a new game version: see [NEW_VERSION.md](NEW_VERSION.md).
 - **Static**: reliable for the Lua functions present in the SDK dump. 9 files only contain signatures, without bodies (flagged ⚠), and some file headers (constants) are empty.
 - **In-game scan**: the `debug` library is not available in game, so classes missing from the SDK only have their names, without parameters.
 - `scriptBinding.xml` is incomplete: some engine functions called by the game are not listed.
-- Descriptions state their confidence level: **NON VÉRIFIÉ** (depends on missing code), « non relu » (skimmed), « non vérifié en jeu » (read in code, not tested in game).
+- Descriptions state their confidence level: **UNVERIFIED** (depends on code missing from the dump), "Signature only" (file has no bodies in the dump), "not tested in game".
+- Descriptions were drafted with AI assistance from the SDK sources and checked automatically (keys, both languages, no text copied from the sources); they have not all been reviewed by a human. Corrections are welcome.
 
 ## License
 Texts, docs and stubs: [CC BY 4.0](LICENSE). Tools (`outils/`): [MIT](LICENSE-tools).

@@ -1,0 +1,29 @@
+{
+ "fichier": "gui/base/GuiUtils.lua",
+ "module": {
+  "en": "Static helpers that convert GUI XML attribute strings into numbers: normalized sizes (px / dp units), colors, UV rectangles, plus a point/overlay hit test. Used by the GUI layer when reading layouts and texture configs. Some functions called from other files (for example GuiUtils.rotateUVs) are not defined in this file.",
+  "fr": "Utilitaires statiques qui convertissent des attributs XML de GUI en nombres : tailles normalisées (unités px / dp), couleurs, rectangles UV, plus un test de survol d'overlay. Utilisés par la couche GUI pour lire les mises en page et les configurations de textures. Certaines fonctions appelées ailleurs (par exemple GuiUtils.rotateUVs) ne sont pas définies dans ce fichier."
+ },
+ "fonctions": {
+  "GuiUtils.getNormalizedValues": {
+   "en": "Splits a space-separated string (or reads a table) into numbers and normalizes them against a reference size; handles `px` and `dp` suffixes and alternates X/Y references. Missing entries are repeated from the default's length, CSS-style; returns the default if input is nil.",
+   "fr": "Découpe une chaîne séparée par des espaces (ou lit une table) en nombres et les normalise par rapport à une taille de référence ; gère les suffixes `px` et `dp` et alterne les références X/Y. Les valeurs manquantes sont répétées selon la longueur du défaut, comme en CSS ; renvoie le défaut si l'entrée est nil."
+  },
+  "GuiUtils.getColorArray": {
+   "en": "Parses a string into a 4-number {r, g, b, a} array through `string.getVector(str, 4)`, or returns the given default when parsing fails.",
+   "fr": "Convertit une chaîne en tableau de 4 nombres {r, v, b, a} via `string.getVector(str, 4)`, ou renvoie le défaut en cas d'échec."
+  },
+  "GuiUtils.getColorGradientArray": {
+   "en": "Parses a string into a vector and accepts it only if it has 4 numbers (one color) or 16 numbers (four colors, one per corner); otherwise returns the default.",
+   "fr": "Convertit une chaîne en vecteur et ne l'accepte que s'il compte 4 nombres (une couleur) ou 16 nombres (quatre couleurs, une par coin) ; sinon renvoie le défaut."
+  },
+  "GuiUtils.getUVs": {
+   "en": "Converts a string \"x y sizeX sizeY\" (pixels) into the 8-value UV array, using the reference texture size (default 1024x1024), flipping V. Optionally rotates the result via `GuiUtils.rotateUVs` (not in this file, UNVERIFIED); logs a dev error if unreadable.",
+   "fr": "Convertit une chaîne « x y tailleX tailleY » (pixels) en tableau de 8 valeurs UV avec la taille de texture de référence (1024x1024 par défaut), en inversant V. Applique éventuellement `GuiUtils.rotateUVs` (absent de ce fichier, NON VÉRIFIÉ) ; journalise une erreur dev si illisible."
+  },
+  "GuiUtils.checkOverlayOverlap": {
+   "en": "Returns true if a point lies inside the overlay rectangle, which must have positive size. With a 4-number hotspot table the rectangle bounds are shifted by those offsets.",
+   "fr": "Renvoie vrai si un point est dans le rectangle de l'overlay, qui doit avoir une taille positive. Avec une table hotspot de 4 nombres, les bornes du rectangle sont décalées par ces valeurs."
+  }
+ }
+}

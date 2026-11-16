@@ -1,0 +1,49 @@
+{
+ "fichier": "triggers/LoanTrigger.lua",
+ "module": {
+  "en": "Map trigger (usually a bank) that lets the local player open the finances screen. It is only enabled in career missions (FSCareerMissionInfo) and shows a symbol, the first child of the trigger node, only to players belonging to a farm. Includes LoanTriggerActivatable, the on-foot interaction prompt. Client-side behaviour; the finances GUI itself is not in this file.",
+  "fr": "Trigger de carte (généralement une banque) qui permet au joueur local d'ouvrir l'écran des finances. Il n'est actif qu'en mode carrière (FSCareerMissionInfo) et affiche un symbole, premier enfant du noeud trigger, seulement aux joueurs appartenant à une ferme. Inclut LoanTriggerActivatable, l'invite d'interaction à pied. Comportement côté client ; l'interface des finances n'est pas dans ce fichier."
+ },
+ "fonctions": {
+  "LoanTrigger:onCreate": {
+   "en": "Map-load entry point for a loan trigger node: builds a LoanTrigger and adds it to the mission's non-updateable objects.",
+   "fr": "Point d'entrée au chargement de la carte pour un noeud de banque : construit un LoanTrigger et l'ajoute aux objets non mis à jour de la mission."
+  },
+  "LoanTrigger.new": {
+   "en": "Creates the trigger: on a client registers the physics callback, takes the first child node as the symbol, creates the activatable, subscribes to PLAYER_FARM_CHANGED and sets initial icon visibility.",
+   "fr": "Crée le trigger : sur un client enregistre le callback physique, prend le premier noeud enfant comme symbole, crée l'activable, s'abonne à PLAYER_FARM_CHANGED et règle la visibilité initiale de l'icône."
+  },
+  "LoanTrigger:delete": {
+   "en": "Unsubscribes from messages, removes the physics trigger if any, clears the symbol reference and removes the activatable.",
+   "fr": "Se désabonne des messages, retire le trigger physique le cas échéant, efface la référence du symbole et retire l'activable."
+  },
+  "LoanTrigger:openFinanceMenu": {
+   "en": "Opens the InGameMenu and publishes GUI_INGAME_OPEN_FINANCES_SCREEN so the menu switches to the finances page.",
+   "fr": "Ouvre l'InGameMenu et publie GUI_INGAME_OPEN_FINANCES_SCREEN pour que le menu passe à la page des finances."
+  },
+  "LoanTrigger:triggerCallback": {
+   "en": "On enter or leave of the local player's root node, adds or removes the activatable. Only acts when the trigger is enabled and the mission is a career mission.",
+   "fr": "À l'entrée ou la sortie du noeud racine du joueur local, ajoute ou retire l'activable. N'agit que si le trigger est actif et que la mission est une carrière."
+  },
+  "LoanTrigger:updateIconVisibility": {
+   "en": "Shows the symbol only if the trigger is enabled, the mission is a career and the local farm is not the spectator farm; hides it otherwise.",
+   "fr": "Affiche le symbole seulement si le trigger est actif, que la mission est une carrière et que la ferme locale n'est pas la ferme spectateur ; le masque sinon."
+  },
+  "LoanTrigger:playerFarmChanged": {
+   "en": "Message handler: refreshes the icon visibility when the farm of the local player changed; other players are ignored.",
+   "fr": "Gestionnaire de message : rafraîchit la visibilité de l'icône quand la ferme du joueur local a changé ; les autres joueurs sont ignorés."
+  },
+  "LoanTriggerActivatable.new": {
+   "en": "Creates the activatable bound to a loan trigger, with the localized text of action_checkFinances.",
+   "fr": "Crée l'activable lié à un trigger de banque, avec le texte localisé de action_checkFinances."
+  },
+  "LoanTriggerActivatable:getIsActivatable": {
+   "en": "Returns true when the trigger is enabled, the local player is not in a vehicle and the local farm is not the spectator farm.",
+   "fr": "Retourne true quand le trigger est actif, que le joueur local n'est pas dans un véhicule et que la ferme locale n'est pas la ferme spectateur."
+  },
+  "LoanTriggerActivatable:run": {
+   "en": "Runs the action by opening the finances menu through the owning trigger.",
+   "fr": "Exécute l'action en ouvrant le menu des finances via le trigger propriétaire."
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/TreeAttachEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the attachment of a tree (split shape) to a forestry carriage or winch at a world position, optionally for a given rope index. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise la fixation d'un arbre (split shape) à un chariot ou un treuil forestier à une position monde, éventuellement pour un indice de câble donné. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "TreeAttachEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "TreeAttachEvent.new": {
+      "en": "Builds the event with the data to send (a node object, a split shape id, three float32 coordinates and an optional rope index on 4 bits); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud, un identifiant de split shape, trois coordonnées float32 et un indice de câble optionnel sur 4 bits) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "TreeAttachEvent:readStream": {
+      "en": "Reads a node object, a split shape id, three float32 coordinates and an optional rope index on 4 bits from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud, un identifiant de split shape, trois coordonnées float32 et un indice de câble optionnel sur 4 bits depuis le flux, puis appelle `run(connection)`."
+    },
+    "TreeAttachEvent:writeStream": {
+      "en": "Writes a node object, a split shape id, three float32 coordinates and an optional rope index on 4 bits to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud, un identifiant de split shape, trois coordonnées float32 et un indice de câble optionnel sur 4 bits dans le flux (même ordre que `readStream`)."
+    },
+    "TreeAttachEvent:run": {
+      "en": "Applies the event on the receiving side: calls `attachTreeToCarriage` if the object has it, otherwise `attachTreeToWinch`, passing noEventSend. It does not re-broadcast itself here.",
+      "fr": "Applique l'événement côté récepteur : appelle `attachTreeToCarriage` si l'objet l'a, sinon `attachTreeToWinch`, avec noEventSend. Il ne se retransmet pas ici."
+    },
+    "TreeAttachEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

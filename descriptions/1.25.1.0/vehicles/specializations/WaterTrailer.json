@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/WaterTrailer.lua",
+ "module": {
+  "en": "Specialization that lets a water trailer (needs FillUnit) be refilled from any water plane in the world, not only from a trigger. When the fill node is within 0.2 m of the water height (`self.waterY`, provided by the engine, UNVERIFIED), an activatable is offered; the server then adds water to the configured fill unit at `fillLitersPerSecond` (default 500) and syncs the state with `WaterTrailerSetIsFillingEvent`. The file also defines the helper class `WaterTrailerActivatable`.",
+  "fr": "Spécialisation permettant de remplir une citerne à eau (nécessite FillUnit) depuis n'importe quel plan d'eau du monde, pas seulement depuis un déclencheur. Quand le nœud de remplissage est à moins de 0,2 m de la hauteur d'eau (`self.waterY`, fournie par le moteur, NON VÉRIFIÉ), un activable est proposé ; le serveur ajoute alors de l'eau à l'unité de remplissage configurée à `fillLitersPerSecond` (500 par défaut) et synchronise l'état avec `WaterTrailerSetIsFillingEvent`. Le fichier définit aussi la classe auxiliaire `WaterTrailerActivatable`."
+ },
+ "fonctions": {
+  "WaterTrailer.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has the `FillUnit` specialization.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède la spécialisation `FillUnit`."
+  },
+  "WaterTrailer.initSpecialization": {
+   "en": "Registers the XML paths `vehicle.waterTrailer#fillUnitIndex`, `#fillLitersPerSecond` (default 500), `#fillNode` (default root component) and the `refill` sound sample.",
+   "fr": "Enregistre les chemins XML `vehicle.waterTrailer#fillUnitIndex`, `#fillLitersPerSecond` (500 par défaut), `#fillNode` (composant racine par défaut) et le son `refill`."
+  },
+  "WaterTrailer.registerFunctions": {
+   "en": "Adds `setIsWaterTrailerFilling` to the vehicle type.",
+   "fr": "Ajoute `setIsWaterTrailerFilling` au type de véhicule."
+  },
+  "WaterTrailer.registerOverwrittenFunctions": {
+   "en": "Overrides `getDrawFirstFillText`.",
+   "fr": "Surcharge `getDrawFirstFillText`."
+  },
+  "WaterTrailer.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, read/write stream, onUpdateTick and onPreDetach.",
+   "fr": "S'abonne à onLoad, onDelete, aux flux de lecture/écriture, onUpdateTick et onPreDetach."
+  },
+  "WaterTrailer:onLoad": {
+   "en": "Reads the fill unit index, fill rate and fill node (only when an index is given), creates the activatable, loads the refill sound on the client and sets `needWaterInfo` so the engine provides the water height. Note: onUpdateTick uses `waterFillNode` without a nil check, so a missing `fillUnitIndex` would break it.",
+   "fr": "Lit l'indice de l'unité de remplissage, le débit et le nœud de remplissage (seulement si un indice est donné), crée l'activable, charge le son de remplissage côté client et pose `needWaterInfo` pour que le moteur fournisse la hauteur d'eau. À noter : onUpdateTick utilise `waterFillNode` sans test nil, donc un `fillUnitIndex` absent la ferait échouer."
+  },
+  "WaterTrailer:onDelete": {
+   "en": "Removes the activatable from the activatable objects system and deletes the sound samples.",
+   "fr": "Retire l'activable du système d'objets activables et supprime les échantillons sonores."
+  },
+  "WaterTrailer:onReadStream": {
+   "en": "Client join: reads the filling boolean and applies it without sending an event.",
+   "fr": "Connexion d'un client : lit le booléen de remplissage et l'applique sans envoyer d'événement."
+  },
+  "WaterTrailer:onWriteStream": {
+   "en": "Server side on join: writes the current filling boolean.",
+   "fr": "Côté serveur lors d'une connexion : écrit le booléen de remplissage courant."
+  },
+  "WaterTrailer:onUpdateTick": {
+   "en": "Adds or removes the activatable depending on whether the fill node is near the water. On the server, stops filling when leaving the water, and while filling adds water to the fill unit at the configured rate (water must be an allowed fill type); stops when nothing more is added.",
+   "fr": "Ajoute ou retire l'activable selon que le nœud de remplissage est près de l'eau. Sur le serveur, arrête le remplissage en quittant l'eau et, pendant le remplissage, ajoute de l'eau à l'unité au débit configuré (l'eau doit être un type autorisé) ; s'arrête quand plus rien n'est ajouté."
+  },
+  "WaterTrailer:setIsWaterTrailerFilling": {
+   "en": "Changes the filling state: sends `WaterTrailerSetIsFillingEvent` (unless `noEventSend`), stores the state and plays or stops the refill sound on the client.",
+   "fr": "Change l'état de remplissage : envoie `WaterTrailerSetIsFillingEvent` (sauf `noEventSend`), mémorise l'état et joue ou arrête le son de remplissage côté client."
+  },
+  "WaterTrailer:getDrawFirstFillText": {
+   "en": "Override: on the client, returns true when the trailer is selected and active for input, its fill unit is empty and has non-zero capacity; otherwise defers to the previous implementation.",
+   "fr": "Surcharge : côté client, renvoie true si la citerne est sélectionnée et active pour l'entrée, que son unité est vide et de capacité non nulle ; sinon on s'en remet à l'implémentation précédente."
+  },
+  "WaterTrailer:onPreDetach": {
+   "en": "Removes the refill activatable just before the trailer is detached.",
+   "fr": "Retire l'activable de remplissage juste avant le détachement de la citerne."
+  },
+  "WaterTrailerActivatable.new": {
+   "en": "Constructor: creates the activatable for the given trailer with a placeholder activate text.",
+   "fr": "Constructeur : crée l'activable pour la citerne donnée avec un texte d'activation provisoire."
+  },
+  "WaterTrailerActivatable:getIsActivatable": {
+   "en": "Returns true (and refreshes the text) when the trailer is active for input, its fill unit is not full and accepts water.",
+   "fr": "Renvoie true (et met à jour le texte) quand la citerne est active pour l'entrée, que son unité n'est pas pleine et accepte l'eau."
+  },
+  "WaterTrailerActivatable:run": {
+   "en": "Toggles the trailer's filling state and refreshes the displayed text.",
+   "fr": "Bascule l'état de remplissage de la citerne et met à jour le texte affiché."
+  },
+  "WaterTrailerActivatable:updateActivateText": {
+   "en": "Sets the activate text to the stop-refilling or refill label (localized), formatted with the vehicle type description.",
+   "fr": "Définit le texte d'activation sur l'étiquette arrêter/remplir (localisée), formatée avec la description du type de véhicule."
+  }
+ }
+}

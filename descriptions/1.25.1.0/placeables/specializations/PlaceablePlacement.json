@@ -1,0 +1,93 @@
+{
+ "fichier": "placeables/specializations/PlaceablePlacement.lua",
+ "module": {
+  "en": "Placeable specialization with no prerequisites that holds the data used when a building is positioned by the player: test boxes for overlap checks, position and rotation snapping, optional terrain alignment and place/destroy sounds. It registers many functions (overlap mask, valid overlap node, water check, density-height overlap, area blocked) whose bodies are absent from the dump, so those are UNVERIFIED. XML keys are read under placeable.placement.",
+  "fr": "Spécialisation de placeable sans prérequis qui porte les données utilisées quand le joueur positionne un bâtiment : zones de test de chevauchement, magnétisme de position et de rotation, alignement optionnel au terrain et sons de pose et de destruction. Elle enregistre plusieurs fonctions (masque de chevauchement, nœud valide, test d'eau, densité-hauteur, zone bloquée) dont le corps est absent du dump : NON VÉRIFIÉ. Les clés XML sont lues sous placeable.placement."
+ },
+ "fonctions": {
+  "PlaceablePlacement.prerequisitesPresent": {
+   "en": "Always returns true, so this specialization can be added to any placeable type.",
+   "fr": "Retourne toujours true : la spécialisation peut être ajoutée à n'importe quel type de placeable."
+  },
+  "PlaceablePlacement.registerFunctions": {
+   "en": "Registers the placement functions on the placeable type, including several (getPlacementOverlapMask, isValidOverlapNode, getCanBePlacedInWater, getIsAreaBlocked, getHasOverlapWithDensityHeight, getIsOnOwnedFarmland) that are not defined in this file's dump.",
+   "fr": "Enregistre les fonctions de placement sur le type de placeable, dont plusieurs (getPlacementOverlapMask, isValidOverlapNode, getCanBePlacedInWater, getIsAreaBlocked, getHasOverlapWithDensityHeight, getIsOnOwnedFarmland) non définies dans ce fichier du dump."
+  },
+  "PlaceablePlacement.registerEventListeners": {
+   "en": "Subscribes the specialization to the onLoad, onDelete and onPreFinalizePlacement events.",
+   "fr": "Abonne la spécialisation aux événements onLoad, onDelete et onPreFinalizePlacement."
+  },
+  "PlaceablePlacement.registerXMLPaths": {
+   "en": "Declares the XML schema for placeable.placement: the three terrain-alignment nodes, test areas (start/end nodes), random/manual rotation flags, alignToWorldY, position and rotation snap values, and the place, placeLayered and destroy sounds.",
+   "fr": "Déclare le schéma XML de placeable.placement : les trois nœuds d'alignement au terrain, les zones de test (nœuds début/fin), les options de rotation aléatoire/manuelle, alignToWorldY, les pas de magnétisme de position et de rotation, et les sons place, placeLayered et destroy."
+  },
+  "PlaceablePlacement:onLoad": {
+   "en": "Loads the test areas, rotation flags, snap sizes (absolute values) and alignToWorldY from XML; falls back to world-Y alignment with a warning if the three position nodes are missing. On the client, when Platform.hasContruction is set, it also loads the 2D place sounds.",
+   "fr": "Charge depuis le XML les zones de test, les options de rotation, les pas de magnétisme (valeurs absolues) et alignToWorldY ; retombe sur l'alignement Y monde avec un avertissement si les trois nœuds manquent. Côté client, si Platform.hasContruction est vrai, charge aussi les sons 2D de pose."
+  },
+  "PlaceablePlacement:onDelete": {
+   "en": "On the client, deletes the loaded placement sound samples.",
+   "fr": "Côté client, supprime les échantillons sonores de placement chargés."
+  },
+  "PlaceablePlacement:loadTestArea": {
+   "en": "Reads one test area from XML. The end node must be a direct child of the start node; computes box size, center relative to the root node and Y rotation, with a 5 cm downward safety offset. Returns false (with a warning) if invalid.",
+   "fr": "Lit une zone de test depuis le XML. Le nœud de fin doit être enfant direct du nœud de début ; calcule la taille de la boîte, son centre relatif au nœud racine et sa rotation Y, avec une marge de sécurité de 5 cm vers le bas. Retourne false (avec avertissement) si invalide."
+  },
+  "PlaceablePlacement:getPlacementRotation": {
+   "en": "Takes the proposed rotation and snaps the Y component to the configured snap angle if one is set; returns x, y, z.",
+   "fr": "Prend la rotation proposée et aligne la composante Y sur l'angle de magnétisme configuré s'il existe ; retourne x, y, z."
+  },
+  "PlaceablePlacement:getPlacementPosition": {
+   "en": "Snaps x and z to the configured grid size (floor, then plus the snap offset) when a snap size is set; y is untouched. Returns x, y, z.",
+   "fr": "Aligne x et z sur la grille configurée (arrondi par défaut, puis ajout du décalage) si un pas est défini ; y n'est pas modifié. Retourne x, y, z."
+  },
+  "PlaceablePlacement:getPositionSnapSize": {
+   "en": "Returns the position snap grid size from the XML.",
+   "fr": "Retourne le pas de la grille de magnétisme de position issu du XML."
+  },
+  "PlaceablePlacement:getPositionSnapOffset": {
+   "en": "Returns the position snap offset from the XML.",
+   "fr": "Retourne le décalage de magnétisme de position issu du XML."
+  },
+  "PlaceablePlacement:getRotationSnapAngle": {
+   "en": "Returns the rotation snap angle in radians from the XML.",
+   "fr": "Retourne l'angle de magnétisme de rotation en radians issu du XML."
+  },
+  "PlaceablePlacement:onPreFinalizePlacement": {
+   "en": "Server only, when alignToWorldY is false: drops the root onto the terrain height and rotates it so the three position nodes follow the terrain slope. Clients receive the resulting transform through sync.",
+   "fr": "Serveur uniquement, quand alignToWorldY est faux : pose la racine à la hauteur du terrain et l'oriente pour que les trois nœuds suivent la pente. Les clients reçoivent la transformation par synchronisation."
+  },
+  "PlaceablePlacement:getIsAreaOwnedByFarm": {
+   "en": "Returns true only if the farm owns the land along all four edges of the parallelogram defined by the corner points (via g_farmlandManager).",
+   "fr": "Retourne true uniquement si la ferme possède le terrain le long des quatre bords du parallélogramme défini par les points (via g_farmlandManager)."
+  },
+  "PlaceablePlacement:startPlacementCheck": {
+   "en": "Empty hook called with the proposed position and Y rotation; specializations or mods can override it.",
+   "fr": "Point d'accroche vide appelé avec la position et la rotation Y proposées ; les spécialisations ou mods peuvent le surcharger."
+  },
+  "PlaceablePlacement:getHasOverlap": {
+   "en": "Tests every test area for a blocked area, then runs an overlapBox (box lowered to 0.5 m under the lowest terrain corner) against the placement mask and a density-height check. Returns true plus the hit node, or false, nil.",
+   "fr": "Teste chaque zone : zone bloquée, puis overlapBox (boîte abaissée à 0,5 m sous le coin de terrain le plus bas) selon le masque de placement, puis contrôle densité-hauteur. Retourne true et le nœud touché, ou false, nil."
+  },
+  "PlaceablePlacement:getHasOverlapWithPlaces": {
+   "en": "Returns true if any corner of any test area, at the given position and rotation, lies inside one of the given placement places.",
+   "fr": "Retourne true si un coin d'une zone de test, à la position et rotation données, se trouve dans l'une des places de placement fournies."
+  },
+  "PlaceablePlacement:getHasOverlapWithZones": {
+   "en": "Returns true if a test-area corner is inside a restricted zone (with a water check unless the placeable may stand in water) or outside the placeable system boundary.",
+   "fr": "Retourne true si un coin de zone de test est dans une zone interdite (avec test d'eau sauf si le placeable peut être dans l'eau) ou hors de la limite du système de placeables."
+  },
+  "PlaceablePlacement:getTestParallelogramAtWorldPosition": {
+   "en": "Computes the four world-space XZ corners of a test area for a placement position and Y rotation. Returns the start, width, height and opposite corners as x, z pairs.",
+   "fr": "Calcule les quatre coins XZ monde d'une zone de test pour une position et une rotation Y de placement. Retourne les coins de départ, de largeur, de hauteur et opposé en paires x, z."
+  },
+  "PlaceablePlacement:playPlaceSound": {
+   "en": "Client only: plays the place and placeLayered samples.",
+   "fr": "Client uniquement : joue les échantillons place et placeLayered."
+  },
+  "PlaceablePlacement:playDestroySound": {
+   "en": "Client only: plays the destroy sample, optionally skipping it if it is already playing.",
+   "fr": "Client uniquement : joue l'échantillon destroy, en l'ignorant éventuellement s'il est déjà en cours de lecture."
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/CropSensorStateEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that synchronises the on/off state of a crop sensor on a vehicle between clients and server. A client sends it to the server, which re-broadcasts it.",
+    "fr": "Événement réseau (sous-classe de Event) qui synchronise l'état actif ou non d'un capteur de culture sur un véhicule entre clients et serveur. Un client l'envoie au serveur, qui le rediffuse."
+  },
+  "fonctions": {
+    "CropSensorStateEvent.emptyNew": {
+      "en": "Creates an empty CropSensorStateEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de CropSensorStateEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "CropSensorStateEvent.new": {
+      "en": "Creates the event for a vehicle object and a boolean sensor state.",
+      "fr": "Crée l'événement pour un objet véhicule et un état booléen du capteur."
+    },
+    "CropSensorStateEvent:readStream": {
+      "en": "Reads the network object reference and the boolean state, then calls run.",
+      "fr": "Lit la référence de l'objet réseau et l'état booléen, puis appelle run."
+    },
+    "CropSensorStateEvent:writeStream": {
+      "en": "Writes the network object reference and the boolean state.",
+      "fr": "Écrit la référence de l'objet réseau et l'état booléen."
+    },
+    "CropSensorStateEvent:run": {
+      "en": "Receiving side. On the server it first re-broadcasts the event to the other clients (not the sender); then, if the target object exists and is synchronized, it applies the change locally without sending a new event. The change is applied with object:setCropSensorActive(state, true).",
+      "fr": "Côté réception. Sur le serveur, il rediffuse d'abord l'événement aux autres clients (pas à l'expéditeur) ; puis, si l'objet cible existe et est synchronisé, il applique le changement localement sans renvoyer d'événement. Le changement est appliqué via object:setCropSensorActive(state, true)."
+    },
+    "CropSensorStateEvent.sendEvent": {
+      "en": "Entry point to sync the crop sensor state. Server: broadcasts a new CropSensorStateEvent to the clients (bound to the object); client: sends it to the server. Does nothing when noEventSend is true.",
+      "fr": "Point d'entrée pour synchroniser l'état du capteur de culture. Serveur : diffuse un nouvel CropSensorStateEvent aux clients (lié à l'objet) ; client : l'envoie au serveur. Ne fait rien si noEventSend vaut true."
+    }
+  }
+}

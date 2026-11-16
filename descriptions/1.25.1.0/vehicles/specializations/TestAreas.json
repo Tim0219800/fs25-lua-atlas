@@ -1,0 +1,101 @@
+{
+ "fichier": "vehicles/specializations/TestAreas.lua",
+ "module": {
+  "en": "Helper specialization (requires WorkArea) that adds 'test areas' to work areas: small ground rectangles checked for crops or fill material so other specializations know where the tool actually has contact. Areas come from XML or are auto-generated across the work area width. The server samples the density maps and syncs contact flags to clients as a compact first/last-contact stream. It exposes the contact width and a charge ratio per work area.",
+  "fr": "Spécialisation utilitaire (exige WorkArea) qui ajoute des « zones de test » aux zones de travail : petits rectangles au sol vérifiés pour la présence de cultures ou de matière, afin que d'autres spécialisations sachent où l'outil est réellement en contact. Les zones viennent du XML ou sont générées automatiquement sur la largeur de la zone de travail. Le serveur échantillonne les density maps et synchronise les indicateurs de contact vers les clients sous forme de flux compact premier/dernier contact. Elle expose la largeur de contact et un taux de charge par zone de travail."
+ },
+ "fonctions": {
+  "TestAreas.initSpecialization": {
+   "en": "Registers the XML schema for testAreas under work areas and work area configurations: auto-generate, root/start/width nodes, offsets, length, count (10), width scale (0.9), scale, and explicit testArea nodes.",
+   "fr": "Enregistre le schéma XML de testAreas sous les zones de travail et leurs configurations : génération auto, nodes racine/début/largeur, décalages, longueur, nombre (10), échelle de largeur (0,9), échelle et nodes testArea explicites."
+  },
+  "TestAreas.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type also has the WorkArea specialization.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède aussi la spécialisation WorkArea."
+  },
+  "TestAreas.registerFunctions": {
+   "en": "Registers the stream read/write, generation, dimension calculation, registration, requirements, activity, processing and width/charge query functions.",
+   "fr": "Enregistre les fonctions de lecture/écriture de flux, de génération, de calcul des dimensions, d'enregistrement, d'exigences, d'activité, de traitement et de requête de largeur/charge."
+  },
+  "TestAreas.registerOverwrittenFunctions": {
+   "en": "Overrides loadWorkAreaFromXML.",
+   "fr": "Surcharge loadWorkAreaFromXML."
+  },
+  "TestAreas.registerEventListeners": {
+   "en": "Subscribes to onPreLoad, onPostLoad, the four stream events (read/write, plain and update) and onUpdateTick.",
+   "fr": "S'abonne à onPreLoad, onPostLoad, aux quatre événements de flux (lecture/écriture, simple et de mise à jour) et à onUpdateTick."
+  },
+  "TestAreas:onPreLoad": {
+   "en": "Creates the test area lists and reserves a dirty flag used to sync contact changes.",
+   "fr": "Crée les listes de zones de test et réserve un dirty flag servant à synchroniser les changements de contact."
+  },
+  "TestAreas:onPostLoad": {
+   "en": "Builds the lookup of test areas by work area index from the by-work-area table.",
+   "fr": "Construit la table de zones de test par index de zone de travail à partir de la table par zone de travail."
+  },
+  "TestAreas:onReadStream": {
+   "en": "Initial sync on join: reads the contact flags.",
+   "fr": "Synchronisation initiale à la connexion : lit les indicateurs de contact."
+  },
+  "TestAreas:onWriteStream": {
+   "en": "Initial sync on join: writes the contact flags.",
+   "fr": "Synchronisation initiale à la connexion : écrit les indicateurs de contact."
+  },
+  "TestAreas:onReadUpdateStream": {
+   "en": "Client side: reads the contact flags when the server flagged a change in this update.",
+   "fr": "Côté client : lit les indicateurs de contact quand le serveur a signalé un changement dans cette mise à jour."
+  },
+  "TestAreas:onWriteUpdateStream": {
+   "en": "Server side: writes a bool for the dirty flag and, if set, the contact flags.",
+   "fr": "Côté serveur : écrit un booléen pour le dirty flag et, s'il est actif, les indicateurs de contact."
+  },
+  "TestAreas:readTestAreasStream": {
+   "en": "Reads the compact contact state: first-contact scan from the left, then last-contact scan from the right, and marks every area between them as in contact.",
+   "fr": "Lit l'état de contact compact : balayage du premier contact depuis la gauche, puis du dernier depuis la droite, et marque comme en contact toutes les zones entre les deux."
+  },
+  "TestAreas:writeTestAreasStream": {
+   "en": "Writes the compact contact state: bools up to the first contact from the left, then from the right up to the last contact.",
+   "fr": "Écrit l'état de contact compact : booléens jusqu'au premier contact depuis la gauche, puis depuis la droite jusqu'au dernier contact."
+  },
+  "TestAreas:onUpdateTick": {
+   "en": "For each active work area, tests areas from the left to find the first contact, then from the right for the last, fills the area in between as in contact, and stores the resulting min/max width. Inactive areas reset to unlimited width.",
+   "fr": "Pour chaque zone de travail active, teste les zones depuis la gauche pour trouver le premier contact, puis depuis la droite pour le dernier, marque celles entre les deux comme en contact et mémorise la largeur min/max obtenue. Les zones inactives reviennent à une largeur illimitée."
+  },
+  "TestAreas:loadWorkAreaFromXML": {
+   "en": "Override: after the parent loads the work area, reads its testAreas settings (warns where the platform disallows them), then auto-generates areas or reads explicit testArea entries. Returns false if the parent fails.",
+   "fr": "Surcharge : après le chargement de la zone de travail par le parent, lit ses réglages testAreas (avertit si la plateforme les interdit), puis génère automatiquement les zones ou lit les entrées testArea explicites. Renvoie false si le parent échoue."
+  },
+  "TestAreas:generateTestAreasForWorkArea": {
+   "en": "Creates transform nodes and splits the work area width into numAreas equal test areas (with side offsets, length and z offset), registering each one.",
+   "fr": "Crée des transform groups et découpe la largeur de la zone de travail en numAreas zones de test égales (avec décalages latéraux, longueur et décalage z), en enregistrant chacune."
+  },
+  "TestAreas:calculateTestAreaDimensions": {
+   "en": "Computes the test area's min/max X relative to the work area root node and widens the work area's overall X range.",
+   "fr": "Calcule le X min/max de la zone de test relativement au node racine de la zone de travail et élargit la plage X globale de la zone de travail."
+  },
+  "TestAreas:registerTestAreaForWorkArea": {
+   "en": "Resets the contact flags of a test area and adds it to the per-work-area list and the global list.",
+   "fr": "Réinitialise les indicateurs de contact d'une zone de test et l'ajoute à la liste par zone de travail et à la liste globale."
+  },
+  "TestAreas:setTestAreaRequirements": {
+   "en": "Sets what the areas look for: a fruit type (with optional forage growth states) or a fill type; FruitType.UNKNOWN and FillType.UNKNOWN count as none.",
+   "fr": "Définit ce que cherchent les zones : un type de fruit (avec états de croissance fourragère optionnels) ou un type de remplissage ; FruitType.UNKNOWN et FillType.UNKNOWN valent aucun."
+  },
+  "TestAreas:getIsTestAreaActive": {
+   "en": "Hook returning true by default; other specializations may override it to disable an individual area.",
+   "fr": "Point d'extension renvoyant true par défaut ; d'autres spécialisations peuvent le surcharger pour désactiver une zone."
+  },
+  "TestAreas:processTestArea": {
+   "en": "Server: samples the density map (fruit area or height fill level) under the area and sets its contact flag, raising the dirty flag on change. Clients only draw debug. Returns the area's current contact state.",
+   "fr": "Serveur : échantillonne la density map (surface de fruit ou niveau de remplissage en hauteur) sous la zone et met à jour son indicateur de contact, en levant le dirty flag en cas de changement. Les clients ne font que du debug. Renvoie l'état de contact courant de la zone."
+  },
+  "TestAreas:getTestAreaWidthByWorkAreaIndex": {
+   "en": "Returns current contact min/max X, total min/max X and true when the work area has test areas; otherwise half-width bounds and false, or unlimited values if the index is unknown.",
+   "fr": "Renvoie les X min/max de contact courants, les X min/max totaux et true quand la zone de travail a des zones de test ; sinon des bornes en demi-largeur et false, ou des valeurs illimitées si l'index est inconnu."
+  },
+  "TestAreas:getTestAreaChargeByWorkAreaIndex": {
+   "en": "Returns the fraction (0 to 1) of the work area's test areas currently in contact, or 1 when it has none.",
+   "fr": "Renvoie la fraction (0 à 1) des zones de test de la zone de travail actuellement en contact, ou 1 si elle n'en a pas."
+  }
+ }
+}

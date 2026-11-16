@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/VariableWorkWidthStateEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes which left and right work width sections of a vehicle are active (VariableWorkWidth specialization). Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise les sections de largeur de travail gauche et droite actives d'un véhicule (spécialisation VariableWorkWidth). Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "VariableWorkWidthStateEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "VariableWorkWidthStateEvent.new": {
+      "en": "Builds the event with the data to send (a node object and two section values (left, right) on VariableWorkWidth.SEND_NUM_BITS bits each); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et deux valeurs de sections (gauche, droite) sur VariableWorkWidth.SEND_NUM_BITS bits chacune) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "VariableWorkWidthStateEvent:readStream": {
+      "en": "Reads a node object and two section values (left, right) on VariableWorkWidth.SEND_NUM_BITS bits each from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et deux valeurs de sections (gauche, droite) sur VariableWorkWidth.SEND_NUM_BITS bits chacune depuis le flux, puis appelle `run(connection)`."
+    },
+    "VariableWorkWidthStateEvent:writeStream": {
+      "en": "Writes a node object and two section values (left, right) on VariableWorkWidth.SEND_NUM_BITS bits each to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et deux valeurs de sections (gauche, droite) sur VariableWorkWidth.SEND_NUM_BITS bits chacune dans le flux (même ordre que `readStream`)."
+    },
+    "VariableWorkWidthStateEvent:run": {
+      "en": "Applies the event on the receiving side: calls `setSectionsActive(left, right, true)` on the vehicle if synchronized, then the server re-broadcasts. Note: the re-broadcast passes `self.object`, which is never set (the event uses `self.vehicle`), so that argument is nil.",
+      "fr": "Applique l'événement côté récepteur : appelle `setSectionsActive(gauche, droite, true)` sur le véhicule s'il est synchronisé, puis le serveur retransmet. À noter : la retransmission passe `self.object`, jamais défini (l'événement utilise `self.vehicle`), donc nil."
+    },
+    "VariableWorkWidthStateEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

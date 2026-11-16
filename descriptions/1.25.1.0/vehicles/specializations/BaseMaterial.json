@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/BaseMaterial.lua",
+ "module": {
+  "en": "Empty specialization kept for compatibility. Despite the declared purpose of applying materials from the vehicle XML, the only code is an onLoad that warns about deprecated FS22 XML elements (vehicle.baseMaterial and the old design material configuration blocks) and points to vehicle.designColorConfigurations.",
+  "fr": "Spécialisation vide conservée pour la compatibilité. Malgré son rôle annoncé (appliquer des matériaux depuis le XML du véhicule), le seul code est un onLoad qui signale les éléments XML obsolètes de FS22 (vehicle.baseMaterial et les anciens blocs de configuration de matériaux) et renvoie vers vehicle.designColorConfigurations."
+ },
+ "fonctions": {
+  "BaseMaterial.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "BaseMaterial.initSpecialization": {
+   "en": "Empty hook, registers no XML schema entries.",
+   "fr": "Point d'entrée vide, n'enregistre aucune entrée de schéma XML."
+  },
+  "BaseMaterial.registerFunctions": {
+   "en": "Empty hook, registers no vehicle functions.",
+   "fr": "Point d'entrée vide, n'enregistre aucune fonction de véhicule."
+  },
+  "BaseMaterial.registerEventListeners": {
+   "en": "Registers the onLoad listener only.",
+   "fr": "Enregistre uniquement l'écouteur onLoad."
+  },
+  "BaseMaterial:onLoad": {
+   "en": "Checks the vehicle XML for deprecated FS22 elements (baseMaterial, baseMaterialConfigurations, designMaterialConfigurations, designMaterial2/3Configurations) and logs a deprecation message; applies no material itself.",
+   "fr": "Vérifie dans le XML du véhicule la présence d'éléments FS22 obsolètes (baseMaterial, baseMaterialConfigurations, designMaterialConfigurations, designMaterial2/3Configurations) et journalise un avertissement ; n'applique aucun matériau."
+  }
+ }
+}

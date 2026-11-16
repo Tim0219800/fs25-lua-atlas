@@ -1,0 +1,165 @@
+{
+ "fichier": "vehicles/specializations/FellerBuncher.lua",
+ "module": {
+  "en": "Vehicle specialization for feller-buncher heads that cut standing trees, grab them with a main arm and extra tree slots, and release them later. Requires FillUnit (the fill level counts the loaded trees). The server runs detection, cutting (splitShape), mounting through physics joints and release; clients get the effect and grab states through streams, and FellerBuncherCutEvent and FellerBuncherReleaseEvent carry the actions (defined elsewhere, UNVERIFIED). It reuses WoodHarvester for the tree access check and is configured under vehicle.fellerBuncher in the XML.",
+  "fr": "Spécialisation de véhicule pour les têtes d'abatteuse qui coupent des arbres sur pied, les saisissent avec un bras principal et des emplacements d'arbres supplémentaires, puis les relâchent. Exige FillUnit (le niveau de remplissage compte les arbres chargés). Le serveur gère la détection, la coupe (splitShape), le montage par joints physiques et le relâchement ; les clients reçoivent l'état des effets et des pinces par flux, et les actions passent par FellerBuncherCutEvent et FellerBuncherReleaseEvent (définis ailleurs, NON VÉRIFIÉ). Elle réutilise WoodHarvester pour le contrôle d'accès à l'arbre et se configure sous vehicle.fellerBuncher dans le XML."
+ },
+ "fonctions": {
+  "FellerBuncher.prerequisitesPresent": {
+   "en": "Returns true only if the FillUnit specialization is present.",
+   "fr": "Renvoie true seulement si la spécialisation FillUnit est présente."
+  },
+  "FellerBuncher.initSpecialization": {
+   "en": "Adds the shop spec 'fellerBuncherMaxTreeSize' and registers the XML keys: fill unit, max radius, input actions, cut node and collision, mount node, tree move direction, main grab, cut animation, unmount, tree slots, sounds, animation nodes and effects.",
+   "fr": "Ajoute la caractéristique boutique « fellerBuncherMaxTreeSize » et enregistre les clés XML : unité de remplissage, rayon max, actions d'entrée, nœud et collision de coupe, nœud de montage, direction de déplacement de l'arbre, pince principale, animation de coupe, démontage, emplacements d'arbres, sons, nœuds d'animation et effets."
+  },
+  "FellerBuncher.registerFunctions": {
+   "en": "Registers the vehicle-level functions for grab state, cut checks, cutting, mounting, releasing, tree counting and the tree cut/mounted message handlers.",
+   "fr": "Enregistre les fonctions de niveau véhicule pour l'état de la pince, les contrôles de coupe, la coupe, le montage, le relâchement, le comptage des arbres et les gestionnaires de messages de coupe/montage d'arbre."
+  },
+  "FellerBuncher.registerOverwrittenFunctions": {
+   "en": "Overrides getCanToggleTurnedOn, registerLoweringActionEvent, getSupportsAutoTreeAlignment and getAutoAlignHasValidTree.",
+   "fr": "Surcharge getCanToggleTurnedOn, registerLoweringActionEvent, getSupportsAutoTreeAlignment et getAutoAlignHasValidTree."
+  },
+  "FellerBuncher.registerEventListeners": {
+   "en": "Subscribes to load/delete, stream and update-stream, update tick, turned on/off, animation finish and action-event registration events.",
+   "fr": "S'abonne aux événements de chargement/suppression, de flux et de flux de mise à jour, de tick de mise à jour, d'allumage/extinction, de fin d'animation et d'enregistrement des événements d'action."
+  },
+  "FellerBuncher:onLoad": {
+   "en": "Reads every XML setting into the spec (radius, input actions, cut and mount nodes, grab and slot animations, unmount timing), builds the tree slots, loads client animations, effects and sounds, subscribes to TREE_SHAPE_CUT and TREE_SHAPE_MOUNTED messages and creates the dirty flag.",
+   "fr": "Lit tous les réglages XML dans le spec (rayon, actions d'entrée, nœuds de coupe et de montage, animations de pince et d'emplacements, minutage du démontage), construit les emplacements d'arbres, charge animations, effets et sons côté client, s'abonne aux messages TREE_SHAPE_CUT et TREE_SHAPE_MOUNTED et crée le drapeau de modification."
+  },
+  "FellerBuncher:onDelete": {
+   "en": "Releases the main arm tree and all tree slots, then deletes effects, sounds and animations.",
+   "fr": "Relâche l'arbre du bras principal et tous les emplacements, puis supprime effets, sons et animations."
+  },
+  "FellerBuncher:onReadStream": {
+   "en": "Client on join: reads the effect state, the main grab usage and each tree slot usage.",
+   "fr": "Client à la connexion : lit l'état de l'effet, l'usage de la pince principale et celui de chaque emplacement d'arbre."
+  },
+  "FellerBuncher:onWriteStream": {
+   "en": "Server on join: writes the effect state, the main grab usage and each tree slot usage.",
+   "fr": "Serveur à la connexion : écrit l'état de l'effet, l'usage de la pince principale et celui de chaque emplacement d'arbre."
+  },
+  "FellerBuncher:onReadUpdateStream": {
+   "en": "Client: when the dirty bit is set, reads effect state and grab/slot usage, then refreshes the action events.",
+   "fr": "Client : quand le bit de modification est présent, lit l'état de l'effet et l'usage des pinces/emplacements, puis rafraîchit les événements d'action."
+  },
+  "FellerBuncher:onWriteUpdateStream": {
+   "en": "Server: when the dirty flag is set, writes effect state and grab/slot usage.",
+   "fr": "Serveur : quand le drapeau de modification est actif, écrit l'état de l'effet et l'usage des pinces/emplacements."
+  },
+  "FellerBuncher:onUpdateTick": {
+   "en": "Server: looks for a cuttable tree in the cut node, runs the automatic cut timer (when no cut input is set), pushes a freshly cut tree toward the mount node, handles the staggered unmount process and releases trees that were deleted. Clients only detect the tree for UI. Also drives cut effect and sound (wood chips) from the effect state.",
+   "fr": "Serveur : cherche un arbre coupable dans le nœud de coupe, gère le minuteur de coupe automatique (sans action de coupe), pousse un arbre fraîchement coupé vers le nœud de montage, gère le démontage échelonné et relâche les arbres supprimés. Les clients ne font que détecter l'arbre pour l'interface. Pilote aussi l'effet et le son de coupe (copeaux) selon l'état de l'effet."
+  },
+  "FellerBuncher:onTurnedOn": {
+   "en": "Closes/opens the grabs via setFellerBuncherGrabState(true) if no tree is loaded; on clients starts the animation nodes and the saw sound.",
+   "fr": "Active les pinces via setFellerBuncherGrabState(true) si aucun arbre n'est chargé ; sur les clients, démarre les nœuds d'animation et le son de scie."
+  },
+  "FellerBuncher:onTurnedOff": {
+   "en": "Reverses the grab state if no tree is loaded; on clients stops animation nodes, effects and sounds.",
+   "fr": "Inverse l'état des pinces si aucun arbre n'est chargé ; sur les clients, arrête nœuds d'animation, effets et sons."
+  },
+  "FellerBuncher:onFinishAnimation": {
+   "en": "Drives the mounting sequence: when the main grab animation or a slot animation ends during a mount, tries to mount the tree into the first free slot or main arm via mountTreeInRange and updates states, joint damping and animations; on failure it reopens the grab.",
+   "fr": "Pilote la séquence de montage : quand l'animation de la pince principale ou d'un emplacement se termine pendant un montage, tente de monter l'arbre dans le premier emplacement libre ou le bras principal via mountTreeInRange et met à jour états, amortissement des joints et animations ; en cas d'échec, rouvre la pince."
+  },
+  "FellerBuncher:setFellerBuncherGrabState": {
+   "en": "Plays the main grab, all tree slot grab and cut animations forward (true) or in reverse (false).",
+   "fr": "Joue les animations de la pince principale, de tous les emplacements et de coupe vers l'avant (true) ou en sens inverse (false)."
+  },
+  "FellerBuncher:getIsFellerBuncherReadyForCut": {
+   "en": "Returns true only when no mount or unmount is running, the main grab is not animating, the machine is turned on and a free tree slot still exists.",
+   "fr": "Renvoie true seulement si aucun montage ou démontage n'est en cours, si la pince principale ne s'anime pas, si la machine est allumée et s'il reste un emplacement d'arbre libre."
+  },
+  "FellerBuncher:getFellerBuncherCanCutSplitShape": {
+   "en": "Checks whether a found tree can be cut: access via WoodHarvester, radius against maxRadius, not already held, and both sides of the cut plane longer than 0.15. Returns a boolean and, when refused, a warning text (too thick, no access, no permission).",
+   "fr": "Vérifie si un arbre trouvé peut être coupé : accès via WoodHarvester, rayon par rapport à maxRadius, pas déjà tenu, et les deux côtés du plan de coupe plus longs que 0,15. Renvoie un booléen et, en cas de refus, un texte d'avertissement (trop épais, pas d'accès, pas de permission)."
+  },
+  "FellerBuncher:cutTree": {
+   "en": "Cuts the tree found in the cut node: on the server updates cut statistics and achievements, records the tree type and splits the shape; then plays the cut animation, the cut sound (manual mode on client) and sends FellerBuncherCutEvent.",
+   "fr": "Coupe l'arbre trouvé dans le nœud de coupe : sur le serveur met à jour statistiques et succès de coupe, enregistre le type d'arbre et sépare la forme ; puis joue l'animation de coupe, le son de coupe (mode manuel côté client) et envoie FellerBuncherCutEvent."
+  },
+  "FellerBuncher:fellerBuncherSplitShapeCallback": {
+   "en": "Split callback: registers the new shape as a known split shape with the tree plant manager and, for the part above the cut, starts the mount process.",
+   "fr": "Rappel de découpe : enregistre la nouvelle forme comme forme découpée connue auprès du gestionnaire de plantation d'arbres et, pour la partie au-dessus de la coupe, lance le processus de montage."
+  },
+  "FellerBuncher:doMountProcess": {
+   "en": "Starts mounting a cut shape: reverses the main grab animation, flags the mount in progress and shifts the shape slightly along the tree move direction (plus a small lift). The noEventSend parameter is unused here.",
+   "fr": "Démarre le montage d'une forme coupée : inverse l'animation de la pince principale, signale le montage en cours et décale légèrement la forme le long de la direction de déplacement (avec un petit relevé). Le paramètre noEventSend n'est pas utilisé ici."
+  },
+  "FellerBuncher:mountTreeInRange": {
+   "en": "Tests the pending shape against the mount node and, if it fits, creates a stiff spring joint between the mount component and the shape and publishes TREE_SHAPE_MOUNTED. Returns joint index, joint node and shape, or 0 and nil.",
+   "fr": "Teste la forme en attente contre le nœud de montage et, si elle convient, crée un joint rigide à ressort entre le composant de montage et la forme, puis publie TREE_SHAPE_MOUNTED. Renvoie indice de joint, nœud de joint et forme, ou 0 et nil."
+  },
+  "FellerBuncher:releaseMountedTrees": {
+   "en": "On the server starts the staggered release of all trees (main arm first, then slots); on every side sends FellerBuncherReleaseEvent unless noEventSend is true.",
+   "fr": "Sur le serveur démarre le relâchement échelonné de tous les arbres (bras principal d'abord, puis emplacements) ; de chaque côté envoie FellerBuncherReleaseEvent sauf si noEventSend vaut true."
+  },
+  "FellerBuncher:releaseMainArmTree": {
+   "en": "Opens the main grab, removes its joint and joint node, restores component joint damping on the server and updates the tree count. Returns whether the main arm held a tree.",
+   "fr": "Ouvre la pince principale, retire son joint et son nœud de joint, restaure l'amortissement des joints de composants sur le serveur et met à jour le nombre d'arbres. Renvoie si le bras principal tenait un arbre."
+  },
+  "FellerBuncher:releaseNextTreeSlot": {
+   "en": "Releases the first used tree slot (animation, joint, node) and updates the tree count. Returns true if a slot was released, false if none was in use.",
+   "fr": "Relâche le premier emplacement d'arbre utilisé (animation, joint, nœud) et met à jour le nombre d'arbres. Renvoie true si un emplacement a été relâché, false si aucun n'était utilisé."
+  },
+  "FellerBuncher:onFellerBuncherTreesChanged": {
+   "en": "Sets the fill unit level to the number of loaded trees (empties it, then adds the count), refreshes the action events and flags a network update.",
+   "fr": "Fixe le niveau de l'unité de remplissage au nombre d'arbres chargés (la vide puis ajoute le nombre), rafraîchit les événements d'action et signale une mise à jour réseau."
+  },
+  "FellerBuncher:getNumLoadedTrees": {
+   "en": "Returns how many trees are held: the main arm (0 or 1) plus the used tree slots.",
+   "fr": "Renvoie le nombre d'arbres tenus : le bras principal (0 ou 1) plus les emplacements utilisés."
+  },
+  "FellerBuncher:onFellerBuncherTreeShapeCut": {
+   "en": "Message handler (server): if the cut shape was held in the main arm or a slot, releases all mounted trees.",
+   "fr": "Gestionnaire de message (serveur) : si la forme coupée était tenue dans le bras principal ou un emplacement, relâche tous les arbres montés."
+  },
+  "FellerBuncher:onFellerBuncherTreeShapeMounted": {
+   "en": "Message handler (server): if a held shape gets mounted by another vehicle, releases all mounted trees.",
+   "fr": "Gestionnaire de message (serveur) : si une forme tenue est montée par un autre véhicule, relâche tous les arbres montés."
+  },
+  "FellerBuncher:getCanToggleTurnedOn": {
+   "en": "Override: refuses toggling while mounting, unmounting or while the main grab is animating; otherwise defers to the parent.",
+   "fr": "Surcharge : refuse le basculement pendant un montage, un démontage ou une animation de la pince principale ; sinon délègue au parent."
+  },
+  "FellerBuncher:registerLoweringActionEvent": {
+   "en": "Override with an empty body: no lowering action event is registered for this machine.",
+   "fr": "Surcharge à corps vide : aucun événement d'action d'abaissement n'est enregistré pour cette machine."
+  },
+  "FellerBuncher:getSupportsAutoTreeAlignment": {
+   "en": "Override: always returns true, declaring support for automatic tree alignment.",
+   "fr": "Surcharge : renvoie toujours true, déclarant la prise en charge de l'alignement automatique sur l'arbre."
+  },
+  "FellerBuncher:getAutoAlignHasValidTree": {
+   "en": "Override: returns whether a cuttable tree was found and whether the given radius is within maxRadius.",
+   "fr": "Surcharge : renvoie si un arbre coupable a été trouvé et si le rayon donné est dans maxRadius."
+  },
+  "FellerBuncher:onRegisterActionEvents": {
+   "en": "Client: registers the powered release action and, if a cut input action is set, the cut action (high priority, with texts) for the active vehicle, then updates their state.",
+   "fr": "Client : enregistre l'action motorisée de relâchement et, si une action de coupe est définie, l'action de coupe (priorité haute, avec textes) pour le véhicule actif, puis met à jour leur état."
+  },
+  "FellerBuncher.actionEventReleaseTrees": {
+   "en": "Input callback: releases the mounted trees.",
+   "fr": "Rappel d'entrée : relâche les arbres montés."
+  },
+  "FellerBuncher.actionEventCutTree": {
+   "en": "Input callback: cuts the detected tree.",
+   "fr": "Rappel d'entrée : coupe l'arbre détecté."
+  },
+  "FellerBuncher.updateActionEvents": {
+   "en": "Client: enables the release action only when a tree is held and the cut action only when a cuttable tree was found.",
+   "fr": "Client : n'active l'action de relâchement que si un arbre est tenu et l'action de coupe que si un arbre coupable a été trouvé."
+  },
+  "FellerBuncher.loadSpecValueMaxTreeSize": {
+   "en": "Shop spec loader: returns the vehicle.fellerBuncher#maxRadius value from the XML.",
+   "fr": "Chargeur de caractéristique boutique : renvoie la valeur vehicle.fellerBuncher#maxRadius du XML."
+  },
+  "FellerBuncher.getSpecValueMaxTreeSize": {
+   "en": "Shop spec getter: converts the radius to a diameter in centimetres and returns it as text, or as value(s) plus text depending on the flags. Returns nothing without the spec.",
+   "fr": "Accesseur de caractéristique boutique : convertit le rayon en diamètre en centimètres et le renvoie en texte, ou en valeur(s) plus texte selon les drapeaux. Ne renvoie rien sans la caractéristique."
+  }
+ }
+}

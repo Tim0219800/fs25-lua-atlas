@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/AIAutomaticSteeringLineEndEvent.lua",
+ "module": {
+  "en": "Network event that tells peers a vehicle reached the end of an automatic-steering line, by raising `onAIAutomaticSteeringLineEnd` on the vehicle. It carries only the vehicle reference.",
+  "fr": "Événement réseau qui indique aux pairs qu'un véhicule a atteint la fin d'une ligne de guidage automatique, en déclenchant `onAIAutomaticSteeringLineEnd` sur le véhicule. Il ne transporte que la référence du véhicule."
+ },
+ "fonctions": {
+  "AIAutomaticSteeringLineEndEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable; used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe ; utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "AIAutomaticSteeringLineEndEvent.new": {
+   "en": "Creates the event for a vehicle. Note: the extra parameters (state, segmentIndex, segmentIsLeft) are accepted but ignored.",
+   "fr": "Crée l'événement pour un véhicule. À noter : les paramètres supplémentaires (state, segmentIndex, segmentIsLeft) sont acceptés mais ignorés."
+  },
+  "AIAutomaticSteeringLineEndEvent:readStream": {
+   "en": "Reads the vehicle reference and immediately calls `run`.",
+   "fr": "Lit la référence du véhicule et appelle immédiatement `run`."
+  },
+  "AIAutomaticSteeringLineEndEvent:writeStream": {
+   "en": "Writes only the vehicle reference.",
+   "fr": "Écrit seulement la référence du véhicule."
+  },
+  "AIAutomaticSteeringLineEndEvent:run": {
+   "en": "If the vehicle is synchronized, raises the specialization event `onAIAutomaticSteeringLineEnd` on it. No rebroadcast here.",
+   "fr": "Si le véhicule est synchronisé, déclenche sur lui l'événement de spécialisation `onAIAutomaticSteeringLineEnd`. Pas de rediffusion ici."
+  }
+ }
+}

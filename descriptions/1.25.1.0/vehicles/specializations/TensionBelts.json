@@ -1,0 +1,205 @@
+{
+ "fichier": "vehicles/specializations/TensionBelts.lua",
+ "module": {
+  "en": "Specialization (no prerequisites) for vehicles that strap loads (bales, pallets, vehicles, tree trunks) with tension belts. Belts are described per configuration under vehicle.tensionBelts and are built as geometry with TensionBeltGeometryConstructor, using belt data from g_tensionBeltManager. The server mounts found objects with physics joints (or kinematic links for trees on trains) and syncs the state through TensionBeltsEvent and a stream bool per belt. A TensionBeltsActivatable offers the per-belt interaction, and the file also holds the toggle action and a debug console command.",
+  "fr": "Spécialisation (sans prérequis) des véhicules qui arriment des charges (balles, palettes, véhicules, troncs) avec des sangles de tension. Les sangles sont décrites par configuration sous vehicle.tensionBelts et construites en géométrie avec TensionBeltGeometryConstructor, à partir des données de g_tensionBeltManager. Le serveur monte les objets trouvés avec des joints physiques (ou des liens cinématiques pour les arbres sur train) et synchronise l'état via TensionBeltsEvent et un booléen de flux par sangle. Un TensionBeltsActivatable propose l'interaction par sangle ; le fichier contient aussi l'action de bascule et une commande console de debug."
+ },
+ "fonctions": {
+  "TensionBelts.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "TensionBelts.initSpecialization": {
+   "en": "Registers the 'tensionBelts' configuration type and the XML schema (interaction radii, trigger, belt type, width, hooks, offsets, per-belt nodes, object changes, sounds, moving-tool flag) plus the savegame key for belt active state.",
+   "fr": "Enregistre le type de configuration « tensionBelts » et le schéma XML (rayons d'interaction, trigger, type de sangle, largeur, crochets, décalages, nodes par sangle, changements d'objets, sons, indicateur d'outil mobile) ainsi que la clé de sauvegarde de l'état actif des sangles."
+  },
+  "TensionBelts.registerFunctions": {
+   "en": "Registers the belt functions: create/remove, set active, mount/unmount queries, refresh, free/lock object, player range, dynamic mount check, trigger callback and tree-cut handler.",
+   "fr": "Enregistre les fonctions de sangles : création/suppression, activation, requêtes de montage/démontage, rafraîchissement, libération/verrouillage d'objet, portée du joueur, test de montage dynamique, callback de trigger et gestion de coupe d'arbre."
+  },
+  "TensionBelts.registerOverwrittenFunctions": {
+   "en": "Overrides automated train travel readiness, selectability, fold permission, moving tool loading/activity, discharge checks, fill level info, mounted-object check and additional component mass.",
+   "fr": "Surcharge l'aptitude au trajet automatisé de train, la sélection, l'autorisation de pliage, le chargement et l'activité des outils mobiles, les contrôles de déchargement, l'info de remplissage, le test d'objet monté et la masse de composant additionnelle."
+  },
+  "TensionBelts.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, onPreDelete, onReadStream, onWriteStream, onUpdate, onUpdateTick, onDraw and onRegisterActionEvents.",
+   "fr": "S'abonne à onLoad, onPostLoad, onDelete, onPreDelete, onReadStream, onWriteStream, onUpdate, onUpdateTick, onDraw et onRegisterActionEvents."
+  },
+  "TensionBelts:onLoad": {
+   "en": "Reads the selected tension belt configuration: radii, optional player trigger (checks collision filters), belt type data, nodes and each tensionBelt entry (end node x/y must be 0). Computes the interaction centre, subscribes to tree cut messages, and removes listeners when no belts exist. Sets a loading error if linkNode is missing.",
+   "fr": "Lit la configuration de sangles choisie : rayons, trigger joueur optionnel (vérifie les filtres de collision), données du type de sangle, nodes et chaque entrée tensionBelt (x/y du node de fin = 0). Calcule le centre d'interaction, s'abonne aux messages de coupe d'arbre et retire les écouteurs sans sangles. Met le chargement en erreur si linkNode manque."
+  },
+  "TensionBelts:onPostLoad": {
+   "en": "When loading a savegame, collects the indices of belts stored as active so onUpdate can refasten them one per frame.",
+   "fr": "Au chargement d'une sauvegarde, collecte les indices des sangles enregistrées comme actives pour que onUpdate les rattache une par frame."
+  },
+  "TensionBelts:saveToXMLFile": {
+   "en": "Writes the isActive flag of every belt to the savegame (true if the belt has a mesh).",
+   "fr": "Écrit dans la sauvegarde l'indicateur isActive de chaque sangle (true si la sangle a un mesh)."
+  },
+  "TensionBelts:onPreDelete": {
+   "en": "Before deletion, wakes the physics of every object currently under a belt's mount area so they do not stay asleep.",
+   "fr": "Avant la suppression, réveille la physique de chaque objet situé dans la zone de montage d'une sangle pour qu'il ne reste pas endormi."
+  },
+  "TensionBelts:onDelete": {
+   "en": "Removes the activatable, unfastens all belts silently, removes the activation trigger and deletes the sounds.",
+   "fr": "Retire l'activable, détache silencieusement toutes les sangles, retire le trigger d'activation et supprime les sons."
+  },
+  "TensionBelts:onReadStream": {
+   "en": "Client join: reads one bool per belt and queues the active ones for refastening.",
+   "fr": "Connexion d'un client : lit un booléen par sangle et met en file les sangles actives pour les rattacher."
+  },
+  "TensionBelts:onWriteStream": {
+   "en": "Server join sync: writes one bool per belt telling whether it has a mesh.",
+   "fr": "Synchronisation à la connexion côté serveur : écrit un booléen par sangle indiquant si elle a un mesh."
+  },
+  "TensionBelts:onUpdate": {
+   "en": "Refastens queued belts, on the server updates dynamic joint frames if the link node moved, on clients steps a fasten/unfasten-all sequence, manages the nearest belt preview (dummy belt) and the activatable when the local player is in range, and draws debug shapes if enabled.",
+   "fr": "Rattache les sangles en file ; sur le serveur, met à jour les repères de joints dynamiques si le link node a bougé ; sur les clients, déroule la séquence serrer/desserrer tout ; gère l'aperçu (sangle fantôme) de la sangle la plus proche et l'activable quand le joueur local est à portée ; dessine le debug si activé."
+  },
+  "TensionBelts:onUpdateTick": {
+   "en": "Server only, every 500 ms: checks whether a mounted physics object no longer exists and, if so, drops it and refreshes the belts.",
+   "fr": "Serveur uniquement, toutes les 500 ms : vérifie si un objet physique monté n'existe plus et, le cas échéant, l'oublie et rafraîchit les sangles."
+  },
+  "TensionBelts:onDraw": {
+   "en": "For the selected, input-active vehicle, sets the toggle action text to fasten or unfasten depending on whether all belts are fastened.",
+   "fr": "Pour le véhicule sélectionné et actif en entrée, règle le texte de l'action de bascule sur serrer ou desserrer selon que toutes les sangles sont serrées."
+  },
+  "TensionBelts:refreshTensionBelts": {
+   "en": "Server broadcasts TensionBeltsRefreshEvent, then rebuilds every fastened belt geometry around the objects currently in range.",
+   "fr": "Le serveur diffuse TensionBeltsRefreshEvent, puis reconstruit la géométrie de chaque sangle serrée autour des objets actuellement à portée."
+  },
+  "TensionBelts:freeTensionBeltObject": {
+   "en": "Releases an object from its mount: server removes the joint, restores mass, inertia and flags (can be sold, mount type) or relinks/unmounts kinematic objects; clears the tree mounted attribute and forgets the object.",
+   "fr": "Libère un objet de son montage : le serveur retire le joint, restaure masse, inertie et indicateurs (vendable, type de montage) ou relie/démonte les objets cinématiques ; efface l'attribut d'arbre monté et oublie l'objet."
+  },
+  "TensionBelts:lockTensionBeltObject": {
+   "en": "Mounts an object: server creates a joint at its centre of mass (with spring limits, reduced mass, mount type set), or kinematically links trees on non-dynamic joint nodes. Clients just record it. Publishes TREE_SHAPE_MOUNTED for trees. Note: the kinematic mount branch is never selected in this code.",
+   "fr": "Monte un objet : le serveur crée un joint à son centre de masse (limites à ressort, masse réduite, type de montage défini) ou lie cinématiquement les arbres sur des nodes non dynamiques. Les clients se contentent de l'enregistrer. Publie TREE_SHAPE_MOUNTED pour les arbres. À noter : la branche de montage cinématique n'est jamais choisie dans ce code."
+  },
+  "TensionBelts:setTensionBeltsActive": {
+   "en": "Fastens or unfastens one belt (by id) or all belts when id is nil: builds or deletes belt meshes, mounts or frees objects in range, applies object changes, sends TensionBeltsEvent unless noEventSend, and updates the all-fastened state.",
+   "fr": "Serre ou desserre une sangle (par id) ou toutes si l'id est nil : construit ou supprime les meshes, monte ou libère les objets à portée, applique les changements d'objets, envoie TensionBeltsEvent sauf si noEventSend, et met à jour l'état « tout serré »."
+  },
+  "TensionBelts:setAllTensionBeltsActive": {
+   "en": "Sets every belt to the given state, or toggles based on whether all are currently fastened when isActive is nil.",
+   "fr": "Met toutes les sangles dans l'état donné, ou bascule selon que toutes sont déjà serrées quand isActive est nil."
+  },
+  "TensionBelts:updateFastenState": {
+   "en": "Recomputes areAllBeltsFastened: true only when no single belt is without a mesh.",
+   "fr": "Recalcule areAllBeltsFastened : true seulement si aucune sangle n'est sans mesh."
+  },
+  "TensionBelts:createTensionBelt": {
+   "en": "Builds the belt geometry between its start and end nodes around the given objects' meshes (material, width, hooks, ratchet, intersection points) and returns the shape, or nil. Dummy belts are previews; real ones are stored, ratchet and hooks are cloned, and the add sound plays.",
+   "fr": "Construit la géométrie de la sangle entre ses nodes de début et de fin autour des meshes des objets donnés (matériau, largeur, crochets, cliquet, points d'intersection) et renvoie la shape, ou nil. Les sangles fantômes sont des aperçus ; les vraies sont stockées, cliquet et crochets sont clonés et le son d'ajout est joué."
+  },
+  "TensionBelts:removeTensionBelt": {
+   "en": "Deletes a belt's mesh and clears its reference; plays the remove sound on clients unless disabled or the belt was only a preview.",
+   "fr": "Supprime le mesh d'une sangle et efface sa référence ; joue le son de retrait sur les clients sauf s'il est désactivé ou si la sangle n'était qu'un aperçu."
+  },
+  "TensionBelts:getObjectToMount": {
+   "en": "Runs a synchronous overlap box over the belt's zone (sides, height, offset from neighbours or defaults) against dynamic objects, vehicles and trees, and returns the table of found objects and their count. The returned table is reused between calls.",
+   "fr": "Lance un recouvrement par boîte synchrone sur la zone de la sangle (côtés, hauteur, décalage des voisines ou valeurs par défaut) contre objets dynamiques, véhicules et arbres, et renvoie la table des objets trouvés et leur nombre. La table renvoyée est réutilisée entre les appels."
+  },
+  "TensionBelts:getObjectsToUnmount": {
+   "en": "Returns the mounted objects that would be freed if the given belt is removed, excluding those still held by another fastened belt, and their count.",
+   "fr": "Renvoie les objets montés qui seraient libérés si la sangle donnée est retirée, hors ceux encore retenus par une autre sangle serrée, et leur nombre."
+  },
+  "TensionBelts:objectOverlapCallback": {
+   "en": "Overlap callback: records mountable game objects (via getTensionBeltNodeId/getMeshNodes) or dynamic/kinematic tree split shapes found in the belt zone. Always returns true to continue.",
+   "fr": "Callback de recouvrement : enregistre les objets de jeu montables (via getTensionBeltNodeId/getMeshNodes) ou les split shapes d'arbres dynamiques/cinématiques trouvés dans la zone. Renvoie toujours true pour continuer."
+  },
+  "TensionBelts:getTensionBeltObjectCanBeMounted": {
+   "en": "Returns whether an object may be strapped: not this vehicle or its own hierarchy, supports tension belts with mesh nodes, not dynamically mounted elsewhere, and no circular mounting with this vehicle.",
+   "fr": "Renvoie si un objet peut être sanglé : ni ce véhicule ni sa hiérarchie, prise en charge des sangles avec mesh nodes, pas déjà monté dynamiquement ailleurs, et pas de montage circulaire avec ce véhicule."
+  },
+  "TensionBelts:getIsPlayerInTensionBeltsRange": {
+   "en": "Returns true plus the nearest belt when the local player can access the vehicle and stands within the interaction radius of a belt end node; otherwise false, nil.",
+   "fr": "Renvoie true et la sangle la plus proche quand le joueur local peut accéder au véhicule et se trouve dans le rayon d'interaction d'une extrémité de sangle ; sinon false, nil."
+  },
+  "TensionBelts:getIsDynamicallyMountedNode": {
+   "en": "Returns true if the given node is currently mounted by one of this vehicle's belts.",
+   "fr": "Renvoie true si le node donné est actuellement monté par l'une des sangles de ce véhicule."
+  },
+  "TensionBelts:getIsReadyForAutomatedTrainTravel": {
+   "en": "Override: returns false while objects are in belt range (not yet strapped); otherwise defers to the parent.",
+   "fr": "Surcharge : renvoie false tant que des objets sont à portée des sangles (pas encore sanglés) ; sinon délègue au parent."
+  },
+  "TensionBelts:getCanBeSelected": {
+   "en": "Override that always returns true.",
+   "fr": "Surcharge qui renvoie toujours true."
+  },
+  "TensionBelts:getIsFoldAllowed": {
+   "en": "Override: forbids folding with a warning text while all belts are fastened when allowFoldingWhileFasten is false (unfolding direction excepted).",
+   "fr": "Surcharge : interdit le pliage avec un texte d'avertissement tant que toutes les sangles sont serrées si allowFoldingWhileFasten vaut false (sauf dans le sens du dépliage)."
+  },
+  "TensionBelts:loadMovingToolFromXML": {
+   "en": "Override: after the parent loads a moving tool, reads its tensionBelts#allowedMounted flag (default true).",
+   "fr": "Surcharge : après le chargement d'un outil mobile par le parent, lit son indicateur tensionBelts#allowedMounted (true par défaut)."
+  },
+  "TensionBelts:getIsMovingToolActive": {
+   "en": "Override: disables a moving tool that does not allow movement while mounted when all belts are fastened.",
+   "fr": "Surcharge : désactive un outil mobile qui n'autorise pas le mouvement en charge lorsque toutes les sangles sont serrées."
+  },
+  "TensionBelts:getCanDischargeToGround": {
+   "en": "Override: returns false while all belts are fastened if allowDischargeWhileFasten is false.",
+   "fr": "Surcharge : renvoie false tant que toutes les sangles sont serrées si allowDischargeWhileFasten vaut false."
+  },
+  "TensionBelts:getCanDischargeToObject": {
+   "en": "Override: returns false while all belts are fastened if allowDischargeWhileFasten is false.",
+   "fr": "Surcharge : renvoie false tant que toutes les sangles sont serrées si allowDischargeWhileFasten vaut false."
+  },
+  "TensionBelts:getFillLevelInformation": {
+   "en": "Override that also adds the fill levels of strapped objects to the display, using their own getFillLevelInformation or fill type, level and capacity.",
+   "fr": "Surcharge qui ajoute aussi à l'affichage les niveaux de remplissage des objets sanglés, via leur propre getFillLevelInformation ou leur type, niveau et capacité."
+  },
+  "TensionBelts:getHasObjectMounted": {
+   "en": "Override: true if the parent says so, or if the object is strapped here or mounted on a strapped object (recursive).",
+   "fr": "Surcharge : true si le parent le dit, ou si l'objet est sanglé ici ou monté sur un objet sanglé (récursif)."
+  },
+  "TensionBelts:getAdditionalComponentMass": {
+   "en": "Override adding to the joint component the default mass of strapped objects whose mass can be reduced, plus the stored original mass of strapped split shapes.",
+   "fr": "Surcharge ajoutant au composant du joint la masse par défaut des objets sanglés dont la masse peut être réduite, ainsi que la masse d'origine mémorisée des split shapes sanglés."
+  },
+  "TensionBelts:onRegisterActionEvents": {
+   "en": "Client only: registers the TOGGLE_TENSION_BELTS action event for the vehicle when input is active.",
+   "fr": "Client uniquement : enregistre l'événement d'action TOGGLE_TENSION_BELTS pour le véhicule quand l'entrée est active."
+  },
+  "TensionBelts:tensionBeltActivationTriggerCallback": {
+   "en": "Client trigger callback: sets isPlayerInTrigger when the local player enters or leaves the activation trigger and keeps the vehicle active on entering.",
+   "fr": "Callback de trigger côté client : positionne isPlayerInTrigger quand le joueur local entre ou sort du trigger d'activation et garde le véhicule actif à l'entrée."
+  },
+  "TensionBelts:onTensionBeltTreeShapeCut": {
+   "en": "Server handler for tree cut messages: if the cut shape was strapped, unfastens all belts.",
+   "fr": "Gestionnaire serveur des messages de coupe d'arbre : si la forme coupée était sanglée, desserre toutes les sangles."
+  },
+  "TensionBeltsActivatable.new": {
+   "en": "Creates the activatable for a vehicle, keeping its spec and the default 'fasten belt' text.",
+   "fr": "Crée l'activable d'un véhicule, en conservant sa spec et le texte par défaut « serrer la sangle »."
+  },
+  "TensionBeltsActivatable:getIsActivatable": {
+   "en": "Returns true while the local player is in range of the belts.",
+   "fr": "Renvoie true tant que le joueur local est à portée des sangles."
+  },
+  "TensionBeltsActivatable:getDistance": {
+   "en": "Returns 0 (highest priority) when a current belt is selected, otherwise math.huge.",
+   "fr": "Renvoie 0 (priorité maximale) quand une sangle courante est sélectionnée, sinon math.huge."
+  },
+  "TensionBeltsActivatable:run": {
+   "en": "Toggles the current belt: unfastens it if it has a mesh, otherwise fastens it, then refreshes the text.",
+   "fr": "Bascule la sangle courante : la desserre si elle a un mesh, sinon la serre, puis rafraîchit le texte."
+  },
+  "TensionBeltsActivatable:updateActivateText": {
+   "en": "Sets the prompt to 'unfasten' or 'fasten' depending on whether the current belt is fastened.",
+   "fr": "Règle le texte d'invite sur « desserrer » ou « serrer » selon que la sangle courante est serrée."
+  },
+  "TensionBelts.actionEventToggleTensionBelts": {
+   "en": "Input callback: starts the sequential fasten-all or unfasten-all (opposite of the current state), carried out one belt per update.",
+   "fr": "Callback d'entrée : démarre la séquence serrer tout ou desserrer tout (inverse de l'état courant), réalisée une sangle par mise à jour."
+  },
+  "TensionBelts.consoleCommandToggleTensionBeltDebugRendering": {
+   "en": "Console command that toggles TensionBelts.debugRendering and returns a status string.",
+   "fr": "Commande console qui bascule TensionBelts.debugRendering et renvoie une chaîne d'état."
+  }
+ }
+}

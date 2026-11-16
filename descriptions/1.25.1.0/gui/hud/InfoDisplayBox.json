@@ -1,0 +1,33 @@
+{
+ "fichier": "gui/hud/InfoDisplayBox.lua",
+ "module": {
+  "en": "Abstract base for one box inside an InfoDisplay. It stores the owning InfoDisplay and UI scale and defines no-op hooks (delete, storeScaledValues) plus default canDraw and draw that subclasses such as InfoDisplayKeyValueBox override. Client-side only.",
+  "fr": "Base abstraite d'une boîte à l'intérieur d'un InfoDisplay. Elle garde l'InfoDisplay propriétaire et l'échelle d'interface, et définit des crochets vides (delete, storeScaledValues) ainsi que canDraw et draw par défaut que des sous-classes comme InfoDisplayKeyValueBox surchargent. Côté client uniquement."
+ },
+ "fonctions": {
+  "InfoDisplayBox.new": {
+   "en": "Creates a box referencing its info display and UI scale; an optional metatable lets subclasses extend it.",
+   "fr": "Crée une boîte référençant son info display et l'échelle d'interface ; une métatable optionnelle permet aux sous-classes de l'étendre."
+  },
+  "InfoDisplayBox:delete": {
+   "en": "Empty hook for subclasses to release resources.",
+   "fr": "Crochet vide permettant aux sous-classes de libérer leurs ressources."
+  },
+  "InfoDisplayBox:setScale": {
+   "en": "Stores the new UI scale and recomputes scaled values by calling storeScaledValues.",
+   "fr": "Mémorise la nouvelle échelle d'interface et recalcule les valeurs mises à l'échelle en appelant storeScaledValues."
+  },
+  "InfoDisplayBox:storeScaledValues": {
+   "en": "Empty hook, overridden by subclasses to cache scaled sizes.",
+   "fr": "Crochet vide, surchargé par les sous-classes pour mettre en cache les tailles mises à l'échelle."
+  },
+  "InfoDisplayBox:canDraw": {
+   "en": "Returns true by default; subclasses return whether the box has something to show.",
+   "fr": "Retourne true par défaut ; les sous-classes indiquent si la boîte a quelque chose à afficher."
+  },
+  "InfoDisplayBox:draw": {
+   "en": "Default draw that renders nothing and returns the position unchanged; subclasses return the next free position.",
+   "fr": "Dessin par défaut qui ne rend rien et retourne la position inchangée ; les sous-classes retournent la prochaine position libre."
+  }
+ }
+}

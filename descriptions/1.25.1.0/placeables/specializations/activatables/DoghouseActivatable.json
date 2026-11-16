@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/activatables/DoghouseActivatable.lua",
+ "module": {
+  "en": "Activatable object for a doghouse placeable: lets the player fill the dog food bowl. While active it draws the fill-bowl context hint with the dog name through the mission.",
+  "fr": "Objet activable pour un placeable de niche : permet au joueur de remplir la gamelle du chien. Tant qu'il est actif, il dessine l'indication de remplissage de la gamelle avec le nom du chien via la mission."
+ },
+ "fonctions": {
+  "DoghouseActivatable.new": {
+   "en": "Creates the activatable for a doghouse placeable and sets the prompt text `action_doghouseFillbowl`.",
+   "fr": "Crée l'activable pour un placeable de niche et fixe le texte `action_doghouseFillbowl`."
+  },
+  "DoghouseActivatable:run": {
+   "en": "Tells the doghouse placeable to set its food bowl state to filled (`setFoodBowlState(true)`).",
+   "fr": "Demande au placeable de niche de passer la gamelle à l'état rempli (`setFoodBowlState(true)`)."
+  },
+  "DoghouseActivatable:draw": {
+   "en": "Per-frame draw: shows the fill-dog-bowl context hint with the dog name (empty if there is no dog).",
+   "fr": "Dessin à chaque image : affiche l'indication de remplissage de la gamelle avec le nom du chien (vide s'il n'y a pas de chien)."
+  },
+  "DoghouseActivatable:activate": {
+   "en": "Registers this object as a drawable of the mission so `draw` is called.",
+   "fr": "Enregistre cet objet comme élément dessinable de la mission pour que `draw` soit appelée."
+  },
+  "DoghouseActivatable:deactivate": {
+   "en": "Removes this object from the mission drawables.",
+   "fr": "Retire cet objet des éléments dessinables de la mission."
+  }
+ }
+}

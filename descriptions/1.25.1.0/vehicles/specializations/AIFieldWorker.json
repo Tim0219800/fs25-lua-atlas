@@ -1,0 +1,37 @@
+{
+ "fichier": "vehicles/specializations/AIFieldWorker.lua",
+ "module": {
+  "en": "Specialization that lets a drivable vehicle with AIJobVehicle perform AI field work: it keeps a list of drive strategies (registered in AIFieldWorker.registeredDriveStrategies) and turns their steering targets into driving commands each frame. In this dump most of the file is blank, so the registration, start and stop logic (startFieldWorker, getIsFieldWorkActive and so on) and the XML keys are UNVERIFIED; only seven functions are visible.",
+  "fr": "Spécialisation qui permet à un véhicule conduisible doté d'AIJobVehicle d'effectuer du travail de champ par l'IA : elle garde une liste de stratégies de conduite (enregistrées dans AIFieldWorker.registeredDriveStrategies) et transforme leurs cibles de direction en commandes de conduite à chaque image. Dans ce dump, la majeure partie du fichier est vide : la logique d'enregistrement, de démarrage et d'arrêt (startFieldWorker, getIsFieldWorkActive, etc.) et les clés XML sont NON VÉRIFIÉES ; seules sept fonctions sont visibles."
+ },
+ "fonctions": {
+  "AIFieldWorker.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both AIJobVehicle and Drivable.",
+   "fr": "Renvoie vrai uniquement si le type de véhicule possède à la fois AIJobVehicle et Drivable."
+  },
+  "AIFieldWorker:saveToXMLFile": {
+   "en": "Writes the isActive flag, asks each drive strategy to fill reconstruction data, then lets every registered strategy class save that data into the vehicle's savegame entry through its optional saveToXML.",
+   "fr": "Écrit l'indicateur isActive, demande à chaque stratégie de conduite de remplir les données de reconstruction, puis laisse chaque classe de stratégie enregistrée sauvegarder ces données dans l'entrée du véhicule via son éventuelle saveToXML."
+  },
+  "AIFieldWorker:onReadStream": {
+   "en": "Client side on join: reads a bool and, if true, calls startFieldWorker so the client mirrors an already running field work (startFieldWorker is not in the dump, UNVERIFIED).",
+   "fr": "Côté client à la connexion : lit un booléen et, s'il est vrai, appelle startFieldWorker pour que le client reflète un travail de champ déjà en cours (startFieldWorker n'est pas dans le dump, NON VÉRIFIÉ)."
+  },
+  "AIFieldWorker:onWriteStream": {
+   "en": "Server side on join: writes whether the field worker is active. Note: spec.isActive is written without a nil guard, and saveToXMLFile does guard against nil.",
+   "fr": "Côté serveur à la connexion : écrit si le travailleur de champ est actif. À noter : spec.isActive est écrit sans garde contre nil, alors que saveToXMLFile en prévoit une."
+  },
+  "AIFieldWorker:updateAIFieldWorker": {
+   "en": "Per-frame AI step while field work is active: asks each drive strategy for a target point and speed until one answers, ends the job as finished if none gives a valid target, limits speed near the stop point, the vehicle speed limit and cruise control, then drives to the point with AIVehicleUtil.driveToPoint and raises onAIFieldWorkerActive. Speeds are in the units used by driveToPoint (km/h, UNVERIFIED).",
+   "fr": "Étape IA à chaque image quand le travail de champ est actif : demande à chaque stratégie de conduite une cible et une vitesse jusqu'à ce que l'une réponde, termine le travail comme réussi si aucune ne donne de cible valide, limite la vitesse près du point d'arrêt, selon la limite du véhicule et le régulateur, puis conduit vers le point avec AIVehicleUtil.driveToPoint et déclenche onAIFieldWorkerActive. Les vitesses sont dans l'unité de driveToPoint (km/h, NON VÉRIFIÉ)."
+  },
+  "AIFieldWorker:updateAIFieldWorkerDriveStrategies": {
+   "en": "Rebuilds the drive strategy list when AI implements exist: deletes the old strategies, then creates one instance per registered strategy whose test function accepts any vehicle in the attached tree, and links each to this vehicle.",
+   "fr": "Reconstruit la liste des stratégies de conduite quand des outils IA existent : supprime les anciennes, puis crée une instance par stratégie enregistrée dont la fonction de test accepte l'un des véhicules de l'arbre attelé, et lie chacune à ce véhicule."
+  },
+  "AIFieldWorker:aiContinue": {
+   "en": "Override: calls the parent, then, if field work is active and the vehicle is not turning, raises onAIFieldWorkerContinue and the matching implement event, and clears the blocked flag.",
+   "fr": "Surcharge : appelle le parent puis, si le travail de champ est actif et que le véhicule ne tourne pas, déclenche onAIFieldWorkerContinue et l'événement d'outil correspondant, et efface l'indicateur de blocage."
+  }
+ }
+}

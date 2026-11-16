@@ -1,0 +1,129 @@
+{
+ "fichier": "vehicles/specializations/WoodCrusher.lua",
+ "module": {
+  "en": "Specialization for machines that pull logs through a trigger, cut them at a cut node and turn them into wood chips in a fill unit. It requires TurnOnVehicle and FillUnit. Most logic lives in reusable static functions (`loadWoodCrusher`, `updateWoodCrusher`, ...) taking an explicit spec table, so other specializations can embed a crusher. Crushing, forces and trigger bookkeeping run on the server; effects, sounds and animations run on the client, with a single boolean in the update stream telling clients whether crushing is happening. XML root is `vehicle.woodCrusher`.",
+  "fr": "Spécialisation pour les machines qui tirent des grumes à travers un déclencheur, les coupent à un nœud de coupe et les transforment en plaquettes dans une unité de remplissage. Elle exige TurnOnVehicle et FillUnit. L'essentiel de la logique est dans des fonctions statiques réutilisables (`loadWoodCrusher`, `updateWoodCrusher`, ...) qui reçoivent explicitement une table de spec, ce qui permet à d'autres spécialisations d'embarquer un broyeur. Broyage, forces et suivi des déclencheurs tournent côté serveur ; effets, sons et animations côté client, un simple booléen du flux de mise à jour indiquant aux clients si le broyage est en cours. Racine XML : `vehicle.woodCrusher`."
+ },
+ "fonctions": {
+  "WoodCrusher.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both the TurnOnVehicle and FillUnit specializations.",
+   "fr": "Renvoie true seulement si le type de véhicule possède les spécialisations TurnOnVehicle et FillUnit."
+  },
+  "WoodCrusher.initSpecialization": {
+   "en": "Registers the XML schema: the shared crusher paths under `vehicle.woodCrusher`, plus `#moveColDisableCollisionPairs` and `#fillUnitIndex`.",
+   "fr": "Enregistre le schéma XML : les chemins communs du broyeur sous `vehicle.woodCrusher`, plus `#moveColDisableCollisionPairs` et `#fillUnitIndex`."
+  },
+  "WoodCrusher.registerWoodCrusherXMLPaths": {
+   "en": "Registers crusher XML paths under a given key: cut and drum nodes, move triggers and collisions, move speed (m/s) and force (kN), down force nodes, auto turn-on, crush effects, animation nodes and start/stop/work/idle sounds.",
+   "fr": "Enregistre sous une clé donnée les chemins XML du broyeur : nœuds de coupe et de tambour, déclencheurs et collisions de déplacement, vitesse (m/s) et force (kN), nœuds de force vers le bas, mise en marche auto, effets, nœuds d'animation et sons start/stop/work/idle."
+  },
+  "WoodCrusher.registerFunctions": {
+   "en": "Registers the vehicle function `onCrushedSplitShape`.",
+   "fr": "Enregistre la fonction de véhicule `onCrushedSplitShape`."
+  },
+  "WoodCrusher.registerOverwrittenFunctions": {
+   "en": "Overrides `getDirtMultiplier`, `getWearMultiplier`, `getCanBeTurnedOn`, `getConsumingLoad` and `getRequiresPower`.",
+   "fr": "Surcharge `getDirtMultiplier`, `getWearMultiplier`, `getCanBeTurnedOn`, `getConsumingLoad` et `getRequiresPower`."
+  },
+  "WoodCrusher.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, the read/write update stream, onUpdate, onUpdateTick, onTurnedOn and onTurnedOff.",
+   "fr": "S'abonne à onLoad, onDelete, aux flux de lecture/écriture de mise à jour, onUpdate, onUpdateTick, onTurnedOn et onTurnedOff."
+  },
+  "WoodCrusher:onLoad": {
+   "en": "Loads the crusher from the vehicle XML. If `#moveColDisableCollisionPairs` is true (default), disables collision between every component and each move collision node. Reads the fill unit index (default 1).",
+   "fr": "Charge le broyeur depuis le XML du véhicule. Si `#moveColDisableCollisionPairs` est vrai (défaut), désactive la collision entre chaque composant et chaque nœud de collision de déplacement. Lit l'indice d'unité de remplissage (1 par défaut)."
+  },
+  "WoodCrusher:onDelete": {
+   "en": "Releases triggers, effects, sounds and animations through `deleteWoodCrusher`.",
+   "fr": "Libère déclencheurs, effets, sons et animations via `deleteWoodCrusher`."
+  },
+  "WoodCrusher:onReadUpdateStream": {
+   "en": "Client side: reads one boolean from the server and sets the crushing timer to 1000 ms or 0.",
+   "fr": "Côté client : lit un booléen envoyé par le serveur et met le minuteur de broyage à 1000 ms ou 0."
+  },
+  "WoodCrusher:onWriteUpdateStream": {
+   "en": "Server side: writes one boolean telling whether the crushing timer is above zero.",
+   "fr": "Côté serveur : écrit un booléen indiquant si le minuteur de broyage est supérieur à zéro."
+  },
+  "WoodCrusher:onUpdate": {
+   "en": "Runs `updateWoodCrusher` with the vehicle's current turned-on state.",
+   "fr": "Exécute `updateWoodCrusher` avec l'état allumé courant du véhicule."
+  },
+  "WoodCrusher:onUpdateTick": {
+   "en": "Runs `updateTickWoodCrusher`, then on the server, if automatic motor start is enabled in the savegame and `#automaticallyTurnOn` is set: starts the motor (own or attacher's) and turns the crusher on while logs are in the move triggers when unattended, and turns it off after a 3 s delay once empty.",
+   "fr": "Exécute `updateTickWoodCrusher`, puis côté serveur, si le démarrage moteur automatique est activé dans la sauvegarde et `#automaticallyTurnOn` défini : démarre le moteur (le sien ou celui de l'attelage) et allume le broyeur tant que des grumes sont dans les déclencheurs sans conducteur, puis l'éteint après 3 s une fois vide."
+  },
+  "WoodCrusher:onTurnedOn": {
+   "en": "Event handler: delegates to `turnOnWoodCrusher`.",
+   "fr": "Gestionnaire d'événement : délègue à `turnOnWoodCrusher`."
+  },
+  "WoodCrusher:onTurnedOff": {
+   "en": "Event handler: delegates to `turnOffWoodCrusher`.",
+   "fr": "Gestionnaire d'événement : délègue à `turnOffWoodCrusher`."
+  },
+  "WoodCrusher:getCanBeTurnedOn": {
+   "en": "Returns false when the crusher is configured to turn on automatically (manual switching is blocked); otherwise defers to the parent implementation.",
+   "fr": "Renvoie false quand le broyeur est configuré pour s'allumer automatiquement (commutation manuelle bloquée) ; sinon s'en remet à l'implémentation parente."
+  },
+  "WoodCrusher:getConsumingLoad": {
+   "en": "Adds one load unit (and one to the count) to the parent result while crushing is in progress. The count is incremented even when idle.",
+   "fr": "Ajoute une unité de charge (et un au compteur) au résultat parent pendant le broyage. Le compteur est incrémenté même au repos."
+  },
+  "WoodCrusher:getRequiresPower": {
+   "en": "Returns true whenever the crusher is turned on; otherwise uses the parent result.",
+   "fr": "Renvoie true dès que le broyeur est allumé ; sinon utilise le résultat parent."
+  },
+  "WoodCrusher:getDirtMultiplier": {
+   "en": "Adds the vehicle's work dirt multiplier to the parent value while crushing.",
+   "fr": "Ajoute le multiplicateur de salissure de travail du véhicule à la valeur parente pendant le broyage."
+  },
+  "WoodCrusher:getWearMultiplier": {
+   "en": "Adds the vehicle's work wear multiplier to the parent value while crushing.",
+   "fr": "Ajoute le multiplicateur d'usure de travail du véhicule à la valeur parente pendant le broyage."
+  },
+  "WoodCrusher:onCrushedSplitShape": {
+   "en": "Adds wood chips to the fill unit for a crushed volume (volume x liters per volume x chips per liter of the split type). Volume is reduced by vehicle damage times `WoodCrusher.DAMAGED_YIELD_DECREASE`.",
+   "fr": "Ajoute des plaquettes à l'unité de remplissage pour un volume broyé (volume x litres par volume x plaquettes par litre du type de bois). Le volume est réduit selon l'endommagement du véhicule multiplié par `WoodCrusher.DAMAGED_YIELD_DECREASE`."
+  },
+  "WoodCrusher.loadWoodCrusher": {
+   "en": "Loads all crusher data from XML into a spec table: nodes, move triggers (warns if the TREE collision bit is missing), move collisions, down force nodes, effects, animations and sounds. Registers triggers on the server. Also warns about deprecated FS17/FS19 XML keys.",
+   "fr": "Charge toutes les données du broyeur depuis le XML dans une table de spec : nœuds, déclencheurs de déplacement (avertit si le bit de collision TREE manque), collisions, nœuds de force, effets, animations et sons. Enregistre les déclencheurs côté serveur. Signale aussi les clés XML obsolètes FS17/FS19."
+  },
+  "WoodCrusher.deleteWoodCrusher": {
+   "en": "Removes move and down force triggers and deletes effects, sounds and animations of a crusher table.",
+   "fr": "Retire les déclencheurs de déplacement et de force et supprime effets, sons et animations d'une table de broyeur."
+  },
+  "WoodCrusher.updateWoodCrusher": {
+   "en": "Server, while on: crushes shapes queued in `crushNodes`, applies down force to logs in the trigger, tracks the largest log height to move the drum reference node smoothly (0.0003 m per ms), and keeps the vehicle active while logs are present or crushing runs.",
+   "fr": "Serveur, en marche : broie les formes en file dans `crushNodes`, applique la force vers le bas aux grumes dans le déclencheur, suit la hauteur de grume maximale pour déplacer en douceur le nœud de tambour (0,0003 m par ms) et garde le véhicule actif tant qu'il y a des grumes ou un broyage."
+  },
+  "WoodCrusher.updateTickWoodCrusher": {
+   "en": "Server, while on: tests each log against the cut plane; crushes it whole if 0.4 or less remains below, or splits it when 0.2 or more lies above; jitters move collision nodes. Then decrements the crushing timer and, on clients, starts or stops the chip effect and the work sound.",
+   "fr": "Serveur, en marche : teste chaque grume face au plan de coupe ; la broie entière s'il reste 0,4 ou moins en dessous, ou la coupe si 0,2 ou plus se trouve au-dessus ; fait vibrer les nœuds de collision. Décrémente ensuite le minuteur et, côté client, démarre ou arrête l'effet de plaquettes et le son de travail."
+  },
+  "WoodCrusher.turnOnWoodCrusher": {
+   "en": "On turn-on: the server sets friction velocity on move collision nodes (pulling logs in); the client stops sounds, plays the start sample then idle, and starts animations.",
+   "fr": "À l'allumage : le serveur règle la vitesse de friction des nœuds de collision (entraîne les grumes) ; le client arrête les sons, joue le son de démarrage puis le ralenti, et lance les animations."
+  },
+  "WoodCrusher.turnOffWoodCrusher": {
+   "en": "On turn-off: the server crushes any queued shapes and zeroes friction velocity; the client stops effects, sounds and animations and plays the stop sample.",
+   "fr": "À l'extinction : le serveur broie les formes en file et remet la vitesse de friction à zéro ; le client arrête effets, sons et animations et joue le son d'arrêt."
+  },
+  "WoodCrusher.crushSplitShape": {
+   "en": "Server: if the shape's split type yields wood chips, reads its volume, deletes the shape, sets the 1000 ms crushing timer and calls `onCrushedSplitShape`. Does nothing for other types.",
+   "fr": "Serveur : si le type de bois produit des plaquettes, lit le volume de la forme, la supprime, arme le minuteur de 1000 ms et appelle `onCrushedSplitShape`. Sans effet pour les autres types."
+  },
+  "WoodCrusher.woodCrusherSplitShapeCallback": {
+   "en": "Callback of `splitShape`: queues the resulting shape for crushing if it is not the part below the cut, and notifies `g_treePlantManager` of the new split shape.",
+   "fr": "Callback de `splitShape` : met en file de broyage la forme obtenue si ce n'est pas la partie sous la coupe, et informe `g_treePlantManager` de la nouvelle forme."
+  },
+  "WoodCrusher.woodCrusherMoveTriggerCallback": {
+   "en": "Move trigger callback: for dynamic non-vehicle bodies whose split type gives wood chips, counts enters and leaves per body in `moveTriggerNodes` and raises the vehicle's active state on enter.",
+   "fr": "Callback du déclencheur de déplacement : pour les corps dynamiques hors véhicules dont le type de bois donne des plaquettes, compte les entrées et sorties par corps dans `moveTriggerNodes` et active le véhicule à l'entrée."
+  },
+  "WoodCrusher.woodCrusherDownForceTriggerCallback": {
+   "en": "Same bookkeeping as the move trigger callback, but per down force node whose extra trigger matches, storing counts in that node's `triggerNodes`.",
+   "fr": "Même suivi que le callback de déplacement, mais par nœud de force dont le déclencheur supplémentaire correspond, avec les comptes stockés dans les `triggerNodes` du nœud."
+  }
+ }
+}

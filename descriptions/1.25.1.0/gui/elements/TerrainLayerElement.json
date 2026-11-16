@@ -1,0 +1,37 @@
+{
+ "fichier": "gui/elements/TerrainLayerElement.lua",
+ "module": {
+  "en": "GUI element (derived from GuiElement) that draws a texture of a terrain layer as an overlay, for example in a layer picker. The overlay is created lazily and drawn with UV clipping when a parent clip rectangle is given. It uses the engine functions getTerrainLayerSubLayer, setOverlayLayer, setOverlayUVs and renderOverlay, whose behaviour is UNVERIFIED here. createOverlay and destroyOverlay are not defined in this file.",
+  "fr": "Élément GUI (dérivé de GuiElement) qui dessine la texture d'une couche de terrain sous forme d'overlay, par exemple dans un sélecteur de couches. L'overlay est créé à la demande et dessiné avec découpe des UV quand un rectangle de clipping parent est fourni. Il utilise les fonctions moteur getTerrainLayerSubLayer, setOverlayLayer, setOverlayUVs et renderOverlay, dont le comportement est NON VÉRIFIÉ ici. createOverlay et destroyOverlay ne sont pas définis dans ce fichier."
+ },
+ "fonctions": {
+  "TerrainLayerElement.new": {
+   "en": "Constructor. Starts with no terrain layer overlay.",
+   "fr": "Constructeur. Démarre sans overlay de couche de terrain."
+  },
+  "TerrainLayerElement:delete": {
+   "en": "Destroys the overlay through destroyOverlay (not defined here, UNVERIFIED), then deletes the element via the parent class. Note: it passes self.terrainRootNode, which setTerrainLayer never stores.",
+   "fr": "Détruit l'overlay via destroyOverlay (non défini ici, NON VÉRIFIÉ) puis supprime l'élément via la classe parente. À noter : il passe self.terrainRootNode, que setTerrainLayer ne stocke jamais."
+  },
+  "TerrainLayerElement:copyAttributes": {
+   "en": "Copies parent attributes then applies the source's terrain root node and layer through setTerrainLayer.",
+   "fr": "Copie les attributs parents puis applique le nœud racine de terrain et la couche de la source via setTerrainLayer."
+  },
+  "TerrainLayerElement:setTerrainLayer": {
+   "en": "Sets which terrain layer to show: creates the overlay on first use, binds it to sub-layer 0 of the layer and remembers the layer index. Does nothing if layer is nil. Note: the root node is not stored.",
+   "fr": "Définit la couche de terrain à afficher : crée l'overlay au premier usage, le lie à la sous-couche 0 de la couche et mémorise l'indice de couche. Ne fait rien si layer est nil. À noter : le nœud racine n'est pas mémorisé."
+  },
+  "TerrainLayerElement:draw": {
+   "en": "Renders the layer overlay in the element's rectangle. When a clip rectangle is given, it shrinks the rectangle and adjusts the UVs to match, skipping drawing if the visible area is empty, then draws children via the parent class.",
+   "fr": "Dessine l'overlay de la couche dans le rectangle de l'élément. Si un rectangle de clipping est donné, il réduit le rectangle et ajuste les UV en conséquence, sans dessiner si la zone visible est vide, puis dessine les enfants via la classe parente."
+  },
+  "TerrainLayerElement:canReceiveFocus": {
+   "en": "Returns true only if the element is visible, has at least one child and every child can itself receive focus.",
+   "fr": "Retourne true seulement si l'élément est visible, a au moins un enfant et que chaque enfant peut lui-même recevoir le focus."
+  },
+  "TerrainLayerElement:getFocusTarget": {
+   "en": "Returns the first child element when there is one, otherwise the element itself.",
+   "fr": "Retourne le premier élément enfant s'il existe, sinon l'élément lui-même."
+  }
+ }
+}

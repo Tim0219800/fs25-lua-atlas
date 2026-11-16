@@ -1,0 +1,77 @@
+{
+ "fichier": "vehicles/specializations/activatables/YarderTowerControlActivatable.lua",
+ "module": {
+  "en": "Activatable for operating the carriage of a yarder tower (cable logging): follow modes, manual move and lift, attach and detach trees. Selected when the player is within the vehicle's control range. Behaviour of the called methods lives in the YarderTower specialization (UNVERIFIED, not in this file).",
+  "fr": "Activatable pour manoeuvrer le chariot d'une tour de débardage par câble (yarder) : modes de suivi, déplacement et levage manuels, attache et détachement d'arbres. Sélectionné quand le joueur est dans la zone de commande du véhicule. Le comportement des méthodes appelées se trouve dans la spécialisation YarderTower (NON VÉRIFIÉ, absent de ce fichier)."
+ },
+ "fonctions": {
+  "YarderTowerControlActivatable.new": {
+   "en": "Creates the activatable for a yarder tower vehicle with an empty prompt text.",
+   "fr": "Crée l'activatable pour un véhicule de tour de débardage (yarder) avec un texte d'invite vide."
+  },
+  "YarderTowerControlActivatable:registerCustomInput": {
+   "en": "Registers the yarder carriage action events (follow me, follow home, follow pickup, left/right move, up/down lift, attach, detach) at very high priority, sets their texts, then calls `updateActionEventTexts`.",
+   "fr": "Enregistre les événements d'action du chariot de yarder (suivre, retour, ramassage, déplacement gauche/droite, levage haut/bas, attacher, détacher) à priorité très haute, fixe leurs textes puis appelle `updateActionEventTexts`."
+  },
+  "YarderTowerControlActivatable:removeCustomInput": {
+   "en": "Removes every input action event registered by this object (all events bound to it as target).",
+   "fr": "Retire tous les événements d'action d'entrée enregistrés par cet objet (tous ceux dont il est la cible)."
+  },
+  "YarderTowerControlActivatable:onToggleFollowMeMode": {
+   "en": "Input callback: toggles the carriage follow-me mode; sets `FOLLOW_MODE_NONE` if already following the player, otherwise `FOLLOW_MODE_ME`.",
+   "fr": "Callback d'entrée : bascule le mode où le chariot suit le joueur ; passe à `FOLLOW_MODE_NONE` s'il suit déjà, sinon à `FOLLOW_MODE_ME`."
+  },
+  "YarderTowerControlActivatable:onToggleFollowHome": {
+   "en": "Input callback: sets the carriage follow mode to `FOLLOW_MODE_HOME` (return toward the tower).",
+   "fr": "Callback d'entrée : met le mode de suivi du chariot sur `FOLLOW_MODE_HOME` (retour vers la tour)."
+  },
+  "YarderTowerControlActivatable:onToggleFollowPickup": {
+   "en": "Input callback: sets the carriage follow mode to `FOLLOW_MODE_PICKUP` (move to the stored pickup position).",
+   "fr": "Callback d'entrée : met le mode de suivi du chariot sur `FOLLOW_MODE_PICKUP` (aller à la position de ramassage mémorisée)."
+  },
+  "YarderTowerControlActivatable:onManualControlLeftRight": {
+   "en": "Input callback: passes the input value to `setYarderCarriageMoveInput` for manual carriage movement along the rope.",
+   "fr": "Callback d'entrée : transmet la valeur à `setYarderCarriageMoveInput` pour le déplacement manuel du chariot le long du câble."
+  },
+  "YarderTowerControlActivatable:onManualControlUpDown": {
+   "en": "Input callback: passes the input value to `setYarderCarriageLiftInput` to raise or lower the carriage load.",
+   "fr": "Callback d'entrée : transmet la valeur à `setYarderCarriageLiftInput` pour monter ou descendre la charge du chariot."
+  },
+  "YarderTowerControlActivatable:onTreeAttach": {
+   "en": "Input callback: calls `onYarderCarriageAttach` on the vehicle to hook trees near the carriage.",
+   "fr": "Callback d'entrée : appelle `onYarderCarriageAttach` sur le véhicule pour accrocher les arbres proches du chariot."
+  },
+  "YarderTowerControlActivatable:onTreeDetach": {
+   "en": "Input callback: calls `onYarderCarriageDetach` with the input value to release the attached trees.",
+   "fr": "Callback d'entrée : appelle `onYarderCarriageDetach` avec la valeur d'entrée pour libérer les arbres attachés."
+  },
+  "YarderTowerControlActivatable:update": {
+   "en": "Per frame, if a carriage vehicle exists: enables attach only with a tree in mount range, and detach and lift/lower only when trees are attached.",
+   "fr": "À chaque frame, si un véhicule chariot existe : active l'attache seulement avec un arbre à portée de montage, et le détachement et le levage seulement si des arbres sont attachés."
+  },
+  "YarderTowerControlActivatable:updateActionEventTexts": {
+   "en": "Refreshes the follow-me text, and enables follow-home/follow-pickup only when no follow mode is active and the carriage is more than 5 (rope-length units, metres presumably) from the target.",
+   "fr": "Rafraîchit le texte de suivi et n'active retour/ramassage que si aucun mode de suivi n'est actif et que le chariot est à plus de 5 (unités de longueur de câble, des mètres vraisemblablement) de la cible."
+  },
+  "YarderTowerControlActivatable:getIsActivatable": {
+   "en": "Returns whether the player is inside the yarder control range, via `getIsPlayerInYarderControlRange`.",
+   "fr": "Renvoie si le joueur est dans la zone de commande du yarder, via `getIsPlayerInYarderControlRange`."
+  },
+  "YarderTowerControlActivatable:activate": {
+   "en": "Empty hook; nothing happens when the activatable becomes the selected one.",
+   "fr": "Fonction vide ; rien ne se passe quand l'activatable devient celui sélectionné."
+  },
+  "YarderTowerControlActivatable:deactivate": {
+   "en": "Empty hook; nothing happens when the activatable stops being the selected one.",
+   "fr": "Fonction vide ; rien ne se passe quand l'activatable n'est plus celui sélectionné."
+  },
+  "YarderTowerControlActivatable:getDistance": {
+   "en": "Returns the distance computed by `getIsPlayerInYarderControlRange` (the point argument is ignored).",
+   "fr": "Renvoie la distance calculée par `getIsPlayerInYarderControlRange` (l'argument de point est ignoré)."
+  },
+  "YarderTowerControlActivatable:draw": {
+   "en": "Empty hook; this activatable draws nothing on screen.",
+   "fr": "Fonction vide ; cet activatable n'affiche rien à l'écran."
+  }
+ }
+}

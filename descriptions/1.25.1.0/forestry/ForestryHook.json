@@ -1,0 +1,89 @@
+{
+ "fichier": "forestry/ForestryHook.lua",
+ "module": {
+  "en": "Plain class (not a specialization) representing a tree hook, the grapple-like piece that a forestry rope drags and fastens around a tree. It loads a hook XML and shared i3d, links the hook node under a vehicle or other node, rotates configured joints toward a target, and can mount itself on a tree by creating a tension-belt shape. Used with the forestry rope classes; the methods getBeltSpacing and updateDynamicSpacingNodes are called here but are not defined in this file (UNVERIFIED where they come from).",
+  "fr": "Classe simple (pas une spécialisation) représentant un crochet d'arbre, la pièce que la corde forestière tire et fixe autour d'un arbre. Elle charge un XML de crochet et un i3d partagé, lie le nœud du crochet sous un véhicule ou un autre nœud, oriente des articulations configurées vers une cible, et peut se monter sur un arbre en créant une forme de sangle de tension. Utilisée avec les classes de corde forestière ; les méthodes getBeltSpacing et updateDynamicSpacingNodes sont appelées ici mais ne sont pas définies dans ce fichier (origine NON VÉRIFIÉE)."
+ },
+ "fonctions": {
+  "ForestryHook.new": {
+   "en": "Constructor. Stores the owning vehicle (may be nil) and the link node, and initialises position, rotation, visibility, target state and empty tables of sub-target and rotation nodes.",
+   "fr": "Constructeur. Mémorise le véhicule propriétaire (peut être nil) et le nœud de liaison, puis initialise position, rotation, visibilité, état de cible et tables vides de sous-cibles et de nœuds de rotation."
+  },
+  "ForestryHook.registerXMLPaths": {
+   "en": "Registers the #filename XML key (path to the hook XML, default treeHook01.xml in the shared forestry data) under the given base key.",
+   "fr": "Déclare la clé XML #filename (chemin du XML du crochet, par défaut treeHook01.xml dans les données forestières partagées) sous la clé de base fournie."
+  },
+  "ForestryHook:isValid": {
+   "en": "Returns true once an i3d filename has been resolved from the hook XML, i.e. the hook definition was found.",
+   "fr": "Retourne true une fois qu'un nom de fichier i3d a été résolu depuis le XML du crochet, c'est-à-dire que la définition du crochet a été trouvée."
+  },
+  "ForestryHook:loadFromXML": {
+   "en": "Reads the hook XML filename, loads that XML and its i3d path, then starts an asynchronous shared i3d load through the vehicle if present, otherwise through g_i3DManager. onI3DLoaded finishes the setup.",
+   "fr": "Lit le nom du XML du crochet, charge ce XML et le chemin de l'i3d, puis lance un chargement i3d partagé asynchrone via le véhicule s'il existe, sinon via g_i3DManager. onI3DLoaded termine l'initialisation."
+  },
+  "ForestryHook:loadFromConfigXML": {
+   "en": "Parses the hook XML: rotation nodes with axis limits and alignment flags, rope target nodes (the first becomes the main rope target), tree belt parameters (offset, max height delta, spacing, belt type from g_tensionBeltManager) and optional dynamic belt spacing with adjustment nodes.",
+   "fr": "Analyse le XML du crochet : nœuds de rotation avec limites d'axes et indicateurs d'alignement, nœuds cibles de corde (le premier devient la cible principale), paramètres de sangle d'arbre (décalage, écart vertical max, espacement, type via g_tensionBeltManager) et espacement dynamique optionnel avec nœuds d'ajustement."
+  },
+  "ForestryHook:clone": {
+   "en": "Creates a new hook with the same vehicle, link node and filenames, reloading the cached shared i3d synchronously. Returns the clone, or nothing if the hook has no i3d filename.",
+   "fr": "Crée un nouveau crochet avec les mêmes véhicule, nœud de liaison et fichiers, en rechargeant l'i3d partagé déjà en cache de façon synchrone. Retourne le clone, ou rien si le crochet n'a pas de fichier i3d."
+  },
+  "ForestryHook:delete": {
+   "en": "Removes the hook from the mission updateables, deletes the hook node (if it still exists) and releases the shared i3d, deletes the belt shape, and re-enables wind sway on a still-static tree it was mounted on.",
+   "fr": "Retire le crochet des éléments mis à jour de la mission, supprime le nœud du crochet (s'il existe encore) et libère l'i3d partagé, supprime la forme de sangle et réactive le balancement au vent d'un arbre encore statique sur lequel il était monté."
+  },
+  "ForestryHook:update": {
+   "en": "Refreshes the target position and, if the target is valid, turns each rotation node toward the target (or the average of its sub-targets), either by clamped Y/X angles or a full direction. Unregisters itself from updateables if the hook node no longer exists.",
+   "fr": "Met à jour la position de la cible et, si elle est valide, oriente chaque nœud de rotation vers la cible (ou la moyenne de ses sous-cibles), par angles Y/X bornés ou par direction complète. Se désinscrit des mises à jour si le nœud du crochet n'existe plus."
+  },
+  "ForestryHook:setTargetNode": {
+   "en": "Sets the node the hook should aim at and does an immediate update. If isActiveDirty is true and the node is valid, the hook is registered for continuous updates, otherwise it is removed from them.",
+   "fr": "Définit le nœud que le crochet doit viser et fait une mise à jour immédiate. Si isActiveDirty est true et le nœud valide, le crochet est inscrit aux mises à jour continues, sinon il en est retiré."
+  },
+  "ForestryHook:setTargetPosition": {
+   "en": "Sets a fixed world position as target, marks the target valid and applies it with an immediate update.",
+   "fr": "Définit une position monde fixe comme cible, la marque valide et l'applique par une mise à jour immédiate."
+  },
+  "ForestryHook:setSubTargetNode": {
+   "en": "Stores a sub-target node at the given index; rotation nodes with targetIndices aim at the average of the sub-targets they reference.",
+   "fr": "Mémorise un nœud de sous-cible à l'index donné ; les nœuds de rotation ayant des targetIndices visent la moyenne des sous-cibles qu'ils référencent."
+  },
+  "ForestryHook:resetSubTargetNodes": {
+   "en": "Clears all stored sub-target nodes.",
+   "fr": "Efface tous les nœuds de sous-cible mémorisés."
+  },
+  "ForestryHook:link": {
+   "en": "Changes the link node and optionally the local position and rotation (nil values keep the previous ones). If the hook node is loaded, it is re-linked, shown or hidden according to visibility, and repositioned.",
+   "fr": "Change le nœud de liaison et, au besoin, la position et la rotation locales (les valeurs nil conservent les précédentes). Si le nœud du crochet est chargé, il est relié de nouveau, affiché ou masqué selon la visibilité, et repositionné."
+  },
+  "ForestryHook:setPositionAndDirection": {
+   "en": "Converts a world position and a horizontal direction (dx, dz) to the link node's local space, stores them, and applies them to the hook node if it is loaded.",
+   "fr": "Convertit une position monde et une direction horizontale (dx, dz) dans l'espace local du nœud de liaison, les mémorise et les applique au nœud du crochet s'il est chargé."
+  },
+  "ForestryHook:mountToTree": {
+   "en": "Fastens the hook around a tree shape near the given point. It computes the tree offset position (returns nil if none), builds a tension-belt shape linked to the tree, links the hook to it and replaces any previous belt. Returns the centre x, y, z. On unsplit static trees it also turns off wind sway.",
+   "fr": "Fixe le crochet autour d'un arbre près du point donné. Calcule la position décalée sur l'arbre (retourne nil s'il n'y en a pas), construit une sangle de tension liée à l'arbre, y relie le crochet et remplace l'éventuelle sangle précédente. Retourne le centre x, y, z. Sur un arbre statique non coupé, désactive aussi le balancement au vent."
+  },
+  "ForestryHook:setVisibility": {
+   "en": "Stores the visibility flag and applies it to the hook node if it is loaded.",
+   "fr": "Mémorise l'indicateur de visibilité et l'applique au nœud du crochet s'il est chargé."
+  },
+  "ForestryHook:getRopeTargetPosition": {
+   "en": "Returns the world position of the main rope target node, or 0, 0, 0 if there is none or it no longer exists.",
+   "fr": "Retourne la position monde du nœud cible principal de la corde, ou 0, 0, 0 s'il n'y en a pas ou s'il n'existe plus."
+  },
+  "ForestryHook:getRopeTarget": {
+   "en": "Returns the node a rope should attach to: the main rope target, else the hook node, else the link node.",
+   "fr": "Retourne le nœud auquel une corde doit s'attacher : la cible principale de corde, sinon le nœud du crochet, sinon le nœud de liaison."
+  },
+  "ForestryHook:getRopeTargets": {
+   "en": "Returns the list of all rope target nodes read from the hook XML (entries can be nil if a node was not found).",
+   "fr": "Retourne la liste de tous les nœuds cibles de corde lus dans le XML du crochet (des entrées peuvent être nil si un nœud n'a pas été trouvé)."
+  },
+  "ForestryHook:onI3DLoaded": {
+   "en": "Callback of the shared i3d load. On success it takes the first child as hook node, links and positions it, parses the config XML, frees that XML, runs an update and deletes the temporary i3d root. Does nothing if loading failed.",
+   "fr": "Rappel du chargement de l'i3d partagé. En cas de succès, prend le premier enfant comme nœud du crochet, le lie et le positionne, analyse le XML de configuration, le libère, lance une mise à jour et supprime la racine i3d temporaire. Ne fait rien si le chargement a échoué."
+  }
+ }
+}

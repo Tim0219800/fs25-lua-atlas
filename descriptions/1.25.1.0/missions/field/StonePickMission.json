@@ -1,0 +1,69 @@
+{
+ "fichier": "missions/field/StonePickMission.lua",
+ "module": {
+  "en": "Stone picking contract, a subclass of AbstractFieldMission using WorkAreaType.STONEPICKER. Progress is measured in the stone system density map. It is only offered on plowed, unsown fields that really contain stones, outside winter, when stones are enabled in the savegame.",
+  "fr": "Contrat de ramassage de cailloux, sous-classe de AbstractFieldMission utilisant WorkAreaType.STONEPICKER. L'avancement est mesuré dans la density map du système de cailloux. Il n'est proposé que sur des champs labourés, non semés, contenant réellement des cailloux, hors hiver, si les cailloux sont activés dans la sauvegarde."
+ },
+ "fonctions": {
+  "StonePickMission.new": {
+   "en": "Constructor. Builds the mission with the stone-pick title and description texts, stone picker work area type, stoneValue 3 and spawnedPixels 0.",
+   "fr": "Constructeur. Crée la mission avec les textes de titre et description du ramassage, le type de zone de travail ramasse-cailloux, stoneValue à 3 et spawnedPixels à 0."
+  },
+  "StonePickMission:getFieldPreparingTask": {
+   "en": "On the server, sets the field state stone level to stoneValue, then returns the parent preparing task.",
+   "fr": "Sur le serveur, fixe le niveau de cailloux de l'état du champ à stoneValue, puis renvoie la tâche de préparation du parent."
+  },
+  "StonePickMission:getFieldFinishTask": {
+   "en": "On the server, resets stone level to 0 and ground type to CULTIVATED on the field state, then returns the parent finish task.",
+   "fr": "Sur le serveur, remet le niveau de cailloux à 0 et le type de sol à CULTIVATED dans l'état du champ, puis renvoie la tâche de fin du parent."
+  },
+  "StonePickMission:createModifier": {
+   "en": "Creates masked and unmasked density map modifiers on the stone density map, with filters comparing the value to the maximum stone value, greater than 0, and equal to 0.",
+   "fr": "Crée les modificateurs de density map (avec et sans masque) sur la density map des cailloux, avec des filtres comparant à la valeur maximale de cailloux, supérieure à 0 et égale à 0."
+  },
+  "StonePickMission:getPartitionCompletion": {
+   "en": "Sets the partition region and returns sum of pixels, area and total area from the stone map. The total excludes the unmasked (stone-free) area. Returns 0, 0, 0 without modifier.",
+   "fr": "Définit la région de la partition et renvoie pixels cumulés, surface et surface totale d'après la carte de cailloux. Le total exclut la zone non masquée (sans cailloux). Renvoie 0, 0, 0 sans modificateur."
+  },
+  "StonePickMission:initializeModifier": {
+   "en": "Calls the parent version, then applies the field density map polygon to the unmasked modifier.",
+   "fr": "Appelle la version du parent, puis applique le polygone de density map du champ au modificateur non masqué."
+  },
+  "StonePickMission:setPartitionRegion": {
+   "en": "Calls the parent, then, if there is more than one partition, clips the unmasked modifier to the partition minZ/maxZ range.",
+   "fr": "Appelle le parent puis, s'il y a plus d'une partition, restreint le modificateur non masqué à la plage minZ/maxZ de la partition."
+  },
+  "StonePickMission:getRewardPerHa": {
+   "en": "Returns the reward per hectare stored for this mission type in MissionManager.",
+   "fr": "Renvoie la récompense par hectare enregistrée pour ce type de mission dans MissionManager."
+  },
+  "StonePickMission:getMissionTypeName": {
+   "en": "Returns StonePickMission.NAME (the value is set elsewhere, not in this file).",
+   "fr": "Renvoie StonePickMission.NAME (la valeur est définie ailleurs, pas dans ce fichier)."
+  },
+  "StonePickMission:validate": {
+   "en": "Runs the parent validation, then, if the mission is not finished, rechecks that the field is still eligible. Returns false when either check fails.",
+   "fr": "Exécute la validation du parent puis, si la mission n'est pas terminée, revérifie que le champ reste éligible. Renvoie false si l'un des tests échoue."
+  },
+  "StonePickMission.loadMapData": {
+   "en": "Reads #rewardPerHa from the map XML (default 2200) into the mission type data. Returns true.",
+   "fr": "Lit #rewardPerHa dans le XML de la carte (2200 par défaut) vers les données du type de mission. Renvoie true."
+  },
+  "StonePickMission.tryGenerateMission": {
+   "en": "Server-side generator: if canRun, takes a field for a mission, requires it to be free and eligible, builds and inits a mission and sets its default end date. Returns the mission or nil.",
+   "fr": "Générateur côté serveur : si canRun, prend un champ pour une mission, exige qu'il soit libre et éligible, crée et initialise une mission et fixe sa date de fin par défaut. Renvoie la mission ou nil."
+  },
+  "StonePickMission.getFieldHasStones": {
+   "en": "Returns true if the stone density map has at least one pixel above 0 inside the field polygon. False when the map has no stones.",
+   "fr": "Renvoie true si la density map des cailloux a au moins un pixel supérieur à 0 dans le polygone du champ. False si la carte n'a pas de cailloux."
+  },
+  "StonePickMission.isAvailableForField": {
+   "en": "For a new mission, requires a valid field state, no fruit, plowed ground and stones present. In all cases refuses during winter.",
+   "fr": "Pour une nouvelle mission, exige un état de champ valide, aucune culture, un sol labouré et des cailloux présents. Dans tous les cas, refuse en hiver."
+  },
+  "StonePickMission.canRun": {
+   "en": "Returns true only if the instance limit is not reached, the map has stones and stones are enabled in the savegame settings.",
+   "fr": "Renvoie true seulement si la limite d'instances n'est pas atteinte, si la carte a des cailloux et si les cailloux sont activés dans les réglages de la sauvegarde."
+  }
+ }
+}

@@ -1,69 +1,73 @@
 # sounds/SoundManager.lua
 
+*[Version française](../../fr/scripts/sounds/SoundManager.md)*
+
 Source: `dataS/scripts/sounds/SoundManager.lua` — FS25 1.25.1.0
+
+✍ Central client-side manager (extends AbstractManager) that loads sound samples from XML (3D audio sources linked to nodes, or 2D samples), applies sound templates, indoor and outdoor attributes, value modifiers driven by callbacks, volume/pitch randomisation and alternative source files, then plays, stops and deletes them. It tracks active samples, updating a limited number each frame, and has a debug overlay toggled by the console command gsSoundManagerDebug. Sample objects are plain Lua tables; most audio work is delegated to engine functions not defined in the dump (UNVERIFIED).
 
 - **SoundManager** inherits from `AbstractManager` (l.24)
 
 ## Functions
 
-| Function | Line | Description (FR) |
+| Function | Line | Description |
 |---|---|---|
-| `SoundManager.new(customMt: table?) → SoundManager` | 30 |  |
-| `SoundManager:initDataStructures()` | 40 |  |
-| `SoundManager:delete()` | 67 |  |
-| `SoundManager:registerModifierType(typeName: any, func: any, minFunc: any, maxFunc: any) → boolean` | 77 |  |
-| `SoundManager:loadSoundTemplates(xmlFilename: any) → boolean` | 104 |  |
-| `SoundManager:reloadSoundTemplates()` | 135 |  |
-| `SoundManager:cloneSample(sample: table, linkNode: integer, modifierTargetObject: any) → table` | 153 |  |
-| `SoundManager:cloneSample2D(sample: table, linkNode: integer, modifierTargetObject: any) → table` | 204 |  |
-| `SoundManager:validateSampleDefinition(xmlFile: integer, baseKey: string, sampleName: string, baseDir: string, audioGroup: string, is2D: boolean, components: table, i3dMappings: table, externalSoundsFile: any) → boolean, boolean, integer, string, integer` | 262 |  |
-| `SoundManager:loadSample2DFromXML(xmlFile: integer, baseKey: string, sampleName: string, baseDir: string, loops: integer, audioGroup: string, requiresFile: boolean?)` | 325 |  |
-| `SoundManager:loadSampleFromXML(xmlFile: integer\|XMLFile, baseKey: string, sampleName: string, baseDir: string, components: (table\|integer), loops: integer, audioGroup: integer, i3dMappings: table?, modifierTargetObject: table?, requiresFile: boolean?) → table?` | 385 |  |
-| `SoundManager:loadSamplesFromXML(xmlFile: integer, baseKey: string, sampleName: string, baseDir: string, components: table, loops: integer, audioGroup: integer, i3dMappings: table, modifierTargetObject: table?, samples: table?) → table` | 452 |  |
-| `SoundManager:createAudioSource(sample: any, filename: any)` | 470 |  |
-| `SoundManager:onCreateAudioSource(sample: any, ignoreReverb: any)` | 489 |  |
-| `SoundManager:createAudio2d(sample: any, filename: any)` | 523 |  |
-| `SoundManager:onCreateAudio2d(sample: any, ignoreReverb: any)` | 541 |  |
-| `SoundManager:loadSampleAttributesFromTemplate(sample: any, templateName: any, baseDir: any, defaultLoops: any, xmlFile: any, sampleKey: any)` | 560 |  |
-| `SoundManager:loadSampleAttributesFromXML(sample: table, xmlFile: integer, key: string, baseDir: any, defaultLoops: any, requiresFile: any)` | 592 |  |
-| `SoundManager:loadModifiersFromXML(sample: table, xmlFile: integer, key: string)` | 684 |  |
-| `SoundManager:loadRandomizationsFromXML(sample: table, xmlFile: integer, key: string, baseDir: any)` | 726 |  |
-| `SoundManager:getRandomSample(sample: any, filename: any)` | 807 |  |
-| `SoundManager:update(dt: any)` | 840 |  |
-| `SoundManager:draw()` | 865 |  |
-| `SoundManager:updateSampleFade(sample: table, dt: number)` | 953 |  |
-| `SoundManager:updateSampleModifiers(sample: table)` | 964 |  |
-| `SoundManager:updateSampleAttributes(sample: table, force: boolean)` | 990 |  |
-| `SoundManager:updateSampleRandomizations(sample: table)` | 1023 |  |
-| `SoundManager:getSampleModifierValue(sample: table, attribute: table, typeIndex: string)` | 1095 |  |
-| `SoundManager:deleteSample(sample: table)` | 1117 |  |
-| `SoundManager:deleteSamples(samples: table, delay: any, afterSample: any)` | 1159 |  |
-| `SoundManager:playSample(sample: table, delay: number?, afterSample: table?)` | 1172 |  |
-| `SoundManager:playSamples(samples: table, delay: integer?, afterSample: table?)` | 1207 |  |
-| `SoundManager:stopSample(sample: table, delay: number?, fadeOut: number?)` | 1218 |  |
-| `SoundManager:stopSamples(samples: table)` | 1227 |  |
-| `SoundManager:setSampleVolumeOffset(sample: table, offset: number)` | 1237 |  |
-| `SoundManager:setSamplePitchOffset(sample: table, offset: number)` | 1247 |  |
-| `SoundManager:setSampleLowpassGainOffset(sample: table, offset: number)` | 1257 |  |
-| `SoundManager:setSampleVolume(sample: table, volume: number)` | 1267 |  |
-| `SoundManager:setSampleVolumeScale(sample: table, volumeScale: number)` | 1277 |  |
-| `SoundManager:getSampleVolumeScale(sample: table) → number` | 1287 |  |
-| `SoundManager:setSamplePitch(sample: table, pitch: number)` | 1299 |  |
-| `SoundManager:getIsSamplePlaying(sample: table) → boolean` | 1309 |  |
-| `SoundManager:setSampleLoopSynthesisParameters(sample: table, rpm: number, loadFactor: number)` | 1331 |  |
-| `SoundManager:setSamplesLoopSynthesisParameters(samples: table, rpm: number, loadFactor: number)` | 1352 |  |
-| `SoundManager:getSampleLoopSynthesisStartDuration(sample: table) → number` | 1362 |  |
-| `SoundManager:setCurrentSampleAttributes(sample: any, isIndoor: any)` | 1374 |  |
-| `SoundManager:getCurrentSampleVolume(sample: any)` | 1386 |  |
-| `SoundManager:getCurrentSamplePitch(sample: any)` | 1392 |  |
-| `SoundManager:getCurrentSampleLowpassGain(sample: any)` | 1398 |  |
-| `SoundManager:getCurrentRandomizationValue(sample: any, attribute: any)` | 1404 |  |
-| `SoundManager:getCurrentFadeFactor(sample: any)` | 1416 |  |
-| `SoundManager:setIsIndoor(isIndoor: boolean)` | 1429 |  |
-| `SoundManager:addIndoorStateChangedListener(target: any)` | 1449 |  |
-| `SoundManager:removeIndoorStateChangedListener(target: any)` | 1455 |  |
-| `SoundManager:getIsIndoor() → boolean` | 1462 |  |
-| `SoundManager:getModifierFactor(sample: table, modifierName: string) → number` | 1471 |  |
-| `SoundManager:consoleCommandToggleDebug()` | 1484 |  |
-| `SoundManager.registerModifierXMLPaths(schema: any, path: any)` | 1505 |  |
-| `SoundManager.registerSampleXMLPaths(schema: table, basePath: string, xmlElementName: string)` | 1516 |  |
+| `SoundManager.new(customMt: table?) → SoundManager` | 30 | ✍ Creates the manager and registers the console command gsSoundManagerDebug, which toggles the global debug overlay. |
+| `SoundManager:initDataStructures()` | 40 | ✍ Resets all sample lists, loads the default sound templates, creates the SoundModifierType global table, sets an open-field reverb effect on slot 0 and clears the indoor listeners. |
+| `SoundManager:delete()` | 67 | ✍ Deletes the sound template XML file handle if one is open. Does not delete the samples themselves. |
+| `SoundManager:registerModifierType(typeName: any, func: any, minFunc: any, maxFunc: any) → boolean` | 77 | ✍ Registers a named (upper-cased) modifier type with a value callback and optional min and max callbacks, and returns its index. An existing name returns its index; a non-function callback logs an error. Used by specializations so XML modifiers can follow vehicle state. |
+| `SoundManager:loadSoundTemplates(xmlFilename: any) → boolean` | 104 | ✍ Opens the given template XML, indexes every template by name (duplicates produce a warning) and keeps the file open. Returns true on success, false if the file could not be loaded. |
+| `SoundManager:reloadSoundTemplates()` | 135 | ✍ Clears the template index, closes the template XML and reloads the default one. Handy for iterating on templates during development. |
+| `SoundManager:cloneSample(sample: table, linkNode: integer, modifierTargetObject: any) → table` | 153 | ✍ Duplicates a sample: copies the table and modifiers, creates a new audio source linked to the given node (unless 2D), sets group and reverb, rebuilds source randomisations, and registers the copy. Returns it. Note: in the no-reverb branch the effect is removed from the original sample's sound, not the clone's. |
+| `SoundManager:cloneSample2D(sample: table, linkNode: integer, modifierTargetObject: any) → table` | 204 | ✍ Duplicates a sample as a non-spatial 2D sample: loads the file into a new engine sample, applies the audio group, rebuilds randomisations and registers the copy. The link node argument is not used. |
+| `SoundManager:validateSampleDefinition(xmlFile: integer, baseKey: string, sampleName: string, baseDir: string, audioGroup: string, is2D: boolean, components: table, i3dMappings: table, externalSoundsFile: any) → boolean, boolean, integer, string, integer` | 262 | ✍ Checks that a sample element exists in the XML or in an optional external sounds file, and for 3D samples resolves its link node (falling back to the root component). Returns validity, whether the external file was used, the XML handle, the element key and the link node. |
+| `SoundManager:loadSample2DFromXML(xmlFile: integer, baseKey: string, sampleName: string, baseDir: string, loops: integer, audioGroup: string, requiresFile: boolean?)` | 325 | ✍ Loads a non-spatial sample for client-only contexts such as the UI. Applies the template and XML attributes, creates the engine sample and registers it. Returns the sample, or nil if the definition is missing or invalid. |
+| `SoundManager:loadSampleFromXML(xmlFile: integer\|XMLFile, baseKey: string, sampleName: string, baseDir: string, components: (table\|integer), loops: integer, audioGroup: integer, i3dMappings: table?, modifierTargetObject: table?, requiresFile: boolean?) → table?` | 385 | ✍ Loads a 3D sample from XML, linked to a node, using template and XML attributes. A modifier target object can supply an external sounds file and a volume factor. Creates the audio source and registers the sample; returns nil if invalid. |
+| `SoundManager:loadSamplesFromXML(xmlFile: integer, baseKey: string, sampleName: string, baseDir: string, components: table, loops: integer, audioGroup: integer, i3dMappings: table, modifierTargetObject: table?, samples: table?) → table` | 452 | ✍ Loads consecutive indexed samples (name(0), name(1), ...) until one is missing and appends them to the given or a new table, which it returns. |
+| `SoundManager:createAudioSource(sample: any, filename: any)` | 470 | ✍ Replaces the sample's 3D audio source with one built from the given file, using its radii, volume and loops, then finishes setup through onCreateAudioSource. Does nothing for an empty file name. |
+| `SoundManager:onCreateAudioSource(sample: any, ignoreReverb: any)` | 489 | ✍ Finishes a 3D source: reads duration and ranges, applies group, volume, pitch, frequency filter, optional reverb and priority, disables autoplay, and links the node with its offset. |
+| `SoundManager:createAudio2d(sample: any, filename: any)` | 523 | ✍ Replaces the sample's 2D engine sample by one loaded from the given file, then calls onCreateAudio2d. Does nothing for an empty file name. |
+| `SoundManager:onCreateAudio2d(sample: any, ignoreReverb: any)` | 541 | ✍ Finishes a 2D sample: reads its duration and applies group, volume, pitch, frequency filter and optional reverb. |
+| `SoundManager:loadSampleAttributesFromTemplate(sample: any, templateName: any, baseDir: any, defaultLoops: any, xmlFile: any, sampleKey: any)` | 560 | ✍ Builds a sample from a named template of the template XML. If the template is unknown, logs an error and returns nil; returns nil too if the template attributes fail to load. |
+| `SoundManager:loadSampleAttributesFromXML(sample: table, xmlFile: integer, key: string, baseDir: any, defaultLoops: any, requiresFile: any)` | 592 | ✍ Reads all sample attributes (file, radii, scales, indoor/outdoor volume, pitch and lowpass, loops, reverb, priority, fades, debug flag), first applying a parent template if given, then modifiers and randomisations. Returns true. Note: the missing-file check can never trigger because the file name defaults to an empty string. |
+| `SoundManager:loadModifiersFromXML(sample: table, xmlFile: integer, key: string)` | 684 | ✍ Reads modifier elements for each modifiable attribute (SAMPLE_MODIFIER_ATTRIBUTES, defined elsewhere) into linear animation curves per modifier type. Unknown types are silently skipped in release builds. |
+| `SoundManager:loadRandomizationsFromXML(sample: table, xmlFile: integer, key: string, baseDir: any)` | 726 | ✍ Reads volume, pitch and lowpass randomisation ranges (indoor and/or outdoor lists) and alternative source files, where '-' means silence. Warns if a range could give negative volume, and adds the base file to the alternatives once. |
+| `SoundManager:getRandomSample(sample: any, filename: any)` | 807 | ✍ Creates an alternative-source entry for a file: a 3D audio source or a 2D sample, with reverb and priority set. The file name '-' gives an empty (silent) entry. |
+| `SoundManager:update(dt: any)` | 840 | ✍ Per-frame update that walks the active sample list, at most MAX_SAMPLES_PER_FRAME entries per call, resuming where it stopped. For a playing sample it updates fade, modifiers and attributes; finished samples leave the list. |
+| `SoundManager:draw()` | 865 | ✍ Debug overlay: for flagged samples near the camera, draws link nodes, radii and a text list on screen (hidden link nodes in red). Returns immediately if there are no debug samples. |
+| `SoundManager:updateSampleFade(sample: table, dt: number)` | 953 | ✍ Advances the sample's fade-in timer by dt (ms), capped at its fadeIn duration. Does nothing if fadeIn is 0. |
+| `SoundManager:updateSampleModifiers(sample: table)` | 964 | ✍ For each modifiable attribute, multiplies the values of all available modifier types and stores the result as the modifier's current value. |
+| `SoundManager:updateSampleAttributes(sample: table, force: boolean)` | 990 | ✍ Switches the sample to indoor or outdoor attributes when the state changed (or forced), then pushes volume, pitch and lowpass to the engine, including modifiers, and loop synthesis RPM and load when modified. |
+| `SoundManager:updateSampleRandomizations(sample: table)` | 1023 | ✍ Called before playback: picks a random volume, pitch and lowpass offset from the list matching the indoor state, and a random alternative source (retrying up to 3 times to avoid repeating the last). May stop the previous sound and switch the sample to the chosen source or to silence. |
+| `SoundManager:getSampleModifierValue(sample: table, attribute: table, typeIndex: string)` | 1095 | ✍ Evaluates one modifier curve for an attribute and type: calls the type's value function on the target object, normalises with min/max functions if present, and samples the curve. Returns value, input and availability. |
+| `SoundManager:deleteSample(sample: table)` | 1117 | ✍ Stops the sample if playing, removes it from all internal lists and deletes its audio nodes, 2D samples and alternative sources. The delay and afterSample parameters passed by deleteSamples are ignored. |
+| `SoundManager:deleteSamples(samples: table, delay: any, afterSample: any)` | 1159 | ✍ Calls deleteSample on every entry of a table of samples. Nil tables are ignored. |
+| `SoundManager:playSample(sample: table, delay: number?, afterSample: table?)` | 1172 | ✍ Starts a sample: refreshes randomisation, modifiers and attributes, then plays it with its loop count, optional delay and optional chaining after another sample, and adds it to the active list. Local-only sounds play only if the target object is active for local sound. |
+| `SoundManager:playSamples(samples: table, delay: integer?, afterSample: table?)` | 1207 | ✍ Plays every sample of a table with the same optional delay and afterSample. |
+| `SoundManager:stopSample(sample: table, delay: number?, fadeOut: number?)` | 1218 | ✍ Stops a sample through the engine. The default stop delay comes from loop synthesis, and the default fade-out is the one stored in the sample. |
+| `SoundManager:stopSamples(samples: table)` | 1227 | ✍ Stops every sample of a table. |
+| `SoundManager:setSampleVolumeOffset(sample: table, offset: number)` | 1237 | ✍ Sets an additive volume offset on the sample, applied the next time attributes are updated. |
+| `SoundManager:setSamplePitchOffset(sample: table, offset: number)` | 1247 | ✍ Sets an additive pitch offset on the sample, applied the next time attributes are updated. |
+| `SoundManager:setSampleLowpassGainOffset(sample: table, offset: number)` | 1257 | ✍ Sets an additive lowpass gain offset on the sample, applied the next time attributes are updated. |
+| `SoundManager:setSampleVolume(sample: table, volume: number)` | 1267 | ✍ Sets the engine volume of the sample directly (it may be overwritten by the next attribute update). |
+| `SoundManager:setSampleVolumeScale(sample: table, volumeScale: number)` | 1277 | ✍ Sets the volume scale multiplier stored on the sample. |
+| `SoundManager:getSampleVolumeScale(sample: table) → number` | 1287 | ✍ Returns the sample's volume scale, or 1 if the sample is nil. |
+| `SoundManager:setSamplePitch(sample: table, pitch: number)` | 1299 | ✍ Sets the engine pitch of the sample directly (it may be overwritten by the next attribute update). |
+| `SoundManager:getIsSamplePlaying(sample: table) → boolean` | 1309 | ✍ Returns true if the sample exists, has an engine sample and the engine reports it playing; false otherwise. |
+| `SoundManager:setSampleLoopSynthesisParameters(sample: table, rpm: number, loadFactor: number)` | 1331 | ✍ Sets loop synthesis RPM (divided by the sample's ratio and clamped to 0..1) and/or load factor on the engine sample. Nil arguments are skipped. |
+| `SoundManager:setSamplesLoopSynthesisParameters(samples: table, rpm: number, loadFactor: number)` | 1352 | ✍ Applies the same loop synthesis RPM and load factor to every sample of a table. |
+| `SoundManager:getSampleLoopSynthesisStartDuration(sample: table) → number` | 1362 | ✍ Returns the engine's loop synthesis start duration for .gls samples, 0 for other files or a nil sample. |
+| `SoundManager:setCurrentSampleAttributes(sample: any, isIndoor: any)` | 1374 | ✍ Points the sample's current attributes and randomisation list to the indoor or outdoor set. |
+| `SoundManager:getCurrentSampleVolume(sample: any)` | 1386 | ✍ Computes the final volume: (current volume plus randomisation) times fade factor times volume scale plus offset, never below 0. |
+| `SoundManager:getCurrentSamplePitch(sample: any)` | 1392 | ✍ Computes the final pitch: (current pitch plus randomisation) times pitch scale plus offset. |
+| `SoundManager:getCurrentSampleLowpassGain(sample: any)` | 1398 | ✍ Computes the final lowpass gain: (current gain plus randomisation) times its scale plus offset. |
+| `SoundManager:getCurrentRandomizationValue(sample: any, attribute: any)` | 1404 | ✍ Returns the current randomisation value of an attribute (volume, pitch, lowpassGain), or 0 if none is set. |
+| `SoundManager:getCurrentFadeFactor(sample: any)` | 1416 | ✍ Returns the fade-in progress (elapsed over fadeIn), or 1 when the sample has no fade-in. |
+| `SoundManager:setIsIndoor(isIndoor: boolean)` | 1429 | ✍ Sets the global indoor state (for example when the camera enters a cabin). On change, refreshes the playing samples immediately and calls onIndoorStateChanged on every registered listener. |
+| `SoundManager:addIndoorStateChangedListener(target: any)` | 1449 | ✍ Adds a target to be notified through its onIndoorStateChanged method (no duplicates). |
+| `SoundManager:removeIndoorStateChangedListener(target: any)` | 1455 | ✍ Removes a target from the indoor state listeners. |
+| `SoundManager:getIsIndoor() → boolean` | 1462 | ✍ Returns whether sounds are currently in indoor mode. |
+| `SoundManager:getModifierFactor(sample: table, modifierName: string) → number` | 1471 | ✍ Returns the current computed value of a named modifier on the sample, or 1.0 if there is none. |
+| `SoundManager:consoleCommandToggleDebug()` | 1484 | ✍ Console command handler: toggles SoundManager.GLOBAL_DEBUG_ENABLED, adds all 3D samples to the debug list (or keeps only the XML-flagged ones) and returns a status string. |
+| `SoundManager.registerModifierXMLPaths(schema: any, path: any)` | 1505 | ✍ Registers on a schema the modifier child paths (type, value, modifiedValue) under the given path. The type attribute lists the known SoundModifierType names. |
+| `SoundManager.registerSampleXMLPaths(schema: table, basePath: string, xmlElementName: string)` | 1516 | ✍ Registers on a schema the XML paths of a sound element (linkNode, linkNodeOffset, template) plus the generic ones from registerGenericSampleXMLPaths, which is not defined in this file (UNVERIFIED). Logs an error if the element name is missing or has spaces. |

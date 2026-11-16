@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/AIFieldWorkerStateEvent.lua",
+ "module": {
+  "en": "Server-to-client event that mirrors the field worker (AI field work) state of a vehicle on clients by calling `startFieldWorker` or `stopFieldWorker`. Writing it from a client triggers an assertion.",
+  "fr": "Événement serveur vers client qui reproduit sur les clients l'état du field worker (travail de champ IA) d'un véhicule en appelant `startFieldWorker` ou `stopFieldWorker`. L'écrire depuis un client déclenche une assertion."
+ },
+ "fonctions": {
+  "AIFieldWorkerStateEvent.emptyNew": {
+   "en": "Creates an empty event instance with the class metatable; used by the network layer before `readStream` fills it.",
+   "fr": "Crée une instance d'événement vide avec la métatable de la classe ; utilisée par la couche réseau avant que `readStream` ne la remplisse."
+  },
+  "AIFieldWorkerStateEvent.new": {
+   "en": "Creates the event for a vehicle with the field worker active flag.",
+   "fr": "Crée l'événement pour un véhicule avec l'indicateur d'activité du field worker."
+  },
+  "AIFieldWorkerStateEvent:readStream": {
+   "en": "Reads the vehicle and the active flag, then calls `run`.",
+   "fr": "Lit le véhicule et l'indicateur d'activité, puis appelle `run`."
+  },
+  "AIFieldWorkerStateEvent:writeStream": {
+   "en": "Writes vehicle and flag. Asserts that it is only written on the server side (server to client event).",
+   "fr": "Écrit véhicule et indicateur. Vérifie par assertion qu'il n'est écrit que côté serveur (événement serveur vers client)."
+  },
+  "AIFieldWorkerStateEvent:run": {
+   "en": "On a synchronized vehicle, calls `startFieldWorker` or `stopFieldWorker` depending on the flag.",
+   "fr": "Sur un véhicule synchronisé, appelle `startFieldWorker` ou `stopFieldWorker` selon l'indicateur."
+  }
+ }
+}

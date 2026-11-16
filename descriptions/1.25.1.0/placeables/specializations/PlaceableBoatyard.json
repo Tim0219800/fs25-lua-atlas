@@ -1,0 +1,61 @@
+{
+ "fichier": "placeables/specializations/PlaceableBoatyard.lua",
+ "module": {
+  "en": "Placeable specialization for the boatyard, a boat-building site driven by a state machine of `BoatyardState*` classes loaded from XML. It manages a spline the boat travels on, an unloading (selling) station and storage, a player trigger, and sailing boats that react to wind via the wind updater. Several of its registered functions have no body in the SDK dump (UNVERIFIED).",
+  "fr": "Spécialisation de placeable pour le chantier naval, un site de construction de bateau piloté par une machine à états de classes `BoatyardState*` chargées depuis le XML. Elle gère une spline sur laquelle se déplace le bateau, une station de déchargement (vente) et un stockage, un déclencheur joueur, et des bateaux qui naviguent en fonction du vent via le `windUpdater`. Plusieurs de ses fonctions enregistrées n'ont pas de corps dans le dump du SDK (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlaceableBoatyard.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specializations.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "PlaceableBoatyard.registerFunctions": {
+   "en": "Registers 13 functions on the placeable type (boat loading, mesh progress, state and spline time handling, boat creation/release, wind values, fill level, player trigger, buy request). Their bodies are not in the dump: UNVERIFIED.",
+   "fr": "Enregistre 13 fonctions sur le type de placeable (chargement du bateau, progression des maillages, gestion de l'état et du temps de spline, création/libération du bateau, vent, niveau de remplissage, déclencheur joueur, demande d'achat). Leurs corps ne sont pas dans le dump : NON VÉRIFIÉ."
+  },
+  "PlaceableBoatyard.registerOverwrittenFunctions": {
+   "en": "Overrides `collectPickObjects`, `updateInfo` and `setOwnerFarmId`.",
+   "fr": "Surcharge `collectPickObjects`, `updateInfo` et `setOwnerFarmId`."
+  },
+  "PlaceableBoatyard.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete`, `onUpdate` and the four network stream events.",
+   "fr": "S'abonne à `onLoad`, `onDelete`, `onUpdate` et aux quatre événements de flux réseau."
+  },
+  "PlaceableBoatyard.registerXMLPaths": {
+   "en": "Declares the `boatyard` XML keys: spline, link node, player trigger, boat file and reward, progressive-visibility meshes, state machine states/transitions (delegating to the `BoatyardState*` classes), sailing splines with bobbing and swaying values, selling station and storage.",
+   "fr": "Déclare les clés XML `boatyard` : spline, nœud de liaison, déclencheur joueur, fichier et récompense du bateau, maillages à visibilité progressive, états et transitions de la machine à états (déléguant aux classes `BoatyardState*`), splines de navigation avec valeurs de tangage et de roulis, station de vente et stockage."
+  },
+  "PlaceableBoatyard.registerSavegameXMLPaths": {
+   "en": "Declares the savegame keys `state#index` and `splineTime`, and delegates to `BoatyardStateBuilding` and `Storage`.",
+   "fr": "Déclare les clés de sauvegarde `state#index` et `splineTime`, et délègue à `BoatyardStateBuilding` et `Storage`."
+  },
+  "PlaceableBoatyard:onLoad": {
+   "en": "Loads the spline, the boat I3D (asynchronously), the unloading station and storage, the player trigger, the XML-defined state machine with its transitions, the sailing splines, and registers as a wind-change listener. Logs XML errors for duplicate or unknown states or classes.",
+   "fr": "Charge la spline, le I3D du bateau (de façon asynchrone), la station de déchargement et le stockage, le déclencheur joueur, la machine à états définie en XML avec ses transitions, les splines de navigation, et s'enregistre comme écouteur des changements de vent. Journalise des erreurs XML pour les états ou classes en double ou inconnus."
+  },
+  "PlaceableBoatyard:collectPickObjects": {
+   "en": "Skips picking nodes that are the exact-fill root node of one of the unloading station's triggers; any other node goes to the parent implementation.",
+   "fr": "Ignore les nœuds de sélection qui sont le nœud racine de remplissage exact d'un des déclencheurs de la station de déchargement ; les autres nœuds sont transmis à l'implémentation parent."
+  },
+  "PlaceableBoatyard:saveToXMLFile": {
+   "en": "Saves the state index, spline time and the current state's data only when the state index is above 0, and always saves the storage.",
+   "fr": "Sauvegarde l'index d'état, le temps de spline et les données de l'état courant seulement si l'index d'état est supérieur à 0, et sauvegarde toujours le stockage."
+  },
+  "PlaceableBoatyard:loadFromXMLFile": {
+   "en": "Replays states from 0 up to the saved index through `setState`, restores the spline time, then loads the current state's data and the storage.",
+   "fr": "Rejoue les états de 0 jusqu'à l'index sauvegardé via `setState`, restaure le temps de spline, puis charge les données de l'état courant et le stockage."
+  },
+  "PlaceableBoatyard:onReadStream": {
+   "en": "Client side join: reads and registers the unloading station and storage, replays states up to the received index, then reads spline time, mesh progress values and the next sailing spline index.",
+   "fr": "Connexion côté client : lit et enregistre la station de déchargement et le stockage, rejoue les états jusqu'à l'index reçu, puis lit le temps de spline, la progression des maillages et l'index de la prochaine spline de navigation."
+  },
+  "PlaceableBoatyard:onWriteStream": {
+   "en": "Server side join: writes the unloading station and storage, the state index and current state data, spline time, mesh progress values and the next sailing spline index (mirror of `onReadStream`).",
+   "fr": "Connexion côté serveur : écrit la station de déchargement et le stockage, l'index d'état et les données de l'état courant, le temps de spline, la progression des maillages et l'index de la prochaine spline (miroir de `onReadStream`)."
+  },
+  "PlaceableBoatyard:setOwnerFarmId": {
+   "en": "Calls the parent, then, when the owner is `AccessHandler.EVERYONE`, registers the unloading station as a selling station and storage unloading station, otherwise removes it. The player trigger is visible only when the owner is EVERYONE.",
+   "fr": "Appelle le parent puis, si le propriétaire est `AccessHandler.EVERYONE`, enregistre la station de déchargement comme station de vente et de déchargement du stockage, sinon la retire. Le déclencheur joueur n'est visible que si le propriétaire est EVERYONE."
+  }
+ }
+}

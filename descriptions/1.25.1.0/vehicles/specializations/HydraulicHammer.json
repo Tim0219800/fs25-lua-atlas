@@ -1,0 +1,69 @@
+{
+ "fichier": "vehicles/specializations/HydraulicHammer.lua",
+ "module": {
+  "en": "Vehicle specialization for a hydraulic hammer that breaks destructible map objects. It requires TurnOnVehicle and AnimatedVehicle. While turned on, it periodically casts a short ray from a work node, asks the mission's destructible map object system for the destructible hit, checks land access for the owner farm and adds damage per hit. On clients it plays effects, sounds (pitch shifted by progress), animation nodes and an optional hit animation. The destructible system class itself is not in this dump (UNVERIFIED).",
+  "fr": "Spécialisation de véhicule pour un marteau hydraulique qui casse des objets destructibles de la carte. Elle requiert TurnOnVehicle et AnimatedVehicle. Une fois allumée, elle lance périodiquement un court rayon depuis un nœud de travail, interroge le système d'objets destructibles de la mission pour trouver l'objet touché, vérifie l'accès au terrain pour la ferme propriétaire et ajoute des dégâts à chaque coup. Côté client, elle joue effets, sons (hauteur modulée par la progression), nœuds d'animation et une animation de coup facultative. La classe du système d'objets destructibles n'est pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HydraulicHammer.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both TurnOnVehicle and AnimatedVehicle.",
+   "fr": "Renvoie true seulement si le type de véhicule possède TurnOnVehicle et AnimatedVehicle."
+  },
+  "HydraulicHammer.initSpecialization": {
+   "en": "Registers the XML schema under vehicle.hydraulicHammer: work node (raycast node, aligned node, damage, hit interval, raycast distance, supported types), effects, start/stop/idle/work sounds with a progress pitch factor, animation nodes and a hit animation.",
+   "fr": "Enregistre le schéma XML sous vehicle.hydraulicHammer : nœud de travail (nœud de raycast, nœud aligné, dégâts, intervalle de coup, distance de raycast, types supportés), effets, sons start/stop/idle/work avec facteur de hauteur selon la progression, nœuds d'animation et animation de coup."
+  },
+  "HydraulicHammer.registerFunctions": {
+   "en": "Registers hydraulicHammerRaycastCallback as a vehicle function.",
+   "fr": "Enregistre hydraulicHammerRaycastCallback comme fonction de véhicule."
+  },
+  "HydraulicHammer.registerOverwrittenFunctions": {
+   "en": "Overrides getDirtMultiplier, getWearMultiplier and getConsumingLoad to account for recent hammering.",
+   "fr": "Surcharge getDirtMultiplier, getWearMultiplier et getConsumingLoad pour tenir compte des coups récents."
+  },
+  "HydraulicHammer.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdate, onDeactivate, onTurnedOn and onTurnedOff.",
+   "fr": "Abonne à onLoad, onDelete, onUpdate, onDeactivate, onTurnedOn et onTurnedOff."
+  },
+  "HydraulicHammer:onLoad": {
+   "en": "Loads the work node settings (damage per hit, hit interval range in ms, ray distance, supported destructible types), the static-object collision mask and, on clients, effects, sounds, animation nodes and the hit animation. Note: code defaults (damage 1, distance 0.4) differ from the schema defaults (5, 0.3).",
+   "fr": "Charge les réglages du nœud de travail (dégâts par coup, plage d'intervalle de coup en ms, distance du rayon, types destructibles supportés), le masque de collision des objets statiques et, côté client, effets, sons, nœuds d'animation et animation de coup. À noter : les valeurs par défaut du code (dégâts 1, distance 0,4) diffèrent de celles du schéma (5, 0,3)."
+  },
+  "HydraulicHammer:onDelete": {
+   "en": "Deletes the sound samples, animation nodes and work node effects.",
+   "fr": "Supprime les échantillons sonores, les nœuds d'animation et les effets du nœud de travail."
+  },
+  "HydraulicHammer:onUpdate": {
+   "en": "While turned on and once the next hit time is reached, stops effects and fires a closest-hit raycast down the work node's -Y axis against static objects. The callback handles the hit.",
+   "fr": "Tant qu'il est allumé et dès que l'instant du prochain coup est atteint, arrête les effets et lance un raycast au plus proche le long de l'axe -Y du nœud de travail contre les objets statiques. Le callback traite le coup."
+  },
+  "HydraulicHammer:hydraulicHammerRaycastCallback": {
+   "en": "Raycast callback. Finds the destructible at the hit, refuses (with a warning to the driver) if the farm has no land access or the type is unsupported, otherwise adds damage and plays hit animation, pitch-shifted sound and effects, then schedules the next hit. Returns false to stop further callbacks when handled.",
+   "fr": "Callback du raycast. Trouve l'objet destructible touché, refuse (avec un avertissement au conducteur) si la ferme n'a pas accès au terrain ou si le type n'est pas supporté, sinon ajoute des dégâts et joue animation de coup, son à hauteur modulée et effets, puis planifie le prochain coup. Renvoie false pour stopper les callbacks suivants une fois traité."
+  },
+  "HydraulicHammer:onDeactivate": {
+   "en": "Client only: stops the work node effects when the vehicle is deactivated.",
+   "fr": "Client uniquement : arrête les effets du nœud de travail quand le véhicule est désactivé."
+  },
+  "HydraulicHammer:onTurnedOn": {
+   "en": "Client only: stops all sounds, plays the start sound then the idle sound after it, and starts the animation nodes.",
+   "fr": "Client uniquement : arrête tous les sons, joue le son de démarrage puis le son de ralenti à sa suite, et démarre les nœuds d'animation."
+  },
+  "HydraulicHammer:onTurnedOff": {
+   "en": "Client only: stops effects, sounds, animation nodes and the hit animation, and plays the stop sound.",
+   "fr": "Client uniquement : arrête effets, sons, nœuds d'animation et animation de coup, et joue le son d'arrêt."
+  },
+  "HydraulicHammer:getDirtMultiplier": {
+   "en": "Adds the work dirt multiplier to the parent value if a hit occurred in the last 500 ms.",
+   "fr": "Ajoute le multiplicateur de salissure de travail à la valeur du parent si un coup a eu lieu dans les 500 dernières ms."
+  },
+  "HydraulicHammer:getWearMultiplier": {
+   "en": "Adds the work wear multiplier to the parent value if a hit occurred in the last 500 ms.",
+   "fr": "Ajoute le multiplicateur d'usure de travail à la valeur du parent si un coup a eu lieu dans les 500 dernières ms."
+  },
+  "HydraulicHammer:getConsumingLoad": {
+   "en": "Adds one unit of load (value and count) to the parent result while a hit occurred in the last 500 ms.",
+   "fr": "Ajoute une unité de charge (valeur et compteur) au résultat du parent tant qu'un coup a eu lieu dans les 500 dernières ms."
+  }
+ }
+}

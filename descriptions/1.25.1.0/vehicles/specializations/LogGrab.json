@@ -1,0 +1,157 @@
+{
+ "fichier": "vehicles/specializations/LogGrab.lua",
+ "module": {
+  "en": "Specialization for log grabs and grapples that hold trees or logs. Each `vehicle.logGrab.grab` (optionally per `logGrab` configuration) has a tree trigger, claws tied to component joints, an optional claw animation and lock animation, and a tree detection box. When the claws close, tree shapes in the trigger are fixed with a physics joint (server only), and joint limits and drive forces adapt to the mounted mass. It cooperates with Cylindered moving tools, Foldable and WoodHarvester when present, and raises `onLogGrabMountedTreesChanged`. No prerequisites.",
+  "fr": "Spécialisation pour les grappins et pinces à grumes qui tiennent arbres ou billes. Chaque `vehicle.logGrab.grab` (éventuellement par configuration `logGrab`) possède un déclencheur d'arbres, des pinces liées à des joints de composant, une animation de pince et une animation de verrouillage optionnelles, et une boîte de détection d'arbre. Quand les pinces se ferment, les arbres dans le déclencheur sont fixés par un joint physique (serveur uniquement), et limites de joint et forces d'entraînement s'adaptent à la masse montée. Coopère avec les moving tools de Cylindered, Foldable et WoodHarvester si présents, et lève `onLogGrabMountedTreesChanged`. Aucun prérequis."
+ },
+ "fonctions": {
+  "LogGrab.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours vrai : aucune autre spécialisation n'est requise."
+  },
+  "LogGrab.initSpecialization": {
+   "en": "Registers the `logGrab` vehicle configuration type, the grab XML paths (base and per configuration) and the savegame attribute for each grab's claw state.",
+   "fr": "Enregistre le type de configuration `logGrab`, les chemins XML de grappin (de base et par configuration) et l'attribut de sauvegarde de l'état de pince de chaque grappin."
+  },
+  "LogGrab.registerLogGrabXMLPaths": {
+   "en": "Registers all XML paths of one grab: joint nodes, limits, claws and their moving tools, claw and lock animations, tree detection, component joint limits and mass-based drive force settings. Note: `clawAnimation#foldMaxLimit` has default 1 in the schema but 0 in the loader.",
+   "fr": "Enregistre tous les chemins XML d'un grappin : nœuds de joint, limites, pinces et leurs moving tools, animations de pince et de verrouillage, détection d'arbre, limites de joints de composant et forces d'entraînement selon la masse. À noter : `clawAnimation#foldMaxLimit` vaut 1 par défaut dans le schéma mais 0 dans le chargeur."
+  },
+  "LogGrab.registerEvents": {
+   "en": "Registers the specialization event `onLogGrabMountedTreesChanged`.",
+   "fr": "Enregistre l'événement de spécialisation `onLogGrabMountedTreesChanged`."
+  },
+  "LogGrab.registerFunctions": {
+   "en": "Registers the grab loading, claw state, mounting and unmounting functions on the vehicle type.",
+   "fr": "Enregistre sur le type de véhicule les fonctions de chargement du grappin, d'état de pince, de montage et de démontage."
+  },
+  "LogGrab.registerOverwrittenFunctions": {
+   "en": "Overrides `setComponentJointFrame`, `getMovingToolMoveValue` and `onDelimbTree`. Note: `addNodeObjectMapping`, `removeNodeObjectMapping` and `updateDebugValues` are defined below but not registered here (UNVERIFIED whether registered elsewhere).",
+   "fr": "Surcharge `setComponentJointFrame`, `getMovingToolMoveValue` et `onDelimbTree`. À noter : `addNodeObjectMapping`, `removeNodeObjectMapping` et `updateDebugValues` sont définies plus bas mais non enregistrées ici (NON VÉRIFIÉ si enregistrées ailleurs)."
+  },
+  "LogGrab.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onDelete, onReadStream, onWriteStream, onUpdateTick, onCutTree, onTurnedOn, onRegisterActionEvents, onLogGrabMountedTreesChanged, onFoldStateChanged and onFoldTimeChanged. Note: onTurnedOff is not subscribed here.",
+   "fr": "S'abonne aux événements onLoad, onPostLoad, onDelete, onReadStream, onWriteStream, onUpdateTick, onCutTree, onTurnedOn, onRegisterActionEvents, onLogGrabMountedTreesChanged, onFoldStateChanged et onFoldTimeChanged. À noter : onTurnedOff n'est pas abonné ici."
+  },
+  "LogGrab:onLoad": {
+   "en": "Loads the grabs of the selected configuration and of the base `vehicle.logGrab` block. If none loads, removes all other event listeners of the specialization.",
+   "fr": "Charge les grappins de la configuration choisie et du bloc de base `vehicle.logGrab`. Si aucun ne se charge, retire tous les autres écouteurs d'événements de la spécialisation."
+  },
+  "LogGrab:onPostLoad": {
+   "en": "Restores the saved claw state (or initial state) and plays the closed animation instantly if closed; resolves the moving tool references and drops entries that cannot be found.",
+   "fr": "Restaure l'état de pince sauvegardé (ou initial) et joue instantanément l'animation de fermeture si fermée ; résout les références de moving tools et supprime celles introuvables."
+  },
+  "LogGrab:onDelete": {
+   "en": "Removes the tree trigger callbacks of all grabs.",
+   "fr": "Supprime les callbacks de déclencheur d'arbres de tous les grappins."
+  },
+  "LogGrab:saveToXMLFile": {
+   "en": "Saves the claw animation state of each grab that has a claw animation.",
+   "fr": "Sauvegarde l'état de l'animation de pince de chaque grappin qui en possède une."
+  },
+  "LogGrab:onReadStream": {
+   "en": "Client join: reads the claw state of each animated grab and applies it without sending an event.",
+   "fr": "Connexion client : lit l'état de pince de chaque grappin animé et l'applique sans envoyer d'événement."
+  },
+  "LogGrab:onWriteStream": {
+   "en": "Server join: writes the claw state of each animated grab.",
+   "fr": "Connexion côté serveur : écrit l'état de pince de chaque grappin animé."
+  },
+  "LogGrab:onUpdateTick": {
+   "en": "Server only. Decides per grab whether it is closed (from claw joint angles or the claw animation), mounts pending tree shapes with joints when closed, unmounts them when open, adjusts joint spring damping, lock animation and component joint limits.",
+   "fr": "Serveur uniquement. Détermine pour chaque grappin s'il est fermé (angles de joints des pinces ou animation de pince), monte les arbres en attente avec des joints quand il est fermé, les démonte quand il est ouvert, ajuste l'amortissement des joints, l'animation de verrouillage et les limites de joints de composant."
+  },
+  "LogGrab:loadLogGrabFromXML": {
+   "en": "Loads one grab into the given table: claws, animations, joint nodes, tree trigger (must have only the Tree collision bit), detection node, joint limits and mass settings. Returns false if the trigger or detection node is missing; a wrong trigger mask returns nil.",
+   "fr": "Charge un grappin dans la table donnée : pinces, animations, nœuds de joint, déclencheur d'arbres (doit avoir uniquement le bit de collision Tree), nœud de détection, limites de joints et réglages de masse. Renvoie faux si le déclencheur ou le nœud de détection manque ; un mauvais masque de déclencheur renvoie nil."
+  },
+  "LogGrab:updateLogGrabClawState": {
+   "en": "Measures the claw joint rotation on its axis and returns true when the claw counts as closed (past the threshold, or fully closed moving tool) for long enough, or after a joint change timeout; otherwise false. `ignoreTiming` skips the timers.",
+   "fr": "Mesure la rotation du joint de pince sur son axe et renvoie vrai quand la pince est considérée fermée (au-delà du seuil, ou moving tool totalement fermé) assez longtemps, ou après un délai suite à un mouvement du joint ; sinon faux. `ignoreTiming` ignore les minuteurs."
+  },
+  "LogGrab:onCutTree": {
+   "en": "Server only: when a new tree is cut with a positive radius, closes every grab whose state change is allowed.",
+   "fr": "Serveur uniquement : quand un nouvel arbre est coupé avec un rayon positif, ferme chaque grappin dont le changement d'état est autorisé."
+  },
+  "LogGrab:onTurnedOn": {
+   "en": "Server only: opens every grab whose state change is allowed.",
+   "fr": "Serveur uniquement : ouvre chaque grappin dont le changement d'état est autorisé."
+  },
+  "LogGrab:onTurnedOff": {
+   "en": "Server only: closes every grab whose state change is allowed. Note: not registered as a listener in `registerEventListeners`, so it may never be called by this specialization (UNVERIFIED).",
+   "fr": "Serveur uniquement : ferme chaque grappin dont le changement d'état est autorisé. À noter : non enregistrée comme écouteur dans `registerEventListeners`, elle peut ne jamais être appelée par cette spécialisation (NON VÉRIFIÉ)."
+  },
+  "LogGrab:onRegisterActionEvents": {
+   "en": "Client: registers one input action per grab with a claw animation (respecting the control group) and refreshes the labels.",
+   "fr": "Client : enregistre une action d'entrée par grappin possédant une animation de pince (en respectant le groupe de contrôle) et met à jour les libellés."
+  },
+  "LogGrab.actionEventClawAnimation": {
+   "en": "Input callback: toggles the claw state of the grab whose index is passed as callback state, if allowed.",
+   "fr": "Callback d'entrée : bascule l'état de pince du grappin dont l'index est passé en état de callback, si autorisé."
+  },
+  "LogGrab.updateActionEvents": {
+   "en": "Updates each grab's input hint text (open or close) and enables it only when the state change is allowed.",
+   "fr": "Met à jour le texte d'aide d'entrée de chaque grappin (ouvrir ou fermer) et ne l'active que si le changement d'état est autorisé."
+  },
+  "LogGrab:setComponentJointFrame": {
+   "en": "Override: after the parent, records the time when a claw component joint was reframed, used to ignore claw state changes for a short time.",
+   "fr": "Surcharge : après le parent, enregistre l'instant où un joint de composant de pince a été recadré, pour ignorer un temps les changements d'état de pince."
+  },
+  "LogGrab:getMovingToolMoveValue": {
+   "en": "Override: stores the last move value of claw moving tools and blocks movement in the closing direction once the claw is past its closing threshold.",
+   "fr": "Surcharge : mémorise la dernière valeur de mouvement des moving tools de pince et bloque le mouvement dans le sens de fermeture une fois le seuil de fermeture dépassé."
+  },
+  "LogGrab:onDelimbTree": {
+   "en": "Override: opens any closed claw animation grab before delegating to the parent delimbing behaviour.",
+   "fr": "Surcharge : ouvre tout grappin à animation de pince fermée avant de déléguer au comportement d'ébranchage du parent."
+  },
+  "LogGrab:getGrabCanMountSplitShape": {
+   "en": "Returns false if the vehicle's fold time is outside the grab's mounting limits, true otherwise.",
+   "fr": "Renvoie faux si le temps de pliage du véhicule est hors des limites de montage du grappin, vrai sinon."
+  },
+  "LogGrab:mountSplitShape": {
+   "en": "Creates a physics joint between the grab root and the tree shape, placed at the detected tree area (or at the joint node, locked, if the test fails). Publishes `TREE_SHAPE_MOUNTED`, raises `onLogGrabMountedTreesChanged` and returns the joint index and transform.",
+   "fr": "Crée un joint physique entre la racine du grappin et l'arbre, placé sur la zone d'arbre détectée (ou sur le nœud de joint, verrouillé, si le test échoue). Publie `TREE_SHAPE_MOUNTED`, lève `onLogGrabMountedTreesChanged` et renvoie l'index et le transform du joint."
+  },
+  "LogGrab:unmountSplitShape": {
+   "en": "Removes the joint and its transform for a tree shape. The shape returns to the pending list unless `isDeleting` is true. Raises `onLogGrabMountedTreesChanged`.",
+   "fr": "Supprime le joint et son transform pour un arbre. L'arbre retourne dans la liste en attente sauf si `isDeleting` est vrai. Lève `onLogGrabMountedTreesChanged`."
+  },
+  "LogGrab:onLogGrabMountedTreesChanged": {
+   "en": "Server only: sums the mass of mounted trees and adjusts the angular drive max force of configured component joints by interpolation. Note: the code assigns index 1 twice and never index 2 of the force array, which looks like a bug.",
+   "fr": "Serveur uniquement : additionne la masse des arbres montés et ajuste par interpolation la force maximale d'entraînement angulaire des joints de composant configurés. À noter : le code affecte deux fois l'indice 1 et jamais l'indice 2 du tableau de forces, ce qui ressemble à un bug."
+  },
+  "LogGrab:onFoldStateChanged": {
+   "en": "Opens or closes grabs configured with open/close during folding when folding goes against the turn-on direction.",
+   "fr": "Ouvre ou ferme les grappins configurés pour s'ouvrir/se fermer pendant le pliage quand le pliage va à l'opposé du sens de mise en marche."
+  },
+  "LogGrab:onFoldTimeChanged": {
+   "en": "Refreshes the input hints when the fold time changes.",
+   "fr": "Rafraîchit les aides d'entrée quand le temps de pliage change."
+  },
+  "LogGrab:getIsLogGrabClawStateChangeAllowed": {
+   "en": "Returns false if the fold time is outside the claw animation fold limits of that grab, otherwise true.",
+   "fr": "Renvoie faux si le temps de pliage est hors des limites de pliage de l'animation de pince de ce grappin, sinon vrai."
+  },
+  "LogGrab:setLogGrabClawState": {
+   "en": "Sets the claw state of a grab (nil toggles) and plays the claw animation forward or backward, refreshes the hints and calls `LogGrabClawStateEvent.sendEvent` for network sync.",
+   "fr": "Définit l'état de pince d'un grappin (nil bascule) et joue l'animation de pince en avant ou en arrière, rafraîchit les aides et appelle `LogGrabClawStateEvent.sendEvent` pour la synchronisation réseau."
+  },
+  "LogGrab:logGrabTriggerCallback": {
+   "en": "Trigger callback: adds dynamic or kinematic split shapes entering the grab trigger to the pending list; on leave, removes them from pending or unmounts them if mounted.",
+   "fr": "Callback de déclencheur : ajoute à la liste en attente les arbres dynamiques ou cinématiques entrant dans le déclencheur du grappin ; à la sortie, les retire de l'attente ou les démonte s'ils sont montés."
+  },
+  "LogGrab:addNodeObjectMapping": {
+   "en": "Override-style function: after the parent, maps each grab trigger node to this vehicle in the given list.",
+   "fr": "Fonction de type surcharge : après le parent, associe chaque nœud de déclencheur de grappin à ce véhicule dans la liste donnée."
+  },
+  "LogGrab:removeNodeObjectMapping": {
+   "en": "Override-style function: after the parent, removes the grab trigger node entries from the given list.",
+   "fr": "Fonction de type surcharge : après le parent, retire de la liste donnée les entrées des nœuds de déclencheur de grappin."
+  },
+  "LogGrab:updateDebugValues": {
+   "en": "Server only: appends debug rows (claw offsets and thresholds, moving tool closing state, mounted and pending shapes) to the given values list.",
+   "fr": "Serveur uniquement : ajoute à la liste de valeurs données des lignes de débogage (décalages et seuils de pince, état de fermeture des moving tools, arbres montés et en attente)."
+  }
+ }
+}

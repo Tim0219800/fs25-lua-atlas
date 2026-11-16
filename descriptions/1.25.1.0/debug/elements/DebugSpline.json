@@ -1,0 +1,13 @@
+{
+ "fichier": "debug/elements/DebugSpline.lua",
+ "module": {
+  "en": "DebugSpline is a debug element for visualising a spline node, with optional edit-point display and a text label near the closest camera position. `createWithNode` (used by DebugManager's spline debug command) and `DebugSpline.renderForNode` are absent from this dump (UNVERIFIED).",
+  "fr": "DebugSpline est un élément de débogage pour visualiser un noeud spline, avec affichage optionnel des points d'édition et une étiquette de texte près de la position la plus proche de la caméra. `createWithNode` (utilisé par la commande de débogage des splines du DebugManager) et `DebugSpline.renderForNode` sont absents de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugSpline:draw": {
+   "en": "Calls `DebugSpline.renderForNode` with the spline node, colour, text (or a default text), clip distances, the edit-point flag and cached closest-to-camera data.",
+   "fr": "Appelle `DebugSpline.renderForNode` avec le noeud spline, la couleur, le texte (ou un texte par défaut), les distances de clip, l'indicateur de points d'édition et les données mises en cache du point le plus proche de la caméra."
+  }
+ }
+}

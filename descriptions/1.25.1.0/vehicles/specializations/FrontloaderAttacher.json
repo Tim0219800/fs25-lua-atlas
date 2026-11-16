@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/FrontloaderAttacher.lua",
+ "module": {
+  "en": "Specialization for tractors with a selectable frontloader attacher configuration. On the server, attaching a frontloader-type implement locks the configured front axis component joint (rotation limits set to 0), and detaching restores the saved limits. Requires AttacherJoints.",
+  "fr": "Spécialisation pour les tracteurs avec une configuration d'attache de chargeur frontal sélectionnable. Côté serveur, l'attelage d'un outil de type chargeur frontal verrouille le joint de composant d'essieu avant configuré (limites de rotation à 0) et le dételage restaure les limites sauvegardées. Exige AttacherJoints."
+ },
+ "fonctions": {
+  "FrontloaderAttacher.prerequisitesPresent": {
+   "en": "Requires the AttacherJoints specialization.",
+   "fr": "Exige la spécialisation AttacherJoints."
+  },
+  "FrontloaderAttacher.registerEventListeners": {
+   "en": "Subscribes to load, pre-attach implement and pre-detach implement events.",
+   "fr": "Abonne aux événements de chargement, pré-attelage et pré-dételage d'un outil."
+  },
+  "FrontloaderAttacher.initSpecialization": {
+   "en": "Registers the \"frontloader\" vehicle configuration type and the XML attributes frontAxisLimitJoint and frontAxisJoint of a frontloader configuration's attacherJoint.",
+   "fr": "Enregistre le type de configuration « frontloader » et les attributs XML frontAxisLimitJoint et frontAxisJoint de l'attacherJoint d'une configuration de chargeur frontal."
+  },
+  "FrontloaderAttacher:onLoad": {
+   "en": "Reads the active frontloader configuration to find the front axis component joint that should be limited while a frontloader is attached (index must exist, else XML warning). Removes the attach/detach listeners on clients or when no such joint is set.",
+   "fr": "Lit la configuration de chargeur frontal active pour trouver le joint de composant d'essieu avant à limiter pendant l'attelage d'un chargeur (l'indice doit exister, sinon avertissement XML). Retire les écouteurs d'attelage/dételage côté client ou sans joint défini."
+  },
+  "FrontloaderAttacher:onPreDetachImplement": {
+   "en": "Server: when a frontloader-type implement is detached, restores the front axis joint's rotation limits saved at attach time on all three axes.",
+   "fr": "Serveur : au dételage d'un outil de type chargeur frontal, restaure sur les trois axes les limites de rotation du joint d'essieu avant sauvegardées à l'attelage."
+  },
+  "FrontloaderAttacher:onPreAttachImplement": {
+   "en": "Server: when a frontloader-type implement is attached, saves the front axis joint's rotation limits and locks its three rotation limits to 0 so the axle no longer pivots.",
+   "fr": "Serveur : à l'attelage d'un outil de type chargeur frontal, sauvegarde les limites de rotation du joint d'essieu avant et fixe ses trois limites de rotation à 0 pour que l'essieu ne pivote plus."
+  }
+ }
+}

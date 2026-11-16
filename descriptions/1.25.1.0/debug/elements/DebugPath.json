@@ -1,0 +1,29 @@
+{
+ "fichier": "debug/elements/DebugPath.lua",
+ "module": {
+  "en": "DebugPath is a debug element that draws a polyline through a list of points, optionally at a forced height or aligned to the ground. It does its own clipping, and the rendering function `DebugPath.renderPath` is absent from this dump (UNVERIFIED).",
+  "fr": "DebugPath est un élément de débogage qui dessine une polyligne passant par une liste de points, éventuellement à une hauteur imposée ou alignée au sol. Il gère son propre clipping, et la fonction de rendu `DebugPath.renderPath` est absente de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugPath.new": {
+   "en": "Creates a path element with an empty point list, no ground alignment, solid drawing and no minimum point spacing.",
+   "fr": "Crée un élément de chemin avec une liste de points vide, sans alignement au sol, dessin solide et sans espacement minimal entre points."
+  },
+  "DebugPath:getShouldBeDrawn": {
+   "en": "Always returns true because the path applies its clip distance itself during rendering, bypassing the base class checks (visibility flag and GUI hiding).",
+   "fr": "Renvoie toujours true car le chemin applique lui-même sa distance de clip pendant le rendu, ce qui contourne les contrôles de la classe de base (indicateur de visibilité et masquage de l'interface)."
+  },
+  "DebugPath:draw": {
+   "en": "Calls `DebugPath.renderPath` with the points, colour, ground alignment, forced Y, solid flag, clip distance and text.",
+   "fr": "Appelle `DebugPath.renderPath` avec les points, la couleur, l'alignement au sol, le Y imposé, l'option solide, la distance de clip et le texte."
+  },
+  "DebugPath:clear": {
+   "en": "Replaces the point list with an empty table. Returns self.",
+   "fr": "Remplace la liste de points par une table vide. Renvoie self."
+  },
+  "DebugPath:setForcedY": {
+   "en": "Sets a fixed world Y used to draw the path; pass nil to remove it. Returns self.",
+   "fr": "Définit un Y monde fixe pour dessiner le chemin ; passer nil le retire. Renvoie self."
+  }
+ }
+}

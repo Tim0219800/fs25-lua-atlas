@@ -1,7 +1,7 @@
 """Importe atlas_releve.tsv (mod_releve) et le compare au dump statique.
 
 Usage : python -I outils/importer_releve.py 1.25.1.0 <chemin atlas_releve.tsv>
-Produit : donnees/<v>/releve.tsv (copie), doc/<v>/releve.md, stubs/<v>/releve.lua
+Produit : donnees/<v>/releve.tsv (copie), doc/<v>/releve.md + doc/<v>/fr/releve.md, stubs/<v>/releve/
 (classes et fonctions présentes en jeu mais absentes des sources du SDK ; types inconnus).
 """
 import json, shutil, sys
@@ -57,19 +57,42 @@ def main(v, tsv):
 
     absents = {g: t for g, t in top.items() if g not in connus}
     nfn_moteur = sum(1 for g, t in absents.items() if t == 'function')
-    L = [f'# In-game scan — FS25 {v}', '', f'`{entete}`', '',
-         f'{len(top)} globals found, {len(absents)} of them missing from the SDK sources '
-         f'({nfn_moteur} functions, probably engine).', '']
-    if racines:
-        L += ['## Explored roots', '', '| Root | Type | Keys |', '|---|---|---|']
-        L += [f'| {r[0]} | {r[1] if len(r) > 1 else ""} | {r[2] if len(r) > 2 else ""} |' for r in racines]
-        L.append('')
-    L += [f'Third-party mod environments skipped: {len(mods)}.', '']
-    L += ['## Mod environment overrides', '',
-          'Names defined directly in the sandboxed environment where mod code runs '
-          '(they shadow or replace the global version).', '']
-    L += [f'- `{n}` ({t})' for n, t in env]
-    L += ['', '## Tables missing from the SDK sources', '']
+    LANG = {
+        'en': ['*[Version française](fr/releve.md)*', f'# In-game scan — FS25 {v}',
+               f'{len(top)} globals found, {len(absents)} of them missing from the SDK sources ({nfn_moteur} functions, probably engine).',
+               '## Explored roots', '| Root | Type | Keys |', f'Third-party mod environments skipped: {len(mods)}.',
+               '## Mod environment overrides',
+               'Names defined directly in the sandboxed environment where mod code runs (they shadow or replace the global version).',
+               '## Tables missing from the SDK sources', 'members',
+               '## Global functions missing from the sources and from scriptBinding.xml'],
+        'fr': ['*[English version](../releve.md)*', f'# Relevé en jeu — FS25 {v}',
+               f'{len(top)} globales trouvées, dont {len(absents)} absentes des sources du SDK ({nfn_moteur} fonctions, probablement moteur).',
+               '## Racines explorées', '| Racine | Type | Clés |', f'Environnements de mods tiers ignorés : {len(mods)}.',
+               "## Surcharges de l'environnement des mods",
+               "Noms définis directement dans l'environnement isolé où tourne le code des mods (ils masquent ou remplacent la version globale).",
+               '## Tables absentes des sources du SDK', 'membres',
+               '## Fonctions globales absentes des sources et de scriptBinding.xml'],
+    }
+    for lang, X in LANG.items():
+        L = [X[1], '', X[0], '', f'`{entete}`', '', X[2], '']
+        if racines:
+            L += [X[3], '', X[4], '|---|---|---|']
+            L += [f'| {r[0]} | {r[1] if len(r) > 1 else ""} | {r[2] if len(r) > 2 else ""} |' for r in racines]
+            L.append('')
+        L += [X[5], '', X[6], '', X[7], '']
+        L += [f'- `{n}` ({t})' for n, t in env]
+        L += ['', X[8], '']
+        for g in sorted(absents):
+            if absents[g] == 'table':
+                ms = membres.get(g, [])
+                L.append(f'### {g} ({len(ms)} {X[9]})')
+                L.append(', '.join(f'`{m}`' for m, mt, _ in sorted(ms) if mt == 'function') or '—')
+                L.append('')
+        L += [X[10], '']
+        L.append(', '.join(f'`{g}`' for g in sorted(absents) if absents[g] == 'function') or '—')
+        out = ROOT / 'doc' / v / ('fr/releve.md' if lang == 'fr' else 'releve.md')
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text('\n'.join(L) + '\n', encoding='utf-8', newline='\n')
     sdir = ROOT / 'stubs' / v / 'releve'
     if sdir.exists():
         shutil.rmtree(sdir)
@@ -83,18 +106,12 @@ def main(v, tsv):
         t = absents[g]
         if t == 'table':
             ms = membres.get(g, [])
-            L.append(f'### {g} ({len(ms)} members)')
-            L.append(', '.join(f'`{m}`' for m, mt, _ in sorted(ms) if mt == 'function') or '—')
-            L.append('')
             C = TETE + [f'---@class {g}', f'{g} = {{}}', '']
             for m, mt, h in sorted(set(ms)):
                 if mt == 'function' and m.isidentifier():
                     C.append(f'function {g}{":" if h else "."}{m}(...) end')
             if g.isidentifier():
                 (sdir / f'{g}.lua').write_text('\n'.join(C) + '\n', encoding='utf-8', newline='\n')
-    L += ['## Global functions missing from the sources and from scriptBinding.xml', '']
-    L.append(', '.join(f'`{g}`' for g in sorted(absents) if absents[g] == 'function') or '—')
-    (ROOT / 'doc' / v / 'releve.md').write_text('\n'.join(L) + '\n', encoding='utf-8', newline='\n')
     S.append('')
     for g in sorted(absents):
         if absents[g] == 'function' and g.isidentifier():

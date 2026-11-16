@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/TensionBeltsRefreshEvent.lua",
+  "module": {
+    "en": "Network event asking all peers to recompute the tension belts of a vehicle; it carries no data beyond the vehicle. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau demandant à tous les participants de recalculer les sangles de tension d'un véhicule ; il ne transporte que le véhicule. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "TensionBeltsRefreshEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "TensionBeltsRefreshEvent.new": {
+      "en": "Builds the event with the data to send (only the node object); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (uniquement l'objet nœud) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "TensionBeltsRefreshEvent:readStream": {
+      "en": "Reads only the node object from the stream, then calls `run(connection)`.",
+      "fr": "Lit uniquement l'objet nœud depuis le flux, puis appelle `run(connection)`."
+    },
+    "TensionBeltsRefreshEvent:writeStream": {
+      "en": "Writes only the node object to the stream (same order as `readStream`).",
+      "fr": "Écrit uniquement l'objet nœud dans le flux (même ordre que `readStream`)."
+    },
+    "TensionBeltsRefreshEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself, then calls `refreshTensionBelts()` on the object if synchronized.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet, puis appelle `refreshTensionBelts()` sur l'objet s'il est synchronisé."
+    }
+  }
+}

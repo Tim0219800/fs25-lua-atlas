@@ -1,0 +1,17 @@
+{
+ "fichier": "ai/errors/AIMessageErrorNoVineFound.lua",
+ "module": {
+  "en": "AI message class for the case where no vine was found. It extends `AIMessage`, is registered in `AIMessageManager` and is shown when a helper job stops with this error.",
+  "fr": "Classe de message IA pour le cas où aucune vigne n'a été trouvée. Elle étend `AIMessage`, est enregistrée dans `AIMessageManager` et s'affiche quand un travail d'assistant s'arrête avec cette erreur."
+ },
+ "fonctions": {
+  "AIMessageErrorNoVineFound.new": {
+   "en": "Constructor of the AI error message meaning: no vine was found. Inherits from `AIMessage` and adds no state.",
+   "fr": "Constructeur du message d'erreur IA signifiant : aucune vigne n'a été trouvée. Hérite de `AIMessage` et n'ajoute aucun état."
+  },
+  "AIMessageErrorNoVineFound:getI18NText": {
+   "en": "Returns the localized text for the key `ai_messageErrorNoVineFound` via `g_i18n`, used by `AIMessage:getMessage`.",
+   "fr": "Renvoie le texte localisé de la clé `ai_messageErrorNoVineFound` via `g_i18n`, utilisé par `AIMessage:getMessage`."
+  }
+ }
+}

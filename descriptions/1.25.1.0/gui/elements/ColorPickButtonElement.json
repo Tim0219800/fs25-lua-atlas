@@ -1,0 +1,37 @@
+{
+ "fichier": "gui/elements/ColorPickButtonElement.lua",
+ "module": {
+  "en": "Button used in the color picker, derived from ButtonElement. It fills with a color, draws a rectangular selection frame when selected or focused, and overlays a glossy, metallic or matte material icon. Works with the ColorPickerDialog.MATERIAL_* constants (defined elsewhere). Client-side GUI.",
+  "fr": "Bouton utilisé dans le sélecteur de couleur, dérivé de ButtonElement. Il se remplit d'une couleur, dessine un cadre de sélection rectangulaire lorsqu'il est sélectionné ou focalisé, et superpose une icône de matériau brillant, métallique ou mat. Fonctionne avec les constantes ColorPickerDialog.MATERIAL_* (définies ailleurs). Interface côté client."
+ },
+ "fonctions": {
+  "ColorPickButtonElement.new": {
+   "en": "Constructor: default frame thickness and white frame color, material glossy, and creates three scaled overlays (`gui.glossyBig`, `gui.metallicBig`, `gui.matteBig`) through `g_overlayManager`.",
+   "fr": "Constructeur : épaisseur de cadre par défaut et cadre blanc, matériau brillant, et crée trois overlays mis à l'échelle (`gui.glossyBig`, `gui.metallicBig`, `gui.matteBig`) via `g_overlayManager`."
+  },
+  "ColorPickButtonElement:loadFromXML": {
+   "en": "Reads `selectionFrameThickness` and `selectionFrameColor` from the XML node after the parent button attributes.",
+   "fr": "Lit `selectionFrameThickness` et `selectionFrameColor` depuis le nœud XML après les attributs du bouton parent."
+  },
+  "ColorPickButtonElement:loadProfile": {
+   "en": "Reads the selection frame thickness and color from a GUI profile after the parent attributes.",
+   "fr": "Lit l'épaisseur et la couleur du cadre de sélection depuis un profil GUI après les attributs du parent."
+  },
+  "ColorPickButtonElement:copyAttributes": {
+   "en": "Copies frame thickness, frame color and material from a source element. The icon overlays are not copied (each element creates its own).",
+   "fr": "Copie l'épaisseur et la couleur du cadre ainsi que le matériau d'un élément source. Les overlays d'icônes ne sont pas copiés (chaque élément crée les siens)."
+  },
+  "ColorPickButtonElement:onGuiSetupFinished": {
+   "en": "Forces the overlay color of every state to white (normal, selected, focused, disabled at alpha 1, highlighted at alpha 0.5) so the actual color can be applied separately.",
+   "fr": "Force la couleur d'overlay de chaque état au blanc (normal, sélectionné, focalisé, désactivé à alpha 1, survol à alpha 0,5) afin que la couleur réelle soit appliquée séparément."
+  },
+  "ColorPickButtonElement:delete": {
+   "en": "Deletes the three material icon overlays and then runs the parent delete.",
+   "fr": "Supprime les trois overlays d'icônes de matériau puis exécute la suppression du parent."
+  },
+  "ColorPickButtonElement:draw": {
+   "en": "Draws the pixel-aligned overlay, inset by 7 pixels with four filled-rect frame edges when selected or focused, optional debug outline, then the icon matching `self.material`. Icon positioning is not set here (UNVERIFIED).",
+   "fr": "Dessine l'overlay aligné sur les pixels, rentré de 7 pixels avec quatre côtés de cadre en rectangles pleins quand il est sélectionné ou focalisé, un contour de debug optionnel, puis l'icône correspondant à `self.material`. Le positionnement de l'icône n'est pas défini ici (NON VÉRIFIÉ)."
+  }
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "fichier": "misc/ConsumableManager.lua",
+ "module": {
+  "en": "Map-bound manager (extends AbstractManager) for consumables such as animal feed items: consumable types with a UI title, and consumable variations with price, capacity, unit text, i3d meshes (normal, consuming state, tension belt), metadata and shader parameters. Data comes from ConsumableManager.DEFAULT_FILENAME (defined outside this file, UNVERIFIED) and mod xmls queued with addModConsumable. Variations are capped by ConsumableManager.MAX_NUM_VARIATIONS (defined elsewhere).",
+  "fr": "Gestionnaire lié à la carte (étend AbstractManager) pour les consommables, comme des aliments pour animaux : types de consommables avec titre d'interface, et variations avec prix, capacité, texte d'unité, meshes i3d (normal, en cours de consommation, sangle), métadonnées et paramètres de shader. Les données viennent de ConsumableManager.DEFAULT_FILENAME (défini hors de ce fichier, NON VÉRIFIÉ) et des xml de mods mis en file par addModConsumable. Le nombre de variations est limité par ConsumableManager.MAX_NUM_VARIATIONS (défini ailleurs)."
+ },
+ "fonctions": {
+  "ConsumableManager.new": {
+   "en": "Creates the manager, empty type and variation tables, and the two XML schemas (consumable and consumables), stored on the class table.",
+   "fr": "Crée le gestionnaire, les tables vides de types et de variations, et les deux schémas XML (consumable et consumables), stockés sur la table de classe."
+  },
+  "ConsumableManager:loadMapData": {
+   "en": "Reads the default consumables xml: types (name uppercased, title required) and consumable file references, loading each file's variations; then loads queued mod consumables with their custom environment and empties the queue.",
+   "fr": "Lit le xml des consommables par défaut : types (nom mis en majuscules, titre obligatoire) et références de fichiers de consommables, dont les variations sont chargées ; charge ensuite les consommables de mods en file avec leur environnement personnalisé et vide la file."
+  },
+  "ConsumableManager:unloadMapData": {
+   "en": "Deletes the object, consuming and tension belt nodes of every variation, empties the variation list, releases the shared i3d requests, then calls the parent. Note: the in-code doc line wrongly says it loads data on map load.",
+   "fr": "Supprime les noeuds objet, consommation et sangle de chaque variation, vide la liste des variations, libère les requêtes i3d partagées, puis appelle le parent. À noter : la ligne de doc du code dit à tort qu'elle charge des données au chargement de la carte."
+  },
+  "ConsumableManager:addModConsumable": {
+   "en": "Queues a mod consumable xml (filename, custom environment, base directory) to be loaded in loadMapData.",
+   "fr": "Met en file le xml de consommables d'un mod (nom de fichier, environnement personnalisé, répertoire de base) pour un chargement dans loadMapData."
+  },
+  "ConsumableManager:loadConsumableVariationsFromXML": {
+   "en": "Loads every consumableVariation of an xml. Entries missing type, name or title are skipped with a warning; the name is prefixed with the custom environment. Starts async i3d loads for object, consumingObject and tensionBeltObject, reads metadata values and shader parameters, and rejects duplicate names and any variation beyond the maximum.",
+   "fr": "Charge chaque consumableVariation d'un xml. Les entrées sans type, nom ou titre sont ignorées avec un avertissement ; le nom est préfixé par l'environnement personnalisé. Lance des chargements i3d asynchrones pour object, consumingObject et tensionBeltObject, lit les métadonnées et paramètres de shader, et rejette les noms en double et toute variation au-delà du maximum."
+  },
+  "ConsumableManager:consumableI3DFileLoaded": {
+   "en": "Async callback: finds the node by path in the loaded i3d, zeroes its position and rotation, unlinks it and stores it in the variation under the requested field (node, consumingNode or tensionBeltNode); warns if the node is not found. Deletes the i3d root.",
+   "fr": "Callback asynchrone : trouve le noeud par chemin dans l'i3d chargé, remet sa position et sa rotation à zéro, le détache et le stocke dans la variation sous le champ demandé (node, consumingNode ou tensionBeltNode) ; avertit si le noeud est introuvable. Supprime la racine i3d."
+  },
+  "ConsumableManager:getConsumableMeshByIndex": {
+   "en": "Returns a clone of the variation's mesh node and, when requested and available, a clone of its tension belt mesh linked under it, as a second value. Nil if the index or the mesh is missing.",
+   "fr": "Renvoie un clone du noeud mesh de la variation et, si demandé et disponible, un clone de son mesh de sangle lié en dessous, comme deuxième valeur. Nil si l'indice ou le mesh manque."
+  },
+  "ConsumableManager:getConsumableConsumingMeshByIndex": {
+   "en": "Returns a clone of the consuming-state mesh (falling back to the normal mesh) with the variation's shader parameters applied recursively, per material slot when a slot name is given. Nil if the variation or its normal mesh is missing.",
+   "fr": "Renvoie un clone du mesh en état de consommation (à défaut le mesh normal) avec les paramètres de shader de la variation appliqués récursivement, par emplacement de matériau si un nom d'emplacement est donné. Nil si la variation ou son mesh normal manque."
+  },
+  "ConsumableManager:getConsumableVariationIndexByName": {
+   "en": "Returns the variation index for a name, trying the custom-environment-prefixed name first. Returns 0 when unknown.",
+   "fr": "Renvoie l'indice de la variation pour un nom, en essayant d'abord le nom préfixé par l'environnement personnalisé. Renvoie 0 si inconnu."
+  },
+  "ConsumableManager:getConsumableVariationNameByIndex": {
+   "en": "Returns the variation's registered name, or the string UNKNOWN if the index is invalid.",
+   "fr": "Renvoie le nom enregistré de la variation, ou la chaîne UNKNOWN si l'indice est invalide."
+  },
+  "ConsumableManager:getConsumableVariationCapacityAndUnitByIndex": {
+   "en": "Returns the capacity of one unit and its unit text for UI display; two nils if the index is invalid.",
+   "fr": "Renvoie la capacité d'une unité et son texte d'unité pour l'affichage ; deux nil si l'indice est invalide."
+  },
+  "ConsumableManager:getConsumableVariationShaderParameterByIndex": {
+   "en": "Returns the variation's list of shader parameters, or nil if the index is invalid.",
+   "fr": "Renvoie la liste des paramètres de shader de la variation, ou nil si l'indice est invalide."
+  },
+  "ConsumableManager:getConsumableVariationMetaDataByIndex": {
+   "en": "Returns the variation's metadata table (name to number, string or vector), or nil if the index is invalid.",
+   "fr": "Renvoie la table de métadonnées de la variation (nom vers nombre, chaîne ou vecteur), ou nil si l'indice est invalide."
+  },
+  "ConsumableManager:getConsumableVariationsByType": {
+   "en": "Returns the titles of all variations of a type as a list, plus a table mapping each list position to the real variation index.",
+   "fr": "Renvoie les titres de toutes les variations d'un type sous forme de liste, plus une table associant chaque position de la liste à l'indice réel de la variation."
+  },
+  "ConsumableManager:getConsumableVariationPriceByIndex": {
+   "en": "Returns the price per unit of a variation, or nil if the index is invalid.",
+   "fr": "Renvoie le prix par unité d'une variation, ou nil si l'indice est invalide."
+  },
+  "ConsumableManager:getTypeTitle": {
+   "en": "Returns the UI title of a consumable type (falling back to the type name), or nil if the type is unknown. Type names are stored uppercased.",
+   "fr": "Renvoie le titre d'interface d'un type de consommable (à défaut le nom du type), ou nil si le type est inconnu. Les noms de types sont stockés en majuscules."
+  },
+  "ConsumableManager.registerConsumableXMLPaths": {
+   "en": "Registers the schema paths of a consumable xml: variation type, price, name, title, capacity, unit text, object, consumingObject and tensionBeltObject (filename and node), metaData values and shader parameters.",
+   "fr": "Enregistre les chemins de schéma d'un xml de consommable : type de variation, prix, nom, titre, capacité, texte d'unité, object, consumingObject et tensionBeltObject (fichier et noeud), valeurs de metaData et paramètres de shader."
+  },
+  "ConsumableManager.registerConsumablesXMLPaths": {
+   "en": "Registers the schema paths of the main consumables xml: types (name, title) and references to consumable files.",
+   "fr": "Enregistre les chemins de schéma du xml principal des consommables : types (nom, titre) et références vers des fichiers de consommables."
+  }
+ }
+}

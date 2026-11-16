@@ -1,85 +1,85 @@
 ---@meta
 -- FS25 1.25.1.0 : placeables/specializations/PlaceableWindTurbine.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation de placeable (prérequis : PlaceableIncomePerHour) qui fait tourner un rotor et orienter une tête d'éolienne selon le vent, et ajoute un revenu horaire proportionnel à la vitesse du rotor. DONNÉES VENT : la spécialisation ne lit pas le vent elle-même ; elle reçoit (windDirX, windDirZ, windVelocity, cirrusCloudSpeedFactor) via setWindValues, signature calquée sur un écouteur « wind changed ». L'unité de windVelocity est le m/s d'après le commentaire XML de #optimalWindSpeed (vitesse à laquelle le rotor atteint son régime max, défaut 15, borné à 1..200). Le seul accès à la source du vent est dans onDelete : g_currentMission.environment.weather.windUpdater:removeWindChangedListener(self) ; l'abonnement symétrique (addWindChangedListener) n'apparaît PAS dans ce fichier du dump : il devrait se trouver dans startWindTurbine, mais cette fonction est enregistrée (registerFunction) sans être définie dans ce fichier. À noter : finalizeConstruction est de même enregistrée comme surcharge sans définition ici (non vérifié en jeu : soit définition absente du dump, soit référence nil). WindUpdater et Weather sont absents du dump : NON VÉRIFIÉ pour tout ce qui concerne la fréquence d'appel et l'origine du vent. Aucune autre donnée météo (pluie, humidité, température) n'est lue. Effets : rotation du rotor pilotée par animationNodes (speedFunc renvoie rotSpeedFactor), son « idle » démarré dès que le facteur est > 0 (client uniquement) ; tête orientée à l'opposé du vent (rotation Y calculée sur -dirX, -dirZ) si #headAdjustToWind. Réseau : seule la rotation de tête (angle compressé) est écrite/lue dans le flux initial (onWriteStream/onReadStream) ; rotSpeedFactor n'est pas synchronisé, chaque machine le recalcule à partir du vent qu'elle reçoit (hypothèse non vérifiée : le vent est supposé identique sur les clients). Sauvegarde : #headRotation. Points d'extension pour un moddeur : fonctions registerFunction (updateHeadRotation, updateRotorRotSpeed, setWindValues, getWindTurbineLoad, startWindTurbine) surchargeables par type de placeable ; getIncomePerHour est une surcharge enregistrée ; getWindTurbineLoad est un bon point de lecture externe (facteur 0..1).
+--- Placeable specialization (prerequisite: PlaceableIncomePerHour) that spins a rotor and orients a wind turbine head according to the wind, and adds an hourly income proportional to the rotor speed. WIND DATA: the specialization does not read the wind itself; it receives (windDirX, windDirZ, windVelocity, cirrusCloudSpeedFactor) through setWindValues, a signature modeled on a "wind changed" listener. The unit of windVelocity is m/s according to the XML comment on #optimalWindSpeed (speed at which the rotor reaches its max speed, default 15, clamped to 1..200). The only access to the wind source is in onDelete: g_currentMission.environment.weather.windUpdater:removeWindChangedListener(self); the symmetric subscription (addWindChangedListener) does NOT appear in this file of the dump: it should be in startWindTurbine, but that function is registered (registerFunction) without being defined in this file. Note: finalizeConstruction is likewise registered as an override without a definition here (not verified in game: either the definition is absent from the dump, or the reference is nil). WindUpdater and Weather are absent from the dump: UNVERIFIED for everything concerning call frequency and the origin of the wind. No other weather data (rain, moisture, temperature) is read. Effects: rotor rotation driven by animationNodes (speedFunc returns rotSpeedFactor), "idle" sound started as soon as the factor is > 0 (client only); head oriented opposite to the wind (Y rotation computed on -dirX, -dirZ) if #headAdjustToWind. Network: only the head rotation (compressed angle) is written/read in the initial stream (onWriteStream/onReadStream); rotSpeedFactor is not synchronized, each machine recomputes it from the wind it receives (unverified hypothesis: the wind is assumed identical on clients). Savegame: #headRotation. Extension points for a modder: registerFunction functions (updateHeadRotation, updateRotorRotSpeed, setWindValues, getWindTurbineLoad, startWindTurbine) overridable per placeable type; getIncomePerHour is a registered override; getWindTurbineLoad is a good external read point (0..1 factor).
 ---@class PlaceableWindTurbine
 PlaceableWindTurbine = {}
 
---- Exige la spécialisation PlaceableIncomePerHour dans le type de placeable.
+--- Requires the PlaceableIncomePerHour specialization in the placeable type.
 ---@param specializations table
 ---@return boolean
 function PlaceableWindTurbine.prerequisitesPresent(specializations) end
 
---- Enregistre updateHeadRotation, updateRotorRotSpeed, setWindValues, getWindTurbineLoad et startWindTurbine (cette dernière n'est pas définie dans ce fichier : à noter, non vérifié en jeu).
+--- Registers updateHeadRotation, updateRotorRotSpeed, setWindValues, getWindTurbineLoad and startWindTurbine (the latter is not defined in this file: Note, not verified in game).
 ---@param placeableType any
 function PlaceableWindTurbine.registerFunctions(placeableType) end
 
---- Déclare les surcharges getIncomePerHour et finalizeConstruction ; seule la première est définie dans ce fichier.
+--- Declares the overrides getIncomePerHour and finalizeConstruction; only the first is defined in this file.
 ---@param placeableType any
 function PlaceableWindTurbine.registerOverwrittenFunctions(placeableType) end
 
---- Abonne la spécialisation à onLoad, onDelete, onFinalizePlacement, onReadStream et onWriteStream.
+--- Subscribes the specialization to onLoad, onDelete, onFinalizePlacement, onReadStream and onWriteStream.
 ---@param placeableType any
 function PlaceableWindTurbine.registerEventListeners(placeableType) end
 
---- Déclare les clés XML windTurbine : #headNode, #headAdjustToWind, #rotationNode, #optimalWindSpeed (m/s), #incomePerHour, #isFinalized, ainsi que sons et animationNodes. #rotationNode est déclaré mais jamais lu dans ce fichier (rotation assurée par les animationNodes).
+--- Declares the windTurbine XML keys: #headNode, #headAdjustToWind, #rotationNode, #optimalWindSpeed (m/s), #incomePerHour, #isFinalized, as well as sounds and animationNodes. #rotationNode is declared but never read in this file (rotation is handled by the animationNodes).
 ---@param schema any
 ---@param basePath any
 function PlaceableWindTurbine.registerXMLPaths(schema, basePath) end
 
---- Déclare la clé de sauvegarde #headRotation (angle courant de la tête).
+--- Declares the #headRotation save key (current head angle).
 ---@param schema any
 ---@param basePath any
 function PlaceableWindTurbine.registerSavegameXMLPaths(schema, basePath) end
 
---- Lit le XML : nœud de tête, option d'orientation au vent, vitesse de vent optimale (défaut 15 m/s, bornée 1..200), revenu horaire (défaut 0) et #isFinalized (défaut true). Côté client, charge le son « idle » et les animationNodes dont la vitesse suit rotSpeedFactor (initialement 1).
+--- Reads the XML: head node, wind orientation option, optimal wind speed (default 15 m/s, clamped 1..200), hourly income (default 0) and #isFinalized (default true). On the client, loads the "idle" sound and the animationNodes whose speed follows rotSpeedFactor (initially 1).
 ---@param savegame table
 function PlaceableWindTurbine:onLoad(savegame) end
 
---- Retire le placeable des écouteurs de changement de vent de weather.windUpdater (appel non protégé : suppose l'existence de l'environnement), puis libère sons et animations. Source du vent non relue (WindUpdater absent du dump).
+--- Removes the placeable from the wind change listeners of weather.windUpdater (unguarded call: assumes the environment exists), then frees sounds and animations. Wind source not re-read (WindUpdater absent from the dump).
 function PlaceableWindTurbine:onDelete() end
 
---- Appelle startWindTurbine si l'éolienne est déjà finalisée (#isFinalized) ; le contenu de startWindTurbine est absent de ce fichier.
+--- Calls startWindTurbine if the turbine is already finalized (#isFinalized); the content of startWindTurbine is absent from this file.
 function PlaceableWindTurbine:onFinalizePlacement() end
 
---- Client : lit l'angle de tête compressé si un nœud de tête existe. Le facteur de rotor n'est pas transmis.
+--- Client: reads the compressed head angle if a head node exists. The rotor factor is not transmitted.
 ---@param streamId any
 ---@param connection any
 function PlaceableWindTurbine:onReadStream(streamId, connection) end
 
---- Serveur : écrit l'angle de tête compressé si un nœud de tête existe.
+--- Server: writes the compressed head angle if a head node exists.
 ---@param streamId any
 ---@param connection any
 function PlaceableWindTurbine:onWriteStream(streamId, connection) end
 
---- Restaure la rotation de tête depuis la sauvegarde (défaut 0) et l'applique.
+--- Restores the head rotation from the savegame (default 0) and applies it.
 ---@param xmlFile any
 ---@param key any
 function PlaceableWindTurbine:loadFromXMLFile(xmlFile, key) end
 
---- Écrit la rotation de tête dans la sauvegarde.
+--- Writes the head rotation to the savegame.
 ---@param xmlFile any
 ---@param key any
 ---@param usedModNames any
 function PlaceableWindTurbine:saveToXMLFile(xmlFile, key, usedModNames) end
 
---- Applique en rotation monde la valeur spec.headRotation autour de l'axe Y du nœud de tête (ne fait rien sans nœud de tête).
+--- Applies the value spec.headRotation as a world rotation around the Y axis of the head node (does nothing without a head node).
 function PlaceableWindTurbine:updateHeadRotation() end
 
---- Calcule rotSpeedFactor = vitesse de vent / vitesse optimale, bornée à 0..1 ; côté client démarre ou arrête le son selon que le facteur est positif. Le vent n'est donc utilisé qu'à travers sa norme, sans rafale ni lissage dans ce fichier.
+--- Computes rotSpeedFactor = wind speed / optimal speed, clamped to 0..1; client side starts or stops the sound depending on whether the factor is positive. The wind is therefore only used through its magnitude, without gusts or smoothing in this file.
 ---@param windVelocity any
 function PlaceableWindTurbine:updateRotorRotSpeed(windVelocity) end
 
---- Reçoit direction du vent (X, Z), vitesse et facteur de vitesse des cirrus (ce dernier ignoré ici). Oriente la tête à l'opposé de la direction si #headAdjustToWind, puis met à jour le rotor. Point d'entrée à surcharger ou à appeler pour observer le vent transmis aux écouteurs (provenance exacte NON VÉRIFIÉE).
+--- Receives wind direction (X, Z), speed and cirrus speed factor (the latter ignored here). Orients the head opposite to the direction if #headAdjustToWind, then updates the rotor. Entry point to override or call in order to observe the wind passed to listeners (exact origin UNVERIFIED).
 ---@param windDirX any
 ---@param windDirZ any
 ---@param windVelocity any
 ---@param cirrusCloudSpeedFactor any
 function PlaceableWindTurbine:setWindValues(windDirX, windDirZ, windVelocity, cirrusCloudSpeedFactor) end
 
---- Renvoie le facteur de charge du rotor (0..1), c'est-à-dire rotSpeedFactor.
+--- Returns the rotor load factor (0..1), i.e. rotSpeedFactor.
 function PlaceableWindTurbine:getWindTurbineLoad() end
 
---- Surcharge : ajoute au revenu horaire parent le revenu configuré multiplié par le facteur de rotor ; revenu nul sans vent.
+--- Override: adds to the parent's hourly income the configured income multiplied by the rotor factor; zero income without wind.
 ---@param superFunc any
 function PlaceableWindTurbine:getIncomePerHour(superFunc) end

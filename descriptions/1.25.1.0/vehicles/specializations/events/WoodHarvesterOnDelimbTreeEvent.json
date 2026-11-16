@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/WoodHarvesterOnDelimbTreeEvent.lua",
+  "module": {
+    "en": "Server-to-client event that tells clients a wood harvester started or stopped delimbing, so they can update effects. It has no sendEvent helper. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement serveur vers client qui indique aux clients qu'une abatteuse commence ou arrête d'ébrancher, afin de mettre à jour les effets. Il n'a pas de fonction sendEvent. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "WoodHarvesterOnDelimbTreeEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "WoodHarvesterOnDelimbTreeEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a boolean state); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un booléen d'état) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "WoodHarvesterOnDelimbTreeEvent:readStream": {
+      "en": "Reads a node object and a boolean state from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un booléen d'état depuis le flux, puis appelle `run(connection)`."
+    },
+    "WoodHarvesterOnDelimbTreeEvent:writeStream": {
+      "en": "Writes a node object and a boolean state to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un booléen d'état dans le flux (même ordre que `readStream`)."
+    },
+    "WoodHarvesterOnDelimbTreeEvent:run": {
+      "en": "Applies the event on the receiving side: calls `onDelimbTree(state)` on the object if synchronized; on the server it first re-broadcasts a new event.",
+      "fr": "Applique l'événement côté récepteur : appelle `onDelimbTree(état)` sur l'objet s'il est synchronisé ; sur le serveur, il retransmet d'abord un nouvel événement."
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/PalletFillerBuyPalletEvent.lua",
+ "module": {
+  "en": "Network event class `PalletFillerBuyPalletEvent` (extends `Event`) that replicates buying pallets for a pallet filler. It carries only the vehicle. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `PalletFillerBuyPalletEvent` (hérite de `Event`) qui réplique l'achat de palettes pour un remplisseur de palettes. Elle transporte uniquement le véhicule. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "PalletFillerBuyPalletEvent.emptyNew": {
+   "en": "Creates an empty `PalletFillerBuyPalletEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `PalletFillerBuyPalletEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "PalletFillerBuyPalletEvent.new": {
+   "en": "Creates the event with its data: only the vehicle.",
+   "fr": "Crée l'événement avec ses données : uniquement le véhicule."
+  },
+  "PalletFillerBuyPalletEvent:readStream": {
+   "en": "Reads the event data from the network stream (only the vehicle), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (uniquement le véhicule), puis appelle `run`."
+  },
+  "PalletFillerBuyPalletEvent:writeStream": {
+   "en": "Writes the event data to the network stream (only the vehicle).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (uniquement le véhicule)."
+  },
+  "PalletFillerBuyPalletEvent:run": {
+   "en": "Executes the event on the receiving side: on the server, forwards the event then calls `buyPalletFillerPallets(true)` if the pallet slot limit allows, otherwise sends the sender a `BuyVehicleEvent` with `STATE_TOO_MANY_PALLETS`; on a client just calls `buyPalletFillerPallets(true)`.",
+   "fr": "Exécute l'événement côté réception : sur le serveur, retransmet l'événement puis appelle `buyPalletFillerPallets(true)` si la limite d'emplacements de palettes le permet, sinon envoie à l'émetteur un `BuyVehicleEvent` avec `STATE_TOO_MANY_PALLETS` ; sur un client, appelle simplement `buyPalletFillerPallets(true)`."
+  }
+ }
+}

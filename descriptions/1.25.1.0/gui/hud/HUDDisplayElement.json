@@ -1,0 +1,49 @@
+{
+ "fichier": "gui/hud/HUDDisplayElement.lua",
+ "module": {
+  "en": "Base class for the larger HUD display blocks, derived from HUDElement. It adds remembered original position and optional slide animations (tween sequence) to show or hide the element by translating it, by default half a screen downwards. Subclasses can override getHidingTranslation.",
+  "fr": "Classe de base des grands blocs d'affichage du HUD, dérivée de HUDElement. Elle ajoute une position d'origine mémorisée et des animations de glissement optionnelles (séquence de tweens) pour afficher ou masquer l'élément par translation, par défaut d'un demi-écran vers le bas. Les sous-classes peuvent surcharger getHidingTranslation."
+ },
+ "fonctions": {
+  "HUDDisplayElement.new": {
+   "en": "Constructor taking the overlay, an optional parent HUD element and an optional metatable; initialises the stored original position to 0,0 and no animation state.",
+   "fr": "Constructeur prenant l'overlay, un élément HUD parent optionnel et une métatable optionnelle ; initialise la position d'origine à 0,0 et aucun état d'animation."
+  },
+  "HUDDisplayElement:setVisible": {
+   "en": "Sets visibility. With animate true and no animation running it plays the show/hide slide; otherwise it stops any animation and applies the change immediately, moving the element to its original position or to its hidden offset.",
+   "fr": "Définit la visibilité. Avec animate à true et sans animation en cours, joue le glissement d'affichage/masquage ; sinon arrête toute animation et applique le changement immédiatement, en plaçant l'élément à sa position d'origine ou à son décalage masqué."
+  },
+  "HUDDisplayElement:setScale": {
+   "en": "Sets a uniform scale by passing the same value for both axes to the parent.",
+   "fr": "Définit une échelle uniforme en passant la même valeur aux deux axes du parent."
+  },
+  "HUDDisplayElement:storeOriginalPosition": {
+   "en": "Remembers the current position as the visible (original) position used by the animations.",
+   "fr": "Mémorise la position actuelle comme position d'origine (visible) utilisée par les animations."
+  },
+  "HUDDisplayElement:getHidingTranslation": {
+   "en": "Returns the screen-space translation applied when hidden: 0 horizontally and -0.5 vertically by default. Override in subclasses.",
+   "fr": "Renvoie la translation en espace écran appliquée au masquage : 0 en horizontal et -0,5 en vertical par défaut. À surcharger dans les sous-classes."
+  },
+  "HUDDisplayElement:animationSetPositionX": {
+   "en": "Tween setter that changes only the X position.",
+   "fr": "Fonction d'affectation pour tween qui ne change que la position X."
+  },
+  "HUDDisplayElement:animationSetPositionY": {
+   "en": "Tween setter that changes only the Y position.",
+   "fr": "Fonction d'affectation pour tween qui ne change que la position Y."
+  },
+  "HUDDisplayElement:animateHide": {
+   "en": "Starts a tween sequence moving the element by the hiding translation over HUDDisplayElement.MOVE_ANIMATION_DURATION; when it ends the element is really hidden.",
+   "fr": "Lance une séquence de tweens déplaçant l'élément de la translation de masquage pendant HUDDisplayElement.MOVE_ANIMATION_DURATION ; à la fin, l'élément est réellement masqué."
+  },
+  "HUDDisplayElement:animateShow": {
+   "en": "Makes the element visible and starts a tween sequence moving it back to its original position over MOVE_ANIMATION_DURATION.",
+   "fr": "Rend l'élément visible et lance une séquence de tweens le ramenant à sa position d'origine pendant MOVE_ANIMATION_DURATION."
+  },
+  "HUDDisplayElement:onAnimateVisibilityFinished": {
+   "en": "Animation end callback: after a hide animation it applies the hidden state; nothing to do after a show.",
+   "fr": "Callback de fin d'animation : après un masquage, applique l'état masqué ; rien à faire après un affichage."
+  }
+ }
+}

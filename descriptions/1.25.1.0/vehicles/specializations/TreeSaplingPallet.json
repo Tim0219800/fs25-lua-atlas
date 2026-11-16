@@ -1,0 +1,69 @@
+{
+ "fichier": "vehicles/specializations/TreeSaplingPallet.lua",
+ "module": {
+  "en": "Specialization for sapling pallets. It stores which tree type and variation the pallet carries, loads the matching sapling I3D model and clones it onto the sapling link nodes, and shows or hides those nodes according to the fill level. TreePlanter reads and writes the type through `getTreeSaplingPalletType` and `setTreeSaplingPalletType`. It has no prerequisites and adds a `treeSaplingType` vehicle configuration.",
+  "fr": "Spécialisation des palettes de plants. Elle mémorise le type d'arbre et la variation portés par la palette, charge le modèle I3D de plant correspondant et le clone sur les nœuds de plants, puis affiche ou masque ces nœuds selon le niveau de remplissage. TreePlanter lit et écrit ce type via `getTreeSaplingPalletType` et `setTreeSaplingPalletType`. Elle n'a aucun prérequis et ajoute une configuration véhicule `treeSaplingType`."
+ },
+ "fonctions": {
+  "TreeSaplingPallet.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "TreeSaplingPallet.initSpecialization": {
+   "en": "Registers the `treeSaplingType` configuration type and the `vehicle.treeSaplingPallet` XML keys (fill unit index, tree type, variation, custom I3D file, sapling nodes, per-configuration sapling nodes), plus savegame keys for tree type and variation.",
+   "fr": "Enregistre le type de configuration `treeSaplingType` et les clés XML `vehicle.treeSaplingPallet` (index du fill unit, type d'arbre, variation, fichier I3D personnalisé, nœuds de plants, nœuds par configuration), ainsi que les clés de sauvegarde du type et de la variation."
+  },
+  "TreeSaplingPallet.registerFunctions": {
+   "en": "Registers the sapling load callback, the tree type getter and setter, and the two visual update functions.",
+   "fr": "Enregistre le callback de chargement du plant, l'accesseur et le mutateur du type d'arbre, et les deux fonctions de mise à jour visuelle."
+  },
+  "TreeSaplingPallet.registerOverwrittenFunctions": {
+   "en": "Registers an override of `showInfo`.",
+   "fr": "Enregistre une surcharge de `showInfo`."
+  },
+  "TreeSaplingPallet.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete and onFillUnitFillLevelChanged.",
+   "fr": "S'abonne à onLoad, onDelete et onFillUnitFillLevelChanged."
+  },
+  "TreeSaplingPallet:onLoad": {
+   "en": "Resolves tree type, variation, fill unit and I3D file from XML, the selected configuration item and the savegame, finds the sapling file from the tree plant manager, collects the sapling nodes (optionally randomising rotation and scale) and starts loading the visuals. Note: the code default type is \"spruce\" while the schema documents \"spruce1\".",
+   "fr": "Détermine le type d'arbre, la variation, le fill unit et le fichier I3D depuis le XML, l'élément de configuration choisi et la sauvegarde, trouve le fichier du plant via le gestionnaire de plantation, collecte les nœuds de plants (rotation et échelle aléatoires en option) et lance le chargement visuel. À noter : le type par défaut dans le code est \"spruce\" alors que le schéma indique \"spruce1\"."
+  },
+  "TreeSaplingPallet:onDelete": {
+   "en": "Releases the shared sapling I3D request and deletes the cloned sapling shapes.",
+   "fr": "Libère la requête I3D partagée du plant et supprime les formes de plants clonées."
+  },
+  "TreeSaplingPallet:saveToXMLFile": {
+   "en": "Saves the current tree type name and variation name.",
+   "fr": "Sauvegarde le nom du type d'arbre et celui de la variation courants."
+  },
+  "TreeSaplingPallet:getTreeSaplingPalletType": {
+   "en": "Returns the current tree type name and variation name (two values).",
+   "fr": "Renvoie le nom du type d'arbre et celui de la variation courants (deux valeurs)."
+  },
+  "TreeSaplingPallet:setTreeSaplingPalletType": {
+   "en": "Stores a new tree type and variation and reloads the sapling visuals if either changed. Unlike `onLoad`, it does not look up a new I3D filename, so the file used stays the one resolved at load time.",
+   "fr": "Mémorise un nouveau type d'arbre et une nouvelle variation et recharge les visuels si l'un des deux change. Contrairement à `onLoad`, elle ne cherche pas de nouveau fichier I3D : le fichier utilisé reste celui résolu au chargement."
+  },
+  "TreeSaplingPallet:updateTreeSaplingVisuals": {
+   "en": "Releases any previous shared I3D request and starts loading the sapling file, as a sub-file while the vehicle is still loading or asynchronously afterwards.",
+   "fr": "Libère la requête I3D partagée précédente et lance le chargement du fichier de plant, comme sous-fichier pendant le chargement du véhicule ou de façon asynchrone ensuite."
+  },
+  "TreeSaplingPallet:onTreeSaplingLoaded": {
+   "en": "Load callback: clones the loaded sapling shape onto every sapling node (replacing earlier clones), deletes the loaded I3D root and refreshes node visibility.",
+   "fr": "Callback de chargement : clone la forme de plant chargée sur chaque nœud de plants (en remplaçant les clones précédents), supprime la racine I3D chargée et rafraîchit la visibilité des nœuds."
+  },
+  "TreeSaplingPallet:updateTreeSaplingPalletNodes": {
+   "en": "Shows as many sapling nodes as the rounded fill level and sets the `hideByIndex` shader parameter from capacity minus fill level.",
+   "fr": "Affiche autant de nœuds de plants que le niveau arrondi et règle le paramètre de shader `hideByIndex` à capacité moins niveau."
+  },
+  "TreeSaplingPallet:onFillUnitFillLevelChanged": {
+   "en": "Refreshes the sapling node visibility on any fill unit level change.",
+   "fr": "Rafraîchit la visibilité des nœuds de plants à chaque changement de niveau d'un fill unit."
+  },
+  "TreeSaplingPallet:showInfo": {
+   "en": "Override: adds a tree type line to the info box when a tree type description was found, then calls the parent.",
+   "fr": "Surcharge : ajoute une ligne de type d'arbre à la boîte d'info si une description du type a été trouvée, puis appelle le parent."
+  }
+ }
+}

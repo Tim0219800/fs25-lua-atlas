@@ -1,0 +1,65 @@
+{
+ "fichier": "vehicles/specializations/RidgeFormer.lua",
+ "module": {
+  "en": "Vehicle specialization for ridge forming implements (work area type ridgeFormer). While moving it erases tire tracks and raises ridges in the density map, aligned to the nearest 90 degrees of heading, and plays a work sound. It adjusts dirt and wear (with a stone-dependent factor) and keeps the speed limit active while working. Prerequisites are none; it also calls AI ground type requirements when available.",
+  "fr": "Spécialisation de véhicule pour les outils de buttage (type de zone de travail ridgeFormer). En déplacement, elle efface les traces de pneus et forme des buttes dans la density map, alignées sur le multiple de 90 degrés le plus proche, et joue un son de travail. Elle ajuste la saleté et l'usure (avec un facteur lié aux pierres) et maintient la limite de vitesse en travail. Aucun prérequis ; elle ajoute aussi des exigences de sol pour l'IA si disponibles."
+ },
+ "fonctions": {
+  "RidgeFormer.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Retourne toujours true : aucune spécialisation prérequise."
+  },
+  "RidgeFormer.initSpecialization": {
+   "en": "Registers the work area type ridgeFormer with the work area type manager and declares the XML paths of the work sound under vehicle.ridgeFormer.sounds.",
+   "fr": "Enregistre le type de zone de travail ridgeFormer auprès du gestionnaire de types et déclare les chemins XML du son de travail sous vehicle.ridgeFormer.sounds."
+  },
+  "RidgeFormer.registerFunctions": {
+   "en": "Registers processRidgeFormerArea on the vehicle type.",
+   "fr": "Enregistre processRidgeFormerArea sur le type de véhicule."
+  },
+  "RidgeFormer.registerOverwrittenFunctions": {
+   "en": "Overrides doCheckSpeedLimit, getDirtMultiplier and getWearMultiplier on the vehicle type.",
+   "fr": "Surcharge doCheckSpeedLimit, getDirtMultiplier et getWearMultiplier sur le type de véhicule."
+  },
+  "RidgeFormer.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onDeactivate, onStartWorkAreaProcessing and onEndWorkAreaProcessing.",
+   "fr": "S'abonne à onLoad, onDelete, onDeactivate, onStartWorkAreaProcessing et onEndWorkAreaProcessing."
+  },
+  "RidgeFormer:onLoad": {
+   "en": "Initialises the stone state and fetches the stone wear multipliers for the SOWINGMACHINE type from the stone system. Adds AI ground type requirements if supported and, on clients, loads the work sound.",
+   "fr": "Initialise l'état des pierres et récupère les multiplicateurs d'usure liés aux pierres pour le type SOWINGMACHINE depuis le système de pierres. Ajoute les exigences de sol IA si supportées et, côté client, charge le son de travail."
+  },
+  "RidgeFormer:onDelete": {
+   "en": "Deletes the loaded sound samples.",
+   "fr": "Supprime les échantillons sonores chargés."
+  },
+  "RidgeFormer:onDeactivate": {
+   "en": "On clients, stops the sound samples and resets the work sample playing flag.",
+   "fr": "Côté client, arrête les échantillons sonores et réinitialise l'indicateur de lecture du son de travail."
+  },
+  "RidgeFormer:onStartWorkAreaProcessing": {
+   "en": "Resets the isWorking flag before the work areas are processed for this frame.",
+   "fr": "Réinitialise l'indicateur isWorking avant le traitement des zones de travail de cette frame."
+  },
+  "RidgeFormer:onEndWorkAreaProcessing": {
+   "en": "On clients, starts the work sound when isWorking became true and stops it when it is false, tracking the playing state.",
+   "fr": "Côté client, démarre le son de travail quand isWorking est devenu vrai et l'arrête sinon, en suivant l'état de lecture."
+  },
+  "RidgeFormer:processRidgeFormerArea": {
+   "en": "Work area callback. Working means last speed above 0.5. Erases tire tracks in the area, then (on server, or client near enough) forms ridges in the density map with heading snapped to 90 degrees, stores the stone state, and returns changed and total area.",
+   "fr": "Callback de zone de travail. Le travail suppose une vitesse supérieure à 0,5. Efface les traces de pneus dans la zone, puis (sur le serveur, ou client assez proche) forme les buttes dans la density map avec un cap arrondi à 90 degrés, mémorise l'état des pierres et retourne la surface modifiée et totale."
+  },
+  "RidgeFormer:doCheckSpeedLimit": {
+   "en": "Returns the parent result, or true when the implement chain is lowered and the ridge former is working.",
+   "fr": "Retourne le résultat parent, ou true quand la chaîne d'outils est abaissée et que le butteur travaille."
+  },
+  "RidgeFormer:getDirtMultiplier": {
+   "en": "Adds work dirt scaled by speed over speed limit to the parent multiplier, only when moving forward and working.",
+   "fr": "Ajoute la saleté de travail, proportionnelle à la vitesse sur la limite, au multiplicateur parent, seulement en marche avant et en travail."
+  },
+  "RidgeFormer:getWearMultiplier": {
+   "en": "Adds work wear scaled by speed over speed limit and by the stone multiplier for the last stone state, to the parent multiplier, only when moving forward and working.",
+   "fr": "Ajoute l'usure de travail, proportionnelle à la vitesse sur la limite et au multiplicateur de pierres du dernier état, au multiplicateur parent, seulement en marche avant et en travail."
+  }
+ }
+}

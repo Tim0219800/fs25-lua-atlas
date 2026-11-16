@@ -1,53 +1,53 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Sprayer.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation des pulvérisateurs, épandeurs de fumier et tonnes à lisier (prérequis : FillUnit, WorkArea, TurnOnVehicle). Elle fait deux choses : (a) côté serveur (et côté client proche), le traitement agronomique : processSprayerArea appelle FSDensityMapUtil.updateSprayArea sur la zone de travail, onEndWorkAreaProcessing consomme le liquide (addFillUnitFillLevel) et met à jour les statistiques de la ferme ; (b) côté client, les effets visuels et sonores. EFFETS : spec.effects (clé XML vehicle.sprayer.effects) et, pour chaque « sprayType » (vehicle.sprayer.sprayTypes.sprayType(?), choisi selon le type de remplissage), des effets, animationNodes, sons et animations propres, tous chargés par g_effectManager:loadEffect (EffectManager absent du dump : comportement interne NON VÉRIFIÉ). Condition d'allumage : getAreEffectsVisible, vrai tant que workAreaParameters.lastSprayTime + 100 ms > g_time ; lastSprayTime n'est mis à jour que dans processSprayerArea, donc quand une zone de travail traite réellement avec un niveau de remplissage > 0 (sur un client, seulement si currentUpdateDistance <= Sprayer.CLIENT_DM_UPDATE_RADIUS, constante non définie dans ce fichier : valeur NON VÉRIFIÉE). updateSprayerEffects (appelé par onTurnedOn, onTurnedOff, onEndWorkAreaProcessing, changement de sprayType et de section de largeur variable) démarre ou arrête les effets en transmettant le type de remplissage via setEffectTypeInfo ; c'est une bascule binaire, sans modulation d'intensité, de largeur de rampe ni de vent dans ce fichier. DONNÉES MÉTÉO/HUMIDITÉ : aucune (ni vent, ni pluie, ni humidité ne sont lus). Autres données utilisées : fillType du réservoir, vitesse (isWorking si getLastSpeed() > 1), état allumé/abaissé, largeur de travail (usageScales). Réseau : le serveur décide de la consommation ; l'état « quantité doublée » est synchronisé par SprayerDoubledAmountEvent ; l'allumage passe par TurnOnVehicle ; il n'y a ni dirty flag ni lecture de flux dans ce fichier. Points d'extension pour un moddeur : fonctions enregistrées getAreEffectsVisible, updateSprayerEffects, getSprayerUsage, getActiveSprayType, getIsSprayTypeActive, getSprayerFillUnitIndex, getExternalFill, getIsSprayerExternallyFilled, setSprayerDoubledAmountActive, getSprayerDoubledAmountActive, processSprayerArea, loadSprayTypeFromXML ; événement enregistré onSprayTypeChange ; fonctions surchargées (via registerOverwrittenFunction) getEffectByNode, getRawSpeedLimit, doCheckSpeedLimit, getCanBeTurnedOn, getIsWorkAreaActive, getDirtMultiplier, getWearMultiplier, getFillVolumeUVScrollSpeed, getVariableWorkWidthUsage, etc. Surcharger getAreEffectsVisible est le moyen le plus direct de piloter l'allumage des effets vanilla sans toucher à la logique de pulvérisation. Vitesse limite par défaut : 15 (Sprayer.getDefaultSpeedLimit).
+--- Specialization for sprayers, manure spreaders and slurry tankers (prerequisites: FillUnit, WorkArea, TurnOnVehicle). It does two things: (a) on the server (and on the nearby client), the agronomic processing: processSprayerArea calls FSDensityMapUtil.updateSprayArea on the work area, onEndWorkAreaProcessing consumes the liquid (addFillUnitFillLevel) and updates the farm statistics; (b) on the client, the visual and sound effects. EFFECTS: spec.effects (XML key vehicle.sprayer.effects) and, for each "sprayType" (vehicle.sprayer.sprayTypes.sprayType(?), chosen from the fill type), its own effects, animationNodes, sounds and animations, all loaded by g_effectManager:loadEffect (EffectManager is absent from the dump: internal behaviour UNVERIFIED). Switch-on condition: getAreEffectsVisible, true as long as workAreaParameters.lastSprayTime + 100 ms > g_time; lastSprayTime is only updated in processSprayerArea, so when a work area actually processes with a fill level > 0 (on a client, only if currentUpdateDistance <= Sprayer.CLIENT_DM_UPDATE_RADIUS, a constant not defined in this file: value UNVERIFIED). updateSprayerEffects (called by onTurnedOn, onTurnedOff, onEndWorkAreaProcessing, sprayType changes and variable-width section changes) starts or stops the effects, passing the fill type through setEffectTypeInfo; it is a binary toggle, with no modulation of intensity, boom width or wind in this file. WEATHER/MOISTURE DATA: none (neither wind, rain nor moisture are read). Other data used: tank fillType, speed (isWorking if getLastSpeed() > 1), on/lowered state, working width (usageScales). Network: the server decides consumption; the "doubled amount" state is synchronized by SprayerDoubledAmountEvent; switching on goes through TurnOnVehicle; there is no dirty flag or stream reading in this file. Extension points for a modder: registered functions getAreEffectsVisible, updateSprayerEffects, getSprayerUsage, getActiveSprayType, getIsSprayTypeActive, getSprayerFillUnitIndex, getExternalFill, getIsSprayerExternallyFilled, setSprayerDoubledAmountActive, getSprayerDoubledAmountActive, processSprayerArea, loadSprayTypeFromXML; registered event onSprayTypeChange; functions overridden (via registerOverwrittenFunction) getEffectByNode, getRawSpeedLimit, doCheckSpeedLimit, getCanBeTurnedOn, getIsWorkAreaActive, getDirtMultiplier, getWearMultiplier, getFillVolumeUVScrollSpeed, getVariableWorkWidthUsage, etc. Overriding getAreEffectsVisible is the most direct way to drive the vanilla effects' switch-on without touching the spraying logic. Default speed limit: 15 (Sprayer.getDefaultSpeedLimit).
 ---@class Sprayer
 Sprayer = {}
 
---- Enregistre dans le schéma XML du véhicule toutes les clés de vehicle.sprayer (usageScales, sprayTypes avec fillTypes, effets, animations, sons, usageScales propres et objectChanges, doubledAmount, turnedAnimation, fillUnitIndex, fillVolumeIndex, effects, animationNodes, sounds) ainsi que l'attribut #sprayType des zones de travail. Détail non relu clé par clé.
+--- Registers in the vehicle XML schema all the vehicle.sprayer keys (usageScales, sprayTypes with fillTypes, effects, animations, sounds, own usageScales and objectChanges, doubledAmount, turnedAnimation, fillUnitIndex, fillVolumeIndex, effects, animationNodes, sounds) as well as the #sprayType attribute of the work areas. Not reread key by key.
 function Sprayer.initSpecialization() end
 
---- Exige FillUnit, WorkArea et TurnOnVehicle.
+--- Requires FillUnit, WorkArea and TurnOnVehicle.
 ---@param specializations any
 function Sprayer.prerequisitesPresent(specializations) end
 
---- Déclare l'événement onSprayTypeChange.
+--- Declares the onSprayTypeChange event.
 ---@param vehicleType any
 function Sprayer.registerEvents(vehicleType) end
 
---- Expose au type de véhicule processSprayerArea, getIsSprayerExternallyFilled, getExternalFill, getAreEffectsVisible, updateSprayerEffects, getSprayerUsage, getUseSprayerAIRequirements, setSprayerAITerrainDetailProhibitedRange, getSprayerFillUnitIndex, loadSprayTypeFromXML, getActiveSprayType, getIsSprayTypeActive, setSprayerDoubledAmountActive et getSprayerDoubledAmountActive.
+--- Exposes to the vehicle type processSprayerArea, getIsSprayerExternallyFilled, getExternalFill, getAreEffectsVisible, updateSprayerEffects, getSprayerUsage, getUseSprayerAIRequirements, setSprayerAITerrainDetailProhibitedRange, getSprayerFillUnitIndex, loadSprayTypeFromXML, getActiveSprayType, getIsSprayTypeActive, setSprayerDoubledAmountActive and getSprayerDoubledAmountActive.
 ---@param vehicleType any
 function Sprayer.registerFunctions(vehicleType) end
 
---- Surcharge getDrawFirstFillText, getAreControlledActionsAllowed, getCanToggleTurnedOn, getCanBeTurnedOn, loadWorkAreaFromXML, getIsWorkAreaActive, doCheckSpeedLimit, getRawSpeedLimit, getFillVolumeUVScrollSpeed, getAIRequiresTurnOffOnHeadland, getDirtMultiplier, getWearMultiplier, getEffectByNode, getVariableWorkWidthUsage et getAIImplementUseVineSegment.
+--- Overrides getDrawFirstFillText, getAreControlledActionsAllowed, getCanToggleTurnedOn, getCanBeTurnedOn, loadWorkAreaFromXML, getIsWorkAreaActive, doCheckSpeedLimit, getRawSpeedLimit, getFillVolumeUVScrollSpeed, getAIRequiresTurnOffOnHeadland, getDirtMultiplier, getWearMultiplier, getEffectByNode, getVariableWorkWidthUsage and getAIImplementUseVineSegment.
 ---@param vehicleType any
 function Sprayer.registerOverwrittenFunctions(vehicleType) end
 
---- Écoute onLoad, onDelete, onUpdateTick, onRegisterActionEvents, onTurnedOn, onTurnedOff, onPreDetach, onStartWorkAreaProcessing, onEndWorkAreaProcessing, onStateChange, onSetLowered, onFillUnitFillLevelChanged, onSprayTypeChange, onAIImplementEnd et onVariableWorkWidthSectionChanged.
+--- Listens to onLoad, onDelete, onUpdateTick, onRegisterActionEvents, onTurnedOn, onTurnedOff, onPreDetach, onStartWorkAreaProcessing, onEndWorkAreaProcessing, onStateChange, onSetLowered, onFillUnitFillLevelChanged, onSprayTypeChange, onAIImplementEnd and onVariableWorkWidthSectionChanged.
 ---@param vehicleType any
 function Sprayer.registerEventListeners(vehicleType) end
 
---- Lit les paramètres de base (allowsSpraying, activateOnLowering, activateTankOnLowering, usageScales par type de remplissage, largeur de travail par défaut 12 m, sprayTypes, doubledAmount avec vitesse réduite ou facteur 0.5, animations, index de fill unit/volume). Sur le client, charge les effets (vehicle.sprayer.effects), sons et animationNodes. Détermine le profil : tonne à lisier/digestat, épandeur de fumier ou pulvérisateur d'engrais. Échoue (état de chargement ERROR) si la fill unit est absente. Initialise workAreaParameters. Retire l'action « quantité doublée » si aucune zone de travail.
+--- Reads the base parameters (allowsSpraying, activateOnLowering, activateTankOnLowering, usageScales per fill type, default working width 12 m, sprayTypes, doubledAmount with reduced speed or a 0.5 factor, animations, fill unit/volume indexes). On the client, loads the effects (vehicle.sprayer.effects), sounds and animationNodes. Determines the profile: slurry/digestate tanker, manure spreader or fertilizer sprayer. Fails (load state ERROR) if the fill unit is missing. Initializes workAreaParameters. Removes the "doubled amount" action if there is no work area.
 ---@param savegame any
 function Sprayer:onLoad(savegame) end
 
---- Supprime les effets, animations et échantillons sonores du pulvérisateur et de chacun de ses sprayTypes.
+--- Deletes the effects, animations and sound samples of the sprayer and of each of its sprayTypes.
 function Sprayer:onDelete() end
 
---- Détecte un changement de sprayType actif : arrête les effets de l'ancien, lève onSprayTypeChange et force updateSprayerEffects(true). Côté client, met à jour le texte et l'activation de l'action « quantité doublée ». Côté serveur, active l'outil si une activation était en attente après abaissement.
+--- Detects a change of the active sprayType: stops the old one's effects, raises onSprayTypeChange and forces updateSprayerEffects(true). On the client, updates the text and activation of the "doubled amount" action. On the server, switches the implement on if an activation was pending after lowering.
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function Sprayer:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Côté client, enregistre l'action d'entrée de quantité doublée (par défaut InputAction.DOUBLED_SPRAY_AMOUNT) quand le véhicule est actif pour la saisie.
+--- On the client, registers the doubled-amount input action (by default InputAction.DOUBLED_SPRAY_AMOUNT) when the vehicle is active for input.
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 function Sprayer:onRegisterActionEvents(isActiveForInput, isActiveForInputIgnoreSelection) end
 
---- Rappel de l'action d'entrée : inverse l'état « quantité doublée ».
+--- Input action callback: toggles the "doubled amount" state.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -55,169 +55,169 @@ function Sprayer:onRegisterActionEvents(isActiveForInput, isActiveForInputIgnore
 ---@param isAnalog any
 function Sprayer.actionEventDoubledAmount(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Traitement d'une zone de travail : sort sans rien faire si le réservoir est vide, si l'IA n'a pas de type de remplissage (elle arrête alors son travail) ou si, sur un client, le véhicule est au-delà de CLIENT_DM_UPDATE_RADIUS. Sinon appelle FSDensityMapUtil.updateSprayArea (coin start/width/height de la zone, type de pulvérisation, facteur 1 ou 2), cumule les aires, met à jour lastSprayTime (ce qui allume les effets) et passe isWorking à true si la vitesse dépasse 1.
+--- Processing of one work area: returns without doing anything if the tank is empty, if the AI has no fill type (it then stops its work) or if, on a client, the vehicle is beyond CLIENT_DM_UPDATE_RADIUS. Otherwise calls FSDensityMapUtil.updateSprayArea (start/width/height corners of the area, spray type, factor 1 or 2), accumulates the areas, updates lastSprayTime (which turns the effects on) and sets isWorking to true if the speed exceeds 1.
 ---@param workArea any
 ---@param dt any
 function Sprayer:processSprayerArea(workArea, dt) end
 
---- Renvoie vrai uniquement quand l'IA est active en travail de champ avec une source externe autorisée par les réglages d'aide (lisier, fumier, achat d'engrais) ; renvoie false hors IA.
+--- Returns true only when the AI is active in field work with an external source allowed by the helper settings (slurry, manure, fertilizer purchase); returns false outside the AI.
 function Sprayer:getIsSprayerExternallyFilled() end
 
---- Détermine, pour l'IA, le type de remplissage et la consommation fournis par l'achat ou par une station de chargement selon les réglages missionInfo (helperSlurrySource, helperManureSource, helperBuyFertilizer) ; côté serveur, débite le compte ou la station (prix x 1.5) et les statistiques de dépenses. Renvoie (FillType.UNKNOWN, 0) si rien n'est trouvé.
+--- Determines, for the AI, the fill type and consumption supplied by purchase or by a loading station according to the missionInfo settings (helperSlurrySource, helperManureSource, helperBuyFertilizer); on the server, debits the account or the station (price x 1.5) and the expense statistics. Returns (FillType.UNKNOWN, 0) if nothing is found.
 ---@param fillType any
 ---@param dt any
 function Sprayer:getExternalFill(fillType, dt) end
 
---- Vrai si lastSprayTime + 100 ms > g_time : c'est la condition qui allume les effets de pulvérisation. Fonction clé pour un mod qui voudrait remplacer ou compléter l'émission.
+--- True if lastSprayTime + 100 ms > g_time: this is the condition that turns the spraying effects on. Key function for a mod that wants to replace or complement the emission.
 function Sprayer:getAreEffectsVisible() end
 
---- Compare l'état d'effets voulu (getAreEffectsVisible) à l'état précédent (ou force). À l'allumage : détermine le fillType (dernier valide du réservoir, à défaut le premier supporté), l'envoie à g_effectManager:setEffectTypeInfo puis startEffects pour les effets de base et ceux du sprayType actif, lance sons et animations. À l'arrêt : arrête les effets, animations et sons de base et de tous les sprayTypes. Aucune donnée de vent ou de météo.
+--- Compares the wanted effects state (getAreEffectsVisible) with the previous one (or forces). On switch-on: determines the fillType (last valid one in the tank, else the first supported), sends it to g_effectManager:setEffectTypeInfo then startEffects for the base effects and those of the active sprayType, starts sounds and animations. On stop: stops the effects, animations and sounds of the base and of all sprayTypes. No wind or weather data.
 ---@param force any
 function Sprayer:updateSprayerEffects(force) end
 
---- Consommation sur dt (ms) : échelle (par type de remplissage ou par défaut) x litersPerSecond du type de pulvérisation (1 par défaut) x self.speedLimit x largeur de travail (zone de travail ou valeur par défaut) x dt x 0.001. Utilise donc la limite de vitesse et non la vitesse réelle.
+--- Consumption over dt (ms): scale (per fill type or default) x litersPerSecond of the spray type (1 by default) x self.speedLimit x working width (work area or default value) x dt x 0.001. So it uses the speed limit and not the actual speed.
 ---@param fillType any
 ---@param dt any
 function Sprayer:getSprayerUsage(fillType, dt) end
 
---- Renvoie true : l'IA applique les exigences de terrain du pulvérisateur.
+--- Returns true: the AI applies the sprayer's field requirements.
 function Sprayer:getUseSprayerAIRequirements() end
 
---- Met à jour les restrictions de terrain de l'IA : selon le type de remplissage actif, appelle setSprayerAITerrainDetailProhibitedRange, sinon rétablit les exigences par défaut (Sprayer.AI_REQUIRED_GROUND_TYPES).
+--- Updates the AI terrain restrictions: depending on the active fill type, calls setSprayerAITerrainDetailProhibitedRange, otherwise restores the default requirements (Sprayer.AI_REQUIRED_GROUND_TYPES).
 ---@param self any
 function Sprayer.updateAiParameters(self) end
 
---- Reconstruit les exigences et interdictions de l'IA (cartes de densité) selon le type de pulvérisation : herbicide (cibler les mauvaises herbes), engrais (interdire les pixels déjà au niveau maximal ou du même type) ou chaux (interdire le même type), et interdit les cultures arrivées à maturité (sauf herbe).
+--- Rebuilds the AI requirements and prohibitions (density maps) according to the spray type: herbicide (target weeds), fertilizer (forbid pixels already at maximum level or of the same type) or lime (forbid the same type), and forbids crops that reached maturity (except grass).
 ---@param fillType any
 function Sprayer:setSprayerAITerrainDetailProhibitedRange(fillType) end
 
---- Index de la fill unit : celle du sprayType actif s'il existe, sinon celle de la spécialisation.
+--- Fill unit index: that of the active sprayType if there is one, otherwise that of the specialization.
 function Sprayer:getSprayerFillUnitIndex() end
 
---- Charge un sprayType : fill unit, volume, support de largeur variable, sons, effets (g_effectManager:loadEffect), animationNodes, animation de rotation, liste de fillTypes déclencheurs, objectChanges, échelles d'usage et réglages IA.
+--- Loads a sprayType: fill unit, volume, variable width support, sounds, effects (g_effectManager:loadEffect), animationNodes, rotation animation, list of trigger fillTypes, objectChanges, usage scales and AI settings.
 ---@param xmlFile any
 ---@param key any
 ---@param sprayType any
 function Sprayer:loadSprayTypeFromXML(xmlFile, key, sprayType) end
 
---- Renvoie le premier sprayType dont getIsSprayTypeActive est vrai, sinon nil.
+--- Returns the first sprayType for which getIsSprayTypeActive is true, otherwise nil.
 function Sprayer:getActiveSprayType() end
 
---- Vrai si le sprayType n'a pas de liste de fillTypes, ou si le type de remplissage actuel de sa fill unit figure dans cette liste.
+--- True if the sprayType has no fillTypes list, or if the current fill type of its fill unit is in that list.
 ---@param sprayType any
 function Sprayer:getIsSprayTypeActive(sprayType) end
 
---- Change l'état « quantité doublée » et envoie SprayerDoubledAmountEvent (synchronisation réseau) si l'état change.
+--- Changes the "doubled amount" state and sends SprayerDoubledAmountEvent (network sync) if the state changes.
 ---@param isActive any
 ---@param noEventSend any
 function Sprayer:setSprayerDoubledAmountActive(isActive, noEventSend) end
 
---- Renvoie (actif, autorisé). Autorisé seulement pour le fumier, le lisier et le digestat (ou un type de pulvérisation d'engrais) ; jamais pour un pulvérisateur d'engrais (isFertilizerSprayer).
+--- Returns (active, allowed). Allowed only for manure, slurry and digestate (or a fertilizer spray type); never for a fertilizer sprayer (isFertilizerSprayer).
 ---@param sprayTypeIndex any
 function Sprayer:getSprayerDoubledAmountActive(sprayTypeIndex) end
 
---- Affiche l'invite « remplissez d'abord l'outil » quand le pulvérisateur est sélectionné, vide et ne peut pas être allumé.
+--- Shows the "fill the tool first" prompt when the sprayer is selected, empty and cannot be turned on.
 ---@param superFunc any
 function Sprayer:getDrawFirstFillText(superFunc) end
 
---- Refuse les actions contrôlées (AVC) si le réservoir est vide (avec message info_firstFillTheTool).
+--- Refuses controlled actions (AVC) if the tank is empty (with the info_firstFillTheTool message).
 ---@param superFunc any
 ---@return boolean
 ---@return string
 function Sprayer:getAreControlledActionsAllowed(superFunc) end
 
---- Côté client, interdit le basculement si l'outil ne peut pas être allumé et n'a pas de réservoir.
+--- On the client, forbids toggling if the implement cannot be turned on and has no tank.
 ---@param superFunc any
 function Sprayer:getCanToggleTurnedOn(superFunc) end
 
---- Refuse l'allumage si allowsSpraying est faux ou si ni le réservoir ni une source de remplissage atteignable ne contient de liquide (hors IA).
+--- Refuses switch-on if allowsSpraying is false or if neither the tank nor a reachable fill source contains liquid (outside the AI).
 ---@param superFunc any
 function Sprayer:getCanBeTurnedOn(superFunc) end
 
---- Après la fonction d'origine, convertit un type de zone par défaut en WorkAreaType.SPRAYER et lit #sprayType de la zone.
+--- After the original function, converts a default area type to WorkAreaType.SPRAYER and reads the area's #sprayType.
 ---@param superFunc any
 ---@param workArea any
 ---@param xmlFile any
 ---@param key any
 function Sprayer:loadWorkAreaFromXML(superFunc, workArea, xmlFile, key) end
 
---- Désactive la zone de travail si elle est rattachée à un sprayType non actif.
+--- Disables the work area if it is bound to a sprayType that is not active.
 ---@param superFunc any
 ---@param workArea any
 function Sprayer:getIsWorkAreaActive(superFunc, workArea) end
 
---- La limite de vitesse s'applique aussi lorsque l'outil est allumé (useSpeedLimit).
+--- The speed limit also applies when the implement is turned on (useSpeedLimit).
 ---@param superFunc any
 function Sprayer:doCheckSpeedLimit(superFunc) end
 
---- Quand la quantité doublée est active et l'outil allumé, renvoie la vitesse limite réduite doubledAmountSpeed.
+--- When doubled amount is active and the implement is on, returns the reduced speed limit doubledAmountSpeed.
 ---@param superFunc any
 function Sprayer:getRawSpeedLimit(superFunc) end
 
---- Fait défiler les UV du volume de remplissage (effet de vidange dans la cuve) quand l'outil est allumé et non alimenté de l'extérieur.
+--- Scrolls the fill volume UVs (draining effect in the tank) when the implement is on and not supplied externally.
 ---@param superFunc any
 ---@param fillVolumeIndex any
 function Sprayer:getFillVolumeUVScrollSpeed(superFunc, fillVolumeIndex) end
 
---- Renvoie toujours true : l'IA éteint l'outil en bout de champ.
+--- Always returns true: the AI turns the implement off at the headland.
 ---@param superFunc any
 function Sprayer:getAIRequiresTurnOffOnHeadland(superFunc) end
 
---- Ajoute à la salissure le multiplicateur de travail x (vitesse / limite de vitesse) tant que isWorking est vrai.
+--- Adds to the dirt the work multiplier x (speed / speed limit) while isWorking is true.
 ---@param superFunc any
 function Sprayer:getDirtMultiplier(superFunc) end
 
---- Ajoute à l'usure le multiplicateur de travail x (vitesse / limite de vitesse) tant que isWorking est vrai.
+--- Adds to the wear the work multiplier x (speed / speed limit) while isWorking is true.
 ---@param superFunc any
 function Sprayer:getWearMultiplier(superFunc) end
 
---- Cherche l'effet correspondant à un nœud dans les effets de base puis dans ceux des sprayTypes, sinon délègue à la fonction d'origine.
+--- Looks up the effect matching a node in the base effects then in those of the sprayTypes, otherwise delegates to the original function.
 ---@param superFunc integer
 ---@param node integer
 function Sprayer:getEffectByNode(superFunc, node) end
 
---- Retourne la consommation par minute (usagePerMin) quand la fonction d'origine n'en donne pas et que l'outil est allumé, sinon 0.
+--- Returns the per-minute consumption (usagePerMin) when the original function gives none and the implement is on, otherwise 0.
 ---@param superFunc any
 ---@return number
 function Sprayer:getVariableWorkWidthUsage(superFunc) end
 
---- Pour l'IA en vignes : vrai si plus de 10 % de l'aire du côté de segment est couverte par l'outil.
+--- For AI in vineyards: true if more than 10 % of the segment side's area is covered by the implement.
 ---@param superFunc any
 ---@param placeable any
 ---@param segment any
 ---@param segmentSide any
 function Sprayer:getAIImplementUseVineSegment(superFunc, placeable, segment, segmentSide) end
 
---- Côté client : met à jour les effets, joue l'animation d'outil et les sons de travail, et les animations « turned » du sprayType et de base (sauf alimentation externe si configuré).
+--- Client side: updates the effects, plays the implement animation and the work sounds, and the "turned" animations of the sprayType and the base (except external supply if configured).
 function Sprayer:onTurnedOn() end
 
---- Côté client : met à jour les effets, arrête l'animation et les sons de travail, et joue les animations d'arrêt.
+--- Client side: updates the effects, stops the animation and the work sounds, and plays the stop animations.
 function Sprayer:onTurnedOff() end
 
---- Avant détachement, éteint le véhicule porteur s'il est allumé.
+--- Before detaching, turns off the carrying vehicle if it is on.
 ---@param attacherVehicle any
 ---@param jointDescIndex any
 function Sprayer:onPreDetach(attacherVehicle, jointDescIndex) end
 
---- Avant le traitement des zones : choisit la source de liquide (propre réservoir ou une source rattachée), calcule fillType, consommation et niveau disponible, applique l'alimentation externe de l'IA, synchronise les animations, et remplit workAreaParameters (sprayType, sprayFillType, sprayFillLevel, usage, usagePerMin). Remet isWorking à false.
+--- Before the areas are processed: picks the liquid source (own tank or an attached source), computes fillType, consumption and available level, applies the AI's external supply, syncs the animations, and fills workAreaParameters (sprayType, sprayFillType, sprayFillLevel, usage, usagePerMin). Resets isWorking to false.
 ---@param dt any
 function Sprayer:onStartWorkAreaProcessing(dt) end
 
---- Côté serveur, si une zone a travaillé : débite la source (addFillUnitFillLevel), met à jour sprayedHectares, sprayedTime, sprayUsage et la dernière aire travaillée. Dans tous les cas (client compris) appelle ensuite updateSprayerEffects.
+--- On the server, if an area worked: debits the source (addFillUnitFillLevel), updates sprayedHectares, sprayedTime, sprayUsage and the last worked area. In all cases (client included) then calls updateSprayerEffects.
 ---@param dt any
 ---@param hasProcessed any
 function Sprayer:onEndWorkAreaProcessing(dt, hasProcessed) end
 
---- Sur attache, détachement ou changement de type de remplissage : reconstruit la liste des types supportés et des sources de remplissage (FillUnit.addFillTypeSources depuis le véhicule racine).
+--- On attach, detach or fill type change: rebuilds the list of supported types and fill sources (FillUnit.addFillTypeSources from the root vehicle).
 ---@param state any
 ---@param data any
 function Sprayer:onStateChange(state, data) end
 
---- Côté serveur, active l'outil à l'abaissement si activateOnLowering (ou met l'activation en attente). Active/désactive aussi les réservoirs sources si activateTankOnLowering.
+--- On the server, turns the implement on when lowered if activateOnLowering (or sets the activation pending). Also turns source tanks on/off if activateTankOnLowering.
 ---@param isLowered any
 function Sprayer:onSetLowered(isLowered) end
 
---- Si le réservoir tombe à 0 pendant que l'outil est allumé (hors IA) et qu'aucune source valide du même type n'existe, éteint l'outil et rejoue les actions contrôlées si l'AVC est disponible.
+--- If the tank drops to 0 while the implement is on (outside the AI) and no valid source of the same type exists, turns the implement off and replays the controlled actions if AVC is available.
 ---@param fillUnitIndex any
 ---@param fillLevelDelta any
 ---@param fillType any
@@ -226,15 +226,15 @@ function Sprayer:onSetLowered(isLowered) end
 ---@param appliedDelta any
 function Sprayer:onFillUnitFillLevelChanged(fillUnitIndex, fillLevelDelta, fillType, toolType, fillPositionData, appliedDelta) end
 
---- Applique les objectChanges du sprayType actif et règle l'activation de la largeur de travail variable.
+--- Applies the objectChanges of the active sprayType and sets the activation of the variable working width.
 ---@param activeSprayType any
 function Sprayer:onSprayTypeChange(activeSprayType) end
 
---- À la fin du travail IA, éteint toutes les sources de remplissage allumées.
+--- At the end of AI work, turns off all the fill sources that are on.
 function Sprayer:onAIImplementEnd() end
 
---- Force la mise à jour des effets quand une section de largeur variable change.
+--- Forces the effects update when a variable-width section changes.
 function Sprayer:onVariableWorkWidthSectionChanged() end
 
---- Limite de vitesse par défaut : 15.
+--- Default speed limit: 15.
 function Sprayer.getDefaultSpeedLimit() end

@@ -1,0 +1,161 @@
+{
+ "fichier": "vehicles/specializations/WorkMode.lua",
+ "module": {
+  "en": "Specialization for implements that offer several selectable work modes, each bundling its own animations, work areas, windrower effects, AI setup, moving-tool limits and variable work width. It requires WorkArea and AnimatedVehicle, reads the `vehicle.workModes` XML block (optionally per `workMode` configuration), and saves the current mode in the savegame. The mode is synchronized to clients (join stream and a server-to-client update stream for windrow effects) and changed through SetWorkModeEvent. It raises `onWorkModeChanged`.",
+  "fr": "Spécialisation pour les outils proposant plusieurs modes de travail sélectionnables, chacun regroupant ses animations, zones de travail, effets d'andaineur, configuration IA, limites d'outils mobiles et largeur de travail variable. Elle exige WorkArea et AnimatedVehicle, lit le bloc XML `vehicle.workModes` (éventuellement par configuration `workMode`) et sauvegarde le mode courant. Le mode est synchronisé vers les clients (flux de connexion et flux de mise à jour serveur vers client pour les effets d'andain) et modifié via SetWorkModeEvent. Elle déclenche `onWorkModeChanged`."
+ },
+ "fonctions": {
+  "WorkMode.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type also has the WorkArea and AnimatedVehicle specializations.",
+   "fr": "Retourne true seulement si le type de véhicule possède aussi les spécialisations WorkArea et AnimatedVehicle."
+  },
+  "WorkMode.initSpecialization": {
+   "en": "Registers the `workMode` configuration type and the XML schema paths under `vehicle.workModes` and each configuration entry, plus the savegame attribute `workMode#state` (default 1).",
+   "fr": "Enregistre le type de configuration `workMode` et les chemins XML sous `vehicle.workModes` et sous chaque entrée de configuration, ainsi que l'attribut de sauvegarde `workMode#state` (défaut 1)."
+  },
+  "WorkMode.registerWorkModeXMLPaths": {
+   "en": "Declares every XML key of a work-mode block: fold limits, change permissions, per-mode animations, work/drop areas, moving-tool limit, variable work width, windrower effect, animation nodes and AI. Also adds `workModeIndex` for spray types and `allowWhileChangingWorkMode` for moving tools.",
+   "fr": "Déclare toutes les clés XML d'un bloc de mode de travail : limites de pliage, autorisations de changement, animations par mode, zones de travail/dépôt, limite d'outil mobile, largeur de travail variable, effet d'andaineur, animation nodes et IA. Ajoute aussi `workModeIndex` pour les types de pulvérisation et `allowWhileChangingWorkMode` pour les outils mobiles."
+  },
+  "WorkMode.registerEvents": {
+   "en": "Registers the vehicle event `onWorkModeChanged`.",
+   "fr": "Enregistre l'événement véhicule `onWorkModeChanged`."
+  },
+  "WorkMode.registerFunctions": {
+   "en": "Adds loadWorkModeFromXML, setWorkMode, getWorkMode, getIsWorkModeChangeAllowed and deactivateWindrowerEffects to the vehicle type. Note: `WorkMode:getWorkMode` is registered here but no definition appears in this file (UNVERIFIED where it comes from).",
+   "fr": "Ajoute loadWorkModeFromXML, setWorkMode, getWorkMode, getIsWorkModeChangeAllowed et deactivateWindrowerEffects au type de véhicule. À noter : `WorkMode:getWorkMode` est enregistrée ici mais aucune définition n'apparaît dans ce fichier (origine NON VÉRIFIÉE)."
+  },
+  "WorkMode.registerOverwrittenFunctions": {
+   "en": "Overrides getIsWorkAreaActive, getCanBeSelected, getAllowsLowering, loadSprayTypeFromXML, getIsSprayTypeActive, loadMovingToolFromXML, getIsMovingToolActive and getAreEffectsVisible.",
+   "fr": "Surcharge getIsWorkAreaActive, getCanBeSelected, getAllowsLowering, loadSprayTypeFromXML, getIsSprayTypeActive, loadMovingToolFromXML, getIsMovingToolActive et getAreEffectsVisible."
+  },
+  "WorkMode.registerEventListeners": {
+   "en": "Subscribes the specialization to load, delete, network stream, update, draw, turn on/off, deactivate, lowering, fold-state and action-event registration callbacks.",
+   "fr": "Abonne la spécialisation aux callbacks de chargement, suppression, flux réseau, mise à jour, affichage, allumage/extinction, désactivation, abaissement, état de pliage et enregistrement des événements d'action."
+  },
+  "WorkMode:onLoad": {
+   "en": "Reads the work-mode definitions (using the vehicle's `workMode` configuration if present), applies the default mode, creates the HUD extension and allocates the dirty flag. If no mode is defined, it removes all the other event listeners to avoid any cost. Prints an error if the mode count exceeds what the network bit width can carry.",
+   "fr": "Lit les définitions de modes de travail (selon la configuration `workMode` du véhicule si elle existe), applique le mode par défaut, crée l'extension HUD et alloue le dirty flag. Si aucun mode n'est défini, elle retire tous les autres écouteurs d'événements pour éviter tout coût. Affiche une erreur si le nombre de modes dépasse ce que la largeur en bits réseau permet."
+  },
+  "WorkMode:onPostLoad": {
+   "en": "Restores the saved mode from the savegame (clamped to the valid range), fast-forwards the animations to their end state and, for foldable tools that are not moving, sets the fold direction from the current fold time.",
+   "fr": "Restaure le mode sauvegardé (borné à la plage valide), avance les animations jusqu'à leur état final et, pour les outils pliables à l'arrêt, définit le sens de pliage d'après le temps de pliage courant."
+  },
+  "WorkMode:saveToXMLFile": {
+   "en": "Writes the current work mode index to the savegame key `#state`.",
+   "fr": "Écrit l'indice du mode de travail courant dans la clé de sauvegarde `#state`."
+  },
+  "WorkMode:onDelete": {
+   "en": "Deletes the windrower effects and animation nodes of every mode and the HUD extension.",
+   "fr": "Supprime les effets d'andaineur et les animation nodes de chaque mode ainsi que l'extension HUD."
+  },
+  "WorkMode:onReadStream": {
+   "en": "Client side on join: reads the current mode index from the stream and applies it without sending an event.",
+   "fr": "Côté client à la connexion : lit l'indice du mode courant dans le flux et l'applique sans envoyer d'événement."
+  },
+  "WorkMode:onWriteStream": {
+   "en": "Server side on join: writes the current mode index to the stream.",
+   "fr": "Côté serveur à la connexion : écrit l'indice du mode courant dans le flux."
+  },
+  "WorkMode:onReadUpdateStream": {
+   "en": "Client only: when the dirty bit was sent, reads for each windrower effect of the active mode whether it was recently charged, and reads the accumulated fruit type.",
+   "fr": "Client uniquement : si le bit dirty a été envoyé, lit pour chaque effet d'andaineur du mode actif s'il a été récemment chargé, ainsi que le type de fruit accumulé."
+  },
+  "WorkMode:onWriteUpdateStream": {
+   "en": "Server only: when the dirty flag is set, writes for each windrower effect of the active mode whether it was charged in the last 500 ms, then the accumulated fruit type.",
+   "fr": "Serveur uniquement : si le dirty flag est actif, écrit pour chaque effet d'andaineur du mode actif s'il a été chargé dans les 500 dernières ms, puis le type de fruit accumulé."
+  },
+  "WorkMode:onUpdate": {
+   "en": "Client: fades turned-on animations in and out, starts or stops windrower effects according to the last charge time and fruit type, and enables the work-mode input actions depending on whether a change is allowed. Server: tracks the fruit type and pickup activity of the active mode's work areas and raises the dirty flag.",
+   "fr": "Client : fait monter et descendre en fondu les animations d'allumage, démarre ou arrête les effets d'andaineur selon le dernier temps de charge et le type de fruit, et active les actions de changement de mode selon que le changement est autorisé. Serveur : suit le type de fruit et l'activité de ramassage des zones de travail du mode actif et lève le dirty flag."
+  },
+  "WorkMode:onUpdateTick": {
+   "en": "When the tool is fully unfolded (or at its middle fold position), restarts mode animations flagged to repeat after unfolding and runs a lowering animation that was postponed during folding.",
+   "fr": "Quand l'outil est entièrement déplié (ou en position de pliage intermédiaire), relance les animations de mode marquées à répéter après dépliage et exécute une animation d'abaissement différée pendant le pliage."
+  },
+  "WorkMode:onDraw": {
+   "en": "Adds the work-mode HUD help extension to the HUD each frame when one exists.",
+   "fr": "Ajoute à chaque frame l'extension d'aide HUD du mode de travail au HUD lorsqu'elle existe."
+  },
+  "WorkMode:onDeactivate": {
+   "en": "Stops the windrower effects when the vehicle is deactivated.",
+   "fr": "Arrête les effets d'andaineur lorsque le véhicule est désactivé."
+  },
+  "WorkMode:deactivateWindrowerEffects": {
+   "en": "Client only: stops the windrower effects of every work mode.",
+   "fr": "Client uniquement : arrête les effets d'andaineur de tous les modes de travail."
+  },
+  "WorkMode:loadWorkModeFromXML": {
+   "en": "Fills a mode table from XML: name, input action, default flag, turned-on and lowering animations (only if the animation exists), work and drop areas, mode-change animations, moving-tool limit, variable work width, windrower effects, animation nodes and AI setup. Always returns true.",
+   "fr": "Remplit une table de mode depuis le XML : nom, action d'entrée, mode par défaut, animations d'allumage et d'abaissement (seulement si l'animation existe), zones de travail et de dépôt, animations de changement de mode, limite d'outil mobile, largeur de travail variable, effets d'andaineur, animation nodes et configuration IA. Retourne toujours true."
+  },
+  "WorkMode:setWorkMode": {
+   "en": "Switches to the given mode: unless `noEventSend` is set, it sends SetWorkModeEvent (broadcast from the server, request from a client). Then it swaps animations, effects, variable work width, work-area drop indices and moving-tool limits, and raises `onWorkModeChanged`. Silently returns for an invalid index.",
+   "fr": "Passe au mode donné : sauf si `noEventSend` est défini, envoie SetWorkModeEvent (diffusion depuis le serveur, requête depuis un client). Puis échange animations, effets, largeur de travail variable, indices de dépôt des zones de travail et limites d'outils mobiles, et déclenche `onWorkModeChanged`. Retourne sans rien faire si l'indice est invalide."
+  },
+  "WorkMode:getIsWorkAreaActive": {
+   "en": "Returns false for a work area that the active mode maps to drop area 0; otherwise defers to the parent implementation.",
+   "fr": "Retourne false pour une zone de travail que le mode actif associe à la zone de dépôt 0 ; sinon délègue à l'implémentation parente."
+  },
+  "WorkMode:getCanBeSelected": {
+   "en": "Always returns true, so the implement can be selected whatever the parent logic says.",
+   "fr": "Retourne toujours true, l'outil est donc sélectionnable quelle que soit la logique parente."
+  },
+  "WorkMode:getAllowsLowering": {
+   "en": "Returns the parent result, or true if the active mode defines lowering animations; the warning from the parent is passed through.",
+   "fr": "Retourne le résultat parent, ou true si le mode actif définit des animations d'abaissement ; l'avertissement du parent est transmis."
+  },
+  "WorkMode:loadSprayTypeFromXML": {
+   "en": "Reads the optional `#workModeIndex` of a spray type, then calls the parent loader.",
+   "fr": "Lit le `#workModeIndex` optionnel d'un type de pulvérisation, puis appelle le chargeur parent."
+  },
+  "WorkMode:getIsSprayTypeActive": {
+   "en": "Returns false when the spray type is bound to a work mode other than the current one; otherwise defers to the parent.",
+   "fr": "Retourne false si le type de pulvérisation est lié à un autre mode que le mode courant ; sinon délègue au parent."
+  },
+  "WorkMode:loadMovingToolFromXML": {
+   "en": "Calls the parent loader and, if it succeeds, reads `#allowWhileChangingWorkMode` (default true) into the moving tool entry.",
+   "fr": "Appelle le chargeur parent et, en cas de succès, lit `#allowWhileChangingWorkMode` (défaut true) dans l'entrée de l'outil mobile."
+  },
+  "WorkMode:getIsMovingToolActive": {
+   "en": "Returns false for a moving tool that forbids movement during mode changes while any mode-change animation is playing; otherwise defers to the parent.",
+   "fr": "Retourne false pour un outil mobile qui interdit tout mouvement pendant un changement de mode tant qu'une animation de changement de mode est en cours ; sinon délègue au parent."
+  },
+  "WorkMode:getAreEffectsVisible": {
+   "en": "Returns false while any mode-change animation is playing or if the parent says effects are hidden; otherwise true.",
+   "fr": "Retourne false tant qu'une animation de changement de mode est en cours ou si le parent masque les effets ; sinon true."
+  },
+  "WorkMode:getIsWorkModeChangeAllowed": {
+   "en": "Returns false if the fold position lies outside the configured fold limits, or if changing while lowered is forbidden and the implement's attacher joint is moving down; otherwise true.",
+   "fr": "Retourne false si la position de pliage est hors des limites configurées, ou si le changement en position abaissée est interdit et que l'attache de l'outil descend ; sinon true."
+  },
+  "WorkMode:onTurnedOff": {
+   "en": "Client only: stops windrower effects, sets the turned-on animations to fade out and stops the mode's animation nodes.",
+   "fr": "Client uniquement : arrête les effets d'andaineur, lance le fondu sortant des animations d'allumage et arrête les animation nodes du mode."
+  },
+  "WorkMode:onTurnedOn": {
+   "en": "Client only: sets the turned-on animations to fade in and starts the animation nodes of the active mode.",
+   "fr": "Client uniquement : lance le fondu entrant des animations d'allumage et démarre les animation nodes du mode actif."
+  },
+  "WorkMode:onSetLowered": {
+   "en": "Plays or reverses the active mode's lowering animations when the tool is lowered or raised. If the tool is mid-fold the request is postponed. Note: it compares against `self.foldMiddleAnimTime`, whereas other code uses `spec_foldable.foldMiddleAnimTime`, which looks inconsistent.",
+   "fr": "Joue ou inverse les animations d'abaissement du mode actif quand l'outil est abaissé ou relevé. Si l'outil est en cours de pliage, la demande est différée. À noter : la comparaison utilise `self.foldMiddleAnimTime` alors que le reste du code utilise `spec_foldable.foldMiddleAnimTime`, ce qui semble incohérent."
+  },
+  "WorkMode:onFoldStateChanged": {
+   "en": "When unfolding starts, re-arms the repeat flag of the mode animations and asks the attacher vehicle to raise the implement if it is still lowered.",
+   "fr": "Au début d'un dépliage, réarme l'indicateur de répétition des animations du mode et demande au véhicule porteur de relever l'outil s'il est encore abaissé."
+  },
+  "WorkMode:onRegisterActionEvents": {
+   "en": "Client only: registers the cycle action `TOGGLE_WORKMODE` and one direct action per mode with an input binding; all start inactive and are enabled later by onUpdate.",
+   "fr": "Client uniquement : enregistre l'action cyclique `TOGGLE_WORKMODE` et une action directe par mode disposant d'une touche ; toutes démarrent inactives et sont activées ensuite par onUpdate."
+  },
+  "WorkMode.actionEventWorkModeChange": {
+   "en": "Input callback that moves to the next mode, wrapping back to the first one, and applies it via setWorkMode (which sends the event).",
+   "fr": "Callback d'entrée qui passe au mode suivant, en revenant au premier après le dernier, et l'applique via setWorkMode (qui envoie l'événement)."
+  },
+  "WorkMode.actionEventWorkModeChangeDirect": {
+   "en": "Input callback that selects the mode bound to the triggered action, if it differs from the current one.",
+   "fr": "Callback d'entrée qui sélectionne le mode associé à l'action déclenchée, s'il diffère du mode courant."
+  }
+ }
+}

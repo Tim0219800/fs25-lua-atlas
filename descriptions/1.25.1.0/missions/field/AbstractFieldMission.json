@@ -1,0 +1,189 @@
+{
+ "fichier": "missions/field/AbstractFieldMission.lua",
+ "module": {
+  "en": "Base class of all field contracts (plow, sow, stone pick, harvest and so on), a subclass of AbstractMission. It binds a mission to a Field, creates the map hotspot, prepares and finishes the field through FieldUpdateTask objects (server), measures progress with density map modifiers split into partitions, registers the field polygon in the MissionManager mission map, computes the reward per hectare and handles save, load and network streams. Subclasses override createModifier, getRewardPerHa, getMissionTypeName and so on.",
+  "fr": "Classe de base de tous les contrats de champ (labour, semis, ramassage de cailloux, récolte, etc.), sous-classe de AbstractMission. Elle lie une mission à un Field, crée le hotspot de carte, prépare et termine le champ via des FieldUpdateTask (serveur), mesure l'avancement avec des modificateurs de density map découpés en partitions, enregistre le polygone du champ dans la carte des missions du MissionManager, calcule la récompense par hectare et gère sauvegarde, chargement et flux réseau. Les sous-classes surchargent createModifier, getRewardPerHa, getMissionTypeName, etc."
+ },
+ "fonctions": {
+  "AbstractFieldMission.new": {
+   "en": "Constructor. Calls AbstractMission.new, then initialises empty work area types, money multiplier 1, not in the mission map, 0 percent done and no modifier, filter or hotspot.",
+   "fr": "Constructeur. Appelle AbstractMission.new puis initialise des types de zone de travail vides, un multiplicateur d'argent à 1, absence de la carte des missions, 0 pour cent fait et aucun modificateur, filtre ou hotspot."
+  },
+  "AbstractFieldMission:init": {
+   "en": "Binds the mission to the given field with setField, then calls the parent init and returns its result.",
+   "fr": "Lie la mission au champ donné avec setField puis appelle l'init du parent et renvoie son résultat."
+  },
+  "AbstractFieldMission:setField": {
+   "en": "Stores the field, tells the field about the mission, builds the progress title with the field id, notifies g_fieldManager:onFieldMissionStarted and creates the map hotspot.",
+   "fr": "Mémorise le champ, informe le champ de la mission, construit le titre d'avancement avec l'id du champ, notifie g_fieldManager:onFieldMissionStarted et crée le hotspot de carte."
+  },
+  "AbstractFieldMission:createMapHotspot": {
+   "en": "Creates an AbstractFieldMissionHotspot if needed, points it at the field and stores it as the only entry of mapHotspots.",
+   "fr": "Crée un AbstractFieldMissionHotspot si nécessaire, le dirige vers le champ et le stocke comme seule entrée de mapHotspots."
+  },
+  "AbstractFieldMission:getField": {
+   "en": "Returns the Field this mission works on.",
+   "fr": "Renvoie le Field sur lequel porte la mission."
+  },
+  "AbstractFieldMission:getMapHotspots": {
+   "en": "Returns the list of map hotspots of this mission.",
+   "fr": "Renvoie la liste des hotspots de carte de cette mission."
+  },
+  "AbstractFieldMission:getWorldPosition": {
+   "en": "Returns the field indicator world position (the two values from field:getIndicatorPosition).",
+   "fr": "Renvoie la position monde de l'indicateur du champ (les deux valeurs de field:getIndicatorPosition)."
+  },
+  "AbstractFieldMission:getLocation": {
+   "en": "Returns the localized text contract_farmland formatted with the field name.",
+   "fr": "Renvoie le texte localisé contract_farmland formaté avec le nom du champ."
+  },
+  "AbstractFieldMission:reactivate": {
+   "en": "Recreates the completion modifier with createModifier, then calls the parent reactivate. Used when a saved mission becomes active again.",
+   "fr": "Recrée le modificateur d'achèvement avec createModifier puis appelle le reactivate du parent. Utilisé quand une mission sauvegardée redevient active."
+  },
+  "AbstractFieldMission:delete": {
+   "en": "Removes the field from the mission map and the hotspot, deletes the hotspot, detaches the mission from the field, notifies g_fieldManager:onFieldMissionDeleted and calls the parent delete.",
+   "fr": "Retire le champ de la carte des missions et le hotspot, supprime le hotspot, détache la mission du champ, notifie g_fieldManager:onFieldMissionDeleted et appelle le delete du parent."
+  },
+  "AbstractFieldMission:saveToXMLFile": {
+   "en": "Calls the parent, writes the field id, and while PREPARING with a finished preparing task also saves that task with its class name under field.preparingTask.",
+   "fr": "Appelle le parent, écrit l'id du champ et, pendant PREPARING avec une tâche de préparation terminée, sauvegarde aussi cette tâche avec son nom de classe sous field.preparingTask."
+  },
+  "AbstractFieldMission:loadFromXMLFile": {
+   "en": "Looks up the saved field id (returns false with a warning if missing), binds it, calls the parent load, restores and enqueues a saved preparing task, and re-adds the field to the mission map if PREPARING or RUNNING.",
+   "fr": "Retrouve l'id de champ sauvegardé (renvoie false avec un avertissement s'il manque), le lie, appelle le chargement du parent, restaure et met en file une tâche de préparation sauvegardée et réinscrit le champ dans la carte des missions si PREPARING ou RUNNING."
+  },
+  "AbstractFieldMission:writeStream": {
+   "en": "Network: writes the field id as int32, then the parent stream data.",
+   "fr": "Réseau : écrit l'id du champ en int32 puis les données de flux du parent."
+  },
+  "AbstractFieldMission:readStream": {
+   "en": "Network: reads the field id, binds the field, reads the parent data and adds the field to the mission map if PREPARING or RUNNING. Would fail on a nil field if the id is unknown.",
+   "fr": "Réseau : lit l'id du champ, lie le champ, lit les données du parent et ajoute le champ à la carte des missions si PREPARING ou RUNNING. Échouerait sur un champ nil si l'id est inconnu."
+  },
+  "AbstractFieldMission:update": {
+   "en": "Calls the parent update; when RUNNING for the local player farm and the hotspot is not yet added, adds the hotspots.",
+   "fr": "Appelle l'update du parent ; en état RUNNING pour la ferme du joueur local et si le hotspot n'est pas encore ajouté, ajoute les hotspots."
+  },
+  "AbstractFieldMission:start": {
+   "en": "Calls the parent start (with or without leased vehicles); on success registers the field in the mission map. Returns false if the parent refuses.",
+   "fr": "Appelle le start du parent (avec ou sans véhicules prêtés) ; en cas de succès, inscrit le champ dans la carte des missions. Renvoie false si le parent refuse."
+  },
+  "AbstractFieldMission:prepare": {
+   "en": "Calls the parent prepare, then prepareField (server) and createModifier.",
+   "fr": "Appelle le prepare du parent puis prepareField (serveur) et createModifier."
+  },
+  "AbstractFieldMission:prepareField": {
+   "en": "Server only: builds the preparing task via getFieldPreparingTask, marks it as not saved and queues it with g_fieldManager:addFieldUpdateTask.",
+   "fr": "Serveur seulement : construit la tâche de préparation via getFieldPreparingTask, la marque comme non sauvegardée et la met en file avec g_fieldManager:addFieldUpdateTask."
+  },
+  "AbstractFieldMission:getFieldPreparingTask": {
+   "en": "Default preparing task: a FieldUpdateTask created from the current field state with height cleared. Returns nil if the field state is not valid. Subclasses override it.",
+   "fr": "Tâche de préparation par défaut : une FieldUpdateTask créée à partir de l'état actuel du champ avec la hauteur effacée. Renvoie nil si l'état du champ n'est pas valide. Les sous-classes la surchargent."
+  },
+  "AbstractFieldMission:getIsPrepared": {
+   "en": "True when the parent says prepared and the preparing task is absent or finished.",
+   "fr": "Vrai quand le parent indique préparé et que la tâche de préparation est absente ou terminée."
+  },
+  "AbstractFieldMission:finishField": {
+   "en": "Server only: gets the finish task from getFieldFinishTask, assigns the field and queues it in the field manager.",
+   "fr": "Serveur seulement : obtient la tâche de fin via getFieldFinishTask, lui affecte le champ et la met en file dans le gestionnaire de champs."
+  },
+  "AbstractFieldMission:getFieldFinishTask": {
+   "en": "Default finish task: a FieldUpdateTask from the current field state, or nil if the state is not valid. Subclasses set state values before calling it.",
+   "fr": "Tâche de fin par défaut : une FieldUpdateTask issue de l'état actuel du champ, ou nil si l'état n'est pas valide. Les sous-classes fixent des valeurs d'état avant de l'appeler."
+  },
+  "AbstractFieldMission:started": {
+   "en": "Callback when the mission has started: adds the field to the mission map.",
+   "fr": "Rappel quand la mission a démarré : ajoute le champ à la carte des missions."
+  },
+  "AbstractFieldMission:finish": {
+   "en": "Calls the parent finish, removes the hotspot and, for the mission farm, shows an in-game notification for success, failure or timeout with the field id.",
+   "fr": "Appelle le finish du parent, retire le hotspot et, pour la ferme de la mission, affiche une notification en jeu de réussite, d'échec ou de dépassement de délai avec l'id du champ."
+  },
+  "AbstractFieldMission:dismiss": {
+   "en": "Called when a finished mission leaves the board: queues the field finish task, then calls the parent dismiss.",
+   "fr": "Appelé quand une mission terminée quitte le tableau : met en file la tâche de fin du champ puis appelle le dismiss du parent."
+  },
+  "AbstractFieldMission:removeAccess": {
+   "en": "Removes the field from the mission map, then calls the parent removeAccess.",
+   "fr": "Retire le champ de la carte des missions puis appelle le removeAccess du parent."
+  },
+  "AbstractFieldMission:validate": {
+   "en": "Returns false if the parent validation fails, the field is nil, or the field now has an owner; true otherwise.",
+   "fr": "Renvoie false si la validation du parent échoue, si le champ est nil ou si le champ a désormais un propriétaire ; true sinon."
+  },
+  "AbstractFieldMission:createModifier": {
+   "en": "Empty hook; subclasses create completionModifier and completionFilter here.",
+   "fr": "Crochet vide ; les sous-classes y créent completionModifier et completionFilter."
+  },
+  "AbstractFieldMission:initializeModifier": {
+   "en": "Applies the field polygon to the completion modifier and splits the field along Z into partitions of about SQM_PER_PARTITION square metres, each with its own result cache. Does nothing without a modifier.",
+   "fr": "Applique le polygone du champ au modificateur d'achèvement et découpe le champ selon Z en partitions d'environ SQM_PER_PARTITION mètres carrés, chacune avec son cache de résultat. Ne fait rien sans modificateur."
+  },
+  "AbstractFieldMission:setPartitionRegion": {
+   "en": "Clips the completion modifier to the Z range of the given partition. Does nothing with a single partition or no partitions.",
+   "fr": "Restreint le modificateur d'achèvement à la plage Z de la partition donnée. Ne fait rien avec une seule partition ou aucune."
+  },
+  "AbstractFieldMission:getPartitionCompletion": {
+   "en": "Sets the partition region and returns summed pixels, area and total area from the completion filter. Returns 0, 0, 0 without modifier.",
+   "fr": "Définit la région de la partition et renvoie pixels cumulés, surface et surface totale du filtre d'achèvement. Renvoie 0, 0, 0 sans modificateur."
+  },
+  "AbstractFieldMission:getCompletion": {
+   "en": "Returns the field completion divided by AbstractMission.SUCCESS_FACTOR, so reaching the success factor counts as complete.",
+   "fr": "Renvoie l'achèvement du champ divisé par AbstractMission.SUCCESS_FACTOR, de sorte qu'atteindre le facteur de réussite compte comme complet."
+  },
+  "AbstractFieldMission:getFieldCompletion": {
+   "en": "Measures one partition per call (round robin) to spread the density map cost over updates, stores its result, updates fieldPercentageDone and returns it. Initialises the modifier on first call. updateFieldPercentageDone is not in this file: UNVERIFIED.",
+   "fr": "Mesure une partition par appel (tourniquet) pour répartir le coût des density maps sur les updates, mémorise son résultat, met à jour fieldPercentageDone et le renvoie. Initialise le modificateur au premier appel. updateFieldPercentageDone n'est pas dans ce fichier : NON VÉRIFIÉ."
+  },
+  "AbstractFieldMission:getVehicleSize": {
+   "en": "Returns \"small\", \"medium\" or \"large\" from the field area compared with the FIELD_SIZE_MEDIUM and FIELD_SIZE_LARGE constants, used to pick leased vehicle groups.",
+   "fr": "Renvoie \"small\", \"medium\" ou \"large\" selon la surface du champ comparée aux constantes FIELD_SIZE_MEDIUM et FIELD_SIZE_LARGE, pour choisir les groupes de véhicules prêtés."
+  },
+  "AbstractFieldMission:getDetails": {
+   "en": "Returns the parent details list plus two rows: field name and formatted field area.",
+   "fr": "Renvoie la liste de détails du parent plus deux lignes : nom du champ et surface formatée du champ."
+  },
+  "AbstractFieldMission:getRewardPerHa": {
+   "en": "Default reward per hectare (1); subclasses override it with the value from the map XML.",
+   "fr": "Récompense par hectare par défaut (1) ; les sous-classes la surchargent avec la valeur du XML de la carte."
+  },
+  "AbstractFieldMission:getReward": {
+   "en": "Returns the parent reward plus reward per hectare times field area, scaled by a difficulty factor 1.3 minus 0.1 times economicDifficulty.",
+   "fr": "Renvoie la récompense du parent plus récompense par hectare fois surface du champ, multipliée par un facteur de difficulté 1,3 moins 0,1 fois economicDifficulty."
+  },
+  "AbstractFieldMission:getFarmlandId": {
+   "en": "Note: returns the field id (field:getId), not a farmland id, despite the name. Returns nil if there is no field.",
+   "fr": "À noter : renvoie l'id du champ (field:getId) et non un id de parcelle, malgré le nom. Renvoie nil sans champ."
+  },
+  "AbstractFieldMission:addToMissionMap": {
+   "en": "Writes this mission active id into the mission map over the field polygon, once (tracked by isInMissionMap). Used to find the mission from an x/z position.",
+   "fr": "Écrit l'id actif de cette mission dans la carte des missions sur le polygone du champ, une seule fois (suivi par isInMissionMap). Sert à retrouver la mission depuis une position x/z."
+  },
+  "AbstractFieldMission:removeFromMissionMap": {
+   "en": "Clears the field polygon from the mission map (id 0) if it was added.",
+   "fr": "Efface le polygone du champ de la carte des missions (id 0) s'il avait été ajouté."
+  },
+  "AbstractFieldMission:updateMissionMap": {
+   "en": "Calls g_missionManager:setMissionMapActiveMissionId with the field density map polygon and the given mission id.",
+   "fr": "Appelle g_missionManager:setMissionMapActiveMissionId avec le polygone de density map du champ et l'id de mission donné."
+  },
+  "AbstractFieldMission:getNPC": {
+   "en": "Returns the NPC of the field farmland (self.field.farmland:getNPC; getNPC is not defined in Farmland.lua of this dump).",
+   "fr": "Renvoie le PNJ de la parcelle du champ (self.field.farmland:getNPC ; getNPC n'est pas défini dans Farmland.lua de ce dump)."
+  },
+  "AbstractFieldMission:getIsWorkAllowed": {
+   "en": "True when the mission is running and the work area type is nil or one of its workAreaTypes. Position, farm and vehicle arguments are not used.",
+   "fr": "Vrai quand la mission est en cours et que le type de zone de travail est nil ou l'un de ses workAreaTypes. Les arguments position, ferme et véhicule ne sont pas utilisés."
+  },
+  "AbstractFieldMission:addHotspots": {
+   "en": "Adds the mission map hotspot to the current mission and sets isHotspotAdded.",
+   "fr": "Ajoute le hotspot de carte de la mission à la mission courante et met isHotspotAdded."
+  },
+  "AbstractFieldMission:removeHotspot": {
+   "en": "Removes the map hotspot from the current mission and clears isHotspotAdded.",
+   "fr": "Retire le hotspot de carte de la mission courante et efface isHotspotAdded."
+  }
+ }
+}

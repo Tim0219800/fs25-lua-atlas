@@ -1,0 +1,245 @@
+{
+ "fichier": "sounds/SoundManager.lua",
+ "module": {
+  "en": "Central client-side manager (extends AbstractManager) that loads sound samples from XML (3D audio sources linked to nodes, or 2D samples), applies sound templates, indoor and outdoor attributes, value modifiers driven by callbacks, volume/pitch randomisation and alternative source files, then plays, stops and deletes them. It tracks active samples, updating a limited number each frame, and has a debug overlay toggled by the console command gsSoundManagerDebug. Sample objects are plain Lua tables; most audio work is delegated to engine functions not defined in the dump (UNVERIFIED).",
+  "fr": "Gestionnaire central côté client (étend AbstractManager) qui charge les échantillons sonores depuis le XML (sources audio 3D liées à des nœuds, ou échantillons 2D), applique les modèles de sons, les attributs intérieur et extérieur, les modificateurs de valeur pilotés par des fonctions de rappel, la randomisation de volume et hauteur et les fichiers sources alternatifs, puis les joue, les arrête et les supprime. Il suit les échantillons actifs, en mettant à jour un nombre limité par image, et dispose d'une surcouche de débogage activée par la commande console gsSoundManagerDebug. Les échantillons sont de simples tables Lua ; l'essentiel du travail audio est délégué à des fonctions moteur absentes du dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "SoundManager.new": {
+   "en": "Creates the manager and registers the console command gsSoundManagerDebug, which toggles the global debug overlay.",
+   "fr": "Crée le gestionnaire et enregistre la commande console gsSoundManagerDebug, qui active ou désactive la surcouche de débogage globale."
+  },
+  "SoundManager:initDataStructures": {
+   "en": "Resets all sample lists, loads the default sound templates, creates the SoundModifierType global table, sets an open-field reverb effect on slot 0 and clears the indoor listeners.",
+   "fr": "Réinitialise toutes les listes d'échantillons, charge les modèles de sons par défaut, crée la table globale SoundModifierType, applique un effet de réverbération champ ouvert sur l'emplacement 0 et vide les écouteurs d'intérieur."
+  },
+  "SoundManager:delete": {
+   "en": "Deletes the sound template XML file handle if one is open. Does not delete the samples themselves.",
+   "fr": "Supprime le descripteur du XML des modèles de sons s'il est ouvert. Ne supprime pas les échantillons eux-mêmes."
+  },
+  "SoundManager:registerModifierType": {
+   "en": "Registers a named (upper-cased) modifier type with a value callback and optional min and max callbacks, and returns its index. An existing name returns its index; a non-function callback logs an error. Used by specializations so XML modifiers can follow vehicle state.",
+   "fr": "Enregistre un type de modificateur nommé (en majuscules) avec une fonction de valeur et des fonctions min et max optionnelles, et retourne son index. Un nom existant retourne son index ; un rappel non fonction journalise une erreur. Utilisé par les spécialisations pour que les modificateurs XML suivent l'état du véhicule."
+  },
+  "SoundManager:loadSoundTemplates": {
+   "en": "Opens the given template XML, indexes every template by name (duplicates produce a warning) and keeps the file open. Returns true on success, false if the file could not be loaded.",
+   "fr": "Ouvre le XML de modèles donné, indexe chaque modèle par nom (les doublons produisent un avertissement) et garde le fichier ouvert. Retourne true en cas de succès, false si le fichier est introuvable."
+  },
+  "SoundManager:reloadSoundTemplates": {
+   "en": "Clears the template index, closes the template XML and reloads the default one. Handy for iterating on templates during development.",
+   "fr": "Vide l'index des modèles, ferme le XML de modèles et recharge celui par défaut. Pratique pour itérer sur les modèles pendant le développement."
+  },
+  "SoundManager:cloneSample": {
+   "en": "Duplicates a sample: copies the table and modifiers, creates a new audio source linked to the given node (unless 2D), sets group and reverb, rebuilds source randomisations, and registers the copy. Returns it. Note: in the no-reverb branch the effect is removed from the original sample's sound, not the clone's.",
+   "fr": "Duplique un échantillon : copie la table et les modificateurs, crée une nouvelle source audio liée au nœud donné (sauf 2D), règle groupe et réverbération, reconstruit les randomisations de source et enregistre la copie. La retourne. À noter : dans la branche sans réverbération, l'effet est retiré du son de l'original et non de celui du clone."
+  },
+  "SoundManager:cloneSample2D": {
+   "en": "Duplicates a sample as a non-spatial 2D sample: loads the file into a new engine sample, applies the audio group, rebuilds randomisations and registers the copy. The link node argument is not used.",
+   "fr": "Duplique un échantillon en échantillon 2D non spatial : charge le fichier dans un nouvel échantillon moteur, applique le groupe audio, reconstruit les randomisations et enregistre la copie. L'argument de nœud de liaison n'est pas utilisé."
+  },
+  "SoundManager:validateSampleDefinition": {
+   "en": "Checks that a sample element exists in the XML or in an optional external sounds file, and for 3D samples resolves its link node (falling back to the root component). Returns validity, whether the external file was used, the XML handle, the element key and the link node.",
+   "fr": "Vérifie qu'un élément d'échantillon existe dans le XML ou dans un fichier de sons externe optionnel et, pour les 3D, résout son nœud de liaison (repli sur le composant racine). Retourne validité, usage du fichier externe, descripteur XML, clé de l'élément et nœud de liaison."
+  },
+  "SoundManager:loadSample2DFromXML": {
+   "en": "Loads a non-spatial sample for client-only contexts such as the UI. Applies the template and XML attributes, creates the engine sample and registers it. Returns the sample, or nil if the definition is missing or invalid.",
+   "fr": "Charge un échantillon non spatial pour les contextes purement clients comme l'interface. Applique le modèle et les attributs XML, crée l'échantillon moteur et l'enregistre. Retourne l'échantillon, ou nil si la définition est absente ou invalide."
+  },
+  "SoundManager:loadSampleFromXML": {
+   "en": "Loads a 3D sample from XML, linked to a node, using template and XML attributes. A modifier target object can supply an external sounds file and a volume factor. Creates the audio source and registers the sample; returns nil if invalid.",
+   "fr": "Charge un échantillon 3D depuis le XML, lié à un nœud, avec les attributs du modèle et du XML. Un objet cible de modificateurs peut fournir un fichier de sons externe et un facteur de volume. Crée la source audio et enregistre l'échantillon ; retourne nil si invalide."
+  },
+  "SoundManager:loadSamplesFromXML": {
+   "en": "Loads consecutive indexed samples (name(0), name(1), ...) until one is missing and appends them to the given or a new table, which it returns.",
+   "fr": "Charge des échantillons indexés consécutifs (nom(0), nom(1), ...) jusqu'à ce que l'un manque et les ajoute à la table donnée ou à une nouvelle table, qu'il retourne."
+  },
+  "SoundManager:createAudioSource": {
+   "en": "Replaces the sample's 3D audio source with one built from the given file, using its radii, volume and loops, then finishes setup through onCreateAudioSource. Does nothing for an empty file name.",
+   "fr": "Remplace la source audio 3D de l'échantillon par une construite depuis le fichier donné, avec ses rayons, volume et boucles, puis termine la configuration via onCreateAudioSource. Sans effet pour un nom de fichier vide."
+  },
+  "SoundManager:onCreateAudioSource": {
+   "en": "Finishes a 3D source: reads duration and ranges, applies group, volume, pitch, frequency filter, optional reverb and priority, disables autoplay, and links the node with its offset.",
+   "fr": "Termine une source 3D : lit durée et portées, applique groupe, volume, hauteur, filtre de fréquence, réverbération optionnelle et priorité, désactive la lecture auto et lie le nœud avec son décalage."
+  },
+  "SoundManager:createAudio2d": {
+   "en": "Replaces the sample's 2D engine sample by one loaded from the given file, then calls onCreateAudio2d. Does nothing for an empty file name.",
+   "fr": "Remplace l'échantillon moteur 2D par un chargé depuis le fichier donné, puis appelle onCreateAudio2d. Sans effet pour un nom de fichier vide."
+  },
+  "SoundManager:onCreateAudio2d": {
+   "en": "Finishes a 2D sample: reads its duration and applies group, volume, pitch, frequency filter and optional reverb.",
+   "fr": "Termine un échantillon 2D : lit sa durée et applique groupe, volume, hauteur, filtre de fréquence et réverbération optionnelle."
+  },
+  "SoundManager:loadSampleAttributesFromTemplate": {
+   "en": "Builds a sample from a named template of the template XML. If the template is unknown, logs an error and returns nil; returns nil too if the template attributes fail to load.",
+   "fr": "Construit un échantillon à partir d'un modèle nommé du XML de modèles. Si le modèle est inconnu, journalise une erreur et retourne nil ; retourne aussi nil si les attributs du modèle échouent à charger."
+  },
+  "SoundManager:loadSampleAttributesFromXML": {
+   "en": "Reads all sample attributes (file, radii, scales, indoor/outdoor volume, pitch and lowpass, loops, reverb, priority, fades, debug flag), first applying a parent template if given, then modifiers and randomisations. Returns true. Note: the missing-file check can never trigger because the file name defaults to an empty string.",
+   "fr": "Lit tous les attributs de l'échantillon (fichier, rayons, échelles, volume, hauteur et passe-bas intérieur/extérieur, boucles, réverbération, priorité, fondus, drapeau debug), en appliquant d'abord un modèle parent si présent, puis modificateurs et randomisations. Retourne true. À noter : le contrôle de fichier manquant ne peut jamais se déclencher car le nom de fichier vaut une chaîne vide par défaut."
+  },
+  "SoundManager:loadModifiersFromXML": {
+   "en": "Reads modifier elements for each modifiable attribute (SAMPLE_MODIFIER_ATTRIBUTES, defined elsewhere) into linear animation curves per modifier type. Unknown types are silently skipped in release builds.",
+   "fr": "Lit les éléments de modificateurs pour chaque attribut modifiable (SAMPLE_MODIFIER_ATTRIBUTES, défini ailleurs) sous forme de courbes linéaires par type de modificateur. Les types inconnus sont ignorés silencieusement en version finale."
+  },
+  "SoundManager:loadRandomizationsFromXML": {
+   "en": "Reads volume, pitch and lowpass randomisation ranges (indoor and/or outdoor lists) and alternative source files, where '-' means silence. Warns if a range could give negative volume, and adds the base file to the alternatives once.",
+   "fr": "Lit les plages de randomisation de volume, hauteur et passe-bas (listes intérieur et/ou extérieur) et les fichiers sources alternatifs, où '-' signifie silence. Avertit si une plage peut donner un volume négatif, et ajoute le fichier de base aux alternatives une seule fois."
+  },
+  "SoundManager:getRandomSample": {
+   "en": "Creates an alternative-source entry for a file: a 3D audio source or a 2D sample, with reverb and priority set. The file name '-' gives an empty (silent) entry.",
+   "fr": "Crée une entrée de source alternative pour un fichier : source audio 3D ou échantillon 2D, avec réverbération et priorité. Le nom '-' donne une entrée vide (silence)."
+  },
+  "SoundManager:update": {
+   "en": "Per-frame update that walks the active sample list, at most MAX_SAMPLES_PER_FRAME entries per call, resuming where it stopped. For a playing sample it updates fade, modifiers and attributes; finished samples leave the list.",
+   "fr": "Mise à jour par image qui parcourt la liste des échantillons actifs, au plus MAX_SAMPLES_PER_FRAME entrées par appel, en reprenant là où elle s'était arrêtée. Pour un échantillon en lecture, elle met à jour fondu, modificateurs et attributs ; les échantillons terminés quittent la liste."
+  },
+  "SoundManager:draw": {
+   "en": "Debug overlay: for flagged samples near the camera, draws link nodes, radii and a text list on screen (hidden link nodes in red). Returns immediately if there are no debug samples.",
+   "fr": "Surcouche de débogage : pour les échantillons marqués proches de la caméra, dessine nœuds de liaison, rayons et une liste de texte à l'écran (nœuds cachés en rouge). Retourne aussitôt s'il n'y a aucun échantillon de débogage."
+  },
+  "SoundManager:updateSampleFade": {
+   "en": "Advances the sample's fade-in timer by dt (ms), capped at its fadeIn duration. Does nothing if fadeIn is 0.",
+   "fr": "Avance le minuteur de fondu d'entrée de l'échantillon de dt (ms), plafonné à sa durée fadeIn. Sans effet si fadeIn vaut 0."
+  },
+  "SoundManager:updateSampleModifiers": {
+   "en": "For each modifiable attribute, multiplies the values of all available modifier types and stores the result as the modifier's current value.",
+   "fr": "Pour chaque attribut modifiable, multiplie les valeurs de tous les types de modificateurs disponibles et stocke le résultat comme valeur courante du modificateur."
+  },
+  "SoundManager:updateSampleAttributes": {
+   "en": "Switches the sample to indoor or outdoor attributes when the state changed (or forced), then pushes volume, pitch and lowpass to the engine, including modifiers, and loop synthesis RPM and load when modified.",
+   "fr": "Bascule l'échantillon sur les attributs intérieur ou extérieur quand l'état a changé (ou est forcé), puis envoie volume, hauteur et passe-bas au moteur, modificateurs inclus, ainsi que le régime et la charge de synthèse de boucle quand ils sont modifiés."
+  },
+  "SoundManager:updateSampleRandomizations": {
+   "en": "Called before playback: picks a random volume, pitch and lowpass offset from the list matching the indoor state, and a random alternative source (retrying up to 3 times to avoid repeating the last). May stop the previous sound and switch the sample to the chosen source or to silence.",
+   "fr": "Appelée avant la lecture : tire un décalage aléatoire de volume, hauteur et passe-bas dans la liste correspondant à l'état intérieur, et une source alternative aléatoire (jusqu'à 3 essais pour éviter de répéter la dernière). Peut arrêter le son précédent et basculer l'échantillon sur la source choisie ou sur le silence."
+  },
+  "SoundManager:getSampleModifierValue": {
+   "en": "Evaluates one modifier curve for an attribute and type: calls the type's value function on the target object, normalises with min/max functions if present, and samples the curve. Returns value, input and availability.",
+   "fr": "Évalue une courbe de modificateur pour un attribut et un type : appelle la fonction de valeur du type sur l'objet cible, normalise avec les fonctions min/max si présentes, et échantillonne la courbe. Retourne valeur, entrée et disponibilité."
+  },
+  "SoundManager:deleteSample": {
+   "en": "Stops the sample if playing, removes it from all internal lists and deletes its audio nodes, 2D samples and alternative sources. The delay and afterSample parameters passed by deleteSamples are ignored.",
+   "fr": "Arrête l'échantillon s'il joue, le retire de toutes les listes internes et supprime ses nœuds audio, échantillons 2D et sources alternatives. Les paramètres delay et afterSample passés par deleteSamples sont ignorés."
+  },
+  "SoundManager:deleteSamples": {
+   "en": "Calls deleteSample on every entry of a table of samples. Nil tables are ignored.",
+   "fr": "Appelle deleteSample sur chaque entrée d'une table d'échantillons. Les tables nil sont ignorées."
+  },
+  "SoundManager:playSample": {
+   "en": "Starts a sample: refreshes randomisation, modifiers and attributes, then plays it with its loop count, optional delay and optional chaining after another sample, and adds it to the active list. Local-only sounds play only if the target object is active for local sound.",
+   "fr": "Démarre un échantillon : rafraîchit randomisation, modificateurs et attributs, puis le joue avec son nombre de boucles, un délai optionnel et un enchaînement optionnel après un autre échantillon, et l'ajoute à la liste active. Les sons locaux ne jouent que si l'objet cible est actif pour le son local."
+  },
+  "SoundManager:playSamples": {
+   "en": "Plays every sample of a table with the same optional delay and afterSample.",
+   "fr": "Joue chaque échantillon d'une table avec les mêmes delay et afterSample optionnels."
+  },
+  "SoundManager:stopSample": {
+   "en": "Stops a sample through the engine. The default stop delay comes from loop synthesis, and the default fade-out is the one stored in the sample.",
+   "fr": "Arrête un échantillon via le moteur. Le délai d'arrêt par défaut vient de la synthèse de boucle, et le fondu de sortie par défaut est celui de l'échantillon."
+  },
+  "SoundManager:stopSamples": {
+   "en": "Stops every sample of a table.",
+   "fr": "Arrête chaque échantillon d'une table."
+  },
+  "SoundManager:setSampleVolumeOffset": {
+   "en": "Sets an additive volume offset on the sample, applied the next time attributes are updated.",
+   "fr": "Définit un décalage additif de volume sur l'échantillon, appliqué à la prochaine mise à jour des attributs."
+  },
+  "SoundManager:setSamplePitchOffset": {
+   "en": "Sets an additive pitch offset on the sample, applied the next time attributes are updated.",
+   "fr": "Définit un décalage additif de hauteur sur l'échantillon, appliqué à la prochaine mise à jour des attributs."
+  },
+  "SoundManager:setSampleLowpassGainOffset": {
+   "en": "Sets an additive lowpass gain offset on the sample, applied the next time attributes are updated.",
+   "fr": "Définit un décalage additif de gain passe-bas sur l'échantillon, appliqué à la prochaine mise à jour des attributs."
+  },
+  "SoundManager:setSampleVolume": {
+   "en": "Sets the engine volume of the sample directly (it may be overwritten by the next attribute update).",
+   "fr": "Règle directement le volume moteur de l'échantillon (il peut être écrasé par la prochaine mise à jour des attributs)."
+  },
+  "SoundManager:setSampleVolumeScale": {
+   "en": "Sets the volume scale multiplier stored on the sample.",
+   "fr": "Définit le multiplicateur d'échelle de volume stocké sur l'échantillon."
+  },
+  "SoundManager:getSampleVolumeScale": {
+   "en": "Returns the sample's volume scale, or 1 if the sample is nil.",
+   "fr": "Retourne l'échelle de volume de l'échantillon, ou 1 si l'échantillon est nil."
+  },
+  "SoundManager:setSamplePitch": {
+   "en": "Sets the engine pitch of the sample directly (it may be overwritten by the next attribute update).",
+   "fr": "Règle directement la hauteur moteur de l'échantillon (elle peut être écrasée par la prochaine mise à jour des attributs)."
+  },
+  "SoundManager:getIsSamplePlaying": {
+   "en": "Returns true if the sample exists, has an engine sample and the engine reports it playing; false otherwise.",
+   "fr": "Retourne true si l'échantillon existe, possède un échantillon moteur et que le moteur le déclare en lecture ; false sinon."
+  },
+  "SoundManager:setSampleLoopSynthesisParameters": {
+   "en": "Sets loop synthesis RPM (divided by the sample's ratio and clamped to 0..1) and/or load factor on the engine sample. Nil arguments are skipped.",
+   "fr": "Règle le régime de synthèse de boucle (divisé par le ratio de l'échantillon et borné à 0..1) et/ou le facteur de charge sur l'échantillon moteur. Les arguments nil sont ignorés."
+  },
+  "SoundManager:setSamplesLoopSynthesisParameters": {
+   "en": "Applies the same loop synthesis RPM and load factor to every sample of a table.",
+   "fr": "Applique les mêmes régime et facteur de charge de synthèse de boucle à chaque échantillon d'une table."
+  },
+  "SoundManager:getSampleLoopSynthesisStartDuration": {
+   "en": "Returns the engine's loop synthesis start duration for .gls samples, 0 for other files or a nil sample.",
+   "fr": "Retourne la durée de démarrage de synthèse de boucle du moteur pour les échantillons .gls, 0 pour les autres fichiers ou un échantillon nil."
+  },
+  "SoundManager:setCurrentSampleAttributes": {
+   "en": "Points the sample's current attributes and randomisation list to the indoor or outdoor set.",
+   "fr": "Fait pointer les attributs courants et la liste de randomisation de l'échantillon vers le jeu intérieur ou extérieur."
+  },
+  "SoundManager:getCurrentSampleVolume": {
+   "en": "Computes the final volume: (current volume plus randomisation) times fade factor times volume scale plus offset, never below 0.",
+   "fr": "Calcule le volume final : (volume courant plus randomisation) fois facteur de fondu fois échelle de volume plus décalage, jamais inférieur à 0."
+  },
+  "SoundManager:getCurrentSamplePitch": {
+   "en": "Computes the final pitch: (current pitch plus randomisation) times pitch scale plus offset.",
+   "fr": "Calcule la hauteur finale : (hauteur courante plus randomisation) fois échelle de hauteur plus décalage."
+  },
+  "SoundManager:getCurrentSampleLowpassGain": {
+   "en": "Computes the final lowpass gain: (current gain plus randomisation) times its scale plus offset.",
+   "fr": "Calcule le gain passe-bas final : (gain courant plus randomisation) fois son échelle plus décalage."
+  },
+  "SoundManager:getCurrentRandomizationValue": {
+   "en": "Returns the current randomisation value of an attribute (volume, pitch, lowpassGain), or 0 if none is set.",
+   "fr": "Retourne la valeur de randomisation courante d'un attribut (volume, pitch, lowpassGain), ou 0 si aucune n'est définie."
+  },
+  "SoundManager:getCurrentFadeFactor": {
+   "en": "Returns the fade-in progress (elapsed over fadeIn), or 1 when the sample has no fade-in.",
+   "fr": "Retourne la progression du fondu d'entrée (écoulé sur fadeIn), ou 1 quand l'échantillon n'a pas de fondu d'entrée."
+  },
+  "SoundManager:setIsIndoor": {
+   "en": "Sets the global indoor state (for example when the camera enters a cabin). On change, refreshes the playing samples immediately and calls onIndoorStateChanged on every registered listener.",
+   "fr": "Définit l'état d'intérieur global (par exemple quand la caméra entre dans une cabine). En cas de changement, rafraîchit aussitôt les échantillons en lecture et appelle onIndoorStateChanged sur chaque écouteur enregistré."
+  },
+  "SoundManager:addIndoorStateChangedListener": {
+   "en": "Adds a target to be notified through its onIndoorStateChanged method (no duplicates).",
+   "fr": "Ajoute une cible à notifier via sa méthode onIndoorStateChanged (sans doublon)."
+  },
+  "SoundManager:removeIndoorStateChangedListener": {
+   "en": "Removes a target from the indoor state listeners.",
+   "fr": "Retire une cible des écouteurs de l'état d'intérieur."
+  },
+  "SoundManager:getIsIndoor": {
+   "en": "Returns whether sounds are currently in indoor mode.",
+   "fr": "Retourne si les sons sont actuellement en mode intérieur."
+  },
+  "SoundManager:getModifierFactor": {
+   "en": "Returns the current computed value of a named modifier on the sample, or 1.0 if there is none.",
+   "fr": "Retourne la valeur calculée courante d'un modificateur nommé de l'échantillon, ou 1.0 s'il n'y en a pas."
+  },
+  "SoundManager:consoleCommandToggleDebug": {
+   "en": "Console command handler: toggles SoundManager.GLOBAL_DEBUG_ENABLED, adds all 3D samples to the debug list (or keeps only the XML-flagged ones) and returns a status string.",
+   "fr": "Gestionnaire de commande console : bascule SoundManager.GLOBAL_DEBUG_ENABLED, ajoute tous les échantillons 3D à la liste de débogage (ou ne garde que ceux marqués dans le XML) et retourne une chaîne d'état."
+  },
+  "SoundManager.registerModifierXMLPaths": {
+   "en": "Registers on a schema the modifier child paths (type, value, modifiedValue) under the given path. The type attribute lists the known SoundModifierType names.",
+   "fr": "Enregistre sur un schéma les chemins enfants de modificateur (type, value, modifiedValue) sous le chemin donné. L'attribut type liste les noms SoundModifierType connus."
+  },
+  "SoundManager.registerSampleXMLPaths": {
+   "en": "Registers on a schema the XML paths of a sound element (linkNode, linkNodeOffset, template) plus the generic ones from registerGenericSampleXMLPaths, which is not defined in this file (UNVERIFIED). Logs an error if the element name is missing or has spaces.",
+   "fr": "Enregistre sur un schéma les chemins XML d'un élément de son (linkNode, linkNodeOffset, template) plus les chemins génériques de registerGenericSampleXMLPaths, non défini dans ce fichier (NON VÉRIFIÉ). Journalise une erreur si le nom d'élément manque ou contient des espaces."
+  }
+ }
+}

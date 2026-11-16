@@ -1,0 +1,225 @@
+{
+ "fichier": "ai/AISystem.lua",
+ "module": {
+  "en": "Central AI system of a mission: it owns the vehicle navigation map (cost map, road splines, blocking regions, physics obstacles) on the server and keeps the list of active AI jobs, their vehicles and path agents. It starts, stops and updates jobs, broadcasts job events, loads map settings from the XML named in map.aiSystem#filename and registers cheat/debug console commands (gs-prefixed). Engine calls such as createVehicleNavigationMap are not in the dump (UNVERIFIED); getRoadSplines, COSTMAP_MAX_VALUE and NEXT_JOB_ID are used here but defined elsewhere.",
+  "fr": "Système d'IA central d'une mission : il possède côté serveur la carte de navigation des véhicules (carte de coûts, splines de route, zones de blocage, obstacles physiques) et tient la liste des jobs IA actifs, de leurs véhicules et des agents de chemin. Il démarre, arrête et met à jour les jobs, diffuse les événements de job, charge les réglages de map depuis le XML indiqué par map.aiSystem#filename et enregistre des commandes console de triche/débogage (préfixe gs). Les appels moteur comme createVehicleNavigationMap ne sont pas dans le dump (NON VÉRIFIÉ) ; getRoadSplines, COSTMAP_MAX_VALUE et NEXT_JOB_ID sont utilisés ici mais définis ailleurs."
+ },
+ "fonctions": {
+  "AISystem.onCreateAIRoadSpline": {
+   "en": "I3D onCreate callback: reads the maxWidth, maxTurningRadius and maxHeight user attributes of a node and registers it as an AI road spline in the current mission's AI system.",
+   "fr": "Callback onCreate I3D : lit les attributs utilisateur maxWidth, maxTurningRadius et maxHeight d'un noeud et l'enregistre comme spline de route IA dans le système d'IA de la mission courante."
+  },
+  "AISystem.new": {
+   "en": "Constructor. Initialises empty agent, job and delayed-spline lists, the cost map filename (vehicleNavigationCostmap.dat), and creates the XML schema of the AI settings file.",
+   "fr": "Constructeur. Initialise les listes vides d'agents, de jobs et de splines différées, le nom du fichier de carte de coûts (vehicleNavigationCostmap.dat) et crée le schéma XML du fichier de réglages IA."
+  },
+  "AISystem:registerXMLPaths": {
+   "en": "Registers the schema paths of the map AI settings file: maximum slope angle, blocked-area info layer name and channel, vehicle maximum height, spline height and left-hand traffic flag.",
+   "fr": "Enregistre les chemins de schéma du fichier de réglages IA de la map : angle de pente maximal, nom et canal de la couche d'info des zones bloquées, hauteur maximale des véhicules, hauteur des splines et indicateur de circulation à gauche."
+  },
+  "AISystem:delete": {
+   "en": "Cleanup. On the server, finishes pending removals and stops all active jobs with an unknown-error message. Deletes the navigation map and the planning bit map, removes the debug marker, unsubscribes from messages and removes the console commands.",
+   "fr": "Nettoyage. Sur le serveur, termine les suppressions en attente et arrête tous les jobs actifs avec un message d'erreur inconnue. Supprime la carte de navigation et la carte de bits de planification, retire le marqueur de débogage, se désabonne des messages et retire les commandes console."
+  },
+  "AISystem:loadMapData": {
+   "en": "Registers the console commands when cheat commands are on, sets defaults (1 m cells, 15 degree slope, navigationCollision layer, vehicle height 4 m), then overrides them from the map's AI settings XML if one is given. Initialises debug state and the road spline list.",
+   "fr": "Enregistre les commandes console si les commandes de triche sont actives, fixe des valeurs par défaut (cellules de 1 m, pente de 15 degrés, couche navigationCollision, hauteur de véhicule 4 m), puis les remplace avec le XML de réglages IA de la map s'il est indiqué. Initialise l'état de débogage et la liste des splines de route."
+  },
+  "AISystem:addRoadSpline": {
+   "en": "Adds a spline and its sub-splines to the AI road network. On the server before the navigation map exists, the request is queued. Splines with isAISpline false are skipped; widths, heights and turning radius fall back to defaults; spline visibility follows the debug toggle.",
+   "fr": "Ajoute une spline et ses sous-splines au réseau routier IA. Sur le serveur, avant l'existence de la carte de navigation, la demande est mise en file. Les splines avec isAISpline à false sont ignorées ; largeur, hauteur et rayon de braquage ont des valeurs par défaut ; la visibilité suit l'option de débogage."
+  },
+  "AISystem:removeRoadSpline": {
+   "en": "Server only. Removes a spline from the navigation map, hides it and drops it from the list; if the map does not exist yet, removes it from the delayed queue instead.",
+   "fr": "Serveur uniquement. Retire une spline de la carte de navigation, la masque et la retire de la liste ; si la carte n'existe pas encore, la retire plutôt de la file différée."
+  },
+  "AISystem:addBlockingRegion": {
+   "en": "Server only. Adds a box-shaped blocking region to the navigation map (position, rotation, size, stop distance, callback name and target) and returns its id. Returns nil on clients or, with a warning, if the map is not initialised.",
+   "fr": "Serveur uniquement. Ajoute à la carte de navigation une zone de blocage en forme de boîte (position, rotation, taille, distance d'arrêt, nom et cible du callback) et retourne son id. Retourne nil sur les clients ou, avec un avertissement, si la carte n'est pas initialisée."
+  },
+  "AISystem:removeBlockingRegion": {
+   "en": "Server only. Removes a blocking region by id; does nothing if the map or id is missing.",
+   "fr": "Serveur uniquement. Retire une zone de blocage par id ; ne fait rien si la carte ou l'id est absent."
+  },
+  "AISystem:setBlockingRegionState": {
+   "en": "Server only. Enables or disables a blocking region by id. Logs a warning if the navigation map is not initialised.",
+   "fr": "Serveur uniquement. Active ou désactive une zone de blocage par id. Journalise un avertissement si la carte de navigation n'est pas initialisée."
+  },
+  "AISystem:onTerrainLoad": {
+   "en": "Server only. Creates the vehicle navigation map from the terrain, adds the traffic and delayed splines and tries to load the cost map from the savegame. If none is loaded, subscribes to the mission start to scan the map. Publishes AI_SYSTEM_LOADED after 2 frames and returns true.",
+   "fr": "Serveur uniquement. Crée la carte de navigation des véhicules à partir du terrain, ajoute les splines du trafic et les splines différées et tente de charger la carte de coûts depuis la sauvegarde. Si aucune n'est chargée, s'abonne au démarrage de mission pour scanner la carte. Publie AI_SYSTEM_LOADED après 2 frames et retourne true."
+  },
+  "AISystem:onMissionStarted": {
+   "en": "Mission start handler used when no saved cost map was found: logs it and asks the engine to scan the whole map area to build the navigation costs.",
+   "fr": "Gestionnaire de démarrage de mission utilisé si aucune carte de coûts sauvegardée n'a été trouvée : le journalise et demande au moteur de scanner toute la zone de la carte pour construire les coûts de navigation."
+  },
+  "AISystem:loadFromXMLFile": {
+   "en": "Loads the saved debug AI target (position and direction) from an XML file if all six values exist. Does nothing if the file cannot be loaded.",
+   "fr": "Charge depuis un fichier XML la cible IA de débogage sauvegardée (position et direction) si les six valeurs existent. Ne fait rien si le fichier ne peut pas être chargé."
+  },
+  "AISystem:save": {
+   "en": "Writes the debug AI target to a new aiSystem XML file, but only saves the file if a target exists. The usedModNames argument is not used.",
+   "fr": "Écrit la cible IA de débogage dans un nouveau fichier XML aiSystem, mais n'enregistre le fichier que si une cible existe. L'argument usedModNames n'est pas utilisé."
+  },
+  "AISystem:getNavigationMapFilename": {
+   "en": "Returns the cost map filename (vehicleNavigationCostmap.dat).",
+   "fr": "Retourne le nom du fichier de carte de coûts (vehicleNavigationCostmap.dat)."
+  },
+  "AISystem:getNavigationMap": {
+   "en": "Returns the engine navigation map handle, or nil on clients or before terrain load.",
+   "fr": "Retourne le handle moteur de la carte de navigation, ou nil sur les clients ou avant le chargement du terrain."
+  },
+  "AISystem:update": {
+   "en": "Per-frame update. Finalises queued job removals (publishing AI_JOB_REMOVED), then updates every active job and, on the server while the mission runs, updates its cost.",
+   "fr": "Mise à jour par frame. Finalise les suppressions de jobs en attente (publie AI_JOB_REMOVED), puis met à jour chaque job actif et, sur le serveur pendant que la mission tourne, met à jour son coût."
+  },
+  "AISystem:onClientJoined": {
+   "en": "Sends an AIJobStartEvent for each active job to a newly joined client connection.",
+   "fr": "Envoie un AIJobStartEvent pour chaque job actif à la connexion d'un client qui vient de rejoindre."
+  },
+  "AISystem:setAreaDirty": {
+   "en": "Marks a rectangle (minX, maxX, minZ, maxZ in world metres) of the navigation cost map for re-evaluation, e.g. after static objects change. Does nothing without a map.",
+   "fr": "Marque un rectangle (minX, maxX, minZ, maxZ en mètres monde) de la carte de coûts de navigation pour réévaluation, par exemple après le changement d'objets statiques. Ne fait rien sans carte."
+  },
+  "AISystem:addAgent": {
+   "en": "Registers a vehicle for a path agent id.",
+   "fr": "Enregistre un véhicule pour un identifiant d'agent de chemin."
+  },
+  "AISystem:removeAgent": {
+   "en": "Removes the vehicle registered for an agent id.",
+   "fr": "Retire le véhicule enregistré pour un identifiant d'agent."
+  },
+  "AISystem:getVehicleByAgent": {
+   "en": "Returns the vehicle registered for an agent id, or nil.",
+   "fr": "Retourne le véhicule enregistré pour un identifiant d'agent, ou nil."
+  },
+  "AISystem:removeJob": {
+   "en": "Queues a job for removal; it is actually removed at the start of the next update.",
+   "fr": "Met un job en file pour suppression ; il est réellement retiré au début de la prochaine mise à jour."
+  },
+  "AISystem:addJob": {
+   "en": "Appends a job to the active job list. It does not start the job; use startJob for that.",
+   "fr": "Ajoute un job à la liste des jobs actifs. Ne démarre pas le job ; utiliser startJob pour cela."
+  },
+  "AISystem:getNumActiveJobs": {
+   "en": "Returns the number of active jobs.",
+   "fr": "Retourne le nombre de jobs actifs."
+  },
+  "AISystem:getActiveJobs": {
+   "en": "Returns the active job list itself (not a copy).",
+   "fr": "Retourne la liste des jobs actifs elle-même (pas une copie)."
+  },
+  "AISystem:startJob": {
+   "en": "Server only (asserts). Gives the job the next job id, broadcasts an AIJobStartEvent to clients and starts the job locally via startJobInternal.",
+   "fr": "Serveur uniquement (assert). Attribue au job le prochain identifiant, diffuse un AIJobStartEvent aux clients et démarre le job localement via startJobInternal."
+  },
+  "AISystem:startJobInternal": {
+   "en": "Starts the job for the farm, adds it to the active list and publishes AI_JOB_STARTED. Called directly on clients when they receive the start event.",
+   "fr": "Démarre le job pour la ferme, l'ajoute à la liste active et publie AI_JOB_STARTED. Appelé directement sur les clients à la réception de l'événement de démarrage."
+  },
+  "AISystem:stopJob": {
+   "en": "Stops a job with an AI message. On the server it stops locally and broadcasts an AIJobStopEvent; on a client it sends the stop event to the server.",
+   "fr": "Arrête un job avec un message IA. Sur le serveur, l'arrête localement et diffuse un AIJobStopEvent ; sur un client, envoie l'événement d'arrêt au serveur."
+  },
+  "AISystem:stopJobInternal": {
+   "en": "Stops the job locally, queues it for removal and publishes AI_JOB_STOPPED with the message.",
+   "fr": "Arrête le job localement, le met en file pour suppression et publie AI_JOB_STOPPED avec le message."
+  },
+  "AISystem:skipCurrentTask": {
+   "en": "Client side: sends an AIJobSkipTaskEvent for the job to the server. It uses the client's server connection, so it should not be called on a dedicated server.",
+   "fr": "Côté client : envoie au serveur un AIJobSkipTaskEvent pour le job. Utilise la connexion serveur du client, donc ne doit pas être appelé sur un serveur dédié."
+  },
+  "AISystem:skipCurrentTaskInternal": {
+   "en": "Asks the job to skip its current task locally.",
+   "fr": "Demande au job de passer sa tâche courante localement."
+  },
+  "AISystem:stopJobById": {
+   "en": "Stops the job with the given id if it exists and returns true, otherwise false. Note: the noEventSend argument is passed on but stopJob does not use it.",
+   "fr": "Arrête le job d'identifiant donné s'il existe et retourne true, sinon false. À noter : l'argument noEventSend est transmis mais stopJob ne l'utilise pas."
+  },
+  "AISystem:getJobById": {
+   "en": "Returns the active job with the given id, or nil.",
+   "fr": "Retourne le job actif d'identifiant donné, ou nil."
+  },
+  "AISystem:addJobVehicle": {
+   "en": "Adds a vehicle to the list of vehicles used by active jobs (no duplicates).",
+   "fr": "Ajoute un véhicule à la liste des véhicules utilisés par les jobs actifs (sans doublon)."
+  },
+  "AISystem:removeJobVehicle": {
+   "en": "Removes a vehicle from the list of vehicles used by active jobs.",
+   "fr": "Retire un véhicule de la liste des véhicules utilisés par les jobs actifs."
+  },
+  "AISystem:getAILimitedReached": {
+   "en": "True if the number of job vehicles has reached the mission's maxNumHirables limit.",
+   "fr": "Vrai si le nombre de véhicules de jobs a atteint la limite maxNumHirables de la mission."
+  },
+  "AISystem:drawDebug": {
+   "en": "Debug drawing: renders the navigation cost, as coloured text, for the cells within 15 cells of the camera or the current vehicle. Blocking cells are red; others blend green to red by cost. Skipped when cost display is off or a GUI is open (except the construction screen).",
+   "fr": "Affichage de débogage : rend le coût de navigation, en texte coloré, pour les cellules à moins de 15 cellules de la caméra ou du véhicule courant. Les cellules bloquantes sont rouges ; les autres vont du vert au rouge selon le coût. Ignoré si l'affichage des coûts est désactivé ou si une interface est ouverte (sauf l'écran de construction)."
+  },
+  "AISystem:addObstacle": {
+   "en": "Server only. Registers a node as a physics obstacle in the navigation map with a centre offset, size and brake acceleration (missing values default to 0), and optionally marks it not passable (passable by default).",
+   "fr": "Serveur uniquement. Enregistre un noeud comme obstacle physique dans la carte de navigation avec un décalage de centre, une taille et une accélération de freinage (valeurs absentes à 0) et le marque éventuellement non franchissable (franchissable par défaut)."
+  },
+  "AISystem:removeObstacle": {
+   "en": "Server only. Removes a node's physics obstacle from the navigation map.",
+   "fr": "Serveur uniquement. Retire l'obstacle physique d'un noeud de la carte de navigation."
+  },
+  "AISystem:setObstacleIsPassable": {
+   "en": "Server only. Sets whether a registered obstacle node can be driven through.",
+   "fr": "Serveur uniquement. Définit si un noeud obstacle enregistré peut être traversé."
+  },
+  "AISystem:consoleCommandShowPlanningDebug": {
+   "en": "Console command (gsAIPlanningDebug): toggles the planning debug flag and logs its new state.",
+   "fr": "Commande console (gsAIPlanningDebug) : bascule l'indicateur de débogage de la planification et journalise son nouvel état."
+  },
+  "AISystem:consoleCommandAIShowCosts": {
+   "en": "Console command (gsAICostsShow), server only: toggles drawing of per-cell navigation costs through the debug manager.",
+   "fr": "Commande console (gsAICostsShow), serveur uniquement : bascule l'affichage des coûts de navigation par cellule via le debug manager."
+  },
+  "AISystem:consoleCommandAISetTarget": {
+   "en": "Console command (gsAISetTarget), server only: sets the debug AI target at the player or vehicle position and direction, shifted by optional forward and sideways offsets, and places a debug flag marker.",
+   "fr": "Commande console (gsAISetTarget), serveur uniquement : place la cible IA de débogage à la position et direction du joueur ou du véhicule, décalée par des offsets optionnels avant et latéral, et pose un marqueur drapeau de débogage."
+  },
+  "AISystem:consoleCommandAISetLastTarget": {
+   "en": "Console command (gsAISetLastTarget), server only: moves the existing debug marker back to the stored last target, if there is one.",
+   "fr": "Commande console (gsAISetLastTarget), serveur uniquement : replace le marqueur de débogage existant sur la dernière cible mémorisée, s'il y en a une."
+  },
+  "AISystem:consoleCommandAIStart": {
+   "en": "Console command (gsAIStart), server only: creates a GOTO job for the vehicle the local player is in, aimed at the debug target, validates it for the player's farm and starts it. Returns a status or error text.",
+   "fr": "Commande console (gsAIStart), serveur uniquement : crée un job GOTO pour le véhicule où se trouve le joueur local, vers la cible de débogage, le valide pour la ferme du joueur et le démarre. Retourne un texte d'état ou d'erreur."
+  },
+  "AISystem:consoleCommandAIEnableDebug": {
+   "en": "Console command (gsAIEnableDebug): toggles the AI debugging flag and returns its new value. Works on clients too.",
+   "fr": "Commande console (gsAIEnableDebug) : bascule l'indicateur de débogage IA et retourne sa nouvelle valeur. Fonctionne aussi sur les clients."
+  },
+  "AISystem:consoleCommandAIToggleSplineVisibility": {
+   "en": "Console command (gsAISplinesShow), server only: toggles debug display of AI road splines (and the traffic root node) with colours. Note: it iterates getRoadSplines() with pairs and takes the key as the spline, which looks inconsistent with the roadSplines list, whose splines are values (getRoadSplines is not in the dump).",
+   "fr": "Commande console (gsAISplinesShow), serveur uniquement : bascule l'affichage de débogage des splines de route IA (et du noeud racine du trafic) en couleurs. À noter : elle parcourt getRoadSplines() avec pairs et prend la clé comme spline, ce qui semble incohérent avec la liste roadSplines dont les splines sont des valeurs (getRoadSplines n'est pas dans le dump)."
+  },
+  "AISystem:consoleCommandAIToggleAINodeDebug": {
+   "en": "Console command (gsAIStationsShow): toggles gizmos at the AI nodes of unloading and loading stations, with a warning that reloaded placeables are not refreshed automatically.",
+   "fr": "Commande console (gsAIStationsShow) : bascule des gizmos sur les noeuds IA des stations de déchargement et de chargement, avec un avertissement : les placeables rechargés ne sont pas rafraîchis automatiquement."
+  },
+  "AISystem:consoleCommandAIShowObstacles": {
+   "en": "Console command (gsAIObstaclesShow), server only: toggles the engine's debug rendering of the navigation map obstacles.",
+   "fr": "Commande console (gsAIObstaclesShow), serveur uniquement : bascule le rendu de débogage moteur des obstacles de la carte de navigation."
+  },
+  "AISystem:consoleCommandAISetAreaDirty": {
+   "en": "Console command (gsAICostsUpdate), server only: marks a square of the given width (default 30, clamped to 2 up to the terrain size) around the camera for cost map recomputation.",
+   "fr": "Commande console (gsAICostsUpdate), serveur uniquement : marque un carré de la largeur donnée (30 par défaut, borné entre 2 et la taille du terrain) autour de la caméra pour recalcul de la carte de coûts."
+  },
+  "AISystem:consoleCommandAICostmapExport": {
+   "en": "Console command (gsAICostsExport), server only: writes the cost map, with splines, as an image named navigationMap in the savegame folder; format from BitmapUtil.FORMAT (default PIXELMAP). Returns an error if the savegame folder does not exist.",
+   "fr": "Commande console (gsAICostsExport), serveur uniquement : écrit la carte de coûts, avec les splines, sous forme d'image nommée navigationMap dans le dossier de sauvegarde ; format issu de BitmapUtil.FORMAT (PIXELMAP par défaut). Retourne une erreur si le dossier de sauvegarde n'existe pas."
+  },
+  "AISystem:consoleCommandAICheckSplineInterference": {
+   "en": "Console command (gsAISplinesCheckInterference), server only: walks every AI spline and tests overlap boxes along it against non-terrain, non-vehicle, non-road objects, logging each hit and drawing debug boxes. Parameters: step length, height offset, default width and height.",
+   "fr": "Commande console (gsAISplinesCheckInterference), serveur uniquement : parcourt chaque spline IA et teste des boîtes de chevauchement le long de celle-ci contre les objets hors terrain, véhicules et routes, en journalisant chaque collision et en dessinant des boîtes de débogage. Paramètres : longueur de pas, décalage de hauteur, largeur et hauteur par défaut."
+  },
+  "AISystem.getAgentStateName": {
+   "en": "Returns the name of the AgentState entry matching an index, or the text UNKNOWN. AgentState itself is defined outside the dump.",
+   "fr": "Retourne le nom de l'entrée AgentState correspondant à un index, ou le texte UNKNOWN. AgentState est défini hors du dump."
+  }
+ }
+}

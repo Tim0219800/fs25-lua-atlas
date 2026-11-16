@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/hud/POIInfoDisplay.lua",
+ "module": {
+  "en": "Small HUD label at the top-left corner (extends HUDDisplayElement) that shows one line of text, used for points-of-interest info. It draws a rounded background sized to the text width plus offsets. text, offsets and applyValues are set elsewhere (UNVERIFIED). Client-side only.",
+  "fr": "Petite étiquette HUD dans le coin supérieur gauche (étend HUDDisplayElement) qui affiche une ligne de texte, utilisée pour des infos de points d'intérêt. Elle dessine un fond arrondi dimensionné à la largeur du texte plus des marges. text, les décalages et applyValues sont définis ailleurs (NON VÉRIFIÉ). Côté client uniquement."
+ },
+ "fonctions": {
+  "POIInfoDisplay:draw": {
+   "en": "Draws a rounded filled rectangle fitted to the text width plus left/right offsets, then the text, then the parent draw. Does nothing when the text is empty.",
+   "fr": "Dessine un rectangle plein arrondi ajusté à la largeur du texte plus les marges gauche/droite, puis le texte, puis le draw du parent. Ne fait rien si le texte est vide."
+  },
+  "POIInfoDisplay:setScale": {
+   "en": "Applies the scale through the parent, repositions at the scaled background position and calls applyValues with the scale.",
+   "fr": "Applique l'échelle via le parent, repositionne à la position de fond mise à l'échelle et appelle applyValues avec l'échelle."
+  },
+  "POIInfoDisplay.getBackgroundPosition": {
+   "en": "Returns the base position: configured X offset times scale, and Y measured from the top of the screen minus the scaled height.",
+   "fr": "Retourne la position de base : décalage X configuré multiplié par l'échelle, et Y mesuré depuis le haut de l'écran moins la hauteur mise à l'échelle."
+  },
+  "POIInfoDisplay.createBackground": {
+   "en": "Creates an image-less overlay with the base position and configured size, used as the positioning frame.",
+   "fr": "Crée un overlay sans image avec la position de base et la taille configurée, servant de cadre de positionnement."
+  }
+ }
+}

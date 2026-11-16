@@ -1,33 +1,37 @@
 # configurations/ConfigurationUtil.lua
 
+*[Version française](../../fr/scripts/configurations/ConfigurationUtil.md)*
+
 Source: `dataS/scripts/configurations/ConfigurationUtil.lua` — FS25 1.25.1.0
+
+✍ Static helpers for configurations (selectable options) of store items such as vehicles and placeables. They track bought and active configurations on an object, save and load them in savegame XML, send them over the network, parse configuration and configuration-set definitions from store XML, and pick fallbacks when a saved id no longer exists. They rely on g_storeManager, a configuration manager and configuration item classes defined elsewhere. The constant ConfigurationUtil.SEND_NUM_BITS is used here but defined outside this file (UNVERIFIED).
 
 - **ConfigurationUtil** (l.10)
 
 ## Functions
 
-| Function | Line | Description (FR) |
+| Function | Line | Description |
 |---|---|---|
-| `ConfigurationUtil.addBoughtConfiguration(manager: string, object: integer, name: string, id: integer)` | 22 |  |
-| `ConfigurationUtil.hasBoughtConfiguration(object: string, name: string, id: integer) → boolean` | 36 |  |
-| `ConfigurationUtil.setConfiguration(object: string, name: string, id: integer)` | 47 |  |
-| `ConfigurationUtil.getColorByConfigId(object: string, configName: string, configId: integer) → table` | 56 |  |
-| `ConfigurationUtil.getConfigItemByConfigId(configFileName: string, configName: string, configId: integer)` | 75 |  |
-| `ConfigurationUtil.raiseConfigurationItemEvent(object: table, eventName: string)` | 93 |  |
-| `ConfigurationUtil.getSaveIdByConfigId(configFileName: table, configName: string, configId: integer) → string` | 115 |  |
-| `ConfigurationUtil.saveConfigurationToXMLFile(itemConfigurations: table, configName: string, configId: integer, xmlFile: table, key: string, isActive: boolean, configurationData: table, xmlIndex: integer) → integer` | 141 |  |
-| `ConfigurationUtil.saveConfigurationsToXMLFile(configFileName: string, xmlFile: table, key: string, configurations: table, boughtConfigurations: table, configurationData: table)` | 169 |  |
-| `ConfigurationUtil.loadConfigurationsFromXMLFile(configFileName: string, xmlFile: table, key: string) → table, table, table` | 190 |  |
-| `ConfigurationUtil.readConfigurationsFromStream(manager: table, streamId: integer, connection: table, configFileName: string) → table, table, table` | 269 |  |
-| `ConfigurationUtil.writeConfigurationsToStream(manager: table, streamId: integer, connection: table, configFileName: string, configurations: table, boughtConfigurations: table, configurationData: table)` | 320 |  |
-| `ConfigurationUtil.getConfigurationDataHasChanged(configFileName: string, configurationData1: table, configurationData2: table) → boolean` | 350 |  |
-| `ConfigurationUtil.getConfigIdBySaveId(configFileName: table, configName: string, configId: string) → integer` | 385 |  |
-| `ConfigurationUtil.getConfigurationValue(xmlFile: XMLFile, key: string, subKey: string, param: string, defaultValue: any, fallbackConfigKey: string?, fallbackOldKey: string?) → any` | 428 |  |
-| `ConfigurationUtil.getXMLConfigurationKey(xmlFile: XMLFile, index: integer, key: string, defaultKey: string?, configurationKey: string) → string?, integer` | 455 |  |
-| `ConfigurationUtil.getConfigurationsFromXML(manager: XMLFile, xmlFile: XMLFile, key: string, baseDir: string, customEnvironment: string, isMod: boolean, storeItem: any) → table` | 480 |  |
-| `ConfigurationUtil.getConfigurationSetsFromXML(storeItem: table, xmlFile: XMLFile, key: string, baseDir: string, customEnvironment: string, isMod: boolean) → table` | 540 |  |
-| `ConfigurationUtil.getSubConfigurationsFromConfigurations(manager: any, configurations: any)` | 606 |  |
-| `ConfigurationUtil.getDefaultConfigIdFromItems(configItems: table) → integer` | 637 |  |
-| `ConfigurationUtil.getConfigurationsMatchConfigSets(configurations: any, configSets: any)` | 659 |  |
-| `ConfigurationUtil.getClosestConfigurationSet(configurations: any, configSets: any)` | 679 |  |
-| `ConfigurationUtil.isColorMetallic(materialId: any)` | 700 |  |
+| `ConfigurationUtil.addBoughtConfiguration(manager: string, object: integer, name: string, id: integer)` | 22 | ✍ Marks configuration id `id` of type `name` as bought on the object, creating the sub-table if needed. Does nothing if the manager does not know that configuration name. |
+| `ConfigurationUtil.hasBoughtConfiguration(object: string, name: string, id: integer) → boolean` | 36 | ✍ Returns true if the object has the given configuration id marked as bought for that configuration name, false otherwise. |
+| `ConfigurationUtil.setConfiguration(object: string, name: string, id: integer)` | 47 | ✍ Stores the active configuration id for a configuration name on the object. No validation is done. |
+| `ConfigurationUtil.getColorByConfigId(object: string, configName: string, configId: integer) → table` | 56 | ✍ Looks up the store item of the object and, if the chosen configuration is a VehicleConfigurationItemColor, returns its color; otherwise returns nil. Also returns nil when the id is nil. |
+| `ConfigurationUtil.getConfigItemByConfigId(configFileName: string, configName: string, configId: integer)` | 75 | ✍ Returns the configuration item object for a store XML file, configuration name and id, or nil when any of them is missing. Errors if the store item is not found, since it is indexed without a nil check. |
+| `ConfigurationUtil.raiseConfigurationItemEvent(object: table, eventName: string)` | 93 | ✍ For each of the object's sorted configuration names, calls the method named `eventName` on the currently selected configuration item, passing the object and the config id, when that method exists. |
+| `ConfigurationUtil.getSaveIdByConfigId(configFileName: table, configName: string, configId: integer) → string` | 115 | ✍ Returns the saveId string of a configuration item identified by store XML file, name and numeric id, or nil if it cannot be found. |
+| `ConfigurationUtil.saveConfigurationToXMLFile(itemConfigurations: table, configName: string, configId: integer, xmlFile: table, key: string, isActive: boolean, configurationData: table, xmlIndex: integer) → integer` | 141 | ✍ Writes one configuration item to `key(xmlIndex)` through its saveToXMLFile, with its optional extra data, and returns the incremented index. Returns the index unchanged if the item does not exist. |
+| `ConfigurationUtil.saveConfigurationsToXMLFile(configFileName: string, xmlFile: table, key: string, configurations: table, boughtConfigurations: table, configurationData: table)` | 169 | ✍ Saves every bought configuration of an object to the savegame XML, flagging as active the one matching the current selection. Does nothing if the store item has no configurations. |
+| `ConfigurationUtil.loadConfigurationsFromXMLFile(configFileName: string, xmlFile: table, key: string) → table, table, table` | 190 | ✍ Reads saved configurations by name and saveId. If a saveId is gone it tries the item class getFallbackConfigId, then the first selectable item. Returns the active configurations, bought configurations and per-item data tables. |
+| `ConfigurationUtil.readConfigurationsFromStream(manager: table, streamId: integer, connection: table, configFileName: string) → table, table, table` | 269 | ✍ Network read counterpart of writeConfigurationsToStream: rebuilds the configuration, bought and data tables from the stream, converting zero-based wire ids to one-based. Logs an error if an item is missing on the client. |
+| `ConfigurationUtil.writeConfigurationsToStream(manager: table, streamId: integer, connection: table, configFileName: string, configurations: table, boughtConfigurations: table, configurationData: table)` | 320 | ✍ Writes bought configurations to a network stream: type count, then per type its index, its ids, an active flag and, if the item has writeToStream, its extra data. Ids are sent zero-based. |
+| `ConfigurationUtil.getConfigurationDataHasChanged(configFileName: string, configurationData1: table, configurationData2: table) → boolean` | 350 | ✍ Compares two configuration data tables and returns true if one is nil and the other not, an entry is missing from the second, or an item's hasDataChanged reports a difference. Only entries of the first table are checked. |
+| `ConfigurationUtil.getConfigIdBySaveId(configFileName: table, configName: string, configId: string) → integer` | 385 | ✍ Converts a saveId to the configuration index. Falls back to the item class getFallbackConfigId, then the first selectable item, and finally returns 1 if nothing matches. |
+| `ConfigurationUtil.getConfigurationValue(xmlFile: XMLFile, key: string, subKey: string, param: string, defaultValue: any, fallbackConfigKey: string?, fallbackOldKey: string?) → any` | 428 | ✍ Reads `key..subKey..param` from the XML, then the fallback config key, then the old-style key, and returns the first found value or the default. Prints a callstack if subKey is a table. |
+| `ConfigurationUtil.getXMLConfigurationKey(xmlFile: XMLFile, index: integer, key: string, defaultKey: string?, configurationKey: string) → string?, integer` | 455 | ✍ Returns the XML key of the configuration entry for a one-based index (default 1) plus that index. Falls back to the `(0)` entry, then to defaultKey, and warns if an explicit index is not present. |
+| `ConfigurationUtil.getConfigurationsFromXML(manager: XMLFile, xmlFile: XMLFile, key: string, baseDir: string, customEnvironment: string, isMod: boolean, storeItem: any) → table` | 480 | ✍ For every registered configuration type, loads its items from the store XML using the item class (preLoad, new, setIndex, loadFromXML, postLoad). Returns the item lists and default ids per type, or nil, nil if none exist. |
+| `ConfigurationUtil.getConfigurationSetsFromXML(storeItem: table, xmlFile: XMLFile, key: string, baseDir: string, customEnvironment: string, isMod: boolean) → table` | 540 | ✍ Parses the `configurationSets` block of a store XML into a list of sets with name, default flag, title override, yes/no option flag and a map of configuration name to index. Invalid names or indices produce XML warnings. |
+| `ConfigurationUtil.getSubConfigurationsFromConfigurations(manager: any, configurations: any)` | 606 | ✍ For configuration types with a sub-selection, builds the list of sub-values and a mapping from each value to its items, keeping only types with more than one sub-value. Returns nil if no configurations are given. |
+| `ConfigurationUtil.getDefaultConfigIdFromItems(configItems: table) → integer` | 637 | ✍ Returns the index of the first item flagged as default and selectable, else the first selectable item, else 1. |
+| `ConfigurationUtil.getConfigurationsMatchConfigSets(configurations: any, configSets: any)` | 659 | ✍ Returns true if the given configurations exactly match at least one of the configuration sets on every entry of that set. |
+| `ConfigurationUtil.getClosestConfigurationSet(configurations: any, configSets: any)` | 679 | ✍ Returns the configuration set with the most matching entries and that match count. Returns nil and 0 if no set has any match. |
+| `ConfigurationUtil.isColorMetallic(materialId: any)` | 700 | ✍ Returns true if the material id is one of 2, 3, 19, 30, 31 or 35, which the UI shows as metallic. |

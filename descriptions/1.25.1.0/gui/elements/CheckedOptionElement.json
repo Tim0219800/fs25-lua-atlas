@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/elements/CheckedOptionElement.lua",
+ "module": {
+  "en": "Two-state off/on option element derived from MultiTextOptionElement; the states are the CheckedOptionElement.STATE_UNCHECKED and STATE_CHECKED constants (defined elsewhere). Client-side GUI.",
+  "fr": "Élément d'option à deux états désactivé/activé dérivé de MultiTextOptionElement ; les états sont les constantes CheckedOptionElement.STATE_UNCHECKED et STATE_CHECKED (définies ailleurs). Interface côté client."
+ },
+ "fonctions": {
+  "CheckedOptionElement.new": {
+   "en": "Constructor; builds the element through MultiTextOptionElement.",
+   "fr": "Constructeur ; construit l'élément via MultiTextOptionElement."
+  },
+  "CheckedOptionElement:addElement": {
+   "en": "Adds a child; once the element count reaches 3, sets the option texts to the localized off/on labels (`ui_off`, `ui_on`) and reapplies the checked state.",
+   "fr": "Ajoute un enfant ; dès que le nombre d'éléments atteint 3, règle les textes d'option sur les libellés localisés désactivé/activé (`ui_off`, `ui_on`) et réapplique l'état coché."
+  },
+  "CheckedOptionElement:getIsChecked": {
+   "en": "Returns true when the current state equals STATE_CHECKED.",
+   "fr": "Retourne true quand l'état courant vaut STATE_CHECKED."
+  },
+  "CheckedOptionElement:setIsChecked": {
+   "en": "Sets the state to STATE_CHECKED or STATE_UNCHECKED according to the boolean.",
+   "fr": "Règle l'état sur STATE_CHECKED ou STATE_UNCHECKED selon le booléen."
+  }
+ }
+}

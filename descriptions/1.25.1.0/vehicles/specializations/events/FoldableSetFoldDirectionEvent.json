@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/FoldableSetFoldDirectionEvent.lua",
+ "module": {
+  "en": "Network event class `FoldableSetFoldDirectionEvent` (extends `Event`) that replicates the fold direction of a foldable implement. It carries the vehicle, a direction (-1, 0 or 1, sent on 2 bits) and a move-to-middle flag. It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `FoldableSetFoldDirectionEvent` (hérite de `Event`) qui réplique le sens de pliage d'un outil repliable. Elle transporte le véhicule, un sens (-1, 0 ou 1, envoyé sur 2 bits) et un indicateur de déplacement au milieu. Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "FoldableSetFoldDirectionEvent.emptyNew": {
+   "en": "Creates an empty `FoldableSetFoldDirectionEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `FoldableSetFoldDirectionEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "FoldableSetFoldDirectionEvent.new": {
+   "en": "Creates the event with its data: the vehicle, a direction (-1, 0 or 1, sent on 2 bits) and a move-to-middle flag.",
+   "fr": "Crée l'événement avec ses données : le véhicule, un sens (-1, 0 ou 1, envoyé sur 2 bits) et un indicateur de déplacement au milieu."
+  },
+  "FoldableSetFoldDirectionEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, a direction (-1, 0 or 1, sent on 2 bits) and a move-to-middle flag), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, un sens (-1, 0 ou 1, envoyé sur 2 bits) et un indicateur de déplacement au milieu), puis appelle `run`."
+  },
+  "FoldableSetFoldDirectionEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, a direction (-1, 0 or 1, sent on 2 bits) and a move-to-middle flag).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, un sens (-1, 0 ou 1, envoyé sur 2 bits) et un indicateur de déplacement au milieu)."
+  },
+  "FoldableSetFoldDirectionEvent:run": {
+   "en": "Executes the event on the receiving side: calls `setFoldState(direction, moveToMiddle, true)` on the vehicle. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `setFoldState(direction, moveToMiddle, true)` sur le véhicule. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  }
+ }
+}

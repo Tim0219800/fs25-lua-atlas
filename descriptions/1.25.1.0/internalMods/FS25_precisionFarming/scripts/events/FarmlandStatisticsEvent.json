@@ -1,0 +1,25 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/FarmlandStatisticsEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that sends the statistics of one farmland from server to a client, in reply to RequestFarmlandStatisticsEvent.",
+    "fr": "Événement réseau (sous-classe de Event) qui envoie les statistiques d'une parcelle du serveur vers un client, en réponse à RequestFarmlandStatisticsEvent."
+  },
+  "fonctions": {
+    "FarmlandStatisticsEvent.emptyNew": {
+      "en": "Creates an empty FarmlandStatisticsEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de FarmlandStatisticsEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "FarmlandStatisticsEvent.new": {
+      "en": "Creates the event for a farmland id.",
+      "fr": "Crée l'événement pour un id de parcelle."
+    },
+    "FarmlandStatisticsEvent:readStream": {
+      "en": "Client side: reads the farmland id, then g_precisionFarming.farmlandStatistics:readStatisticFromStream reads the statistics, if the object exists.",
+      "fr": "Côté client : lit l'id de parcelle, puis g_precisionFarming.farmlandStatistics:readStatisticFromStream lit les statistiques, si l'objet existe."
+    },
+    "FarmlandStatisticsEvent:writeStream": {
+      "en": "Server side: writes the farmland id, then g_precisionFarming.farmlandStatistics:writeStatisticToStream writes the statistics, if the object exists.",
+      "fr": "Côté serveur : écrit l'id de parcelle, puis g_precisionFarming.farmlandStatistics:writeStatisticToStream écrit les statistiques, si l'objet existe."
+    }
+  }
+}

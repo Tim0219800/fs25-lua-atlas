@@ -1,0 +1,33 @@
+{
+ "fichier": "ai/events/AIJobStartRequestEvent.lua",
+ "module": {
+  "en": "Two-way event for starting an AI job. A client sends job and farm id; the server checks `getIsStartable`, answers with a state code and, if startable, starts the job through `aiSystem:startJob`. The client then publishes the answer on the message center.",
+  "fr": "Événement bidirectionnel pour démarrer un job IA. Le client envoie le job et l'id de ferme ; le serveur vérifie `getIsStartable`, répond par un code d'état et, si c'est possible, démarre le job via `aiSystem:startJob`. Le client publie ensuite la réponse sur le centre de messages."
+ },
+ "fonctions": {
+  "AIJobStartRequestEvent.emptyNew": {
+   "en": "Creates an empty event for stream reconstruction.",
+   "fr": "Crée un événement vide pour la reconstruction depuis un flux."
+  },
+  "AIJobStartRequestEvent.new": {
+   "en": "Creates the client-to-server request for a job and farm id.",
+   "fr": "Crée la requête client vers serveur pour un job et un id de ferme."
+  },
+  "AIJobStartRequestEvent.newServerToClient": {
+   "en": "Creates the server reply carrying a state code (0 is sent when the job is accepted) and the job type index.",
+   "fr": "Crée la réponse du serveur avec un code d'état (0 est envoyé quand le job est accepté) et l'index du type de job."
+  },
+  "AIJobStartRequestEvent:readStream": {
+   "en": "On the server reads farm id, job type (uint16) and job data; on a client reads the state (uint8) and job type index. Then runs the event.",
+   "fr": "Sur le serveur lit l'id de ferme, le type (uint16) et les données du job ; sur un client lit l'état (uint8) et l'index du type. Puis exécute l'événement."
+  },
+  "AIJobStartRequestEvent:writeStream": {
+   "en": "Mirror of `readStream`: a client writes farm id, job type and job data; the server writes state and job type index.",
+   "fr": "Miroir de `readStream` : un client écrit id de ferme, type et données du job ; le serveur écrit l'état et l'index du type."
+  },
+  "AIJobStartRequestEvent:run": {
+   "en": "Server side: calls `job:getIsStartable(connection)`, sends the state back, and only if startable starts the job with `aiSystem:startJob`. Client side: publishes `AIJobStartRequestEvent` with state and job type on `g_messageCenter`.",
+   "fr": "Côté serveur : appelle `job:getIsStartable(connection)`, renvoie l'état, et ne démarre le job via `aiSystem:startJob` que s'il est démarrable. Côté client : publie `AIJobStartRequestEvent` avec l'état et le type sur `g_messageCenter`."
+  }
+ }
+}

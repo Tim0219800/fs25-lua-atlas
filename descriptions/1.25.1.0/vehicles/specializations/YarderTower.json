@@ -1,0 +1,277 @@
+{
+ "fichier": "vehicles/specializations/YarderTower.lua",
+ "module": {
+  "en": "Specialization for the tower of a forestry yarder (cable crane). The player enters a setup mode, aims at a tree and, if the placement is valid (angle, length, tree diameter, clear path, uphill rule), the main rope is anchored. The server then spawns a separate carriage vehicle (see YarderCarriage) that moves along the rope, while support ropes attach to nearby trees or the ground and the tower becomes kinematic. It has no prerequisites, uses YarderTowerSetupActivatable, YarderTowerControlActivatable and a HUD extension, registers store specs (max length, max mass) and saves its rope state, carriage position and attached trees in the savegame. Network sync goes through YarderTowerSetTargetEvent and YarderTowerFollowModeEvent plus an input update stream from client to server.",
+  "fr": "Spécialisation pour la tour d'un téléphérique forestier (yarder). Le joueur entre en mode installation, vise un arbre et, si le placement est valide (angle, longueur, diamètre de l'arbre, trajet dégagé, règle de la montée), la corde principale est ancrée. Le serveur crée alors un véhicule chariot séparé (voir YarderCarriage) qui se déplace sur la corde, tandis que des cordes de soutien se fixent à des arbres proches ou au sol et que la tour devient cinématique. Elle n'a aucun prérequis, utilise YarderTowerSetupActivatable, YarderTowerControlActivatable et une extension HUD, déclare des specs de boutique (longueur et masse maximales) et sauvegarde l'état des cordes, la position du chariot et les arbres attachés. La synchronisation passe par YarderTowerSetTargetEvent et YarderTowerFollowModeEvent, plus un flux d'entrées du client vers le serveur."
+ },
+ "fonctions": {
+  "YarderTower.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Retourne toujours true : aucune spécialisation prérequise."
+  },
+  "YarderTower.initSpecialization": {
+   "en": "Registers the store spec types `yarderMaxLength` and `yarderMaxMass`, the whole `vehicle.yarderTower` XML schema (control trigger, placement, carriage, hooks, setup/main/pull/push/support ropes, sounds, motor effects) and the savegame attributes for rope state, carriage position, target and attached trees.",
+   "fr": "Enregistre les types de spec de boutique `yarderMaxLength` et `yarderMaxMass`, tout le schéma XML `vehicle.yarderTower` (déclencheur de contrôle, placement, chariot, crochets, cordes d'installation/principale/traction/poussée/soutien, sons, effets moteur) et les attributs de sauvegarde pour l'état des cordes, la position du chariot, la cible et les arbres attachés."
+  },
+  "YarderTower.registerRopeXMLPaths": {
+   "en": "Declares the XML keys shared by all rope kinds: sag offset, rope i3d file and node path, diameter, rotation node, nodes driven by the rope length (rotation, translation, scale, shader parameter) and object changes. Note: onLoad uses a default sag of 0.4 whereas the schema documents 0.1.",
+   "fr": "Déclare les clés XML communes à tous les types de corde : affaissement, fichier i3d et chemin de noeud de la corde, diamètre, noeud de rotation, noeuds pilotés par la longueur de corde (rotation, translation, échelle, paramètre de shader) et object changes. À noter : onLoad utilise un affaissement par défaut de 0.4 alors que le schéma indique 0.1."
+  },
+  "YarderTower.registerEvents": {
+   "en": "Registers the vehicle event `onYarderCarriageTreeAttached`, raised by the carriage when a tree is attached.",
+   "fr": "Enregistre l'événement véhicule `onYarderCarriageTreeAttached`, déclenché par le chariot quand un arbre est attaché."
+  },
+  "YarderTower.registerFunctions": {
+   "en": "Adds the yarder API to the vehicle type: setup mode, target activation, carriage follow/move/lift input, support rope setup, rope updates, placement validation, range queries, status info and the raycast/overlap/trigger callbacks.",
+   "fr": "Ajoute l'API du yarder au type de véhicule : mode installation, activation de la cible, suivi/déplacement/levage du chariot, installation des cordes de soutien, mise à jour des cordes, validation du placement, requêtes de portée, infos d'état et callbacks de raycast/overlap/trigger."
+  },
+  "YarderTower.registerOverwrittenFunctions": {
+   "en": "Overrides detach, fold, lowering, PTO power, consuming load, PTO activity, dirt, wear, damage usage and physics add/remove.",
+   "fr": "Surcharge le détachement, le pliage, l'abaissement, la puissance PTO, la charge consommée, l'activité PTO, la salissure, l'usure, l'usage causant des dégâts et l'ajout/retrait de la physique."
+  },
+  "YarderTower.registerEventListeners": {
+   "en": "Subscribes to load, load-end, pre-delete, delete, network streams, update, the carriage's tree-attached event and post-attach.",
+   "fr": "S'abonne aux événements de chargement, fin de chargement, pré-suppression, suppression, flux réseau, mise à jour, événement d'arbre attaché du chariot et post-attach."
+  },
+  "YarderTower:onLoad": {
+   "en": "Reads all yarder settings from XML, validates required parts (control trigger with PLAYER collision flag, carriage store item, hooks, setup and main rope nodes), loads rope i3d files, sounds, motor effects and texts. If anything is invalid it logs an error and removes the runtime listeners; otherwise it creates the setup and control activatables and the HUD extension. Defaults used here (support rope maxAngle 22.5) differ from the schema (15).",
+   "fr": "Lit tous les réglages du yarder depuis le XML, valide les éléments obligatoires (déclencheur de contrôle avec le flag de collision PLAYER, objet de boutique du chariot, crochets, noeuds des cordes d'installation et principale), charge les i3d de cordes, sons, effets moteur et textes. En cas d'invalidité elle journalise une erreur et retire les écouteurs d'exécution ; sinon elle crée les activables d'installation et de contrôle et l'extension HUD. Les défauts utilisés ici (maxAngle des cordes de soutien 22.5) diffèrent du schéma (15)."
+  },
+  "YarderTower:onLoadEnd": {
+   "en": "From the savegame, restores the active state, carriage position, main rope target and the saved attached-tree data, and re-activates the target without sending an event.",
+   "fr": "Depuis la sauvegarde, restaure l'état actif, la position du chariot, la cible de la corde principale et les données d'arbres attachés, et réactive la cible sans envoyer d'événement."
+  },
+  "YarderTower:onPreDelete": {
+   "en": "Deactivates the yarder target before deletion if the main rope is active, so carriage and registrations are cleaned up.",
+   "fr": "Désactive la cible du yarder avant la suppression si la corde principale est active, afin de nettoyer chariot et enregistrements."
+  },
+  "YarderTower:onDelete": {
+   "en": "Removes the HUD extension, the control trigger, shared i3d requests, hooks, sounds, motor effects and both activatables.",
+   "fr": "Retire l'extension HUD, le déclencheur de contrôle, les requêtes i3d partagées, crochets, sons, effets moteur et les deux activables."
+  },
+  "YarderTower:saveToXMLFile": {
+   "en": "Saves whether the main rope is active, the carriage position and the target coordinates, and asks the carriage vehicle to save its attached trees.",
+   "fr": "Sauvegarde l'état actif de la corde principale, la position du chariot et les coordonnées de la cible, et demande au véhicule chariot de sauvegarder ses arbres attachés."
+  },
+  "YarderTower:onReadStream": {
+   "en": "Client on join: reads the follow-mode state and, if the rope is active, the target position, then activates the target locally.",
+   "fr": "Client à la connexion : lit l'état du mode de suivi et, si la corde est active, la position de la cible, puis active la cible localement."
+  },
+  "YarderTower:onWriteStream": {
+   "en": "Server on join: writes the follow-mode state, the rope-active flag and, if active, the target position.",
+   "fr": "Serveur à la connexion : écrit l'état du mode de suivi, l'indicateur de corde active et, si active, la position de la cible."
+  },
+  "YarderTower:onReadUpdateStream": {
+   "en": "Server side: reads the carriage move and lift input directions sent by a client (stored as sign + 1).",
+   "fr": "Côté serveur : lit les directions d'entrée de déplacement et de levage du chariot envoyées par un client (stockées en signe + 1)."
+  },
+  "YarderTower:onWriteUpdateStream": {
+   "en": "Client side: when the dirty flag is set, writes the sign of the last move and lift input for the server.",
+   "fr": "Côté client : si le dirty flag est actif, écrit le signe de la dernière entrée de déplacement et de levage pour le serveur."
+  },
+  "YarderTower:onUpdate": {
+   "en": "Large per-frame update. In setup mode: raycasts for a tree, validates the main rope placement, drives sounds and the rope colour. When the main rope is active: server moves the carriage along the rope with acceleration and follow modes, may start the attacher vehicle's motor and feed PTO load, places the carriage vehicle; all sides update ropes, carriage sounds, HUD and motor sound/effects. The condition on `updateRopesDirtyTime` is always true because of an `or true`.",
+   "fr": "Grosse mise à jour par frame. En mode installation : raycast vers un arbre, validation du placement de la corde principale, sons et couleur de la corde. Quand la corde principale est active : le serveur déplace le chariot le long de la corde avec accélération et modes de suivi, peut démarrer le moteur du véhicule porteur et alimenter la charge PTO, place le véhicule chariot ; tous les côtés mettent à jour cordes, sons du chariot, HUD et son/effets du moteur. La condition sur `updateRopesDirtyTime` est toujours vraie à cause d'un `or true`."
+  },
+  "YarderTower:onYarderCarriageTreeAttached": {
+   "en": "Event handler: remembers the carriage's current position as the pickup position for follow mode and refreshes the control action texts.",
+   "fr": "Gestionnaire d'événement : mémorise la position actuelle du chariot comme position de prise pour le mode de suivi et rafraîchit les textes d'actions de contrôle."
+  },
+  "YarderTower:onPostAttach": {
+   "en": "After the tower is attached to a vehicle, registers a function on the root vehicle that blocks driving while the yarder is set up.",
+   "fr": "Après l'attelage de la tour à un véhicule, enregistre sur le véhicule racine une fonction qui interdit la conduite tant que le yarder est installé."
+  },
+  "YarderTower:onHookI3DLoaded": {
+   "en": "Callback for the shared i3d load of a hook: links the first child to the root node, hides it and stores it in the hook data, then deletes the loaded i3d.",
+   "fr": "Callback du chargement i3d partagé d'un crochet : lie le premier enfant au noeud racine, le masque et le stocke dans les données du crochet, puis supprime l'i3d chargé."
+  },
+  "YarderTower:onRopeI3DLoaded": {
+   "en": "Callback for a rope i3d load: links the rope shape found by the configured path to the rope's node (or the vehicle root), hides it and stores it, then deletes the loaded i3d.",
+   "fr": "Callback du chargement d'un i3d de corde : lie la shape de corde trouvée via le chemin configuré au noeud de la corde (ou à la racine du véhicule), la masque et la stocke, puis supprime l'i3d chargé."
+  },
+  "YarderTower:getIsSetupModeChangeAllowed": {
+   "en": "Returns true if setup mode can be entered or left; when entering it requires the implement lowered and unfolded within limits if configured. Otherwise returns false and a warning text.",
+   "fr": "Retourne true si le mode installation peut être activé ou quitté ; à l'entrée il exige l'outil abaissé et déplié dans les limites si configuré. Sinon retourne false et un texte d'avertissement."
+  },
+  "YarderTower:setYarderSetupModeState": {
+   "en": "Toggles (or sets) setup mode: plays start/cancel sounds, deactivates any existing target and shows or hides the setup rope; removes the setup activatable when leaving if the player is outside the trigger.",
+   "fr": "Active, désactive ou inverse le mode installation : joue les sons de début/annulation, désactive la cible existante et affiche ou masque la corde d'installation ; retire l'activable d'installation à la sortie si le joueur est hors du déclencheur."
+  },
+  "YarderTower:setYarderTargetActive": {
+   "en": "Activates or removes the main rope anchor. Activating mounts hooks on the target tree, registers with g_splitShapeManager, sets up support ropes, makes the tower components kinematic and (server) loads the carriage vehicle; deactivating reverses this and deletes the carriage. Sends YarderTowerSetTargetEvent unless `noEventSend`.",
+   "fr": "Active ou retire l'ancrage de la corde principale. L'activation monte les crochets sur l'arbre cible, s'enregistre auprès de g_splitShapeManager, installe les cordes de soutien, rend les composants de la tour cinématiques et (serveur) charge le véhicule chariot ; la désactivation inverse tout et supprime le chariot. Envoie YarderTowerSetTargetEvent sauf si `noEventSend`."
+  },
+  "YarderTower:setYarderCarriageFollowMode": {
+   "en": "Sets the carriage follow mode (none, follow player, pickup position or home; constants defined elsewhere, UNVERIFIED here). On the server it tracks the requesting player and listens for that player's deletion; sends YarderTowerFollowModeEvent unless `noEventSend`.",
+   "fr": "Définit le mode de suivi du chariot (aucun, suivre le joueur, position de prise ou retour ; constantes définies ailleurs, NON VÉRIFIÉ ici). Sur le serveur il mémorise le joueur demandeur et écoute sa suppression ; envoie YarderTowerFollowModeEvent sauf si `noEventSend`."
+  },
+  "YarderTower:setYarderCarriageMoveInput": {
+   "en": "Stores a move direction with its timestamp (cancelling any follow mode) and raises the dirty flag so the input reaches the server.",
+   "fr": "Mémorise une direction de déplacement avec son horodatage (annule tout mode de suivi) et lève le dirty flag pour que l'entrée parvienne au serveur."
+  },
+  "YarderTower:setYarderCarriageLiftInput": {
+   "en": "Stores a lift direction with its timestamp and raises the dirty flag so the input reaches the server.",
+   "fr": "Mémorise une direction de levage avec son horodatage et lève le dirty flag pour que l'entrée parvienne au serveur."
+  },
+  "YarderTower:onYarderCarriageAttach": {
+   "en": "Forwards the attach-tree action to the carriage vehicle. Errors if no carriage exists.",
+   "fr": "Transmet l'action d'attache d'arbre au véhicule chariot. Provoque une erreur s'il n'y a pas de chariot."
+  },
+  "YarderTower:onYarderCarriageDetach": {
+   "en": "Forwards the detach-tree action to the carriage vehicle. Errors if no carriage exists.",
+   "fr": "Transmet l'action de détache d'arbre au véhicule chariot. Provoque une erreur s'il n'y a pas de chariot."
+  },
+  "YarderTower:setupSupportRopes": {
+   "en": "Finds trees around the center node with a sphere overlap, assigns each support rope the best tree by smallest angle (resolving conflicts), and for ropes without a tree starts an async raycast to anchor a ground hook.",
+   "fr": "Trouve les arbres autour du noeud central par un overlap sphérique, attribue à chaque corde de soutien le meilleur arbre selon le plus petit angle (en résolvant les conflits) et, pour les cordes sans arbre, lance un raycast asynchrone pour ancrer un crochet au sol."
+  },
+  "YarderTower:onCreateCarriageFinished": {
+   "en": "Callback after the carriage vehicle is loaded: on success stores it, links it to the tower, listens for its deletion and removes it from physics until positioned; otherwise logs an error.",
+   "fr": "Callback après le chargement du véhicule chariot : en cas de succès le mémorise, le lie à la tour, écoute sa suppression et le retire de la physique jusqu'à son placement ; sinon journalise une erreur."
+  },
+  "YarderTower:onCarriageVehicleDeleted": {
+   "en": "Delete listener: clears the stored carriage vehicle reference and the in-range flag.",
+   "fr": "Écouteur de suppression : efface la référence au véhicule chariot et l'indicateur de présence à portée."
+  },
+  "YarderTower:setYarderRopeState": {
+   "en": "Shows or hides a rope: sets its active flag, rope node visibility and object changes; when hiding, resets its rotation node, deletes its hook and resets length-driven nodes.",
+   "fr": "Affiche ou masque une corde : définit son indicateur actif, la visibilité de son noeud et ses object changes ; en masquant, réinitialise son noeud de rotation, supprime son crochet et remet à zéro les noeuds pilotés par la longueur."
+  },
+  "YarderTower:updateYarderRope": {
+   "en": "Aims a rope from its start node to a target point, updates its shader length/bend parameters and bounding sphere and its length-driven nodes, only when the length changed. Returns the sag offset used.",
+   "fr": "Oriente une corde de son noeud de départ vers un point cible, met à jour ses paramètres de shader de longueur/courbure, sa sphère englobante et ses noeuds pilotés par la longueur, seulement si la longueur a changé. Retourne l'affaissement utilisé."
+  },
+  "YarderTower:updateYarderRopeLengthNodes": {
+   "en": "Interpolates rotation, translation, scale and shader parameter of the rope's length-driven nodes between their min and max settings according to the rope length.",
+   "fr": "Interpole rotation, translation, échelle et paramètre de shader des noeuds pilotés par la longueur de la corde entre leurs réglages min et max selon la longueur de la corde."
+  },
+  "YarderTower:getTreeAtPosition": {
+   "en": "Looks up a split shape (tree) near a world position with the engine `findSplitShape` and returns its id (nil or 0 if none).",
+   "fr": "Cherche une split shape (arbre) près d'une position monde avec `findSplitShape` du moteur et retourne son id (nil ou 0 si aucune)."
+  },
+  "YarderTower:getIsPlayerInYarderRange": {
+   "en": "Returns true if the local player's farm owns the tower and the player is in the control trigger or in setup mode.",
+   "fr": "Retourne true si la ferme du joueur local possède la tour et si le joueur est dans le déclencheur de contrôle ou en mode installation."
+  },
+  "YarderTower:getIsPlayerInYarderControlRange": {
+   "en": "Returns whether a position (default the local player) lies within the maximum control distance of the main rope line, plus the distance. Returns false while the player is inside the setup trigger or for another farm.",
+   "fr": "Retourne si une position (par défaut le joueur local) se trouve à moins de la distance maximale de contrôle de la ligne de la corde principale, ainsi que la distance. Retourne false si le joueur est dans le déclencheur d'installation ou pour une autre ferme."
+  },
+  "YarderTower:getYarderIsSetUp": {
+   "en": "Returns true when the carriage vehicle exists, i.e. the yarder is set up.",
+   "fr": "Retourne true quand le véhicule chariot existe, c'est-à-dire quand le yarder est installé."
+  },
+  "YarderTower:getYarderStatusInfo": {
+   "en": "Returns status for the HUD: player available, carriage loaded with trees, player position along the rope, carriage position, follow mode, whether the local player is followed and the target position (if any).",
+   "fr": "Retourne l'état pour le HUD : joueur disponible, chariot chargé d'arbres, position du joueur le long de la corde, position du chariot, mode de suivi, si le joueur local est suivi et position cible (le cas échéant)."
+  },
+  "YarderTower:getYarderMainRopeLength": {
+   "en": "Returns the distance from the main rope start to its target, or 0 if no valid target exists.",
+   "fr": "Retourne la distance entre le départ de la corde principale et sa cible, ou 0 s'il n'y a pas de cible valide."
+  },
+  "YarderTower:getYarderCarriageLastSpeed": {
+   "en": "Returns the carriage's last measured speed as a 0 to 1 fraction of the maximum speed.",
+   "fr": "Retourne la dernière vitesse mesurée du chariot sous forme de fraction de 0 à 1 de la vitesse maximale."
+  },
+  "YarderTower:getIsTreeShapeUsedForYarderSetup": {
+   "en": "Returns true if the given tree shape holds the main rope or one of the support ropes.",
+   "fr": "Retourne true si la shape d'arbre donnée porte la corde principale ou l'une des cordes de soutien."
+  },
+  "YarderTower:onYarderControlTriggerCallback": {
+   "en": "Trigger callback: when the local player enters or leaves the control trigger, sets the in-range flag and adds or removes the setup activatable.",
+   "fr": "Callback de déclencheur : quand le joueur local entre ou sort du déclencheur de contrôle, met à jour l'indicateur de portée et ajoute ou retire l'activable d'installation."
+  },
+  "YarderTower:onYarderTreeRaycastCallback": {
+   "en": "Setup raycast callback: keeps the first unsplit tree hit and its height as the aimed tree, otherwise clears it.",
+   "fr": "Callback du raycast d'installation : conserve le premier arbre non fendu touché et sa hauteur comme arbre visé, sinon l'efface."
+  },
+  "YarderTower:doRopePlacementValidation": {
+   "en": "Validates a main rope target: height rule (uphill), angle, tree diameter and length limits, then starts an async raycast to check the path is clear. Results go to the callback data's function with a failure reason.",
+   "fr": "Valide une cible de corde principale : règle de hauteur (montée), angle, diamètre de l'arbre et limites de longueur, puis lance un raycast asynchrone pour vérifier que le trajet est dégagé. Le résultat est transmis à la fonction des données de callback avec une raison d'échec."
+  },
+  "YarderTower.onYarderMainTreeRaycastCallback": {
+   "en": "Raycast callback for the clear-path check: any hit means the way is blocked; reaching the last result with no hit reports success.",
+   "fr": "Callback du raycast de vérification du trajet : toute collision signifie que le chemin est bloqué ; atteindre le dernier résultat sans collision indique un succès."
+  },
+  "YarderTower:onMainRopePlacementValidated": {
+   "en": "Receives the validation result: during setup it stores validity and target, and shows a blinking warning for too long, wrong angle, small tree, blocked path or non-uphill placement.",
+   "fr": "Reçoit le résultat de validation : pendant l'installation il mémorise validité et cible, et affiche un avertissement clignotant pour trop long, mauvais angle, arbre trop petit, chemin bloqué ou placement non montant."
+  },
+  "YarderTower.onYarderSupportTerrainRaycastCallback": {
+   "en": "Raycast callback for support ropes: on a terrain hit it creates a ground hook at that point, plays the ground-link sound and activates the rope; with no hit at the last result it deactivates the rope.",
+   "fr": "Callback de raycast des cordes de soutien : sur un impact avec le terrain il crée un crochet au sol à ce point, joue le son de fixation au sol et active la corde ; sans impact au dernier résultat il désactive la corde."
+  },
+  "YarderTower:onSupportRopeTreeOverlapCallback": {
+   "en": "Overlap callback: collects found trees for support ropes, excluding the tree used by the main rope.",
+   "fr": "Callback d'overlap : collecte les arbres trouvés pour les cordes de soutien, en excluant l'arbre utilisé par la corde principale."
+  },
+  "YarderTower:onYarderTowerPlayerDeleted": {
+   "en": "Delete listener for the followed player: resets the carriage follow mode to none.",
+   "fr": "Écouteur de suppression du joueur suivi : remet le mode de suivi du chariot à aucun."
+  },
+  "YarderTower:isDetachAllowed": {
+   "en": "Forbids detaching the tower from its carrier while the main rope is active if the tower requires an attacher vehicle (returns false and a warning); otherwise defers to the parent.",
+   "fr": "Interdit de détacher la tour de son porteur tant que la corde principale est active si la tour exige un véhicule porteur (retourne false et un avertissement) ; sinon délègue au parent."
+  },
+  "YarderTower:getIsFoldAllowed": {
+   "en": "Returns false while the main rope is active; otherwise defers to the parent.",
+   "fr": "Retourne false tant que la corde principale est active ; sinon délègue au parent."
+  },
+  "YarderTower:getAllowsLowering": {
+   "en": "Returns false while the main rope is active; otherwise defers to the parent.",
+   "fr": "Retourne false tant que la corde principale est active ; sinon délègue au parent."
+  },
+  "YarderTower:getDoConsumePtoPower": {
+   "en": "Returns true while the main rope is active, otherwise the parent value.",
+   "fr": "Retourne true tant que la corde principale est active, sinon la valeur parente."
+  },
+  "YarderTower:getConsumingLoad": {
+   "en": "Adds one load entry to the parent result when active: 5 % base plus up to 95 % scaled by the carriage's last speed.",
+   "fr": "Ajoute une entrée de charge au résultat parent quand actif : 5 % de base plus jusqu'à 95 % selon la dernière vitesse du chariot."
+  },
+  "YarderTower:getIsPowerTakeOffActive": {
+   "en": "Returns true when the main rope is active and the attacher vehicle's motor is running; otherwise the parent value.",
+   "fr": "Retourne true quand la corde principale est active et que le moteur du véhicule porteur tourne ; sinon la valeur parente."
+  },
+  "YarderTower:getDirtMultiplier": {
+   "en": "Adds a work dirt contribution proportional to the carriage speed while the main rope is active.",
+   "fr": "Ajoute une contribution de salissure de travail proportionnelle à la vitesse du chariot tant que la corde principale est active."
+  },
+  "YarderTower:getWearMultiplier": {
+   "en": "Adds a work wear contribution proportional to the carriage speed while the main rope is active.",
+   "fr": "Ajoute une contribution d'usure de travail proportionnelle à la vitesse du chariot tant que la corde principale est active."
+  },
+  "YarderTower:getUsageCausesDamage": {
+   "en": "While active, returns true only when the carriage moved recently and the vehicle is not a mission vehicle; otherwise defers to the parent.",
+   "fr": "Quand actif, retourne true seulement si le chariot a bougé récemment et que le véhicule n'est pas un véhicule de mission ; sinon délègue au parent."
+  },
+  "YarderTower:addToPhysics": {
+   "en": "Calls the parent and, if the main rope is active, sets every component to a kinematic rigid body.",
+   "fr": "Appelle le parent et, si la corde principale est active, passe chaque composant en corps rigide cinématique."
+  },
+  "YarderTower:removeFromPhysics": {
+   "en": "If the main rope is active, restores dynamic rigid bodies on all components, then calls the parent.",
+   "fr": "Si la corde principale est active, rétablit des corps rigides dynamiques sur tous les composants, puis appelle le parent."
+  },
+  "YarderTower.getIsVehicleControlAllowed": {
+   "en": "Function registered on the root vehicle: returns false with a warning text while the yarder rope is active, so the carrier cannot be driven.",
+   "fr": "Fonction enregistrée sur le véhicule racine : retourne false avec un texte d'avertissement tant que la corde du yarder est active, empêchant de conduire le porteur."
+  },
+  "YarderTower.loadSpecValueMaxLength": {
+   "en": "Store spec loader: reads the main rope's `maxLength` from the vehicle XML.",
+   "fr": "Chargeur de spec de boutique : lit le `maxLength` de la corde principale dans le XML du véhicule."
+  },
+  "YarderTower.getSpecValueMaxLength": {
+   "en": "Store spec formatter: returns the max rope length in meters as text, or the raw value (and range) depending on the flags; nothing if the value is 0.",
+   "fr": "Formateur de spec de boutique : retourne la longueur maximale de corde en mètres sous forme de texte, ou la valeur brute (et la plage) selon les indicateurs ; rien si la valeur est 0."
+  },
+  "YarderTower.loadSpecValueMaxMass": {
+   "en": "Store spec loader: reads the carriage's `maxTreeMass` from the vehicle XML.",
+   "fr": "Chargeur de spec de boutique : lit le `maxTreeMass` du chariot dans le XML du véhicule."
+  },
+  "YarderTower.getSpecValueMaxMass": {
+   "en": "Store spec formatter: returns the max tree mass in tonnes with one decimal as text, or the raw value (and range) depending on the flags; nothing if the value is 0.",
+   "fr": "Formateur de spec de boutique : retourne la masse maximale d'arbre en tonnes avec une décimale sous forme de texte, ou la valeur brute (et la plage) selon les indicateurs ; rien si la valeur est 0."
+  }
+ }
+}

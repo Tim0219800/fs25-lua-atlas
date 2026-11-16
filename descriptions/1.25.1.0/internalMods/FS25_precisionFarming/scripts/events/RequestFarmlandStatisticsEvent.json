@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/RequestFarmlandStatisticsEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) sent by a client to ask the server for the statistics of one farmland. The server answers with a FarmlandStatisticsEvent to that connection only.",
+    "fr": "Événement réseau (sous-classe de Event) envoyé par un client pour demander au serveur les statistiques d'une parcelle. Le serveur répond par un FarmlandStatisticsEvent à cette seule connexion."
+  },
+  "fonctions": {
+    "RequestFarmlandStatisticsEvent.emptyNew": {
+      "en": "Creates an empty RequestFarmlandStatisticsEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de RequestFarmlandStatisticsEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "RequestFarmlandStatisticsEvent.new": {
+      "en": "Creates the request for a farmland id.",
+      "fr": "Crée la requête pour un id de parcelle."
+    },
+    "RequestFarmlandStatisticsEvent:readStream": {
+      "en": "Server side: reads the farmland id, then calls run.",
+      "fr": "Côté serveur : lit l'id de parcelle, puis appelle run."
+    },
+    "RequestFarmlandStatisticsEvent:writeStream": {
+      "en": "Client side: writes the farmland id.",
+      "fr": "Côté client : écrit l'id de parcelle."
+    },
+    "RequestFarmlandStatisticsEvent:run": {
+      "en": "Executes only on the server: replies with a FarmlandStatisticsEvent for that farmland to the requesting connection alone.",
+      "fr": "S'exécute uniquement sur le serveur : répond par un FarmlandStatisticsEvent pour cette parcelle à la seule connexion demandeuse."
+    }
+  }
+}

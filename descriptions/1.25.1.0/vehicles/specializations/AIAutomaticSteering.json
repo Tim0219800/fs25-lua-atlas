@@ -1,0 +1,161 @@
+{
+ "fichier": "vehicles/specializations/AIAutomaticSteering.lua",
+ "module": {
+  "en": "Vehicle specialization that implements the steering assist (automatic steering along field-course lines) for drivable vehicles; it requires the Drivable specialization. It asks the server to generate a field course through g_fieldCourseManager, follows the current line by overriding steering input and vehicle physics, and plays engage, disengage and line-end sounds. The course is saved with the vehicle, streamed to joining clients and kept in sync with events. Constants such as STATE, HEADING_LETTERS and the distance thresholds are not visible in the dump (UNVERIFIED).",
+  "fr": "Spécialisation de véhicule qui réalise l'assistance à la conduite (direction automatique le long des lignes d'un parcours de champ) pour les véhicules conduisibles ; elle exige la spécialisation Drivable. Elle demande au serveur de générer un parcours via g_fieldCourseManager, suit la ligne courante en remplaçant l'entrée de direction et la physique du véhicule, et joue les sons d'activation, de désactivation et de fin de ligne. Le parcours est sauvegardé avec le véhicule, transmis aux clients qui rejoignent et synchronisé par des événements. Les constantes comme STATE, HEADING_LETTERS et les seuils de distance ne sont pas visibles dans le dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AIAutomaticSteering.prerequisitesPresent": {
+   "en": "Returns true only when the vehicle type includes the Drivable specialization, which is the single prerequisite for automatic steering.",
+   "fr": "Renvoie vrai uniquement si le type de véhicule contient la spécialisation Drivable, seul prérequis de la direction automatique."
+  },
+  "AIAutomaticSteering.initSpecialization": {
+   "en": "Registers the XML schema entries: engage, disengage and lineEnd sounds, four dashboard values, and the optional lookAheadDistance under vehicle.ai.automaticSteering. Also registers the savegame paths for the saved field courses and the isOnField and courseWasActive flags.",
+   "fr": "Déclare les entrées du schéma XML : sons engage, disengage et lineEnd, quatre valeurs de tableau de bord et l'option lookAheadDistance sous vehicle.ai.automaticSteering. Déclare aussi les chemins de sauvegarde des parcours de champ et des drapeaux isOnField et courseWasActive."
+  },
+  "AIAutomaticSteering.registerEvents": {
+   "en": "Registers the vehicle event onAIAutomaticSteeringLineEnd, raised on the server when the vehicle gets close to the end of a line.",
+   "fr": "Enregistre l'événement de véhicule onAIAutomaticSteeringLineEnd, déclenché côté serveur quand le véhicule approche de la fin d'une ligne."
+  },
+  "AIAutomaticSteering.registerFunctions": {
+   "en": "Adds the specialization's public functions to the vehicle type: working width, allowed checks, enabling steering, setting or generating the course, state, look-ahead distance and side-offset reversal.",
+   "fr": "Ajoute au type de véhicule les fonctions publiques de la spécialisation : largeur de travail, tests d'autorisation, activation de la direction, définition ou génération du parcours, état, distance d'anticipation et inversion du décalage latéral."
+  },
+  "AIAutomaticSteering.registerOverwrittenFunctions": {
+   "en": "Overrides setSteeringInput and updateVehiclePhysics on the vehicle type so the assist can cancel itself on manual input and inject its own steering value.",
+   "fr": "Surcharge setSteeringInput et updateVehiclePhysics du type de véhicule pour que l'assistance se coupe à l'entrée manuelle et injecte sa propre valeur de direction."
+  },
+  "AIAutomaticSteering.registerEventListeners": {
+   "en": "Subscribes the specialization to load, post-load, delete, network stream, update, state change, AI mode, activate, leave-vehicle, dashboard and action-event callbacks.",
+   "fr": "Abonne la spécialisation aux rappels de chargement, post-chargement, suppression, flux réseau, mise à jour, changement d'état, mode IA, activation, sortie du véhicule, tableau de bord et événements d'action."
+  },
+  "AIAutomaticSteering:onLoad": {
+   "en": "Initializes the steering state in spec_aiAutomaticSteering, reads the optional lookAheadDistance from XML, loads the three sounds on clients and registers the STEERING_ASSIST_CRUISE_CONTROL vehicle setting. Also allocates the dirty flag used for segment-state sync.",
+   "fr": "Initialise l'état de direction dans spec_aiAutomaticSteering, lit l'option lookAheadDistance du XML, charge les trois sons côté client et enregistre le réglage de véhicule STEERING_ASSIST_CRUISE_CONTROL. Réserve aussi le drapeau de modification pour la synchro des états de segments."
+  },
+  "AIAutomaticSteering:onPostLoad": {
+   "en": "When loading from a savegame that is not reset, restores the isOnField flag, the last active course and the current course, applying the course through setAIAutomaticSteeringCourse without sending an event.",
+   "fr": "Au chargement d'une sauvegarde non réinitialisée, restaure le drapeau isOnField, le dernier parcours actif et le parcours courant, en appliquant ce dernier via setAIAutomaticSteeringCourse sans envoyer d'événement."
+  },
+  "AIAutomaticSteering:onRegisterDashboardValueTypes": {
+   "en": "Registers four dashboard values: steeringEngaged, steeringState (state minus one), heading in degrees and headingLetter (compass letter from eight 45-degree sectors). Note: headingLetter samples the backward direction while heading uses the forward one.",
+   "fr": "Enregistre quatre valeurs de tableau de bord : steeringEngaged, steeringState (état moins un), heading en degrés et headingLetter (lettre de boussole selon huit secteurs de 45 degrés). À noter : headingLetter utilise la direction arrière alors que heading utilise l'avant."
+  },
+  "AIAutomaticSteering:onDelete": {
+   "en": "Frees the loaded sound samples when the vehicle is deleted.",
+   "fr": "Libère les échantillons sonores chargés à la suppression du véhicule."
+  },
+  "AIAutomaticSteering:saveToXMLFile": {
+   "en": "Writes the courseWasActive and isOnField flags, the current course, and the last active course when it differs from the current one, into the vehicle's savegame entry.",
+   "fr": "Écrit dans l'entrée de sauvegarde du véhicule les drapeaux courseWasActive et isOnField, le parcours courant et le dernier parcours actif s'il diffère du courant."
+  },
+  "AIAutomaticSteering:onReadStream": {
+   "en": "Client side on join: reads a bool and, if set, the full steering field course from the stream, applies it without sending events and marks the vehicle as on a field.",
+   "fr": "Côté client à la connexion : lit un booléen et, s'il est vrai, le parcours de champ complet du flux, l'applique sans envoyer d'événement et marque le véhicule comme sur un champ."
+  },
+  "AIAutomaticSteering:onWriteStream": {
+   "en": "Server side on join: writes whether a course exists and, if so, the whole course to the stream.",
+   "fr": "Côté serveur à la connexion : écrit si un parcours existe puis, le cas échéant, le parcours entier dans le flux."
+  },
+  "AIAutomaticSteering:onReadUpdateStream": {
+   "en": "On a client receiving from the server, reads the flag and the per-segment states into the current course.",
+   "fr": "Sur un client recevant du serveur, lit le drapeau puis les états par segment dans le parcours courant."
+  },
+  "AIAutomaticSteering:onWriteUpdateStream": {
+   "en": "On the server, writes the segment states when the specialization's dirty flag is set in the mask. Note: it indexes steeringFieldCourse without a nil check, so it relies on the flag only being raised when a course exists.",
+   "fr": "Sur le serveur, écrit les états des segments quand le drapeau de modification de la spécialisation est dans le masque. À noter : steeringFieldCourse est utilisé sans test de nil, on suppose donc que le drapeau n'est levé que si un parcours existe."
+  },
+  "AIAutomaticSteering:onUpdate": {
+   "en": "In steering-assist mode, feeds the course the vehicle position and heading from a speed-dependent look-ahead point. The server then computes a target steering value from the target point, ramps it at the AI steering speed, raises the line-end event and can switch cruise control off near the end. Also flags segment states for network sync.",
+   "fr": "En mode assistance, fournit au parcours la position et le cap du véhicule depuis un point d'anticipation dépendant de la vitesse. Le serveur calcule alors une valeur de direction cible, la fait évoluer à la vitesse de direction IA, déclenche l'événement de fin de ligne et peut couper le régulateur près de la fin. Marque aussi les états de segments pour la synchro réseau."
+  },
+  "AIAutomaticSteering:onUpdateTick": {
+   "en": "For the active local vehicle, checks via the terrain density map and farm land access whether it is on a field and, on change or forced update, either asks the server for a new course (AIAutomaticSteeringRequestEvent) or starts a timer to clear it. On the server it turns steering off if the driving direction flips while moving.",
+   "fr": "Pour le véhicule actif localement, vérifie via la carte de densité du terrain et l'accès aux terres de la ferme s'il est sur un champ ; si cela change ou si une mise à jour est forcée, il demande un nouveau parcours au serveur (AIAutomaticSteeringRequestEvent) ou lance un minuteur pour l'effacer. Sur le serveur, il coupe la direction si le sens de marche s'inverse en roulant."
+  },
+  "AIAutomaticSteering:onStateChange": {
+   "en": "On attach (not from savegame) or detach, forces a field course refresh and forgets the last active course; the server leaves steering-assist mode for WORKER mode if automatic steering is no longer allowed.",
+   "fr": "À l'attelage (hors sauvegarde) ou au dételage, force le rafraîchissement du parcours et oublie le dernier parcours actif ; le serveur repasse du mode assistance au mode WORKER si la direction automatique n'est plus autorisée."
+  },
+  "AIAutomaticSteering:onAIModeChanged": {
+   "en": "Clears the course when the AI mode leaves steering assist; when entering it on an input-active vehicle, schedules a course update.",
+   "fr": "Efface le parcours quand le mode IA quitte l'assistance ; à l'entrée dans ce mode sur un véhicule actif en entrée, programme une mise à jour du parcours."
+  },
+  "AIAutomaticSteering:onAIModeSettingsChanged": {
+   "en": "When steering-assist settings change on the vehicle being controlled, drops the current course and schedules a new one.",
+   "fr": "Quand les réglages de l'assistance changent sur le véhicule contrôlé, abandonne le parcours courant et en programme un nouveau."
+  },
+  "AIAutomaticSteering:onAIAutomaticSteeringLineEnd": {
+   "en": "Event handler that plays the line-end sound sample.",
+   "fr": "Gestionnaire d'événement qui joue le son de fin de ligne."
+  },
+  "AIAutomaticSteering:onActivate": {
+   "en": "When the vehicle becomes active in steering-assist mode and has a course, registers that course as the active one in g_fieldCourseManager.",
+   "fr": "Quand le véhicule devient actif en mode assistance et possède un parcours, enregistre ce parcours comme parcours actif dans g_fieldCourseManager."
+  },
+  "AIAutomaticSteering:onLeaveVehicle": {
+   "en": "Server only: when the player leaves a vehicle that is not being deleted, clears the active course in the field course manager and disables automatic steering.",
+   "fr": "Serveur uniquement : quand le joueur quitte un véhicule non en cours de suppression, efface le parcours actif du gestionnaire de parcours et désactive la direction automatique."
+  },
+  "AIAutomaticSteering:getAttacherToolWorkingWidth": {
+   "en": "Returns the largest working width among all child vehicles of the root vehicle, from their AI markers or AI work-area width; 0 if none provide one. It refreshes each marker width as a side effect.",
+   "fr": "Renvoie la plus grande largeur de travail parmi les véhicules enfants du véhicule racine, d'après leurs marqueurs IA ou la largeur de zone de travail IA ; 0 si aucune n'est fournie. Met à jour la largeur de chaque marqueur au passage."
+  },
+  "AIAutomaticSteering:getIsAutomaticSteeringAllowed": {
+   "en": "Returns true if the root vehicle or any of its child vehicles reports getImplementAllowAutomaticSteering as true, false otherwise.",
+   "fr": "Renvoie vrai si le véhicule racine ou l'un de ses véhicules enfants indique getImplementAllowAutomaticSteering à vrai, faux sinon."
+  },
+  "AIAutomaticSteering:setAIAutomaticSteeringEnabled": {
+   "en": "Turns steering on, off or toggles it (nil), plays the engage or disengage sound and updates dashboards on clients, and syncs the current line segment. Sends AIAutomaticSteeringStateEvent unless noEventSend is set; returns the segment index and side.",
+   "fr": "Active, désactive ou bascule (nil) la direction, joue le son d'activation ou de désactivation et met à jour les tableaux de bord côté client, et synchronise le segment de ligne courant. Envoie AIAutomaticSteeringStateEvent sauf si noEventSend est vrai ; renvoie l'index et le côté du segment."
+  },
+  "AIAutomaticSteering:setAIAutomaticSteeringCourse": {
+   "en": "Sets or clears the steering field course, disabling steering if cleared, updates the active course in the field course manager and the UI, and broadcasts AIAutomaticSteeringCourseEvent (server) or sends it to the server (client) unless noEventSend is true.",
+   "fr": "Définit ou efface le parcours de direction, désactive la direction si on l'efface, met à jour le parcours actif du gestionnaire et l'interface, et diffuse AIAutomaticSteeringCourseEvent (serveur) ou l'envoie au serveur (client) sauf si noEventSend est vrai."
+  },
+  "AIAutomaticSteering:generateSteeringFieldCourse": {
+   "en": "Reuses the last active course if the point is inside it and the settings are identical; otherwise asks g_fieldCourseManager to generate a course at the position, queuing one pending request while a generation is running. On failure it clears the course.",
+   "fr": "Réutilise le dernier parcours actif si le point est dedans et que les réglages sont identiques ; sinon demande à g_fieldCourseManager de générer un parcours à cette position, en mettant en attente une seule requête pendant une génération. En cas d'échec, le parcours est effacé."
+  },
+  "AIAutomaticSteering:getIsAIAutomaticSteeringAllowed": {
+   "en": "Returns true when a course with a current segment exists; otherwise returns false plus a localized warning text (no course or no segment).",
+   "fr": "Renvoie vrai si un parcours avec un segment courant existe ; sinon renvoie faux accompagné d'un texte d'avertissement localisé (pas de parcours ou pas de segment)."
+  },
+  "AIAutomaticSteering:getAIAutomaticSteeringState": {
+   "en": "Returns ACTIVE when a course exists and steering is on, AVAILABLE when a course exists but steering is off, DISABLED without a course. The numeric values of STATE are not in the dump (UNVERIFIED).",
+   "fr": "Renvoie ACTIVE si un parcours existe et la direction est active, AVAILABLE si un parcours existe mais la direction est coupée, DISABLED sans parcours. Les valeurs numériques de STATE ne sont pas dans le dump (NON VÉRIFIÉ)."
+  },
+  "AIAutomaticSteering:getAIAutomaticSteeringLookAheadDistance": {
+   "en": "Returns the lookAheadDistance configured in XML, or by default the AI root node's max Z offset when moving forward and its min Z offset when reversing.",
+   "fr": "Renvoie la lookAheadDistance configurée dans le XML ou, par défaut, le décalage Z maximal du nœud racine IA en marche avant et son décalage Z minimal en marche arrière."
+  },
+  "AIAutomaticSteering:getIsSideOffsetReversed": {
+   "en": "Looks for a plow among child vehicles and returns its rotationMax value; returns false if there is none. This tells the course whether the side offset is mirrored.",
+   "fr": "Cherche une charrue parmi les véhicules enfants et renvoie sa valeur rotationMax ; renvoie faux s'il n'y en a pas. Indique au parcours si le décalage latéral est inversé."
+  },
+  "AIAutomaticSteering:setSteeringInput": {
+   "en": "Override of setSteeringInput. While assist is on, keyboard/mouse input switches it off at once; for other devices a change above 0.1 after a 2.5 s grace period switches it off. Then calls the parent function.",
+   "fr": "Surcharge de setSteeringInput. Quand l'assistance est active, une entrée clavier/souris la coupe aussitôt ; pour les autres périphériques, une variation supérieure à 0,1 après un délai de grâce de 2,5 s la coupe. Appelle ensuite la fonction parente."
+  },
+  "AIAutomaticSteering:updateVehiclePhysics": {
+   "en": "Override of updateVehiclePhysics: while steering is enabled, replaces the side axis with the value derived from the computed steering target, calls the parent, then forces rotatedTime and the Drivable side axis to that value.",
+   "fr": "Surcharge de updateVehiclePhysics : quand la direction est active, remplace l'axe latéral par la valeur issue de la cible de direction calculée, appelle le parent, puis impose cette valeur à rotatedTime et à l'axe latéral de Drivable."
+  },
+  "AIAutomaticSteering:onRegisterActionEvents": {
+   "en": "Client side: registers the TOGGLE_AI_STEERING action (high priority, with the steering-assist label) and the hidden TOGGLE_AI_STEERING_LINES action for the vehicle that is input-active.",
+   "fr": "Côté client : enregistre l'action TOGGLE_AI_STEERING (priorité haute, avec le libellé d'assistance à la conduite) et l'action masquée TOGGLE_AI_STEERING_LINES pour le véhicule actif en entrée."
+  },
+  "AIAutomaticSteering.actionEventSteering": {
+   "en": "Input callback that toggles automatic steering on or off.",
+   "fr": "Rappel d'entrée qui active ou désactive la direction automatique."
+  },
+  "AIAutomaticSteering.updateActionEvents": {
+   "en": "Enables the steering toggle action only when a course with a current segment exists.",
+   "fr": "Active l'action de bascule de la direction seulement si un parcours avec un segment courant existe."
+  },
+  "AIAutomaticSteering.actionEventSteeringLines": {
+   "en": "Input callback that flips the STEERING_ASSIST_LINES game setting (show or hide guidance lines) and saves it.",
+   "fr": "Rappel d'entrée qui inverse le réglage de jeu STEERING_ASSIST_LINES (afficher ou masquer les lignes de guidage) et l'enregistre."
+  }
+ }
+}

@@ -1,0 +1,53 @@
+{
+ "fichier": "objects/AnimatedObjectActivatable.lua",
+ "module": {
+  "en": "Activatable wrapper that lets the player operate an AnimatedObject through the activatable objects system. It registers the input action events defined in the object's controls table (a toggle, or continuous positive/negative actions) and shows the action text and, if closed, the closing text. The object's getCanBeTriggered method is called but not defined in the dumped files (UNVERIFIED).",
+  "fr": "Enveloppe d'activatable qui permet au joueur d'actionner un AnimatedObject via le système d'objets activables. Elle enregistre les événements d'action d'entrée définis dans la table controls de l'objet (une bascule, ou des actions positive/négative continues) et affiche le texte d'action et, si fermé, le texte de fermeture. La méthode getCanBeTriggered de l'objet est appelée mais n'est pas définie dans les fichiers du dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AnimatedObjectActivatable.new": {
+   "en": "Creates the activatable bound to an animated object, with an empty activate text.",
+   "fr": "Crée l'activatable lié à un objet animé, avec un texte d'activation vide."
+  },
+  "AnimatedObjectActivatable:registerCustomInput": {
+   "en": "Registers input events from the object's controls: one toggle event if only posAction exists, one continuous axis event if both actions are identical, or two continuous events otherwise. Sets very high text priority, visibility and configured texts, then refreshes the texts.",
+   "fr": "Enregistre les événements d'entrée à partir des contrôles de l'objet : un événement bascule si seule posAction existe, un événement continu sur axe si les deux actions sont identiques, ou deux événements continus sinon. Définit une priorité de texte très haute, la visibilité et les textes configurés, puis rafraîchit les textes."
+  },
+  "AnimatedObjectActivatable:removeCustomInput": {
+   "en": "Removes all action events registered by this activatable and clears the stored event ids in the object's controls.",
+   "fr": "Supprime tous les événements d'action enregistrés par cet activatable et efface les identifiants d'événements mémorisés dans les contrôles de l'objet."
+  },
+  "AnimatedObjectActivatable:onAnimationInputContinuous": {
+   "en": "Input callback for hold-to-move: while the positive or negative input is active it sets the animation direction (unless already moving that way or at the end), and sets direction 0 on release if it had been pressed.",
+   "fr": "Rappel d'entrée pour le mouvement maintenu : tant que l'entrée positive ou négative est active, il fixe la direction de l'animation (sauf si elle va déjà dans ce sens ou est en bout de course), et remet la direction à 0 au relâchement si elle avait été pressée."
+  },
+  "AnimatedObjectActivatable:onAnimationInputToggle": {
+   "en": "Input callback for toggle mode: reverses the current animation direction through setDirection and updates the displayed action text. Note: if the direction is 0 (idle), the result stays 0 because 0 * -1 = 0, so setDirection is called with 0.",
+   "fr": "Rappel d'entrée en mode bascule : inverse la direction d'animation courante via setDirection et met à jour le texte d'action affiché. À noter : si la direction est 0 (à l'arrêt), le résultat reste 0 car 0 * -1 = 0, donc setDirection reçoit 0."
+  },
+  "AnimatedObjectActivatable:updateActionEventTexts": {
+   "en": "In toggle mode with both texts defined, shows the positive text when the animation is closed or closing and the negative text otherwise.",
+   "fr": "En mode bascule avec les deux textes définis, affiche le texte positif quand l'animation est fermée ou en fermeture et le texte négatif sinon."
+  },
+  "AnimatedObjectActivatable:getIsActivatable": {
+   "en": "Returns whether the animated object can currently be triggered, by delegating to its getCanBeTriggered method (not defined in the dump, UNVERIFIED).",
+   "fr": "Retourne si l'objet animé peut actuellement être déclenché, en déléguant à sa méthode getCanBeTriggered (absente du dump, NON VÉRIFIÉ)."
+  },
+  "AnimatedObjectActivatable:activate": {
+   "en": "Registers this activatable as a drawable on the mission so that draw is called each frame.",
+   "fr": "Enregistre cet activatable comme drawable de la mission afin que draw soit appelé à chaque trame."
+  },
+  "AnimatedObjectActivatable:deactivate": {
+   "en": "Removes this activatable from the mission's drawables.",
+   "fr": "Retire cet activatable des drawables de la mission."
+  },
+  "AnimatedObjectActivatable:getDistance": {
+   "en": "Returns the distance from a world position to the object's trigger node, or math.huge if the object has no trigger node.",
+   "fr": "Retourne la distance entre une position du monde et le nœud déclencheur de l'objet, ou math.huge si l'objet n'a pas de nœud déclencheur."
+  },
+  "AnimatedObjectActivatable:draw": {
+   "en": "When the object has opening hours with a closed text, adds that text as extra on-screen text for the mission.",
+   "fr": "Quand l'objet a des horaires d'ouverture avec un texte de fermeture, ajoute ce texte comme texte supplémentaire à l'écran pour la mission."
+  }
+ }
+}

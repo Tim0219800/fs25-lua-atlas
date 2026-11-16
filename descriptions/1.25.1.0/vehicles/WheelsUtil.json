@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/WheelsUtil.lua",
+ "module": {
+  "en": "Utility table for wheel and drive physics. It registers tire types with friction coefficients per ground type (dry, wet, snow), maps terrain information to a ground type, and `updateWheelsPhysics` turns the driver's acceleration request into accelerator and brake pedals and drives the vehicle motor and brakes. The constants `WheelsUtil.tireTypes`, `NUM_GROUNDS`, `GROUND_*` and `SMOOTHING_SPEED_SCALE` are defined outside the functions shown (UNVERIFIED).",
+  "fr": "Table utilitaire pour la physique des roues et de la transmission. Elle enregistre des types de pneus avec des coefficients de frottement par type de sol (sec, humide, neige), convertit les informations de terrain en type de sol, et `updateWheelsPhysics` transforme la demande d'accélération du conducteur en pédales d'accélérateur et de frein pour piloter le moteur et les freins. Les constantes `WheelsUtil.tireTypes`, `NUM_GROUNDS`, `GROUND_*` et `SMOOTHING_SPEED_SCALE` sont définies hors des fonctions montrées (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "WheelsUtil.registerTireType": {
+   "en": "Registers a tire type under an upper-cased name with friction tables for dry, wet and snow. Missing entries are filled from the previous ground type (first one defaults to 1.15 or the first given value). Warns and ignores duplicates.",
+   "fr": "Enregistre un type de pneu sous un nom en majuscules avec des tables de frottement sec, humide et neige. Les entrées manquantes sont reprises du type de sol précédent (la première vaut 1.15 par défaut ou la première valeur fournie). Avertit et ignore les doublons."
+  },
+  "WheelsUtil.unregisterTireType": {
+   "en": "Removes the first tire type with this name from the registry, if present.",
+   "fr": "Retire du registre le premier type de pneu portant ce nom, s'il existe."
+  },
+  "WheelsUtil.getTireType": {
+   "en": "Returns the registry index of a tire type by name (case-insensitive), or nil.",
+   "fr": "Retourne l'index d'un type de pneu dans le registre d'après son nom (insensible à la casse), ou nil."
+  },
+  "WheelsUtil.getTireTypeName": {
+   "en": "Returns the tire type name for an index, or the string `unknown`.",
+   "fr": "Retourne le nom du type de pneu pour un index, ou la chaîne `unknown`."
+  },
+  "WheelsUtil.getSmoothedAcceleratorAndBrakePedals": {
+   "en": "Applies ramping to accelerator and brake pedal inputs, storing smoothed values on the vehicle. Pedals rise gradually and fall at a rate that depends on the other pedal; returns the applied accelerator and brake values.",
+   "fr": "Applique une rampe aux entrées d'accélérateur et de frein, en stockant les valeurs lissées sur le véhicule. Les pédales montent progressivement et redescendent à une vitesse dépendant de l'autre pédale ; retourne les valeurs appliquées."
+  },
+  "WheelsUtil.updateWheelsPhysics": {
+   "en": "Converts the requested acceleration into pedals using direction logic, gear updates, automatic low-speed braking, handbrake and over-speed limiting. It raises `onVehiclePhysicsUpdate`, then calls `controlVehicle` and `brake` on the vehicle. Speed is signed, in m/ms.",
+   "fr": "Convertit l'accélération demandée en pédales avec gestion du sens de marche, des rapports, du freinage automatique à basse vitesse, du frein à main et de la limite de vitesse. Lève `onVehiclePhysicsUpdate`, puis appelle `controlVehicle` et `brake` sur le véhicule. La vitesse est signée, en m/ms."
+  },
+  "WheelsUtil.computeDifferentialRotSpeedNonMotor": {
+   "en": "Returns the non-motor differential speed: on the server, the mean of axle speed times radius over wheels in ground contact; otherwise the vehicle's last real speed times 1000.",
+   "fr": "Retourne la vitesse non motrice du différentiel : côté serveur, la moyenne de la vitesse d'axe fois le rayon des roues au contact du sol ; sinon la dernière vitesse réelle du véhicule fois 1000."
+  },
+  "WheelsUtil.getTireFriction": {
+   "en": "Returns the tire friction for a tire type and ground type: dry value blended toward the wet and snow values by the wet and snow scales. The snow scale must be given (nil would error).",
+   "fr": "Retourne le frottement d'un type de pneu sur un type de sol : valeur sèche interpolée vers les valeurs humide et neige selon les échelles correspondantes. L'échelle de neige doit être fournie (nil provoquerait une erreur)."
+  },
+  "WheelsUtil.getGroundType": {
+   "en": "Maps terrain info to a ground type: field first, then road (flag or depth under 0.1), then soft terrain above 0.8 depth, else hard terrain.",
+   "fr": "Convertit les informations de terrain en type de sol : champ d'abord, puis route (indicateur ou profondeur sous 0.1), puis sol meuble au-delà de 0.8 de profondeur, sinon sol dur."
+  }
+ }
+}

@@ -1,0 +1,281 @@
+{
+ "fichier": "utils/FSDensityMapUtil.lua",
+ "module": {
+  "en": "Utility table of static helpers for the terrain density maps (fruit, field type, ground type, spray, weeds, stones, plowing, vines). The SDK dump keeps only signatures, so every behaviour below is inferred from names and parameters. Most functions take a world-space parallelogram (start, width and height corners) and return pixel counts or factors; callers are presumably work-area specializations. UNVERIFIED.",
+  "fr": "Table utilitaire de fonctions statiques sur les cartes de densité du terrain (cultures, types de champ et de sol, pulvérisation, mauvaises herbes, pierres, labour, vigne). Le dump du SDK ne garde que les signatures : tout comportement est déduit des noms et paramètres. La plupart des fonctions prennent un parallélogramme monde (coins départ, largeur, hauteur) et renvoient des nombres de pixels ou des facteurs ; les appelants sont probablement des spécialisations de zones de travail. NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "FSDensityMapUtil.clearCache": {
+   "en": "Signature only (no body in the SDK dump): Presumably clears cached density-map modifiers or filters held by the utility; takes no argument. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Vide probablement les modificateurs ou filtres de densité mis en cache par l'utilitaire ; aucun argument. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getFieldDataAtWorldPosition": {
+   "en": "Signature only (no body in the SDK dump): Given a world position (x, y, z), returns whether it is on a field, a density-bits value and a ground type. UNVERIFIED how these are computed.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : À partir d'une position monde (x, y, z), renvoie si elle est sur un champ, une valeur de bits de densité et un type de sol. Calcul NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.cutFruitArea": {
+   "en": "Signature only (no body in the SDK dump): Harvests a fruit type over a world parallelogram; returns scaled and total pixel counts, factors (spray, plow, lime, weed, stubble, roller, bee), growth state, max area and a pixel sum. Optional flags: destroy spray, forage minimum, field limit. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Récolte un type de culture sur un parallélogramme monde ; renvoie les nombres de pixels (pondéré et total), des facteurs (pulvérisation, labour, chaux, mauvaises herbes, chaume, rouleau, abeilles), l'état de croissance, l'aire max et une somme de pixels. Options : détruire la pulvérisation, état minimum fourrage, limite au champ. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getFruitArea": {
+   "en": "Signature only (no body in the SDK dump): Queries the fruit of a given index over a world parallelogram without cutting it; returns a result value, pixel count, total pixels and growth state. Options for preparing and minimum forage state. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interroge la culture d'un indice donné sur un parallélogramme monde sans la couper ; renvoie une valeur de résultat, le nombre de pixels, le total et l'état de croissance. Options : préparation et état minimum fourrage. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateRollerArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a roller pass over a world parallelogram with a given angle and returns a changed value. Exact density layers touched UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de rouleau sur un parallélogramme monde avec un angle donné et renvoie une valeur modifiée. Couches de densité exactes NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateGrassRollerArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a grass-roller pass over a world parallelogram, optionally removing stones; returns changed and total pixel counts. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de rouleau à herbe sur un parallélogramme monde, avec retrait optionnel des pierres ; renvoie les pixels modifiés et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.addStoneArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably adds a delta to stone density over a world parallelogram, with optional field and custom filters. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Ajoute probablement un delta à la densité de pierres sur un parallélogramme monde, avec filtres de champ et personnalisé optionnels. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.removeStoneArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably removes stones over a world parallelogram; returns a pixel count and a total pixel count. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Retire probablement les pierres sur un parallélogramme monde ; renvoie un nombre de pixels et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getStoneArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably reads stone data over a world parallelogram; the only documented return is a filter index. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Lit probablement les données de pierres sur un parallélogramme monde ; seul retour documenté : un indice de filtre. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateStonePickerArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a stone-picker pass over a world parallelogram with an angle; returns a stone factor, the area handled and the total area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de ramasseuse de pierres sur un parallélogramme monde avec un angle ; renvoie un facteur de pierres, l'aire traitée et l'aire totale. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.removeFieldArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably removes field data over a world parallelogram; a flag deleteAll widens what is removed. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Supprime probablement les données de champ sur un parallélogramme monde ; le drapeau deleteAll élargit ce qui est supprimé. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.removeFieldPolygon": {
+   "en": "Signature only (no body in the SDK dump): Presumably removes field data inside a polygon of vertices; deleteAll flag. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Supprime probablement les données de champ à l'intérieur d'un polygone de sommets ; drapeau deleteAll. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateCultivatorArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a cultivator pass over a world parallelogram, with options to create a field, limit fruit destruction to fields, angle, blocked spray type, weeds and stones; returns changed and total area pixels. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de cultivateur sur un parallélogramme monde, avec options : créer un champ, limiter la destruction aux champs, angle, type de pulvérisation bloqué, mauvaises herbes, pierres ; renvoie les pixels modifiés et totaux. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateDiscHarrowArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a disc-harrow pass over a world parallelogram, with createField, field-limited destruction, angle and blocked spray type; returns changed and total area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de herse à disques sur un parallélogramme monde, avec createField, destruction limitée aux champs, angle et type de pulvérisation bloqué ; renvoie l'aire modifiée et totale. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updatePlowPackerArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a plow-packer pass over a world parallelogram with an angle; returns changed and total area pixels. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de rouleau packer de labour sur un parallélogramme monde avec un angle ; renvoie les pixels modifiés et totaux. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateSubsoilerArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a subsoiler pass over a world parallelogram, with a forced flag; returns changed and total area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de sous-soleuse sur un parallélogramme monde, avec un drapeau forced ; renvoie l'aire modifiée et totale. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updatePlowArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a plow pass over a world parallelogram, with options for field creation, field-limited destruction, angle, plow level reset and stones; returns changed and total area pixels. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de charrue sur un parallélogramme monde, avec options : création de champ, destruction limitée aux champs, angle, réinitialisation du niveau de labour, pierres ; renvoie les pixels modifiés et totaux. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updatePlowShareArea": {
+   "en": "Signature only (no body in the SDK dump): Digs the plow-share furrow in the terrain displacement and clears foliage over a world parallelogram; options for field creation and foliage offset. UNVERIFIED beyond that.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Creuse le sillon du soc de charrue dans le déplacement du terrain et supprime le feuillage sur un parallélogramme monde ; options de création de champ et de décalage du feuillage. Reste NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.resetDisplacementArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably resets terrain displacement over a world parallelogram, using two optional filters. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Réinitialise probablement le déplacement du terrain sur un parallélogramme monde, avec deux filtres optionnels. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.multiModifierAddResetDisplacement": {
+   "en": "Signature only (no body in the SDK dump): Presumably adds a displacement-reset operation, with two filters, to a given multi-modifier. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Ajoute probablement une opération de réinitialisation du déplacement, avec deux filtres, à un multi-modificateur donné. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.resetDisplacement": {
+   "en": "Signature only (no body in the SDK dump): Presumably resets terrain displacement for a prebuilt density-map area object, using two optional filters. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Réinitialise probablement le déplacement du terrain pour un objet de zone de carte de densité préconstruit, avec deux filtres optionnels. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateDestroyCommonArea": {
+   "en": "Signature only (no body in the SDK dump): Destroys common foliage and fruit over a world parallelogram, optionally only on fields, with a deleteAll flag. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Détruit la végétation et les cultures courantes sur un parallélogramme monde, éventuellement seulement sur les champs, avec un drapeau deleteAll. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateWheelDestructionArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably applies wheel destruction (crushing of crops) over a world parallelogram. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique probablement la destruction par les roues (écrasement des cultures) sur un parallélogramme monde. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.setGroundTypeLayerArea": {
+   "en": "Signature only (no body in the SDK dump): Sets the ground-type layer to a value over a world parallelogram; returns the changed and total pixel counts. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fixe la couche de type de sol à une valeur sur un parallélogramme monde ; renvoie les pixels modifiés et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.setStubbleShredLevelArea": {
+   "en": "Signature only (no body in the SDK dump): Sets the stubble shred level to a value over a world parallelogram; returns changed and total pixel counts. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fixe le niveau de broyage du chaume à une valeur sur un parallélogramme monde ; renvoie les pixels modifiés et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateSprayArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a spray type and amount over a world parallelogram; returns pixel count and total pixel count. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un type et une quantité de pulvérisation sur un parallélogramme monde ; renvoie le nombre de pixels et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.removeSprayArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably removes spray over a world parallelogram, with a blocked spray type and an optional custom filter. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Retire probablement la pulvérisation sur un parallélogramme monde, avec un type bloqué et un filtre personnalisé optionnel. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateFertilizerArea": {
+   "en": "Signature only (no body in the SDK dump): Applies fertilizer of a spray type and amount over a world parallelogram; returns pixel count and total pixel count. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique de l'engrais d'un type et d'une quantité donnés sur un parallélogramme monde ; renvoie le nombre de pixels et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateLimeArea": {
+   "en": "Signature only (no body in the SDK dump): Applies lime over a world parallelogram depending on a ground type; returns an area and the total pixel count. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique de la chaux sur un parallélogramme monde selon un type de sol ; renvoie une aire et le nombre total de pixels. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateHerbicideArea": {
+   "en": "Signature only (no body in the SDK dump): Applies herbicide over a world parallelogram depending on a ground type; returns an area and total pixels. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique de l'herbicide sur un parallélogramme monde selon un type de sol ; renvoie une aire et le total de pixels. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateWeederArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a weeder pass over a world parallelogram, with a flag for hoe-type weeders; returns the number of pixels affected. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de herse étrille ou sarcleuse sur un parallélogramme monde, avec un drapeau pour les bineuses ; renvoie le nombre de pixels touchés. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.removeWeedArea": {
+   "en": "Signature only (no body in the SDK dump): Removes weeds over a world parallelogram; returns pixel count and total pixel count. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Supprime les mauvaises herbes sur un parallélogramme monde ; renvoie le nombre de pixels et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.setSparseWeedArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably sets a sparse weed state over a world parallelogram. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fixe probablement un état de mauvaises herbes clairsemées sur un parallélogramme monde. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.setSowingWeedArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably sets the weed state associated with sowing over a world parallelogram. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fixe probablement l'état des mauvaises herbes lié au semis sur un parallélogramme monde. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.setWeedBlockingState": {
+   "en": "Signature only (no body in the SDK dump): Presumably sets a weed-blocking state over a world parallelogram, with two optional custom filters. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fixe probablement un état de blocage des mauvaises herbes sur un parallélogramme monde, avec deux filtres personnalisés optionnels. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.removeWeedBlockingState": {
+   "en": "Signature only (no body in the SDK dump): Presumably clears the weed-blocking state over a world parallelogram. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Efface probablement l'état de blocage des mauvaises herbes sur un parallélogramme monde. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateMulcherArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a mulcher pass over a world parallelogram; returns the changed area and the total area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de broyeur sur un parallélogramme monde ; renvoie l'aire modifiée et l'aire totale. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateMowerArea": {
+   "en": "Signature only (no body in the SDK dump): Mows a fruit type over a world parallelogram, optionally limited to fields; returns the same set of values as cutFruitArea (pixels, factors, growth state, max area). UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fauche un type de culture sur un parallélogramme monde, éventuellement limité aux champs ; renvoie le même jeu de valeurs que cutFruitArea (pixels, facteurs, état de croissance, aire max). NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateFruitHaulmArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably processes the haulm (stalks) of a fruit over a world parallelogram; returns the number of changed pixels. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Traite probablement les fanes d'une culture sur un parallélogramme monde ; renvoie le nombre de pixels modifiés. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getStubbleFactor": {
+   "en": "Signature only (no body in the SDK dump): Returns a stubble value (named area) over a world parallelogram. UNVERIFIED how it is computed.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie une valeur de chaume (nommée area) sur un parallélogramme monde. Calcul NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.resetSprayArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably resets spray over a world parallelogram, with a force flag and an excluded type. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Réinitialise probablement la pulvérisation sur un parallélogramme monde, avec un drapeau force et un type exclu. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateSowingArea": {
+   "en": "Signature only (no body in the SDK dump): Sows a fruit over a world parallelogram, with field ground type, ridge seeding, angle, growth state and blocked spray type; returns changed and total area pixels. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Sème une culture sur un parallélogramme monde, avec type de sol du champ, semis sur buttes, angle, état de croissance et type de pulvérisation bloqué ; renvoie les pixels modifiés et totaux. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateDirectSowingArea": {
+   "en": "Signature only (no body in the SDK dump): Direct-sowing variant of sowing over a world parallelogram, same parameter list as updateSowingArea; returns changed and total area pixels. UNVERIFIED how it differs.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Variante semis direct sur un parallélogramme monde, même liste de paramètres que updateSowingArea ; renvoie les pixels modifiés et totaux. La différence reste NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateRidgeFormerArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a ridge-former pass over a world parallelogram with an angle; returns changed and total area pixels. UNVERIFIED. Note: its doc comment is titled as sowing, apparently copy-pasted.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de butteuse sur un parallélogramme monde avec un angle ; renvoie les pixels modifiés et totaux. NON VÉRIFIÉ. À noter : le commentaire de doc parle de semis, apparemment copié-collé."
+  },
+  "FSDensityMapUtil.updateFruitPreparerArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a fruit preparer (haulm topper) over a world parallelogram, with a second drop-area parallelogram and a limit-to-fruit flag; returns the changed pixel count. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un préparateur de culture (défaneuse) sur un parallélogramme monde, avec un second parallélogramme de dépôt et un drapeau de limitation à la culture ; renvoie le nombre de pixels modifiés. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.clearDecoArea": {
+   "en": "Signature only (no body in the SDK dump): Clears decorative foliage over a world parallelogram; returns an area, a total area and a boolean for non-mowable cut. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Supprime la végétation décorative sur un parallélogramme monde ; renvoie une aire, l'aire totale et un booléen pour une coupe non fauchable. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.createVineArea": {
+   "en": "Signature only (no body in the SDK dump): Creates vine fruit over a world parallelogram, with an optional custom state and a flag to ignore existing fruits; returns an area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Crée de la vigne sur un parallélogramme monde, avec un état personnalisé optionnel et un drapeau pour ignorer les cultures existantes ; renvoie une aire. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.destroyVineArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably destroys vine fruit over a world parallelogram. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Détruit probablement la vigne sur un parallélogramme monde. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateVineAreaValues": {
+   "en": "Signature only (no body in the SDK dump): Presumably writes a values argument into vine data over a world parallelogram; returns a total area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Écrit probablement l'argument values dans les données de vigne sur un parallélogramme monde ; renvoie une aire totale. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil:setVineAreaValue": {
+   "en": "Signature only (no body in the SDK dump): Presumably sets a single value on vine data over a world parallelogram. Note: declared with a colon (FSDensityMapUtil:), unlike the other functions, so the first parameter may be shifted if called with a dot. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fixe probablement une valeur unique sur les données de vigne sur un parallélogramme monde. À noter : déclarée avec deux-points (FSDensityMapUtil:) contrairement aux autres, donc le premier paramètre peut être décalé si appelée avec un point. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateVineCutArea": {
+   "en": "Signature only (no body in the SDK dump): Harvest-cuts vine over a world parallelogram; returns area, total area and weed, spray, plow and lime factors. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Récolte la vigne sur un parallélogramme monde ; renvoie l'aire, l'aire totale et les facteurs mauvaises herbes, pulvérisation, labour et chaux. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateVinePrepareArea": {
+   "en": "Signature only (no body in the SDK dump): Applies vine preparation over a world parallelogram; returns an area and a total area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique la préparation de la vigne sur un parallélogramme monde ; renvoie une aire et l'aire totale. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.resetVineArea": {
+   "en": "Signature only (no body in the SDK dump): Resets vine over a world parallelogram to a given state; returns an area and a total area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Réinitialise la vigne sur un parallélogramme monde à un état donné ; renvoie une aire et l'aire totale. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateVineCultivatorArea": {
+   "en": "Signature only (no body in the SDK dump): Applies a vine cultivator pass over a world parallelogram, optionally changing the ground type; returns an area. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique un passage de cultivateur de vigne sur un parallélogramme monde, avec changement optionnel du type de sol ; renvoie une aire. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.updateDisasterArea": {
+   "en": "Signature only (no body in the SDK dump): Presumably applies a disaster effect to a prebuilt density-map area, with a perlin percentage argument. No documented return. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Applique probablement un effet de catastrophe à une zone de carte de densité préconstruite, avec un pourcentage de bruit de Perlin. Aucun retour documenté. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.eraseTireTrack": {
+   "en": "Signature only (no body in the SDK dump): Erases tire tracks over a world parallelogram. No documented return. UNVERIFIED how.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Efface les traces de pneus sur un parallélogramme monde. Aucun retour documenté. Méthode NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getAreaDensity": {
+   "en": "Signature only (no body in the SDK dump): Counts density over a world parallelogram for a given density-map id, first channel, channel count and value; returns accumulator, matching pixels and total pixels. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Compte la densité sur un parallélogramme monde pour un id de carte, un premier canal, un nombre de canaux et une valeur ; renvoie l'accumulateur, les pixels correspondants et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getFruitTypeIndexAtWorldPos": {
+   "en": "Signature only (no body in the SDK dump): Returns the fruit type index (or nil) and growth state at a world x, z position. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie l'indice du type de culture (ou nil) et l'état de croissance à une position monde x, z. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getIsFieldAtWorldPos": {
+   "en": "Signature only (no body in the SDK dump): Returns whether a world x, z position lies on a field. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie si une position monde x, z se trouve sur un champ. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getFieldTypeAtWorldPos": {
+   "en": "Signature only (no body in the SDK dump): Returns the field type index at a world x, z position. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie l'indice du type de champ à une position monde x, z. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getFieldTypeModifierAndFilter": {
+   "en": "Signature only (no body in the SDK dump): Returns a shared density-map modifier and a filter matching the given field type, for counting its pixels. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie un modificateur de carte de densité partagé et un filtre correspondant au type de champ donné, pour compter ses pixels. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getFieldTypeArea": {
+   "en": "Signature only (no body in the SDK dump): Counts pixels of a field type over a world parallelogram; returns matching and total pixel counts. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Compte les pixels d'un type de champ sur un parallélogramme monde ; renvoie les pixels correspondants et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getFieldTypeAreaInPolygon": {
+   "en": "Signature only (no body in the SDK dump): Counts pixels of a field type inside a polygon area; returns matching and total pixel counts. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Compte les pixels d'un type de champ dans une zone polygonale ; renvoie les pixels correspondants et le total. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getFieldDensity": {
+   "en": "Signature only (no body in the SDK dump): Returns accumulator, matching and total pixel counts of field density over a world parallelogram. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie l'accumulateur, les pixels correspondants et le total de la densité de champ sur un parallélogramme monde. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getBushDensity": {
+   "en": "Signature only (no body in the SDK dump): Returns accumulator, matching and total pixel counts of bush density over a world parallelogram. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie l'accumulateur, les pixels correspondants et le total de la densité de buissons sur un parallélogramme monde. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.convertToDensityMapAngle": {
+   "en": "Signature only (no body in the SDK dump): Converts an angle into a density-map angle value using a maximum density value. The return is documented as radians, which looks inconsistent. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit un angle en valeur d'angle de carte de densité avec une valeur de densité maximale. Le retour est documenté en radians, ce qui semble incohérent. NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.getWeedFactor": {
+   "en": "Signature only (no body in the SDK dump): Returns a weed factor over a world parallelogram, for a given fruit index. UNVERIFIED how it is computed.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie un facteur de mauvaises herbes sur un parallélogramme monde, pour un indice de culture donné. Calcul NON VÉRIFIÉ."
+  },
+  "FSDensityMapUtil.assert": {
+   "en": "Signature only (no body in the SDK dump): Presumably a helper asserting a boolean and emitting a warning message when false. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Sert probablement à vérifier un booléen et à émettre un avertissement s'il est faux. NON VÉRIFIÉ."
+  }
+ }
+}

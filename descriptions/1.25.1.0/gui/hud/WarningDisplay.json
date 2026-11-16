@@ -1,0 +1,21 @@
+{
+ "fichier": "gui/hud/WarningDisplay.lua",
+ "module": {
+  "en": "HUD element (HUDDisplay subclass) drawing a vertical stack of red warning boxes with an info icon, slightly below the screen centre. Each entry of the warnings list is rendered as one rounded black box with wrapped bold text. How warnings are added to the list is UNVERIFIED (not in this file).",
+  "fr": "Élément HUD (sous-classe de HUDDisplay) dessinant une pile verticale de boîtes d'avertissement rouges avec une icône d'info, légèrement sous le centre de l'écran. Chaque entrée de la liste warnings est rendue dans une boîte noire arrondie avec texte gras à retour à la ligne. L'ajout des avertissements à la liste est NON VÉRIFIÉ (absent de ce fichier)."
+ },
+ "fonctions": {
+  "WarningDisplay.new": {
+   "en": "Creates the display with an empty warnings list and a grey semi-transparent info icon overlay. Note: the customMt argument is ignored; the class metatable is always used.",
+   "fr": "Crée l'affichage avec une liste d'avertissements vide et une icône d'info grise semi-transparente. À noter : l'argument customMt est ignoré, la métatable de la classe est toujours utilisée."
+  },
+  "WarningDisplay:storeScaledValues": {
+   "en": "Stores the scaled position (horizontal centre, 0.45 of the screen height), maximum text width, text size, paddings, offsets and icon size for the current UI scale.",
+   "fr": "Mémorise la position mise à l'échelle (centre horizontal, 0,45 de la hauteur d'écran), la largeur maximale de texte, la taille de texte, les marges, décalages et la taille d'icône pour l'échelle courante."
+  },
+  "WarningDisplay:draw": {
+   "en": "Draws every warning in the list as a centred stack of boxes, each sized to its wrapped text and the icon, with the text alpha tied to IngameMap.alpha. Returns early when there are no warnings and restores text render state afterwards.",
+   "fr": "Dessine chaque avertissement de la liste en pile centrée de boîtes, chacune dimensionnée selon son texte et l'icône, avec l'alpha du texte lié à IngameMap.alpha. Sort tôt s'il n'y a aucun avertissement et restaure l'état de rendu du texte ensuite."
+  }
+ }
+}

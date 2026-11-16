@@ -1,0 +1,509 @@
+{
+ "fichier": "vehicles/specializations/FillUnit.lua",
+ "module": {
+  "en": "Vehicle specialization that gives a vehicle or tool one or more fill units (tanks, hoppers, pallets, fuel and so on). It owns capacity, current fill level and fill type per unit, validates which fill types and tool types may enter, synchronizes levels to clients, saves and loads them, drives fill planes, effects, animations, alarms and dashboards, and offers the pallet unloading feature. It has no prerequisites, is configured through the fillUnit configuration in the vehicle XML, and also defines the FillActivatable helper used for refilling from triggers. FillVolume and many other specializations build on it. Server holds the authoritative levels; clients receive them via streams.",
+  "fr": "Spécialisation de véhicule qui donne à un véhicule ou un outil une ou plusieurs unités de remplissage (réservoirs, trémies, palettes, carburant, etc.). Elle gère par unité la capacité, le niveau et le type de remplissage, valide les types de remplissage et d'outils acceptés, synchronise les niveaux vers les clients, les sauvegarde et les recharge, pilote plans de remplissage, effets, animations, alarmes et tableaux de bord, et fournit le déchargement en palettes. Elle n'a aucun prérequis, se configure via la configuration fillUnit du XML du véhicule et définit aussi l'aide FillActivatable pour le remplissage depuis des triggers. FillVolume et de nombreuses autres spécialisations s'appuient dessus. Le serveur détient les niveaux de référence ; les clients les reçoivent par flux réseau."
+ },
+ "fonctions": {
+  "FillUnit.initSpecialization": {
+   "en": "Registers the fillUnit vehicle configuration, the shop spec entries \"capacity\" and \"fillTypes\", and the whole XML schema for fill units (capacity, fill types, planes, alarms, effects, dashboards, unloading, leveler and attacher joint extras) plus the savegame keys for unit index, type and level.",
+   "fr": "Enregistre la configuration de véhicule fillUnit, les caractéristiques de boutique « capacity » et « fillTypes », tout le schéma XML des unités de remplissage (capacité, types, plans, alarmes, effets, tableaux de bord, déchargement, extras de niveleur et d'attache) ainsi que les clés de sauvegarde (index, type, niveau)."
+  },
+  "FillUnit.registerUnitDisplaySchema": {
+   "en": "Registers the two XML attributes shopDisplayUnit and unitTextOverride on a given key, used to show a capacity in the shop in a unit other than liters.",
+   "fr": "Enregistre sur une clé donnée les deux attributs XML shopDisplayUnit et unitTextOverride, utilisés pour afficher une capacité en boutique dans une unité autre que le litre."
+  },
+  "FillUnit.prerequisitesPresent": {
+   "en": "Always returns true: this specialization has no prerequisite on other specializations.",
+   "fr": "Retourne toujours true : cette spécialisation n'exige aucune autre spécialisation."
+  },
+  "FillUnit.registerEvents": {
+   "en": "Declares the events raised by this specialization, such as onFillUnitFillLevelChanged, onChangedFillType, onAlarmTriggerChanged, the fill trigger add/change/remove events and the unloading events.",
+   "fr": "Déclare les événements émis par cette spécialisation, comme onFillUnitFillLevelChanged, onChangedFillType, onAlarmTriggerChanged, les événements d'ajout, changement et retrait de trigger de remplissage et ceux de déchargement."
+  },
+  "FillUnit.registerFunctions": {
+   "en": "Registers all fill unit functions on the vehicle type (getters, setters, trigger handling, loading helpers, unloading and debug helpers) so they can be called on vehicle instances.",
+   "fr": "Enregistre sur le type de véhicule toutes les fonctions des unités de remplissage (accesseurs, gestion des triggers, chargement XML, déchargement, aide au débogage) pour les appeler sur les instances."
+  },
+  "FillUnit.registerOverwrittenFunctions": {
+   "en": "Overrides base vehicle functions to include fill state: component mass, HUD fill info, fold permission, automated train travel, moving tools, PTO power, turn-on permission, info box, leveler nodes and attacher joints.",
+   "fr": "Surcharge des fonctions de base du véhicule pour tenir compte du remplissage : masse des composants, infos HUD, autorisation de repli, trajet ferroviaire automatique, outils mobiles, prise de force, mise en marche, boîte d'infos, niveleurs et attaches."
+  },
+  "FillUnit.registerEventListeners": {
+   "en": "Subscribes the specialization to vehicle events: load, post load, delete, read/write stream and update stream, update tick, post update, draw, deactivate, action event registration and discharge target changes.",
+   "fr": "Abonne la spécialisation aux événements du véhicule : chargement, post-chargement, suppression, flux de lecture/écriture et de mise à jour, tick, post-mise à jour, affichage, désactivation, enregistrement des actions et changement de cible de déversement."
+  },
+  "FillUnit:onLoad": {
+   "en": "Reads the selected fillUnit configuration, builds every fill unit and unloading place from XML, creates the fill trigger state and its FillActivatable, and on clients loads sounds, effects and animations. A failing unit sets the vehicle loading state to ERROR.",
+   "fr": "Lit la configuration fillUnit choisie, construit chaque unité de remplissage et chaque zone de déchargement depuis le XML, crée l'état du trigger de remplissage et son FillActivatable, et charge sons, effets et animations côté client. Une unité invalide met le chargement du véhicule en ERROR."
+  },
+  "FillUnit:onPostLoad": {
+   "en": "Server only: restores fill levels from the savegame (respecting vehicle reset rules) or applies start fill levels, then refreshes alarm triggers. If there are no fill units it removes the stream, update and draw listeners to save work.",
+   "fr": "Serveur uniquement : restaure les niveaux depuis la sauvegarde (en respectant la réinitialisation des véhicules) ou applique les niveaux de départ, puis met à jour les alarmes. Sans unité de remplissage, retire les écouteurs de flux, de mise à jour et d'affichage."
+  },
+  "FillUnit:onDelete": {
+   "en": "Cleans up on removal: unregisters the fill activatable, tells triggers the vehicle is gone, deletes alarm sounds, beacon lights, effects, animations and exact fill root node registrations, and frees samples.",
+   "fr": "Nettoie à la suppression : retire l'activable de remplissage, prévient les triggers que le véhicule disparaît, supprime sons d'alarme, gyrophares, effets, animations et enregistrements de nœuds de remplissage exact, et libère les échantillons sonores."
+  },
+  "FillUnit:saveToXMLFile": {
+   "en": "Writes one unit entry (index, fill type name, fill level) to the savegame for every fill unit flagged as needing saving.",
+   "fr": "Écrit dans la sauvegarde une entrée par unité marquée à sauvegarder (index, nom du type de remplissage, niveau)."
+  },
+  "FillUnit:saveStatsToXMLFile": {
+   "en": "Writes space-separated lists of fill type names and fill levels (3 decimals) for all units to the stats XML.",
+   "fr": "Écrit dans le XML de statistiques les listes (séparées par des espaces) des noms de types de remplissage et des niveaux (3 décimales) de toutes les unités."
+  },
+  "FillUnit:onReadStream": {
+   "en": "Client side, initial join: reads the filling flag, then each synchronized unit's level, fill type and last valid fill type sent by the server.",
+   "fr": "Côté client, à la connexion initiale : lit l'indicateur de remplissage puis, pour chaque unité synchronisée, le niveau, le type et le dernier type valide envoyés par le serveur."
+  },
+  "FillUnit:onWriteStream": {
+   "en": "Server side, initial join: writes the filling flag and, for each synchronized unit, the full 32-bit level, fill type and last valid fill type.",
+   "fr": "Côté serveur, à la connexion initiale : écrit l'indicateur de remplissage et, pour chaque unité synchronisée, le niveau en flottant 32 bits, le type et le dernier type valide."
+  },
+  "FillUnit:onReadUpdateStream": {
+   "en": "Client side, incremental update: reads level (full float or quantized fraction of capacity) and fill type per unit and applies the difference through addFillUnitFillLevel, emptying the unit when the type is unknown.",
+   "fr": "Côté client, mise à jour incrémentale : lit niveau (flottant complet ou fraction quantifiée de la capacité) et type par unité, applique la différence via addFillUnitFillLevel et vide l'unité si le type est inconnu."
+  },
+  "FillUnit:onWriteUpdateStream": {
+   "en": "Server side, incremental update: when the dirty flag is set, writes each synchronized unit's last sent level (full float for huge capacities or quantized with synchronizationNumBits), fill type and last valid type.",
+   "fr": "Côté serveur, mise à jour incrémentale : si le drapeau dirty est actif, écrit pour chaque unité synchronisée le dernier niveau envoyé (flottant complet ou quantifié sur synchronizationNumBits), le type et le dernier type valide."
+  },
+  "FillUnit:onUpdateTick": {
+   "en": "Server: while filling from a trigger, transfers liters per second times elapsed time via trigger:fillVehicle and stops filling when nothing is delivered. Client: updates measurement nodes and alarms and stops fill effects and animations after their timeout.",
+   "fr": "Serveur : pendant un remplissage par trigger, transfère litres par seconde multiplié par le temps écoulé via trigger:fillVehicle et arrête si rien n'est livré. Client : met à jour nœuds de mesure et alarmes, et arrête effets et animations de remplissage après leur délai."
+  },
+  "FillUnit:onPostUpdate": {
+   "en": "Runs and then clears the queued exact fill root aim callbacks registered by other vehicles, skipping vehicles that were deleted meanwhile.",
+   "fr": "Exécute puis vide les rappels de visée du nœud de remplissage exact enregistrés par d'autres véhicules, en ignorant ceux supprimés entre-temps."
+  },
+  "FillUnit:onDraw": {
+   "en": "Shows the extra HUD text asking to fill the tool first when getDrawFirstFillText returns true (it returns false in this specialization).",
+   "fr": "Affiche le texte HUD supplémentaire demandant de remplir d'abord l'outil quand getDrawFirstFillText retourne true (ici elle retourne false)."
+  },
+  "FillUnit:onDeactivate": {
+   "en": "Stops an ongoing trigger filling without sending an event and resets the measurement nodes' intensity to zero.",
+   "fr": "Arrête un remplissage par trigger en cours sans envoyer d'événement et remet à zéro l'intensité des nœuds de mesure."
+  },
+  "FillUnit:onRegisterActionEvents": {
+   "en": "Client: registers the UNLOAD input action when the vehicle defines unloading places, and on a console development build on a server also registers three debug fill unit actions.",
+   "fr": "Client : enregistre l'action d'entrée UNLOAD si le véhicule définit des zones de déchargement ; en build de développement console sur serveur, enregistre aussi trois actions de débogage des unités."
+  },
+  "FillUnit:onDischargeTargetObjectChanged": {
+   "en": "Refreshes the unload action's availability because a discharge target may now conflict with unloading pallets.",
+   "fr": "Rafraîchit la disponibilité de l'action de déchargement, car une cible de déversement peut entrer en conflit avec le déchargement de palettes."
+  },
+  "FillUnit:getDrawFirstFillText": {
+   "en": "Hook returning false by default; specializations may override it to request the \"fill the tool first\" HUD hint.",
+   "fr": "Point d'extension retournant false par défaut ; d'autres spécialisations peuvent le surcharger pour demander l'indication HUD « remplir d'abord l'outil »."
+  },
+  "FillUnit:getFillUnits": {
+   "en": "Returns the array of all fill unit tables of the vehicle (live reference, not a copy).",
+   "fr": "Retourne le tableau de toutes les unités de remplissage du véhicule (référence directe, pas une copie)."
+  },
+  "FillUnit:getFillUnitByIndex": {
+   "en": "Returns the fill unit table for an index, or nil if that index does not exist.",
+   "fr": "Retourne la table de l'unité de remplissage pour un index, ou nil si l'index n'existe pas."
+  },
+  "FillUnit:getFillUnitExists": {
+   "en": "Returns true when the given index is not nil and refers to an existing fill unit.",
+   "fr": "Retourne true si l'index fourni est non nil et correspond à une unité existante."
+  },
+  "FillUnit:getFillUnitCapacity": {
+   "en": "Returns the capacity of a fill unit in liters (math.huge when unlimited), or nil for an unknown index.",
+   "fr": "Retourne la capacité d'une unité en litres (math.huge si illimitée), ou nil si l'index est inconnu."
+  },
+  "FillUnit:getFillUnitFreeCapacity": {
+   "en": "Returns capacity minus current level, or 0 if the trailer fill limit option is on and the maximum component mass is reached (unless the unit ignores the limit). The fill type and farm arguments are unused. Nil for an unknown unit.",
+   "fr": "Retourne la capacité moins le niveau actuel, ou 0 si l'option de limite de remplissage est active et que la masse maximale est atteinte (sauf si l'unité l'ignore). Les arguments type et ferme sont inutilisés. Nil si l'unité est inconnue."
+  },
+  "FillUnit:getIsFillAllowedFromFarm": {
+   "en": "Always returns true here; the farm id is ignored. Other specializations can override it to restrict filling by farm.",
+   "fr": "Retourne toujours true ici ; l'identifiant de ferme est ignoré. D'autres spécialisations peuvent la surcharger pour restreindre le remplissage par ferme."
+  },
+  "FillUnit:getFillUnitFillLevel": {
+   "en": "Returns the current fill level in liters of a unit, or nil for an unknown index.",
+   "fr": "Retourne le niveau de remplissage actuel d'une unité en litres, ou nil si l'index est inconnu."
+  },
+  "FillUnit:getFillUnitFillLevelPercentage": {
+   "en": "Returns level divided by capacity as a 0 to 1 fraction (0 when capacity is not positive), or nil for an unknown unit.",
+   "fr": "Retourne le niveau divisé par la capacité sous forme de fraction de 0 à 1 (0 si la capacité n'est pas positive), ou nil si l'unité est inconnue."
+  },
+  "FillUnit:getFillUnitFillType": {
+   "en": "Returns the fill type index currently held by a unit (FillType.UNKNOWN when empty), or nil for an unknown unit.",
+   "fr": "Retourne l'index du type de remplissage actuellement contenu (FillType.UNKNOWN si vide), ou nil si l'unité est inconnue."
+  },
+  "FillUnit:getFillUnitLastValidFillType": {
+   "en": "Returns the last fill type that actually had a positive level in the unit, which is kept after emptying. Nil for an unknown unit.",
+   "fr": "Retourne le dernier type de remplissage ayant eu un niveau positif dans l'unité, conservé après vidage. Nil si l'unité est inconnue."
+  },
+  "FillUnit:getFillUnitFirstSupportedFillType": {
+   "en": "Returns an arbitrary first key of the unit's supported fill type table (Lua next, so order is not guaranteed), or nil.",
+   "fr": "Retourne une première clé quelconque de la table des types supportés (via next en Lua, ordre non garanti), ou nil."
+  },
+  "FillUnit:getFillUnitExactFillRootNode": {
+   "en": "Returns the exact fill root node of a unit, used for precise targeting by fill effects, or nil.",
+   "fr": "Retourne le nœud racine de remplissage exact d'une unité, utilisé pour le ciblage précis par les effets de remplissage, ou nil."
+  },
+  "FillUnit:getFillUnitRootNode": {
+   "en": "Returns the fill root node of a unit (defaults to the first component node at load time), or nil for an unknown unit.",
+   "fr": "Retourne le nœud racine de remplissage d'une unité (par défaut le nœud du premier composant au chargement), ou nil si l'unité est inconnue."
+  },
+  "FillUnit:getFillUnitAutoAimTargetNode": {
+   "en": "Returns the auto aim target node of a unit (nil when the XML defines none), or nil for an unknown unit index.",
+   "fr": "Retourne le nœud cible de visée automatique d'une unité (nil si le XML n'en définit pas), ou nil si l'index d'unité est inconnu."
+  },
+  "FillUnit:getFillUnitSupportsFillType": {
+   "en": "Returns whether a fill type index is in the unit's supported set (the stored table value, true or nil), false for an unknown unit.",
+   "fr": "Indique si un type de remplissage figure dans l'ensemble supporté de l'unité (valeur stockée, true ou nil), false si l'unité est inconnue."
+  },
+  "FillUnit:getFillUnitSupportsToolType": {
+   "en": "Returns whether a tool type is supported by the unit; all tool types are enabled at load, so this is normally true. False for an unknown unit.",
+   "fr": "Indique si un type d'outil est supporté par l'unité ; tous sont activés au chargement, donc normalement true. False si l'unité est inconnue."
+  },
+  "FillUnit:getFillUnitSupportsToolTypeAndFillType": {
+   "en": "Combines getFillUnitSupportsToolType and getFillUnitSupportsFillType: true only when both are accepted.",
+   "fr": "Combine getFillUnitSupportsToolType et getFillUnitSupportsFillType : vrai seulement si les deux sont acceptés."
+  },
+  "FillUnit:getFillUnitSupportedFillTypes": {
+   "en": "Returns the table of supported fill types (keys are fill type indices) of a unit, or nil.",
+   "fr": "Retourne la table des types de remplissage supportés (clés = index de types) d'une unité, ou nil."
+  },
+  "FillUnit:getFillUnitSupportedToolTypes": {
+   "en": "Returns the table of supported tool types of a unit, or nil for an unknown unit.",
+   "fr": "Retourne la table des types d'outils supportés d'une unité, ou nil si l'unité est inconnue."
+  },
+  "FillUnit:getFillUnitAllowsFillType": {
+   "en": "True if the fill type is supported and is either the current type or the unit is nearly empty (level fraction at or under the change threshold), so the type can be switched.",
+   "fr": "Vrai si le type est supporté et soit identique au type courant, soit l'unité est presque vide (fraction du niveau sous le seuil de changement), ce qui permet de changer de type."
+  },
+  "FillUnit:getFillTypeChangeThreshold": {
+   "en": "Returns the fill type change threshold as a fraction, or in liters (capacity times fraction) when a unit index is given. Default fraction is 0.05.",
+   "fr": "Retourne le seuil de changement de type en fraction, ou en litres (capacité multipliée par la fraction) si un index d'unité est fourni. La fraction par défaut est 0,05."
+  },
+  "FillUnit:getFirstValidFillUnitToFill": {
+   "en": "Returns the index of the first unit that allows the fill type and has free capacity (or any if ignoreCapacity is true), or nil if none.",
+   "fr": "Retourne l'index de la première unité qui accepte le type et a de la place (ou n'importe laquelle si ignoreCapacity est vrai), ou nil sinon."
+  },
+  "FillUnit:getFillUnitCanBeFilled": {
+   "en": "Returns true when the given unit allows the fill type and has free capacity, or ignoreCapacity is true.",
+   "fr": "Retourne true si l'unité donnée accepte le type et dispose de place, ou si ignoreCapacity est vrai."
+  },
+  "FillUnit:setFillUnitFillType": {
+   "en": "Directly changes the fill type of a unit and raises onChangedFillType with old and new index if it differs. Does not touch the fill level.",
+   "fr": "Change directement le type de remplissage d'une unité et émet onChangedFillType (ancien et nouvel index) s'il diffère. Ne modifie pas le niveau."
+  },
+  "FillUnit:setFillUnitFillTypeToDisplay": {
+   "en": "Overrides the fill type shown on the HUD for a unit; the override is cleared on emptying unless persistent is true.",
+   "fr": "Remplace le type de remplissage affiché au HUD pour une unité ; la valeur est effacée au vidage sauf si isPersistent est vrai."
+  },
+  "FillUnit:setFillUnitFillLevelToDisplay": {
+   "en": "Overrides the fill level shown on the HUD for a unit; cleared on emptying unless persistent is true.",
+   "fr": "Remplace le niveau affiché au HUD pour une unité ; effacé au vidage sauf si isPersistent est vrai."
+  },
+  "FillUnit:setFillUnitCapacityToDisplay": {
+   "en": "Overrides the capacity shown on the HUD for a unit without changing the real capacity.",
+   "fr": "Remplace la capacité affichée au HUD pour une unité sans modifier la capacité réelle."
+  },
+  "FillUnit:setFillUnitCapacity": {
+   "en": "Changes a unit's real capacity and, if it changed, sends SetFillUnitCapacityEvent (unless noEventSend) so the change is synchronized.",
+   "fr": "Modifie la capacité réelle d'une unité et, si elle change, envoie SetFillUnitCapacityEvent (sauf noEventSend) pour la synchroniser."
+  },
+  "FillUnit:setFillUnitForcedMaterialFillType": {
+   "en": "Forces the material shown for the unit's fill plane and, if FillVolume is present, its fill volumes, independent of the real fill type. Visual only.",
+   "fr": "Force la matière affichée pour le plan de remplissage de l'unité et, si FillVolume est présent, ses volumes, indépendamment du vrai type. Purement visuel."
+  },
+  "FillUnit:getFillUnitForcedMaterialFillType": {
+   "en": "Returns the forced display material fill type of a unit, or FillType.UNKNOWN when none is set.",
+   "fr": "Retourne le type de matière d'affichage forcé d'une unité, ou FillType.UNKNOWN si aucun n'est défini."
+  },
+  "FillUnit:setFillUnitInTriggerRange": {
+   "en": "Empty hook in this specialization; subclasses or other specializations may override it to react to a unit entering or leaving a trigger range.",
+   "fr": "Point d'extension vide dans cette spécialisation ; d'autres peuvent le surcharger pour réagir à l'entrée ou la sortie d'une unité dans la portée d'un trigger."
+  },
+  "FillUnit:updateAlarmTriggers": {
+   "en": "Re-evaluates each given alarm trigger from level and, for directional triggers, from the sign of the last fill level change, then applies the resulting state.",
+   "fr": "Réévalue chaque alarme fournie d'après le niveau et, pour les alarmes directionnelles, d'après le signe du dernier changement de niveau, puis applique l'état obtenu."
+  },
+  "FillUnit:getAlarmTriggerIsActive": {
+   "en": "Returns true when the unit's level fraction lies between the alarm's minFillLevel and maxFillLevel (inclusive). Divides by capacity, so unlimited units give 0.",
+   "fr": "Retourne true si la fraction de niveau de l'unité est comprise (bornes incluses) entre minFillLevel et maxFillLevel de l'alarme. Divise par la capacité, donc une unité illimitée donne 0."
+  },
+  "FillUnit:setAlarmTriggerState": {
+   "en": "On a state change, plays or stops the alarm sound, switches beacon lights (optionally auto-off after activeDuration), tracks the active alarm and raises onAlarmTriggerChanged.",
+   "fr": "Lors d'un changement d'état, lance ou arrête le son d'alarme, commute les gyrophares (arrêt automatique possible après activeDuration), suit l'alarme active et émet onAlarmTriggerChanged."
+  },
+  "FillUnit:getFillUnitIndexFromNode": {
+   "en": "Returns the fill unit index owning the given exact fill root node, or nil.",
+   "fr": "Retourne l'index de l'unité propriétaire du nœud de remplissage exact fourni, ou nil."
+  },
+  "FillUnit:getFillUnitExtraDistanceFromNode": {
+   "en": "Returns the extra effect distance configured for an exact fill root node, 0 by default.",
+   "fr": "Retourne la distance d'effet supplémentaire configurée pour un nœud de remplissage exact, 0 par défaut."
+  },
+  "FillUnit:getFillUnitFromNode": {
+   "en": "Returns the fill unit table that owns the given exact fill root node, or nil.",
+   "fr": "Retourne la table de l'unité propriétaire du nœud de remplissage exact fourni, ou nil."
+  },
+  "FillUnit:emptyAllFillUnits": {
+   "en": "Empties every unit by adding minus infinity to its level; with ignoreDeleteOnEmptyFlag the vehicle is not removed even if configured to delete when empty.",
+   "fr": "Vide toutes les unités en ajoutant moins l'infini à leur niveau ; avec ignoreDeleteOnEmptyFlag, le véhicule n'est pas supprimé même s'il est configuré pour l'être une fois vide."
+  },
+  "FillUnit:loadFillUnitUnloadingFromXML": {
+   "en": "Reads one unloading place from XML: node (defaults to the root node), width (default 15) and offset. Always returns true. Note: the iteration index passed by onLoad is unused.",
+   "fr": "Lit une zone de déchargement depuis le XML : nœud (par défaut le nœud racine), largeur (15 par défaut) et décalage. Retourne toujours true. À noter : l'index passé par onLoad est inutilisé."
+  },
+  "FillUnit:getFillUnitUnloadPalletFilename": {
+   "en": "Returns the pallet XML filename of the unit's current fill type, or nil if the unit is empty.",
+   "fr": "Retourne le nom de fichier XML de palette du type courant de l'unité, ou nil si elle est vide."
+  },
+  "FillUnit:getFillUnitHasMountedPalletsToUnload": {
+   "en": "Hook returning false by default; overridden by vehicles that carry mounted pallets which can be unloaded.",
+   "fr": "Point d'extension retournant false par défaut ; surchargé par les véhicules transportant des palettes montées déchargeables."
+  },
+  "FillUnit:getFillUnitMountedPalletsToUnload": {
+   "en": "Hook returning nil by default; overridden to return the list of mounted pallets to unload.",
+   "fr": "Point d'extension retournant nil par défaut ; surchargé pour fournir la liste des palettes montées à décharger."
+  },
+  "FillUnit:getFillUnitUnloadingTasks": {
+   "en": "Builds a list of unloading tasks, one per unloadable non-empty unit with a pallet file, each with unit index, fill type, level and pallet filename.",
+   "fr": "Construit la liste des tâches de déchargement, une par unité déchargeable non vide ayant une palette, avec index d'unité, type, niveau et fichier de palette."
+  },
+  "FillUnit:getFillUnitEmptyOnReset": {
+   "en": "Returns true by default: units without start fill level are emptied when vehicles are reset instead of loaded from the savegame.",
+   "fr": "Retourne true par défaut : les unités sans niveau de départ sont vidées à la réinitialisation des véhicules au lieu d'être chargées depuis la sauvegarde."
+  },
+  "FillUnit:getAllowLoadTriggerActivation": {
+   "en": "Returns true only when this vehicle's root vehicle is the one the local player is currently in, so only the player's own vehicle can be refilled from a trigger.",
+   "fr": "Retourne true seulement si le véhicule racine est celui dans lequel se trouve le joueur local, donc seul son propre véhicule peut être rempli depuis un trigger."
+  },
+  "FillUnit:addExactFillRootAimToUpdate": {
+   "en": "Queues a callback for another vehicle to be run (once) in this vehicle's next post update, for exact fill root aiming.",
+   "fr": "Met en file un rappel pour un autre véhicule, exécuté une seule fois lors du prochain post-update de ce véhicule, pour la visée du nœud de remplissage exact."
+  },
+  "FillUnit:unloadFillUnits": {
+   "en": "Client: asks the server via FillUnitUnloadEvent. Server: places mounted pallets and spawns new pallet vehicles on the unloading places, filling them with the unit contents, then raises onFillUnitUnloaded and broadcasts FillUnitUnloadedEvent. Shows a notification when there is no space.",
+   "fr": "Client : demande au serveur via FillUnitUnloadEvent. Serveur : place les palettes montées et fait apparaître de nouvelles palettes sur les zones de déchargement en les remplissant avec le contenu, puis émet onFillUnitUnloaded et diffuse FillUnitUnloadedEvent. Notifie en cas de manque de place."
+  },
+  "FillUnit:addFillUnitFillLevel": {
+   "en": "Central function to add or remove liters in a unit and returns the applied delta. Checks farm access, mass limit and tool and fill type support, may switch the fill type, updates sync flags, mass, planes, alarms, effects, animations and dashboards, raises onFillUnitFillLevelChanged and may delete the vehicle when empty.",
+   "fr": "Fonction centrale pour ajouter ou retirer des litres dans une unité ; retourne le delta réellement appliqué. Vérifie l'accès de la ferme, la limite de masse et le support des types d'outil et de remplissage, peut changer de type, met à jour synchronisation, masse, plans, alarmes, effets, animations et tableaux de bord, émet onFillUnitFillLevelChanged et peut supprimer le véhicule une fois vide."
+  },
+  "FillUnit:setFillUnitLastValidFillType": {
+   "en": "Sets the last valid fill type of a unit and its sent copy, and raises the dirty flag so the change is synchronized, if the value differs.",
+   "fr": "Définit le dernier type valide d'une unité et sa copie envoyée, puis lève le drapeau dirty pour synchroniser, si la valeur diffère."
+  },
+  "FillUnit:loadFillUnitFromXML": {
+   "en": "Loads one fill unit from XML: capacity, supported fill types or categories (one of the two is required, else it fails), start fill, nodes, network bits, HUD options, animations, and on clients alarms, measurement nodes, fill plane, materials, effects and dashboard values. Note: useMaxStateIfEmpty defaults to false here but the schema documents true.",
+   "fr": "Charge une unité depuis le XML : capacité, types ou catégories supportés (un des deux est obligatoire, sinon échec), niveau de départ, nœuds, bits réseau, options HUD, animations et, côté client, alarmes, nœuds de mesure, plan, matériaux, effets et valeurs de tableau de bord. À noter : useMaxStateIfEmpty vaut false ici alors que le schéma documente true."
+  },
+  "FillUnit:loadAlarmTrigger": {
+   "en": "Loads an alarm trigger from XML: required min and max fill level fractions, alarm sound, beacon lights and direction. Returns false when a required level is missing. Note: needsTurnOn and turnOffInTrigger are registered in the schema but not read here.",
+   "fr": "Charge une alarme depuis le XML : fractions min et max obligatoires, son d'alarme, gyrophares et direction. Retourne false si un niveau requis manque. À noter : needsTurnOn et turnOffInTrigger sont déclarés dans le schéma mais non lus ici."
+  },
+  "FillUnit:loadMeasurementNode": {
+   "en": "Loads a measurement node (shader-driven fill gauge) from XML; returns false and warns if the node is missing.",
+   "fr": "Charge un nœud de mesure (jauge pilotée par shader) depuis le XML ; retourne false avec un avertissement si le nœud manque."
+  },
+  "FillUnit:updateMeasurementNodes": {
+   "en": "Drives the measurement nodes' shader parameters fillLevel and prevFillLevel with a 5 second visibility timer and intensity boosted by vehicle speed above about 10 km/h. Client only in practice.",
+   "fr": "Pilote les paramètres shader fillLevel et prevFillLevel des nœuds de mesure avec un minuteur de visibilité de 5 secondes et une intensité renforcée par la vitesse du véhicule au-delà d'environ 10 km/h. Utilisé côté client."
+  },
+  "FillUnit:loadFillPlane": {
+   "en": "Loads the fill plane of a unit: moving nodes with keyframed or min/max Y animation curves, assigns the base material \"fillPlane\" and terrain texture arrays, and resolves the default fill type. Returns false when absent or invalid default type.",
+   "fr": "Charge le plan de remplissage d'une unité : nœuds mobiles avec courbes d'animation (images clés ou Y min/max), assigne le matériau de base « fillPlane » et les tableaux de textures du terrain, et résout le type par défaut. Retourne false si absent ou si le type par défaut est invalide."
+  },
+  "FillUnit:setFillPlaneForcedFillType": {
+   "en": "Stores a forced fill type on the unit's fill plane, if the unit has one. Visual use. Note: updateFillUnitFillPlane does not read this value in this file.",
+   "fr": "Mémorise un type forcé sur le plan de remplissage de l'unité, s'il existe. Usage visuel. À noter : updateFillUnitFillPlane ne lit pas cette valeur dans ce fichier."
+  },
+  "FillUnit:updateFillUnitFillPlane": {
+   "en": "Positions, rotates, scales and shows the fill plane nodes from the unit's level fraction through the animation curves, and sets the shader fillTypeId texture index when the fill type changes. Note: lastFillPlaneType is never updated, so the shader parameter is rewritten each call.",
+   "fr": "Positionne, oriente, met à l'échelle et affiche les nœuds du plan selon la fraction de niveau via les courbes, et règle l'index de texture fillTypeId du shader quand le type change. À noter : lastFillPlaneType n'est jamais mis à jour, donc le paramètre shader est réécrit à chaque appel."
+  },
+  "FillUnit:loadFillTypeMaterials": {
+   "en": "Reads the fillTypeMaterials list: either a target node plus reference node whose material is copied, or a material slot name plus custom diffuse texture. Invalid entries are skipped with warnings. Returns the list.",
+   "fr": "Lit la liste fillTypeMaterials : soit un nœud cible et un nœud de référence dont le matériau est copié, soit un nom d'emplacement de matériau et une texture diffuse personnalisée. Les entrées invalides sont ignorées avec avertissement. Retourne la liste."
+  },
+  "FillUnit:updateFillTypeMaterials": {
+   "en": "For each entry matching the new fill type, either copies the reference node material onto the target node or replaces the slot's diffuse map from file across the vehicle's nodes.",
+   "fr": "Pour chaque entrée correspondant au nouveau type, copie le matériau du nœud de référence sur le nœud cible ou remplace la texture diffuse de l'emplacement depuis un fichier sur les nœuds du véhicule."
+  },
+  "FillUnit:updateFillUnitAutoAimTarget": {
+   "en": "Moves the unit's auto aim target node along Z between startZ and endZ according to the fill level above the start percentage (optionally inverted).",
+   "fr": "Déplace le nœud cible de visée automatique selon Z entre startZ et endZ en fonction du niveau au-dessus du pourcentage de départ (inversion possible)."
+  },
+  "FillUnit:addFillUnitTrigger": {
+   "en": "Registers a fill trigger that currently reaches the vehicle. The first one registers the fill activatable and, on platforms with automatic filling, starts filling. Raises onAddedFillUnitTrigger and re-sorts triggers.",
+   "fr": "Enregistre un trigger de remplissage qui atteint actuellement le véhicule. Le premier enregistre l'activable de remplissage et, sur les plateformes à remplissage automatique, démarre le remplissage. Émet onAddedFillUnitTrigger et retrie les triggers."
+  },
+  "FillUnit:removeFillUnitTrigger": {
+   "en": "Unregisters a fill trigger, stops filling on the server if it was the active one, removes the activatable when none remain, raises onRemovedFillUnitTrigger and re-sorts.",
+   "fr": "Désenregistre un trigger de remplissage, arrête le remplissage côté serveur s'il était actif, retire l'activable s'il n'en reste aucun, émet onRemovedFillUnitTrigger et retrie."
+  },
+  "FillUnit:updateFillUnitTriggers": {
+   "en": "Sorts the triggers (fillable ones first, fuller units first), updates the activatable's fill type from the first trigger and raises onFillUnitTriggerChanged when the selected trigger changes.",
+   "fr": "Trie les triggers (ceux remplissables d'abord, puis unités les plus pleines), met à jour le type de l'activable depuis le premier et émet onFillUnitTriggerChanged quand le trigger sélectionné change."
+  },
+  "FillUnit:setFillUnitIsFilling": {
+   "en": "Starts or stops refilling from a trigger. Unless noEventSend, sends SetFillUnitIsFillingEvent. Picks the first activatable trigger, toggles fill sounds, raises onFillUnitIsFillingStateChanged and re-sorts triggers when stopping.",
+   "fr": "Démarre ou arrête le remplissage depuis un trigger. Sauf noEventSend, envoie SetFillUnitIsFillingEvent. Choisit le premier trigger activable, bascule les sons, émet onFillUnitIsFillingStateChanged et retrie à l'arrêt."
+  },
+  "FillUnit:setFillSoundIsPlaying": {
+   "en": "Starts or stops the looping fill sound sample depending on the argument, only acting when the playing state differs.",
+   "fr": "Démarre ou arrête l'échantillon sonore de remplissage selon l'argument, en n'agissant que si l'état de lecture diffère."
+  },
+  "FillUnit:getIsFillUnitActive": {
+   "en": "Returns true by default; hook that other specializations can override to deactivate a unit.",
+   "fr": "Retourne true par défaut ; point d'extension que d'autres spécialisations peuvent surcharger pour désactiver une unité."
+  },
+  "FillUnit:getAdditionalComponentMass": {
+   "en": "Overrides the vehicle function: adds the mass of each unit's content (level times the fill type's mass per liter) to the component that is the unit's fill mass node.",
+   "fr": "Surcharge la fonction du véhicule : ajoute la masse du contenu de chaque unité (niveau multiplié par la masse par litre du type) au composant correspondant au nœud de masse de l'unité."
+  },
+  "FillUnit:getFillLevelInformation": {
+   "en": "Overrides the vehicle function: adds one HUD entry per visible unit (type, level, capacity, precision, max reached flag, display style), merging parent and child units and showing the sole supported type when empty.",
+   "fr": "Surcharge la fonction du véhicule : ajoute une entrée HUD par unité visible (type, niveau, capacité, précision, indicateur de maximum, style), fusionne parent et enfant et affiche l'unique type supporté quand l'unité est vide."
+  },
+  "FillUnit:getIsFoldAllowed": {
+   "en": "Overrides fold permission: when folding while filled is forbidden, returns false and a warning text if any unit exceeds its folding threshold (for the configured fill type if given); otherwise defers to the parent.",
+   "fr": "Surcharge l'autorisation de repli : si le repli en charge est interdit, retourne false avec un texte d'avertissement quand une unité dépasse son seuil (pour le type configuré le cas échéant) ; sinon délègue au parent."
+  },
+  "FillUnit:getIsReadyForAutomatedTrainTravel": {
+   "en": "Overrides the train readiness check: returns false if any unit flagged blocksAutomatedTrainTravel is not empty, otherwise defers to the parent.",
+   "fr": "Surcharge le contrôle d'aptitude du train : retourne false si une unité marquée blocksAutomatedTrainTravel n'est pas vide, sinon délègue au parent."
+  },
+  "FillUnit:loadMovingToolFromXML": {
+   "en": "Extends moving tool loading with fillUnitIndex, minFillLevel and maxFillLevel attributes after the parent loader succeeds.",
+   "fr": "Étend le chargement des outils mobiles avec les attributs fillUnitIndex, minFillLevel et maxFillLevel après réussite du chargeur parent."
+  },
+  "FillUnit:getIsMovingToolActive": {
+   "en": "Overrides moving tool activity: when linked to a fill unit, returns false if the fill fraction is above minFillLevel or below maxFillLevel. Note: this looks inverted compared with the leveler and attacher joint checks, and the min and max defaults are nil, which would error if only the index is set.",
+   "fr": "Surcharge l'activité des outils mobiles : si lié à une unité, retourne false quand la fraction est supérieure à minFillLevel ou inférieure à maxFillLevel. À noter : la condition semble inversée par rapport aux contrôles du niveleur et de l'attache, et min et max valent nil par défaut, ce qui planterait si seul l'index est défini."
+  },
+  "FillUnit:getDoConsumePtoPower": {
+   "en": "Overrides PTO power consumption: also true while the vehicle is filling from a trigger and consumePtoPower is configured.",
+   "fr": "Surcharge la consommation de prise de force : vrai aussi pendant le remplissage par trigger si consumePtoPower est configuré."
+  },
+  "FillUnit:getIsPowerTakeOffActive": {
+   "en": "Overrides PTO activity: also true while filling from a trigger when consumePtoPower is configured.",
+   "fr": "Surcharge l'activité de la prise de force : vrai aussi pendant le remplissage par trigger si consumePtoPower est configuré."
+  },
+  "FillUnit:getCanBeTurnedOn": {
+   "en": "Overrides turn-on permission: returns false while an active alarm trigger has turnOffInTrigger set, else defers to the parent. Note: loadAlarmTrigger never reads that flag from XML.",
+   "fr": "Surcharge l'autorisation de mise en marche : retourne false tant qu'une alarme active a turnOffInTrigger, sinon délègue au parent. À noter : loadAlarmTrigger ne lit jamais ce drapeau depuis le XML."
+  },
+  "FillUnit:showInfo": {
+   "en": "Overrides the info box: lists the total level per fill type (with the unit text and precision) for units visible in the info HUD, rebuilt only when the cached info is dirty, then calls the parent.",
+   "fr": "Surcharge la boîte d'informations : liste le niveau total par type (avec unité et précision) pour les unités visibles dans le HUD d'infos, reconstruit seulement si le cache est invalide, puis appelle le parent."
+  },
+  "FillUnit:loadLevelerNodeFromXML": {
+   "en": "Extends leveler node loading with fillUnitIndex (default 1) and min and max fill fraction limits.",
+   "fr": "Étend le chargement des nœuds de niveleur avec fillUnitIndex (1 par défaut) et des limites min et max de fraction de remplissage."
+  },
+  "FillUnit:getIsLevelerPickupNodeActive": {
+   "en": "Overrides leveler pickup activity: returns false when the linked unit's fill fraction is outside the node's min and max range, else defers to the parent.",
+   "fr": "Surcharge l'activité de ramassage du niveleur : retourne false si la fraction de la unité liée est hors de la plage min/max du nœud, sinon délègue au parent."
+  },
+  "FillUnit:loadAttacherJointFromXML": {
+   "en": "Extends attacher joint loading with fillUnitIndex, fillUnitTopArmOnly, minFillLevel and maxFillLevel when a fill unit index is configured.",
+   "fr": "Étend le chargement des attaches avec fillUnitIndex, fillUnitTopArmOnly, minFillLevel et maxFillLevel quand un index d'unité est configuré."
+  },
+  "FillUnit:getIsAttacherJointCompatible": {
+   "en": "Overrides joint compatibility: returns false with a warning text when the linked unit's fill fraction is outside the joint's allowed range (for top-arm-only joints only if the implement has a top reference node).",
+   "fr": "Surcharge la compatibilité d'attache : retourne false avec un texte d'avertissement quand la fraction de l'unité liée est hors de la plage autorisée (pour le mode bras supérieur seul, seulement si l'outil a un nœud de référence haut)."
+  },
+  "FillUnit:debugGetSupportedFillTypesPerFillUnit": {
+   "en": "Debug helper returning a table mapping each fill unit index to its supported fill type set.",
+   "fr": "Aide au débogage retournant une table associant chaque index d'unité à son ensemble de types supportés."
+  },
+  "FillUnit.addFillTypeSources": {
+   "en": "Recursively walks a vehicle and its attached implements (skipping the excluded vehicle) and fills sources[fillType] with entries holding vehicle and fill unit index for units supporting the wanted fill types.",
+   "fr": "Parcourt récursivement un véhicule et ses outils attelés (en ignorant le véhicule exclu) et remplit sources[type] avec des entrées véhicule et index d'unité pour les unités supportant les types voulus."
+  },
+  "FillUnit.loadSpecValueCapacity": {
+   "en": "Shop spec loader: reads capacities per fill unit configuration (or the storeData capacity override), converting them with the display unit when set. Returns a list of configurations or nil.",
+   "fr": "Chargeur de caractéristique boutique : lit les capacités par configuration d'unités (ou la valeur storeData), en les convertissant selon l'unité d'affichage. Retourne une liste de configurations ou nil."
+  },
+  "FillUnit.getSpecValueCapacity": {
+   "en": "Shop spec getter: computes the capacity text for the selected configuration or a min to max range across selectable configurations, using the real item's current capacity when available. Can return values instead of text when returnValues is set.",
+   "fr": "Accesseur de caractéristique boutique : calcule le texte de capacité pour la configuration choisie ou une plage min à max sur les configurations sélectionnables, en utilisant la capacité réelle de l'objet si disponible. Peut retourner des valeurs plutôt que du texte avec returnValues."
+  },
+  "FillUnit.getCapacityFromXml": {
+   "en": "Returns the largest unit capacity found in any fill unit configuration of a vehicle XML file, 0 if none.",
+   "fr": "Retourne la plus grande capacité d'unité trouvée dans les configurations d'un fichier XML de véhicule, 0 s'il n'y en a pas."
+  },
+  "FillUnit.loadSpecValueFillTypes": {
+   "en": "Shop spec loader: collects fill type and category names of all configurations (skipping hidden or zero-capacity units), plus storeData overrides, fruit types and windrow conversion types, into one descriptor table.",
+   "fr": "Chargeur de caractéristique boutique : collecte les noms de types et catégories de toutes les configurations (hors unités masquées ou de capacité nulle), les valeurs storeData, les fruits et les types d'andain issus d'un convertisseur, dans une table descriptive."
+  },
+  "FillUnit.getFillTypeNamesFromXML": {
+   "en": "Reads all fill type names and fill type category names of units with positive or unspecified capacity from a vehicle XML and returns them as two space-joined strings.",
+   "fr": "Lit tous les noms de types et de catégories des unités à capacité positive ou non précisée d'un XML de véhicule et les retourne en deux chaînes séparées par des espaces."
+  },
+  "FillUnit.getSpecValueFillTypes": {
+   "en": "Shop spec getter: resolves the loaded descriptor (for the chosen configuration if given) to a list of fill type indices via categories, names, fruit types, fruit categories or windrow types. Returns nil when none.",
+   "fr": "Accesseur de caractéristique boutique : résout le descripteur chargé (pour la configuration choisie le cas échéant) en liste d'index de types via catégories, noms, fruits, catégories de fruits ou types d'andain. Nil si rien."
+  },
+  "FillUnit.loadSpecValueFillUnitMassData": {
+   "en": "Collects data used to estimate a vehicle's start mass: consumer tanks of the first consumer configuration and fill units with a start fill level and type from the first fill unit configuration.",
+   "fr": "Collecte les données servant à estimer la masse initiale : réservoirs de consommateurs de la première configuration et unités ayant niveau et type de départ dans la première configuration d'unités."
+  },
+  "FillUnit.getSpecValueStartFillUnitMassByMassData": {
+   "en": "Sums capacity times mass per liter over the collected mass data, using the first fill type of each category or name list. Returns the mass total (game mass units).",
+   "fr": "Additionne capacité multipliée par masse par litre sur les données collectées, avec le premier type de chaque liste de catégories ou noms. Retourne la masse totale (unités de masse du jeu)."
+  },
+  "FillUnit.actionEventConsoleFillUnitNext": {
+   "en": "Debug action: for the selected vehicle, empties unit 1 and fills it with 100 liters of the next supported fill type. Only registered on console development builds.",
+   "fr": "Action de débogage : pour le véhicule sélectionné, vide l'unité 1 et la remplit de 100 litres du type supporté suivant. Enregistrée seulement sur les builds de développement console."
+  },
+  "FillUnit.actionEventConsoleFillUnitInc": {
+   "en": "Debug action: adds 1000 liters to unit 1 of the selected vehicle, choosing a supported type if it is empty.",
+   "fr": "Action de débogage : ajoute 1000 litres à l'unité 1 du véhicule sélectionné, en choisissant un type supporté si elle est vide."
+  },
+  "FillUnit.actionEventConsoleFillUnitDec": {
+   "en": "Debug action: removes 1000 liters from unit 1 of the selected vehicle.",
+   "fr": "Action de débogage : retire 1000 litres de l'unité 1 du véhicule sélectionné."
+  },
+  "FillUnit.actionEventUnload": {
+   "en": "Input callback for the UNLOAD action: calls unloadFillUnits on the vehicle.",
+   "fr": "Rappel d'entrée de l'action UNLOAD : appelle unloadFillUnits sur le véhicule."
+  },
+  "FillUnit.updateUnloadActionDisplay": {
+   "en": "Activates the unload action only when some unloadable unit holds something with a pallet, or mounted pallets exist, and no discharge target is currently set.",
+   "fr": "Active l'action de déchargement seulement si une unité déchargeable contient quelque chose avec une palette ou si des palettes montées existent, et qu'aucune cible de déversement n'est définie."
+  },
+  "FillActivatable.new": {
+   "en": "Creates the helper object used by the activatable system to start and stop refilling from a trigger for a given vehicle; starts with an unknown fill type.",
+   "fr": "Crée l'objet d'aide utilisé par le système d'activables pour démarrer et arrêter le remplissage depuis un trigger pour un véhicule donné ; démarre avec un type inconnu."
+  },
+  "FillActivatable:getIsActivatable": {
+   "en": "True when the vehicle is active for input, has a unit that can take the current fill type with more than 1 liter free, supports trigger tool type, and some trigger is activatable; also refreshes the prompt text.",
+   "fr": "Vrai si le véhicule est actif pour la saisie, a une unité pouvant recevoir le type courant avec plus de 1 litre libre, supporte l'outil trigger, et qu'un trigger est activable ; met aussi à jour le texte d'invite."
+  },
+  "FillActivatable:run": {
+   "en": "Toggles the vehicle's trigger filling state and refreshes the prompt text.",
+   "fr": "Bascule l'état de remplissage par trigger du véhicule et met à jour le texte d'invite."
+  },
+  "FillActivatable:activate": {
+   "en": "Called when the player enters range: registers this object as drawable so draw is called each frame.",
+   "fr": "Appelé à l'entrée du joueur dans la portée : enregistre l'objet comme dessinable pour que draw soit appelé à chaque image."
+  },
+  "FillActivatable:deactivate": {
+   "en": "Called when leaving range: removes the object from the mission's drawables.",
+   "fr": "Appelé à la sortie de la portée : retire l'objet des éléments dessinables de la mission."
+  },
+  "FillActivatable:draw": {
+   "en": "Shows the fuel context HUD for the vehicle when the activatable's fill type is diesel fuel.",
+   "fr": "Affiche le contexte carburant du HUD pour le véhicule quand le type de l'activable est le carburant."
+  },
+  "FillActivatable:updateActivateText": {
+   "en": "Sets the prompt text to either the stop or start refilling string with the vehicle's type description.",
+   "fr": "Définit le texte d'invite sur la chaîne d'arrêt ou de démarrage du remplissage avec la description du type de véhicule."
+  },
+  "FillActivatable:setFillType": {
+   "en": "Sets the fill type index this activatable is about, used when checking whether a unit can take it.",
+   "fr": "Définit l'index du type de remplissage concerné par cet activable, utilisé pour vérifier si une unité peut le recevoir."
+  }
+ }
+}

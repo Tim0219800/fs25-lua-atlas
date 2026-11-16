@@ -1,0 +1,121 @@
+{
+ "fichier": "vehicles/specializations/RidgeMarker.lua",
+ "module": {
+  "en": "Specialization for implements that carry folding ridge markers (marker arms that scratch a guide line in the soil). It requires AnimatedVehicle and WorkArea, adds a \"ridgeMarker\" configuration type and a \"ridgemarker\" work area type, and cycles through marker states with an input action. The state is saved, streamed to joining clients and synchronised through RidgeMarkerSetStateEvent; the soil marking is done on the density map.",
+  "fr": "Spécialisation pour les outils équipés de traceurs de lignes repliables (bras qui griffent une ligne de guidage dans le sol). Elle exige AnimatedVehicle et WorkArea, ajoute un type de configuration \"ridgeMarker\" et un type de zone de travail \"ridgemarker\", et fait défiler les états de traceur via une action d'entrée. L'état est sauvegardé, envoyé aux clients qui rejoignent et synchronisé par RidgeMarkerSetStateEvent ; le marquage du sol passe par la density map."
+ },
+ "fonctions": {
+  "RidgeMarker.initSpecialization": {
+   "en": "Registers the \"ridgeMarker\" configuration type and the \"ridgemarker\" work area type, then declares the vehicle XML schema paths (including per-configuration ones, the work area child node and the speed rotating part attributes) and the savegame `ridgeMarker#state` attribute.",
+   "fr": "Enregistre le type de configuration \"ridgeMarker\" et le type de zone de travail \"ridgemarker\", puis déclare les chemins du schéma XML du véhicule (dont ceux par configuration, le nœud enfant de zone de travail et les attributs des pièces à rotation de vitesse) ainsi que l'attribut de sauvegarde `ridgeMarker#state`."
+  },
+  "RidgeMarker.registerRidgeMarkerXMLPaths": {
+   "en": "Declares the XML schema entries under a base key: input button, the list of `marker` entries (animation, work limits, lifted animation time, work area index), fold limits, fold disable direction, only-active-when-lowered flag and direction node.",
+   "fr": "Déclare dans le schéma XML, sous une clé de base, le bouton d'entrée, la liste des `marker` (animation, limites de travail, temps d'animation relevé, index de zone de travail), les limites de pliage, la direction de pliage interdite, l'option « actif seulement abaissé » et le nœud de direction."
+  },
+  "RidgeMarker.registerRidgeMarkerAreaXMLPaths": {
+   "en": "Declares the `ridgeMarkerArea` schema entries of a work area: the node around which the marking area is built, the area size (default 0.25) and the test area offset along +z (default 0.2).",
+   "fr": "Déclare les entrées de schéma `ridgeMarkerArea` d'une zone de travail : le nœud autour duquel la zone de marquage est construite, sa taille (0,25 par défaut) et le décalage de la zone de test en z positif (0,2 par défaut)."
+  },
+  "RidgeMarker.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both the AnimatedVehicle and WorkArea specializations.",
+   "fr": "Retourne vrai uniquement si le type de véhicule possède les spécialisations AnimatedVehicle et WorkArea."
+  },
+  "RidgeMarker.registerFunctions": {
+   "en": "Registers the specialization functions on the vehicle type: `loadRidgeMarker`, `setRidgeMarkerState`, `canFoldRidgeMarker` and `processRidgeMarkerArea`.",
+   "fr": "Enregistre les fonctions de la spécialisation sur le type de véhicule : `loadRidgeMarker`, `setRidgeMarkerState`, `canFoldRidgeMarker` et `processRidgeMarkerArea`."
+  },
+  "RidgeMarker.registerOverwrittenFunctions": {
+   "en": "Overrides `loadWorkAreaFromXML`, `getIsWorkAreaActive`, `loadSpeedRotatingPartFromXML`, `getIsSpeedRotatingPartActive` and `getCanBeSelected` on the vehicle type.",
+   "fr": "Surcharge `loadWorkAreaFromXML`, `getIsWorkAreaActive`, `loadSpeedRotatingPartFromXML`, `getIsSpeedRotatingPartActive` et `getCanBeSelected` sur le type de véhicule."
+  },
+  "RidgeMarker.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostLoad, onReadStream, onWriteStream, onUpdateTick, onRegisterActionEvents, onSetLowered, onFoldStateChanged and onAIImplementStart.",
+   "fr": "S'abonne à onLoad, onPostLoad, onReadStream, onWriteStream, onUpdateTick, onRegisterActionEvents, onSetLowered, onFoldStateChanged et onAIImplementStart."
+  },
+  "RidgeMarker:onLoad": {
+   "en": "Picks the ridge marker configuration (falls back to `vehicle.ridgeMarker`), reads the input action, the `marker` entries (capped by MAX_NUM_RIDGEMARKERS - 1), fold limits and direction node, and sets state 0. On non-clients it removes the onUpdateTick listener.",
+   "fr": "Choisit la configuration de traceur (repli sur `vehicle.ridgeMarker`), lit l'action d'entrée, les entrées `marker` (plafonnées à MAX_NUM_RIDGEMARKERS - 1), les limites de pliage et le nœud de direction, puis met l'état à 0. Hors client, retire l'écouteur onUpdateTick."
+  },
+  "RidgeMarker:onPostLoad": {
+   "en": "When loading a savegame with markers defined, restores the saved state and jumps the matching animation to its end.",
+   "fr": "Lors du chargement d'une sauvegarde avec des traceurs définis, restaure l'état enregistré et amène l'animation correspondante directement à sa fin."
+  },
+  "RidgeMarker:saveToXMLFile": {
+   "en": "Writes the current ridge marker state to the savegame, only if the vehicle has at least one marker.",
+   "fr": "Écrit l'état courant des traceurs dans la sauvegarde, seulement si le véhicule a au moins un traceur."
+  },
+  "RidgeMarker:onReadStream": {
+   "en": "Client side on join: reads the ridge marker state from the stream, applies it without sending an event and fast-forwards the animation if the state is not 0.",
+   "fr": "Côté client à la connexion : lit l'état des traceurs dans le flux, l'applique sans envoyer d'événement et avance l'animation à sa fin si l'état n'est pas 0."
+  },
+  "RidgeMarker:onWriteStream": {
+   "en": "Server side on join: writes the current ridge marker state to the stream when markers exist.",
+   "fr": "Côté serveur à la connexion : écrit l'état courant des traceurs dans le flux lorsque des traceurs existent."
+  },
+  "RidgeMarker:onUpdateTick": {
+   "en": "Client-only tick that refreshes the visibility of the toggle action event.",
+   "fr": "Tick réservé au client qui met à jour la visibilité de l'action de bascule des traceurs."
+  },
+  "RidgeMarker:loadRidgeMarker": {
+   "en": "Reads one `marker` entry (animation name, min/max work limits, lifted animation time, work area index). Returns false with an XML warning if `workAreaIndex` is missing.",
+   "fr": "Lit une entrée `marker` (nom d'animation, limites de travail min/max, temps d'animation relevé, index de zone de travail). Retourne false avec un avertissement XML si `workAreaIndex` est absent."
+  },
+  "RidgeMarker:setRidgeMarkerState": {
+   "en": "Switches the active marker: sends RidgeMarkerSetStateEvent, folds the previous marker's animation backwards, then unfolds the new one (stopping at the lifted time if the tool is raised). State 0 means all folded.",
+   "fr": "Change le traceur actif : envoie RidgeMarkerSetStateEvent, replie l'animation du traceur précédent à l'envers, puis déplie le nouveau (en s'arrêtant au temps « relevé » si l'outil est levé). L'état 0 signifie tout replié."
+  },
+  "RidgeMarker:canFoldRidgeMarker": {
+   "en": "Returns whether the given state may be selected, based on the fold animation time being inside the configured limits and on the disabled fold direction. Used by the toggle and by the action text visibility.",
+   "fr": "Retourne si l'état donné peut être choisi, selon que le temps d'animation de pliage est dans les limites configurées et selon la direction de pliage interdite. Utilisé par la bascule et la visibilité de l'action."
+  },
+  "RidgeMarker:processRidgeMarkerArea": {
+   "en": "Work area callback: if the test node lies on a field ground type, erases tire tracks and applies a plow or cultivator density map update on the marker area (cultivator if the ground is plowed). Clients far away skip the density update. Returns 0, 0.",
+   "fr": "Callback de zone de travail : si le nœud de test est sur un type de sol de champ, efface les traces de pneus et applique une mise à jour de density map de type labour ou cultivateur (cultivateur si le sol est labouré). Les clients éloignés ignorent la mise à jour. Retourne 0, 0."
+  },
+  "RidgeMarker:loadWorkAreaFromXML": {
+   "en": "Overrides work area loading: builds start/width/height/test transform nodes around `ridgeMarkerArea#node`, calls the parent, and turns a DEFAULT work area into RIDGEMARKER type when the node exists. Warns if a RIDGEMARKER area has no node.",
+   "fr": "Surcharge le chargement des zones de travail : crée des nœuds start/width/height/test autour de `ridgeMarkerArea#node`, appelle le parent, et convertit une zone DEFAULT en type RIDGEMARKER si le nœud existe. Avertit si une zone RIDGEMARKER n'a pas de nœud."
+  },
+  "RidgeMarker:loadSpeedRotatingPartFromXML": {
+   "en": "Extends speed rotating part loading with the `ridgeMarkerAnim` name and `ridgeMarkerAnimTimeMax` (default 0.99) attributes.",
+   "fr": "Étend le chargement des pièces à rotation de vitesse avec les attributs `ridgeMarkerAnim` et `ridgeMarkerAnimTimeMax` (0,99 par défaut)."
+  },
+  "RidgeMarker:getIsSpeedRotatingPartActive": {
+   "en": "Returns false while the linked ridge marker animation has not reached its max time (marker not fully unfolded); otherwise defers to the parent.",
+   "fr": "Retourne false tant que l'animation de traceur liée n'a pas atteint son temps max (traceur pas totalement déplié) ; sinon délègue au parent."
+  },
+  "RidgeMarker:getCanBeSelected": {
+   "en": "Always returns true, so the implement stays selectable.",
+   "fr": "Retourne toujours true, l'outil reste donc sélectionnable."
+  },
+  "RidgeMarker:getIsWorkAreaActive": {
+   "en": "For RIDGEMARKER work areas, returns false if there are no markers, if the marker animation is outside its min/max work limits, or if it must be lowered and is not; otherwise defers to the parent.",
+   "fr": "Pour les zones RIDGEMARKER, retourne false s'il n'y a pas de traceur, si l'animation du traceur est hors de ses limites min/max, ou si l'outil doit être abaissé et ne l'est pas ; sinon délègue au parent."
+  },
+  "RidgeMarker:onRegisterActionEvents": {
+   "en": "Client side: registers the powered action event that toggles ridge markers (text `action_toggleRidgeMarker`) when active for input and markers exist.",
+   "fr": "Côté client : enregistre l'action motorisée qui bascule les traceurs (texte `action_toggleRidgeMarker`) lorsque le véhicule est actif pour l'entrée et possède des traceurs."
+  },
+  "RidgeMarker:onSetLowered": {
+   "en": "Adjusts markers that define a lifted animation time: when lowered, resumes the animation if it is parked at that time; when raised, plays it back down to that time if it is further unfolded.",
+   "fr": "Ajuste les traceurs qui définissent un temps d'animation relevé : à l'abaissement, relance l'animation si elle est arrêtée à ce temps ; au relevage, la ramène à ce temps si elle était plus dépliée."
+  },
+  "RidgeMarker:onFoldStateChanged": {
+   "en": "Resets the ridge marker state to 0 (no event sent) when the implement starts folding in a positive direction and is not moving to the middle position.",
+   "fr": "Remet l'état des traceurs à 0 (sans événement) lorsque l'outil commence à se plier dans le sens positif et ne va pas vers la position médiane."
+  },
+  "RidgeMarker:onAIImplementStart": {
+   "en": "Resets the ridge marker state to 0 (no event sent) when an AI job starts with this implement.",
+   "fr": "Remet l'état des traceurs à 0 (sans événement) au démarrage d'une tâche IA avec cet outil."
+  },
+  "RidgeMarker.actionEventToggleRidgeMarkers": {
+   "en": "Input callback: computes the next state (cycling through 0..numMarkers) and applies it with `setRidgeMarkerState` if `canFoldRidgeMarker` allows it.",
+   "fr": "Callback d'entrée : calcule l'état suivant (cycle de 0 à numMarkers) et l'applique avec `setRidgeMarkerState` si `canFoldRidgeMarker` l'autorise."
+  },
+  "RidgeMarker.updateActionEvents": {
+   "en": "Shows or hides the toggle action depending on whether markers exist and the next state may be selected.",
+   "fr": "Affiche ou masque l'action de bascule selon qu'il existe des traceurs et que l'état suivant est sélectionnable."
+  }
+ }
+}

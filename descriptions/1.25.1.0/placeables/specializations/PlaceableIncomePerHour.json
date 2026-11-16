@@ -1,0 +1,57 @@
+{
+ "fichier": "placeables/specializations/PlaceableIncomePerHour.lua",
+ "module": {
+  "en": "Placeable specialization that pays a fixed income per in-game hour to the owning farm, with an amount that can depend on an incomePerHour configuration. It also registers the incomePerHour store spec and configuration type, so the value appears in the shop. Income is added on the server only, and only once the placeable is fully built.",
+  "fr": "Spécialisation de placeable qui verse un revenu fixe par heure de jeu à la ferme propriétaire, dont le montant peut dépendre d'une configuration incomePerHour. Elle enregistre aussi la caractéristique de boutique et le type de configuration incomePerHour, pour que la valeur apparaisse en boutique. Le revenu n'est ajouté que sur le serveur, et seulement une fois le placeable entièrement construit."
+ },
+ "fonctions": {
+  "PlaceableIncomePerHour.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableIncomePerHour.registerFunctions": {
+   "en": "Registers the getIncomePerHour method.",
+   "fr": "Enregistre la méthode getIncomePerHour."
+  },
+  "PlaceableIncomePerHour.registerOverwrittenFunctions": {
+   "en": "Overrides getNeedHourChanged and finalizeConstruction (the latter has no body in the SDK dump: UNVERIFIED).",
+   "fr": "Surcharge getNeedHourChanged et finalizeConstruction (ce dernier sans corps dans le dump du SDK : NON VÉRIFIÉ)."
+  },
+  "PlaceableIncomePerHour.registerEventListeners": {
+   "en": "Subscribes to the load and hour-changed events.",
+   "fr": "Abonne la spécialisation aux événements de chargement et de changement d'heure."
+  },
+  "PlaceableIncomePerHour.registerXMLPaths": {
+   "en": "Declares incomePerHour as a plain value and per configuration entry.",
+   "fr": "Déclare incomePerHour comme valeur simple et par entrée de configuration."
+  },
+  "PlaceableIncomePerHour.initSpecialization": {
+   "en": "Registers the incomePerHour store spec type (loader, getter, placeable species) and the incomePerHour configuration type with the placeable configuration manager.",
+   "fr": "Enregistre le type de caractéristique de boutique incomePerHour (chargeur, accesseur, espèce placeable) et le type de configuration incomePerHour auprès du gestionnaire de configurations de placeables."
+  },
+  "PlaceableIncomePerHour:onLoad": {
+   "en": "Reads the income for the selected configuration (default 1st), falling back to the base value then 0. The placeable counts as finished unless it has constructible states (getNumFinishedConstructibleStates).",
+   "fr": "Lit le revenu de la configuration choisie (la première par défaut), avec repli sur la valeur de base puis 0. Le placeable est considéré fini sauf s'il possède des états constructibles (getNumFinishedConstructibleStates)."
+  },
+  "PlaceableIncomePerHour:getNeedHourChanged": {
+   "en": "Always returns true so the placeable receives hour-changed events.",
+   "fr": "Renvoie toujours true pour que le placeable reçoive les événements de changement d'heure."
+  },
+  "PlaceableIncomePerHour:onHourChanged": {
+   "en": "Server only. Skips unowned or unfinished placeables; otherwise adds getIncomePerHour times the environment time adjustment to the owner farm as PROPERTY_INCOME money.",
+   "fr": "Serveur uniquement. Ignore les placeables sans propriétaire ou inachevés ; sinon ajoute getIncomePerHour multiplié par l'ajustement de temps de l'environnement à la ferme propriétaire, en revenu PROPERTY_INCOME."
+  },
+  "PlaceableIncomePerHour:getIncomePerHour": {
+   "en": "Returns the hourly income value (before the time adjustment factor).",
+   "fr": "Renvoie le revenu horaire (avant le facteur d'ajustement du temps)."
+  },
+  "PlaceableIncomePerHour.loadSpecValueIncomePerHour": {
+   "en": "Store spec loader: returns a fixed income (first configuration or base value) and a variable income summed from wind turbine and first solar panel configuration, or nil if all are zero.",
+   "fr": "Chargeur de caractéristique de boutique : renvoie un revenu fixe (première configuration ou valeur de base) et un revenu variable cumulant éolienne et première configuration de panneaux solaires, ou nil si tout est nul."
+  },
+  "PlaceableIncomePerHour.getSpecValueIncomePerHour": {
+   "en": "Formats the shop text per month (24 times the hourly value): a single amount, or a range from fixed to fixed plus variable income when a variable part exists. Returns nil without stored spec.",
+   "fr": "Formate le texte de boutique par mois (24 fois la valeur horaire) : un montant, ou une plage du revenu fixe au fixe plus variable s'il y a une part variable. Renvoie nil sans caractéristique stockée."
+  }
+ }
+}

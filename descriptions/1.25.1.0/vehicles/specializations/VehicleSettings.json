@@ -1,0 +1,57 @@
+{
+ "fichier": "vehicles/specializations/VehicleSettings.lua",
+ "module": {
+  "en": "Specialization that mirrors selected client-side game settings onto a vehicle. Other specializations register a setting by id; the state is updated when the client's setting changes while it controls the vehicle, and is sent to the server through `VehicleSettingsChangeEvent` so server-side logic can read it with `getVehicleSettingState`. It raises `onVehicleSettingChanged`. No prerequisites.",
+  "fr": "Spécialisation qui reflète sur un véhicule certains réglages de jeu côté client. D'autres spécialisations enregistrent un réglage par identifiant ; l'état est mis à jour quand le réglage du client change pendant qu'il contrôle le véhicule, et envoyé au serveur via `VehicleSettingsChangeEvent` pour que la logique serveur le lise avec `getVehicleSettingState`. Elle déclenche `onVehicleSettingChanged`. Aucun prérequis."
+ },
+ "fonctions": {
+  "VehicleSettings.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisites.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "VehicleSettings.initSpecialization": {
+   "en": "Empty: registers nothing in the XML schema.",
+   "fr": "Vide : n'enregistre rien dans le schéma XML."
+  },
+  "VehicleSettings.registerFunctions": {
+   "en": "Adds registerVehicleSetting, setVehicleSettingState, getVehicleSettingState and forceVehicleSettingsUpdate to the vehicle type.",
+   "fr": "Ajoute registerVehicleSetting, setVehicleSettingState, getVehicleSettingState et forceVehicleSettingsUpdate au type de véhicule."
+  },
+  "VehicleSettings.registerEvents": {
+   "en": "Registers the event `onVehicleSettingChanged`.",
+   "fr": "Enregistre l'événement `onVehicleSettingChanged`."
+  },
+  "VehicleSettings.registerEventListeners": {
+   "en": "Subscribes to onPreLoad, onUpdateTick, onStateChange and onPreAttach. Note: onPreAttach is registered but no `VehicleSettings:onPreAttach` function exists in this file.",
+   "fr": "S'abonne à onPreLoad, onUpdateTick, onStateChange et onPreAttach. À noter : onPreAttach est enregistré mais aucune fonction `VehicleSettings:onPreAttach` n'existe dans ce fichier."
+  },
+  "VehicleSettings:onPreLoad": {
+   "en": "Initializes the empty settings list and dirty flag; on a server it removes the onUpdateTick listener since only clients send settings.",
+   "fr": "Initialise la liste de réglages vide et le drapeau « sale » ; sur un serveur, retire l'écouteur onUpdateTick car seuls les clients envoient les réglages."
+  },
+  "VehicleSettings:onUpdateTick": {
+   "en": "Client only: if any setting is dirty and this is a remote client (no local server), sends a `VehicleSettingsChangeEvent` to the server, then clears the vehicle dirty flag (individual setting flags stay set).",
+   "fr": "Client uniquement : si un réglage est « sale » et qu'il s'agit d'un client distant (sans serveur local), envoie un `VehicleSettingsChangeEvent` au serveur, puis efface le drapeau du véhicule (les drapeaux individuels restent)."
+  },
+  "VehicleSettings:registerVehicleSetting": {
+   "en": "Registers a vehicle setting tied to a game setting id and subscribes to that setting's change message. The callback applies the new state only while the local player is active in this vehicle.",
+   "fr": "Enregistre un réglage de véhicule lié à un identifiant de réglage de jeu et s'abonne au message de changement. Le rappel n'applique le nouvel état que lorsque le joueur local est actif dans ce véhicule."
+  },
+  "VehicleSettings:forceVehicleSettingsUpdate": {
+   "en": "Pushes the current value of every registered game setting into the vehicle (without sending an event per setting), marking them dirty so the client sends them to the server.",
+   "fr": "Applique au véhicule la valeur courante de chaque réglage de jeu enregistré (sans événement par réglage) et les marque « sales » pour que le client les envoie au serveur."
+  },
+  "VehicleSettings:setVehicleSettingState": {
+   "en": "Sets a setting's state by index, marks it dirty and raises `onVehicleSettingChanged`. Unless `noEventSend`, a remote client first sends the settings event to the server (before the new state is stored).",
+   "fr": "Définit l'état d'un réglage par indice, le marque « sale » et déclenche `onVehicleSettingChanged`. Sauf `noEventSend`, un client distant envoie d'abord l'événement au serveur (avant que le nouvel état soit stocké)."
+  },
+  "VehicleSettings:getVehicleSettingState": {
+   "en": "Returns the stored state for the given game setting id, or nil if it is not registered or has no state yet.",
+   "fr": "Renvoie l'état stocké pour l'identifiant de réglage donné, ou nil s'il n'est pas enregistré ou n'a pas encore d'état."
+  },
+  "VehicleSettings:onStateChange": {
+   "en": "When the controlling player enters the vehicle (ENTER_VEHICLE), forces an update of all vehicle settings from the current game settings.",
+   "fr": "Quand le joueur qui contrôle entre dans le véhicule (ENTER_VEHICLE), force la mise à jour de tous les réglages du véhicule depuis les réglages de jeu courants."
+  }
+ }
+}

@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/CropRowAdjustedNodes.lua",
+ "module": {
+  "en": "Specialization that slides configured nodes sideways so implement parts line up with crop rows (or the middle between rows) of row crops. Rows are derived from the fruit type's plant spacing and a rasterized world position, snapped to 90 degree directions; only active while lowered, roughly aligned with the rows, and within a configurable distance of the player. Reads 'vehicle.cropRowAdjustedNodes'.",
+  "fr": "Spécialisation qui fait glisser latéralement des noeuds configurés pour aligner les éléments d'un outil sur les rangs de cultures (ou le milieu entre rangs). Les rangs sont déduits de l'espacement de plantation du type de culture et d'une position monde rastérisée, alignés sur des directions à 90 degrés ; actif seulement outil abaissé, à peu près aligné avec les rangs et à distance configurable du joueur. Lit 'vehicle.cropRowAdjustedNodes'."
+ },
+ "fonctions": {
+  "CropRowAdjustedNodes.prerequisitesPresent": {
+   "en": "Always returns true: no other specialization is required.",
+   "fr": "Renvoie toujours true : aucune autre spécialisation n'est requise."
+  },
+  "CropRowAdjustedNodes.initSpecialization": {
+   "en": "Registers the XML schema: max update distance and, per adjusted node, node, translation axis and limits, move speed, between-rows flag, fruit types and fold time limits.",
+   "fr": "Enregistre le schéma XML : distance maximale de mise à jour et, par noeud, noeud, axe et limites de translation, vitesse, drapeau entre-rangs, types de culture et limites de temps de repliage."
+  },
+  "CropRowAdjustedNodes.registerFunctions": {
+   "en": "Registers loadCropRowAdjustedNodeFromXML, updateCropRowAdjustedNode and getIsCropRowAdjustedNodeActive.",
+   "fr": "Enregistre loadCropRowAdjustedNodeFromXML, updateCropRowAdjustedNode et getIsCropRowAdjustedNodeActive."
+  },
+  "CropRowAdjustedNodes.registerEventListeners": {
+   "en": "Subscribes to load and update.",
+   "fr": "S'abonne aux événements de chargement et de mise à jour."
+  },
+  "CropRowAdjustedNodes:onLoad": {
+   "en": "Loads all adjusted nodes from XML and the max update distance; removes the update listener if none loaded.",
+   "fr": "Charge tous les noeuds ajustés depuis le XML et la distance maximale de mise à jour ; retire l'écouteur de mise à jour si aucun n'est chargé."
+  },
+  "CropRowAdjustedNodes:onUpdate": {
+   "en": "Each frame, if the vehicle is closer to the player than the max update distance, updates every adjusted node.",
+   "fr": "À chaque image, si le véhicule est plus proche du joueur que la distance maximale, met à jour chaque noeud ajusté."
+  },
+  "CropRowAdjustedNodes:loadCropRowAdjustedNodeFromXML": {
+   "en": "Loads one adjusted node: creates a reference transform group beside it, stores start translation, axis, limits, speed (converted from m/s to m/ms), between-rows flag, fruit types and fold limits. Returns false with a warning if the node or the fruit types are missing.",
+   "fr": "Charge un noeud ajusté : crée un groupe de transformation de référence à côté, mémorise translation initiale, axe, limites, vitesse (m/s converti en m/ms), drapeau entre-rangs, cultures et limites de repliage. Renvoie false avec avertissement si le noeud ou les cultures manquent."
+  },
+  "CropRowAdjustedNodes:updateCropRowAdjustedNode": {
+   "en": "Computes the node's lateral offset to the nearest row from the fruit type under it, clamps it to the min/max translation and moves the node toward it at the configured speed. Returns to the start position when it becomes inactive.",
+   "fr": "Calcule le décalage latéral du noeud vers le rang le plus proche d'après la culture située dessous, le borne aux translations min/max et déplace le noeud vers lui à la vitesse configurée. Revient à sa position initiale quand il devient inactif."
+  },
+  "CropRowAdjustedNodes:getIsCropRowAdjustedNodeActive": {
+   "en": "Returns true only when the fold time is within the node's limits, the implement is lowered, and its heading is within CropRowAdjustedNodes.MAX_ACTIVE_ANGLE (value not in this file) of a multiple of 90 degrees.",
+   "fr": "Renvoie true seulement si le temps de repliage est dans les limites du noeud, l'outil est abaissé et son cap est à moins de CropRowAdjustedNodes.MAX_ACTIVE_ANGLE (valeur absente de ce fichier) d'un multiple de 90 degrés."
+  }
+ }
+}

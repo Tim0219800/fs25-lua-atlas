@@ -1,0 +1,53 @@
+{
+ "fichier": "placeables/specializations/PlaceableDestructible.lua",
+ "module": {
+  "en": "Placeable specialization that lets a constructible placeable be destroyed and repaired by moving between its constructible states (XML `destruct` and `repair` transitions, resolved through `getConstructibleStateIndexByName`). It requires `PlaceableConstructible`, adds an optional player trigger with an activatable, a repair bonus and a destruction sound, and saves the repairing farm id. Many of its registered functions (`destruct`, `destructed`, `startRepairDestructible`, `finalizeConstruction`, etc.) have no body in the dump: UNVERIFIED.",
+  "fr": "Spécialisation de placeable qui permet à un placeable constructible d'être détruit puis réparé en passant d'un état constructible à un autre (transitions XML `destruct` et `repair`, résolues via `getConstructibleStateIndexByName`). Elle requiert `PlaceableConstructible`, ajoute un déclencheur joueur optionnel avec un activable, un bonus de réparation et un son de destruction, et sauvegarde l'id de la ferme qui répare. Beaucoup de ses fonctions enregistrées (`destruct`, `destructed`, `startRepairDestructible`, `finalizeConstruction`, etc.) n'ont pas de corps dans le dump : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlaceableDestructible.registerXMLPaths": {
+   "en": "Declares the `destructible` XML keys: trigger node, destruct and repair state transitions (`from`/`to`), repair bonus and a `destructed` sound.",
+   "fr": "Déclare les clés XML `destructible` : nœud de déclencheur, transitions d'état de destruction et de réparation (`from`/`to`), bonus de réparation et son `destructed`."
+  },
+  "PlaceableDestructible.registerSavegameXMLPaths": {
+   "en": "Declares the savegame key `repairingFarm#id`.",
+   "fr": "Déclare la clé de sauvegarde `repairingFarm#id`."
+  },
+  "PlaceableDestructible.prerequisitesPresent": {
+   "en": "Returns true only if the `PlaceableConstructible` specialization is present.",
+   "fr": "Renvoie true seulement si la spécialisation `PlaceableConstructible` est présente."
+  },
+  "PlaceableDestructible.registerFunctions": {
+   "en": "Registers seven functions, among them `destruct`, `destructed`, `startRepairDestructible`, `getCanRepairDestructible`, `getCanBeDestructedByTwister` and `onDestructibleTriggerCallback`. Only the trigger callback has a body in the dump.",
+   "fr": "Enregistre sept fonctions, dont `destruct`, `destructed`, `startRepairDestructible`, `getCanRepairDestructible`, `getCanBeDestructedByTwister` et `onDestructibleTriggerCallback`. Seul le rappel du déclencheur a un corps dans le dump."
+  },
+  "PlaceableDestructible.registerOverwrittenFunctions": {
+   "en": "Overrides `finalizeConstruction`; its replacement has no body in the dump (UNVERIFIED).",
+   "fr": "Surcharge `finalizeConstruction` ; son remplacement n'a pas de corps dans le dump (NON VÉRIFIÉ)."
+  },
+  "PlaceableDestructible.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete` and `onFinalizePlacement`; no `onDelete` body appears in the dump (UNVERIFIED).",
+   "fr": "S'abonne à `onLoad`, `onDelete` et `onFinalizePlacement` ; aucun corps d'`onDelete` n'apparaît dans le dump (NON VÉRIFIÉ)."
+  },
+  "PlaceableDestructible:onLoad": {
+   "en": "Builds the destruct and repair transition tables from the XML by state name (logging an XML error on an unknown state), reads the repair bonus and trigger node (warning if it lacks the player collision bit), loads the destruction sound on clients and creates the `DestructibleActivatable`.",
+   "fr": "Construit les tables de transition de destruction et de réparation depuis le XML par nom d'état (erreur XML si un état est inconnu), lit le bonus de réparation et le nœud de déclencheur (avertissement s'il n'a pas le bit de collision joueur), charge le son de destruction côté client et crée le `DestructibleActivatable`."
+  },
+  "PlaceableDestructible:onFinalizePlacement": {
+   "en": "Registers the destructible trigger callback on the trigger node, if one is defined.",
+   "fr": "Enregistre le rappel du déclencheur de destruction sur le nœud de déclencheur, s'il est défini."
+  },
+  "PlaceableDestructible:saveToXMLFile": {
+   "en": "Saves the repairing farm id when one is set.",
+   "fr": "Sauvegarde l'id de la ferme qui répare, s'il est défini."
+  },
+  "PlaceableDestructible:loadFromXMLFile": {
+   "en": "Restores the repairing farm id if the farm still exists; otherwise logs a warning. Note: the warning passes `xmlFile` as first argument of `Logging.warning`, which looks like a mistake.",
+   "fr": "Restaure l'id de la ferme qui répare si la ferme existe encore, sinon journalise un avertissement. À noter : l'avertissement passe `xmlFile` comme premier argument de `Logging.warning`, ce qui ressemble à une erreur."
+  },
+  "PlaceableDestructible:onDestructibleTriggerCallback": {
+   "en": "Trigger callback: adds the destructible activatable when the local player enters, removes it when the player leaves.",
+   "fr": "Rappel du déclencheur : ajoute l'activable de destruction quand le joueur local entre, le retire quand il sort."
+  }
+ }
+}

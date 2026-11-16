@@ -1,0 +1,29 @@
+{
+ "fichier": "ship/ferry/FerryStartEvent.lua",
+ "module": {
+  "en": "Network event to start a ferry. The client asks, the server runs `ferry:start(connection)` and answers with an error code; the client then calls `onStarted` or `onStartFailed`. The `Ferry` class and its `ERROR_*` constants are not in this file (UNVERIFIED). Note: the doc comment says washing stations, apparently copied.",
+  "fr": "Événement réseau pour démarrer un ferry. Le client demande, le serveur exécute `ferry:start(connection)` et répond avec un code d'erreur ; le client appelle alors `onStarted` ou `onStartFailed`. La classe `Ferry` et ses constantes `ERROR_*` ne sont pas dans ce fichier (NON VÉRIFIÉ). À noter : le commentaire de doc parle de stations de lavage, apparemment copié."
+ },
+ "fonctions": {
+  "FerryStartEvent.emptyNew": {
+   "en": "Creates an empty event, used when reading from a stream.",
+   "fr": "Crée un événement vide, utilisé lors de la lecture d'un flux."
+  },
+  "FerryStartEvent.new": {
+   "en": "Creates the event for the given ferry. The error code is not set here; the server must set `errorCode` before sending its answer.",
+   "fr": "Crée l'événement pour le ferry donné. Le code d'erreur n'est pas défini ici ; le serveur doit renseigner `errorCode` avant d'envoyer sa réponse."
+  },
+  "FerryStartEvent:readStream": {
+   "en": "Reads the ferry node object, and on the client also the error code (`Ferry.ERROR_SEND_NUM_BITS` bits), then calls `run`.",
+   "fr": "Lit l'objet node du ferry et, côté client, aussi le code d'erreur (`Ferry.ERROR_SEND_NUM_BITS` bits), puis appelle `run`."
+  },
+  "FerryStartEvent:writeStream": {
+   "en": "Writes the ferry node object; when sent by the server, also writes `errorCode`.",
+   "fr": "Écrit l'objet node du ferry ; quand l'envoi vient du serveur, écrit aussi `errorCode`."
+  },
+  "FerryStartEvent:run": {
+   "en": "Server: calls `ferry:start(connection)`. Client: calls `ferry:onStarted()` on `Ferry.ERROR_SUCCESS`, else `ferry:onStartFailed(errorCode)`.",
+   "fr": "Serveur : appelle `ferry:start(connection)`. Client : appelle `ferry:onStarted()` pour `Ferry.ERROR_SUCCESS`, sinon `ferry:onStartFailed(errorCode)`."
+  }
+ }
+}

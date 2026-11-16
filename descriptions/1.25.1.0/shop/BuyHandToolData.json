@@ -1,0 +1,49 @@
+{
+ "fichier": "shop/BuyHandToolData.lua",
+ "module": {
+  "en": "Data holder for buying a hand tool: store item, free-of-charge flag, owner farm and price. It can be sent over the network (readStream/writeStream) and executes the purchase through HandToolLoadingData. The onBought callback used by buy is not defined in this file (UNVERIFIED), and `holder` is only read here, never set.",
+  "fr": "Conteneur de données pour l'achat d'un outil à main : article de boutique, drapeau de gratuité, ferme propriétaire et prix. Il peut être envoyé sur le réseau (readStream/writeStream) et exécute l'achat via HandToolLoadingData. Le callback onBought utilisé par buy n'est pas défini dans ce fichier (NON VÉRIFIÉ), et `holder` n'est ici que lu, jamais défini."
+ },
+ "fonctions": {
+  "BuyHandToolData.new": {
+   "en": "Creates empty purchase data: no store item, not free, owner AccessHandler.EVERYONE, price 0 and no holder.",
+   "fr": "Crée des données d'achat vides : pas d'article, non gratuit, propriétaire AccessHandler.EVERYONE, prix 0 et pas de porteur."
+  },
+  "BuyHandToolData:isValid": {
+   "en": "Returns true when a store item is set; on console builds the item's XML file must also exist.",
+   "fr": "Retourne true quand un article de boutique est défini ; sur les versions console, le fichier XML de l'article doit aussi exister."
+  },
+  "BuyHandToolData:setStoreItem": {
+   "en": "Sets the store item to buy.",
+   "fr": "Définit l'article de boutique à acheter."
+  },
+  "BuyHandToolData:setIsFreeOfCharge": {
+   "en": "Sets whether the tool is given for free, for example as a reward.",
+   "fr": "Définit si l'outil est offert gratuitement, par exemple comme récompense."
+  },
+  "BuyHandToolData:setOwnerFarmId": {
+   "en": "Sets the id of the farm that will own the tool.",
+   "fr": "Définit l'id de la ferme qui sera propriétaire de l'outil."
+  },
+  "BuyHandToolData:setPrice": {
+   "en": "Sets the purchase price directly, overriding any computed price.",
+   "fr": "Définit directement le prix d'achat, en remplaçant tout prix calculé."
+  },
+  "BuyHandToolData:updatePrice": {
+   "en": "Recomputes the price from the economy manager's buy price for the store item.",
+   "fr": "Recalcule le prix à partir du prix d'achat du gestionnaire d'économie pour l'article de boutique."
+  },
+  "BuyHandToolData:readStream": {
+   "en": "Reads the store item (by lower-cased XML filename), the free flag and the owner farm id from a network stream. The price is not transmitted.",
+   "fr": "Lit l'article de boutique (par nom de fichier XML en minuscules), le drapeau de gratuité et l'id de la ferme propriétaire depuis un flux réseau. Le prix n'est pas transmis."
+  },
+  "BuyHandToolData:writeStream": {
+   "en": "Writes the store item XML filename, the free flag and the owner farm id to a network stream, mirroring readStream.",
+   "fr": "Écrit le nom de fichier XML de l'article, le drapeau de gratuité et l'id de la ferme propriétaire dans un flux réseau, en miroir de readStream."
+  },
+  "BuyHandToolData:buy": {
+   "en": "Starts the purchase by loading the hand tool with a HandToolLoadingData built from this data. The optional callback is wrapped and called through self.onBought after loading, which is not defined here (UNVERIFIED).",
+   "fr": "Lance l'achat en chargeant l'outil à main avec un HandToolLoadingData construit à partir de ces données. Le callback optionnel est encapsulé et appelé via self.onBought après chargement, non défini ici (NON VÉRIFIÉ)."
+  }
+ }
+}

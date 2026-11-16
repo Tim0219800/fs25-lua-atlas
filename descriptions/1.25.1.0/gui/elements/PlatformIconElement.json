@@ -1,0 +1,25 @@
+{
+ "fichier": "gui/elements/PlatformIconElement.lua",
+ "module": {
+  "en": "Bitmap element that shows the icon of a gaming platform (identified by a PlatformId) by selecting an image slice. On PS5, Xbox Series and Microsoft Store builds only the icon of the same platform is shown; others fall back to a generic slice. The PlatformId, SLICES and ALLOW_COLOR_CHANGE tables are defined elsewhere (UNVERIFIED).",
+  "fr": "Élément bitmap qui affiche l'icône d'une plateforme de jeu (identifiée par un PlatformId) en sélectionnant une tranche d'image. Sur les versions PS5, Xbox Series et Microsoft Store, seule l'icône de la même plateforme est affichée ; les autres utilisent une tranche générique. Les tables PlatformId, SLICES et ALLOW_COLOR_CHANGE sont définies ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlatformIconElement.new": {
+   "en": "Constructor. Builds a BitmapElement and returns it with no extra fields.",
+   "fr": "Constructeur. Construit un BitmapElement et le retourne sans champ supplémentaire."
+  },
+  "PlatformIconElement:delete": {
+   "en": "Deletes the element by calling the parent delete; no extra cleanup.",
+   "fr": "Supprime l'élément en appelant le delete du parent ; aucun nettoyage supplémentaire."
+  },
+  "PlatformIconElement:copyAttributes": {
+   "en": "Copies the platformId from a source element after the base copy.",
+   "fr": "Copie le platformId depuis un élément source après la copie de base."
+  },
+  "PlatformIconElement:setPlatformId": {
+   "en": "Selects the icon slice for a platform id, replacing it with 0 (generic) when the current platform only allows its own icon. Backs up and neutralizes the selected color for platforms not allowing color change. Note: the source comment mentions a terrain layer, which looks like a copy-paste leftover.",
+   "fr": "Sélectionne la tranche d'icône pour un id de plateforme, en le remplaçant par 0 (générique) si la plateforme courante n'autorise que sa propre icône. Sauvegarde et neutralise la couleur sélectionnée pour les plateformes sans changement de couleur. À noter : le commentaire source parle de couche de terrain, ce qui semble un reste de copier-coller."
+  }
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "fichier": "vehicles/ai/AIDriveStrategyConveyor.lua",
+ "module": {
+  "en": "AI drive strategy (subclass of AIDriveStrategy) that drives a vehicle with an aiConveyorBelt definition back and forth between two world targets, using wheel nodes of that vehicle as references. It suits conveyor-type machines that sweep sideways while moving, and relies on vehicle.aiConveyorBelt fields (wheel indices, current angle, speed).",
+  "fr": "Stratégie de conduite IA (sous-classe d'AIDriveStrategy) qui fait avancer et reculer un véhicule disposant d'une définition aiConveyorBelt entre deux cibles du monde, en s'appuyant sur ses noeuds de roues. Destinée aux machines de type convoyeur qui balaient latéralement en se déplaçant ; elle utilise les champs vehicle.aiConveyorBelt (indices de roues, angle courant, vitesse)."
+ },
+ "fonctions": {
+  "AIDriveStrategyConveyor.new": {
+   "en": "Constructor, only builds the object from the parent class with the strategy metatable.",
+   "fr": "Constructeur, construit simplement l'objet à partir de la classe parente avec la métatable de la stratégie."
+  },
+  "AIDriveStrategyConveyor:setAIVehicle": {
+   "en": "Calls the parent method, then from the back and center wheel nodes and the belt angle computes the distance to cover and two world targets (left and right). Resets the target index and moved distance.",
+   "fr": "Appelle la méthode parente, puis, à partir des noeuds de roue arrière et centrale et de l'angle du convoyeur, calcule la distance à parcourir et deux cibles monde (gauche et droite). Réinitialise l'indice de cible et la distance parcourue."
+  },
+  "AIDriveStrategyConveyor:update": {
+   "en": "Empty override, does nothing.",
+   "fr": "Surcharge vide, ne fait rien."
+  },
+  "AIDriveStrategyConveyor:getDriveData": {
+   "en": "Accumulates the distance moved by the back wheel, toggles between the two targets (and flips direction) once the distance is reached, the first time doubling it. Returns target x, z, direction and a speed scaled by a sine of progress (clamped to 0.1 to 0.5, then doubled).",
+   "fr": "Cumule la distance parcourue par la roue arrière et alterne entre les deux cibles (en inversant le sens) une fois la distance atteinte, la première fois en la doublant. Renvoie x, z de la cible, le sens et une vitesse modulée par un sinus de la progression (bornée de 0,1 à 0,5, puis doublée)."
+  }
+ }
+}

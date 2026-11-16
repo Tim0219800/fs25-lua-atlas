@@ -1,0 +1,101 @@
+{
+ "fichier": "handTools/specializations/HandToolSprayCan.lua",
+ "module": {
+  "en": "Hand tool specialization for the tree marking spray can. The player aims at a tree (split shape) within a short distance; a SprayCanEvent runs on the server and the marker is applied through the mission's tree marker system after a delay. The number of remaining markers is saved to the savegame and synchronised to clients. Several marker types can be cycled.",
+  "fr": "Spécialisation d'outil à main pour la bombe de marquage d'arbres. Le joueur vise un arbre (split shape) à courte distance ; un SprayCanEvent s'exécute sur le serveur et le marqueur est appliqué via le système de marqueurs d'arbres de la mission après un délai. Le nombre de marqueurs restants est sauvegardé et synchronisé vers les clients. Plusieurs types de marqueur peuvent être parcourus."
+ },
+ "fonctions": {
+  "HandToolSprayCan.registerXMLPaths": {
+   "en": "Registers the `handTool.sprayCan` attributes (shake node, colour material slot, colour, distance, delay, total markers) plus the spraying sound and effects.",
+   "fr": "Enregistre les attributs de `handTool.sprayCan` (nœud de secousse, emplacement de matériau coloré, couleur, distance, délai, nombre total de marqueurs) ainsi que le son et les effets de pulvérisation."
+  },
+  "HandToolSprayCan.registerSavegameXMLPaths": {
+   "en": "Registers the savegame key `sprayCan#remainingNumMarkers`.",
+   "fr": "Enregistre la clé de sauvegarde `sprayCan#remainingNumMarkers`."
+  },
+  "HandToolSprayCan.registerFunctions": {
+   "en": "Registers `tryToAddTreeMarker`, `processDelayedMarker`, `setIsSpraying`, `changeTreeMarkerType`, `getIsSprayingAllowed` and `activateSpraying`.",
+   "fr": "Enregistre `tryToAddTreeMarker`, `processDelayedMarker`, `setIsSpraying`, `changeTreeMarkerType`, `getIsSprayingAllowed` et `activateSpraying`."
+  },
+  "HandToolSprayCan.registerEventListeners": {
+   "en": "Subscribes to load, post-load, delete, update, draw, full and update stream read/write, action events registration, and held start/end.",
+   "fr": "Abonne la spécialisation aux événements de chargement, post-chargement, suppression, mise à jour, affichage, lecture/écriture des flux complet et de mise à jour, enregistrement des actions, et début/fin de prise en main."
+  },
+  "HandToolSprayCan.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "HandToolSprayCan:onLoad": {
+   "en": "Reads marker count (valid range 1 to 255, otherwise 255 with a warning), colour, detection distance (default 1.5), delay, colour slot and shake node; loads effects (water type) and sound; resolves the tree marker type and crosshairs. Returns true.",
+   "fr": "Lit le nombre de marqueurs (plage valide 1 à 255, sinon 255 avec avertissement), la couleur, la distance de détection (1,5 par défaut), le délai, l'emplacement de couleur et le nœud de secousse ; charge les effets (type eau) et le son ; résout le type de marqueur et les réticules. Renvoie true."
+  },
+  "HandToolSprayCan:onPostLoad": {
+   "en": "Restores `remainingNumMarkers` from the savegame, clamped between 1 and the maximum, when the savegame has the `sprayCan` key.",
+   "fr": "Restaure `remainingNumMarkers` depuis la sauvegarde, borné entre 1 et le maximum, si la clé `sprayCan` existe."
+  },
+  "HandToolSprayCan:onDelete": {
+   "en": "Applies any pending delayed marker, then frees effects, spraying sound and both crosshairs.",
+   "fr": "Applique un éventuel marqueur différé en attente, puis libère les effets, le son de pulvérisation et les deux réticules."
+  },
+  "HandToolSprayCan:onWriteStream": {
+   "en": "Server to client initial sync: writes the remaining marker count as a byte.",
+   "fr": "Synchronisation initiale serveur vers client : écrit le nombre de marqueurs restants sur un octet."
+  },
+  "HandToolSprayCan:onReadStream": {
+   "en": "Client side: reads the remaining marker count sent by the server.",
+   "fr": "Côté client : lit le nombre de marqueurs restants envoyé par le serveur."
+  },
+  "HandToolSprayCan:onWriteUpdateStream": {
+   "en": "Server to client: when the dirty flag is set, writes the remaining marker count as a byte.",
+   "fr": "Serveur vers client : quand l'indicateur de modification est actif, écrit le nombre de marqueurs restants sur un octet."
+  },
+  "HandToolSprayCan:onReadUpdateStream": {
+   "en": "Client side: reads the remaining marker count if the update flag is set.",
+   "fr": "Côté client : lit le nombre de marqueurs restants si l'indicateur de mise à jour est actif."
+  },
+  "HandToolSprayCan:saveToXMLFile": {
+   "en": "Saves the remaining marker count to `#remainingNumMarkers` under the given key.",
+   "fr": "Sauvegarde le nombre de marqueurs restants dans `#remainingNumMarkers` sous la clé donnée."
+  },
+  "HandToolSprayCan:onUpdate": {
+   "en": "For the owning player, reads the targeted tree and on a fresh press sends a SprayCanEvent to the server if markers remain and the land is accessible; otherwise shows a blinking warning. Also processes the delayed marker, animates the shake and stops spraying after its duration.",
+   "fr": "Pour le joueur propriétaire, lit l'arbre visé et, à un nouvel appui, envoie un SprayCanEvent au serveur s'il reste des marqueurs et que le terrain est accessible ; sinon affiche un avertissement clignotant. Traite aussi le marqueur différé, anime la secousse et arrête la pulvérisation après sa durée."
+  },
+  "HandToolSprayCan:onDraw": {
+   "en": "Draws the marker type icon and, if a tree is targeted, the tree crosshair. Draws nothing without a marker type or with no markers left.",
+   "fr": "Affiche l'icône du type de marqueur et, si un arbre est visé, le réticule d'arbre. N'affiche rien sans type de marqueur ou sans marqueur restant."
+  },
+  "HandToolSprayCan:onHeldStart": {
+   "en": "For the owning player, adds a TREE target type (0.5 minimum, detection distance) with a filter that keeps only split-shape meshes.",
+   "fr": "Pour le joueur propriétaire, ajoute un type de cible TREE (0,5 minimum, distance de détection) avec un filtre ne gardant que les maillages split shape."
+  },
+  "HandToolSprayCan:onRegisterActionEvents": {
+   "en": "Registers SPRAYCAN_CHANGE_MARKER (cycles marker type) and ACTIVATE_HANDTOOL (spray), with texts and priority. Skipped if the tool is not active for input.",
+   "fr": "Enregistre SPRAYCAN_CHANGE_MARKER (change le type de marqueur) et ACTIVATE_HANDTOOL (pulvériser), avec textes et priorité. Ignoré si l'outil n'est pas actif pour les entrées."
+  },
+  "HandToolSprayCan:activateSpraying": {
+   "en": "Input callback: records whether the activate input is pressed for this frame.",
+   "fr": "Rappel d'entrée : enregistre si l'entrée d'activation est appuyée pour cette image."
+  },
+  "HandToolSprayCan:tryToAddTreeMarker": {
+   "en": "Called when the server-side event is processed: starts the spray animation, decrements the remaining markers, flags sync on the server and, if a tree is given and allowed, stores a delayed marker to apply after `sprayDelay`.",
+   "fr": "Appelée au traitement de l'événement côté serveur : lance l'animation de pulvérisation, décrémente les marqueurs restants, signale la synchronisation sur le serveur et, si un arbre est fourni et autorisé, mémorise un marqueur différé à appliquer après `sprayDelay`."
+  },
+  "HandToolSprayCan:processDelayedMarker": {
+   "en": "Applies the pending delayed marker via the tree marker system (camera based, with the spray colour) if the shape still exists, then clears it.",
+   "fr": "Applique le marqueur différé en attente via le système de marqueurs d'arbres (basé sur la caméra, avec la couleur de la bombe) si la forme existe encore, puis l'efface."
+  },
+  "HandToolSprayCan:setIsSpraying": {
+   "en": "Starts or stops the spray effects and sound. Starting needs the tool to be held and sets the shake end time; stopping can optionally reset the effects when `force` is true.",
+   "fr": "Démarre ou arrête les effets et le son de pulvérisation. Le démarrage exige que l'outil soit tenu et fixe la fin de la secousse ; l'arrêt peut réinitialiser les effets si `force` est true."
+  },
+  "HandToolSprayCan:changeTreeMarkerType": {
+   "en": "Input callback: advances to the next tree marker type (wrapping to 1) and rebuilds the marker icon crosshair.",
+   "fr": "Rappel d'entrée : passe au type de marqueur suivant (retour à 1 en fin de liste) et recrée le réticule d'icône du marqueur."
+  },
+  "HandToolSprayCan:getIsSprayingAllowed": {
+   "en": "Returns true for no shape; otherwise true only if the local player's farm may access the land at the shape's position.",
+   "fr": "Renvoie true sans forme ; sinon true uniquement si la ferme du joueur local a accès au terrain à la position de la forme."
+  }
+ }
+}

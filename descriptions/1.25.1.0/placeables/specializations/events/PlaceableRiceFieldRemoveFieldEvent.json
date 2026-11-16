@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableRiceFieldRemoveFieldEvent.lua",
+ "module": {
+  "en": "Network event that deletes one field of a PlaceableRiceField by index. A client sends it to the server, which applies it and broadcasts it back to all clients.",
+  "fr": "Événement réseau qui supprime un champ d'un PlaceableRiceField par son index. Un client l'envoie au serveur, qui l'applique puis le rediffuse à tous les clients."
+ },
+ "fonctions": {
+  "PlaceableRiceFieldRemoveFieldEvent.emptyNew": {
+   "en": "Creates an empty event bound to the main network channel (`NetworkNode.CHANNEL_MAIN`).",
+   "fr": "Crée un événement vide lié au canal réseau principal (`NetworkNode.CHANNEL_MAIN`)."
+  },
+  "PlaceableRiceFieldRemoveFieldEvent.new": {
+   "en": "Builds the event from the rice field placeable and the index of the field to remove.",
+   "fr": "Construit l'événement à partir du placeable de rizière et de l'index du champ à supprimer."
+  },
+  "PlaceableRiceFieldRemoveFieldEvent:readStream": {
+   "en": "Reads the rice field object and a UInt8 field index, then runs the event.",
+   "fr": "Lit l'objet rizière et un index de champ UInt8, puis exécute l'événement."
+  },
+  "PlaceableRiceFieldRemoveFieldEvent:writeStream": {
+   "en": "Writes the rice field object and the UInt8 field index.",
+   "fr": "Écrit l'objet rizière et l'index de champ UInt8."
+  },
+  "PlaceableRiceFieldRemoveFieldEvent:run": {
+   "en": "If the rice field is synchronized, removes the field via `removeFieldByIndex`; when received by the server (the connection is not the server's), it then rebroadcasts the same event to all clients.",
+   "fr": "Si la rizière est synchronisée, supprime le champ via `removeFieldByIndex` ; reçu par le serveur (la connexion n'est pas celle du serveur), il rediffuse ensuite le même événement à tous les clients."
+  }
+ }
+}

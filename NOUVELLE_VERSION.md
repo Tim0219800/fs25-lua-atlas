@@ -6,7 +6,7 @@
 2. **Sources** : extraire `sdk/debugger/gameSource.zip` dans un **nouveau** dossier hors du dépôt, sans écraser l'ancien.
 3. **Extraction statique** :
    `python -I outils/extraire.py "<extrait>/dataS/scripts" "<FS25>/sdk/debugger/scriptBinding.xml" donnees/<v>/statique.json`
-   Corriger au passage `gameVersion` dans `extraire.py`.
+   La version du jeu est tirée du nom du dossier de sortie (ou d'un 4e argument).
 4. **Relevé en jeu** : installer `outils/mod_releve/`, charger une partie, puis
    `python -I outils/importer_releve.py <v> "<profil FS25>/atlas_releve.tsv"`.
    Vérifier dans `log.txt` que le mod est accepté : `descVersion` peut augmenter d'une version du jeu à l'autre.

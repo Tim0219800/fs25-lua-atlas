@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/events/PlaceableFenceAddSegmentEvent.lua",
+ "module": {
+  "en": "Network event (subclass of Event) for adding one fence segment from the build tool. A client sends it to the server, which creates the segment, charges the purchase price to the fence owner farm and broadcasts it to the other clients. Local listeners are told via a message-center publish.",
+  "fr": "Événement réseau (sous-classe d'Event) pour ajouter un segment de clôture depuis l'outil de construction. Un client l'envoie au serveur, qui crée le segment, débite le prix d'achat de la ferme propriétaire de la clôture et le diffuse aux autres clients. Les écouteurs locaux sont prévenus via une publication du centre de messages."
+ },
+ "fonctions": {
+  "PlaceableFenceAddSegmentEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream reading.",
+   "fr": "Crée une instance d'événement vide pour la lecture de flux."
+  },
+  "PlaceableFenceAddSegmentEvent.new": {
+   "en": "Creates the event with the fence, segment end points (x1, z1, x2, z2), the render-first and render-last flags, an optional gate index and the price.",
+   "fr": "Crée l'événement avec la clôture, les extrémités du segment (x1, z1, x2, z2), les drapeaux de rendu premier et dernier, un indice de portail optionnel et le prix."
+  },
+  "PlaceableFenceAddSegmentEvent:readStream": {
+   "en": "Reads the fence, four coordinates, both render flags, the gate index (0 means none) and the price, then calls `run`.",
+   "fr": "Lit la clôture, quatre coordonnées, les deux drapeaux de rendu, l'indice de portail (0 signifie aucun) et le prix, puis appelle `run`."
+  },
+  "PlaceableFenceAddSegmentEvent:writeStream": {
+   "en": "Writes the same fields in the same order (gate index written as 0 when nil).",
+   "fr": "Écrit les mêmes champs dans le même ordre (indice de portail écrit 0 si nil)."
+  },
+  "PlaceableFenceAddSegmentEvent:run": {
+   "en": "If the fence is synchronized, creates and adds the segment (built synchronously on clients when it has a gate) and publishes the add-segment message. On the server side it also deducts the price from the owner farm as a property purchase and broadcasts the event.",
+   "fr": "Si la clôture est synchronisée, crée et ajoute le segment (construit de façon synchrone sur les clients s'il a un portail) et publie le message d'ajout de segment. Côté serveur, elle déduit aussi le prix de la ferme propriétaire comme achat de propriété et diffuse l'événement."
+  }
+ }
+}

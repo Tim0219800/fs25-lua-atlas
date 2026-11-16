@@ -1,0 +1,53 @@
+{
+ "fichier": "vehicles/specializations/HUDInfoTrigger.lua",
+ "module": {
+  "en": "Vehicle specialization that adds a trigger zone around a vehicle. While the local player, on foot or inside a vehicle belonging to the same vehicle chain, stands in the zone, the vehicle HUD extensions of the root vehicle are drawn even though the player is not controlling it. The trigger tracks entered objects by network id, so it is meant for the local client's display only.",
+  "fr": "Spécialisation de véhicule qui ajoute une zone de déclenchement autour d'un véhicule. Tant que le joueur local, à pied ou dans un véhicule de la même chaîne, se trouve dans la zone, les extensions HUD du véhicule racine sont dessinées bien que le joueur ne le conduise pas. Le trigger suit les objets entrés par identifiant réseau ; il sert à l'affichage du client local uniquement."
+ },
+ "fonctions": {
+  "HUDInfoTrigger.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite on other specializations.",
+   "fr": "Renvoie toujours true : aucun prérequis envers d'autres spécialisations."
+  },
+  "HUDInfoTrigger.initSpecialization": {
+   "en": "Registers the XML key vehicle.hudInfoTrigger#triggerNode, the node used as trigger.",
+   "fr": "Enregistre la clé XML vehicle.hudInfoTrigger#triggerNode, le nœud utilisé comme trigger."
+  },
+  "HUDInfoTrigger.registerFunctions": {
+   "en": "Registers getIsPlayerInHudInfoTrigger and getAllowHudInfoTrigger on the vehicle type.",
+   "fr": "Enregistre getIsPlayerInHudInfoTrigger et getAllowHudInfoTrigger sur le type de véhicule."
+  },
+  "HUDInfoTrigger.registerOverwrittenFunctions": {
+   "en": "Empty: nothing is overridden.",
+   "fr": "Vide : rien n'est surchargé."
+  },
+  "HUDInfoTrigger.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad, onDelete and onUpdate.",
+   "fr": "Abonne la spécialisation à onLoad, onDelete et onUpdate."
+  },
+  "HUDInfoTrigger:onLoad": {
+   "en": "Reads the trigger node and registers a trigger callback on it. Without a trigger node, removes the onDelete and onUpdate listeners.",
+   "fr": "Lit le nœud de trigger et y enregistre un callback de trigger. Sans nœud, retire les écouteurs onDelete et onUpdate."
+  },
+  "HUDInfoTrigger:onDelete": {
+   "en": "Removes the trigger registered in onLoad, if any.",
+   "fr": "Retire le trigger enregistré dans onLoad, le cas échéant."
+  },
+  "HUDInfoTrigger:onUpdate": {
+   "en": "When the vehicle is not the one controlled and the local player is in the trigger, draws the root vehicle's HUD and keeps the vehicle awake with raiseActive.",
+   "fr": "Quand ce véhicule n'est pas celui contrôlé et que le joueur local est dans le trigger, dessine le HUD du véhicule racine et garde le véhicule actif avec raiseActive."
+  },
+  "HUDInfoTrigger.onHudInfoTriggerCallback": {
+   "en": "Trigger callback. Resolves the entering node to a game object or the local player and keeps a counter per network id: incremented on enter, decremented on leave and removed at zero. Ignores the vehicle itself.",
+   "fr": "Callback du trigger. Résout le nœud entrant en objet du jeu ou en joueur local et tient un compteur par identifiant réseau : incrémenté à l'entrée, décrémenté à la sortie et supprimé à zéro. Ignore le véhicule lui-même."
+  },
+  "HUDInfoTrigger:getAllowHudInfoTrigger": {
+   "en": "Returns true by default; other specializations can override it to forbid the HUD display.",
+   "fr": "Renvoie true par défaut ; d'autres spécialisations peuvent la surcharger pour interdire l'affichage du HUD."
+  },
+  "HUDInfoTrigger:getIsPlayerInHudInfoTrigger": {
+   "en": "Returns true if the local player is inside the trigger: directly on foot, or through any vehicle of the player's current vehicle chain. Returns false when display is not allowed or there is no local player.",
+   "fr": "Renvoie true si le joueur local est dans le trigger : directement à pied, ou via un véhicule de la chaîne du véhicule actuel du joueur. Renvoie false si l'affichage n'est pas autorisé ou s'il n'y a pas de joueur local."
+  }
+ }
+}

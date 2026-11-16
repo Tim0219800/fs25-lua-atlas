@@ -1,0 +1,13 @@
+{
+ "fichier": "debug/elements/DebugCylinder.lua",
+ "module": {
+  "en": "DebugCylinder is a debug element for a cylinder, derived from DebugElement. Only `draw` is present; `DebugCylinder.renderAtPosition` is absent from this dump (UNVERIFIED).",
+  "fr": "DebugCylinder est un élément de débogage pour un cylindre, dérivé de DebugElement. Seul `draw` est présent ; `DebugCylinder.renderAtPosition` est absent de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugCylinder:draw": {
+   "en": "Forwards position, radius, height, axis, colour, segment count, solid, ground alignment and text to `DebugCylinder.renderAtPosition`.",
+   "fr": "Transmet position, rayon, hauteur, axe, couleur, nombre de segments, option solide, alignement au sol et texte à `DebugCylinder.renderAtPosition`."
+  }
+ }
+}

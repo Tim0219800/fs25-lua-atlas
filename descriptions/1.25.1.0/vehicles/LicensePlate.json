@@ -1,0 +1,69 @@
+{
+ "fichier": "vehicles/LicensePlate.lua",
+ "module": {
+  "en": "One license plate object: an i3d node with several variations, each made of value nodes (characters or static parts) and optional materials. Instances are loaded from the map license plate XML by LicensePlateManager (global `g_licensePlateManager`), then cloned for each vehicle. It displays text with CharacterLine objects using the font material, can be coloured, validated and randomised, and also registers the XML paths of the plate definition. The CharacterLine, VehicleMaterial and font classes are outside this file (UNVERIFIED).",
+  "fr": "Objet représentant une plaque d'immatriculation : un noeud i3d avec plusieurs variations, chacune composée de noeuds de valeur (caractères ou parties statiques) et de matériaux optionnels. Les instances sont chargées depuis le XML de plaques de la carte par LicensePlateManager (global `g_licensePlateManager`), puis clonées pour chaque véhicule. Elle affiche du texte avec des objets CharacterLine via le matériau de police, peut être colorée, validée et tirée au hasard, et enregistre aussi les chemins XML de la définition de plaque. Les classes CharacterLine, VehicleMaterial et de police sont hors de ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "LicensePlate.new": {
+   "en": "Constructor. Starts at variation 1, position ANY, empty characters, and keeps a reference to `g_licensePlateManager`.",
+   "fr": "Constructeur. Démarre à la variation 1, position ANY, caractères vides, et garde une référence à `g_licensePlateManager`."
+  },
+  "LicensePlate:loadFromXML": {
+   "en": "Loads the plate from the map XML: type (ELONGATED by default), size, font settings, variations with their value nodes and materials, and an optional frame node. Fetches the font from the manager. Returns false on an unknown type or missing font.",
+   "fr": "Charge la plaque depuis le XML de la carte : type (ELONGATED par défaut), taille, réglages de police, variations avec leurs noeuds de valeur et matériaux, et un noeud de cadre optionnel. Récupère la police auprès du manager. Retourne false si le type est inconnu ou la police absente."
+  },
+  "LicensePlate:delete": {
+   "en": "Deletes the plate i3d node.",
+   "fr": "Supprime le noeud i3d de la plaque."
+  },
+  "LicensePlate:clone": {
+   "en": "Creates an independent copy with a cloned node, copied settings and variations (value nodes rebound to the clone), then applies the current variation. The frame is shown and added to the size only if `includeFrame` is true.",
+   "fr": "Crée une copie indépendante avec un noeud cloné, des réglages et variations copiés (noeuds de valeur rattachés au clone), puis applique la variation courante. Le cadre n'est affiché et ajouté à la taille que si `includeFrame` vaut true."
+  },
+  "LicensePlate:updateData": {
+   "en": "Applies variation, placement position and text: switches variation if needed, optionally validates the characters, then positions each value node and sets its text or visibility according to position and whether it is static. Note: indexing is byte-based, not UTF-8 safe.",
+   "fr": "Applique variation, position de placement et texte : change de variation si nécessaire, valide éventuellement les caractères, puis positionne chaque noeud de valeur et règle son texte ou sa visibilité selon la position et son caractère statique. À noter : l'indexation se fait par octet, sans gestion d'UTF-8."
+  },
+  "LicensePlate:setVariation": {
+   "en": "Switches to another variation: deletes the children of the old non-static value nodes, creates a centered CharacterLine for each new non-static value, and applies the variation materials matching the position. Does nothing for an unknown index.",
+   "fr": "Passe à une autre variation : supprime les enfants des anciens noeuds de valeur non statiques, crée une CharacterLine centrée pour chaque nouvelle valeur non statique, et applique les matériaux de la variation correspondant à la position. Sans effet pour un indice inconnu."
+  },
+  "LicensePlate:getFontSize": {
+   "en": "Returns two values: the maximum character width (font size times the font max width ratio) and the font size.",
+   "fr": "Retourne deux valeurs : la largeur maximale d'un caractère (taille de police multipliée par le ratio de largeur maximale de la police) et la taille de police."
+  },
+  "LicensePlate:setColorIndex": {
+   "en": "Looks up the manager color at this index and applies it with `setColor`. Does nothing if the index is invalid.",
+   "fr": "Cherche la couleur du manager à cet indice et l'applique avec `setColor`. Sans effet si l'indice est invalide."
+  },
+  "LicensePlate:getColor": {
+   "en": "Returns the color table (r, g, b) from the manager list at this index, or nil if the index does not exist.",
+   "fr": "Retourne la table de couleur (r, g, b) de la liste du manager à cet indice, ou nil si l'indice n'existe pas."
+  },
+  "LicensePlate:setColor": {
+   "en": "Colors the plate material named by the manager and sets the character shader parameter to the same RGB on all non-static value nodes of every variation.",
+   "fr": "Colorie le matériau de plaque nommé par le manager et règle le paramètre de shader des caractères sur le même RVB pour tous les noeuds de valeur non statiques de chaque variation."
+  },
+  "LicensePlate:getRandomCharacters": {
+   "en": "Returns a table of characters for a variation: fixed characters are kept, others are drawn at random from the font set matching the node type (letters, digits, special). The first random digit is never zero.",
+   "fr": "Retourne une table de caractères pour une variation : les caractères fixes sont conservés, les autres sont tirés au hasard dans l'ensemble de la police correspondant au type du noeud (lettres, chiffres, spéciaux). Le premier chiffre aléatoire n'est jamais zéro."
+  },
+  "LicensePlate:validateLicensePlateCharacters": {
+   "en": "Filters the given text (string or table) with `filterText`, and replaces each changed character with the first character of the allowed set of the matching value node. Returns the corrected characters in the same form. Byte-based, not UTF-8 safe.",
+   "fr": "Filtre le texte donné (chaîne ou table) avec `filterText` et remplace chaque caractère modifié par le premier caractère de l'ensemble autorisé du noeud de valeur correspondant. Retourne les caractères corrigés sous la même forme. Basé sur les octets, sans gestion d'UTF-8."
+  },
+  "LicensePlate:changeCharacter": {
+   "en": "Steps the character at a value index by `direction` through the allowed sets (letters, digits, special) of that node, moving to the neighbouring set at the ends and clamping at the extremes. Edits and returns the given table.",
+   "fr": "Fait avancer le caractère d'un indice de valeur de `direction` dans les ensembles autorisés (lettres, chiffres, spéciaux) de ce noeud, en passant à l'ensemble voisin aux extrémités et en bloquant aux bornes. Modifie et retourne la table fournie."
+  },
+  "LicensePlate:getFormattedString": {
+   "en": "Builds the displayed text from the stored characters, skipping static nodes and underscores and inserting a space before nodes marked as a new section. Returns nil when the plate has no characters.",
+   "fr": "Construit le texte affiché à partir des caractères stockés, en ignorant les noeuds statiques et les tirets bas et en insérant un espace avant les noeuds marqués comme nouvelle section. Retourne nil si la plaque n'a pas de caractères."
+  },
+  "LicensePlate.registerXMLPaths": {
+   "en": "Registers the XML schema paths of a plate definition (filename, node, type, size, font, variations, values, materials, frame). Note: the registered default height is 0.2 while `loadFromXML` uses 0.3.",
+   "fr": "Enregistre les chemins du schéma XML d'une définition de plaque (fichier, noeud, type, taille, police, variations, valeurs, matériaux, cadre). À noter : la hauteur par défaut enregistrée est 0,2 alors que `loadFromXML` utilise 0,3."
+  }
+ }
+}

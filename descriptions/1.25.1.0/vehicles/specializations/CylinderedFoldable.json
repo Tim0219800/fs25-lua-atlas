@@ -1,0 +1,37 @@
+{
+ "fichier": "vehicles/specializations/CylinderedFoldable.lua",
+ "module": {
+  "en": "Small glue specialization for vehicles that have both Cylindered (moving tools) and Foldable. It lets the moving tool states be applied at a chosen moment, once the fold animation has reached a given time, and it repairs the network sync order between the two. It requires Cylindered and Foldable and reads two attributes under vehicle.cylindered in the vehicle XML.",
+  "fr": "Petite spécialisation de liaison pour les véhicules qui ont à la fois Cylindered (outils mobiles) et Foldable. Elle permet d'appliquer les états des outils mobiles à un moment choisi, quand l'animation de pliage atteint un temps donné, et corrige l'ordre de synchronisation réseau entre les deux. Elle exige Cylindered et Foldable et lit deux attributs sous vehicle.cylindered dans le XML du véhicule."
+ },
+ "fonctions": {
+  "CylinderedFoldable.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both the Cylindered and Foldable specializations.",
+   "fr": "Renvoie true seulement si le type de véhicule possède les spécialisations Cylindered et Foldable."
+  },
+  "CylinderedFoldable.initSpecialization": {
+   "en": "Registers the XML schema entries vehicle.cylindered#loadMovingToolStatesAfterFolding (bool, default false) and vehicle.cylindered#loadMovingToolStatesFoldTime (float).",
+   "fr": "Enregistre dans le schéma XML les entrées vehicle.cylindered#loadMovingToolStatesAfterFolding (booléen, faux par défaut) et vehicle.cylindered#loadMovingToolStatesFoldTime (flottant)."
+  },
+  "CylinderedFoldable.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad, onPreInitComponentPlacement, onReadStream and onWriteStream.",
+   "fr": "Abonne la spécialisation à onLoad, onPreInitComponentPlacement, onReadStream et onWriteStream."
+  },
+  "CylinderedFoldable:onLoad": {
+   "en": "Reads the two XML settings (reload flag and target fold time) into spec_cylinderedFoldable.",
+   "fr": "Lit les deux réglages XML (indicateur de rechargement et temps de pliage cible) dans spec_cylinderedFoldable."
+  },
+  "CylinderedFoldable:onPreInitComponentPlacement": {
+   "en": "If the reload flag is set and either no fold time is configured or the current fold animation time equals it, it calls Cylindered.onPostLoad again so the moving tool states are applied after folding.",
+   "fr": "Si l'indicateur est actif et qu'aucun temps de pliage n'est configuré, ou que le temps courant de l'animation de pliage lui est égal, rappelle Cylindered.onPostLoad pour appliquer les états des outils mobiles après le pliage."
+  },
+  "CylinderedFoldable:onReadStream": {
+   "en": "Client-side join sync: finishes the fold animation instantly, then reads a bool and, if true, re-runs Cylindered.onReadStream (Foldable overrode it). On the client side of the connection it also refreshes dependent animations of dirty moving tools.",
+   "fr": "Synchronisation à la connexion côté client : termine instantanément l'animation de pliage, lit un booléen et, s'il est vrai, relance Cylindered.onReadStream (écrasé par Foldable). Côté client de la connexion, rafraîchit aussi les animations dépendantes des outils mobiles modifiés."
+  },
+  "CylinderedFoldable:onWriteStream": {
+   "en": "Writes a bool telling whether the fold time matches the configured one (or none is configured), and only in that case calls Cylindered.onWriteStream. Mirrors the read logic.",
+   "fr": "Écrit un booléen indiquant si le temps de pliage correspond à celui configuré (ou si aucun n'est configuré) et n'appelle Cylindered.onWriteStream que dans ce cas. Symétrique de la lecture."
+  }
+ }
+}

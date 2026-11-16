@@ -1,0 +1,49 @@
+{
+ "fichier": "ai/tasks/AITaskLoading.lua",
+ "module": {
+  "en": "AI task that drives a vehicle to a load trigger and starts loading a chosen fill type into a fill unit of a load vehicle. Positioning is server-only and uses the trigger's AI target position and direction shifted by an offset. Loading is delegated to the load vehicle (aiPrepareLoading, aiStartLoadingFromTrigger, aiFinishLoading), which later calls finishedLoading.",
+  "fr": "Tâche IA qui conduit un véhicule jusqu'à un déclencheur de chargement et lance le chargement d'un type de remplissage choisi dans une unité de remplissage d'un véhicule à charger. Le positionnement n'a lieu que sur le serveur et utilise la position et la direction IA du déclencheur décalées d'un offset. Le chargement est délégué au véhicule (aiPrepareLoading, aiStartLoadingFromTrigger, aiFinishLoading), qui appelle ensuite finishedLoading."
+ },
+ "fonctions": {
+  "AITaskLoading.new": {
+   "en": "Creates the task with no vehicle, trigger, fill type or fill unit, a zero offset and a max speed of 5. Speed unit UNVERIFIED.",
+   "fr": "Crée la tâche sans véhicule, déclencheur, type de remplissage ni unité de remplissage, avec un offset nul et une vitesse maximale de 5. Unité de vitesse NON VÉRIFIÉE."
+  },
+  "AITaskLoading:reset": {
+   "en": "Clears the vehicle, load trigger, load vehicle and fill type, then runs the parent reset. The offset and fill unit index are not cleared.",
+   "fr": "Efface le véhicule, le déclencheur, le véhicule à charger et le type de remplissage, puis exécute le reset du parent. L'offset et l'index de l'unité de remplissage ne sont pas effacés."
+  },
+  "AITaskLoading:setVehicle": {
+   "en": "Sets the vehicle that is driven to the load trigger.",
+   "fr": "Définit le véhicule conduit jusqu'au déclencheur de chargement."
+  },
+  "AITaskLoading:setLoadTrigger": {
+   "en": "Sets the load trigger to drive to. It must provide getAITargetPositionAndDirection.",
+   "fr": "Définit le déclencheur de chargement vers lequel rouler. Il doit fournir getAITargetPositionAndDirection."
+  },
+  "AITaskLoading:setFillType": {
+   "en": "Sets the fill type to load.",
+   "fr": "Définit le type de remplissage à charger."
+  },
+  "AITaskLoading:setFillUnit": {
+   "en": "Sets the load vehicle, the index of its fill unit to fill and the Z offset applied to the trigger target position.",
+   "fr": "Définit le véhicule à charger, l'index de son unité de remplissage et l'offset Z appliqué à la position cible du déclencheur."
+  },
+  "AITaskLoading:start": {
+   "en": "On the server, computes the trigger target shifted back by the offset, reads terrain height and sets an AI target on the vehicle. Always runs the parent start.",
+   "fr": "Sur le serveur, calcule la cible du déclencheur reculée de l'offset, lit la hauteur du terrain et définit une cible IA sur le véhicule. Exécute toujours le start du parent."
+  },
+  "AITaskLoading:finishedLoading": {
+   "en": "Called when loading is done: tells the load vehicle via aiFinishLoading, then marks the task finished.",
+   "fr": "Appelé quand le chargement est terminé : prévient le véhicule via aiFinishLoading, puis marque la tâche terminée."
+  },
+  "AITaskLoading:onTargetReached": {
+   "en": "On arrival, clears the AI target, enters the loading state, prepares the load vehicle and starts loading the fill type from the trigger.",
+   "fr": "À l'arrivée, efface la cible IA, passe à l'état de chargement, prépare le véhicule à charger et lance le chargement du type de remplissage depuis le déclencheur."
+  },
+  "AITaskLoading:onError": {
+   "en": "Empty callback for AI errors; nothing is done with the message.",
+   "fr": "Callback vide pour les erreurs IA ; le message n'est pas traité."
+  }
+ }
+}

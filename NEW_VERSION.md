@@ -6,7 +6,7 @@
 2. **Sources**: extract `sdk/debugger/gameSource.zip` into a **new** folder outside the repository; do not overwrite the old one.
 3. **Static extraction**:
    `python -I outils/extraire.py "<extracted>/dataS/scripts" "<FS25>/sdk/debugger/scriptBinding.xml" donnees/<v>/statique.json`
-   Update `gameVersion` in `extraire.py` while you are at it.
+   The game version is taken from the output folder name (or a 4th argument).
 4. **In-game scan**: install `outils/mod_releve/`, load a savegame, then
    `python -I outils/importer_releve.py <v> "<FS25 profile>/atlas_releve.tsv"`.
    Check in `log.txt` that the mod is accepted: `descVersion` may increase between game versions.

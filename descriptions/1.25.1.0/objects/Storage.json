@@ -1,0 +1,125 @@
+{
+ "fichier": "objects/Storage.lua",
+ "module": {
+  "en": "Generic multi-fill-type storage (silo, bunker, extension) extending Object. It tracks fill levels per fill type with optional per-type capacities, a shared total capacity or single-type mode, start levels, fill planes (static or dynamic) for visuals, daily upkeep costs, and server-to-client synchronization through a dirty flag with a configurable threshold. Unloading and loading stations register themselves with it, and other code can listen for fill level changes. Loaded from the owning placeable's XML.",
+  "fr": "Stockage générique multi-types (silo, tas, extension) étendant Object. Il suit les niveaux par type de remplissage avec capacités optionnelles par type, capacité totale partagée ou mode mono-type, niveaux de départ, plans de remplissage (statiques ou dynamiques) pour le visuel, coûts d'entretien journaliers et synchronisation serveur vers clients par drapeau sale avec seuil configurable. Les stations de chargement et de déchargement s'y enregistrent et d'autres codes peuvent écouter les changements de niveau. Chargé depuis le XML du placeable propriétaire."
+ },
+ "fonctions": {
+  "Storage.registerXMLPaths": {
+   "en": "Registers the storage XML attributes: node, capacity, sync threshold, multiple fill types flag, upkeep cost, fill type lists or categories, extension flag, per-type capacities, start levels, fill planes and the dynamic fill plane.",
+   "fr": "Enregistre les attributs XML du stockage : noeud, capacité, seuil de synchro, option multi-types, coût d'entretien, listes ou catégories de types, extension, capacités par type, niveaux de départ, plans de remplissage et plan dynamique."
+  },
+  "Storage.registerSavegameXMLPaths": {
+   "en": "Registers the savegame paths: owner `#farmId` and one `node(?)` entry per stored fill type with its name and level.",
+   "fr": "Enregistre les chemins de sauvegarde : `#farmId` du propriétaire et une entrée `node(?)` par type stocké avec son nom et son niveau."
+  },
+  "Storage.new": {
+   "en": "Constructor: builds the Object and initializes empty tables for unloading stations, loading stations and fill level listeners, plus rootNode 0 and `foreignSilo` false.",
+   "fr": "Constructeur : construit l'Object et initialise des tables vides pour les stations de déchargement, de chargement et les écouteurs de niveau, avec rootNode à 0 et `foreignSilo` à false."
+  },
+  "Storage:load": {
+   "en": "Loads the storage from XML: accepted fill types from categories, names or per-type capacities (error and false if none), start levels with clamping rules, fill planes (custom class or `FillPlane`), the dynamic fill plane, extension flag and dirty flag. Subscribes to `FARM_DELETED`.",
+   "fr": "Charge le stockage depuis le XML : types acceptés via catégories, noms ou capacités par type (erreur et false si aucun), niveaux de départ avec règles de bornage, plans de remplissage (classe perso ou `FillPlane`), plan dynamique, option extension et drapeau sale. S'abonne à `FARM_DELETED`."
+  },
+  "Storage:delete": {
+   "en": "Unsubscribes from messages, deletes the fill planes, clears the station and listener tables, then calls the parent delete.",
+   "fr": "Se désabonne des messages, supprime les plans de remplissage, vide les tables de stations et d'écouteurs puis appelle le delete parent."
+  },
+  "Storage:readStream": {
+   "en": "Client side initial sync: after the parent data, reads for each sorted fill type an optional Float32 level (preceded by a bool) and applies it with `setFillLevel`.",
+   "fr": "Synchro initiale côté client : après les données parent, lit pour chaque type trié un niveau Float32 optionnel (précédé d'un booléen) et l'applique avec `setFillLevel`."
+  },
+  "Storage:writeStream": {
+   "en": "Server side initial sync: writes each fill level above zero as a bool plus Float32 and records it as last synced.",
+   "fr": "Synchro initiale côté serveur : écrit chaque niveau supérieur à zéro (booléen + Float32) et le mémorise comme dernière valeur synchronisée."
+  },
+  "Storage:readUpdateStream": {
+   "en": "Client side: if the server flagged a storage update, reads all fill levels in sorted fill type order and applies them with `setFillLevel`.",
+   "fr": "Côté client : si le serveur a signalé une mise à jour du stockage, lit tous les niveaux dans l'ordre des types triés et les applique avec `setFillLevel`."
+  },
+  "Storage:writeUpdateStream": {
+   "en": "Server side: when the storage dirty flag is set in the mask, writes all fill levels (bool plus Float32 when above zero) and records them as last synced.",
+   "fr": "Côté serveur : si le drapeau sale du stockage est dans le masque, écrit tous les niveaux (booléen + Float32 si supérieur à zéro) et les mémorise comme derniers synchronisés."
+  },
+  "Storage:loadFromXMLFile": {
+   "en": "Loads from a savegame: restores the owner farm (default `AccessHandler.EVERYONE`), zeroes all levels, then sets each saved `node(i)` level for supported fill types, warning for unknown or unsupported ones. Returns true.",
+   "fr": "Charge depuis une sauvegarde : restaure la ferme propriétaire (par défaut `AccessHandler.EVERYONE`), remet tous les niveaux à zéro puis applique chaque niveau `node(i)` pour les types supportés, avec avertissement pour les types inconnus ou non supportés. Renvoie true."
+  },
+  "Storage:saveToXMLFile": {
+   "en": "Saves the owner farm id and one `node(i)` entry for each fill type whose level is above zero.",
+   "fr": "Sauvegarde l'identifiant de la ferme propriétaire et une entrée `node(i)` pour chaque type dont le niveau est supérieur à zéro."
+  },
+  "Storage:empty": {
+   "en": "Sets every fill level to 0 directly, raising the dirty flag on the server for each. Does not notify listeners or update fill planes. Note: last-synced values are not reset here.",
+   "fr": "Met chaque niveau à 0 directement et lève le drapeau sale sur le serveur pour chacun. Ne notifie pas les écouteurs et ne met pas à jour les plans de remplissage. À noter : les dernières valeurs synchronisées ne sont pas réinitialisées ici."
+  },
+  "Storage:updateFillPlanes": {
+   "en": "Sets each static fill plane's state to level divided by capacity for its fill type (1 if capacity is not positive).",
+   "fr": "Fixe l'état de chaque plan de remplissage statique au rapport niveau sur capacité de son type (1 si la capacité n'est pas positive)."
+  },
+  "Storage:getIsFillTypeSupported": {
+   "en": "Returns true if the fill type is in the accepted set.",
+   "fr": "Renvoie true si le type de remplissage est dans l'ensemble accepté."
+  },
+  "Storage:getFillLevel": {
+   "en": "Returns the current level for a fill type, or 0 if unsupported.",
+   "fr": "Renvoie le niveau actuel d'un type de remplissage, ou 0 s'il n'est pas supporté."
+  },
+  "Storage:getFillLevels": {
+   "en": "Returns the internal table of fill levels indexed by fill type (not a copy).",
+   "fr": "Renvoie la table interne des niveaux indexée par type de remplissage (pas une copie)."
+  },
+  "Storage:getCapacity": {
+   "en": "Returns the custom capacity of the fill type, or the storage's general capacity if none is defined.",
+   "fr": "Renvoie la capacité propre au type de remplissage, ou la capacité générale du stockage s'il n'y en a pas."
+  },
+  "Storage:setFillLevel": {
+   "en": "Clamps and sets the level of a fill type. On change it notifies listeners (when the change exceeds 0.1 or the rounded value changed), raises the server dirty flag at threshold, empty or full, updates fill planes, and adds or removes material on the dynamic fill plane using the optional `fillInfo` area.",
+   "fr": "Borne et fixe le niveau d'un type. En cas de changement, notifie les écouteurs (si la variation dépasse 0,1 ou si la valeur arrondie change), lève le drapeau sale serveur au seuil, à vide ou plein, met à jour les plans et ajoute ou retire de la matière sur le plan dynamique selon la zone optionnelle `fillInfo`."
+  },
+  "Storage:getFreeCapacity": {
+   "en": "Returns the remaining room for a fill type: 0 if unsupported; per-type or shared total capacity in multi-type mode; in single-type mode 0 when another type is already stored.",
+   "fr": "Renvoie la place restante pour un type : 0 s'il n'est pas supporté ; capacité par type ou totale partagée en mode multi-types ; en mode mono-type 0 si un autre type est déjà stocké."
+  },
+  "Storage:getSupportedFillTypes": {
+   "en": "Returns the internal set of accepted fill types (keys are fill type indices).",
+   "fr": "Renvoie l'ensemble interne des types acceptés (clés = indices de types)."
+  },
+  "Storage:hourChanged": {
+   "en": "Server only: charges the owner farm hourly upkeep (cost per level and day divided by 24, times the economy cost multiplier) over all stored levels, as property maintenance.",
+   "fr": "Serveur uniquement : débite la ferme propriétaire de l'entretien horaire (coût par niveau et par jour divisé par 24, multiplié par le multiplicateur de coûts de l'économie) sur tous les niveaux stockés, en maintenance de propriété."
+  },
+  "Storage:addUnloadingStation": {
+   "en": "Registers an unloading station that uses this storage.",
+   "fr": "Enregistre une station de déchargement utilisant ce stockage."
+  },
+  "Storage:removeUnloadingStation": {
+   "en": "Unregisters an unloading station from this storage.",
+   "fr": "Retire une station de déchargement de ce stockage."
+  },
+  "Storage:addLoadingStation": {
+   "en": "Registers a loading station that uses this storage.",
+   "fr": "Enregistre une station de chargement utilisant ce stockage."
+  },
+  "Storage:removeLoadingStation": {
+   "en": "Unregisters a loading station from this storage.",
+   "fr": "Retire une station de chargement de ce stockage."
+  },
+  "Storage:farmDestroyed": {
+   "en": "Message handler for farm deletion: if the deleted farm owns this storage, sets all accepted fill types to 0.",
+   "fr": "Gestionnaire de message de suppression de ferme : si la ferme supprimée possède ce stockage, remet tous les types acceptés à 0."
+  },
+  "Storage:addFillLevelChangedListeners": {
+   "en": "Adds a callback called as `func(fillType, delta)` when a level changes.",
+   "fr": "Ajoute un callback appelé sous la forme `func(fillType, delta)` lorsqu'un niveau change."
+  },
+  "Storage:removeFillLevelChangedListeners": {
+   "en": "Removes a previously added fill level change callback.",
+   "fr": "Retire un callback de changement de niveau ajouté précédemment."
+  },
+  "Storage:draw": {
+   "en": "Debug rendering: shows a table of fill levels and capacities near the storage node, added as a frame element to the debug manager.",
+   "fr": "Rendu de debug : affiche un tableau des niveaux et capacités près du noeud du stockage, ajouté comme élément de frame au gestionnaire de debug."
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "fichier": "ai/errors/AIMessageErrorVehicleDeleted.lua",
+ "module": {
+  "en": "AI message class for the case where the vehicle was deleted. It extends `AIMessage`, is registered in `AIMessageManager` and is shown when a helper job stops with this error.",
+  "fr": "Classe de message IA pour le cas où le véhicule a été supprimé. Elle étend `AIMessage`, est enregistrée dans `AIMessageManager` et s'affiche quand un travail d'assistant s'arrête avec cette erreur."
+ },
+ "fonctions": {
+  "AIMessageErrorVehicleDeleted.new": {
+   "en": "Constructor of the AI error message meaning: the vehicle was deleted. Inherits from `AIMessage` and adds no state.",
+   "fr": "Constructeur du message d'erreur IA signifiant : le véhicule a été supprimé. Hérite de `AIMessage` et n'ajoute aucun état."
+  },
+  "AIMessageErrorVehicleDeleted:getI18NText": {
+   "en": "Returns the localized text for the key `ai_messageErrorVehicleDeleted` via `g_i18n`, used by `AIMessage:getMessage`.",
+   "fr": "Renvoie le texte localisé de la clé `ai_messageErrorVehicleDeleted` via `g_i18n`, utilisé par `AIMessage:getMessage`."
+  }
+ }
+}

@@ -1,0 +1,133 @@
+{
+ "fichier": "player/Player.lua",
+ "module": {
+  "en": "Networked `Object` representing one player character, local or replicated, composed of a capsule controller, mover, graphics component, state machine, input component, camera, targeter, HUD updater and a network component chosen by role (server, local owner, remote). It handles creation, synchronization, hand tool carrying, spawn positions, show/hide (controlled state) and debug display. Many methods used here (e.g. `setStyleAsync`, `teleportTo`, `getPosition`, `hide`, `getCurrentVehicle`) are defined elsewhere in the file or in mixed-in code (UNVERIFIED).",
+  "fr": "`Object` réseau représentant un personnage joueur, local ou répliqué, composé d'un contrôleur à capsule, d'un mover, d'un composant graphique, d'une machine à états, d'un composant d'entrée, d'une caméra, d'un targeter, d'un HUD updater et d'un composant réseau choisi selon le rôle (serveur, propriétaire local, distant). Il gère la création, la synchronisation, le port d'outils à main, les positions d'apparition, l'affichage/masquage (état contrôlé) et l'affichage de debug. Plusieurs méthodes utilisées ici (ex. `setStyleAsync`, `teleportTo`, `getPosition`, `hide`, `getCurrentVehicle`) sont définies ailleurs dans le fichier ou dans du code mélangé (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "Player.createServerInstance": {
+   "en": "Server-side factory: creates a player for a user and farm, sets its unique id, calls `initialise` and `load` with saved player data, applies the saved or last-used style (default style as fallback), and registers the object on the network.",
+   "fr": "Fabrique côté serveur : crée un joueur pour un utilisateur et une ferme, définit son id unique, appelle `initialise` et `load` avec les données sauvegardées, applique le style sauvegardé ou le dernier utilisé (style par défaut sinon) et enregistre l'objet sur le réseau."
+  },
+  "Player.new": {
+   "en": "Constructor, normally reached through `Object.new`: initializes fields and creates the components (CCT, mover, state machine, graphics, HUD updater, hotspot) without building any scene node yet.",
+   "fr": "Constructeur, normalement appelé via `Object.new` : initialise les champs et crée les composants (CCT, mover, machine à états, graphismes, HUD updater, hotspot) sans encore construire de noeud de scène."
+  },
+  "Player:initialise": {
+   "en": "Creates the root transform node, builds the capsule, registers the player as node object, and sets up role-specific parts: input, camera and targeter for the owner, a positional interpolator for others, and the matching network component (server, local or remote). Also subscribes to mission and farm messages.",
+   "fr": "Crée le noeud racine, construit la capsule, enregistre le joueur comme objet de noeud et met en place les éléments propres au rôle : entrée, caméra et targeter pour le propriétaire, interpolateur de position pour les autres, et le composant réseau adapté (serveur, local ou distant). S'abonne aussi aux messages de mission et de ferme."
+  },
+  "Player:load": {
+   "en": "Registers console commands and, on the server, restores spawn data and hand tool ids from the player data, then loads the hands, flashlight and starting hand tools asynchronously and teleports to the spawn point. Rebuilds the capsule, finishes owner or remote setup and adds the player to `playerSystem`.",
+   "fr": "Enregistre les commandes console et, sur le serveur, restaure les données d'apparition et les ids d'outils depuis les données du joueur, puis charge de façon asynchrone les mains, la lampe torche et les outils de départ et téléporte au point d'apparition. Reconstruit la capsule, termine la configuration propriétaire ou distante et ajoute le joueur à `playerSystem`."
+  },
+  "Player:delete": {
+   "en": "Cleans up the player: leaves any vehicle or passenger seat, removes it from the player system, cancels pending tool loads, removes obstacles, subscriptions, console commands and hotspot, deletes components, hands the carried tools back and deletes the root node before calling the parent delete.",
+   "fr": "Nettoie le joueur : quitte tout véhicule ou siège passager, le retire du système de joueurs, annule les chargements d'outils en attente, retire obstacles, abonnements, commandes console et hotspot, supprime les composants, rend les outils portés et supprime le noeud racine avant d'appeler le delete parent."
+  },
+  "Player:writeStream": {
+   "en": "Initial synchronization from server to a joining client: owner flag, foot position, controlled state, farm id, user id, the style if it is not the default, and the hands object if present.",
+   "fr": "Synchronisation initiale du serveur vers un client qui rejoint : indicateur de propriétaire, position des pieds, état contrôlé, id de ferme, id utilisateur, style s'il n'est pas celui par défaut, et objet mains s'il existe."
+  },
+  "Player:readStream": {
+   "en": "Client counterpart of `writeStream`: reads these values, calls `initialise` and `load`, applies the style, teleports the player to the received position and shows or hides it depending on the controlled flag.",
+   "fr": "Pendant client de `writeStream` : lit ces valeurs, appelle `initialise` et `load`, applique le style, téléporte le joueur à la position reçue et l'affiche ou le masque selon l'état contrôlé."
+  },
+  "Player:writeUpdateStream": {
+   "en": "Delegates the dirty-mask update stream writing to the network component, if one exists.",
+   "fr": "Délègue l'écriture du flux de mise à jour (masque dirty) au composant réseau, s'il existe."
+  },
+  "Player:readUpdateStream": {
+   "en": "Delegates the incoming update stream reading to the network component, if one exists.",
+   "fr": "Délègue la lecture du flux de mise à jour entrant au composant réseau, s'il existe."
+  },
+  "Player:update": {
+   "en": "Per-frame update: resolves pending hands and saved hand tools by id, keeps the player active while controlled, updates the HUD updater for the owner with position and yaw, then updates the state machine.",
+   "fr": "Mise à jour par image : résout les mains et outils sauvegardés en attente par id, maintient le joueur actif tant qu'il est contrôlé, met à jour le HUD updater du propriétaire avec position et yaw, puis la machine à états."
+  },
+  "Player:updateTick": {
+   "en": "Network tick update: forwards to the current state's `updateTick` if that state defines one.",
+   "fr": "Mise à jour au tick réseau : transmet à `updateTick` de l'état courant si celui-ci en définit un."
+  },
+  "Player:getUniqueUserId": {
+   "en": "Returns the persistent unique user id of this player.",
+   "fr": "Retourne l'id utilisateur unique persistant de ce joueur."
+  },
+  "Player:setUniqueUserId": {
+   "en": "Sets the unique user id once; trying to change an existing different id logs an error and is ignored.",
+   "fr": "Définit l'id utilisateur unique une seule fois ; tenter de changer un id existant différent consigne une erreur et est ignoré."
+  },
+  "Player:onPickupHandTool": {
+   "en": "Adds the hand tool to the carried list and tells it which player carries it. Returns false for a nil tool, true otherwise.",
+   "fr": "Ajoute l'outil à la liste des outils portés et lui indique quel joueur le porte. Retourne false pour un outil nil, true sinon."
+  },
+  "Player:onDropHandTool": {
+   "en": "Removes the tool from the carried list, unequipping it first if held, refreshes the flashlight state and clears its carrying player; logs an error and a call stack if it was not carried. Note: the log line reads the tool before the nil check.",
+   "fr": "Retire l'outil de la liste portée, en le déséquipant d'abord s'il est tenu, rafraîchit l'état de la lampe torche et efface son joueur porteur ; consigne une erreur et la pile d'appels s'il n'était pas porté. À noter : la ligne de log lit l'outil avant le test nil."
+  },
+  "Player:getCanPickupHandTool": {
+   "en": "Returns true if the tool is not nil, the player has access to it through the mission access handler, and the carry limit (`getReachedHandToolLimit`) is not reached.",
+   "fr": "Retourne true si l'outil n'est pas nil, si le joueur y a accès via l'access handler de la mission, et si la limite de charge (`getReachedHandToolLimit`) n'est pas atteinte."
+  },
+  "Player:getIsHoldingHandTool": {
+   "en": "Returns whether a hand tool is currently held, based on `getHeldHandTool`.",
+   "fr": "Indique si un outil est actuellement tenu, d'après `getHeldHandTool`."
+  },
+  "Player:getIsCarryingHandTool": {
+   "en": "Returns whether the given tool is in the carried list (held or in the backpack).",
+   "fr": "Indique si l'outil donné est dans la liste portée (en main ou dans le sac)."
+  },
+  "Player:getCarriedHandToolMass": {
+   "en": "Returns the summed `mass` of every carried hand tool.",
+   "fr": "Retourne la somme de `mass` de tous les outils portés."
+  },
+  "Player:getMapPositionAndLookYaw": {
+   "en": "Returns the player's x and z position plus the yaw of the current camera view direction, for map display.",
+   "fr": "Retourne la position x et z du joueur ainsi que le yaw de la direction de vue de la caméra courante, pour l'affichage sur la carte."
+  },
+  "Player:updateControlledState": {
+   "en": "Calls `show` or `hide` according to the requested state; does nothing if the state is unchanged.",
+   "fr": "Appelle `show` ou `hide` selon l'état demandé ; ne fait rien si l'état est inchangé."
+  },
+  "Player:findSpawnPositionAndYaw": {
+   "en": "Picks the spawn position and yaw in order: saved player spawn, auto-load parameters (terrain height plus 0.2), the farm spawn point (or the mission start point on an invalid new save), else 0,0,0 with an error log.",
+   "fr": "Choisit la position et le yaw d'apparition dans l'ordre : apparition sauvegardée du joueur, paramètres d'auto-chargement (hauteur de terrain plus 0,2), point d'apparition de la ferme (ou point de départ de mission pour une sauvegarde invalide), sinon 0,0,0 avec un log d'erreur."
+  },
+  "Player:findEmptyAreaAroundPosition": {
+   "en": "Placeholder: returns the given position unchanged; the search for a free area is marked as not yet implemented.",
+   "fr": "Espace réservé : retourne la position donnée sans changement ; la recherche d'une zone libre est signalée comme non implémentée."
+  },
+  "Player:getHasSpawnPosition": {
+   "en": "Returns true if all three spawn position components are set.",
+   "fr": "Retourne true si les trois composantes de la position d'apparition sont définies."
+  },
+  "Player:getSpawnPosition": {
+   "en": "Returns the stored spawn x, y and z, which are nil if unset.",
+   "fr": "Retourne les x, y et z d'apparition stockés, nil s'ils ne sont pas définis."
+  },
+  "Player:getHasSpawnYaw": {
+   "en": "Returns true if a spawn yaw is stored.",
+   "fr": "Retourne true si un yaw d'apparition est stocké."
+  },
+  "Player:getSpawnYaw": {
+   "en": "Returns the stored spawn yaw, or nil.",
+   "fr": "Retourne le yaw d'apparition stocké, ou nil."
+  },
+  "Player:setSpawnYaw": {
+   "en": "Stores the spawn yaw (number or nil).",
+   "fr": "Stocke le yaw d'apparition (nombre ou nil)."
+  },
+  "Player:getMovementYaw": {
+   "en": "Returns the movement yaw of the player as given by its mover.",
+   "fr": "Retourne le yaw de déplacement du joueur tel que fourni par son mover."
+  },
+  "Player:show": {
+   "en": "Makes the player controlled and visible: raises it active, sets the owner connection and dirty flag on the server, publishes `OWN_PLAYER_ENTERED`, for the owner makes the camera current and registers input, and sets model visibility. Also adds the shallow-water and AI obstacles, the map hotspot, the traffic-system entry, and resets the current hand tool. Skipped if deleted or if a local control flag is set (unless overridden).",
+   "fr": "Rend le joueur contrôlé et visible : le rend actif, définit la connexion propriétaire et le dirty flag sur le serveur, publie `OWN_PLAYER_ENTERED`, pour le propriétaire active la caméra et l'entrée, et règle la visibilité du modèle. Ajoute aussi les obstacles d'eau peu profonde et d'IA, le hotspot de carte, l'entrée du système de trafic, et réinitialise l'outil en main. Ignoré si supprimé ou si un indicateur de contrôle local est défini (sauf forçage)."
+  },
+  "Player:debugDraw": {
+   "en": "Draws debug overlays: the enabled flag list for the owner, the root node, then text sections for state, movement, input, graphics, hand tools and network depending on `Player.currentDebugFlag`; returns the next y position.",
+   "fr": "Affiche des surcouches de debug : la liste des drapeaux actifs pour le propriétaire, le noeud racine, puis des sections de texte pour l'état, le mouvement, l'entrée, les graphismes, les outils et le réseau selon `Player.currentDebugFlag` ; retourne la position y suivante."
+  }
+ }
+}

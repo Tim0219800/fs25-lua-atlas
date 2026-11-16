@@ -1,0 +1,69 @@
+{
+ "fichier": "gui/elements/RenderElement.lua",
+ "module": {
+  "en": "GUI element that loads an i3d scene asynchronously through g_i3DManager and renders it from a chosen camera into a render overlay, which it then draws in the layout (used for 3D previews in menus). It exposes render settings (masks, shadows, bloom, DOF, SSAO, atmosphere quality, super-sampling) and a callback fired when the overlay is ready. The overlay is only re-rendered when flagged dirty. Engine functions such as createRenderOverlay are UNVERIFIED (not in the dump).",
+  "fr": "Élément d'interface qui charge une scène i3d de façon asynchrone via g_i3DManager et la rend depuis une caméra choisie dans un overlay de rendu, qu'il dessine ensuite dans la mise en page (utilisé pour les aperçus 3D des menus). Il expose des réglages de rendu (masques, ombres, bloom, profondeur de champ, SSAO, qualité d'atmosphère, sur-échantillonnage) et un callback appelé quand l'overlay est prêt. L'overlay n'est re-rendu que s'il est marqué sale. Les fonctions moteur comme createRenderOverlay sont NON VÉRIFIÉES (absentes du dump)."
+ },
+ "fonctions": {
+  "RenderElement.new": {
+   "en": "Constructor. Sets defaults: alpha on, shapes mask 255, light mask 67108864 (bit 26 only), no shadows, no bloom, DOF or SSAO, async shader compilation off, atmosphere quality off, render not dirty.",
+   "fr": "Constructeur. Définit les valeurs par défaut : alpha actif, masque de formes 255, masque de lumières 67108864 (bit 26 seul), sans ombres, bloom, profondeur de champ ni SSAO, compilation asynchrone des shaders désactivée, atmosphère désactivée, rendu non sale."
+  },
+  "RenderElement:delete": {
+   "en": "Destroys the scene and overlay to free resources, then runs the parent delete.",
+   "fr": "Détruit la scène et l'overlay pour libérer les ressources, puis exécute le delete du parent."
+  },
+  "RenderElement:loadFromXML": {
+   "en": "Loads the base element, then reads filename, cameraNode, superSamplingFactor, shapesMask, lightMask, shadow, bloom, DOF, SSAO and async-shader options, and an atmosphereQuality name (warning if invalid), and registers the onRenderLoad callback.",
+   "fr": "Charge l'élément de base, puis lit filename, cameraNode, superSamplingFactor, shapesMask, lightMask, ainsi que les options d'ombres, bloom, profondeur de champ, SSAO et shaders asynchrones, un nom atmosphereQuality (avertissement si invalide) et enregistre le callback onRenderLoad."
+  },
+  "RenderElement:loadProfile": {
+   "en": "Loads filename, cameraNode, superSamplingFactor and atmosphereQuality from a profile. Note: the first three are overwritten with nil when the profile lacks them. If applyProfile is true, it destroys and reloads the scene.",
+   "fr": "Charge filename, cameraNode, superSamplingFactor et atmosphereQuality depuis un profil. À noter : les trois premiers sont écrasés par nil si le profil ne les définit pas. Si applyProfile est vrai, détruit et recharge la scène."
+  },
+  "RenderElement:copyAttributes": {
+   "en": "Copies filename, camera path, super-sampling factor, atmosphere quality and the render-load callback from a source element.",
+   "fr": "Copie filename, chemin de caméra, facteur de sur-échantillonnage, qualité d'atmosphère et callback de chargement depuis un élément source."
+  },
+  "RenderElement:createScene": {
+   "en": "Starts loading the configured scene file and creating the overlay once loaded. Pair with destroyScene to release resources.",
+   "fr": "Lance le chargement du fichier de scène configuré et la création de l'overlay une fois chargé. À associer à destroyScene pour libérer les ressources."
+  },
+  "RenderElement:destroyScene": {
+   "en": "Releases the shared i3d loading request, deletes the render overlay and deletes the scene node, resetting the references to nil.",
+   "fr": "Libère la requête de chargement i3d partagée, supprime l'overlay de rendu et le nœud de scène, et remet les références à nil."
+  },
+  "RenderElement:setScene": {
+   "en": "Starts asynchronous loading of the given i3d file and marks the element as loading. Logs an error and does nothing if a scene request already exists; call destroyScene first.",
+   "fr": "Lance le chargement asynchrone du fichier i3d donné et marque l'élément comme en chargement. Journalise une erreur et ne fait rien si une requête de scène existe déjà ; appeler d'abord destroyScene."
+  },
+  "RenderElement:onSceneLoaded": {
+   "en": "Load-completion callback. On success it links the scene under the root node, hides it and creates the overlay; on failure it logs an error for file-not-found or unknown reasons and deletes any returned node.",
+   "fr": "Callback de fin de chargement. En cas de succès, rattache la scène au nœud racine, la masque et crée l'overlay ; en cas d'échec, journalise une erreur (fichier introuvable ou raison inconnue) et supprime le nœud retourné s'il existe."
+  },
+  "RenderElement:createOverlay": {
+   "en": "(Re)creates the render overlay sized to the element on screen times the super-sampling factor, using the camera found by path. Logs errors if the camera or overlay is missing; on success marks it dirty and raises onRenderLoad with scene and overlay.",
+   "fr": "(Re)crée l'overlay de rendu à la taille de l'élément à l'écran multipliée par le facteur de sur-échantillonnage, avec la caméra trouvée par chemin. Journalise des erreurs si la caméra ou l'overlay manque ; en cas de succès le marque sale et déclenche onRenderLoad avec la scène et l'overlay."
+  },
+  "RenderElement:update": {
+   "en": "Per-frame update: if flagged dirty and an overlay exists, re-renders the scene into the overlay and clears the flag.",
+   "fr": "Mise à jour par image : si le rendu est marqué sale et qu'un overlay existe, re-rend la scène dans l'overlay et efface l'indicateur."
+  },
+  "RenderElement:draw": {
+   "en": "Draws the overlay in the element rectangle when loaded, adjusting UV coordinates to match the clip bounds when clipping is requested, then runs the parent draw.",
+   "fr": "Dessine l'overlay dans le rectangle de l'élément une fois chargé, en ajustant les coordonnées UV selon les limites de clipping demandées, puis exécute le draw du parent."
+  },
+  "RenderElement:canReceiveFocus": {
+   "en": "Always returns false: a render element never takes UI focus.",
+   "fr": "Retourne toujours false : un élément de rendu ne prend jamais le focus de l'interface."
+  },
+  "RenderElement:getSceneRoot": {
+   "en": "Returns the root node of the loaded scene, or nil if none is loaded.",
+   "fr": "Retourne le nœud racine de la scène chargée, ou nil si aucune n'est chargée."
+  },
+  "RenderElement:setRenderDirty": {
+   "en": "Flags the overlay so the next update re-renders the scene into it.",
+   "fr": "Marque l'overlay pour que la prochaine mise à jour re-rende la scène dedans."
+  }
+ }
+}

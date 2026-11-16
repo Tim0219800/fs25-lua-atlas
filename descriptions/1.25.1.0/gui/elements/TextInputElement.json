@@ -1,0 +1,161 @@
+{
+ "fichier": "gui/elements/TextInputElement.lua",
+ "module": {
+  "en": "Single-line editable text box for menus, derived from ButtonElement. It captures keyboard (or on-screen IME) input while pressed, manages a blinking cursor, horizontal scrolling with front/back ellipsis, password masking and an optional profanity filter. It switches the input binding context while capturing so game actions do not fire. Loads attributes such as maxCharacters, maxInputTextWidth, isPassword and several callbacks (onEnterPressed, onEscPressed, onTextChanged, onIsUnicodeAllowed) from XML or a GUI profile.",
+  "fr": "Zone de saisie de texte monoligne pour les menus, dérivée de ButtonElement. Elle capture le clavier (ou l'IME à l'écran) lorsqu'elle est activée, gère un curseur clignotant, le défilement horizontal avec points de suspension avant/arrière, le masquage de mot de passe et un filtre de grossièretés optionnel. Elle change le contexte des entrées pendant la capture pour que les actions du jeu ne se déclenchent pas. Charge des attributs comme maxCharacters, maxInputTextWidth, isPassword et plusieurs callbacks (onEnterPressed, onEscPressed, onTextChanged, onIsUnicodeAllowed) depuis le XML ou un profil GUI."
+ },
+ "fonctions": {
+  "TextInputElement.new": {
+   "en": "Constructor. Builds the element on top of ButtonElement and initialises cursor, blink timing, text state, IME support flag (from imeIsSupported), forced focus and the text-box focus sound.",
+   "fr": "Constructeur. Crée l'élément à partir de ButtonElement et initialise le curseur, le clignotement, l'état du texte, l'indicateur de prise en charge de l'IME (via imeIsSupported), le focus forcé et le son de focus de zone de texte."
+  },
+  "TextInputElement:delete": {
+   "en": "Aborts any running IME session, deletes the cursor overlay and then calls the parent delete.",
+   "fr": "Interrompt toute session IME en cours, supprime l'overlay du curseur puis appelle le delete du parent."
+  },
+  "TextInputElement:translate": {
+   "en": "Converts a text through g_i18n:convertText so l10n tokens in IME strings are resolved; returns nil/false input unchanged.",
+   "fr": "Convertit un texte via g_i18n:convertText pour résoudre les jetons l10n des chaînes IME ; une entrée nil/false est renvoyée telle quelle."
+  },
+  "TextInputElement:loadFromXML": {
+   "en": "Reads the element from XML: the five callbacks, IME keyboard type/title/description/placeholder, maxCharacters, maxInputTextWidth, cursor offset/size/overlay, enterWhenClickOutside, applyProfanityFilter and isPassword. Ensures the cursor is at least one pixel wide.",
+   "fr": "Lit l'élément depuis le XML : les cinq callbacks, le type de clavier/titre/description/texte d'indication de l'IME, maxCharacters, maxInputTextWidth, décalage/taille/overlay du curseur, enterWhenClickOutside, applyProfanityFilter et isPassword. Garantit un curseur d'au moins un pixel de large."
+  },
+  "TextInputElement:loadProfile": {
+   "en": "Applies GUI profile values (maxCharacters, maxInputTextWidth, cursor offset/size/image size, isPassword, applyProfanityFilter) and loads the cursor overlay from the profile.",
+   "fr": "Applique les valeurs d'un profil GUI (maxCharacters, maxInputTextWidth, décalage/taille/taille d'image du curseur, isPassword, applyProfanityFilter) et charge l'overlay du curseur depuis le profil."
+  },
+  "TextInputElement:copyAttributes": {
+   "en": "Copies IME settings, limits, cursor overlay and geometry, password flag, callbacks and behaviour flags from another TextInputElement when cloning.",
+   "fr": "Copie les réglages IME, les limites, l'overlay et la géométrie du curseur, l'indicateur de mot de passe, les callbacks et les options de comportement depuis un autre TextInputElement lors d'un clonage."
+  },
+  "TextInputElement:finalize": {
+   "en": "Recomputes the space the cursor needs and logs an error if centre/right alignment is used without maxInputTextWidth, or a warning if that width is too small for the dots plus cursor.",
+   "fr": "Recalcule la place nécessaire au curseur et journalise une erreur si l'alignement centre/droite est utilisé sans maxInputTextWidth, ou un avertissement si cette largeur est trop petite pour les points et le curseur."
+  },
+  "TextInputElement:getIsActive": {
+   "en": "Uses the base GuiElement active check, deliberately bypassing ButtonElement's version, which would behave incompatibly for a text box.",
+   "fr": "Utilise le test d'activité de base de GuiElement, en contournant volontairement celui de ButtonElement qui serait incompatible avec une zone de texte."
+  },
+  "TextInputElement:setCaptureInput": {
+   "en": "Starts or stops input capture. Starting switches g_inputBinding to the text-input context (reverting a previous one if needed) and, on non-console, registers MENU_BACK/MENU_ACCEPT; stopping reverts the context and, unless it is a password or filtering is disabled, runs filterText on the content.",
+   "fr": "Démarre ou arrête la capture des entrées. Le démarrage bascule g_inputBinding sur le contexte de saisie (en annulant un contexte précédent si besoin) et, hors console, enregistre MENU_BACK/MENU_ACCEPT ; l'arrêt restaure le contexte et, sauf mot de passe ou filtre désactivé, applique filterText au contenu."
+  },
+  "TextInputElement:setAlpha": {
+   "en": "Sets the element alpha through the parent and mirrors it onto the cursor overlay.",
+   "fr": "Définit l'alpha de l'élément via le parent et le recopie sur l'overlay du curseur."
+  },
+  "TextInputElement:getDoRenderText": {
+   "en": "Always returns false so the parent does not draw the text itself; draw() renders the visible text parts manually.",
+   "fr": "Renvoie toujours false pour que le parent ne dessine pas le texte lui-même ; draw() affiche les parties visibles du texte à la main."
+  },
+  "TextInputElement:reset": {
+   "en": "Resets the parent state and stops any key auto-repeat in progress.",
+   "fr": "Réinitialise l'état du parent et arrête toute répétition automatique de touche en cours."
+  },
+  "TextInputElement:setText": {
+   "en": "Sets the text, truncating to maxCharacters (UTF-8 aware), moves the cursor to the end and refreshes the visible portions. Does not raise onTextChanged.",
+   "fr": "Définit le texte, tronqué à maxCharacters (compatible UTF-8), place le curseur à la fin et rafraîchit les portions visibles. Ne déclenche pas onTextChanged."
+  },
+  "TextInputElement:setForcePressed": {
+   "en": "Enters or leaves editing mode: toggles input capture, sets focus on the element, restores or clears the previous focus state on exit, stops key repeat and refreshes the visible text.",
+   "fr": "Entre ou sort du mode édition : active/désactive la capture des entrées, donne le focus à l'élément, restaure ou retire l'état de focus précédent à la sortie, arrête la répétition de touche et rafraîchit le texte visible."
+  },
+  "TextInputElement:getIsUnicodeAllowed": {
+   "en": "Returns whether a typed character is accepted: rejects line breaks and characters the font cannot render, then defers to the onIsUnicodeAllowed callback (default true).",
+   "fr": "Indique si un caractère saisi est accepté : refuse les sauts de ligne et les caractères que la police ne peut pas afficher, puis s'en remet au callback onIsUnicodeAllowed (true par défaut)."
+  },
+  "TextInputElement:mouseEvent": {
+   "en": "Handles mouse interaction: highlights on hover, enters edit mode on left click (opening the IME on release when supported), and leaves edit mode on a click outside, optionally firing onEnterPressed. Returns whether the event was consumed.",
+   "fr": "Gère la souris : surbrillance au survol, entrée en édition au clic gauche (ouverture de l'IME au relâchement si prise en charge) et sortie lors d'un clic à l'extérieur, avec éventuel onEnterPressed. Renvoie si l'événement a été consommé."
+  },
+  "TextInputElement:moveCursorLeft": {
+   "en": "Moves the cursor one character left, or to the start of the previous word when the ctrl modifier flag is set.",
+   "fr": "Déplace le curseur d'un caractère vers la gauche, ou au début du mot précédent si le modificateur ctrl est actif."
+  },
+  "TextInputElement:moveCursorRight": {
+   "en": "Moves the cursor one character right, or jumps to the next word start when the ctrl modifier flag is set.",
+   "fr": "Déplace le curseur d'un caractère vers la droite, ou saute au début du mot suivant si le modificateur ctrl est actif."
+  },
+  "TextInputElement:setCursorPosition": {
+   "en": "Sets the 1-based cursor position, clamped between 1 and text length plus one.",
+   "fr": "Définit la position du curseur (base 1), bornée entre 1 et la longueur du texte plus un."
+  },
+  "TextInputElement:deleteText": {
+   "en": "Deletes the character before the cursor, or the one after it when the argument is true, then raises onTextChanged. Does nothing at the text boundaries.",
+   "fr": "Supprime le caractère avant le curseur, ou celui après si l'argument est true, puis déclenche onTextChanged. Sans effet aux extrémités du texte."
+  },
+  "TextInputElement:stopSpecialKeyRepeating": {
+   "en": "Clears the auto-repeat state (key, delay and remaining delay) for held navigation/delete keys.",
+   "fr": "Efface l'état de répétition automatique (touche, délai et délai restant) des touches de navigation/suppression maintenues."
+  },
+  "TextInputElement:openIme": {
+   "en": "Opens the platform on-screen input (imeOpen) with the current text, title, description, placeholder, keyboard type and max length (512 if unset). Returns true and subscribes to pause changes if it opened.",
+   "fr": "Ouvre la saisie système à l'écran (imeOpen) avec le texte courant, le titre, la description, l'indication, le type de clavier et la longueur max (512 par défaut). Renvoie true et s'abonne aux changements de pause si l'ouverture a réussi."
+  },
+  "TextInputElement:abortIme": {
+   "en": "Cancels an active IME session via imeAbort, clears the stored previous text and unsubscribes from pause messages.",
+   "fr": "Annule une session IME active via imeAbort, vide le texte précédent mémorisé et se désabonne des messages de pause."
+  },
+  "TextInputElement:keyEvent": {
+   "en": "Processes keyboard input while in edit mode: enter/escape on key release, arrows, home/end, delete, backspace (ctrl removes a word), ctrl+V paste and normal characters inserted at the cursor, with auto-repeat. Raises onEnterPressed, onEscPressed and onTextChanged.",
+   "fr": "Traite le clavier en mode édition : entrée/échap au relâchement, flèches, début/fin, suppr, retour arrière (ctrl supprime un mot), collage ctrl+V et caractères normaux insérés au curseur, avec répétition automatique. Déclenche onEnterPressed, onEscPressed et onTextChanged."
+  },
+  "TextInputElement:inputEvent": {
+   "en": "Handles gamepad/menu actions while editing (no IME active): MENU_ACCEPT confirms and MENU_BACK/MENU_CANCEL cancels, each leaving edit mode and raising the matching callback.",
+   "fr": "Gère les actions manette/menu pendant l'édition (sans IME actif) : MENU_ACCEPT valide et MENU_BACK/MENU_CANCEL annule, chacun quittant l'édition et déclenchant le callback correspondant."
+  },
+  "TextInputElement:update": {
+   "en": "Per-frame update: advances the cursor blink timer, drives accelerated key auto-repeat, polls the IME for completion or live text, and decrements the input block timer. dt is in milliseconds.",
+   "fr": "Mise à jour par frame : fait avancer le clignotement du curseur, gère la répétition accélérée des touches, interroge l'IME (fin ou texte en direct) et décrémente le minuteur de blocage des entrées. dt en millisecondes."
+  },
+  "TextInputElement:draw": {
+   "en": "Draws the parent background with empty text, then renders front dots, text before the cursor, the blinking cursor, text after it and back dots, honouring alignment and optional clip area.",
+   "fr": "Dessine le fond du parent avec un texte vide, puis affiche les points avant, le texte avant le curseur, le curseur clignotant, le texte après et les points arrière, selon l'alignement et la zone de découpe éventuelle."
+  },
+  "TextInputElement:shouldFocusChange": {
+   "en": "Allows focus navigation to leave the element only when it is not in edit mode.",
+   "fr": "Autorise la navigation de focus hors de l'élément seulement s'il n'est pas en mode édition."
+  },
+  "TextInputElement:onFocusLeave": {
+   "en": "On focus loss, aborts the IME, leaves edit mode and calls the parent handler.",
+   "fr": "À la perte du focus, interrompt l'IME, quitte le mode édition et appelle le gestionnaire du parent."
+  },
+  "TextInputElement:onFocusActivate": {
+   "en": "Activation by focus (e.g. gamepad confirm): raises onEnter, then either finishes editing and raises onEnterPressed, or opens the IME and enters edit mode. Ignored while the input block timer runs.",
+   "fr": "Activation par le focus (ex. validation manette) : déclenche onEnter, puis termine l'édition et déclenche onEnterPressed, ou ouvre l'IME et entre en édition. Ignorée tant que le minuteur de blocage tourne."
+  },
+  "TextInputElement:onClose": {
+   "en": "When the parent screen closes, aborts the IME and leaves edit mode so input mode is not left active.",
+   "fr": "À la fermeture de l'écran parent, interrompt l'IME et quitte le mode édition afin que le mode de saisie ne reste pas actif."
+  },
+  "TextInputElement:drawTextPart": {
+   "en": "Renders one text segment (with optional shadow text) at the given x offset and returns its width, used to chain dots, text parts and cursor.",
+   "fr": "Affiche un segment de texte (avec ombre optionnelle) au décalage x donné et renvoie sa largeur, ce qui permet d'enchaîner points, segments et curseur."
+  },
+  "TextInputElement:drawCursor": {
+   "en": "Draws the cursor overlay, pixel-snapped, during the visible half of the blink cycle and returns the horizontal space reserved for the cursor.",
+   "fr": "Dessine l'overlay du curseur, aligné sur les pixels, pendant la moitié visible du cycle de clignotement et renvoie la largeur réservée au curseur."
+  },
+  "TextInputElement:updateVisibleTextElements": {
+   "en": "Recomputes which parts of the text (before/after cursor, front/back dots) fit in maxInputTextWidth. Passwords are shown as asterisks; when not editing, the text is shown from its start and cut with back dots.",
+   "fr": "Recalcule quelles parties du texte (avant/après curseur, points avant/arrière) tiennent dans maxInputTextWidth. Les mots de passe sont affichés en astérisques ; hors édition, le texte part du début et est coupé par des points arrière."
+  },
+  "TextInputElement.limitTextToAvailableWidth": {
+   "en": "Static helper that trims text from the back (or from the front if trimFront) until it fits the width. Returns the trimmed text and the first/last character indices.",
+   "fr": "Fonction statique qui rogne le texte par l'arrière (ou par l'avant si trimFront) jusqu'à ce qu'il tienne dans la largeur. Renvoie le texte rogné et les indices du premier/dernier caractère."
+  },
+  "TextInputElement:getAvailableTextWidth": {
+   "en": "Returns maxInputTextWidth minus the space taken by visible dots and cursor, or nil when no maximum width is set.",
+   "fr": "Renvoie maxInputTextWidth moins la place prise par les points et le curseur visibles, ou nil si aucune largeur maximale n'est définie."
+  },
+  "TextInputElement:getNeededTextWidth": {
+   "en": "Sums the widths of all currently visible parts (dots, text segments, cursor); used to align centred or right-aligned text.",
+   "fr": "Additionne les largeurs de toutes les parties actuellement visibles (points, segments de texte, curseur) ; sert à aligner le texte centré ou à droite."
+  },
+  "TextInputElement:getText": {
+   "en": "Returns the current raw text of the input (not masked for passwords).",
+   "fr": "Renvoie le texte brut courant de la saisie (non masqué pour les mots de passe)."
+  }
+ }
+}

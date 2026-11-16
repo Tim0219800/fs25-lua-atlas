@@ -1,0 +1,29 @@
+{
+ "fichier": "placeables/specializations/PlaceableHeapSpawner.lua",
+ "module": {
+  "en": "Placeable specialization that continuously spawns a fill type as a heap inside rectangular areas at a rate in liters per in-game hour, with optional effects, sounds and animation nodes on clients. The server keeps the placeable active so its update tick does the actual spawning; the onUpdateTick and onDelete handlers are registered but have no body in the SDK dump (UNVERIFIED).",
+  "fr": "Spécialisation de placeable qui fait apparaître en continu un type de remplissage sous forme de tas dans des zones rectangulaires, à un débit en litres par heure de jeu, avec effets, sons et noeuds d'animation optionnels côté client. Le serveur maintient le placeable actif pour que son tick de mise à jour fasse l'apparition ; les gestionnaires onUpdateTick et onDelete sont enregistrés mais sans corps dans le dump du SDK (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlaceableHeapSpawner.prerequisitesPresent": {
+   "en": "No prerequisite: always returns true.",
+   "fr": "Aucun prérequis : renvoie toujours true."
+  },
+  "PlaceableHeapSpawner.registerEventListeners": {
+   "en": "Subscribes to load, finalize-placement, update-tick and delete events.",
+   "fr": "Abonne la spécialisation aux événements de chargement, finalisation du placement, tick de mise à jour et suppression."
+  },
+  "PlaceableHeapSpawner.registerXMLPaths": {
+   "en": "Declares each spawnArea: area start, width and height nodes, fillType, litersPerHour, effect nodes, work/work2/dropping sounds and animation nodes.",
+   "fr": "Déclare chaque spawnArea : noeuds début, largeur et hauteur de la zone, fillType, litersPerHour, noeuds d'effet, sons work/work2/dropping et noeuds d'animation."
+  },
+  "PlaceableHeapSpawner:onLoad": {
+   "en": "Reads each spawn area, skipping with a logged error those missing a node, a valid fill type or a positive litersPerHour (default 150). Stores liters per millisecond. On clients loads and starts effects, three looping samples and animations.",
+   "fr": "Lit chaque zone, en ignorant avec une erreur loguée celles sans noeud, sans type de remplissage valide ou sans litersPerHour positif (150 par défaut). Stocke des litres par milliseconde. Côté client, charge et démarre effets, trois échantillons sonores en boucle et animations."
+  },
+  "PlaceableHeapSpawner:onFinalizePlacement": {
+   "en": "On the server, wakes the update loop so spawning can begin.",
+   "fr": "Sur le serveur, réveille la boucle de mise à jour pour que l'apparition puisse commencer."
+  }
+ }
+}

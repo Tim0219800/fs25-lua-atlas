@@ -1,53 +1,53 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Weeder.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation des bineuses / herses étrilles (désherbage), avec option binage (isHoe) et option prairie (isGrasslandWeeder). Pas de chargement d'effets EffectManager ; l'originalité côté visuel est la coloration des particules de sol : pour chaque correspondance de particules de sol déclarée avec adjustColor (clé XML sur le noeud de WorkParticles), onUpdateTick recolore le shader de ce système de particules. TRAVAIL : processWeederArea (serveur, ou client à distance <= Weeder.CLIENT_DM_UPDATE_RADIUS, constante non définie ici : NON VÉRIFIÉ) appelle FSDensityMapUtil.updateWeederArea (carte des mauvaises herbes ; corps absent du dump, NON VÉRIFIÉ) et, en mode prairie, updateGrassRollerArea ; isWorking = vitesse > 0.5. getStoneArea est lu pour l'usure (pierres). CONDITIONS de zone : getIsWorkAreaActive exige le contact sol du noeud de référence (si requiresGroundContact) et, si disableBackwards, movingDirection > 0 ; l'état abaissé n'est pas testé ici (la limite de vitesse suit getIsImplementChainLowered). À noter : startActivationTime est armé à l'attelage (2000 ms) mais n'est jamais consulté dans ce fichier (non vérifié en jeu : peut-être sans effet). COLORATION (onUpdateTick, client et serveur, tant que isWorking) : la couleur de base est lue à la position monde du noeud : sur un champ, getFieldGroundTyreTrackColor(densityBits) du fieldGroundSystem (couleur de trace de pneu du type de sol), sinon getTerrainAttributesAtWorldPos (couleur d'attribut de terrain) ; une transition lissée sur 1 s (alpha += dt/1000, interpolation vector3ArrayLerp) puis setShaderParameter psColor (alpha final 1). Le paramètre psColor du shader de particules n'est pas vérifiable dans le dump. À noter : la condition de relance de transition (lignes 144-147) compare les composantes par ET logique de différences, ce qui ne se déclenche que si les trois canaux changent à la fois (non vérifié en jeu). MÉTÉO/HUMIDITÉ : aucune donnée lue ; la couleur du sol est celle des cartes de terrain, donc indirectement liée à ce qu'elles encodent (pas relu). RÉSEAU : aucun flux ni dirtyFlag ; la coloration et l'état isWorking sont recalculés localement par chaque client. dt : utilisé pour la transition de couleur (secondes = dt/1000). POINTS D'EXTENSION : fonctions processWeederArea, updateWeederAIRequirements ; surcharges doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML (type WEEDER), getIsWorkAreaActive, loadGroundParticleMapping (ajoute adjustColor). Les particules de sol elles-mêmes sont chargées/pilotées par WorkParticles (WorkParticles.lua:238 : actif si getDoGroundManipulation() et sur champ ; Weeder ne surcharge pas getDoGroundManipulation, donc la valeur par défaut vrai de WorkParticles.lua:311 s'applique). Vitesse limite par défaut : 15.
+--- Specialization for weeders / tine harrows (weed control), with a hoeing option (isHoe) and a grassland option (isGrasslandWeeder). No EffectManager effects are loaded; the visual originality is the colouring of ground particles: for each ground particle mapping declared with adjustColor (XML key on the WorkParticles node), onUpdateTick recolours the shader of that particle system. WORK: processWeederArea (server, or client at a distance <= Weeder.CLIENT_DM_UPDATE_RADIUS, a constant not defined here: UNVERIFIED) calls FSDensityMapUtil.updateWeederArea (weed map; body absent from the dump, UNVERIFIED) and, in grassland mode, updateGrassRollerArea; isWorking = speed > 0.5. getStoneArea is read for wear (stones). AREA CONDITIONS: getIsWorkAreaActive requires ground contact of the reference node (if requiresGroundContact) and, if disableBackwards, movingDirection > 0; the lowered state is not tested here (the speed limit follows getIsImplementChainLowered). Note: startActivationTime is armed on attach (2000 ms) but is never consulted in this file (not verified in game: possibly no effect). COLOURING (onUpdateTick, client and server, while isWorking): the base colour is read at the node's world position: on a field, getFieldGroundTyreTrackColor(densityBits) of the fieldGroundSystem (tyre track colour of the ground type), otherwise getTerrainAttributesAtWorldPos (terrain attribute colour); a smoothed transition over 1 s (alpha += dt/1000, vector3ArrayLerp interpolation) then setShaderParameter psColor (final alpha 1). The psColor parameter of the particle shader cannot be verified in the dump. Note: the condition that restarts a transition (lines 144-147) compares components with a logical AND of differences, which only triggers when all three channels change at once (not verified in game). WEATHER/WETNESS: no data read; the ground colour comes from the terrain maps, so it is indirectly tied to what they encode (not re-read). NETWORK: no stream or dirtyFlag; the colouring and the isWorking state are recomputed locally by each client. dt: used for the colour transition (seconds = dt/1000). EXTENSION POINTS: functions processWeederArea, updateWeederAIRequirements; overrides doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML (type WEEDER), getIsWorkAreaActive, loadGroundParticleMapping (adds adjustColor). The ground particles themselves are loaded/driven by WorkParticles (WorkParticles.lua:238: active if getDoGroundManipulation() and on a field; Weeder does not override getDoGroundManipulation, so the default true of WorkParticles.lua:311 applies). Default speed limit: 15.
 ---@class Weeder
 Weeder = {}
 
---- Déclare le type de zone de travail weeder, le schéma XML (sons de travail, vehicle.weeder#isHoe, #isGrasslandWeeder) et ajoute à la table de correspondance de WorkParticles la clé adjustColor.
+--- Declares the weeder work area type, the XML schema (work sounds, vehicle.weeder#isHoe, #isGrasslandWeeder) and adds the adjustColor key to WorkParticles' mapping table.
 function Weeder.initSpecialization() end
 
---- Exige WorkArea et AttacherJoints.
+--- Requires WorkArea and AttacherJoints.
 ---@param specializations table
 ---@return boolean
 function Weeder.prerequisitesPresent(specializations) end
 
---- Enregistre processWeederArea et updateWeederAIRequirements.
+--- Registers processWeederArea and updateWeederAIRequirements.
 ---@param vehicleType any
 function Weeder.registerFunctions(vehicleType) end
 
---- Surcharge doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML, getIsWorkAreaActive et loadGroundParticleMapping.
+--- Overrides doCheckSpeedLimit, getDirtMultiplier, getWearMultiplier, loadWorkAreaFromXML, getIsWorkAreaActive and loadGroundParticleMapping.
 ---@param vehicleType any
 function Weeder.registerOverwrittenFunctions(vehicleType) end
 
---- S'abonne à onLoad, onDelete, onUpdateTick, onDeactivate, onPostAttach, onStartWorkAreaProcessing, onEndWorkAreaProcessing et onStateChange.
+--- Subscribes to onLoad, onDelete, onUpdateTick, onDeactivate, onPostAttach, onStartWorkAreaProcessing, onEndWorkAreaProcessing and onStateChange.
 ---@param vehicleType any
 function Weeder.registerEventListeners(vehicleType) end
 
---- Charge les sons (client), lit isHoe et isGrasslandWeeder, initialise les accumulateurs de surface, le délai d'activation et les données de multiplicateur d'usure liées aux pierres (type WEEDER du stoneSystem), puis les besoins IA.
+--- Loads the sounds (client), reads isHoe and isGrasslandWeeder, initialises the surface accumulators, the activation delay and the stone-related wear multiplier data (WEEDER type of the stoneSystem), then the AI requirements.
 ---@param savegame table
 function Weeder:onLoad(savegame) end
 
---- Libère les sons de travail s'ils existent.
+--- Releases the work sounds if they exist.
 function Weeder:onDelete() end
 
---- Si l'outil travaille et possède des particules à couleur ajustable : relit la couleur du sol sous chaque noeud (couleur de trace de pneu si champ, attribut de terrain sinon), fait une transition de 1 s et l'envoie au paramètre de shader psColor du système de particules. Exécuté sur tout participant qui a ces particules (client ou hôte). Aucune lecture météo.
+--- If the tool is working and has colour-adjustable particles: re-reads the ground colour under each node (tyre track colour on a field, terrain attribute otherwise), blends over 1 s and sends it to the psColor shader parameter of the particle system. Runs on any participant that has these particles (client or host). No weather reading.
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function Weeder:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Applique le désherbage (et le rouleau prairie si isGrasslandWeeder) à la carte de densité, cumule les surfaces, met isWorking (vitesse > 0.5) et lit la présence de pierres si l'outil travaille. Renvoie la surface deux fois (réelle et totale identiques).
+--- Applies weeding (and the grassland roller if isGrasslandWeeder) to the density map, accumulates areas, sets isWorking (speed > 0.5) and reads stone presence if the tool is working. Returns the area twice (actual and total identical).
 ---@param workArea any
 ---@param dt any
 function Weeder:processWeederArea(workArea, dt) end
 
---- Déclare à l'IA les états de mauvaises herbes ciblés (via weedSystem:getWeederReplacements) sauf si un semoir est attelé ; sans lien avec les effets. Fin de fonction (lignes 230-240) non relue.
+--- Declares to the AI the targeted weed states (via weedSystem:getWeederReplacements) unless a seeder is attached; unrelated to effects. End of function (lines 230-240) not re-read.
 function Weeder:updateWeederAIRequirements() end
 
---- Force le type de zone WEEDER lorsque le type lu est DEFAULT.
+--- Forces the WEEDER area type when the type read is DEFAULT.
 ---@param superFunc table
 ---@param workArea table
 ---@param xmlFile integer
@@ -55,28 +55,28 @@ function Weeder:updateWeederAIRequirements() end
 ---@return boolean
 function Weeder:loadWorkAreaFromXML(superFunc, workArea, xmlFile, key) end
 
---- Pour WEEDER : actif si contact sol (quand exigé) et, le cas échéant, marche avant uniquement ; ne regarde ni l'allumage ni le délai post-attelage.
+--- For WEEDER: active if ground contact (when required) and, where relevant, forward motion only; looks at neither ignition nor the post-attach delay.
 ---@param superFunc table
 ---@param workArea table
 ---@return boolean
 function Weeder:getIsWorkAreaActive(superFunc, workArea) end
 
---- Applique la limite de vitesse dès que la chaîne d'outils est abaissée.
+--- Applies the speed limit as soon as the implement chain is lowered.
 ---@param superFunc any
 ---@return boolean
 function Weeder:doCheckSpeedLimit(superFunc) end
 
---- Ajoute la salissure de travail pondérée par vitesse / limite de vitesse quand isWorking.
+--- Adds the work dirt, weighted by speed / speed limit, when isWorking.
 ---@param superFunc any
 ---@return number
 function Weeder:getDirtMultiplier(superFunc) end
 
---- Ajoute l'usure de travail pondérée par vitesse / limite et par le multiplicateur de pierres (spec.stoneLastState).
+--- Adds the work wear, weighted by speed / limit and by the stone multiplier (spec.stoneLastState).
 ---@param superFunc any
 ---@return number
 function Weeder:getWearMultiplier(superFunc) end
 
---- Étend le chargement d'une correspondance de particules de sol : lit adjustColor et, s'il est vrai, enregistre la correspondance dans spec.colorParticleSystems avec un tampon de couleur.
+--- Extends the loading of a ground particle mapping: reads adjustColor and, if true, registers the mapping in spec.colorParticleSystems with a colour buffer.
 ---@param superFunc XMLFile
 ---@param xmlFile XMLFile
 ---@param key string
@@ -86,29 +86,29 @@ function Weeder:getWearMultiplier(superFunc) end
 ---@return boolean
 function Weeder:loadGroundParticleMapping(superFunc, xmlFile, key, mapping, index, i3dNode) end
 
---- Réinitialise isWorking et les surfaces avant la passe.
+--- Resets isWorking and the areas before the pass.
 ---@param dt any
 function Weeder:onStartWorkAreaProcessing(dt) end
 
---- Serveur : déclare la surface travaillée (updateLastWorkedArea). Client : démarre/arrête le son de travail selon isWorking.
+--- Server: declares the worked area (updateLastWorkedArea). Client: starts/stops the work sound according to isWorking.
 ---@param dt any
 ---@param hasProcessed any
 function Weeder:onEndWorkAreaProcessing(dt, hasProcessed) end
 
---- À l'attelage ou au dételage, recalcule les besoins IA.
+--- On attach or detach, recomputes the AI requirements.
 ---@param state any
 ---@param data any
 function Weeder:onStateChange(state, data) end
 
---- Coupe le son de travail.
+--- Stops the work sound.
 function Weeder:onDeactivate() end
 
---- Arme startActivationTime (2000 ms), valeur non consultée ailleurs dans ce fichier.
+--- Arms startActivationTime (2000 ms), a value not consulted elsewhere in this file.
 ---@param attacherVehicle table
 ---@param inputJointDescIndex integer
 ---@param jointDescIndex integer
 function Weeder:onPostAttach(attacherVehicle, inputJointDescIndex, jointDescIndex) end
 
---- Limite de vitesse par défaut : 15.
+--- Default speed limit: 15.
 ---@return number
 function Weeder.getDefaultSpeedLimit() end

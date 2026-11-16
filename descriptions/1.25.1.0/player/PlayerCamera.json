@@ -1,0 +1,101 @@
+{
+ "fichier": "player/PlayerCamera.lua",
+ "module": {
+  "en": "Camera of a player, usable in first or third person. It owns the yaw node, the pitch node and the camera root node, handles rotation from input, following the player, zoom and collision distance, first-person view bobbing, and temporary target overrides. It subscribes to the player field-of-view settings. Several helpers it calls (`initialiseCameraNodes`, `switchToPerspective`, `applyZoom`, `getHasOverriddenTarget`, `getBaseOffsetY`) are not in this dump (UNVERIFIED).",
+  "fr": "Caméra d'un joueur, utilisable en première ou troisième personne. Elle possède le noeud de lacet, le noeud de tangage et le noeud racine de caméra, et gère la rotation selon les entrées, le suivi du joueur, le zoom et la distance de collision, le balancement de la vue en première personne et les forçages temporaires de cible. Elle s'abonne aux réglages de champ de vision du joueur. Plusieurs fonctions qu'elle appelle (`initialiseCameraNodes`, `switchToPerspective`, `applyZoom`, `getHasOverriddenTarget`, `getBaseOffsetY`) ne sont pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlayerCamera.new": {
+   "en": "Creates the camera for a player, starting in first person with collision on and default zoom, and subscribes to the first- and third-person FOV setting changes. No scene nodes exist yet.",
+   "fr": "Crée la caméra d'un joueur, en première personne au départ, collision activée et zoom par défaut, et s'abonne aux changements des réglages de FOV en première et troisième personne. Aucun noeud de scène n'existe encore."
+  },
+  "PlayerCamera:initialise": {
+   "en": "Called when the player first loads; delegates to `initialiseCameraNodes` (not in this dump) to build the camera nodes in the scene.",
+   "fr": "Appelée au premier chargement du joueur ; délègue à `initialiseCameraNodes` (absente de ce dump) pour créer les noeuds de caméra dans la scène."
+  },
+  "PlayerCamera:makeCurrent": {
+   "en": "Makes this camera the active one in `g_cameraManager`: the first-person camera, the third-person conversation camera while in a conversation, or the normal third-person camera.",
+   "fr": "Rend cette caméra active dans `g_cameraManager` : la caméra première personne, la caméra de conversation à la troisième personne pendant une conversation, ou la caméra troisième personne normale."
+  },
+  "PlayerCamera:toggleThirdPersonMode": {
+   "en": "Switches between first and third person by calling `switchToPerspective` with the opposite of the current mode.",
+   "fr": "Bascule entre première et troisième personne en appelant `switchToPerspective` avec l'inverse du mode actuel."
+  },
+  "PlayerCamera:getIsCollisionEnabled": {
+   "en": "Returns the stored collision flag. Note: the code simply returns the variable, so it is not forced to false in first person despite what the name might suggest elsewhere.",
+   "fr": "Renvoie l'indicateur de collision stocké. À noter : le code renvoie simplement la variable, elle n'est donc pas forcée à false en première personne."
+  },
+  "PlayerCamera:setIsCollisionEnabled": {
+   "en": "Sets whether the camera collides with objects behind it.",
+   "fr": "Définit si la caméra entre en collision avec les objets derrière elle."
+  },
+  "PlayerCamera:getOffsetY": {
+   "en": "Returns the extra vertical camera offset, used for fine adjustments such as swimming.",
+   "fr": "Renvoie le décalage vertical supplémentaire de la caméra, utilisé pour des ajustements fins comme la nage."
+  },
+  "PlayerCamera:setOffsetY": {
+   "en": "Sets the extra vertical offset, 0 when nil is given.",
+   "fr": "Définit le décalage vertical supplémentaire, 0 si nil est donné."
+  },
+  "PlayerCamera:getCurrentZoomDistance": {
+   "en": "Returns the current distance between the camera root and the focus point.",
+   "fr": "Renvoie la distance actuelle entre la racine de la caméra et le point de focalisation."
+  },
+  "PlayerCamera:setCurrentZoomDistance": {
+   "en": "Stores the zoom distance and moves the camera root node back by that amount on its local z axis. The `isForced` parameter is unused.",
+   "fr": "Enregistre la distance de zoom et recule le noeud racine de la caméra de cette valeur sur son axe z local. Le paramètre `isForced` n'est pas utilisé."
+  },
+  "PlayerCamera:getDesiredZoomDistance": {
+   "en": "Returns the zoom distance the player wants, or 0 in first person.",
+   "fr": "Renvoie la distance de zoom souhaitée par le joueur, ou 0 en première personne."
+  },
+  "PlayerCamera:getFocusPosition": {
+   "en": "Returns the world position of the yaw node, which is the point the camera orbits and looks at.",
+   "fr": "Renvoie la position monde du noeud de lacet, point autour duquel la caméra orbite et vers lequel elle regarde."
+  },
+  "PlayerCamera:setFocusPosition": {
+   "en": "Moves the yaw node to the given world position.",
+   "fr": "Déplace le noeud de lacet à la position monde donnée."
+  },
+  "PlayerCamera:getCameraPosition": {
+   "en": "Returns the world position of the camera root node itself.",
+   "fr": "Renvoie la position monde du noeud racine de la caméra lui-même."
+  },
+  "PlayerCamera:getRotation": {
+   "en": "Returns pitch, yaw and roll computed from the camera's forward direction, which avoids the engine's Euler flipping; roll is read directly from the node.",
+   "fr": "Renvoie le tangage, le lacet et le roulis calculés à partir de la direction avant de la caméra, ce qui évite l'inversion d'Euler du moteur ; le roulis est lu directement sur le noeud."
+  },
+  "PlayerCamera:setRotation": {
+   "en": "Applies pitch to the pitch node, yaw to the yaw node and roll to the camera root node (which is also turned by pi). Nil values count as 0.",
+   "fr": "Applique le tangage au noeud de tangage, le lacet au noeud de lacet et le roulis au noeud racine de caméra (qui est aussi tourné de pi). Les valeurs nil valent 0."
+  },
+  "PlayerCamera:calculateWorldDirection": {
+   "en": "Converts a local x/z direction relative to the yaw node into a world x/z direction (the y component is dropped).",
+   "fr": "Convertit une direction locale x/z relative au noeud de lacet en direction monde x/z (la composante y est ignorée)."
+  },
+  "PlayerCamera:calculateLocalDirection": {
+   "en": "Converts a world x/z direction into a direction local to the yaw node (the y component is dropped).",
+   "fr": "Convertit une direction monde x/z en direction locale au noeud de lacet (la composante y est ignorée)."
+  },
+  "PlayerCamera:updateRotation": {
+   "en": "Rotates the camera from the player's input deltas scaled by the camera sensitivity setting, clamping pitch between `LOWEST_PITCH` and `HIGHEST_PITCH`. While a target override is active it follows the target instead.",
+   "fr": "Fait tourner la caméra selon les deltas d'entrée du joueur multipliés par le réglage de sensibilité, en bornant le tangage entre `LOWEST_PITCH` et `HIGHEST_PITCH`. Pendant un forçage de cible, elle suit la cible à la place."
+  },
+  "PlayerCamera:updatePosition": {
+   "en": "Per-frame position update: follows the player, applies first-person bobbing and the zoom logic (`applyZoom`, not in this dump). With a target override it only updates from the target.",
+   "fr": "Mise à jour de position à chaque image : suit le joueur, applique le balancement en première personne et la logique de zoom (`applyZoom`, absente de ce dump). Avec un forçage de cible, elle ne se met à jour que depuis la cible."
+  },
+  "PlayerCamera:focusOnPlayer": {
+   "en": "Focuses the camera on the player's graphical (interpolated) position.",
+   "fr": "Centre la caméra sur la position graphique (interpolée) du joueur."
+  },
+  "PlayerCamera:focusOnPosition": {
+   "en": "Moves the focus point to the given position plus the current y offset and the base y offset (`getBaseOffsetY`, not in this dump).",
+   "fr": "Déplace le point de focalisation à la position donnée plus le décalage y courant et le décalage y de base (`getBaseOffsetY`, absente de ce dump)."
+  },
+  "PlayerCamera:tryApplyViewBobbing": {
+   "en": "Applies camera bobbing (x/y offset and roll, smoothed per frame) in first person while walking on the ground, if the CAMERA_BOBBING setting is on. In third person or with the setting off, it just resets the camera offset; it does nothing when the player speed exceeds 10.",
+   "fr": "Applique le balancement de la caméra (décalage x/y et roulis, lissé à chaque image) en première personne pendant la marche au sol, si le réglage CAMERA_BOBBING est actif. En troisième personne ou réglage désactivé, il réinitialise simplement le décalage de la caméra ; il ne fait rien si la vitesse du joueur dépasse 10."
+  }
+ }
+}

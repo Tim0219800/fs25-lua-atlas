@@ -1,0 +1,197 @@
+{
+ "fichier": "handTools/HandTool.lua",
+ "module": {
+  "en": "Base class of every hand tool instance (child of `Object`). It runs an asynchronous, specialization-based loading pipeline (i3d, XML `handTool.base`, specialization events onPreLoad to onLoadFinished), tracks holder, carrying player and held state, mounts the tool on the player hand node or camera node, saves and syncs state over the network, and computes age-based price. Specialization events are raised with `SpecializationUtil.raiseEvent`. Some helpers it calls (`loadCallback`, `registerActionEvents`, `getHolder`, `setHolder`, `loadHandToolOnClient`, `setCanBeDropped`) are not defined in this file (UNVERIFIED).",
+  "fr": "Classe de base de toute instance d'outil à main (fille de `Object`). Elle exécute un chargement asynchrone basé sur les spécialisations (i3d, XML `handTool.base`, événements de spécialisation de onPreLoad à onLoadFinished), suit le holder, le joueur porteur et l'état tenu, attache l'outil à la main ou à la caméra du joueur, sauvegarde et synchronise l'état sur le réseau, et calcule un prix dépendant de l'âge. Les événements de spécialisation sont levés avec `SpecializationUtil.raiseEvent`. Plusieurs aides qu'elle appelle (`loadCallback`, `registerActionEvents`, `getHolder`, `setHolder`, `loadHandToolOnClient`, `setCanBeDropped`) ne sont pas définies dans ce fichier (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "HandTool.init": {
+   "en": "Calls the `init` function of every registered hand tool specialization that defines one.",
+   "fr": "Appelle la fonction `init` de chaque spécialisation d'outil à main enregistrée qui en définit une."
+  },
+  "HandTool.postInit": {
+   "en": "Empty hook for post-initialization; does nothing.",
+   "fr": "Point d'accroche vide pour la post-initialisation ; ne fait rien."
+  },
+  "HandTool.registerXMLPaths": {
+   "en": "Creates the `handTool` XML schema (plus a `sounds` sub-schema), registers it for the hand tool store species and type manager, and declares the `handTool.base` keys (crouch, held, save, drop, speed and jump multipliers, texts, i3d filename, graphics, hand and first person nodes, carried node, mass) and the `type` attribute. Then lets each specialization register its own paths.",
+   "fr": "Crée le schéma XML `handTool` (plus un sous-schéma `sounds`), l'enregistre pour l'espèce de boutique des outils à main et le gestionnaire de types, et déclare les clés `handTool.base` (accroupissement, tenu, sauvegarde, dépôt, multiplicateurs de vitesse et de saut, textes, fichier i3d, graphismes, noeuds de main et de première personne, noeud porté, masse) et l'attribut `type`. Chaque spécialisation enregistre ensuite ses propres chemins."
+  },
+  "HandTool.registerSavegameXMLPaths": {
+   "en": "Declares the savegame keys under `handTools.handTool(?)`: filename, modName, uniqueId, farmId, age, price and last holder id, then the specializations' own savegame paths.",
+   "fr": "Déclare les clés de sauvegarde sous `handTools.handTool(?)` : filename, modName, uniqueId, farmId, age, price et identifiant du dernier holder, puis les chemins de sauvegarde des spécialisations."
+  },
+  "HandTool.registerEvents": {
+   "en": "Registers the specialization events of a hand tool type, from onPreLoad, onLoad and onDelete to the update, held, holder-changed and carrying-player events and onDebugDraw.",
+   "fr": "Enregistre les événements de spécialisation d'un type d'outil à main, de onPreLoad, onLoad et onDelete aux événements de mise à jour, tenu, changement de holder et joueur porteur, ainsi que onDebugDraw."
+  },
+  "HandTool.new": {
+   "en": "Creates a hand tool object with default state: not loaded, loading state OK, step CREATED, no holder, no carrying player, not held, mass 0.",
+   "fr": "Crée un objet outil à main avec l'état par défaut : non chargé, état de chargement OK, étape CREATED, sans holder ni joueur porteur, non tenu, masse 0."
+  },
+  "HandTool:setFilename": {
+   "en": "Stores the XML config filename, its clean form, and the mod name and base directory derived from the path.",
+   "fr": "Mémorise le nom du fichier XML de config, sa forme nettoyée, ainsi que le nom du mod et le dossier de base déduits du chemin."
+  },
+  "HandTool:setType": {
+   "en": "Initializes the tool's specializations from the given type definition through `SpecializationUtil.initSpecializationsIntoTypeClass`.",
+   "fr": "Initialise les spécialisations de l'outil depuis la définition de type donnée via `SpecializationUtil.initSpecializationsIntoTypeClass`."
+  },
+  "HandTool:setLoadCallback": {
+   "en": "Stores the callback function, target and arguments to call when loading ends.",
+   "fr": "Mémorise la fonction de callback, sa cible et ses arguments, appelés à la fin du chargement."
+  },
+  "HandTool:i3dFileLoaded": {
+   "en": "Callback of the i3d load: on failure sets the ERROR state, logs and calls the load callback; otherwise keeps the node hidden and continues with `loadFinished`.",
+   "fr": "Callback du chargement i3d : en cas d'échec, passe à l'état ERROR, journalise et appelle le callback de chargement ; sinon garde le noeud masqué et poursuit avec `loadFinished`."
+  },
+  "HandTool:loadFinished": {
+   "en": "Main load step after the i3d is available: sets owner farm, mass, unique id and farm from the savegame, price (store default if 0), texts, root node, components and i3d mappings, then reads the `handTool.base` values (graphical, hand and first person nodes, multipliers with jump clamped to 0 to 1.2, crouch, held, save and drop flags). Raises onLoad and onPostLoad, reads age and price from the savegame, subscribes to `PERIOD_CHANGED`, then finishes or waits for sub-loading tasks. Errors abort via the load callback.",
+   "fr": "Étape principale du chargement une fois l'i3d disponible : fixe la ferme propriétaire, la masse, l'identifiant unique et la ferme issus de la sauvegarde, le prix (valeur boutique si 0), les textes, le noeud racine, les composants et mappings i3d, puis lit les valeurs `handTool.base` (noeuds graphique, de main et de première personne, multiplicateurs avec saut borné entre 0 et 1,2, accroupissement, tenu, drapeaux de sauvegarde et de dépôt). Lève onLoad et onPostLoad, lit âge et prix de la sauvegarde, s'abonne à `PERIOD_CHANGED`, puis termine ou attend les tâches de sous-chargement. Les erreurs interrompent via le callback de chargement."
+  },
+  "HandTool:onFinishedLoading": {
+   "en": "Final load step: raises onLoadFinished, marks the tool synchronized on the server, adds it to `handToolSystem` (error and callback on failure), registers it if requested, prepares the initial holder (loading data or savegame unique id), adds it to owned items, frees the XML file and calls the load callback.",
+   "fr": "Dernière étape du chargement : lève onLoadFinished, marque l'outil synchronisé sur le serveur, l'ajoute à `handToolSystem` (erreur et callback en cas d'échec), l'enregistre si demandé, prépare le holder initial (données de chargement ou identifiant unique de la sauvegarde), l'ajoute aux objets possédés, libère le fichier XML et appelle le callback de chargement."
+  },
+  "HandTool:createLoadingTask": {
+   "en": "Creates and returns a loading task for the given target through `SpecializationUtil.createLoadingTask`; loading waits for all tasks.",
+   "fr": "Crée et renvoie une tâche de chargement pour la cible donnée via `SpecializationUtil.createLoadingTask` ; le chargement attend toutes les tâches."
+  },
+  "HandTool:finishLoadingTask": {
+   "en": "Marks a loading task as done via `SpecializationUtil.finishLoadingTask`; finishes loading when ready and no task remains.",
+   "fr": "Marque une tâche de chargement comme terminée via `SpecializationUtil.finishLoadingTask` ; termine le chargement quand tout est prêt et qu'aucune tâche ne reste."
+  },
+  "HandTool:setLoadingState": {
+   "en": "Sets the loading state if it is a valid `HandToolLoadingState`; otherwise prints the call stack and logs an error.",
+   "fr": "Définit l'état de chargement s'il s'agit d'un `HandToolLoadingState` valide ; sinon affiche la pile d'appels et journalise une erreur."
+  },
+  "HandTool:setLoadingStep": {
+   "en": "Sets the loading step through `SpecializationUtil.setLoadingStep`.",
+   "fr": "Définit l'étape de chargement via `SpecializationUtil.setLoadingStep`."
+  },
+  "HandTool:delete": {
+   "en": "Cleans up once: removes owned item, unsubscribes messages, clears the holder, releases the shared i3d, raises onDelete, deletes the root node, removes the tool from the system, deletes the sounds file and calls the parent delete.",
+   "fr": "Nettoyage unique : retire l'objet des possessions, désabonne les messages, efface le holder, libère l'i3d partagé, lève onDelete, supprime le noeud racine, retire l'outil du système, supprime le fichier de sons et appelle le delete parent."
+  },
+  "HandTool:writeStream": {
+   "en": "Server: after the parent data, writes the network config filename and the can-be-dropped flag, so the client can load the same tool.",
+   "fr": "Serveur : après les données du parent, écrit le nom de fichier de config réseau et l'indicateur de dépôt possible, pour que le client charge le même outil."
+  },
+  "HandTool:readStream": {
+   "en": "Client: reads filename and drop flag, refuses if loading already started, then starts a client-side load through `HandToolLoadingData` with a callback that tells the client the object finished async loading.",
+   "fr": "Client : lit le nom de fichier et l'indicateur de dépôt, refuse si le chargement a déjà commencé, puis lance un chargement côté client via `HandToolLoadingData` avec un callback qui signale au client que l'objet a fini son chargement asynchrone."
+  },
+  "HandTool:postWriteStream": {
+   "en": "Server, once the client has loaded the tool: writes whether it has a holder and, if so, the holder object and held flag, then raises onWriteStream.",
+   "fr": "Serveur, une fois l'outil chargé chez le client : écrit s'il a un holder et, le cas échéant, l'objet holder et l'indicateur tenu, puis lève onWriteStream."
+  },
+  "HandTool:postReadStream": {
+   "en": "Client: reads the pending holder object id and holding flag, then raises onReadStream and sets the step to SYNCHRONIZED.",
+   "fr": "Client : lit l'identifiant du holder en attente et l'indicateur de prise en main, puis lève onReadStream et passe à l'étape SYNCHRONIZED."
+  },
+  "HandTool:writeUpdateStream": {
+   "en": "Server: only raises onWriteUpdateStream for specializations to write their data.",
+   "fr": "Serveur : se contente de lever onWriteUpdateStream pour que les spécialisations écrivent leurs données."
+  },
+  "HandTool:readUpdateStream": {
+   "en": "Client: only raises onReadUpdateStream for specializations to read their data.",
+   "fr": "Client : se contente de lever onReadUpdateStream pour que les spécialisations lisent leurs données."
+  },
+  "HandTool:getNeedsSaving": {
+   "en": "Returns whether the tool is saved with the savegame (`canBeSaved`).",
+   "fr": "Renvoie si l'outil est sauvegardé avec la partie (`canBeSaved`)."
+  },
+  "HandTool:saveToXMLFile": {
+   "en": "Writes unique id, farm id (-1 if none), age and the holder unique id, then lets each specialization with `saveToXMLFile` write under its own sub-key.",
+   "fr": "Écrit l'identifiant unique, l'identifiant de ferme (-1 si aucun), l'âge et l'identifiant unique du holder, puis laisse chaque spécialisation ayant `saveToXMLFile` écrire sous sa sous-clé."
+  },
+  "HandTool:getUniqueId": {
+   "en": "Returns the tool unique id.",
+   "fr": "Renvoie l'identifiant unique de l'outil."
+  },
+  "HandTool:setUniqueId": {
+   "en": "Sets the unique id; it should not change after the first assignment (only debug assertions check it).",
+   "fr": "Définit l'identifiant unique ; il ne doit plus changer après la première affectation (seules des assertions de debug le vérifient)."
+  },
+  "HandTool:register": {
+   "en": "Calls the parent register, then raises onRegistered.",
+   "fr": "Appelle le register parent, puis lève onRegistered."
+  },
+  "HandTool:getIsSynchronized": {
+   "en": "Returns true when the loading step is SYNCHRONIZED, meaning fully loaded and synchronized.",
+   "fr": "Renvoie true quand l'étape de chargement est SYNCHRONIZED, c'est-à-dire entièrement chargé et synchronisé."
+  },
+  "HandTool:update": {
+   "en": "Per-frame update: resolves pending holders (object, unique id, or direct), raises onPreUpdate, onUpdate and onPostUpdate, and keeps itself active while held by a controlled player. `dt` is in milliseconds.",
+   "fr": "Mise à jour par image : résout les holders en attente (objet, identifiant unique ou direct), lève onPreUpdate, onUpdate et onPostUpdate, et reste actif tant qu'un joueur contrôlé le tient. `dt` est en millisecondes."
+  },
+  "HandTool:updateTick": {
+   "en": "Raises onUpdateTick with `dt`.",
+   "fr": "Lève onUpdateTick avec `dt`."
+  },
+  "HandTool:startHolding": {
+   "en": "Called when the player takes the tool in hand: may lock first or third person, sets held, attaches the tool, raises onHeldStart and re-registers the action events for the owning player.",
+   "fr": "Appelé quand le joueur prend l'outil en main : peut verrouiller la vue à la première ou troisième personne, met l'état tenu, attache l'outil, lève onHeldStart et réenregistre les événements d'action du joueur propriétaire."
+  },
+  "HandTool:stopHolding": {
+   "en": "Called when the tool is put away: restores the camera perspective if it was locked, clears held, detaches the tool, raises onHeldEnd and rebinds action events.",
+   "fr": "Appelé quand l'outil est rangé : restaure la perspective de caméra si elle était verrouillée, efface l'état tenu, détache l'outil, lève onHeldEnd et relie les événements d'action."
+  },
+  "HandTool:getIsCarried": {
+   "en": "Returns true if a player carries the tool (in inventory), whether or not it is held in hand.",
+   "fr": "Renvoie true si un joueur porte l'outil (inventaire), qu'il soit en main ou non."
+  },
+  "HandTool:setCarryingPlayer": {
+   "en": "Sets the carrying player, raises onCarryingPlayerChanged with new and previous player, and re-registers action events if the player is the local owner.",
+   "fr": "Définit le joueur porteur, lève onCarryingPlayerChanged avec le nouveau et l'ancien joueur, et réenregistre les événements d'action si le joueur est le propriétaire local."
+  },
+  "HandTool:getCarryingPlayer": {
+   "en": "Returns the player carrying the tool, or nil.",
+   "fr": "Renvoie le joueur qui porte l'outil, ou nil."
+  },
+  "HandTool:periodChanged": {
+   "en": "Increments the tool age by one period (subscribed to `PERIOD_CHANGED`).",
+   "fr": "Incrémente l'âge de l'outil d'une période (abonné à `PERIOD_CHANGED`)."
+  },
+  "HandTool:getPrice": {
+   "en": "Returns the tool's price.",
+   "fr": "Renvoie le prix de l'outil."
+  },
+  "HandTool:getSellPrice": {
+   "en": "Returns the sell price from the store item, age and price via `HandTool.calculateSellPrice`.",
+   "fr": "Renvoie le prix de vente à partir de l'item de boutique, de l'âge et du prix via `HandTool.calculateSellPrice`."
+  },
+  "HandTool.calculateSellPrice": {
+   "en": "Depreciation: age in years (`age / Environment.PERIODS_IN_YEAR`), factor = min(0.75 - 0.1 * ln(years), 0.8), result = max(price * factor, 3% of price). The `storeItem` argument is unused. Note: age 0 gives ln(0), so the factor goes to the 0.8 cap.",
+   "fr": "Dépréciation : âge en années (`age / Environment.PERIODS_IN_YEAR`), facteur = min(0,75 - 0,1 * ln(années), 0,8), résultat = max(prix * facteur, 3 % du prix). L'argument `storeItem` est inutilisé. À noter : un âge 0 donne ln(0), le facteur atteint donc le plafond de 0,8."
+  },
+  "HandTool:getIsHeld": {
+   "en": "Returns true only if the tool is carried and currently held in hand.",
+   "fr": "Renvoie true seulement si l'outil est porté et actuellement en main."
+  },
+  "HandTool:setCarryingPlayerStyleChanged": {
+   "en": "Called when the carrying player's model changes: reattaches the tool to the new model, then raises onCarryingPlayerStyleChanged.",
+   "fr": "Appelé quand le modèle du joueur porteur change : rattache l'outil au nouveau modèle, puis lève onCarryingPlayerStyleChanged."
+  },
+  "HandTool:attachTool": {
+   "en": "If held, places the tool on the player camera (first person, forced mode) or on the hand, then makes the root node visible.",
+   "fr": "Si l'outil est tenu, l'attache à la caméra du joueur (première personne, mode forcé) ou à la main, puis rend le noeud racine visible."
+  },
+  "HandTool:detachTool": {
+   "en": "Hides and unlinks the root node; does nothing if there is no root node.",
+   "fr": "Masque et délie le noeud racine ; ne fait rien s'il n'y a pas de noeud racine."
+  },
+  "HandTool:attachToolToHand": {
+   "en": "Links the tool to the player's right or left third person hand node, aligned with the tool's `handNode`; without a hand node, links with zero offset and warns. Returns false and logs an error if the player model is invalid or the tool not held.",
+   "fr": "Lie l'outil au noeud de main droite ou gauche en troisième personne du joueur, aligné sur le `handNode` de l'outil ; sans noeud de main, lie avec un décalage nul et avertit. Renvoie false et journalise une erreur si le modèle du joueur est invalide ou l'outil non tenu."
+  },
+  "HandTool:attachToolToCamera": {
+   "en": "Links the tool to the carrying player's camera pitch node, aligned with `firstPersonNode`; without it, uses zero offset and warns.",
+   "fr": "Lie l'outil au noeud de tangage de la caméra du joueur porteur, aligné sur `firstPersonNode` ; sans ce noeud, utilise un décalage nul et avertit."
+  },
+  "HandTool:clearActionEvents": {
+   "en": "Removes all of this tool's action events from the input binding in the player input context. Note: the parameter `clearCarriedActionEvents` is documented but never used.",
+   "fr": "Retire tous les événements d'action de cet outil de l'input binding dans le contexte d'entrée du joueur. À noter : le paramètre `clearCarriedActionEvents` est documenté mais jamais utilisé."
+  }
+ }
+}

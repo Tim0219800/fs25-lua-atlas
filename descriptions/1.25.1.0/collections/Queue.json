@@ -1,0 +1,13 @@
+{
+ "fichier": "collections/Queue.lua",
+ "module": {
+  "en": "Queue class stub: the dump only contains peek, which reads a `first` field. No constructor or push/pop function is present in this file, so how that field is filled is UNVERIFIED.",
+  "fr": "Ébauche de classe Queue : le dump ne contient que peek, qui lit un champ `first`. Aucun constructeur ni fonction d'ajout/retrait n'est présent dans ce fichier, donc la manière dont ce champ est rempli est NON VÉRIFIÉE."
+ },
+ "fonctions": {
+  "Queue:peek": {
+   "en": "Gives back whatever sits first in the queue, read from the `first` field, without taking it out; nil if there is nothing.",
+   "fr": "Donne ce qui se trouve en premier dans la file, lu dans le champ `first`, sans le retirer ; nil s'il n'y a rien."
+  }
+ }
+}

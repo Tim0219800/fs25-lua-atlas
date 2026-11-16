@@ -1,0 +1,389 @@
+{
+ "fichier": "vehicles/VehicleMotor.lua",
+ "module": {
+  "en": "Per-vehicle motor and transmission model used by the Motorized specialization. It holds the torque curve, RPM range, speed limits, forward/backward gears, optional gear groups and direction-change modes, and each update reads the motor rotation speed and torque from the engine. It computes smoothed load, picks start gears and automatic shifts, supports manual and manual-clutch shifting, and raises vehicle events such as `onGearChanged`. Gear state is synchronized with the stream functions; the tuning constants (`VehicleMotor.*`, `MODULATION_*`) are defined outside the functions shown (UNVERIFIED).",
+  "fr": "Modèle de moteur et de transmission par véhicule, utilisé par la spécialisation Motorized. Il contient la courbe de couple, la plage de régime, les limites de vitesse, les rapports avant/arrière, d'éventuels groupes de rapports et les modes d'inversion, et chaque mise à jour lit du moteur la vitesse de rotation et le couple. Il calcule la charge lissée, choisit les rapports de démarrage et les passages automatiques, gère le passage manuel avec ou sans embrayage et lève des événements véhicule comme `onGearChanged`. L'état des rapports est synchronisé par les fonctions de flux ; les constantes de réglage (`VehicleMotor.*`, `MODULATION_*`) sont définies hors des fonctions montrées (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "VehicleMotor.new": {
+   "en": "Creates the motor for a vehicle from RPM range, speed limits, torque curve, brake force, gear tables and gear ratio ranges. It initializes all timers and limits, derives peak torque and peak power from the curve, and reads direction-change and gear-shift modes from game settings.",
+   "fr": "Crée le moteur d'un véhicule à partir de la plage de régime, des limites de vitesse, de la courbe de couple, de la force de freinage, des tables de rapports et des plages de rapports. Il initialise tous les minuteurs et limites, déduit couple et puissance maximums de la courbe et lit les modes d'inversion et de passage de rapports dans les réglages du jeu."
+  },
+  "VehicleMotor:postLoad": {
+   "en": "Post-load step: if gear groups exist, raises `onGearGroupChanged` for the active group so listeners get the initial state. The savegame argument is unused.",
+   "fr": "Étape après chargement : si des groupes de rapports existent, lève `onGearGroupChanged` pour le groupe actif afin que les écouteurs reçoivent l'état initial. L'argument de sauvegarde est inutilisé."
+  },
+  "VehicleMotor:delete": {
+   "en": "Unsubscribes the motor from all message center subscriptions.",
+   "fr": "Désabonne le moteur de tous ses abonnements au centre de messages."
+  },
+  "VehicleMotor:setGearGroups": {
+   "en": "Sets the gear groups, their transmission type and change time, then picks the default group (first group with positive ratio, overridden by one flagged as default) as active group.",
+   "fr": "Définit les groupes de rapports, leur type de transmission et leur temps de changement, puis choisit comme groupe actif le groupe par défaut (premier à ratio positif, remplacé par un groupe marqué par défaut)."
+  },
+  "VehicleMotor:setDirectionChange": {
+   "en": "Configures how forward/backward direction changes work: via a backward gear, via a group, or by inverting the forward gears, plus the change time.",
+   "fr": "Configure le fonctionnement du changement de sens : via un rapport arrière, via un groupe, ou par inversion des rapports avant, ainsi que le temps de changement."
+  },
+  "VehicleMotor:setManualShift": {
+   "en": "Sets whether gears and gear groups are shifted manually.",
+   "fr": "Définit si les rapports et les groupes de rapports se changent manuellement."
+  },
+  "VehicleMotor:setStartGearThreshold": {
+   "en": "Sets the factor threshold used when choosing a suitable start gear.",
+   "fr": "Définit le seuil de facteur utilisé pour choisir un rapport de démarrage adapté."
+  },
+  "VehicleMotor:setLowBrakeForce": {
+   "en": "Sets the brake force scale and the speed limit below which the low-speed automatic braking applies.",
+   "fr": "Définit l'échelle de force de freinage et la limite de vitesse sous laquelle s'applique le freinage automatique à basse vitesse."
+  },
+  "VehicleMotor:getMaxClutchTorque": {
+   "en": "Returns the maximum torque the clutch can transfer (default 5).",
+   "fr": "Retourne le couple maximal transmissible par l'embrayage (5 par défaut)."
+  },
+  "VehicleMotor:getRotInertia": {
+   "en": "Returns the motor rotational inertia.",
+   "fr": "Retourne l'inertie de rotation du moteur."
+  },
+  "VehicleMotor:setRotInertia": {
+   "en": "Sets the motor rotational inertia.",
+   "fr": "Définit l'inertie de rotation du moteur."
+  },
+  "VehicleMotor:getDampingRateFullThrottle": {
+   "en": "Returns the motor damping rate at full throttle.",
+   "fr": "Retourne le taux d'amortissement du moteur à pleine charge."
+  },
+  "VehicleMotor:getDampingRateZeroThrottleClutchEngaged": {
+   "en": "Returns the damping rate at zero throttle with the clutch engaged.",
+   "fr": "Retourne le taux d'amortissement à accélérateur nul, embrayage engagé."
+  },
+  "VehicleMotor:getDampingRateZeroThrottleClutchDisengaged": {
+   "en": "Returns the damping rate at zero throttle with the clutch disengaged.",
+   "fr": "Retourne le taux d'amortissement à accélérateur nul, embrayage débrayé."
+  },
+  "VehicleMotor:setDampingRateScale": {
+   "en": "Scales all three damping rates relative to their default constants.",
+   "fr": "Met à l'échelle les trois taux d'amortissement par rapport à leurs constantes par défaut."
+  },
+  "VehicleMotor:setGearChangeTime": {
+   "en": "Sets the gear change duration. A time of 0 marks the transmission as powershift, any other value as default.",
+   "fr": "Définit la durée de changement de rapport. Un temps de 0 marque la transmission comme powershift, toute autre valeur comme standard."
+  },
+  "VehicleMotor:setAutoGearChangeTime": {
+   "en": "Sets the minimum delay between automatic gear changes and clamps the running timer to it.",
+   "fr": "Définit le délai minimal entre deux changements de rapport automatiques et limite le minuteur en cours à cette valeur."
+  },
+  "VehicleMotor:getPeakTorque": {
+   "en": "Returns the maximum torque of the torque curve.",
+   "fr": "Retourne le couple maximal de la courbe de couple."
+  },
+  "VehicleMotor:getBrakeForce": {
+   "en": "Returns the configured brake force.",
+   "fr": "Retourne la force de freinage configurée."
+  },
+  "VehicleMotor:getMinRpm": {
+   "en": "Returns the minimum (idle) RPM.",
+   "fr": "Retourne le régime minimal (ralenti)."
+  },
+  "VehicleMotor:getMaxRpm": {
+   "en": "Returns the maximum RPM.",
+   "fr": "Retourne le régime maximal."
+  },
+  "VehicleMotor:getRequiredMotorRpmRange": {
+   "en": "Returns min and max RPM the motor must run at: the lower bound is raised to the PTO-driven RPM when a PTO consumer demands it, otherwise it is idle RPM.",
+   "fr": "Retourne les régimes min et max que doit tenir le moteur : la borne basse est relevée au régime imposé par la prise de force si un consommateur l'exige, sinon c'est le ralenti."
+  },
+  "VehicleMotor:getLastMotorRpm": {
+   "en": "Returns the smoothed motor RPM last stored by `setLastRpm`.",
+   "fr": "Retourne le régime moteur lissé mémorisé en dernier par `setLastRpm`."
+  },
+  "VehicleMotor:getLastModulatedMotorRpm": {
+   "en": "Returns the smoothed RPM plus a load-dependent oscillation and minus a drop after load increases. Intended for cosmetic use such as sound; returns 0 when the RPM is 0.",
+   "fr": "Retourne le régime lissé plus une oscillation dépendant de la charge et moins une chute après hausse de charge. Destiné à un usage cosmétique comme le son ; retourne 0 si le régime est 0."
+  },
+  "VehicleMotor:getLastRealMotorRpm": {
+   "en": "Returns the unsmoothed RPM last given to `setLastRpm`.",
+   "fr": "Retourne le régime non lissé donné en dernier à `setLastRpm`."
+  },
+  "VehicleMotor:getSmoothLoadPercentage": {
+   "en": "Returns the smoothed motor load with a small modulation offset applied (cosmetic variation).",
+   "fr": "Retourne la charge moteur lissée avec un léger décalage de modulation (variation cosmétique)."
+  },
+  "VehicleMotor:getClutchPedal": {
+   "en": "Returns the clutch pedal value: the manual value on clients or in manual-clutch mode, otherwise an estimate from the gap between clutch and motor speed (0 to 1, with a 50 RPM tolerance).",
+   "fr": "Retourne la valeur de la pédale d'embrayage : la valeur manuelle côté client ou en mode embrayage manuel, sinon une estimation d'après l'écart entre vitesse d'embrayage et de moteur (0 à 1, tolérance de 50 tr/min)."
+  },
+  "VehicleMotor:getSmoothedClutchPedal": {
+   "en": "Returns the low-pass smoothed clutch pedal value.",
+   "fr": "Retourne la valeur lissée de la pédale d'embrayage."
+  },
+  "VehicleMotor:getManualClutchPedal": {
+   "en": "Returns the manual clutch value in manual-clutch mode, otherwise 0.",
+   "fr": "Retourne la valeur d'embrayage manuel en mode embrayage manuel, sinon 0."
+  },
+  "VehicleMotor:getGearToDisplay": {
+   "en": "Returns the gear label for the HUD or dashboard (gear name, reverse name or N). Without gear tables it returns D or R from the driving direction.",
+   "fr": "Retourne le libellé du rapport pour l'interface ou le tableau de bord (nom du rapport, nom en marche arrière ou N). Sans tables de rapports, retourne D ou R selon le sens de conduite."
+  },
+  "VehicleMotor:getGearInfoToDisplay": {
+   "en": "Returns the current gear name, whether gear display is available, whether the transmission is automatic, the previous and next two gear names, and whether a gear change is in progress.",
+   "fr": "Retourne le nom du rapport actuel, si l'affichage des rapports est disponible, si la transmission est automatique, les noms des deux rapports précédents et suivants, et si un changement de rapport est en cours."
+  },
+  "VehicleMotor:getDrivingDirection": {
+   "en": "Returns the driving direction (1, -1 or 0): from the selected direction in manual cases, otherwise from the vehicle moving direction when faster than 0.95 km/h, else 0.",
+   "fr": "Retourne le sens de conduite (1, -1 ou 0) : d'après le sens sélectionné dans les cas manuels, sinon d'après le sens de déplacement du véhicule au-delà de 0,95 km/h, sinon 0."
+  },
+  "VehicleMotor:getGearGroupToDisplay": {
+   "en": "Returns the active gear group label and whether group display is available (N and false when there are no groups).",
+   "fr": "Retourne le libellé du groupe de rapports actif et si l'affichage des groupes est disponible (N et false sans groupes)."
+  },
+  "VehicleMotor:readGearDataFromStream": {
+   "en": "Reads direction, target gear, gear-changing flag, gear table and group from a network stream. Raises `onGearChanged` and `onGearGroupChanged` when the values differ from the local state.",
+   "fr": "Lit dans un flux réseau le sens, le rapport cible, l'indicateur de changement, la table de rapports et le groupe. Lève `onGearChanged` et `onGearGroupChanged` quand les valeurs diffèrent de l'état local."
+  },
+  "VehicleMotor:writeGearDataToStream": {
+   "en": "Writes direction, target gear, gear-changing flag, forward/backward table choice and active group to a network stream, mirroring `readGearDataFromStream`.",
+   "fr": "Écrit dans un flux réseau le sens, le rapport cible, l'indicateur de changement, le choix de table avant/arrière et le groupe actif, en miroir de `readGearDataFromStream`."
+  },
+  "VehicleMotor:setLastRpm": {
+   "en": "Stores the real RPM, smooths it into the displayed RPM, updates the turbo scale and blow-off valve state (raising `onMotorBlowOffValveChanged` when it toggles) and the constant-RPM charge.",
+   "fr": "Mémorise le régime réel, le lisse en régime affiché, met à jour l'échelle de turbo et l'état de la soupape de décharge (lève `onMotorBlowOffValveChanged` à chaque bascule) ainsi que la charge de régime constant."
+  },
+  "VehicleMotor:getMotorAppliedTorque": {
+   "en": "Returns the torque actually applied this frame, including the externally consumed part.",
+   "fr": "Retourne le couple réellement appliqué cette image, y compris la part consommée en externe."
+  },
+  "VehicleMotor:getMotorExternalTorque": {
+   "en": "Returns the torque taken from the motor but not sent to the wheels, for example by PTO consumers.",
+   "fr": "Retourne le couple prélevé sur le moteur mais non envoyé aux roues, par exemple par les prises de force."
+  },
+  "VehicleMotor:getMotorAvailableTorque": {
+   "en": "Returns the torque available to the physics simulation.",
+   "fr": "Retourne le couple disponible pour la simulation physique."
+  },
+  "VehicleMotor:getEqualizedMotorRpm": {
+   "en": "Returns the equalized motor RPM value.",
+   "fr": "Retourne le régime moteur égalisé."
+  },
+  "VehicleMotor:setEqualizedMotorRpm": {
+   "en": "Stores the equalized RPM and also feeds it into `setLastRpm`.",
+   "fr": "Mémorise le régime égalisé et le transmet aussi à `setLastRpm`."
+  },
+  "VehicleMotor:getPtoMotorRpmRatio": {
+   "en": "Returns the ratio between motor RPM and PTO RPM.",
+   "fr": "Retourne le rapport entre régime moteur et régime de prise de force."
+  },
+  "VehicleMotor:setExternalTorqueVirtualMultiplicator": {
+   "en": "Sets a virtual multiplier applied to the external torque (defaults to 1 when nil).",
+   "fr": "Définit un multiplicateur virtuel appliqué au couple externe (1 par défaut si nil)."
+  },
+  "VehicleMotor:getNonClampedMotorRpm": {
+   "en": "Returns the motor RPM converted from rotation speed, without clamping to min/max.",
+   "fr": "Retourne le régime moteur converti depuis la vitesse de rotation, sans limitation min/max."
+  },
+  "VehicleMotor:getMotorRotSpeed": {
+   "en": "Returns the motor rotation speed in rad/s.",
+   "fr": "Retourne la vitesse de rotation du moteur en rad/s."
+  },
+  "VehicleMotor:getClutchRpm": {
+   "en": "Returns the RPM on the wheel side of the clutch (differential speed times gear ratio).",
+   "fr": "Retourne le régime côté roues de l'embrayage (vitesse du différentiel fois rapport)."
+  },
+  "VehicleMotor:getClutchRotSpeed": {
+   "en": "Returns the clutch rotation speed in rad/s (differential speed times gear ratio).",
+   "fr": "Retourne la vitesse de rotation de l'embrayage en rad/s (vitesse du différentiel fois rapport)."
+  },
+  "VehicleMotor:getTorqueCurve": {
+   "en": "Returns the torque curve object.",
+   "fr": "Retourne l'objet de la courbe de couple."
+  },
+  "VehicleMotor:getTorque": {
+   "en": "Returns the torque for the current motor speed (clamped to min/max RPM) scaled by the absolute acceleration value.",
+   "fr": "Retourne le couple pour la vitesse moteur actuelle (limitée entre min et max) multiplié par la valeur absolue de l'accélération."
+  },
+  "VehicleMotor:getTorqueCurveValue": {
+   "en": "Returns the curve torque at an RPM, reduced by vehicle damage through `VehicleMotor.DAMAGE_TORQUE_REDUCTION`.",
+   "fr": "Retourne le couple de la courbe à un régime, réduit par les dégâts du véhicule via `VehicleMotor.DAMAGE_TORQUE_REDUCTION`."
+  },
+  "VehicleMotor:getTorqueAndSpeedValues": {
+   "en": "Returns two arrays built from the torque curve keyframes: damage-adjusted torques and rotation speeds in rad/s.",
+   "fr": "Retourne deux tableaux construits à partir des points de la courbe de couple : couples ajustés aux dégâts et vitesses de rotation en rad/s."
+  },
+  "VehicleMotor:getMaximumForwardSpeed": {
+   "en": "Returns the maximum forward speed in m/s.",
+   "fr": "Retourne la vitesse maximale avant en m/s."
+  },
+  "VehicleMotor:getMaximumBackwardSpeed": {
+   "en": "Returns the maximum backward speed in m/s.",
+   "fr": "Retourne la vitesse maximale arrière en m/s."
+  },
+  "VehicleMotor:calculatePhysicalMaximumForwardSpeed": {
+   "en": "Computes the theoretical top forward speed from the minimum forward ratio or gears and max RPM.",
+   "fr": "Calcule la vitesse maximale théorique avant à partir du rapport minimal avant ou des rapports et du régime max."
+  },
+  "VehicleMotor:calculatePhysicalMaximumBackwardSpeed": {
+   "en": "Computes the theoretical top backward speed from backward gears, or forward gears if there are none.",
+   "fr": "Calcule la vitesse maximale théorique arrière à partir des rapports arrière, ou des rapports avant s'il n'y en a pas."
+  },
+  "VehicleMotor.calculatePhysicalMaximumSpeed": {
+   "en": "Static helper: top speed in m/s from max RPM and the smallest gear ratio. Prints a call stack and returns 0 if neither ratio nor gears are given.",
+   "fr": "Aide statique : vitesse maximale en m/s à partir du régime max et du plus petit rapport. Affiche la pile d'appels et retourne 0 si ni rapport ni rapports ne sont donnés."
+  },
+  "VehicleMotor:update": {
+   "en": "Main per-frame update: reads motor rotation speed, torque and gear ratio from the engine node, tracks clutch slipping, PTO RPM and load percentage (server side), and updates smoothed load, start gear values and modulation. Without a motorized node it derives speeds from the wheels.",
+   "fr": "Mise à jour principale par image : lit du moteur de jeu la vitesse de rotation, le couple et le rapport, suit le patinage d'embrayage, le régime de prise de force et le pourcentage de charge (côté serveur), puis met à jour charge lissée, valeurs de rapport de démarrage et modulation. Sans nœud motorisé, il déduit les vitesses des roues."
+  },
+  "VehicleMotor:updateSmoothLoadPercentage": {
+   "en": "Low-pass filters the raw load percentage with a speed-dependent factor (slower when load falls) and accumulates the load-change charge used for RPM drop effects.",
+   "fr": "Filtre la charge brute avec un facteur dépendant de la vitesse (plus lent quand la charge baisse) et accumule la charge de variation utilisée pour les effets de chute de régime."
+  },
+  "VehicleMotor:updateStartGearValues": {
+   "en": "Recomputes the data that rates start gears: total mass, tool force demand, mass on the ground, direction difference of attached tools, available power after PTO, and slope. Also blocks idle gear changes briefly while the mass changes.",
+   "fr": "Recalcule les données qui évaluent les rapports de démarrage : masse totale, effort demandé par les outils, masse au sol, différence de direction des outils attelés, puissance disponible après prise de force et pente. Bloque aussi brièvement les changements de rapport à l'arrêt quand la masse varie."
+  },
+  "VehicleMotor:getBestStartGear": {
+   "en": "Chooses the best start gear (and group when groups exist) by scoring each with `getStartInGearFactor` against the start threshold. Returns the gear and the group index.",
+   "fr": "Choisit le meilleur rapport de démarrage (et le groupe s'il y en a) en évaluant chacun avec `getStartInGearFactor` face au seuil de démarrage. Retourne le rapport et l'indice de groupe."
+  },
+  "VehicleMotor:getRequiredRpmAtSpeedLimit": {
+   "en": "Returns the RPM needed to reach the current speed limit (vehicle limit, cruise control and motor max speed) with a given gear ratio.",
+   "fr": "Retourne le régime nécessaire pour atteindre la limite de vitesse actuelle (limite véhicule, régulateur et vitesse max moteur) avec un rapport donné."
+  },
+  "VehicleMotor:getStartInGearFactor": {
+   "en": "Returns a difficulty factor for starting in a gear ratio, from mass, slope, available power and ratio; math.huge if the gear would not reach a useful RPM at the speed limit. Lower is better.",
+   "fr": "Retourne un facteur de difficulté pour démarrer avec un rapport, selon masse, pente, puissance disponible et rapport ; math.huge si le rapport n'atteint pas un régime utile à la limite de vitesse. Plus bas est meilleur."
+  },
+  "VehicleMotor:getBestGearRatio": {
+   "en": "For continuous (CVT-like) ratio ranges, returns the ratio giving the best power at the wheel speed, or one matching a required motor RPM when that is given, clamped to the allowed ratio range.",
+   "fr": "Pour les plages de rapports continues (type CVT), retourne le rapport donnant la meilleure puissance à la vitesse de roue, ou celui correspondant à un régime moteur requis s'il est fourni, limité à la plage autorisée."
+  },
+  "VehicleMotor:getBestGear": {
+   "en": "Returns the direction (1 or -1) and gear ratio to use for the requested acceleration, using the ratio range or the first gear depending on the transmission type.",
+   "fr": "Retourne le sens (1 ou -1) et le rapport à utiliser pour l'accélération demandée, selon la plage de rapports ou le premier rapport suivant le type de transmission."
+  },
+  "VehicleMotor:findGearChangeTargetGearPrediction": {
+   "en": "Predicts the speed after a gear change and scores each valid gear on power, RPM preference and change penalty, returning the best target gear. It writes debug values into the gear tables in transmission debug mode.",
+   "fr": "Prédit la vitesse après un changement de rapport et note chaque rapport valide sur la puissance, la préférence de régime et la pénalité de changement, puis retourne le meilleur rapport cible. Il écrit des valeurs de debug dans les tables de rapports en mode debug transmission."
+  },
+  "VehicleMotor:applyTargetGear": {
+   "en": "Makes the target gear the active gear, sets min/max gear ratio from it (outside manual-clutch mode), resets the gear change time and raises `onGearChanged`.",
+   "fr": "Fait du rapport cible le rapport actif, fixe les rapports min/max à partir de lui (hors mode embrayage manuel), réinitialise le temps de changement et lève `onGearChanged`."
+  },
+  "VehicleMotor:updateGear": {
+   "en": "Core gear logic called each physics update: advances change timers, handles automatic start-gear and shift selection and group shifts, manual-clutch ratio and stalling (stops the motor), and returns the adjusted accelerator and brake pedals.",
+   "fr": "Logique de rapports appelée à chaque mise à jour physique : fait avancer les minuteurs de changement, gère le choix automatique du rapport de démarrage et des passages ainsi que les groupes, le rapport en embrayage manuel et le calage (arrête le moteur), et retourne les pédales d'accélérateur et de frein ajustées."
+  },
+  "VehicleMotor:shiftGear": {
+   "en": "Manual shift one gear up or down in the current direction, clamped to the gear table. May flip direction when going below the first gear, then calls `setGear`; raises `onClutchCreaking` if the clutch forbids it.",
+   "fr": "Passe manuellement un rapport au-dessus ou en dessous dans le sens courant, limité à la table de rapports. Peut inverser le sens en dessous du premier rapport, puis appelle `setGear` ; lève `onClutchCreaking` si l'embrayage l'interdit."
+  },
+  "VehicleMotor:selectGear": {
+   "en": "Selects a gear directly (H-shifter style). On activation sets the gear if allowed and the gear exists, otherwise raises `onClutchCreaking`; on release goes to neutral.",
+   "fr": "Sélectionne directement un rapport (style levier en H). À l'activation, applique le rapport s'il est autorisé et existe, sinon lève `onClutchCreaking` ; au relâchement, passe au point mort."
+  },
+  "VehicleMotor:setGear": {
+   "en": "Sets the target gear, starts the gear change timer (or applies directly in manual-clutch mode) and raises `onGearChanged`. Does nothing if the gear is unchanged.",
+   "fr": "Définit le rapport cible, lance le minuteur de changement (ou applique directement en mode embrayage manuel) et lève `onGearChanged`. Sans effet si le rapport est inchangé."
+  },
+  "VehicleMotor:shiftGroup": {
+   "en": "Manually shifts the gear group up or down, clamped to the existing groups, if allowed; raises `onClutchCreaking` if the clutch forbids it.",
+   "fr": "Change manuellement le groupe de rapports vers le haut ou le bas, limité aux groupes existants, si c'est autorisé ; lève `onClutchCreaking` si l'embrayage l'interdit."
+  },
+  "VehicleMotor:selectGroup": {
+   "en": "Selects a gear group directly if allowed and it exists, otherwise raises `onClutchCreaking`; releasing activation sets group 0 (neutral).",
+   "fr": "Sélectionne directement un groupe de rapports s'il est autorisé et existe, sinon lève `onClutchCreaking` ; au relâchement, passe au groupe 0 (neutre)."
+  },
+  "VehicleMotor:setGearGroup": {
+   "en": "Applies a new active gear group: adjusts direction when groups encode direction, starts the group change timer or applies the gear at once for powershift groups, and raises `onGearGroupChanged`.",
+   "fr": "Applique un nouveau groupe actif : ajuste le sens quand les groupes codent le sens, lance le minuteur de changement ou applique le rapport aussitôt pour les groupes powershift, et lève `onGearGroupChanged`."
+  },
+  "VehicleMotor:changeDirection": {
+   "en": "Changes driving direction (toggle when nil, or forced). Depending on configuration it uses a backward gear, a group or inverted gears, starts the direction timer, and raises `onGearDirectionChanged`, `onGearChanged` and possibly `onGearGroupChanged`.",
+   "fr": "Change le sens de conduite (bascule si nil, ou forcé). Selon la configuration, il utilise un rapport arrière, un groupe ou des rapports inversés, lance le minuteur de sens, et lève `onGearDirectionChanged`, `onGearChanged` et éventuellement `onGearGroupChanged`."
+  },
+  "VehicleMotor:onManualClutchChanged": {
+   "en": "Stores the manual clutch pedal value (0 to 1).",
+   "fr": "Mémorise la valeur de la pédale d'embrayage manuel (0 à 1)."
+  },
+  "VehicleMotor:getIsGearChangeAllowed": {
+   "en": "Returns whether a manual gear change is allowed: in manual-clutch mode on a non-powershift gearbox the clutch must be pressed beyond 0.5, otherwise always true.",
+   "fr": "Indique si un changement de rapport manuel est autorisé : en mode embrayage manuel sur une boîte non powershift l'embrayage doit dépasser 0,5, sinon toujours true."
+  },
+  "VehicleMotor:getIsGearGroupChangeAllowed": {
+   "en": "Same rule as for gears but for groups; returns false when no gear groups exist.",
+   "fr": "Même règle que pour les rapports mais pour les groupes ; retourne false s'il n'y a pas de groupes."
+  },
+  "VehicleMotor:setTransmissionDirection": {
+   "en": "Sets the transmission direction; a negative value swaps forward and backward speeds and gear ratio ranges with their stored original values.",
+   "fr": "Définit le sens de la transmission ; une valeur négative échange vitesses et plages de rapports avant/arrière avec leurs valeurs d'origine mémorisées."
+  },
+  "VehicleMotor:getMinMaxGearRatio": {
+   "en": "Returns the minimum and maximum gear ratio in effect, adjusted for clutch slipping (widens the maximum or blends toward the slipping ratio).",
+   "fr": "Retourne les rapports minimal et maximal en vigueur, ajustés selon le patinage d'embrayage (élargit le maximum ou interpole vers le rapport de patinage)."
+  },
+  "VehicleMotor:getGearRatio": {
+   "en": "Returns the gear ratio last read from the engine.",
+   "fr": "Retourne le rapport lu en dernier depuis le moteur de jeu."
+  },
+  "VehicleMotor:getGearRatioMultiplier": {
+   "en": "Returns the group and direction factor multiplied into gear ratios (0 if the group is neutral).",
+   "fr": "Retourne le facteur de groupe et de sens multiplié aux rapports (0 si le groupe est neutre)."
+  },
+  "VehicleMotor:getIsInNeutral": {
+   "en": "Returns true when a gear table exists and both current and target gear are 0.",
+   "fr": "Retourne true quand une table de rapports existe et que le rapport actuel et le rapport cible valent 0."
+  },
+  "VehicleMotor:getCanMotorRun": {
+   "en": "In manual-clutch mode, with the motor off and a gear engaged, returns false and `REASON_CLUTCH_NOT_ENGAGED` when the clutch would stall it; otherwise true.",
+   "fr": "En mode embrayage manuel, moteur arrêté et rapport engagé, retourne false et `REASON_CLUTCH_NOT_ENGAGED` quand l'embrayage le ferait caler ; sinon true."
+  },
+  "VehicleMotor:getCurMaxRpm": {
+   "en": "Returns the highest allowed RPM now: the motor maximum, lowered by speed limit through the current gear ratio and by the RPM limit.",
+   "fr": "Retourne le régime maximal autorisé actuellement : le maximum du moteur, abaissé par la limite de vitesse via le rapport courant et par la limite de régime."
+  },
+  "VehicleMotor:setSpeedLimit": {
+   "en": "Sets the speed limit in km/h, never below the motor minimum speed.",
+   "fr": "Définit la limite de vitesse en km/h, jamais en dessous de la vitesse minimale du moteur."
+  },
+  "VehicleMotor:getSpeedLimit": {
+   "en": "Returns the speed limit in km/h.",
+   "fr": "Retourne la limite de vitesse en km/h."
+  },
+  "VehicleMotor:setAccelerationLimit": {
+   "en": "Sets the acceleration limit in m/s^2.",
+   "fr": "Définit la limite d'accélération en m/s^2."
+  },
+  "VehicleMotor:getAccelerationLimit": {
+   "en": "Returns the acceleration limit in m/s^2.",
+   "fr": "Retourne la limite d'accélération en m/s^2."
+  },
+  "VehicleMotor:setRpmLimit": {
+   "en": "Sets an upper RPM limit.",
+   "fr": "Définit une limite supérieure de régime."
+  },
+  "VehicleMotor:setMotorRotationAccelerationLimit": {
+   "en": "Sets the limit of motor rotation acceleration in rad/s^2.",
+   "fr": "Définit la limite d'accélération de rotation du moteur en rad/s^2."
+  },
+  "VehicleMotor:getMotorRotationAccelerationLimit": {
+   "en": "Returns the limit of motor rotation acceleration in rad/s^2.",
+   "fr": "Retourne la limite d'accélération de rotation du moteur en rad/s^2."
+  },
+  "VehicleMotor:setDirectionChangeMode": {
+   "en": "Sets the direction change mode (manual or automatic).",
+   "fr": "Définit le mode de changement de sens (manuel ou automatique)."
+  },
+  "VehicleMotor:setGearShiftMode": {
+   "en": "Sets the gear shift mode. The manual-clutch mode is downgraded to plain manual on powershift gearboxes.",
+   "fr": "Définit le mode de passage des rapports. Le mode embrayage manuel est ramené au mode manuel simple sur les boîtes powershift."
+  },
+  "VehicleMotor:getUseAutomaticGearShifting": {
+   "en": "True in automatic mode, or when the vehicle has no manual gear shifting.",
+   "fr": "True en mode automatique, ou quand le véhicule n'a pas de passage de rapports manuel."
+  },
+  "VehicleMotor:getUseAutomaticGroupShifting": {
+   "en": "True in automatic mode, or when the vehicle has no manual group shifting.",
+   "fr": "True en mode automatique, ou quand le véhicule n'a pas de changement de groupe manuel."
+  }
+ }
+}

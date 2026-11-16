@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/ConsumableRefillEvent.lua",
+ "module": {
+  "en": "Network event class `ConsumableRefillEvent` (extends `Event`) that requests a refill of the consumable storage and consuming slots of a vehicle, charging the farm. It carries the vehicle, a consumable type index (uint8) and a variation index (`ConsumableManager.NUM_VARIATION_BITS` bits). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `ConsumableRefillEvent` (hérite de `Event`) qui demande le remplissage des emplacements de stockage et de consommation d'un véhicule, en facturant la ferme. Elle transporte le véhicule, un index de type de consommable (uint8) et un index de variante (`ConsumableManager.NUM_VARIATION_BITS` bits). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "ConsumableRefillEvent.emptyNew": {
+   "en": "Creates an empty `ConsumableRefillEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `ConsumableRefillEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "ConsumableRefillEvent.new": {
+   "en": "Creates the event with its data: the vehicle, a consumable type index (uint8) and a variation index (`ConsumableManager.NUM_VARIATION_BITS` bits).",
+   "fr": "Crée l'événement avec ses données : le véhicule, un index de type de consommable (uint8) et un index de variante (`ConsumableManager.NUM_VARIATION_BITS` bits)."
+  },
+  "ConsumableRefillEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, a consumable type index (uint8) and a variation index (`ConsumableManager.NUM_VARIATION_BITS` bits)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, un index de type de consommable (uint8) et un index de variante (`ConsumableManager.NUM_VARIATION_BITS` bits)), puis appelle `run`."
+  },
+  "ConsumableRefillEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, a consumable type index (uint8) and a variation index (`ConsumableManager.NUM_VARIATION_BITS` bits)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, un index de type de consommable (uint8) et un index de variante (`ConsumableManager.NUM_VARIATION_BITS` bits))."
+  },
+  "ConsumableRefillEvent:run": {
+   "en": "Executes the event on the receiving side: sets the consuming variation, adds fill levels to the storage and consuming slots, then charges expenses and money (`MoneyType.PURCHASE_CONSUMABLES`) from the variation price when positive.",
+   "fr": "Exécute l'événement côté réception : fixe la variante consommée, ajoute des niveaux de remplissage aux emplacements de stockage et de consommation, puis débite dépenses et argent (`MoneyType.PURCHASE_CONSUMABLES`) selon le prix de la variante s'il est positif."
+  },
+  "ConsumableRefillEvent.sendEvent": {
+   "en": "Helper that sends the event: the server broadcasts it, a client sends it to the server. It has no `noEventSend` parameter.",
+   "fr": "Fonction utilitaire d'envoi : le serveur le diffuse, un client l'envoie au serveur. Elle n'a pas de paramètre `noEventSend`."
+  }
+ }
+}

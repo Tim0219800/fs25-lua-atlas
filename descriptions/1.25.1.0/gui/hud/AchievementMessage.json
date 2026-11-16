@@ -1,0 +1,17 @@
+{
+ "fichier": "gui/hud/AchievementMessage.lua",
+ "module": {
+  "en": "HUD widget meant to show an achievement-unlocked banner, derived from HUDDisplay. The file only builds the state (pending message queue, header text from l10n message_achievementUnlocked, icon overlay, timers) and the scaled layout; showing and drawing logic is not in this file (UNVERIFIED where it lives).",
+  "fr": "Widget HUD destiné à afficher une bannière de succès débloqué, dérivé de HUDDisplay. Le fichier ne construit que l'état (file de messages en attente, texte d'en-tête l10n message_achievementUnlocked, overlay d'icône, minuteurs) et la mise en page à l'échelle ; la logique d'affichage et de dessin n'est pas dans ce fichier (emplacement NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "AchievementMessage.new": {
+   "en": "Constructor. Creates the display with an empty pending-message list, no current message, an uppercase header text and an empty icon overlay. The customMt argument is ignored (the class metatable is always used).",
+   "fr": "Constructeur. Crée l'affichage avec une liste de messages en attente vide, sans message courant, un texte d'en-tête en majuscules et un overlay d'icône vide. L'argument customMt est ignoré (la métatable de la classe est toujours utilisée)."
+  },
+  "AchievementMessage:storeScaledValues": {
+   "en": "Computes the banner layout from pixel values (600x100 box centred horizontally at the bottom HUD anchor, 90x90 icon, title and description text sizes, offsets and max description width) scaled to the current UI scale.",
+   "fr": "Calcule la mise en page de la bannière à partir de valeurs en pixels (boîte 600x100 centrée horizontalement sur l'ancre basse du HUD, icône 90x90, tailles et décalages des textes de titre et de description, largeur max de la description), mises à l'échelle de l'interface."
+  }
+ }
+}

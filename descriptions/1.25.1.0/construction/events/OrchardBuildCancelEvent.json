@@ -1,0 +1,29 @@
+{
+ "fichier": "construction/events/OrchardBuildCancelEvent.lua",
+ "module": {
+  "en": "Network event sent by a client to ask the server to stop a running orchard build, identified by a request id (one byte). It sends on the main channel and only does anything on the server, which forwards to `g_currentMission.orchardBuildManager:cancelRequest`. The manager class is not in the dump, so its behaviour is UNVERIFIED.",
+  "fr": "Événement réseau envoyé par un client pour demander au serveur d'arrêter une construction de verger en cours, identifiée par un id de requête (un octet). Il passe sur le canal principal et n'agit que côté serveur, qui transmet à `g_currentMission.orchardBuildManager:cancelRequest`. La classe du manager n'est pas dans le dump, son comportement est NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "OrchardBuildCancelEvent.emptyNew": {
+   "en": "Creates an empty event on the main network channel, used when reading from a stream.",
+   "fr": "Crée un événement vide sur le canal réseau principal, utilisé lors de la lecture d'un flux."
+  },
+  "OrchardBuildCancelEvent.new": {
+   "en": "Creates a cancel request for the given build run id.",
+   "fr": "Crée une demande d'annulation pour l'id de construction donné."
+  },
+  "OrchardBuildCancelEvent:readStream": {
+   "en": "Reads the request id (UInt8) and immediately calls `run`. Executed on the server when a client request arrives.",
+   "fr": "Lit l'id de requête (UInt8) puis appelle aussitôt `run`. Exécuté sur le serveur à l'arrivée d'une demande client."
+  },
+  "OrchardBuildCancelEvent:writeStream": {
+   "en": "Writes the request id as a UInt8. Used by the client when sending.",
+   "fr": "Écrit l'id de requête en UInt8. Utilisé par le client à l'envoi."
+  },
+  "OrchardBuildCancelEvent:run": {
+   "en": "Server only: returns early if the connection leads to a server, or if the mission has no `orchardBuildManager`; otherwise asks the manager to cancel the request for this connection.",
+   "fr": "Serveur uniquement : sort tôt si la connexion mène à un serveur ou si la mission n'a pas d'`orchardBuildManager` ; sinon demande au manager d'annuler la requête de cette connexion."
+  }
+ }
+}

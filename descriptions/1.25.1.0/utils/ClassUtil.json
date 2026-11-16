@@ -1,0 +1,41 @@
+{
+ "fichier": "utils/ClassUtil.lua",
+ "module": {
+  "en": "Signature only (no body in the SDK dump): helpers to resolve class tables, class names and functions from strings, including names of the form \"customEnv.name\" that point into a mod environment. All behaviour below is inferred from names and parameters (UNVERIFIED).",
+  "fr": "Signature seule (pas de corps dans le dump du SDK) : fonctions pour retrouver des tables de classes, des noms de classes et des fonctions à partir de chaînes, y compris des noms de la forme \"customEnv.nom\" pointant dans l'environnement d'un mod. Tout le comportement ci-dessous est déduit des noms et paramètres (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "ClassUtil.getIsValidClassName": {
+   "en": "Signature only (no body in the SDK dump): presumably tests whether a string is an acceptable class name and returns a boolean. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : teste vraisemblablement si une chaîne est un nom de classe acceptable et renvoie un booléen. NON VÉRIFIÉ."
+  },
+  "ClassUtil.getIsValidIndexName": {
+   "en": "Signature only (no body in the SDK dump): presumably tests whether a string is an acceptable index name and returns a boolean. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : teste vraisemblablement si une chaîne est un nom d'index acceptable et renvoie un booléen. NON VÉRIFIÉ."
+  },
+  "ClassUtil.getClassObject": {
+   "en": "Signature only (no body in the SDK dump): presumably resolves a class name string to the class table. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : résout vraisemblablement un nom de classe en table de classe. NON VÉRIFIÉ."
+  },
+  "ClassUtil.getClassObjectByObject": {
+   "en": "Signature only (no body in the SDK dump): presumably returns the class table of a given object instance. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie vraisemblablement la table de classe d'une instance donnée. NON VÉRIFIÉ."
+  },
+  "ClassUtil.getClassName": {
+   "en": "Signature only (no body in the SDK dump): presumably returns the registered name of a class table, or nil if unknown. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie vraisemblablement le nom enregistré d'une table de classe, ou nil si inconnu. NON VÉRIFIÉ."
+  },
+  "ClassUtil.getClassNameByObject": {
+   "en": "Signature only (no body in the SDK dump): presumably returns the class name of an object instance, or nil. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : renvoie vraisemblablement le nom de classe d'une instance, ou nil. NON VÉRIFIÉ."
+  },
+  "ClassUtil.getClassModName": {
+   "en": "Signature only (no body in the SDK dump): presumably extracts the mod name from a class name written as \"customEnv.className\", or nil. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : extrait vraisemblablement le nom du mod d'un nom de classe écrit \"customEnv.className\", ou nil. NON VÉRIFIÉ."
+  },
+  "ClassUtil.getFunction": {
+   "en": "Signature only (no body in the SDK dump): presumably resolves a function from a name written as \"customEnv.functionName\" and returns it. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : résout vraisemblablement une fonction à partir d'un nom écrit \"customEnv.functionName\" et la renvoie. NON VÉRIFIÉ."
+  }
+ }
+}

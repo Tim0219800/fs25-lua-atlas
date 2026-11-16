@@ -1,0 +1,25 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/FarmlandStatisticsResetEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) that tells a client to reset the statistics of one farmland. Its payload is only the farmland id.",
+    "fr": "Événement réseau (sous-classe de Event) qui ordonne à un client de réinitialiser les statistiques d'une parcelle. Sa charge utile est uniquement l'id de parcelle."
+  },
+  "fonctions": {
+    "FarmlandStatisticsResetEvent.emptyNew": {
+      "en": "Creates an empty FarmlandStatisticsResetEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de FarmlandStatisticsResetEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "FarmlandStatisticsResetEvent.new": {
+      "en": "Creates the event for a farmland id.",
+      "fr": "Crée l'événement pour un id de parcelle."
+    },
+    "FarmlandStatisticsResetEvent:readStream": {
+      "en": "Client side: reads the farmland id and calls g_precisionFarming.farmlandStatistics:resetStatistic on it, if the object exists. It does not call run.",
+      "fr": "Côté client : lit l'id de parcelle et appelle g_precisionFarming.farmlandStatistics:resetStatistic dessus, si l'objet existe. Il n'appelle pas run."
+    },
+    "FarmlandStatisticsResetEvent:writeStream": {
+      "en": "Writes only the farmland id.",
+      "fr": "Écrit uniquement l'id de parcelle."
+    }
+  }
+}

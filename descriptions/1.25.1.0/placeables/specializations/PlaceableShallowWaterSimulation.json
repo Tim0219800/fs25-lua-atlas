@@ -1,0 +1,21 @@
+{
+ "fichier": "placeables/specializations/PlaceableShallowWaterSimulation.lua",
+ "module": {
+  "en": "Placeable specialization with no prerequisites that registers water planes and obstacles from placeable.shallowWaterSimulation with g_currentMission.shallowWaterSimulation, so water on the building reacts to the shallow water simulation. It does nothing if that simulation does not exist or for construction previews. The simulation class itself is not in the dump (UNVERIFIED).",
+  "fr": "Spécialisation de placeable sans prérequis qui enregistre les plans d'eau et obstacles de placeable.shallowWaterSimulation auprès de g_currentMission.shallowWaterSimulation, afin que l'eau du bâtiment réagisse à la simulation d'eau peu profonde. Elle ne fait rien si cette simulation n'existe pas ou pour un aperçu de construction. La classe de simulation n'est pas dans le dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PlaceableShallowWaterSimulation.prerequisitesPresent": {
+   "en": "Always returns true.",
+   "fr": "Retourne toujours true."
+  },
+  "PlaceableShallowWaterSimulation:onLoad": {
+   "en": "Skips if there is no simulation or the placeable is a construction preview. Otherwise optionally applies a base material by name to each water plane and registers it, then adds each obstacle node with type (default rectangle), size, offset and Y rotation.",
+   "fr": "Ne fait rien s'il n'y a pas de simulation ou si le placeable est un aperçu de construction. Sinon applique éventuellement un matériau de base par nom à chaque plan d'eau et l'enregistre, puis ajoute chaque obstacle avec type (rectangle par défaut), taille, décalage et rotation Y."
+  },
+  "PlaceableShallowWaterSimulation:onDelete": {
+   "en": "Removes the water planes (area geometry and plane) and obstacles that this placeable had registered.",
+   "fr": "Retire les plans d'eau (géométrie de zone et plan) et les obstacles que ce placeable avait enregistrés."
+  }
+ }
+}

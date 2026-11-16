@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/PurchaseSoilMapsEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) sent by a client to buy the soil maps of a farmland. The server performs the purchase through the soilMap object of g_precisionFarming.",
+    "fr": "Événement réseau (sous-classe de Event) envoyé par un client pour acheter les cartes de sol d'une parcelle. Le serveur effectue l'achat via l'objet soilMap de g_precisionFarming."
+  },
+  "fonctions": {
+    "PurchaseSoilMapsEvent.emptyNew": {
+      "en": "Creates an empty PurchaseSoilMapsEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de PurchaseSoilMapsEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "PurchaseSoilMapsEvent.new": {
+      "en": "Creates the event for a farmland id.",
+      "fr": "Crée l'événement pour un id de parcelle."
+    },
+    "PurchaseSoilMapsEvent:readStream": {
+      "en": "Server side: reads the farmland id, then calls run.",
+      "fr": "Côté serveur : lit l'id de parcelle, puis appelle run."
+    },
+    "PurchaseSoilMapsEvent:writeStream": {
+      "en": "Client side: writes the farmland id.",
+      "fr": "Côté client : écrit l'id de parcelle."
+    },
+    "PurchaseSoilMapsEvent:run": {
+      "en": "Executes only on the server: calls g_precisionFarming.soilMap:purchaseSoilMaps for the farmland, then updatePrecisionFarmingOverlays. Nothing is broadcast here.",
+      "fr": "S'exécute uniquement sur le serveur : appelle g_precisionFarming.soilMap:purchaseSoilMaps pour la parcelle, puis updatePrecisionFarmingOverlays. Rien n'est diffusé ici."
+    }
+  }
+}

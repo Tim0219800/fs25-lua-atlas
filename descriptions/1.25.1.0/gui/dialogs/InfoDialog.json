@@ -1,0 +1,17 @@
+{
+ "fichier": "gui/dialogs/InfoDialog.lua",
+ "module": {
+  "en": "Simple information dialog with a text and a confirm button, derived from MessageDialog. A singleton instance (`InfoDialog.INSTANCE`) is reused through the static `show` helper. Client-side GUI only.",
+  "fr": "Boîte de dialogue d'information simple avec un texte et un bouton de confirmation, dérivée de MessageDialog. Une instance unique (`InfoDialog.INSTANCE`) est réutilisée via l'aide statique `show`. Interface côté client uniquement."
+ },
+ "fonctions": {
+  "InfoDialog.show": {
+   "en": "Configures the shared instance (callback, dialog type defaulting to TYPE_INFO, button text and action, message, open sound) and opens it with `g_gui:showDialog`. Does nothing if the instance does not exist.",
+   "fr": "Configure l'instance partagée (callback, type de dialogue par défaut TYPE_INFO, texte et action du bouton, message, son d'ouverture) et l'ouvre via `g_gui:showDialog`. Ne fait rien si l'instance n'existe pas."
+  },
+  "InfoDialog:inputEvent": {
+   "en": "Extends the parent input handling; on Android, once the input lock delay has expired, the back action triggers `onClickOk` and the event is always consumed so no other focused element reacts.",
+   "fr": "Étend la gestion d'entrée du parent ; sous Android, une fois le délai de blocage écoulé, l'action de retour déclenche `onClickOk` et l'événement est toujours consommé pour qu'aucun autre élément focalisé ne réagisse."
+  }
+ }
+}

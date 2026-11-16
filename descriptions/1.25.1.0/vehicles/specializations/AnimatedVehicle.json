@@ -1,0 +1,249 @@
+{
+ "fichier": "vehicles/specializations/AnimatedVehicle.lua",
+ "module": {
+  "en": "Specialization that gives any vehicle named, time-based animations defined in vehicle.animations (and per-configuration animationConfigurations). Each animation is a list of timed parts, or a keyframe set, driving node rotation, translation, scale, visibility, shader parameters, animation clips, splines, rolling gates, other animations, and on the server joint limits, masses, centres of mass and friction. Playing and stopping is synchronised through AnimatedVehicleStartEvent and AnimatedVehicleStopEvent. It also overrides the speed-rotating-part, work-area, moving-tool and moving-part loaders so they can depend on an animation time range. Other specializations register extra value types through the onRegisterAnimationValueTypes event.",
+  "fr": "Spécialisation qui donne à tout véhicule des animations nommées, pilotées par le temps, définies dans vehicle.animations (et dans animationConfigurations selon la configuration). Chaque animation est une liste de parties temporisées, ou un jeu de keyframes, qui agit sur la rotation, la translation, l'échelle, la visibilité, les paramètres de shader, les clips d'animation, les splines, les rolling gates, d'autres animations et, côté serveur, les limites d'articulations, les masses, centres de masse et frictions. La lecture et l'arrêt sont synchronisés par AnimatedVehicleStartEvent et AnimatedVehicleStopEvent. Elle surcharge aussi les chargeurs de pièces tournantes selon la vitesse, de zones de travail, d'outils mobiles et de pièces mobiles pour les conditionner à une plage de temps d'animation. D'autres spécialisations enregistrent des types de valeurs supplémentaires via l'événement onRegisterAnimationValueTypes."
+ },
+ "fonctions": {
+  "AnimatedVehicle.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours vrai : aucune spécialisation prérequise."
+  },
+  "AnimatedVehicle.initSpecialization": {
+   "en": "Adds the shop configuration type 'animation', registers the animation XML paths (plain and per configuration), the animName/limit attributes for speed rotating parts and work areas, and the requiredAnimation attributes for Cylindered moving tools and parts.",
+   "fr": "Ajoute le type de configuration de boutique 'animation', déclare les chemins XML d'animation (simples et par configuration), les attributs animName/limites pour les pièces tournantes et zones de travail, et les attributs requiredAnimation pour les outils et pièces mobiles de Cylindered."
+  },
+  "AnimatedVehicle.registerAnimationXMLPaths": {
+   "en": "Registers every XML key of one animation: name, looping, resetOnStart, startAnimTime, keyframe flag, all part attributes (rot/trans/scale, limits, spring, mass, shader, clip, spline, rolling gate, requirements) and the sound entries.",
+   "fr": "Déclare toutes les clés XML d'une animation : nom, looping, resetOnStart, startAnimTime, indicateur keyframe, tous les attributs de part (rot/trans/scale, limites, ressort, masse, shader, clip, spline, rolling gate, conditions) et les entrées sonores."
+  },
+  "AnimatedVehicle.registerEvents": {
+   "en": "Registers onRegisterAnimationValueTypes, onPlayAnimation, onStartAnimation, onUpdateAnimation, onFinishAnimation, onStopAnimation and onAnimationPartChanged.",
+   "fr": "Enregistre onRegisterAnimationValueTypes, onPlayAnimation, onStartAnimation, onUpdateAnimation, onFinishAnimation, onStopAnimation et onAnimationPartChanged."
+  },
+  "AnimatedVehicle.registerFunctions": {
+   "en": "Registers the public animation API on the vehicle type (load, play, stop, time/speed getters and setters, reset, active count).",
+   "fr": "Enregistre sur le type de véhicule l'API publique d'animation (chargement, lecture, arrêt, accesseurs de temps et de vitesse, réinitialisation, nombre d'animations actives)."
+  },
+  "AnimatedVehicle.registerOverwrittenFunctions": {
+   "en": "Overrides the load and is-active functions for speed rotating parts, work areas, moving tools and moving parts so they can be gated by an animation.",
+   "fr": "Surcharge les fonctions de chargement et d'activité des pièces tournantes, zones de travail, outils mobiles et pièces mobiles afin de les conditionner à une animation."
+  },
+  "AnimatedVehicle.registerEventListeners": {
+   "en": "Subscribes to onPreLoad, onLoad, onPostLoad, onDelete, onUpdate and onRegisterAnimationValueTypes.",
+   "fr": "Abonne la spécialisation à onPreLoad, onLoad, onPostLoad, onDelete, onUpdate et onRegisterAnimationValueTypes."
+  },
+  "AnimatedVehicle:onPreLoad": {
+   "en": "Creates the animation value type table and raises onRegisterAnimationValueTypes so every specialization can register its own value types before animations load.",
+   "fr": "Crée la table des types de valeurs d'animation et déclenche onRegisterAnimationValueTypes pour que chaque spécialisation enregistre ses propres types avant le chargement des animations."
+  },
+  "AnimatedVehicle:onLoad": {
+   "en": "Loads all vehicle.animations.animation entries, then those of the selected animation configuration, into spec.animations indexed by name. Same name in the configuration replaces the base one.",
+   "fr": "Charge toutes les entrées vehicle.animations.animation, puis celles de la configuration d'animation choisie, dans spec.animations indexé par nom. Un même nom dans la configuration remplace celui de base."
+  },
+  "AnimatedVehicle:onPostLoad": {
+   "en": "For animations with resetOnStart, snaps them to the configured start time by a forced instant update. Removes the onUpdate listener when the vehicle has no animation.",
+   "fr": "Pour les animations avec resetOnStart, les place au temps de départ configuré par une mise à jour instantanée forcée. Retire l'écouteur onUpdate si le véhicule n'a aucune animation."
+  },
+  "AnimatedVehicle:onDelete": {
+   "en": "On clients, deletes all animation sound samples, including the stop-time event samples.",
+   "fr": "Sur les clients, supprime tous les échantillons sonores d'animation, y compris ceux des événements de temps d'arrêt."
+  },
+  "AnimatedVehicle:onUpdate": {
+   "en": "Advances all active animations by dt, handles the short delay used to stop non-looping samples of finished fixed-time updates, and keeps the vehicle raised active while any animation runs.",
+   "fr": "Fait avancer toutes les animations actives de dt, gère le court délai servant à arrêter les échantillons non bouclés après une mise à jour à temps fixe, et maintient le véhicule actif tant qu'une animation tourne."
+  },
+  "AnimatedVehicle:registerAnimationValueType": {
+   "en": "Registers a value type (name, start/end XML attribute names, class object, load/get/set callbacks) used by animation parts. Ignored if the name is already registered. Call it from onRegisterAnimationValueTypes.",
+   "fr": "Enregistre un type de valeur (nom, noms des attributs XML de début/fin, classe, rappels load/get/set) utilisé par les parts d'animation. Ignoré si le nom existe déjà. À appeler depuis onRegisterAnimationValueTypes."
+  },
+  "AnimatedVehicle:loadAnimation": {
+   "en": "Loads one animation from XML into the given table: flags, sorted parts (or keyframe curves), computed duration in ms, start time and sound samples. Returns true if a name was found, false otherwise.",
+   "fr": "Charge une animation depuis le XML dans la table fournie : indicateurs, parts triées (ou courbes de keyframes), durée calculée en ms, temps de départ et échantillons sonores. Renvoie vrai si un nom est trouvé, faux sinon."
+  },
+  "AnimatedVehicle:loadAnimationPart": {
+   "en": "Loads one timed part: builds a value object for every registered type that the XML part uses, stores requirements (other animation range, configuration) and times in ms. Returns false if no value applies or timing is missing.",
+   "fr": "Charge une part temporisée : crée un objet valeur pour chaque type enregistré utilisé par la part XML, stocke les conditions (plage d'une autre animation, configuration) et les temps en ms. Renvoie faux si aucune valeur ne s'applique ou si le timing manque."
+  },
+  "AnimatedVehicle:loadStaticAnimationPart": {
+   "en": "Keyframe variant: adds translation/rotation/scale keyframes for a node into its AnimCurve, from either a time attribute or start/end times. Returns true when the node resolves.",
+   "fr": "Variante keyframe : ajoute des keyframes de translation/rotation/échelle d'un nœud dans son AnimCurve, à partir d'un attribut time ou de temps de début/fin. Renvoie vrai si le nœud est résolu."
+  },
+  "AnimatedVehicle:loadStaticAnimationPartValues": {
+   "en": "Reads translation, rotation and scale for one keyframe, using the node's current transform for missing ones, warns on inconsistent attribute sets for a node, and adds the keyframe to the curve.",
+   "fr": "Lit translation, rotation et échelle d'une keyframe, en utilisant la transformation actuelle du nœud pour les valeurs absentes, avertit si les jeux d'attributs d'un nœud sont incohérents, et ajoute la keyframe à la courbe."
+  },
+  "AnimatedVehicle:initializeAnimationParts": {
+   "en": "Initialises every part of an animation in two passes: init for all, then postInit for all.",
+   "fr": "Initialise toutes les parts d'une animation en deux passes : init pour toutes, puis postInit pour toutes."
+  },
+  "AnimatedVehicle:initializeAnimationPart": {
+   "en": "Calls init on each value object of the part, passing the part index and the part count.",
+   "fr": "Appelle init sur chaque objet valeur de la part, en lui passant l'indice de la part et leur nombre."
+  },
+  "AnimatedVehicle:postInitializeAnimationPart": {
+   "en": "Calls postInit on each value object of the part, normally to fill missing start values from the previous part's end values.",
+   "fr": "Appelle postInit sur chaque objet valeur de la part, normalement pour compléter les valeurs de départ manquantes à partir des valeurs de fin de la part précédente."
+  },
+  "AnimatedVehicle:playAnimation": {
+   "en": "Starts or resumes an animation at the given speed (negative plays backwards, 0 or nil with no stored speed is skipped) and start time (0-1). Unless noEventSend, broadcasts an AnimatedVehicleStartEvent. Raises onPlayAnimation and onStartAnimation.",
+   "fr": "Démarre ou reprend une animation à la vitesse donnée (négative : lecture inversée, 0 ou nil sans vitesse mémorisée : ignoré) et au temps de départ (0-1). Sauf noEventSend, diffuse un AnimatedVehicleStartEvent. Déclenche onPlayAnimation et onStartAnimation."
+  },
+  "AnimatedVehicle:stopAnimation": {
+   "en": "Stops an animation, clears its stop time, stops its non-looping sounds and raises onStopAnimation and onFinishAnimation. Unless noEventSend, sends an AnimatedVehicleStopEvent even if the name is unknown.",
+   "fr": "Arrête une animation, efface son temps d'arrêt, coupe ses sons non bouclés et déclenche onStopAnimation et onFinishAnimation. Sauf noEventSend, envoie un AnimatedVehicleStopEvent même si le nom est inconnu."
+  },
+  "AnimatedVehicle:getAnimationExists": {
+   "en": "Returns true if an animation with this name is defined on the vehicle.",
+   "fr": "Renvoie vrai si une animation de ce nom est définie sur le véhicule."
+  },
+  "AnimatedVehicle:getAnimationByName": {
+   "en": "Returns the internal animation table for the name, or nil.",
+   "fr": "Renvoie la table interne de l'animation portant ce nom, ou nil."
+  },
+  "AnimatedVehicle:getIsAnimationPlaying": {
+   "en": "Returns true if the animation is currently in the active animation list.",
+   "fr": "Renvoie vrai si l'animation figure actuellement dans la liste des animations actives."
+  },
+  "AnimatedVehicle:getRealAnimationTime": {
+   "en": "Returns the current animation time in milliseconds, or 0 for an unknown animation.",
+   "fr": "Renvoie le temps courant de l'animation en millisecondes, ou 0 pour une animation inconnue."
+  },
+  "AnimatedVehicle:setRealAnimationTime": {
+   "en": "Jumps an animation to a time in ms. By default (update true) it applies all part values immediately, with optional sounds. With update false it only stores the time.",
+   "fr": "Place une animation à un temps en ms. Par défaut (update vrai), applique immédiatement toutes les valeurs des parts, avec sons optionnels. Avec update faux, ne fait que mémoriser le temps."
+  },
+  "AnimatedVehicle:getAnimationTime": {
+   "en": "Returns the normalised animation time (0 to 1), or 0 when unknown or of zero duration.",
+   "fr": "Renvoie le temps normalisé de l'animation (0 à 1), ou 0 si elle est inconnue ou de durée nulle."
+  },
+  "AnimatedVehicle:setAnimationTime": {
+   "en": "Sets the normalised time (0 to 1) via setRealAnimationTime, optionally applying values at once.",
+   "fr": "Définit le temps normalisé (0 à 1) via setRealAnimationTime, en appliquant éventuellement les valeurs immédiatement."
+  },
+  "AnimatedVehicle:getAnimationDuration": {
+   "en": "Returns the animation duration in ms, or 1 if the animation does not exist.",
+   "fr": "Renvoie la durée de l'animation en ms, ou 1 si elle n'existe pas."
+  },
+  "AnimatedVehicle:setAnimationSpeed": {
+   "en": "Sets the playback speed factor. If a playing animation changes direction, its part values are reset.",
+   "fr": "Définit le facteur de vitesse de lecture. Si une animation en cours change de sens, les valeurs de ses parts sont réinitialisées."
+  },
+  "AnimatedVehicle:getAnimationSpeed": {
+   "en": "Returns the current speed factor of the animation, or 0 if unknown.",
+   "fr": "Renvoie le facteur de vitesse courant de l'animation, ou 0 si elle est inconnue."
+  },
+  "AnimatedVehicle:setAnimationStopTime": {
+   "en": "Sets a normalised time (0 to 1) at which the animation will stop on its own.",
+   "fr": "Définit un temps normalisé (0 à 1) auquel l'animation s'arrêtera d'elle-même."
+  },
+  "AnimatedVehicle:resetAnimationValues": {
+   "en": "Recomputes the current part index and resets the value objects of all parts of the animation.",
+   "fr": "Recalcule l'indice de la part courante et réinitialise les objets valeur de toutes les parts de l'animation."
+  },
+  "AnimatedVehicle:resetAnimationPartValues": {
+   "en": "Resets every value object of one animation part.",
+   "fr": "Réinitialise chaque objet valeur d'une part d'animation."
+  },
+  "AnimatedVehicle:loadSpeedRotatingPartFromXML": {
+   "en": "Override: after the parent loader succeeds, reads animName, animOuterRange, animMinLimit and animMaxLimit. Returns false if the parent fails.",
+   "fr": "Surcharge : si le chargeur parent réussit, lit animName, animOuterRange, animMinLimit et animMaxLimit. Renvoie faux si le parent échoue."
+  },
+  "AnimatedVehicle:getIsSpeedRotatingPartActive": {
+   "en": "Override: with an animName set, the part is inactive outside the min/max animation time range (or inside it with animOuterRange); otherwise defers to the parent. Note: the outer-range test uses 'or', so with default limits 0 and 1 it is almost always inactive.",
+   "fr": "Surcharge : avec animName défini, la pièce est inactive hors de la plage de temps min/max de l'animation (ou dedans avec animOuterRange) ; sinon délègue au parent. À noter : le test de plage extérieure utilise un 'or', donc avec les limites par défaut 0 et 1 la pièce est presque toujours inactive."
+  },
+  "AnimatedVehicle:loadWorkAreaFromXML": {
+   "en": "Override: reads animName, animMinLimit and animMaxLimit on the work area, then calls the parent loader.",
+   "fr": "Surcharge : lit animName, animMinLimit et animMaxLimit sur la zone de travail, puis appelle le chargeur parent."
+  },
+  "AnimatedVehicle:getIsWorkAreaActive": {
+   "en": "Override: the work area is inactive while its linked animation time lies outside the min/max limits; otherwise the parent decides.",
+   "fr": "Surcharge : la zone de travail est inactive tant que le temps de son animation liée est hors des limites min/max ; sinon le parent décide."
+  },
+  "AnimatedVehicle:loadMovingToolFromXML": {
+   "en": "Override: after the parent loader succeeds, reads requiredAnimation and its min/max time (defaults 0 and 1). Returns false if the parent fails.",
+   "fr": "Surcharge : si le chargeur parent réussit, lit requiredAnimation et ses temps min/max (0 et 1 par défaut). Renvoie faux si le parent échoue."
+  },
+  "AnimatedVehicle:getIsMovingToolActive": {
+   "en": "Override: the moving tool is inactive while the required animation time is outside its allowed range; otherwise the parent decides.",
+   "fr": "Surcharge : l'outil mobile est inactif tant que le temps de l'animation requise est hors de la plage autorisée ; sinon le parent décide."
+  },
+  "AnimatedVehicle:loadMovingPartFromXML": {
+   "en": "Override: after the parent loader succeeds, reads requiredAnimation and its min/max time (defaults 0 and 1). Returns false if the parent fails.",
+   "fr": "Surcharge : si le chargeur parent réussit, lit requiredAnimation et ses temps min/max (0 et 1 par défaut). Renvoie faux si le parent échoue."
+  },
+  "AnimatedVehicle:getIsMovingPartActive": {
+   "en": "Override: the moving part is inactive while the required animation time is outside its allowed range; otherwise the parent decides.",
+   "fr": "Surcharge : la pièce mobile est inactive tant que le temps de l'animation requise est hors de la plage autorisée ; sinon le parent décide."
+  },
+  "AnimatedVehicle.initializeAnimationPartAttribute": {
+   "en": "Helper used by value types: links each part to the next part on the same node and direction, copies end values into the next part's missing start values, and warns on overlapping parts. Parts with different required ranges or configurations are not linked.",
+   "fr": "Aide utilisée par les types de valeurs : relie chaque part à la suivante sur le même nœud et le même sens, copie les valeurs de fin dans les valeurs de début manquantes de la suivante et avertit en cas de chevauchement. Les parts à plages ou configurations requises différentes ne sont pas reliées."
+  },
+  "AnimatedVehicle.animPartSorter": {
+   "en": "Sort comparator: orders parts by start time, then by shorter duration.",
+   "fr": "Comparateur de tri : ordonne les parts par temps de début, puis par durée croissante."
+  },
+  "AnimatedVehicle.animPartSorterReverse": {
+   "en": "Sort comparator for reverse playback: orders parts by later end time first, then later start time.",
+   "fr": "Comparateur de tri pour la lecture inversée : ordonne les parts par temps de fin le plus tardif d'abord, puis par temps de début le plus tardif."
+  },
+  "AnimatedVehicle.getMovedLimitedValue": {
+   "en": "Moves a value toward a target by speed times dt (ms) and never overshoots the target. Returns the new value.",
+   "fr": "Déplace une valeur vers une cible de vitesse multipliée par dt (ms) sans jamais dépasser la cible. Renvoie la nouvelle valeur."
+  },
+  "AnimatedVehicle.setMovedLimitedValuesN": {
+   "en": "Applies getMovedLimitedValue to the first n entries of a table in place. Returns true if any value changed.",
+   "fr": "Applique getMovedLimitedValue aux n premières entrées d'une table, en place. Renvoie vrai si une valeur a changé."
+  },
+  "AnimatedVehicle.setMovedLimitedValues3": {
+   "en": "Shortcut for setMovedLimitedValuesN with 3 values (for example an x/y/z vector). Returns true if any value changed.",
+   "fr": "Raccourci de setMovedLimitedValuesN pour 3 valeurs (par exemple un vecteur x/y/z). Renvoie vrai si une valeur a changé."
+  },
+  "AnimatedVehicle.setMovedLimitedValues4": {
+   "en": "Shortcut for setMovedLimitedValuesN with 4 values. Returns true if any value changed.",
+   "fr": "Raccourci de setMovedLimitedValuesN pour 4 valeurs. Renvoie vrai si une valeur a changé."
+  },
+  "AnimatedVehicle.findCurrentPartIndex": {
+   "en": "Finds the index of the part being played at the current time, using the forward or reversed part order depending on the speed sign. Stores it in animation.currentPartIndex.",
+   "fr": "Trouve l'indice de la part jouée au temps courant, en utilisant l'ordre direct ou inversé des parts selon le signe de la vitesse. Le stocke dans animation.currentPartIndex."
+  },
+  "AnimatedVehicle.getDurationToEndOfPart": {
+   "en": "Returns the time in ms from the current animation time to the end of the part in the playback direction.",
+   "fr": "Renvoie le temps en ms entre le temps courant de l'animation et la fin de la part dans le sens de lecture."
+  },
+  "AnimatedVehicle.getNextPartIsPlaying": {
+   "en": "Returns whether the following part (in playback direction) is already past its start, or the default value when there is no such part.",
+   "fr": "Indique si la part suivante (dans le sens de lecture) a déjà dépassé son début, ou renvoie la valeur par défaut s'il n'y en a pas."
+  },
+  "AnimatedVehicle.updateAnimations": {
+   "en": "Updates every active animation for dt, iterating from the end of the list so finished animations can be removed safely.",
+   "fr": "Met à jour chaque animation active pour dt, en parcourant la liste à l'envers afin de pouvoir retirer sans risque les animations terminées."
+  },
+  "AnimatedVehicle.updateAnimationByName": {
+   "en": "Updates one named animation for dt, respecting its stop time. Does nothing if the name is unknown.",
+   "fr": "Met à jour une animation nommée pour dt, en respectant son temps d'arrêt. Sans effet si le nom est inconnu."
+  },
+  "AnimatedVehicle.updateAnimationCurrentTime": {
+   "en": "Advances the animation clock by dt times speed, clamps it at the stop time if reached, and returns the effective dt and whether the animation should stop.",
+   "fr": "Avance l'horloge de l'animation de dt multiplié par la vitesse, la limite au temps d'arrêt s'il est atteint, et renvoie le dt effectif et l'indication d'arrêt."
+  },
+  "AnimatedVehicle.updateAnimation": {
+   "en": "Core step: updates the parts in range (or evaluates keyframe curves), drives sounds with start/end times, direction and pitch, raises onUpdateAnimation and finishes the animation (events, stop samples, optional looping). A fixed-time update skips sounds and looping.",
+   "fr": "Étape centrale : met à jour les parts concernées (ou évalue les courbes de keyframes), pilote les sons selon temps de début/fin, sens et hauteur, déclenche onUpdateAnimation et termine l'animation (événements, sons d'arrêt, bouclage éventuel). Une mise à jour à temps fixe ignore sons et bouclage."
+  },
+  "AnimatedVehicle:updateAnimationPart": {
+   "en": "Updates all value objects of a part and returns true if any of them changed.",
+   "fr": "Met à jour tous les objets valeur d'une part et renvoie vrai si l'un d'eux a changé."
+  },
+  "AnimatedVehicle:getNumOfActiveAnimations": {
+   "en": "Returns how many animations are currently playing on the vehicle.",
+   "fr": "Renvoie le nombre d'animations actuellement en cours de lecture sur le véhicule."
+  },
+  "AnimatedVehicle:onRegisterAnimationValueTypes": {
+   "en": "Registers the built-in value types: rotation, translation, scale, shaderParameter, visibility, visibilityInter, animationClip, dependentAnimation, spline and rollingGate for all, plus rotLimit, transLimit, rotationLimitSpring, componentMass, centerOfMass and frictionVelocity on the server only.",
+   "fr": "Enregistre les types de valeurs intégrés : rotation, translation, scale, shaderParameter, visibility, visibilityInter, animationClip, dependentAnimation, spline et rollingGate pour tous, plus rotLimit, transLimit, rotationLimitSpring, componentMass, centerOfMass et frictionVelocity uniquement côté serveur."
+  }
+ }
+}

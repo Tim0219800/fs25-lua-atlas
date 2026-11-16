@@ -1,0 +1,13 @@
+{
+ "fichier": "debug/elements/DebugShapeOutline.lua",
+ "module": {
+  "en": "DebugShapeOutline is a debug element that outlines the shape of a node, optionally recursing into children and skipping hidden ones. The static `DebugShapeOutline.render` is absent from this dump (UNVERIFIED).",
+  "fr": "DebugShapeOutline est un élément de débogage qui trace le contour de la forme d'un noeud, avec récursion optionnelle sur les enfants et exclusion des masqués. Le `DebugShapeOutline.render` statique est absent de ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugShapeOutline:draw": {
+   "en": "Calls `DebugShapeOutline.render` with the node, the recursive flag and the exclude-hidden flag.",
+   "fr": "Appelle `DebugShapeOutline.render` avec le noeud, l'indicateur récursif et l'indicateur d'exclusion des masqués."
+  }
+ }
+}

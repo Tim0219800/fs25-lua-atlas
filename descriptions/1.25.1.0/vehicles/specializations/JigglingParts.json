@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/specializations/JigglingParts.lua",
+ "module": {
+  "en": "Vehicle specialization that makes parts such as sowing coulters shake while working, by driving shader parameters (frequency and amplitude) on a node. The shake speed follows the vehicle speed and the amplitude fades in and out. A part can be tied to a ground reference node so it only jiggles while that node touches the ground (needs the GroundReference specialization for this).",
+  "fr": "Spécialisation de véhicule qui fait vibrer des pièces comme les socs de semoir pendant le travail, en pilotant des paramètres de shader (fréquence et amplitude) sur un nœud. La vitesse de vibration suit la vitesse du véhicule et l'amplitude monte et descend progressivement. Une pièce peut être liée à un nœud de référence au sol pour ne vibrer qu'au contact du sol (nécessite la spécialisation GroundReference)."
+ },
+ "fonctions": {
+  "JigglingParts.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite on other specializations.",
+   "fr": "Renvoie toujours true : aucun prérequis envers d'autres spécialisations."
+  },
+  "JigglingParts.initSpecialization": {
+   "en": "Registers the XML schema of a jiggling part: node, speed scale, shader parameter names, component indices, amplitude scale and ground reference node index. The base path constant is defined outside this file (UNVERIFIED).",
+   "fr": "Enregistre le schéma XML d'une pièce vibrante : nœud, échelle de vitesse, noms de paramètres de shader, indices de composantes, échelle d'amplitude et indice du nœud de référence au sol. La constante du chemin de base est définie hors de ce fichier (NON VÉRIFIÉ)."
+  },
+  "JigglingParts.registerFunctions": {
+   "en": "Registers loadJigglingPartsFromXML, isJigglingPartActive and updateJigglingPart on the vehicle type.",
+   "fr": "Enregistre loadJigglingPartsFromXML, isJigglingPartActive et updateJigglingPart sur le type de véhicule."
+  },
+  "JigglingParts.registerEventListeners": {
+   "en": "Subscribes the specialization to onLoad and onUpdate.",
+   "fr": "Abonne la spécialisation à onLoad et onUpdate."
+  },
+  "JigglingParts:onLoad": {
+   "en": "Loads all jigglingPart entries from vehicle.jigglingParts. If none is valid, removes the onUpdate listener.",
+   "fr": "Charge toutes les entrées jigglingPart depuis vehicle.jigglingParts. Si aucune n'est valide, retire l'écouteur onUpdate."
+  },
+  "JigglingParts:onUpdate": {
+   "en": "Each frame, updates active parts with ground contact, and lets inactive parts fade out while their amplitude is still above zero.",
+   "fr": "À chaque frame, met à jour les pièces actives avec contact au sol, et laisse les pièces inactives s'atténuer tant que leur amplitude est supérieure à zéro."
+  },
+  "JigglingParts:loadJigglingPartsFromXML": {
+   "en": "Loads one jiggling part (node, speed and amplitude scales, shader parameter names and components, reference node index) and initialises its state. Returns false with a warning if the node is missing.",
+   "fr": "Charge une pièce vibrante (nœud, échelles de vitesse et d'amplitude, noms et composantes des paramètres de shader, indice du nœud de référence) et initialise son état. Renvoie false avec un avertissement si le nœud manque."
+  },
+  "JigglingParts:isJigglingPartActive": {
+   "en": "Resolves the linked ground reference node on first call (warning if not found) and returns false if that node is not touching the ground, true otherwise.",
+   "fr": "Résout au premier appel le nœud de référence au sol lié (avertissement s'il est introuvable) et renvoie false si ce nœud ne touche pas le sol, true sinon."
+  },
+  "JigglingParts:updateJigglingPart": {
+   "en": "Advances the shake phase in proportion to the vehicle speed, ramps the amplitude up or down (about 100 ms), then writes current and previous-frame values to the node's shader parameters (previous one used for motion data).",
+   "fr": "Fait avancer la phase de vibration proportionnellement à la vitesse du véhicule, augmente ou réduit l'amplitude (environ 100 ms), puis écrit les valeurs courante et de la frame précédente dans les paramètres de shader du nœud (la précédente sert aux données de mouvement)."
+  }
+ }
+}

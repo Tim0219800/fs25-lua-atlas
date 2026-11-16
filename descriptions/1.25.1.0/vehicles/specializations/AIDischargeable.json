@@ -1,0 +1,17 @@
+{
+ "fichier": "vehicles/specializations/AIDischargeable.lua",
+ "module": {
+  "en": "Specialization for vehicles that unload material under AI control. In this dump almost the whole file is empty: only two functions remain, so the rest of the behaviour (spec_aiDischargeable fields, the stoppedAIDischarge function, registrations) is UNVERIFIED. The visible code overrides automatic discharge during AI work and reacts to the discharge state returning to OFF.",
+  "fr": "Spécialisation des véhicules qui déchargent une matière sous contrôle de l'IA. Dans ce dump, presque tout le fichier est vide : seules deux fonctions subsistent, le reste du comportement (champs de spec_aiDischargeable, fonction stoppedAIDischarge, enregistrements) est NON VÉRIFIÉ. Le code visible désactive le déchargement automatique pendant le travail de l'IA et réagit au retour de l'état de déchargement à OFF."
+ },
+ "fonctions": {
+  "AIDischargeable:getDischargeNodeAutomaticDischarge": {
+   "en": "Override: returns false while the AI is active and the platform enables automatic discharge, because the AI triggers unloading itself at the unloading point; otherwise defers to the parent function.",
+   "fr": "Surcharge : renvoie faux quand l'IA est active et que la plateforme autorise le déchargement automatique, car l'IA déclenche elle-même le déchargement au point de décharge ; sinon délègue à la fonction parente."
+  },
+  "AIDischargeable:onDischargeStateChanged": {
+   "en": "Event handler: when an AI discharge is running with a current discharge node and the state goes back to DISCHARGE_STATE_OFF, calls stoppedAIDischarge (defined outside the visible dump, UNVERIFIED).",
+   "fr": "Gestionnaire d'événement : quand un déchargement IA est en cours avec un nœud de décharge courant et que l'état repasse à DISCHARGE_STATE_OFF, appelle stoppedAIDischarge (définie hors du dump visible, NON VÉRIFIÉ)."
+  }
+ }
+}

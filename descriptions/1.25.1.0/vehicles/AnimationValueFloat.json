@@ -1,0 +1,45 @@
+{
+ "fichier": "vehicles/AnimationValueFloat.lua",
+ "module": {
+  "en": "One animated property made of one or several numbers, driven by an animation part of the AnimatedVehicle specialization. It loads start and end values from XML, then each update moves the current values towards the target at a speed derived from the remaining duration, and applies them through a `set` callback with linear, step or spline interpolation. AnimationValueBool inherits from it. Consecutive parts that animate the same property are linked so the next part starts from the previous end value.",
+  "fr": "Propriété animée composée d'un ou plusieurs nombres, pilotée par une partie d'animation de la spécialisation AnimatedVehicle. Elle charge les valeurs de début et de fin depuis le XML, puis chaque mise à jour rapproche les valeurs courantes de la cible à une vitesse déduite de la durée restante, et les applique via un callback `set` avec une interpolation linéaire, par palier ou par spline. AnimationValueBool en hérite. Les parties consécutives qui animent la même propriété sont chaînées pour que la suivante démarre à la valeur de fin de la précédente."
+ },
+ "fonctions": {
+  "AnimationValueFloat.new": {
+   "en": "Constructor. Stores the vehicle, animation, part, XML attribute names, and the `get`, `set` and `extraLoad` callbacks, and prepares empty tables for compare parameters and cached values and speeds.",
+   "fr": "Constructeur. Stocke le véhicule, l'animation, la partie, les noms d'attributs XML et les callbacks `get`, `set` et `extraLoad`, et prépare des tables vides pour les paramètres de comparaison ainsi que les valeurs et vitesses en cache."
+  },
+  "AnimationValueFloat:load": {
+   "en": "Reads start and end values from XML (number, boolean, string or table, normalized to a table of numbers), runs `extraLoad`, then resolves the `tangentType` attribute (linear by default, step or spline variants). Returns true on success.",
+   "fr": "Lit les valeurs de début et de fin dans le XML (nombre, booléen, chaîne ou table, normalisés en table de nombres), exécute `extraLoad`, puis résout l'attribut `tangentType` (linéaire par défaut, variantes palier ou spline). Retourne true en cas de succès."
+  },
+  "AnimationValueFloat:addCompareParameters": {
+   "en": "Appends field names that `init` compares between two values of different parts: two values are only chained if all these fields are equal.",
+   "fr": "Ajoute des noms de champs que `init` compare entre deux valeurs de parties différentes : deux valeurs ne sont chaînées que si tous ces champs sont égaux."
+  },
+  "AnimationValueFloat:setWarningInformation": {
+   "en": "Sets the text used to identify this value in XML warning messages.",
+   "fr": "Définit le texte servant à identifier cette valeur dans les avertissements XML."
+  },
+  "AnimationValueFloat:init": {
+   "en": "Looks at later parts of the same animation with the same direction for a value with the same end attribute and matching compare parameters, then links them as previous and next. Logs an XML warning on overlapping parts and may copy this end value as the next start value.",
+   "fr": "Parcourt les parties suivantes de la même animation, de même direction, à la recherche d'une valeur avec le même attribut de fin et des paramètres de comparaison identiques, puis les relie comme précédente et suivante. Journalise un avertissement XML en cas de chevauchement et peut copier cette valeur de fin comme début de la suivante."
+  },
+  "AnimationValueFloat:postInit": {
+   "en": "If an end value exists but no start value was given in XML, captures the start value from the vehicle through the `get` callback.",
+   "fr": "Si une valeur de fin existe mais qu'aucune valeur de début n'est donnée dans le XML, relève la valeur de départ sur le véhicule via le callback `get`."
+  },
+  "AnimationValueFloat:reset": {
+   "en": "Keeps the last current values and speeds for reuse, then clears the active ones so the next update re-initializes the movement.",
+   "fr": "Conserve les dernières valeurs et vitesses courantes pour les réutiliser, puis efface les valeurs actives afin que la prochaine mise à jour réinitialise le mouvement."
+  },
+  "AnimationValueFloat:initValues": {
+   "en": "Sets the current values, computes per-value speed as remaining distance over the remaining duration (minimum 0.001), and stores spline start values. With a fixed-time update it starts from the part start or end value depending on playback direction. Returns the `initialUpdate` flag.",
+   "fr": "Fixe les valeurs courantes, calcule la vitesse de chaque valeur comme distance restante sur durée restante (minimum 0,001) et mémorise les valeurs de départ de la spline. Avec une mise à jour à temps fixe, part de la valeur de début ou de fin selon le sens de lecture. Retourne l'indicateur `initialUpdate`."
+  },
+  "AnimationValueFloat:update": {
+   "en": "Moves the current values towards the target (end value, or start value when playing backwards) using real dt, then calls `set` with the linear, spline or step result. Returns true if values were applied. Does nothing without a start value or when the part is not active.",
+   "fr": "Rapproche les valeurs courantes de la cible (valeur de fin, ou de début en lecture inverse) avec le dt réel, puis appelle `set` avec le résultat linéaire, spline ou palier. Retourne true si des valeurs ont été appliquées. Ne fait rien sans valeur de début ou si la partie n'est pas active."
+  }
+ }
+}

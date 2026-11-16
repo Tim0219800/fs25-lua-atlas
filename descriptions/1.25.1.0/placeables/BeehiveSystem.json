@@ -1,0 +1,77 @@
+{
+ "fichier": "placeables/BeehiveSystem.lua",
+ "module": {
+  "en": "Mission-level manager for beehive placeables: it keeps the beehives sorted by action radius, per-farm honey pallet spawners, and the global production and effect state (off in winter, at night or in rain). It computes the combined beehive influence at a world position (capped at 1, used for crop yield bonus), distributes honey to pallet spawners each hour on the server and warns the owner when no pallet spawner is available. Beehive methods such as `getHoneyAmountToSpawn` and `getBeehiveInfluenceFactor` live in the beehive placeable spec (not in this file, UNVERIFIED).",
+  "fr": "Gestionnaire au niveau mission des placeables de ruches : il garde les ruches triées par rayon d'action, les générateurs de palettes de miel par ferme et l'état global de production et d'effets (arrêt en hiver, la nuit ou sous la pluie). Il calcule l'influence cumulée des ruches à une position du monde (plafonnée à 1, utilisée pour le bonus de rendement), distribue le miel aux générateurs de palettes chaque heure côté serveur et avertit le propriétaire quand aucun générateur n'est disponible. Les méthodes des ruches comme `getHoneyAmountToSpawn` et `getBeehiveInfluenceFactor` sont dans la spécialisation du placeable (absente de ce fichier, NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "BeehiveSystem.new": {
+   "en": "Constructor: stores the mission, initializes empty beehive and spawner lists, inactive states and counters, and on the server registers the `gsBeehiveDebug` console command if test commands are enabled. `COOLDOWN_DURATION` is not defined in this file (UNVERIFIED).",
+   "fr": "Constructeur : mémorise la mission, initialise les listes de ruches et de générateurs vides, les états inactifs et les compteurs, et sur le serveur enregistre la commande console `gsBeehiveDebug` si les commandes de test sont actives. `COOLDOWN_DURATION` n'est pas défini dans ce fichier (NON VÉRIFIÉ)."
+  },
+  "BeehiveSystem:delete": {
+   "en": "Removes the `gsBeehiveDebug` console command.",
+   "fr": "Retire la commande console `gsBeehiveDebug`."
+  },
+  "BeehiveSystem:addBeehive": {
+   "en": "Adds a beehive: on the first one updates the state and subscribes to hour and day/night changes, shows the no-spawner warning once the mission has started, and re-sorts the list by action radius, largest first, so influence loops can stop early.",
+   "fr": "Ajoute une ruche : pour la première, met à jour l'état et s'abonne aux changements d'heure et de jour/nuit, affiche l'avertissement d'absence de générateur une fois la mission démarrée et retrie la liste par rayon d'action décroissant pour que les boucles d'influence s'arrêtent tôt."
+  },
+  "BeehiveSystem:removeBeehive": {
+   "en": "Removes a beehive and, when the list becomes empty, unsubscribes from the hour and day/night messages.",
+   "fr": "Retire une ruche et, quand la liste devient vide, se désabonne des messages d'heure et de jour/nuit."
+  },
+  "BeehiveSystem:onHourChanged": {
+   "en": "Hourly message handler: updates honey output then the beehive state.",
+   "fr": "Gestionnaire du message horaire : met à jour la production de miel puis l'état des ruches."
+  },
+  "BeehiveSystem:update": {
+   "en": "Server only, when spawners exist: after a cooldown counted in calls, updates one pallet spawner per call in round-robin order, then restarts the cooldown at the end of the list.",
+   "fr": "Serveur uniquement, si des générateurs existent : après un délai compté en appels, met à jour un générateur de palettes par appel en tournant, puis relance le délai en fin de liste."
+  },
+  "BeehiveSystem:updateBeehivesOutput": {
+   "en": "Server only: for each beehive (optionally filtered by farm) with a pallet spawner for its owner, adds the honey amount returned by `getHoneyAmountToSpawn` to that spawner's fill level.",
+   "fr": "Serveur uniquement : pour chaque ruche (filtrée éventuellement par ferme) ayant un générateur de palettes pour son propriétaire, ajoute la quantité de miel renvoyée par `getHoneyAmountToSpawn` au niveau de ce générateur."
+  },
+  "BeehiveSystem:updateState": {
+   "en": "Recomputes the global flags: production is active outside winter, and effects are active only if production is active, the sun is on and it is not raining. Uses the mission environment (class not in the dump, UNVERIFIED).",
+   "fr": "Recalcule les drapeaux globaux : la production est active hors hiver, et les effets seulement si la production est active, que le soleil est levé et qu'il ne pleut pas. Utilise l'environnement de la mission (classe absente du dump, NON VÉRIFIÉ)."
+  },
+  "BeehiveSystem:updateBeehivesState": {
+   "en": "Refreshes the global state and then calls `updateBeehiveState` on every beehive.",
+   "fr": "Rafraîchit l'état global puis appelle `updateBeehiveState` sur chaque ruche."
+  },
+  "BeehiveSystem:getFarmHasBeehive": {
+   "en": "Returns true if the farm owns at least one beehive.",
+   "fr": "Renvoie true si la ferme possède au moins une ruche."
+  },
+  "BeehiveSystem:getBeehives": {
+   "en": "Returns the internal list of beehives sorted by radius (not a copy).",
+   "fr": "Renvoie la liste interne des ruches triée par rayon (pas une copie)."
+  },
+  "BeehiveSystem:getBeehiveInfluenceFactorAt": {
+   "en": "Returns the summed influence of all beehives at world position (x, z), regardless of farm, stopping early and capped at 1. Includes a debug-only text overlay.",
+   "fr": "Renvoie l'influence cumulée de toutes les ruches à la position monde (x, z), quelle que soit la ferme, avec arrêt anticipé et plafond à 1. Contient un affichage de texte réservé au debug."
+  },
+  "BeehiveSystem:addBeehivePalletSpawner": {
+   "en": "Registers a pallet spawner and immediately updates honey output for its owner farm.",
+   "fr": "Enregistre un générateur de palettes et met aussitôt à jour la production de miel de sa ferme propriétaire."
+  },
+  "BeehiveSystem:removeBeehivePalletSpawner": {
+   "en": "Unregisters a pallet spawner and shows the no-spawner warning for it.",
+   "fr": "Retire un générateur de palettes et affiche l'avertissement d'absence de générateur le concernant."
+  },
+  "BeehiveSystem:showNoSpawnerWarning": {
+   "en": "Client side, at most every 5 seconds: if the local farm owns the placeable and has beehives but no pallet spawner, adds a critical in-game notification about a missing pallet location.",
+   "fr": "Côté client, au plus toutes les 5 secondes : si la ferme locale possède le placeable et des ruches mais aucun générateur de palettes, ajoute une notification critique en jeu sur l'absence d'emplacement de palettes."
+  },
+  "BeehiveSystem:getFarmBeehivePalletSpawner": {
+   "en": "Returns the pallet spawner owned by the given farm, or nil.",
+   "fr": "Renvoie le générateur de palettes appartenant à la ferme donnée, ou nil."
+  },
+  "BeehiveSystem:consoleCommandBeehiveDebug": {
+   "en": "Console command: toggles `BeehiveSystem.DEBUG_ENABLED` and returns its new value as text.",
+   "fr": "Commande console : bascule `BeehiveSystem.DEBUG_ENABLED` et renvoie sa nouvelle valeur sous forme de texte."
+  }
+ }
+}

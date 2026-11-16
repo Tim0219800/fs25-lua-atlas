@@ -1,0 +1,77 @@
+{
+ "fichier": "animals/husbandry/placeables/PlaceableHusbandryStraw.lua",
+ "module": {
+  "en": "Placeable specialization for the straw bedding of a husbandry: animals consume straw and, optionally, produce manure from it. It overwrites the husbandry output, production, condition and info functions, drives an optional visual straw fill plane, and reads its settings from `placeable.husbandry.straw` (`strawPlane`, `manure#factor`, `manure#active`). It relies on the husbandry specialization functions (UNVERIFIED, file not in this lot).",
+  "fr": "Spécialisation de placeable pour la litière de paille d'un élevage : les animaux consomment de la paille et, en option, produisent du fumier. Elle surcharge les fonctions de sortie, de production, de condition et d'info de l'élevage, pilote un plan de remplissage visuel de paille et lit ses réglages sous `placeable.husbandry.straw` (`strawPlane`, `manure#factor`, `manure#active`). Elle s'appuie sur les fonctions de la spécialisation d'élevage (NON VÉRIFIÉ, fichier hors de ce lot)."
+ },
+ "fonctions": {
+  "PlaceableHusbandryStraw.prerequisitesPresent": {
+   "en": "Prerequisite check; always returns true, so the specialization has no requirement on other specializations.",
+   "fr": "Vérification des prérequis ; renvoie toujours true, la spécialisation n'exige donc aucune autre spécialisation."
+  },
+  "PlaceableHusbandryStraw.registerFunctions": {
+   "en": "Registers the new placeable function `updateStrawPlane`.",
+   "fr": "Enregistre la nouvelle fonction de placeable `updateStrawPlane`."
+  },
+  "PlaceableHusbandryStraw.registerOverwrittenFunctions": {
+   "en": "Registers overrides of `updateOutput`, `updateProduction`, `getConditionInfos` and `updateInfo`.",
+   "fr": "Enregistre les surcharges de `updateOutput`, `updateProduction`, `getConditionInfos` et `updateInfo`."
+  },
+  "PlaceableHusbandryStraw.registerEventListeners": {
+   "en": "Subscribes to onLoad, onPostFinalizePlacement, onDelete, onFinalizePlacement, onReadStream, onHusbandryAnimalsUpdate and onHusbandryFillLevelChanged.",
+   "fr": "S'abonne à onLoad, onPostFinalizePlacement, onDelete, onFinalizePlacement, onReadStream, onHusbandryAnimalsUpdate et onHusbandryFillLevelChanged."
+  },
+  "PlaceableHusbandryStraw.registerXMLPaths": {
+   "en": "Declares the XML paths under `husbandry.straw`: the `strawPlane` fill plane, `manure#factor` (default 1) and `manure#active` (default true).",
+   "fr": "Déclare les chemins XML sous `husbandry.straw` : le plan `strawPlane`, `manure#factor` (1 par défaut) et `manure#active` (true par défaut)."
+  },
+  "PlaceableHusbandryStraw:onLoad": {
+   "en": "Reads the manure factor and active flag, creates the optional straw `FillPlane` (deleted if loading fails), sets straw as input and manure as output fill types, and initializes liters-per-hour and info tables.",
+   "fr": "Lit le facteur de fumier et l'indicateur d'activation, crée le `FillPlane` de paille optionnel (supprimé si le chargement échoue), définit la paille en entrée et le fumier en sortie, et initialise les litres par heure et les tables d'info."
+  },
+  "PlaceableHusbandryStraw:onPostFinalizePlacement": {
+   "en": "Refreshes the straw plane once placement is finalized.",
+   "fr": "Rafraîchit le plan de paille une fois le placement finalisé."
+  },
+  "PlaceableHusbandryStraw:onDelete": {
+   "en": "Deletes the straw fill plane if there is one.",
+   "fr": "Supprime le plan de remplissage de paille s'il existe."
+  },
+  "PlaceableHusbandryStraw:onFinalizePlacement": {
+   "en": "Logs an XML warning if the husbandry storage does not support straw. Note: the manure check reads `self.isManureActive` instead of `spec.isManureActive`, so it is probably never true (apparent bug).",
+   "fr": "Journalise un avertissement XML si le stockage de l'élevage n'accepte pas la paille. À noter : le test du fumier lit `self.isManureActive` au lieu de `spec.isManureActive`, donc il n'est probablement jamais vrai (bug apparent)."
+  },
+  "PlaceableHusbandryStraw:onReadStream": {
+   "en": "Refreshes the straw plane after a client receives the initial stream.",
+   "fr": "Rafraîchit le plan de paille quand un client reçoit le flux initial."
+  },
+  "PlaceableHusbandryStraw:updateStrawPlane": {
+   "en": "Sets the straw plane state to the straw fill level divided by capacity (0 if capacity is 0). Does nothing without a plane.",
+   "fr": "Règle l'état du plan de paille sur le niveau de paille divisé par la capacité (0 si la capacité est nulle). Ne fait rien sans plan."
+  },
+  "PlaceableHusbandryStraw:updateOutput": {
+   "en": "Override. On the server, removes straw according to liters per hour scaled by `environment.timeAdjustment`, adds manure in proportion to the straw really consumed, and refreshes the plane. Then calls the parent function.",
+   "fr": "Surcharge. Sur le serveur, retire de la paille selon les litres par heure multipliés par `environment.timeAdjustment`, ajoute du fumier proportionnellement à la paille réellement consommée et rafraîchit le plan. Appelle ensuite la fonction parente."
+  },
+  "PlaceableHusbandryStraw:updateProduction": {
+   "en": "Override. Takes the parent production factor and, on the server, multiplies it by 0.75 if straw is present but manure storage is full, or by 0.9 if there is no straw. Returns the factor.",
+   "fr": "Surcharge. Prend le facteur de production parent et, sur le serveur, le multiplie par 0,75 s'il y a de la paille mais que le stockage de fumier est plein, ou par 0,9 s'il n'y a pas de paille. Renvoie le facteur."
+  },
+  "PlaceableHusbandryStraw:onHusbandryAnimalsUpdate": {
+   "en": "Recomputes straw input and manure output in liters per hour by summing, over the animal clusters, the subtype age-based daily amounts times animal count divided by 24.",
+   "fr": "Recalcule l'entrée de paille et la sortie de fumier en litres par heure en sommant, sur les groupes d'animaux, les quantités journalières selon l'âge du sous-type multipliées par le nombre d'animaux et divisées par 24."
+  },
+  "PlaceableHusbandryStraw:onHusbandryFillLevelChanged": {
+   "en": "Refreshes the straw plane when the changed fill type is straw.",
+   "fr": "Rafraîchit le plan de paille quand le type de remplissage modifié est la paille."
+  },
+  "PlaceableHusbandryStraw:getConditionInfos": {
+   "en": "Override. Appends a straw condition bar (value and ratio of capacity) and a manure bar (inverted bar, disabled with a missing-manure-heap label when manure capacity is 0) to the parent list.",
+   "fr": "Surcharge. Ajoute à la liste parente une barre de condition pour la paille (valeur et ratio de la capacité) et une pour le fumier (barre inversée, désactivée avec une mention de tas de fumier manquant si la capacité de fumier est 0)."
+  },
+  "PlaceableHusbandryStraw:updateInfo": {
+   "en": "Override. After the parent, appends two info entries to the table: straw and manure levels formatted as whole liters.",
+   "fr": "Surcharge. Après la fonction parente, ajoute deux entrées d'info à la table : niveaux de paille et de fumier en litres entiers."
+  }
+ }
+}

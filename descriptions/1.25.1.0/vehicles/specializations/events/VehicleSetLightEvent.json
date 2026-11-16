@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/VehicleSetLightEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the lights bit mask of a vehicle. The mask width is sent first on 5 bits, then the mask itself. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise le masque binaire des feux d'un véhicule. La largeur du masque est envoyée d'abord sur 5 bits, puis le masque lui-même. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "VehicleSetLightEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "VehicleSetLightEvent.new": {
+      "en": "Builds the event with the data to send (a node object, a bit count (5 bits) and the lights type mask on that many bits); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud, un nombre de bits (5 bits) et le masque de types de feux sur ce nombre de bits) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "VehicleSetLightEvent:readStream": {
+      "en": "Reads a node object, a bit count (5 bits) and the lights type mask on that many bits from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud, un nombre de bits (5 bits) et le masque de types de feux sur ce nombre de bits depuis le flux, puis appelle `run(connection)`."
+    },
+    "VehicleSetLightEvent:writeStream": {
+      "en": "Writes a node object, a bit count (5 bits) and the lights type mask on that many bits to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud, un nombre de bits (5 bits) et le masque de types de feux sur ce nombre de bits dans le flux (même ordre que `readStream`)."
+    },
+    "VehicleSetLightEvent:run": {
+      "en": "Applies the event on the receiving side: calls `setLightsTypesMask(mask, true, true)` on the object if synchronized, then the server re-broadcasts to the other clients.",
+      "fr": "Applique l'événement côté récepteur : appelle `setLightsTypesMask(masque, true, true)` sur l'objet s'il est synchronisé, puis le serveur retransmet aux autres clients."
+    }
+  }
+}

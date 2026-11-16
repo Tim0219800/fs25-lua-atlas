@@ -1,0 +1,69 @@
+{
+ "fichier": "gui/hud/InputGlyphElement.lua",
+ "module": {
+  "en": "HUD element (extends HUDElement) that shows the key caps or gamepad glyphs bound to one or two input actions, optionally followed by an action text. It asks g_inputDisplayManager for the symbol overlays, lays out combos with plus or or separators, and refreshes itself on the INPUT_DEVICES_CHANGED message. Client-side only. onInputDevicesChanged and getPositionOffset/getDrawSeparator are used but not defined in this file (UNVERIFIED where they live).",
+  "fr": "Élément HUD (étend HUDElement) qui affiche les touches clavier ou glyphes de manette liés à une ou deux actions de saisie, éventuellement suivis d'un texte d'action. Il demande les overlays de symboles à g_inputDisplayManager, dispose les combinaisons avec des séparateurs plus ou ou, et se rafraîchit sur le message INPUT_DEVICES_CHANGED. Côté client uniquement. onInputDevicesChanged, getPositionOffset et getDrawSeparator sont utilisés mais non définis dans ce fichier (NON VÉRIFIÉ pour leur emplacement)."
+ },
+ "fonctions": {
+  "InputGlyphElement.new": {
+   "en": "Creates the glyph with a base size, empty action list, plus/or overlays from the input display manager and a keyboard ButtonOverlay, then subscribes to INPUT_DEVICES_CHANGED. Call delete to unsubscribe.",
+   "fr": "Crée le glyphe avec une taille de base, une liste d'actions vide, les overlays plus/ou du gestionnaire d'affichage de saisie et un ButtonOverlay clavier, puis s'abonne à INPUT_DEVICES_CHANGED. Appeler delete pour se désabonner."
+  },
+  "InputGlyphElement:delete": {
+   "en": "Deletes the keyboard overlay, unsubscribes from all message center events and runs the parent delete.",
+   "fr": "Supprime l'overlay clavier, se désabonne de tous les événements du message center et exécute le delete du parent."
+  },
+  "InputGlyphElement:setScale": {
+   "en": "Applies width/height scale through the parent, then recomputes glyph and text offsets and the icon, plus and or sizes from the base size.",
+   "fr": "Applique l'échelle en largeur/hauteur via le parent, puis recalcule les décalages de glyphe et de texte ainsi que les tailles d'icône, plus et ou à partir de la taille de base."
+  },
+  "InputGlyphElement:setUpperCase": {
+   "en": "Enables or disables upper-casing of the action text (this cancels lower-casing) and refreshes the display text.",
+   "fr": "Active ou désactive la mise en majuscules du texte d'action (ce qui annule les minuscules) et rafraîchit le texte affiché."
+  },
+  "InputGlyphElement:setLowerCase": {
+   "en": "Enables or disables lower-casing of the action text (this cancels upper-casing) and refreshes the display text.",
+   "fr": "Active ou désactive la mise en minuscules du texte d'action (ce qui annule les majuscules) et rafraîchit le texte affiché."
+  },
+  "InputGlyphElement:setBold": {
+   "en": "Sets whether the action text is rendered in bold.",
+   "fr": "Définit si le texte d'action est rendu en gras."
+  },
+  "InputGlyphElement:setKeyboardGlyphColor": {
+   "en": "Stores the main color (also used for the action text) and applies it with an optional background color to the keyboard key overlay.",
+   "fr": "Mémorise la couleur principale (aussi utilisée pour le texte d'action) et l'applique, avec une couleur de fond optionnelle, à l'overlay des touches clavier."
+  },
+  "InputGlyphElement:setButtonGlyphColor": {
+   "en": "Stores the color used for gamepad glyphs and applies it to the already resolved button overlays of the current actions.",
+   "fr": "Mémorise la couleur utilisée pour les glyphes de manette et l'applique aux overlays de boutons déjà résolus des actions courantes."
+  },
+  "InputGlyphElement:setAction": {
+   "en": "Shortcut for a single action: replaces the action list with it and calls setActions with the same text options.",
+   "fr": "Raccourci pour une action unique : remplace la liste d'actions par celle-ci et appelle setActions avec les mêmes options de texte."
+  },
+  "InputGlyphElement:setActions": {
+   "en": "Resolves symbol overlays and key names for the given action names (at most a pair is combined) through the input display manager, then sets the element width from the glyphs and its height unchanged. Stores optional action text and size.",
+   "fr": "Résout les overlays de symboles et noms de touches des actions données (au plus une paire combinée) via le gestionnaire d'affichage de saisie, puis fixe la largeur de l'élément d'après les glyphes en conservant la hauteur. Mémorise le texte d'action et sa taille optionnels."
+  },
+  "InputGlyphElement:updateDisplayText": {
+   "en": "Derives the displayed text from the action text, upper-cased or lower-cased according to the flags, when an action text exists.",
+   "fr": "Dérive le texte affiché à partir du texte d'action, en majuscules ou minuscules selon les drapeaux, lorsqu'un texte d'action existe."
+  },
+  "InputGlyphElement:getGlyphWidth": {
+   "en": "Computes the total width of the currently resolved glyphs (gamepad icons with separators, or key caps), excluding the action text.",
+   "fr": "Calcule la largeur totale des glyphes actuellement résolus (icônes de manette avec séparateurs, ou touches clavier), sans le texte d'action."
+  },
+  "InputGlyphElement:draw": {
+   "en": "Draws the glyphs (gamepad buttons or keyboard keys) right-aligned to the element unless left alignment is set, then the action text if any. Does nothing without actions or when the overlay is hidden.",
+   "fr": "Dessine les glyphes (boutons de manette ou touches clavier) alignés à droite dans l'élément sauf alignement à gauche, puis le texte d'action s'il existe. Ne fait rien sans actions ou si l'overlay est masqué."
+  },
+  "InputGlyphElement:drawControllerButtons": {
+   "en": "Renders each gamepad button overlay in order, inserting plus or or separator icons between them, and returns the X position after the last one.",
+   "fr": "Rend chaque overlay de bouton de manette dans l'ordre, en insérant des icônes de séparation plus ou ou entre eux, et retourne la position X après le dernier."
+  },
+  "InputGlyphElement:drawActionText": {
+   "en": "Renders the action text after the glyphs using the stored size, bold flag and color, with an optional text clip area that is reset afterwards.",
+   "fr": "Rend le texte d'action après les glyphes avec la taille, le gras et la couleur mémorisés, avec une zone de clipping de texte optionnelle réinitialisée ensuite."
+  }
+ }
+}

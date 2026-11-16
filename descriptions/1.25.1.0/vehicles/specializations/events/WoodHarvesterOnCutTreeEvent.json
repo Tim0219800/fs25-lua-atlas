@@ -1,0 +1,29 @@
+{
+  "fichier": "vehicles/specializations/events/WoodHarvesterOnCutTreeEvent.lua",
+  "module": {
+    "en": "Server-to-client event that raises the `onCutTree` specialization event with the cut radius so clients can play cut effects. It has no sendEvent helper. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement serveur vers client qui déclenche l'événement de spécialisation `onCutTree` avec le rayon de coupe afin que les clients jouent les effets de coupe. Il n'a pas de fonction sendEvent. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "WoodHarvesterOnCutTreeEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "WoodHarvesterOnCutTreeEvent.new": {
+      "en": "Builds the event with the data to send (a node object and a float32 radius); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud et un rayon float32) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "WoodHarvesterOnCutTreeEvent:readStream": {
+      "en": "Reads a node object and a float32 radius from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud et un rayon float32 depuis le flux, puis appelle `run(connection)`."
+    },
+    "WoodHarvesterOnCutTreeEvent:writeStream": {
+      "en": "Writes a node object and a float32 radius to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud et un rayon float32 dans le flux (même ordre que `readStream`)."
+    },
+    "WoodHarvesterOnCutTreeEvent:run": {
+      "en": "Applies the event on the receiving side: calls `SpecializationUtil.raiseEvent(object, 'onCutTree', radius)` if synchronized; on the server it first re-broadcasts a new event.",
+      "fr": "Applique l'événement côté récepteur : appelle `SpecializationUtil.raiseEvent(objet, 'onCutTree', rayon)` si synchronisé ; sur le serveur, il retransmet d'abord un nouvel événement."
+    }
+  }
+}

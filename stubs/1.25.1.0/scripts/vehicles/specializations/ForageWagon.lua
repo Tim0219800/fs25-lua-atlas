@@ -1,122 +1,122 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/ForageWagon.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation de la remorque autochargeuse (ramassage d'andains d'herbe/foin/ensilage dans la carte de hauteur, DensityMapHeightUtil). Prérequis : FillUnit, TurnOnVehicle, Pickup, WorkArea. EFFETS (client) : fillEffects (vehicle.forageWagon.fillEffect, flux de matière) et startFillEffect (vehicle.forageWagon.startFillEffect, effet de démarrage de remplissage avec retard et fondu) chargés par g_effectManager:loadEffect ; classes d'effets absentes du dump : rendu NON VÉRIFIÉ. DÉCLENCHEMENT : le serveur arme spec.fillTimer = 500 ms dès qu'un ramassage de litres a eu lieu dans la passe (onEndWorkAreaProcessing) ; onUpdateTick décompte ce temps avec dt et isFilling reste vrai tant qu'il est positif ; tout changement d'isFilling lève dirtyFlag et appelle setFillEffectActive. Le client reçoit isFilling et le type de remplissage (FillTypeManager.SEND_NUM_BITS bits) par les flux initial et de mise à jour et appelle lui-même setFillEffectActive. L'effet reçoit comme type spec.lastFillType (le dernier type de matière ramassée), pas de stade de croissance, pas de largeur ; la densité du startFillEffect est modulée par le niveau de remplissage (onFillUnitFillLevelChanged : 1 - niveau/fillStartFadeOff). CONDITIONS : zone active si l'outil est allumé et si Pickup autorise le ramassage (allowPickingUp, spécialisation Pickup non relue : le critère abaissé/contact sol y est donc NON VÉRIFIÉ ici). Les autres sources montrent seulement doCheckSpeedLimit lié à allumé ET abaissé. RAMASSAGE : processForageWagonArea tire, sur la ligne de la zone (rayon 0.5), les litres de chaque type supporté (tipToGroundAroundLine avec -infini = aspiration), mémorise le premier type trouvé (forcedFillType), traite les andains herbe/foin humide-sec comme interchangeables, applique côté serveur les additifs (+5 % pondéré du niveau d'additif disponible) et cumule les litres ; workArea.pickupParticlesActive est posé selon pickupLiters > 0 (champ lu probablement par Pickup : NON VÉRIFIÉ). La surface retournée = largeur de ligne * lastMovedDistance, seulement en marche avant. Ce script ne lit aucune donnée météo ni humidité, et ne modifie pas de carte de densité terrain autre que la hauteur (pas de carte de culture). Remarque : processForageWagonArea n'a pas de garde de distance client (contrairement aux outils de sol), mais seul le serveur remplit le véhicule. dt : fillTimer en ms de temps de jeu. POINTS D'EXTENSION : fonctions processForageWagonArea, setFillEffectActive, fillForageWagon ; surcharges loadSpeedRotatingPartFromXML, getIsSpeedRotatingPartActive, getFillVolumeUVScrollSpeed, getIsWorkAreaActive, doCheckSpeedLimit, getConsumingLoad ; événements de flux, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOff, onDeactivate, onFillUnitFillLevelChanged. Vitesse limite par défaut : 20.
+--- Specialization of the forage wagon (picking up grass/hay/silage windrows from the height map, DensityMapHeightUtil). Prerequisites: FillUnit, TurnOnVehicle, Pickup, WorkArea. EFFECTS (client): fillEffects (vehicle.forageWagon.fillEffect, material flow) and startFillEffect (vehicle.forageWagon.startFillEffect, fill start effect with delay and fade) loaded by g_effectManager:loadEffect; effect classes are absent from the dump: rendering UNVERIFIED. TRIGGER: the server arms spec.fillTimer = 500 ms as soon as litres have been picked up during the pass (onEndWorkAreaProcessing); onUpdateTick counts this time down with dt and isFilling stays true while it is positive; any change of isFilling raises dirtyFlag and calls setFillEffectActive. The client receives isFilling and the fill type (FillTypeManager.SEND_NUM_BITS bits) through the initial and update streams and itself calls setFillEffectActive. The effect receives spec.lastFillType (the last material type picked up) as its type, no growth stage, no width; the density of startFillEffect is modulated by the fill level (onFillUnitFillLevelChanged: 1 - level/fillStartFadeOff). CONDITIONS: the area is active if the tool is turned on and if Pickup allows picking up (allowPickingUp, Pickup specialization not re-read: the lowered/ground contact criterion there is therefore UNVERIFIED here). The other sources only show doCheckSpeedLimit tied to turned on AND lowered. PICKUP: processForageWagonArea draws, along the area line (radius 0.5), the litres of each supported type (tipToGroundAroundLine with -infinity = suction), remembers the first type found (forcedFillType), treats wet/dry grass/hay windrows as interchangeable, applies additives on the server side (+5 % weighted by the available additive level) and accumulates the litres; workArea.pickupParticlesActive is set according to pickupLiters > 0 (field probably read by Pickup: UNVERIFIED). The returned area = line width * lastMovedDistance, only when driving forward. This script reads no weather or wetness data, and does not modify any terrain density map other than the height map (no crop map). Remark: processForageWagonArea has no client distance guard (unlike ground tools), but only the server fills the vehicle. dt: fillTimer in ms of game time. EXTENSION POINTS: functions processForageWagonArea, setFillEffectActive, fillForageWagon; overrides loadSpeedRotatingPartFromXML, getIsSpeedRotatingPartActive, getFillVolumeUVScrollSpeed, getIsWorkAreaActive, doCheckSpeedLimit, getConsumingLoad; stream events, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOff, onDeactivate, onFillUnitFillLevelChanged. Default speed limit: 20.
 ---@class ForageWagon
 ForageWagon = {}
 
---- Déclare le type de zone forageWagon et le schéma XML : indices de zone/unité/load info, additifs (unité, usage, types), défilement UV du volume, maxPickupLitersPerSecond, fillEffect et startFillEffect. Non relu clé par clé.
+--- Declares the forageWagon area type and the XML schema: area/unit/load info indices, additives (unit, usage, types), volume UV scrolling, maxPickupLitersPerSecond, fillEffect and startFillEffect. Not re-read key by key.
 function ForageWagon.initSpecialization() end
 
---- Exige FillUnit, TurnOnVehicle, Pickup et WorkArea.
+--- Requires FillUnit, TurnOnVehicle, Pickup and WorkArea.
 ---@param specializations any
 function ForageWagon.prerequisitesPresent(specializations) end
 
---- Enregistre processForageWagonArea, setFillEffectActive et fillForageWagon.
+--- Registers processForageWagonArea, setFillEffectActive and fillForageWagon.
 ---@param vehicleType any
 function ForageWagon.registerFunctions(vehicleType) end
 
---- Surcharge loadSpeedRotatingPartFromXML, getIsSpeedRotatingPartActive, getFillVolumeUVScrollSpeed, getIsWorkAreaActive, doCheckSpeedLimit et getConsumingLoad.
+--- Overrides loadSpeedRotatingPartFromXML, getIsSpeedRotatingPartActive, getFillVolumeUVScrollSpeed, getIsWorkAreaActive, doCheckSpeedLimit and getConsumingLoad.
 ---@param vehicleType any
 function ForageWagon.registerOverwrittenFunctions(vehicleType) end
 
---- S'abonne aux événements de flux, à onLoad, onDelete, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOff, onDeactivate et onFillUnitFillLevelChanged (liste exacte non relue).
+--- Subscribes to the stream events, onLoad, onDelete, onUpdateTick, onStart/EndWorkAreaProcessing, onTurnedOff, onDeactivate and onFillUnitFillLevelChanged (exact list not re-read).
 ---@param vehicleType any
 function ForageWagon.registerEventListeners(vehicleType) end
 
---- Initialise l'état de remplissage, lit indices de zone/unité/charge, additifs (usage par défaut 0.0000275 par litre, type GRASS_WINDROW), vitesses de défilement UV, débit maximal (500 l/s), charge les effets (client) et un tampon de litres sur 750 ms ; retire l'écouteur onFillUnitFillLevelChanged s'il n'y a pas de startFillEffect.
+--- Initializes the filling state, reads area/unit/load indices, additives (default usage 0.0000275 per litre, type GRASS_WINDROW), UV scroll speeds, maximum flow (500 l/s), loads the effects (client) and a litres buffer over 750 ms; removes the onFillUnitFillLevelChanged listener if there is no startFillEffect.
 ---@param savegame any
 function ForageWagon:onLoad(savegame) end
 
---- Libère les deux groupes d'effets.
+--- Frees the two effect groups.
 function ForageWagon:onDelete() end
 
---- Lit isFilling et le type de remplissage à la connexion et applique setFillEffectActive.
+--- Reads isFilling and the fill type on connection and applies setFillEffectActive.
 ---@param streamId any
 ---@param connection any
 function ForageWagon:onReadStream(streamId, connection) end
 
---- Écrit isFillingSent et lastFillType.
+--- Writes isFillingSent and lastFillType.
 ---@param streamId any
 ---@param connection any
 function ForageWagon:onWriteStream(streamId, connection) end
 
---- Côté client : si le drapeau est levé, lit isFilling et le type, applique setFillEffectActive.
+--- Client side: if the flag is raised, reads isFilling and the type, applies setFillEffectActive.
 ---@param streamId any
 ---@param timestamp any
 ---@param connection any
 function ForageWagon:onReadUpdateStream(streamId, timestamp, connection) end
 
---- Côté serveur : écrit isFillingSent et lastFillType quand dirtyFlag est levé.
+--- Server side: writes isFillingSent and lastFillType when dirtyFlag is raised.
 ---@param streamId any
 ---@param connection any
 ---@param dirtyMask any
 function ForageWagon:onWriteUpdateStream(streamId, connection, dirtyMask) end
 
---- Serveur : décompte fillTimer (dt), déduit isFilling, diffuse le changement et déclenche setFillEffectActive ; alimente le tampon de litres ramassés (charge moteur).
+--- Server: counts down fillTimer (dt), derives isFilling, broadcasts the change and triggers setFillEffectActive; feeds the buffer of picked-up litres (engine load).
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function ForageWagon:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Ramasse l'andain sous la ligne de la zone (type forcé si déjà chargé, sinon premier type supporté qui donne des litres), gère l'additif côté serveur, marque pickupParticlesActive et lastPickUpLiters sur la zone, mémorise lastFillType (avec drapeau réseau) et calcule la surface en marche avant.
+--- Picks up the windrow under the area line (forced type if already loaded, otherwise first supported type that yields litres), handles the additive on the server side, sets pickupParticlesActive and lastPickUpLiters on the area, remembers lastFillType (with network flag) and computes the area when driving forward.
 ---@param workArea any
 function ForageWagon:processForageWagonArea(workArea) end
 
---- Applique le type de remplissage courant aux deux groupes d'effets puis les démarre ou arrête. Point d'entrée unique des effets visuels ; appelé sur serveur et client.
+--- Applies the current fill type to the two effect groups then starts or stops them. Single entry point of the visual effects; called on server and client.
 ---@param isActive any
 function ForageWagon:setFillEffectActive(isActive) end
 
---- Serveur : verse dans l'unité de remplissage les litres accumulés ; si tout ne rentre pas, éteint l'outil et relève le ramasseur.
+--- Server: pours the accumulated litres into the fill unit; if not everything fits, turns the tool off and raises the pickup.
 function ForageWagon:fillForageWagon() end
 
---- Lit l'option rotateOnlyIfFillLevelIncreased d'une pièce tournante.
+--- Reads the rotateOnlyIfFillLevelIncreased option of a rotating part.
 ---@param superFunc any
 ---@param speedRotatingPart any
 ---@param xmlFile any
 ---@param key any
 function ForageWagon:loadSpeedRotatingPartFromXML(superFunc, speedRotatingPart, xmlFile, key) end
 
---- Fait tourner une pièce marquée rotateOnlyIfFillLevelIncreased seulement tant que isFilling.
+--- Makes a part marked rotateOnlyIfFillLevelIncreased rotate only while isFilling.
 ---@param superFunc any
 ---@param speedRotatingPart any
 function ForageWagon:getIsSpeedRotatingPartActive(superFunc, speedRotatingPart) end
 
---- Vitesse de défilement UV du volume : valeur de chargement si isFilling, valeur de déchargement si déchargement en cours, sinon parent.
+--- UV scroll speed of the volume: loading value if isFilling, unloading value if unloading is in progress, otherwise the parent value.
 ---@param superFunc any
 ---@param fillVolumeIndex any
 function ForageWagon:getFillVolumeUVScrollSpeed(superFunc, fillVolumeIndex) end
 
---- Pour la zone de ramassage : inactive si l'outil n'est pas allumé ou si allowPickingUp est faux.
+--- For the pickup area: inactive if the tool is not turned on or if allowPickingUp is false.
 ---@param superFunc any
 ---@param workArea any
 function ForageWagon:getIsWorkAreaActive(superFunc, workArea) end
 
---- Applique la limite de vitesse si l'outil est allumé et abaissé.
+--- Applies the speed limit if the tool is turned on and lowered.
 ---@param superFunc any
 function ForageWagon:doCheckSpeedLimit(superFunc) end
 
---- Ajoute la charge de ramassage (litres sur 1 s / débit maximal) à la charge consommée.
+--- Adds the pickup load (litres over 1 s / maximum flow) to the consumed load.
 ---@param superFunc any
 function ForageWagon:getConsumingLoad(superFunc) end
 
---- Avant la passe : force le type chargé s'il y a plus que le seuil de changement de type, arme éventuellement le délai de l'effet de démarrage et remet lastPickupLiters à zéro.
+--- Before the pass: forces the loaded type if there is more than the type change threshold, possibly arms the start effect delay and resets lastPickupLiters to zero.
 ---@param dt any
 function ForageWagon:onStartWorkAreaProcessing(dt) end
 
---- Serveur : si des litres ont été ramassés, laisse l'effet de démarrage s'écouler (retard), appelle fillForageWagon et arme fillTimer = 500 ms.
+--- Server: if litres were picked up, lets the start effect run (delay), calls fillForageWagon and arms fillTimer = 500 ms.
 ---@param dt any
 ---@param hasProcessed any
 function ForageWagon:onEndWorkAreaProcessing(dt, hasProcessed) end
 
---- Client : remet fillTimer à zéro et coupe les effets.
+--- Client: resets fillTimer to zero and stops the effects.
 function ForageWagon:onTurnedOff() end
 
---- Client : remet fillTimer à zéro et coupe les effets.
+--- Client: resets fillTimer to zero and stops the effects.
 function ForageWagon:onDeactivate() end
 
---- Client : règle la densité du startFillEffect selon le niveau de remplissage (fondu).
+--- Client: sets the startFillEffect density according to the fill level (fade).
 ---@param fillUnitIndex any
 ---@param fillLevelDelta any
 ---@param fillTypeIndex any
@@ -125,5 +125,5 @@ function ForageWagon:onDeactivate() end
 ---@param appliedDelta any
 function ForageWagon:onFillUnitFillLevelChanged(fillUnitIndex, fillLevelDelta, fillTypeIndex, toolType, fillPositionData, appliedDelta) end
 
---- Limite de vitesse par défaut : 20.
+--- Default speed limit: 20.
 function ForageWagon.getDefaultSpeedLimit() end

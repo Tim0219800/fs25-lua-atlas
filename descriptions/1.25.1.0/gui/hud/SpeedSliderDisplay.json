@@ -1,0 +1,109 @@
+{
+ "fichier": "gui/hud/SpeedSliderDisplay.lua",
+ "module": {
+  "en": "Touch/mobile HUD element (HUDDisplayElement subclass) with a vertical throttle/brake slider for vehicles, gait slider for rideables (horses), a jump button and a speed readout. It slides in and out depending on input mode (gamepad hides it), AI activity and player/vehicle state, and drives the vehicle through setTargetSpeedAndDirection. Only active when Platform.hasTouchSliders is true. Client-side only.",
+  "fr": "Élément HUD tactile/mobile (sous-classe de HUDDisplayElement) avec un curseur vertical accélérateur/frein pour les véhicules, un curseur d'allures pour les montures (chevaux), un bouton de saut et un affichage de vitesse. Il apparaît ou se cache selon le mode d'entrée (la manette le masque), l'activité IA et l'état joueur/véhicule, et pilote le véhicule via setTargetSpeedAndDirection. Actif seulement si Platform.hasTouchSliders est vrai. Côté client uniquement."
+ },
+ "fonctions": {
+  "SpeedSliderDisplay.new": {
+   "en": "Creates the display on an empty positioning overlay, initialises state (no vehicle/player, rest position 0.25), builds the components and subscribes to GUI open, dialog, guided tour and insets-changed messages.",
+   "fr": "Crée l'affichage sur un overlay de positionnement vide, initialise l'état (ni véhicule ni joueur, position de repos 0,25), construit les composants et s'abonne aux messages d'ouverture de GUI, de dialogue, de visite guidée et de changement d'insets."
+  },
+  "SpeedSliderDisplay:delete": {
+   "en": "Unsubscribes from all message center subscriptions and then deletes the element through the parent class.",
+   "fr": "Se désabonne de tous les messages du message center puis supprime l'élément via la classe parente."
+  },
+  "SpeedSliderDisplay:createComponents": {
+   "en": "Builds the child elements: slider background, positive (acceleration) and negative (brake) bars, the slider handle with its callback, player and horse jump buttons and the gamepad background. Also stores the visible/hidden positions used for animation.",
+   "fr": "Construit les éléments enfants : fond du curseur, barres positive (accélération) et négative (frein), poignée du curseur avec son callback, boutons de saut joueur et cheval et fond pour manette. Mémorise aussi les positions visible/cachée utilisées pour l'animation."
+  },
+  "SpeedSliderDisplay:setSliderState": {
+   "en": "Shows or hides the slider (animated) when the requested state differs from the current one.",
+   "fr": "Affiche ou cache le curseur (avec animation) lorsque l'état demandé diffère de l'état courant."
+  },
+  "SpeedSliderDisplay:hideSlider": {
+   "en": "Starts a tween moving the display to its hidden position, marks the slider state false, disables touch on the slider and refreshes element visibility.",
+   "fr": "Lance une interpolation vers la position cachée, passe l'état du curseur à faux, désactive le toucher sur le curseur et rafraîchit la visibilité des éléments."
+  },
+  "SpeedSliderDisplay:showSlider": {
+   "en": "Starts a tween moving the display to its visible position, resets the slider, enables touch and refreshes visibility once the animation finishes.",
+   "fr": "Lance une interpolation vers la position visible, réinitialise le curseur, active le toucher et rafraîchit la visibilité à la fin de l'animation."
+  },
+  "SpeedSliderDisplay:updateElementsVisibility": {
+   "en": "Shows the gamepad background only when the slider is off and neither a player nor a rideable is controlled, and the slider background only while the slider is active.",
+   "fr": "Affiche le fond manette seulement quand le curseur est inactif et qu'aucun joueur ni monture n'est contrôlé, et le fond du curseur seulement quand il est actif."
+  },
+  "SpeedSliderDisplay:onSliderVisibilityChangeFinished": {
+   "en": "Animation-finished callback: refreshes element visibility when the slider has become visible.",
+   "fr": "Callback de fin d'animation : rafraîchit la visibilité des éléments quand le curseur est devenu visible."
+  },
+  "SpeedSliderDisplay:setVehicle": {
+   "en": "Sets the controlled vehicle, detects whether it is rideable, clears any player, resets the slider and adds gait snap positions for rideables. Switches background art and size between vehicle and horse variants.",
+   "fr": "Définit le véhicule contrôlé, détecte s'il est monture, efface tout joueur, réinitialise le curseur et ajoute les positions d'accroche des allures pour les montures. Change l'image et la taille du fond entre variantes véhicule et cheval."
+  },
+  "SpeedSliderDisplay:setPlayer": {
+   "en": "Sets the on-foot player; a non-nil player clears the current vehicle. Then updates the slider visibility state and element visibility.",
+   "fr": "Définit le joueur à pied ; un joueur non nil efface le véhicule courant. Met ensuite à jour l'état de visibilité du curseur et des éléments."
+  },
+  "SpeedSliderDisplay:createBar": {
+   "en": "Creates a plain-colour bar HUDElement at the given pixel position, size and colour, relative to the display position.",
+   "fr": "Crée une barre HUDElement de couleur unie à la position, la taille et la couleur données (en pixels), relativement à la position de l'affichage."
+  },
+  "SpeedSliderDisplay:onSliderPositionChanged": {
+   "en": "Slider callback: clamps the position to 0..1, rescales the acceleration bar and repositions/rescales the brake bar, colours the bar for cruise control if active, and for rideables sets the matching gait when the handle reaches a snap position.",
+   "fr": "Callback du curseur : borne la position entre 0 et 1, redimensionne la barre d'accélération et repositionne/redimensionne la barre de frein, colore la barre pour le régulateur s'il est actif, et pour une monture règle l'allure correspondante quand la poignée atteint une position d'accroche."
+  },
+  "SpeedSliderDisplay:getAccelerateAndBrakeValue": {
+   "en": "Converts the slider position into two values in 0..1: acceleration above the rest position and brake below it.",
+   "fr": "Convertit la position du curseur en deux valeurs entre 0 et 1 : accélération au-dessus de la position de repos et frein en dessous."
+  },
+  "SpeedSliderDisplay:onJumpEventCallback": {
+   "en": "Jump button handler: ignored while sleeping; makes a rideable jump if allowed, or triggers the player jump input when on foot.",
+   "fr": "Gestionnaire du bouton de saut : ignoré pendant le sommeil ; fait sauter la monture si c'est permis, ou déclenche l'entrée de saut du joueur à pied."
+  },
+  "SpeedSliderDisplay:update": {
+   "en": "Per-frame update: refreshes the slider element and, for a vehicle with acceleration input, sends target speed and direction (forward, reverse or neutral) from the slider. For rideables it moves the handle to follow gait changes made elsewhere.",
+   "fr": "Mise à jour par frame : met à jour le curseur et, pour un véhicule avec entrée d'accélération, envoie vitesse cible et direction (avant, arrière ou neutre) selon le curseur. Pour une monture, déplace la poignée pour suivre les changements d'allure faits ailleurs."
+  },
+  "SpeedSliderDisplay:getIsSliderActive": {
+   "en": "Returns true only when the slider should be usable: not in gamepad help mode, touch sliders supported, no AI driving the vehicle and no on-foot player.",
+   "fr": "Renvoie vrai seulement si le curseur doit être utilisable : pas en mode d'aide manette, curseurs tactiles supportés, aucune IA ne conduit le véhicule et aucun joueur à pied."
+  },
+  "SpeedSliderDisplay:onInputHelpModeChange": {
+   "en": "Stores the new input help mode; in gamepad mode it puts the handle back at rest position. Then refreshes the visibility state.",
+   "fr": "Mémorise le nouveau mode d'aide à la saisie ; en mode manette, remet la poignée en position de repos. Rafraîchit ensuite l'état de visibilité."
+  },
+  "SpeedSliderDisplay:onAIVehicleStateChanged": {
+   "en": "AI state callback: refreshes the visibility state when the event concerns the currently controlled vehicle.",
+   "fr": "Callback d'état IA : rafraîchit l'état de visibilité si l'événement concerne le véhicule actuellement contrôlé."
+  },
+  "SpeedSliderDisplay:updateVisibilityState": {
+   "en": "Recomputes whether the slider should be shown and applies it through setSliderState if it changed.",
+   "fr": "Recalcule si le curseur doit être affiché et l'applique via setSliderState en cas de changement."
+  },
+  "SpeedSliderDisplay:draw": {
+   "en": "Draws the children, then for a non-rideable vehicle renders the speed (rounded, in the user speed unit) as a short number, or with the unit when AI, gamepad or no touch slider is in use.",
+   "fr": "Dessine les enfants puis, pour un véhicule non monture, affiche la vitesse (arrondie, dans l'unité choisie) en nombre court, ou avec l'unité quand l'IA, la manette ou l'absence de curseur tactile s'applique."
+  },
+  "SpeedSliderDisplay:onDialogOpened": {
+   "en": "Message handler: resets the slider handle when a dialog opens that does not overlap another dialog.",
+   "fr": "Gestionnaire de message : réinitialise la poignée du curseur à l'ouverture d'un dialogue qui ne chevauche pas un autre dialogue."
+  },
+  "SpeedSliderDisplay:onGuiOpen": {
+   "en": "Message handler: resets the slider handle when a GUI screen is about to open.",
+   "fr": "Gestionnaire de message : réinitialise la poignée du curseur lorsqu'un écran de GUI va s'ouvrir."
+  },
+  "SpeedSliderDisplay:setScale": {
+   "en": "Applies a new UI scale: resizes the element, recomputes visible/hidden positions (clamped to the right safe-area inset), slider range and stored original position, and keeps the display hidden if the slider is inactive.",
+   "fr": "Applique une nouvelle échelle d'interface : redimensionne l'élément, recalcule les positions visible/cachée (bornées par l'inset droit de la zone de sécurité), la plage du curseur et la position d'origine, et garde l'affichage caché si le curseur est inactif."
+  },
+  "SpeedSliderDisplay.getBackgroundPosition": {
+   "en": "Returns the screen position of the display for a given scale and width, anchored to the right edge and limited by the right safe-frame inset.",
+   "fr": "Renvoie la position écran de l'affichage pour une échelle et une largeur données, ancrée au bord droit et limitée par l'inset droit de la zone de sécurité."
+  },
+  "SpeedSliderDisplay.createBackground": {
+   "en": "Creates the empty overlay (no texture) used only as the positioning frame of the display.",
+   "fr": "Crée l'overlay vide (sans texture) servant uniquement de cadre de positionnement à l'affichage."
+  }
+ }
+}

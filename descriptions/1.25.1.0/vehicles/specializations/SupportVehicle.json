@@ -1,0 +1,81 @@
+{
+ "fichier": "vehicles/specializations/SupportVehicle.lua",
+ "module": {
+  "en": "Specialization for implements that spawn a helper 'support vehicle' (for example a transport trolley) when detached and remove it again when attached. It requires AttacherJoints and Mountable. The server loads the support vehicle from the store through VehicleLoadingData, attaches the tool to it and tracks it. XML keys live under vehicle.supportVehicle (filename, joint indices, offsets, configurations).",
+  "fr": "Spécialisation des outils qui font apparaître un « véhicule de support » auxiliaire (par exemple un chariot de transport) au dételage et le suppriment à l'attelage. Elle exige AttacherJoints et Mountable. Le serveur charge le véhicule de support depuis la boutique via VehicleLoadingData, y attelle l'outil et le suit. Clés XML sous vehicle.supportVehicle (fichier, index d'attaches, décalages, configurations)."
+ },
+ "fonctions": {
+  "SupportVehicle.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has both AttacherJoints and Mountable.",
+   "fr": "Renvoie true uniquement si le type de véhicule possède AttacherJoints et Mountable."
+  },
+  "SupportVehicle.initSpecialization": {
+   "en": "Registers the XML schema: support vehicle filename, attacher joint indices, terrain offset (0.2), spawn offset (0.75) and a list of configuration name/id pairs.",
+   "fr": "Enregistre le schéma XML : fichier du véhicule de support, index des attaches, décalage au terrain (0,2), décalage d'apparition (0,75) et liste de paires nom/id de configuration."
+  },
+  "SupportVehicle.registerFunctions": {
+   "en": "Registers addSupportVehicle, enableSupportVehicle and removeSupportVehicle on the vehicle type.",
+   "fr": "Enregistre addSupportVehicle, enableSupportVehicle et removeSupportVehicle sur le type de véhicule."
+  },
+  "SupportVehicle.registerOverwrittenFunctions": {
+   "en": "Overrides getAllowMultipleAttachments, resolveMultipleAttachments, getShowAttachableMapHotspot, getIsReadyToFinishDetachProcess and startDetachProcess.",
+   "fr": "Surcharge getAllowMultipleAttachments, resolveMultipleAttachments, getShowAttachableMapHotspot, getIsReadyToFinishDetachProcess et startDetachProcess."
+  },
+  "SupportVehicle.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onUpdate and onPostDetach.",
+   "fr": "S'abonne à onLoad, onDelete, onUpdate et onPostDetach."
+  },
+  "SupportVehicle:onLoad": {
+   "en": "Reads offsets and joint indices, resolves the support vehicle store item (warns if missing), precomputes four footprint corners for height checks and reads configuration pairs. Removes the delete/update/post-detach listeners on clients or when no store item exists.",
+   "fr": "Lit décalages et index d'attaches, résout l'article de boutique du véhicule de support (avertit s'il manque), précalcule quatre coins d'empreinte pour les hauteurs et lit les paires de configuration. Retire les écouteurs delete/update/post-detach sur les clients ou sans article de boutique."
+  },
+  "SupportVehicle:onDelete": {
+   "en": "Removes the support vehicle unless the vehicle is being reconfigured.",
+   "fr": "Supprime le véhicule de support sauf si le véhicule est en cours de reconfiguration."
+  },
+  "SupportVehicle:onPostDetach": {
+   "en": "After detachment, enables the pending support vehicle by attaching the tool to it.",
+   "fr": "Après le dételage, active le véhicule de support en attente en y attelant l'outil."
+  },
+  "SupportVehicle:onUpdate": {
+   "en": "On the first update (not during a vehicle reload): spawns a support vehicle if unattached, or adopts the current attacher as support vehicle if its config file matches, reducing component mass. Runs once.",
+   "fr": "À la première mise à jour (hors rechargement des véhicules) : fait apparaître un véhicule de support si l'outil n'est pas attelé, ou adopte l'attelage actuel s'il correspond au fichier de config, avec masse des composants réduite. S'exécute une seule fois."
+  },
+  "SupportVehicle:addSupportVehicle": {
+   "en": "Asynchronously loads the support vehicle at the input attacher joint (shifted by the spawn offset when detaching), placed on terrain height plus offset. Does nothing if one exists or is loading.",
+   "fr": "Charge de façon asynchrone le véhicule de support au niveau de l'attache d'entrée (décalé du décalage d'apparition au dételage), posé à la hauteur du terrain plus un décalage. Sans effet si un véhicule existe ou se charge déjà."
+  },
+  "SupportVehicle:supportVehicleLoaded": {
+   "en": "Load callback: stores the loaded vehicle and enables it unless the load came from a detach. If the owner vehicle was deleted meanwhile, deletes the loaded vehicles. Clears the loading flag.",
+   "fr": "Callback de chargement : mémorise le véhicule chargé et l'active sauf si le chargement vient d'un dételage. Si le véhicule propriétaire a été supprimé entre-temps, supprime les véhicules chargés. Réinitialise l'indicateur de chargement."
+  },
+  "SupportVehicle:enableSupportVehicle": {
+   "en": "Positions the loaded support vehicle and this tool using joint offsets, then attaches the tool to it and selects the tool. Reduces component mass. Deletes the support vehicle if the needed joints are missing.",
+   "fr": "Positionne le véhicule de support chargé et cet outil à partir des décalages d'attaches, puis y attelle l'outil et le sélectionne. Réduit la masse des composants. Supprime le véhicule de support si les attaches requises manquent."
+  },
+  "SupportVehicle:removeSupportVehicle": {
+   "en": "Deletes the current support vehicle if still alive, clears the reference, and on the server restores normal component mass.",
+   "fr": "Supprime le véhicule de support s'il existe encore, efface la référence et, sur le serveur, rétablit la masse normale des composants."
+  },
+  "SupportVehicle:getAllowMultipleAttachments": {
+   "en": "Override returning true when a support vehicle filename is configured, so the attach dialog can still be shown while attached.",
+   "fr": "Surcharge renvoyant true quand un fichier de véhicule de support est configuré, pour que le dialogue d'attelage reste affichable pendant l'attelage."
+  },
+  "SupportVehicle:resolveMultipleAttachments": {
+   "en": "Override: on the server removes the support vehicle first, then calls the parent.",
+   "fr": "Surcharge : sur le serveur, supprime d'abord le véhicule de support, puis appelle le parent."
+  },
+  "SupportVehicle:getShowAttachableMapHotspot": {
+   "en": "Override: with a support vehicle, shows the hotspot only if that support vehicle itself has no attacher vehicle; otherwise uses the parent.",
+   "fr": "Surcharge : avec un véhicule de support, n'affiche le point d'intérêt que si ce véhicule n'a lui-même aucun véhicule attelant ; sinon utilise le parent."
+  },
+  "SupportVehicle:getIsReadyToFinishDetachProcess": {
+   "en": "Override: detach may finish only if the parent allows it and the support vehicle is either not loading or already loaded.",
+   "fr": "Surcharge : le dételage ne peut se terminer que si le parent l'autorise et que le véhicule de support n'est pas en chargement ou est déjà chargé."
+  },
+  "SupportVehicle:startDetachProcess": {
+   "en": "Override: unless the vehicle is being deleted, requests a support vehicle spawn for the detach, then calls the parent.",
+   "fr": "Surcharge : sauf si le véhicule est en cours de suppression, demande l'apparition d'un véhicule de support pour le dételage, puis appelle le parent."
+  }
+ }
+}

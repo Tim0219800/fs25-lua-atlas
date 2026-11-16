@@ -1,0 +1,117 @@
+{
+ "fichier": "vehicles/specializations/VariableWorkWidth.lua",
+ "module": {
+  "en": "Specialization that lets the player (or the AI) narrow or widen the working width of an implement by switching sections on the left and right side. Sections can deactivate work areas and effects, and section nodes are moved or rotated to match the chosen width. It adds a configuration type `variableWorkWidth`, saves the left/right state in the savegame, syncs it with `VariableWorkWidthStateEvent`, and shows a HUD extension. Note: `onDraw` and `onDelete` listeners are registered but no such functions are defined in this file (UNVERIFIED whether other code provides them).",
+  "fr": "Spécialisation permettant au joueur (ou à l'IA) de réduire ou d'élargir la largeur de travail d'un outil en activant des sections à gauche et à droite. Les sections peuvent désactiver zones de travail et effets, et des nœuds de section sont déplacés ou tournés selon la largeur choisie. Elle ajoute un type de configuration `variableWorkWidth`, sauvegarde l'état gauche/droite, le synchronise via `VariableWorkWidthStateEvent` et affiche une extension de HUD. À noter : des écouteurs `onDraw` et `onDelete` sont enregistrés mais aucune fonction correspondante n'est définie dans ce fichier (NON VÉRIFIÉ : fournies ailleurs ?)."
+ },
+ "fonctions": {
+  "VariableWorkWidth.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisites.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "VariableWorkWidth.initSpecialization": {
+   "en": "Adds the `variableWorkWidth` configuration type, registers the XML paths (sections, section nodes, reference work area, default and AI states, work area `section#index`) and the savegame attributes `leftSide` and `rightSide`.",
+   "fr": "Ajoute le type de configuration `variableWorkWidth`, enregistre les chemins XML (sections, nœuds de section, zone de travail de référence, états par défaut et IA, `section#index` des zones de travail) et les attributs de sauvegarde `leftSide` et `rightSide`."
+  },
+  "VariableWorkWidth.registerSectionPaths": {
+   "en": "Registers the XML paths for sections (side, center flag, width, max width node, effects) and section nodes (min/max translation or rotation, work area index) under the given base path.",
+   "fr": "Enregistre les chemins XML des sections (côté, centre, largeur, nœud de largeur max, effets) et des nœuds de section (translation ou rotation min/max, indice de zone de travail) sous le chemin de base donné."
+  },
+  "VariableWorkWidth.registerEvents": {
+   "en": "Registers the event `onVariableWorkWidthSectionChanged`, raised each time the sections are recomputed.",
+   "fr": "Enregistre l'événement `onVariableWorkWidthSectionChanged`, déclenché à chaque recalcul des sections."
+  },
+  "VariableWorkWidth.registerFunctions": {
+   "en": "Adds the public functions (setSectionsActive, updateSections, getVariableWorkWidth, getEffectByNode, and others) to the vehicle type.",
+   "fr": "Ajoute au type de véhicule les fonctions publiques (setSectionsActive, updateSections, getVariableWorkWidth, getEffectByNode, etc.)."
+  },
+  "VariableWorkWidth.registerOverwrittenFunctions": {
+   "en": "Overrides `loadWorkAreaFromXML` and `getIsWorkAreaActive` so work areas can be tied to a section.",
+   "fr": "Surcharge `loadWorkAreaFromXML` et `getIsWorkAreaActive` pour lier les zones de travail à une section."
+  },
+  "VariableWorkWidth.registerEventListeners": {
+   "en": "Subscribes to onPostLoad, read/write stream, register action events, AI start events, onDraw and onDelete.",
+   "fr": "S'abonne à onPostLoad, aux flux de lecture/écriture, à l'enregistrement des actions, aux événements de démarrage IA, à onDraw et onDelete."
+  },
+  "VariableWorkWidth:onPostLoad": {
+   "en": "Loads sections and section nodes from the selected configuration (or the base key), links section effects, computes each section's relative and absolute width from its max-width node, sorts sides by width, reads default/AI states, applies saved states, and creates the HUD extension. Removes listeners that are useless without sections or on a server.",
+   "fr": "Charge sections et nœuds de section depuis la configuration choisie (ou la clé de base), relie les effets, calcule la largeur relative et absolue de chaque section d'après son nœud de largeur max, trie chaque côté par largeur, lit les états par défaut/IA, applique la sauvegarde et crée l'extension de HUD. Retire les écouteurs inutiles sans sections ou sur serveur."
+  },
+  "VariableWorkWidth:saveToXMLFile": {
+   "en": "Writes `leftSide` and `rightSide` section states to the savegame when the vehicle has sections.",
+   "fr": "Écrit les états de section `leftSide` et `rightSide` dans la sauvegarde quand le véhicule a des sections."
+  },
+  "VariableWorkWidth:onReadStream": {
+   "en": "Client join: reads the left and right states (fixed bit count `SEND_NUM_BITS`) and applies them without sending an event.",
+   "fr": "Connexion d'un client : lit les états gauche et droit (nombre de bits fixe `SEND_NUM_BITS`) et les applique sans envoyer d'événement."
+  },
+  "VariableWorkWidth:onWriteStream": {
+   "en": "Server side on join: writes the left and right states into the stream.",
+   "fr": "Côté serveur lors d'une connexion : écrit les états gauche et droit dans le flux."
+  },
+  "VariableWorkWidth:onRegisterActionEvents": {
+   "en": "Registers the actions VARIABLE_WORK_WIDTH_LEFT, _RIGHT and _TOGGLE when the feature is active, and records whether any of them has a binding so the input help is drawn.",
+   "fr": "Enregistre les actions VARIABLE_WORK_WIDTH_LEFT, _RIGHT et _TOGGLE quand la fonction est active, et note si l'une est assignée pour afficher l'aide de saisie."
+  },
+  "VariableWorkWidth.actionEventWorkWidthLeft": {
+   "en": "Input callback: changes the left side state by the input value (subtracts it).",
+   "fr": "Rappel d'entrée : modifie l'état du côté gauche selon la valeur d'entrée (soustraction)."
+  },
+  "VariableWorkWidth.actionEventWorkWidthRight": {
+   "en": "Input callback: changes the right side state by the input value (subtracts it).",
+   "fr": "Rappel d'entrée : modifie l'état du côté droit selon la valeur d'entrée (soustraction)."
+  },
+  "VariableWorkWidth.actionEventWorkWidthToggle": {
+   "en": "Input callback: lowers both sides to one step below the smaller current state, wrapping back to the maximum when it falls under the minimum state.",
+   "fr": "Rappel d'entrée : abaisse les deux côtés d'un cran sous le plus petit état actuel, puis revient au maximum quand il passe sous l'état minimal."
+  },
+  "VariableWorkWidth:onAIFieldWorkerStart": {
+   "en": "Server only: when the AI field worker starts and `aiKeepCurrentWidth` is false, applies the configured AI left/right states.",
+   "fr": "Serveur uniquement : au démarrage de l'IA, si `aiKeepCurrentWidth` est faux, applique les états gauche/droit configurés pour l'IA."
+  },
+  "VariableWorkWidth:onAIImplementStart": {
+   "en": "Server only: same as the field worker start, applies the AI states when the implement starts under AI control.",
+   "fr": "Serveur uniquement : comme au démarrage du travailleur IA, applique les états IA au démarrage de l'outil sous contrôle IA."
+  },
+  "VariableWorkWidth:setVariableWorkWidthActive": {
+   "en": "Enables or disables the feature. On the server, disabling resets both sides to their maximum. Requests an action event refresh.",
+   "fr": "Active ou désactive la fonction. Sur le serveur, la désactivation remet les deux côtés au maximum. Demande une mise à jour des actions."
+  },
+  "VariableWorkWidth:setSectionsActive": {
+   "en": "Sets the left and right states (clamped between 0 and the side maximum). If something changed, recomputes sections and sends `VariableWorkWidthStateEvent` unless `noEventSend`.",
+   "fr": "Définit les états gauche et droit (bornés entre 0 et le maximum du côté). En cas de changement, recalcule les sections et envoie `VariableWorkWidthStateEvent` sauf `noEventSend`."
+  },
+  "VariableWorkWidth:setSectionNodePercentage": {
+   "en": "Moves/rotates each given section node by linear interpolation between its min and max values (translation, X translation, rotation) at the given 0..1 percentage, then updates the linked work area width.",
+   "fr": "Déplace/tourne chaque nœud de section par interpolation linéaire entre ses valeurs min et max (translation, translation X, rotation) au pourcentage 0..1 donné, puis met à jour la largeur de la zone de travail liée."
+  },
+  "VariableWorkWidth:updateSections": {
+   "en": "Refreshes the active flags of both sides, positions the section nodes from the width of the current section (0 when the side is off) and raises `onVariableWorkWidthSectionChanged`.",
+   "fr": "Met à jour les drapeaux actifs des deux côtés, positionne les nœuds de section selon la largeur de la section courante (0 si le côté est éteint) et déclenche `onVariableWorkWidthSectionChanged`."
+  },
+  "VariableWorkWidth:updateSectionStates": {
+   "en": "Marks sections up to the given state as active and stops any running effect of sections that became inactive.",
+   "fr": "Marque actives les sections jusqu'à l'état donné et arrête les effets en cours des sections devenues inactives."
+  },
+  "VariableWorkWidth:getEffectByNode": {
+   "en": "Empty hook returning nothing; other specializations that own effects are expected to override it (UNVERIFIED from this file alone).",
+   "fr": "Crochet vide ne renvoyant rien ; les autres spécialisations qui possèdent des effets sont censées le surcharger (NON VÉRIFIÉ d'après ce seul fichier)."
+  },
+  "VariableWorkWidth:getVariableWorkWidth": {
+   "en": "For the left or right side returns the current absolute width, the max width and whether sections exist. Without sections it returns 1, 1, false.",
+   "fr": "Pour le côté gauche ou droit, renvoie la largeur absolue courante, la largeur max et si des sections existent. Sans sections : 1, 1, false."
+  },
+  "VariableWorkWidth:getVariableWorkWidthUsage": {
+   "en": "Returns nil by default, meaning no usage value is shown; other specializations can override it.",
+   "fr": "Renvoie nil par défaut, donc aucune consommation affichée ; d'autres spécialisations peuvent la surcharger."
+  },
+  "VariableWorkWidth:loadWorkAreaFromXML": {
+   "en": "Override: reads the optional `section#index` of the work area, then calls the previous implementation.",
+   "fr": "Surcharge : lit le `section#index` facultatif de la zone de travail, puis appelle l'implémentation précédente."
+  },
+  "VariableWorkWidth:getIsWorkAreaActive": {
+   "en": "Override: a work area linked to an inactive section is inactive; otherwise the previous result applies.",
+   "fr": "Surcharge : une zone de travail liée à une section inactive est inactive ; sinon le résultat précédent s'applique."
+  }
+ }
+}

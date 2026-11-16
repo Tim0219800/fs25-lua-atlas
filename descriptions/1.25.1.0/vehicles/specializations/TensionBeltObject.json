@@ -1,0 +1,41 @@
+{
+ "fichier": "vehicles/specializations/TensionBeltObject.lua",
+ "module": {
+  "en": "Marks a vehicle as an object that tension belts can strap down, with no prerequisites. It reads vehicle.tensionBeltObject: a supports flag and a list of mesh nodes used for belt calculation. Mesh nodes must be shapes with the CPU-Mesh flag, otherwise they are skipped with an XML warning. Used by the TensionBelts specialization of the carrying vehicle.",
+  "fr": "Marque un véhicule comme objet pouvant être sanglé par des sangles de tension, sans prérequis. Lit vehicle.tensionBeltObject : un indicateur de prise en charge et une liste de mesh nodes servant au calcul des sangles. Les mesh nodes doivent être des shapes avec le drapeau CPU-Mesh, sinon ils sont ignorés avec un avertissement XML. Utilisé par la spécialisation TensionBelts du véhicule porteur."
+ },
+ "fonctions": {
+  "TensionBeltObject.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation prérequise."
+  },
+  "TensionBeltObject.initSpecialization": {
+   "en": "Registers the XML schema: supportsTensionBelts (default true) and the list of mesh nodes.",
+   "fr": "Enregistre le schéma XML : supportsTensionBelts (true par défaut) et la liste des mesh nodes."
+  },
+  "TensionBeltObject.registerFunctions": {
+   "en": "Registers getSupportsTensionBelts, getMeshNodes and getTensionBeltNodeId.",
+   "fr": "Enregistre getSupportsTensionBelts, getMeshNodes et getTensionBeltNodeId."
+  },
+  "TensionBeltObject.registerEventListeners": {
+   "en": "Subscribes to onLoad.",
+   "fr": "S'abonne à onLoad."
+  },
+  "TensionBeltObject:onLoad": {
+   "en": "Reads the support flag and collects the valid mesh nodes, skipping (with XML warnings) missing nodes, non-shapes and shapes lacking the CPU-Mesh flag.",
+   "fr": "Lit l'indicateur de prise en charge et collecte les mesh nodes valides, en ignorant (avec avertissements XML) les nodes manquants, les non-shapes et les shapes sans le drapeau CPU-Mesh."
+  },
+  "TensionBeltObject:getSupportsTensionBelts": {
+   "en": "Returns whether this vehicle may be strapped with tension belts.",
+   "fr": "Renvoie si ce véhicule peut être sanglé avec des sangles de tension."
+  },
+  "TensionBeltObject:getMeshNodes": {
+   "en": "Returns the list of valid mesh nodes used for belt calculation.",
+   "fr": "Renvoie la liste des mesh nodes valides utilisés pour le calcul des sangles."
+  },
+  "TensionBeltObject:getTensionBeltNodeId": {
+   "en": "Returns the node of the first component, used as the belt reference node.",
+   "fr": "Renvoie le node du premier composant, utilisé comme node de référence des sangles."
+  }
+ }
+}

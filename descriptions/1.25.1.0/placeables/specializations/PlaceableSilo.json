@@ -1,0 +1,137 @@
+{
+ "fichier": "placeables/specializations/PlaceableSilo.lua",
+ "module": {
+  "en": "Placeable specialization with no prerequisites for silos. It builds an UnloadingStation, a LoadingStation and one or more Storage objects (one per farm slot when storages perFarm is set and in multiplayer), registers them with g_currentMission.storageSystem, streams them to clients, saves storage contents, handles selling with a content-value warning, and shows fill levels in the info HUD. The same file also defines PlaceableSiloActivatable (refill action) and PlaceableSiloRefillEvent (client to server refill request).",
+  "fr": "Spécialisation de placeable sans prérequis pour les silos. Elle construit un UnloadingStation, un LoadingStation et un ou plusieurs objets Storage (un par emplacement de ferme si storages perFarm est actif et en multijoueur), les enregistre auprès de g_currentMission.storageSystem, les transmet aux clients, sauvegarde le contenu, gère la vente avec un avertissement sur la valeur du contenu et affiche les niveaux dans le HUD d'infos. Le même fichier définit aussi PlaceableSiloActivatable (action de remplissage) et PlaceableSiloRefillEvent (demande de remplissage client vers serveur)."
+ },
+ "fonctions": {
+  "PlaceableSilo.prerequisitesPresent": {
+   "en": "Always returns true.",
+   "fr": "Retourne toujours true."
+  },
+  "PlaceableSilo.registerOverwrittenFunctions": {
+   "en": "Overrides collectPickObjects, setOwnerFarmId, canBeSold and updateInfo.",
+   "fr": "Surcharge collectPickObjects, setOwnerFarmId, canBeSold et updateInfo."
+  },
+  "PlaceableSilo.registerFunctions": {
+   "en": "Registers setAmount, refillAmount, getFillLevels and onPlayerActionTriggerCallback on the placeable type.",
+   "fr": "Enregistre setAmount, refillAmount, getFillLevels et onPlayerActionTriggerCallback sur le type de placeable."
+  },
+  "PlaceableSilo.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onFinalizePlacement, onReadStream, onWriteStream and onSell.",
+   "fr": "Abonne à onLoad, onDelete, onFinalizePlacement, onReadStream, onWriteStream et onSell."
+  },
+  "PlaceableSilo.registerXMLPaths": {
+   "en": "Declares the XML under placeable.silo: sell warning text, player action trigger, perFarm and foreignSilo flags, plus unloading station, loading station and storage definitions.",
+   "fr": "Déclare le XML sous placeable.silo : texte d'avertissement de vente, déclencheur d'action du joueur, indicateurs perFarm et foreignSilo, ainsi que les définitions de la station de déchargement, de la station de chargement et des stockages."
+  },
+  "PlaceableSilo.registerSavegameXMLPaths": {
+   "en": "Declares savegame keys for each storage: its index and the Storage savegame data.",
+   "fr": "Déclare les clés de sauvegarde de chaque stockage : son indice et les données de sauvegarde de Storage."
+  },
+  "PlaceableSilo.initSpecialization": {
+   "en": "Adds the shop spec type siloVolume (capacity icon) for placeables.",
+   "fr": "Ajoute le type de spécification de boutique siloVolume (icône de capacité) pour les placeables."
+  },
+  "PlaceableSilo:onLoad": {
+   "en": "Loads the player trigger and activatable, the unloading and loading stations, and the storages (one set per farm slot if perFarm and multiplayer, otherwise one). Each storage gets its farm id and foreignSilo flag. Reads the sell warning text.",
+   "fr": "Charge le déclencheur joueur et l'activatable, les stations de déchargement et de chargement, et les stockages (un jeu par emplacement de ferme si perFarm et multijoueur, sinon un seul). Chaque stockage reçoit son identifiant de ferme et l'indicateur foreignSilo. Lit le texte d'avertissement de vente."
+  },
+  "PlaceableSilo:onDelete": {
+   "en": "Detaches storages from the stations and the storage system, then deletes storages, stations (also removing a liquid manure loading station), the activatable and the trigger. Note: it passes spec.storageFilLLevelChangedCallback to removeFillLevelChangedListeners, a field that is never set in this file.",
+   "fr": "Détache les stockages des stations et du système de stockage, puis supprime stockages, stations (en retirant aussi une station de chargement de lisier), l'activatable et le déclencheur. À noter : il passe spec.storageFilLLevelChangedCallback à removeFillLevelChangedListeners, un champ jamais défini dans ce fichier."
+  },
+  "PlaceableSilo:onFinalizePlacement": {
+   "en": "Registers stations and storages as network objects, adds them to the storage system and links them, gives single-owner storages the placeable's farm, attaches storage extensions found in range, and enables the player action trigger.",
+   "fr": "Enregistre stations et stockages comme objets réseau, les ajoute au système de stockage et les relie, attribue aux stockages mono-propriétaire la ferme du placeable, rattache les extensions de stockage à portée et active le déclencheur d'action du joueur."
+  },
+  "PlaceableSilo:onReadStream": {
+   "en": "Client initial sync: reads the unloading station, loading station and every storage (object id then data) and completes their registration with g_client.",
+   "fr": "Synchronisation initiale côté client : lit la station de déchargement, la station de chargement et chaque stockage (identifiant d'objet puis données) et termine leur enregistrement auprès de g_client."
+  },
+  "PlaceableSilo:onWriteStream": {
+   "en": "Server initial sync: writes object id and data for the unloading station, loading station and every storage, registering each in the stream.",
+   "fr": "Synchronisation initiale côté serveur : écrit identifiant d'objet et données de la station de déchargement, de la station de chargement et de chaque stockage, en les enregistrant dans le flux."
+  },
+  "PlaceableSilo:collectPickObjects": {
+   "en": "Skips nodes that are an unload trigger's exact fill root node or a load trigger node; otherwise defers to the parent.",
+   "fr": "Ignore les nœuds qui sont le nœud racine de remplissage exact d'un déclencheur de déchargement ou un nœud de déclencheur de chargement ; sinon délègue au parent."
+  },
+  "PlaceableSilo:canBeSold": {
+   "en": "Returns false for per-farm silos. Otherwise returns true and, if the first storage holds content, a warning listing each fill type with an estimated sell value (lowest selling-point price times PRICE_SELL_FACTOR); the total is kept for onSell.",
+   "fr": "Retourne false pour les silos par ferme. Sinon retourne true et, si le premier stockage contient quelque chose, un avertissement listant chaque type de remplissage avec une valeur de vente estimée (prix le plus bas d'un point de vente fois PRICE_SELL_FACTOR) ; le total est conservé pour onSell."
+  },
+  "PlaceableSilo:loadFromXMLFile": {
+   "en": "Loads each saved storage by its index into the matching storage object.",
+   "fr": "Charge chaque stockage sauvegardé selon son indice dans l'objet de stockage correspondant."
+  },
+  "PlaceableSilo:saveToXMLFile": {
+   "en": "Saves every storage with its 1-based index.",
+   "fr": "Sauvegarde chaque stockage avec son indice commençant à 1."
+  },
+  "PlaceableSilo:setOwnerFarmId": {
+   "en": "Calls the parent, then on the server propagates the farm id to all storages unless the silo is per farm.",
+   "fr": "Appelle le parent, puis sur le serveur propage l'identifiant de ferme à tous les stockages sauf si le silo est par ferme."
+  },
+  "PlaceableSilo:setAmount": {
+   "en": "Sets the fill level of a fill type by filling storages in order, each up to its free capacity, until the amount is spent.",
+   "fr": "Définit le niveau d'un type de remplissage en remplissant les stockages dans l'ordre, chacun jusqu'à sa capacité libre, jusqu'à épuisement de la quantité."
+  },
+  "PlaceableSilo:refillAmount": {
+   "en": "Buys material to refill the silo. On a client it sends PlaceableSiloRefillEvent to the server; on the server it adds the amount across storages and charges the farm (BOUGHT_MATERIALS). Does nothing if an argument is nil.",
+   "fr": "Achète de la matière pour remplir le silo. Sur un client, envoie PlaceableSiloRefillEvent au serveur ; sur le serveur, ajoute la quantité dans les stockages et débite la ferme (BOUGHT_MATERIALS). Ne fait rien si un argument est nil."
+  },
+  "PlaceableSilo:getFillLevels": {
+   "en": "Returns a table fill type index to level combined from all storages, keeping only fill types allowed by self.fillTypes when it is set. Note: for fill types in several storages the last value overwrites the earlier ones instead of summing.",
+   "fr": "Retourne une table indice de type de remplissage vers niveau, combinée depuis tous les stockages, en ne gardant que les types permis par self.fillTypes s'il est défini. À noter : pour un type présent dans plusieurs stockages, la dernière valeur écrase les précédentes au lieu de s'additionner."
+  },
+  "PlaceableSilo:onSell": {
+   "en": "Server only: pays the farm the total stored-content value computed in canBeSold as HARVEST_INCOME.",
+   "fr": "Serveur uniquement : verse à la ferme la valeur totale du contenu calculée dans canBeSold, en HARVEST_INCOME."
+  },
+  "PlaceableSilo:onPlayerActionTriggerCallback": {
+   "en": "When the local player of the owning farm enters or leaves the trigger, adds or removes the refill activatable.",
+   "fr": "Quand le joueur local de la ferme propriétaire entre dans le déclencheur ou en sort, ajoute ou retire l'activatable de remplissage."
+  },
+  "PlaceableSilo:updateInfo": {
+   "en": "Calls the parent, then adds to the info table the largest fill levels (above 0.1) from the loading station for the local farm, up to INFO_TRIGGER_NUM_DISPLAYED_FILLTYPES entries, or an empty-silo line.",
+   "fr": "Appelle le parent, puis ajoute au tableau d'infos les plus gros niveaux (au-dessus de 0,1) de la station de chargement pour la ferme locale, jusqu'à INFO_TRIGGER_NUM_DISPLAYED_FILLTYPES entrées, ou une ligne de silo vide."
+  },
+  "PlaceableSilo.loadSpecValueVolume": {
+   "en": "Reads the capacity of the first storage from the store item XML.",
+   "fr": "Lit la capacité du premier stockage depuis le XML de l'article de boutique."
+  },
+  "PlaceableSilo.getSpecValueVolume": {
+   "en": "Returns the silo volume formatted for the shop, or nil if the store item has none.",
+   "fr": "Retourne le volume du silo formaté pour la boutique, ou nil si l'article n'en a pas."
+  },
+  "PlaceableSiloActivatable.new": {
+   "en": "Creates the refill activatable for a silo placeable with the refill action text.",
+   "fr": "Crée l'activatable de remplissage pour un placeable silo, avec le texte de l'action de remplissage."
+  },
+  "PlaceableSiloActivatable:run": {
+   "en": "Sums the free capacity per fill type over all storages and opens RefillDialog, whose confirmation calls the placeable's refillAmount.",
+   "fr": "Additionne la capacité libre par type de remplissage sur tous les stockages et ouvre RefillDialog, dont la confirmation appelle refillAmount du placeable."
+  },
+  "PlaceableSiloRefillEvent.emptyNew": {
+   "en": "Creates an empty refill event, used when reading from the network.",
+   "fr": "Crée un événement de remplissage vide, utilisé à la lecture depuis le réseau."
+  },
+  "PlaceableSiloRefillEvent.new": {
+   "en": "Creates a refill event holding the placeable, fill type index, amount and price.",
+   "fr": "Crée un événement de remplissage contenant le placeable, l'indice du type de remplissage, la quantité et le prix."
+  },
+  "PlaceableSiloRefillEvent:writeStream": {
+   "en": "Writes the placeable, amount and price (int32) and the fill type index to the stream.",
+   "fr": "Écrit dans le flux le placeable, la quantité et le prix (int32) ainsi que l'indice du type de remplissage."
+  },
+  "PlaceableSiloRefillEvent:readStream": {
+   "en": "Reads placeable, amount, price and fill type index, then runs the event immediately.",
+   "fr": "Lit le placeable, la quantité, le prix et l'indice du type de remplissage, puis exécute aussitôt l'événement."
+  },
+  "PlaceableSiloRefillEvent:run": {
+   "en": "On the receiving server (connection not to a server), calls refillAmount on the placeable with the transmitted values.",
+   "fr": "Sur le serveur récepteur (connexion qui ne mène pas à un serveur), appelle refillAmount sur le placeable avec les valeurs transmises."
+  }
+ }
+}

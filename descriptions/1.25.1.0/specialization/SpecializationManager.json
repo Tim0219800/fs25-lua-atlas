@@ -1,0 +1,45 @@
+{
+ "fichier": "specialization/SpecializationManager.lua",
+ "module": {
+  "en": "Manager that registers the specialization classes (vehicles, placeables, etc.) of one type family from an XML list. It extends AbstractManager and sources each specialization script, then keeps them by name and in load order. It also drives the two-stage initialisation of every specialization through the async task manager.",
+  "fr": "Gestionnaire qui enregistre les classes de spécialisations (véhicules, placeables, etc.) d'une famille de types à partir d'une liste XML. Il étend AbstractManager, charge chaque script de spécialisation, puis les conserve par nom et dans l'ordre de chargement. Il pilote aussi l'initialisation en deux étapes de chaque spécialisation via le gestionnaire de tâches asynchrones."
+ },
+ "fonctions": {
+  "SpecializationManager.new": {
+   "en": "Creates a manager for the given type name and XML file path. Stores both values; the XML is only read later in loadMapData.",
+   "fr": "Crée un gestionnaire pour le nom de type et le chemin XML donnés. Les deux valeurs sont stockées ; le XML n'est lu que plus tard dans loadMapData."
+  },
+  "SpecializationManager:initDataStructures": {
+   "en": "Resets the specialization lookup table (by name) and the ordered list used to keep load order.",
+   "fr": "Réinitialise la table des spécialisations (par nom) et la liste ordonnée qui conserve l'ordre de chargement."
+  },
+  "SpecializationManager:loadMapData": {
+   "en": "Reads the specializations XML and, for each entry with name, className and filename, queues an async subtask calling addSpecialization. Entries with a missing attribute are skipped with a warning. Returns false if the XML is missing.",
+   "fr": "Lit le XML des spécialisations et, pour chaque entrée avec name, className et filename, met en file une sous-tâche asynchrone appelant addSpecialization. Les entrées incomplètes sont ignorées avec un avertissement. Retourne false si le XML est introuvable."
+  },
+  "SpecializationManager:addSpecialization": {
+   "en": "Registers one specialization: sources its script, resolves the class by name and stores its className on it. Refuses duplicate names or nil className/filename and returns false; an unresolved class only logs a warning.",
+   "fr": "Enregistre une spécialisation : charge son script, résout la classe par son nom et y inscrit son className. Refuse les noms en double ou un className/filename nil (retourne false) ; une classe introuvable ne produit qu'un avertissement."
+  },
+  "SpecializationManager:initSpecializations": {
+   "en": "For every registered specialization in load order, queues an async subtask calling its static initSpecialization, if it defines one.",
+   "fr": "Pour chaque spécialisation enregistrée, dans l'ordre de chargement, met en file une sous-tâche asynchrone appelant son initSpecialization statique, si elle en définit une."
+  },
+  "SpecializationManager:postInitSpecializations": {
+   "en": "Same as initSpecializations but for the optional static postInitSpecialization, meant to run after all specializations are initialised.",
+   "fr": "Comme initSpecializations mais pour le postInitSpecialization statique optionnel, prévu pour s'exécuter après l'initialisation de toutes les spécialisations."
+  },
+  "SpecializationManager:getSpecializationByName": {
+   "en": "Returns the registration entry (name, className, filename) for a specialization name, or nil if the name is nil or unknown.",
+   "fr": "Retourne l'entrée d'enregistrement (name, className, filename) d'une spécialisation, ou nil si le nom est nil ou inconnu."
+  },
+  "SpecializationManager:getSpecializationObjectByName": {
+   "en": "Returns the actual class table of a specialization, resolved through ClassUtil from its registered className, or nil if unknown.",
+   "fr": "Retourne la table de classe réelle d'une spécialisation, résolue via ClassUtil à partir du className enregistré, ou nil si inconnue."
+  },
+  "SpecializationManager:getSpecializations": {
+   "en": "Returns the internal table of registration entries indexed by specialization name.",
+   "fr": "Retourne la table interne des entrées d'enregistrement indexée par nom de spécialisation."
+  }
+ }
+}

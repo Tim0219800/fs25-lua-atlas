@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/specializations/events/AnimatedVehicleStartEvent.lua",
+ "module": {
+  "en": "Network event class `AnimatedVehicleStartEvent` (extends `Event`) that replicates the start of a named animation on a vehicle. It carries the vehicle, the animation name, the play speed and the start animation time (floats). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `AnimatedVehicleStartEvent` (hérite de `Event`) qui réplique le démarrage d'une animation nommée sur un véhicule. Elle transporte le véhicule, le nom de l'animation, la vitesse de lecture et le temps d'animation de départ (flottants). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "AnimatedVehicleStartEvent.emptyNew": {
+   "en": "Creates an empty `AnimatedVehicleStartEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `AnimatedVehicleStartEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "AnimatedVehicleStartEvent.new": {
+   "en": "Creates the event with its data: the vehicle, the animation name, the play speed and the start animation time (floats).",
+   "fr": "Crée l'événement avec ses données : le véhicule, le nom de l'animation, la vitesse de lecture et le temps d'animation de départ (flottants)."
+  },
+  "AnimatedVehicleStartEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle, the animation name, the play speed and the start animation time (floats)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule, le nom de l'animation, la vitesse de lecture et le temps d'animation de départ (flottants)), puis appelle `run`."
+  },
+  "AnimatedVehicleStartEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle, the animation name, the play speed and the start animation time (floats)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule, le nom de l'animation, la vitesse de lecture et le temps d'animation de départ (flottants))."
+  },
+  "AnimatedVehicleStartEvent:run": {
+   "en": "Executes the event on the receiving side: calls `playAnimation(name, speed, animTime, true)` on the vehicle. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `playAnimation(name, speed, animTime, true)` sur le véhicule. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  }
+ }
+}

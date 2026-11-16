@@ -1,0 +1,13 @@
+{
+ "fichier": "objects/NightIllumination.lua",
+ "module": {
+  "en": "Legacy i3D onCreate user-attribute handler. It no longer does any lighting work: it only logs a deprecation warning pointing to the Visibility Condition tab of GIANTS Editor.",
+  "fr": "Gestionnaire hérité d'attribut utilisateur onCreate d'i3D. Il ne gère plus aucun éclairage : il écrit seulement un avertissement de dépréciation renvoyant à l'onglet Visibility Condition de GIANTS Editor."
+ },
+ "fonctions": {
+  "NightIllumination:onCreate": {
+   "en": "Logs a deprecation warning with the node's full path; has no other effect.",
+   "fr": "Écrit un avertissement de dépréciation avec le chemin complet du noeud ; aucun autre effet."
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+  "fichier": "internalMods/FS25_precisionFarming/scripts/events/RequestFieldBuyInfoEvent.lua",
+  "module": {
+    "en": "Network event (subclass of Event) sent by a client to ask the server for the extra buy information of a farmland. The server answers with an AdditionalFieldBuyInfoEvent to that connection only.",
+    "fr": "Événement réseau (sous-classe de Event) envoyé par un client pour demander au serveur les informations supplémentaires d'achat d'une parcelle. Le serveur répond par un AdditionalFieldBuyInfoEvent à cette seule connexion."
+  },
+  "fonctions": {
+    "RequestFieldBuyInfoEvent.emptyNew": {
+      "en": "Creates an empty RequestFieldBuyInfoEvent instance with the Event metatable; the network layer calls it before readStream fills the fields.",
+      "fr": "Crée une instance vide de RequestFieldBuyInfoEvent avec la métatable Event ; la couche réseau l'appelle avant que readStream ne remplisse les champs."
+    },
+    "RequestFieldBuyInfoEvent.new": {
+      "en": "Creates the request for a farmland id.",
+      "fr": "Crée la requête pour un id de parcelle."
+    },
+    "RequestFieldBuyInfoEvent:readStream": {
+      "en": "Server side: reads the farmland id, then calls run.",
+      "fr": "Côté serveur : lit l'id de parcelle, puis appelle run."
+    },
+    "RequestFieldBuyInfoEvent:writeStream": {
+      "en": "Client side: writes the farmland id.",
+      "fr": "Côté client : écrit l'id de parcelle."
+    },
+    "RequestFieldBuyInfoEvent:run": {
+      "en": "Executes only on the server: replies with an AdditionalFieldBuyInfoEvent for that farmland to the requesting connection alone. Note: the server check is written twice in a nested way, which is redundant.",
+      "fr": "S'exécute uniquement sur le serveur : répond par un AdditionalFieldBuyInfoEvent pour cette parcelle à la seule connexion demandeuse. À noter : le test serveur est écrit deux fois de façon imbriquée, ce qui est redondant."
+    }
+  }
+}

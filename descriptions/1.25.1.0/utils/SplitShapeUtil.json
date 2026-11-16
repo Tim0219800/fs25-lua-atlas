@@ -1,0 +1,29 @@
+{
+ "fichier": "utils/SplitShapeUtil.lua",
+ "module": {
+  "en": "Static helpers around engine split shapes (trees and logs): splitting, locating a tree's center and radius, building a tension belt around a tree and finding the split shape in a node hierarchy. The dump only has signatures, so behaviour is inferred and UNVERIFIED.",
+  "fr": "Utilitaires statiques autour des split shapes du moteur (arbres et grumes) : découpe, localisation du centre et du rayon d'un arbre, création d'une sangle de tension autour d'un arbre et recherche du split shape dans une hiérarchie de noeuds. Le dump ne contient que des signatures ; le comportement est déduit et NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "SplitShapeUtil.onSplitShapeCallback": {
+   "en": "Signature only (no body in the SDK dump): Callback shape receiving the split shape plus flags for below and above and Y/Z extents. Its role as a split result handler is inferred and UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Forme de callback recevant le split shape, des drapeaux dessous et dessus et des étendues Y/Z. Son rôle de gestionnaire de résultat de découpe est déduit et NON VÉRIFIÉ."
+  },
+  "SplitShapeUtil.splitShape": {
+   "en": "Signature only (no body in the SDK dump): Presumably cuts a split shape with a plane given by a position, a normal and a Y direction, with cut sizes, then calls a named callback, optionally on a target table. The signature lists the callback parameter twice, so the real parameter order is UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Découpe probablement un split shape avec un plan défini par une position, une normale et une direction Y, avec des tailles de coupe, puis appelle un callback nommé, éventuellement sur une table cible. La signature liste deux fois le paramètre callback, l'ordre réel des paramètres est donc NON VÉRIFIÉ."
+  },
+  "SplitShapeUtil.getTreeOffsetPosition": {
+   "en": "Signature only (no body in the SDK dump): Returns the tree center position, up normal and radius near a world position within a maximum radius and a minimum length. UNVERIFIED beyond the annotations.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie la position du centre, la normale vers le haut et le rayon d'un arbre près d'une position monde, dans un rayon maximal et pour une longueur minimale. NON VÉRIFIÉ au-delà des annotations."
+  },
+  "SplitShapeUtil.createTreeBelt": {
+   "en": "Signature only (no body in the SDK dump): Creates a tension belt shape around a tree from a tree center, a target position, the trunk up direction, a hook offset, an option to ignore the Y direction and a spacing; fills the given belt data table and returns the belt shape id. UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Crée une forme de sangle de tension autour d'un arbre à partir du centre de l'arbre, d'une position cible, de la direction haute du tronc, d'un décalage de crochet, d'une option ignorant la direction Y et d'un espacement ; remplit la table de données de sangle et renvoie l'id de la forme. NON VÉRIFIÉ."
+  },
+  "SplitShapeUtil.getSplitShapeId": {
+   "en": "Signature only (no body in the SDK dump): Returns the first split shape mesh found in the hierarchy of a node, or nil.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie le premier maillage split shape trouvé dans la hiérarchie d'un noeud, ou nil."
+  }
+ }
+}

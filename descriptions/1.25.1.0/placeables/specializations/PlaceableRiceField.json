@@ -1,0 +1,101 @@
+{
+ "fichier": "placeables/specializations/PlaceableRiceField.lua",
+ "module": {
+  "en": "Placeable specialization for player-drawn rice paddies. Each field is a polygon with a flat terrain area, a raised ridge around it, a water plane (visual, mirror and collision meshes), a pump with sounds and a player trigger. The server animates the water level over game time and syncs it; the terrain is deformed through g_terrainDeformationQueue. It also uses PlaceableRiceFieldActivatable and the shallow water simulation if present. Many functions are registered but have no body in the dump (field creation, vertices, water getters, events), so they are UNVERIFIED.",
+  "fr": "Spécialisation de placeable pour les rizières dessinées par le joueur. Chaque champ est un polygone avec une zone de terrain aplanie, une digue surélevée autour, un plan d'eau (maillages visuel, miroir et collision), une pompe avec sons et un déclencheur joueur. Le serveur anime le niveau d'eau selon le temps de jeu et le synchronise ; le terrain est déformé via g_terrainDeformationQueue. Utilise aussi PlaceableRiceFieldActivatable et la simulation d'eau peu profonde si présente. Beaucoup de fonctions sont enregistrées mais sans corps dans le dump (création, sommets, accesseurs d'eau, événements) : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "PlaceableRiceField.registerXMLPaths": {
+   "en": "Declares the XML schema under placeable.riceField: inner area and ridge ground types and sizes, ridge foliage, water max level and fill duration, underwater fog shader values, pump i3d with filling/emptying nodes and sounds, player trigger node, and the supported fruit types.",
+   "fr": "Déclare le schéma XML sous placeable.riceField : types de sol et dimensions de la zone et de la digue, feuillage de digue, niveau d'eau max et durée de remplissage, valeurs de brouillard sous-marin, i3d de pompe avec nœuds de remplissage/vidange et sons, nœud de déclencheur joueur et types de fruits acceptés."
+  },
+  "PlaceableRiceField.registerSavegameXMLPaths": {
+   "en": "Declares the savegame XML for each saved field: world height, water height and target, initial fruit data for preplaced fields, outline vertices and per-period water levels.",
+   "fr": "Déclare le XML de sauvegarde de chaque champ : hauteur monde, hauteur et cible d'eau, données de fruit initial pour les champs prépositionnés, sommets du contour et niveaux d'eau par période."
+  },
+  "PlaceableRiceField.prerequisitesPresent": {
+   "en": "Always returns true; no prerequisite specialization.",
+   "fr": "Retourne toujours true ; aucune spécialisation prérequise."
+  },
+  "PlaceableRiceField.registerFunctions": {
+   "en": "Registers the rice field API on the placeable type (field create/remove/get, vertices, water height and fill level getters/setters, terrain deformation callbacks, rice field state events). Most of these functions are not defined in the dump.",
+   "fr": "Enregistre l'API de rizière sur le type de placeable (création/suppression/accès aux champs, sommets, accesseurs de hauteur et de niveau d'eau, callbacks de déformation du terrain, événements d'état). La plupart de ces fonctions ne sont pas définies dans le dump."
+  },
+  "PlaceableRiceField.registerOverwrittenFunctions": {
+   "en": "Overrides addToPhysics, collectPickObjects, getIsOnFarmland, getFarmlandId, getDestructionMethod, performNodeDestruction and previewNodeDestructionNodes.",
+   "fr": "Surcharge addToPhysics, collectPickObjects, getIsOnFarmland, getFarmlandId, getDestructionMethod, performNodeDestruction et previewNodeDestructionNodes."
+  },
+  "PlaceableRiceField.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, the stream read/write events (initial and update), onDirtyMaskCleared, onUpdateTick and onPeriodChanged.",
+   "fr": "Abonne à onLoad, onDelete, aux événements de flux lecture/écriture (initial et mise à jour), onDirtyMaskCleared, onUpdateTick et onPeriodChanged."
+  },
+  "PlaceableRiceField.initSpecialization": {
+   "en": "Only when g_isDevelopmentVersion is set, registers four console commands (gsRiceFieldWaterSetLevel, gsRiceFieldWaterSetShaderParameters, gsRiceFieldSetRice, gsRiceFieldCreateFromField).",
+   "fr": "Seulement si g_isDevelopmentVersion est actif, enregistre quatre commandes console (gsRiceFieldWaterSetLevel, gsRiceFieldWaterSetShaderParameters, gsRiceFieldSetRice, gsRiceFieldCreateFromField)."
+  },
+  "PlaceableRiceField:onLoad": {
+   "en": "Reads ground types, ridge and water settings, fog values, trigger node and fruit types from XML, starts the async load of the pump i3d, loads pump sounds on the client, creates the activatable and subscribes to FINISHED_GROWTH_PERIOD. Note: the ridge foliage growth state fallback reads the foliageGrowthStateName key instead of foliageGrowthState.",
+   "fr": "Lit depuis le XML les types de sol, réglages de digue et d'eau, valeurs de brouillard, nœud de déclencheur et types de fruits, lance le chargement asynchrone de l'i3d de pompe, charge les sons côté client, crée l'activatable et s'abonne à FINISHED_GROWTH_PERIOD. À noter : le repli de l'état de croissance du feuillage lit la clé foliageGrowthStateName au lieu de foliageGrowthState."
+  },
+  "PlaceableRiceField:onPumpI3DLoaded": {
+   "en": "Async callback for the shared pump i3d: stores the node as a template cloned per field, remembers the node paths for filling/emptying water and splash, then finishes the loading task. Returns false if the i3d failed.",
+   "fr": "Callback asynchrone de l'i3d de pompe partagé : conserve le nœud comme modèle cloné par champ, mémorise les chemins des nœuds d'eau et d'éclaboussures de remplissage/vidange, puis termine la tâche de chargement. Retourne false en cas d'échec de l'i3d."
+  },
+  "PlaceableRiceField:onDelete": {
+   "en": "Removes the activatable, unsubscribes from messages, deletes all fields, the pump template, sounds and the shared i3d request.",
+   "fr": "Retire l'activatable, se désabonne des messages, supprime tous les champs, le modèle de pompe, les sons et la requête i3d partagée."
+  },
+  "PlaceableRiceField:onReadStream": {
+   "en": "Client initial sync: reads each field (height, polygon vertices, water height, optional target), creates it, builds its meshes and sets the pump effects as filling or emptying.",
+   "fr": "Synchronisation initiale côté client : lit chaque champ (hauteur, sommets du polygone, hauteur d'eau, cible optionnelle), le crée, construit ses maillages et règle les effets de pompe en remplissage ou vidange."
+  },
+  "PlaceableRiceField:onWriteStream": {
+   "en": "Server initial sync: writes the number of fields, then for each its height, polygon vertices, water height and optional water target.",
+   "fr": "Synchronisation initiale côté serveur : écrit le nombre de champs, puis pour chacun sa hauteur, les sommets du polygone, la hauteur d'eau et la cible éventuelle."
+  },
+  "PlaceableRiceField:onWriteUpdateStream": {
+   "en": "Server only: when the water dirty flag is set, writes the water height (compressed up to the max level) and a flag telling if the target was reached, only for fields marked dirty.",
+   "fr": "Serveur uniquement : si le drapeau de changement d'eau est levé, écrit la hauteur d'eau (compressée jusqu'au niveau max) et un indicateur d'atteinte de la cible, uniquement pour les champs marqués modifiés."
+  },
+  "PlaceableRiceField:onUpdateTick": {
+   "en": "Adds random waves to the shallow water simulation near filling splashes. On the server, moves each field's water height toward its target at a rate scaled by effective time scale and the fill duration, ends effects and flags a sync when the target is reached.",
+   "fr": "Ajoute des vagues aléatoires à la simulation d'eau peu profonde près des éclaboussures de remplissage. Sur le serveur, rapproche la hauteur d'eau de chaque champ de sa cible selon l'échelle de temps effective et la durée de remplissage, arrête les effets et signale une synchronisation à l'arrivée."
+  },
+  "PlaceableRiceField:loadFromXMLFile": {
+   "en": "Loads each saved field: height, water height, polygon, per-period water levels and optional water target. On a new savegame, the server also applies the initial terrain deformation and initial fruit. Note: the local callback passed to performTerrainDeformation is never defined, so it is nil.",
+   "fr": "Charge chaque champ sauvegardé : hauteur, hauteur d'eau, polygone, niveaux d'eau par période et cible éventuelle. Dans une nouvelle partie, le serveur applique aussi la déformation initiale du terrain et le fruit initial. À noter : la variable callback passée à performTerrainDeformation n'est jamais définie, elle vaut nil."
+  },
+  "PlaceableRiceField:saveToXMLFile": {
+   "en": "Saves each field: world height, water height, optional target, per-period water levels per square meter and polygon vertices as x z strings.",
+   "fr": "Sauvegarde chaque champ : hauteur monde, hauteur d'eau, cible éventuelle, niveaux d'eau par période au mètre carré et sommets du polygone sous forme de chaînes x z."
+  },
+  "PlaceableRiceField:getDestructionMethod": {
+   "en": "Returns Placeable.DESTRUCTION.PER_NODE, so the player removes one field at a time instead of the whole placeable.",
+   "fr": "Retourne Placeable.DESTRUCTION.PER_NODE : le joueur supprime un champ à la fois plutôt que tout le placeable."
+  },
+  "PlaceableRiceField:previewNodeDestructionNodes": {
+   "en": "For the field under the targeted node, draws the outline of its water mesh and of the visible shapes of its pump. Returns nil (no extra nodes for the brush to highlight).",
+   "fr": "Pour le champ du nœud visé, dessine le contour de son maillage d'eau et des formes visibles de sa pompe. Retourne nil (aucun nœud supplémentaire à surligner pour le pinceau)."
+  },
+  "PlaceableRiceField:performNodeDestruction": {
+   "en": "Removes the field matching the node; returns whether a field was removed and whether the whole placeable should be destroyed (no valid field left).",
+   "fr": "Supprime le champ correspondant au nœud ; retourne si un champ a été retiré et si tout le placeable doit être détruit (plus aucun champ valide)."
+  },
+  "PlaceableRiceField:collectPickObjects": {
+   "en": "Empty override: disables the default pick object collection for this placeable.",
+   "fr": "Surcharge vide : désactive la collecte par défaut des objets pickables pour ce placeable."
+  },
+  "PlaceableRiceField:buildMesh": {
+   "en": "Builds a field's nodes from its polygon: visual water plane with the riceFieldWaterSimulation material, a mirror plane, water and placement collision planes, a cloned pump and a player trigger at the first edge. Registers the field, sets the water height and adds the water plane to the shallow water simulation. Returns false if a mesh cannot be created. Note: shader parameters of the mirror plane are set on the main plane node.",
+   "fr": "Construit les nœuds d'un champ depuis son polygone : plan d'eau visuel avec le matériau riceFieldWaterSimulation, plan miroir, plans de collision d'eau et de placement, pompe clonée et déclencheur joueur sur la première arête. Enregistre le champ, règle la hauteur d'eau et ajoute le plan à la simulation d'eau peu profonde. Retourne false si un maillage échoue. À noter : les paramètres shader du plan miroir sont appliqués au nœud du plan principal."
+  },
+  "PlaceableRiceField:performTerrainDeformation": {
+   "en": "Queues three terrain jobs for a field: flattening the polygon with the inner ground type, raising ridges along each edge, and painting the ridge ground type if it exists. Each job calls onTerrainDeformationTaskFinished; the callback is stored in field.brushCallback.",
+   "fr": "Met en file trois travaux de terrain pour un champ : aplanir le polygone avec le type de sol intérieur, relever les digues le long de chaque arête, et peindre le type de sol des digues s'il existe. Chaque travail appelle onTerrainDeformationTaskFinished ; le callback est stocké dans field.brushCallback."
+  },
+  "PlaceableRiceField:getHasValidFields": {
+   "en": "Returns true if at least one field polygon has three or more vertices.",
+   "fr": "Retourne true si au moins un polygone de champ a trois sommets ou plus."
+  }
+ }
+}

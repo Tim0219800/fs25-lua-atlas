@@ -1,0 +1,69 @@
+{
+ "fichier": "animals/AnimalLoadingTrigger.lua",
+ "module": {
+  "en": "Trigger zone where a player or a livestock trailer can open the animal screen, either at a husbandry or at an animal dealer. It can be created from a scenegraph node (user attributes isDealer, animalTypes, title) or from XML. It registers an activatable with the mission's activatable objects system, checks the tradeAnimals permission and farm ownership, and can auto-activate on platforms that enable it. The file also defines the helper class AnimalLoadingTriggerActivatable.",
+  "fr": "Zone de déclenchement où un joueur ou une remorque à bétail peut ouvrir l'écran des animaux, soit à un élevage soit chez un marchand d'animaux. Elle peut être créée depuis un noeud de scène (attributs utilisateur isDealer, animalTypes, title) ou depuis un XML. Elle enregistre un activatable auprès du système d'objets activables de la mission, vérifie la permission tradeAnimals et la propriété de la ferme, et peut s'activer automatiquement sur les plateformes qui l'autorisent. Le fichier définit aussi la classe auxiliaire AnimalLoadingTriggerActivatable."
+ },
+ "fonctions": {
+  "AnimalLoadingTrigger.registerXMLPaths": {
+   "en": "Registers the XML schema entries `#node`, `#isDealer`, `#animalTypes` and `#title` (default ui_farm) under the given base path.",
+   "fr": "Enregistre dans le schéma XML les entrées `#node`, `#isDealer`, `#animalTypes` et `#title` (défaut ui_farm) sous le chemin de base donné."
+  },
+  "AnimalLoadingTrigger:onCreate": {
+   "en": "Scenegraph creation callback: builds a trigger for the node, loads it, and adds it to the non-updateable list on success, otherwise deletes it.",
+   "fr": "Callback de création de la scène : construit un déclencheur pour le noeud, le charge et l'ajoute aux objets non mis à jour en cas de succès, sinon le supprime."
+  },
+  "AnimalLoadingTrigger.new": {
+   "en": "Creates the trigger object (an Object subclass) with no node, not a dealer, disabled, no loading vehicle, and a new activatable. It stores the current map mod name for text lookups.",
+   "fr": "Crée l'objet déclencheur (sous-classe de Object) sans noeud, non marchand, désactivé, sans véhicule de chargement, avec un nouvel activatable. Il mémorise le nom du mod de carte courant pour les textes."
+  },
+  "AnimalLoadingTrigger:loadFromXML": {
+   "en": "Loads the trigger node, dealer flag, allowed animal types (space-separated names resolved through the animal system) and title from XML, then registers the trigger callback. Returns false with an XML warning if the node is missing.",
+   "fr": "Charge depuis le XML le noeud, l'indicateur de marchand, les types d'animaux autorisés (noms séparés par des espaces, résolus via le système d'animaux) et le titre, puis enregistre le callback du déclencheur. Retourne false avec un avertissement XML si le noeud manque."
+  },
+  "AnimalLoadingTrigger:load": {
+   "en": "Loads the same settings from the user attributes of the scenegraph node, keeps the optional husbandry, registers the trigger callback, enables the trigger and returns true. Unknown animal type names are logged as warnings.",
+   "fr": "Charge les mêmes réglages depuis les attributs utilisateur du noeud de scène, conserve l'élevage optionnel, enregistre le callback du déclencheur, active le déclencheur et retourne true. Les noms de types d'animaux inconnus sont journalisés en avertissement."
+  },
+  "AnimalLoadingTrigger:delete": {
+   "en": "Removes the activatable from the mission, removes the trigger node and clears the husbandry reference.",
+   "fr": "Retire l'activatable de la mission, supprime le déclencheur du noeud et efface la référence à l'élevage."
+  },
+  "AnimalLoadingTrigger:triggerCallback": {
+   "en": "Engine trigger callback on enter or leave. A vehicle supporting animals becomes the loading trailer (auto-activating and braking on some platforms); on leave it is released and the animal screen is told if its target left. For the local player it tracks range and refreshes the activatable.",
+   "fr": "Callback de déclencheur du moteur à l'entrée ou à la sortie. Un véhicule gérant les animaux devient la remorque de chargement (avec activation automatique et freinage sur certaines plateformes) ; à la sortie il est libéré et l'écran des animaux est prévenu si sa cible part. Pour le joueur local, il suit la portée et met à jour l'activatable."
+  },
+  "AnimalLoadingTrigger:updateActivatableObject": {
+   "en": "Adds the activatable to the mission when a loading vehicle or the player is in range, and removes it otherwise.",
+   "fr": "Ajoute l'activatable à la mission quand un véhicule de chargement ou le joueur est à portée, et le retire sinon."
+  },
+  "AnimalLoadingTrigger:setLoadingTrailer": {
+   "en": "Replaces the current loading vehicle: unregisters this trigger from the old one and registers it on the new one through setLoadingTrigger when available, then refreshes the activatable.",
+   "fr": "Remplace le véhicule de chargement courant : retire ce déclencheur de l'ancien et l'enregistre sur le nouveau via setLoadingTrigger si présent, puis met à jour l'activatable."
+  },
+  "AnimalLoadingTrigger:getAnimals": {
+   "en": "Returns the list of allowed animal type indices (dealer only), or nil if no restriction was configured. Despite the name it returns types, not animals.",
+   "fr": "Retourne la liste des indices de types d'animaux autorisés (marchand seulement), ou nil si aucune restriction n'est configurée. Malgré son nom, elle retourne des types, pas des animaux."
+  },
+  "AnimalLoadingTrigger:openAnimalMenu": {
+   "en": "Opens AnimalScreen for the husbandry, loading vehicle and dealer flag, and remembers the vehicle as the activated target. Client-side UI call.",
+   "fr": "Ouvre AnimalScreen pour l'élevage, le véhicule de chargement et l'indicateur de marchand, et mémorise le véhicule comme cible activée. Appel d'interface côté client."
+  },
+  "AnimalLoadingTriggerActivatable.new": {
+   "en": "Creates the activatable for a trigger with the localized text animals_openAnimalScreen as action label.",
+   "fr": "Crée l'activatable pour un déclencheur avec le texte localisé animals_openAnimalScreen comme libellé d'action."
+  },
+  "AnimalLoadingTriggerActivatable:getIsActivatable": {
+   "en": "True only if the trigger is enabled, no GUI is open, the player has the tradeAnimals permission, the husbandry (if any) belongs to the player's farm, and the player is in range or in the loading vehicle's root vehicle.",
+   "fr": "Vrai seulement si le déclencheur est actif, aucune interface n'est ouverte, le joueur a la permission tradeAnimals, l'élevage éventuel appartient à la ferme du joueur, et le joueur est à portée ou dans le véhicule racine du véhicule de chargement."
+  },
+  "AnimalLoadingTriggerActivatable:run": {
+   "en": "Opens the animal menu, unless the guided tour is running, in which case an info dialog says the feature is disabled.",
+   "fr": "Ouvre le menu des animaux, sauf si la visite guidée est en cours : une boîte d'information indique alors que la fonction est désactivée."
+  },
+  "AnimalLoadingTriggerActivatable:getDistance": {
+   "en": "Returns the 3D distance from the given point to the trigger node, or infinity if the node does not exist.",
+   "fr": "Retourne la distance 3D entre le point donné et le noeud du déclencheur, ou l'infini si le noeud n'existe pas."
+  }
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "fichier": "misc/SprayTypeManager.lua",
+ "module": {
+  "en": "Manager (subclass of AbstractManager) for spray types: fertilizer, lime and herbicide products tied to a fill type of the same name, with a consumption rate in liters per second and a ground type. Defaults come from data/maps/maps_sprayTypes.xml, then the map XML (key map.sprayTypes.sprayType) can add or modify entries. initDataStructures also publishes the global table SprayType (name to index).",
+  "fr": "Gestionnaire (sous-classe d'AbstractManager) des types de pulvérisation : engrais, chaux et herbicides liés à un type de remplissage de même nom, avec un débit en litres par seconde et un type de sol. Les valeurs par défaut viennent de data/maps/maps_sprayTypes.xml, puis le XML de la carte (clé map.sprayTypes.sprayType) peut ajouter ou modifier des entrées. initDataStructures publie aussi la table globale SprayType (nom vers indice)."
+ },
+ "fonctions": {
+  "SprayTypeManager.new": {
+   "en": "Constructor: creates the manager on top of AbstractManager with the given or default metatable.",
+   "fr": "Constructeur : crée le gestionnaire à partir d'AbstractManager avec la métatable fournie ou celle par défaut."
+  },
+  "SprayTypeManager:initDataStructures": {
+   "en": "Resets the spray type lists and lookup tables (by name, index, fill type index) and assigns the global SprayType to the name-to-index table, so mods can read SprayType.NAME.",
+   "fr": "Réinitialise les listes et tables de recherche des types de pulvérisation (par nom, indice, indice de type de remplissage) et affecte la table globale SprayType à la table nom vers indice, permettant aux mods de lire SprayType.NOM."
+  },
+  "SprayTypeManager:loadDefaultTypes": {
+   "en": "Loads the base game spray types from data/maps/maps_sprayTypes.xml and registers them as base types, then closes the XML file.",
+   "fr": "Charge les types de pulvérisation du jeu de base depuis data/maps/maps_sprayTypes.xml et les enregistre comme types de base, puis ferme le fichier XML."
+  },
+  "SprayTypeManager:loadMapData": {
+   "en": "Calls the parent loader, loads the default spray types, then lets XMLUtil read the map's own sprayTypes section (and mod additions) through loadSprayTypes. Returns the result of that helper.",
+   "fr": "Appelle le chargeur parent, charge les types par défaut, puis laisse XMLUtil lire la section sprayTypes propre à la carte (et les ajouts de mods) via loadSprayTypes. Retourne le résultat de cet utilitaire."
+  },
+  "SprayTypeManager:loadSprayTypes": {
+   "en": "Iterates over map.sprayTypes.sprayType entries of an XML file, reading #name, #litersPerSecond, #type and #sprayGroundType (via FieldSprayType) and calling addSprayType for each. Always returns true.",
+   "fr": "Parcourt les entrées map.sprayTypes.sprayType d'un fichier XML, lit #name, #litersPerSecond, #type et #sprayGroundType (via FieldSprayType) et appelle addSprayType pour chacune. Retourne toujours true."
+  },
+  "SprayTypeManager:addSprayType": {
+   "en": "Creates a spray type bound to the fill type of the same name, or updates an existing one. The type must be FERTILIZER, LIME or HERBICIDE, otherwise a warning is printed and nil is returned. A base type that already exists is rejected; a later definition only overrides litersPerSecond and sprayGroundType (ground type defaults to 1).",
+   "fr": "Crée un type de pulvérisation lié au type de remplissage de même nom, ou met à jour un existant. Le type doit être FERTILIZER, LIME ou HERBICIDE, sinon un avertissement est affiché et nil est retourné. Un type de base déjà présent est refusé ; une définition ultérieure ne remplace que litersPerSecond et sprayGroundType (type de sol par défaut 1)."
+  },
+  "SprayTypeManager:getSprayTypeByIndex": {
+   "en": "Returns the spray type object at the given index, or nil if the index is nil or unknown.",
+   "fr": "Retourne l'objet type de pulvérisation à l'indice donné, ou nil si l'indice est nil ou inconnu."
+  },
+  "SprayTypeManager:getSprayTypeByName": {
+   "en": "Returns the spray type with the given name (case-insensitive, uppercased internally), or nil.",
+   "fr": "Retourne le type de pulvérisation portant le nom donné (insensible à la casse, mis en majuscules en interne), ou nil."
+  },
+  "SprayTypeManager:getFillTypeNameByIndex": {
+   "en": "Returns the name registered for a spray type index. Despite the method name, the index is a spray type index, not a fill type index.",
+   "fr": "Retourne le nom enregistré pour un indice de type de pulvérisation. Malgré le nom de la méthode, l'indice est celui du type de pulvérisation, pas d'un type de remplissage."
+  },
+  "SprayTypeManager:getFillTypeIndexByName": {
+   "en": "Returns the spray type index for a name (case-insensitive), or nil. Despite the name, it is a spray type index, not a fill type index.",
+   "fr": "Retourne l'indice de type de pulvérisation pour un nom (insensible à la casse), ou nil. Malgré le nom, ce n'est pas un indice de type de remplissage."
+  },
+  "SprayTypeManager:getFillTypeByName": {
+   "en": "Returns the spray type object for a name (case-insensitive), or nil. Same result as getSprayTypeByName despite its name.",
+   "fr": "Retourne l'objet type de pulvérisation pour un nom (insensible à la casse), ou nil. Même résultat que getSprayTypeByName malgré son nom."
+  },
+  "SprayTypeManager:getSprayTypeByFillTypeIndex": {
+   "en": "Returns the spray type linked to a fill type index, or nil when that fill type is not a spray product.",
+   "fr": "Retourne le type de pulvérisation lié à un indice de type de remplissage, ou nil si ce type de remplissage n'est pas un produit de pulvérisation."
+  },
+  "SprayTypeManager:getSprayTypeIndexByFillTypeIndex": {
+   "en": "Returns the spray type index for a fill type index, or nil if the fill type has no spray type.",
+   "fr": "Retourne l'indice de type de pulvérisation pour un indice de type de remplissage, ou nil si ce type de remplissage n'en a pas."
+  },
+  "SprayTypeManager:getSprayTypes": {
+   "en": "Returns the ordered list of all registered spray types.",
+   "fr": "Retourne la liste ordonnée de tous les types de pulvérisation enregistrés."
+  }
+ }
+}

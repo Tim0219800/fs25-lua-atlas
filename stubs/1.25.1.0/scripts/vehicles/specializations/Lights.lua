@@ -1,316 +1,316 @@
 ---@meta
 -- FS25 1.25.1.0 : vehicles/specializations/Lights.lua (generated stub, FS25 Lua Atlas)
 
---- Spécialisation d'éclairage des véhicules (spec_lights) : feux de croisement/route, feux de travail, de stop, de recul, clignotants, gyrophares, feux d'intérieur, feux de jour, feux hauts/bas. Elle pilote deux familles de feux décrites dans le XML du véhicule : les feux statiques (StaticLight : matériaux/shaders émissifs, sans source lumineuse) et les feux réels (RealLight : sources de lumière du moteur). Les classes StaticLight, SharedLight, StaticLightCompound et BeaconLight sont dans d'autres fichiers ; seul RealLight.lua est présent dans le dump (vehicles/specializations/components/RealLight.lua).
+--- Vehicle lighting specialization (spec_lights): dipped/main beams, work lights, brake, reverse, turn signals, beacons, interior lights, daytime lights, top/bottom lights. It drives two families of lights described in the vehicle XML: static lights (StaticLight: emissive materials/shaders, no light source) and real lights (RealLight: engine light sources). The StaticLight, SharedLight, StaticLightCompound and BeaconLight classes are in other files; only RealLight.lua is present in the dump (vehicles/specializations/components/RealLight.lua).
 --- 
---- MODÈLE DE DONNÉES. L'état est un masque de bits spec.lightsTypesMask : le bit n correspond au type de lumière n. Les valeurs des constantes Lights.LIGHT_TYPE_* et Lights.TURNLIGHT_* sont NON VÉRIFIÉES : elles sont définies dans l'en-tête du fichier, dont les lignes sont vides dans le dump (on voit seulement que LIGHT_TYPE_DEFAULT, LIGHT_TYPE_WORK_BACK, LIGHT_TYPE_WORK_FRONT et LIGHT_TYPE_HIGHBEAM existent). Les types « de base » vont jusqu'à maxLightState (au moins HIGHBEAM) ; la spécialisation ajoute huit types juste après : bottomLight, topLight, brakeLight, turnLightLeft, turnLightRight, turnLightAny, reverseLight, interiorLight (limite totale de 31 bits, onLoad). Les états successifs de la touche de lumière viennent de vehicle.lights.states.state(?)#lightTypes ; automaticState#lightTypes (défaut « 0 ») et #lightTypesWork (défaut « 0 1 2 ») servent aux éclairages automatiques.
+--- DATA MODEL. State is a bit mask spec.lightsTypesMask: bit n matches light type n. The values of the Lights.LIGHT_TYPE_* and Lights.TURNLIGHT_* constants are UNVERIFIED: they are defined in the file header, whose lines are blank in the dump (we only see that LIGHT_TYPE_DEFAULT, LIGHT_TYPE_WORK_BACK, LIGHT_TYPE_WORK_FRONT and LIGHT_TYPE_HIGHBEAM exist). The "base" types go up to maxLightState (at least HIGHBEAM); the specialization adds eight types right after: bottomLight, topLight, brakeLight, turnLightLeft, turnLightRight, turnLightAny, reverseLight, interiorLight (total limit of 31 bits, onLoad). The successive states of the light key come from vehicle.lights.states.state(?)#lightTypes; automaticState#lightTypes (default "0") and #lightTypesWork (default "0 1 2") are used for automatic lighting.
 --- 
---- FEUX RÉELS ET PROFILS. Deux jeux de feux réels sont chargés : realLights.low et realLights.high. Un seul est actif : getUseHighProfile compare le réglage LIGHTS_PROFILE à GS_PROFILE_HIGH (réglage forçable par Platform.gameplay.lightsProfile). Dans setLightsTypesMask le profil inactif reçoit un masque nul. Pour un mod de brouillard : pour savoir si un phare est allumé, lire getLightsTypesMask() et tester le bit voulu, ou écouter l'événement onLightsTypesMaskChanged ; pour retrouver la source de lumière d'un phare, getRealLightFromNode puis les champs de l'objet RealLight. À noter dans RealLight.lua : la diffusion de lumière dans l'air (setLightUseLightScattering, setLightScatteringConeAngle, setLightScatteringIntensity fixée à 1) est activée par RealLight:updateLightScattering (components/RealLight.lua:212-258) seulement si la source a une portée supérieure à 7.5, avec le profil haut pour les feux par défaut/route et le profil très haut pour les autres feux typés. C'est l'effet natif de « faisceau visible » ; son rendu dans un brouillard et son interaction avec le brouillard du moteur sont NON VÉRIFIÉS (code moteur et classe Environment absents du dump).
+--- REAL LIGHTS AND PROFILES. Two sets of real lights are loaded: realLights.low and realLights.high. Only one is active: getUseHighProfile compares the LIGHTS_PROFILE setting to GS_PROFILE_HIGH (a setting that Platform.gameplay.lightsProfile can force). In setLightsTypesMask the inactive profile receives a zero mask. For a fog mod: to know whether a headlight is on, read getLightsTypesMask() and test the wanted bit, or listen to the onLightsTypesMaskChanged event; to find the light source of a headlight, use getRealLightFromNode then the fields of the RealLight object. Note in RealLight.lua: light scattering in the air (setLightUseLightScattering, setLightScatteringConeAngle, setLightScatteringIntensity fixed at 1) is enabled by RealLight:updateLightScattering (components/RealLight.lua:212-258) only if the source has a range above 7.5, with the high profile for default/high-beam lights and the very high profile for the other typed lights. This is the native "visible beam" effect; how it renders in fog and how it interacts with the engine fog are UNVERIFIED (engine code and the Environment class are absent from the dump).
 --- 
---- RÉSEAU. Le serveur ajoute lui-même les bits supplémentaires (clignotants, haut/bas, stop, recul, intérieur) et diffuse VehicleSetLightEvent (masque sur totalNumLightTypes bits) ; le client reçoit le masque complet mais recalcule localement les bits haut/bas et intérieur. Clignotants (VehicleSetTurnLightEvent) et gyrophares (VehicleSetBeaconLightEvent) ont leur propre événement. À la connexion, onWriteStream envoie masque et état des gyrophares.
+--- NETWORK. The server adds the extra bits itself (turn signals, top/bottom, brake, reverse, interior) and broadcasts VehicleSetLightEvent (mask over totalNumLightTypes bits); the client receives the full mask but recomputes the top/bottom and interior bits locally. Turn signals (VehicleSetTurnLightEvent) and beacons (VehicleSetBeaconLightEvent) have their own event. On connection, onWriteStream sends the mask and the beacon state.
 --- 
---- TEMPS. Aucun dt dans ce fichier : le clignotement est calculé à partir de getShaderTimeSec() ; onUpdate relance raiseActive tant qu'un clignotant est actif. Les feux de jour suivent onStartMotor / onStopMotor. L'éclairage automatique (updateAutomaticLights) ne dépend que de environment.isSunOn (Environment absent du dump) : aucune lecture de brouillard, pluie ou visibilité n'apparaît ici. La luminosité des feux d'intérieur dépend de l'heure (voir getInteriorLightBrightness).
+--- TIMING. No dt in this file: blinking is computed from getShaderTimeSec(); onUpdate keeps calling raiseActive while a turn signal is active. Daytime lights follow onStartMotor / onStopMotor. Automatic lighting (updateAutomaticLights) depends only on environment.isSunOn (Environment is absent from the dump): no reading of fog, rain or visibility appears here. Interior light brightness depends on the time of day (see getInteriorLightBrightness).
 --- 
---- POINTS D'EXTENSION. Événements déclarés : onTurnLightStateChanged, onTopLightsVisibilityChanged, onBrakeLightsVisibilityChanged, onReverseLightsVisibilityChanged, onLightsTypesMaskChanged, onBeaconLightsVisibilityChanged. Fonctions surchargées ici : loadDashboardGroupFromXML, getIsDashboardGroupActive. Fonctions prévues pour être surchargées par d'autres spécialisations : getIsActiveForInteriorLights (faux ici, surchargée par Motorized) et getDeactivateLightsOnLeave (vrai ici, surchargée par Motorized). Abonnements au centre de messages : DAY_NIGHT_CHANGED, changement du réglage LIGHTS_PROFILE, changement du réglage REAL_BEACON_LIGHTS. À noter : ils sont faits dans onLoad et aucun désabonnement n'apparaît dans ce fichier, y compris dans onDelete (non vérifié en jeu).
+--- EXTENSION POINTS. Declared events: onTurnLightStateChanged, onTopLightsVisibilityChanged, onBrakeLightsVisibilityChanged, onReverseLightsVisibilityChanged, onLightsTypesMaskChanged, onBeaconLightsVisibilityChanged. Functions overridden here: loadDashboardGroupFromXML, getIsDashboardGroupActive. Functions meant to be overridden by other specializations: getIsActiveForInteriorLights (false here, overridden by Motorized) and getDeactivateLightsOnLeave (true here, overridden by Motorized). Message center subscriptions: DAY_NIGHT_CHANGED, change of the LIGHTS_PROFILE setting, change of the REAL_BEACON_LIGHTS setting. Note: they are made in onLoad and no unsubscription appears in this file, including in onDelete (not verified in game).
 ---@class Lights
 Lights = {}
 
---- Renvoie toujours vrai : aucun prérequis de spécialisation.
+--- Always returns true: no specialization prerequisite.
 ---@param specializations table
 ---@return boolean
 function Lights.prerequisitesPresent(specializations) end
 
---- Enregistre le type de configuration « beaconLight » et les chemins XML : états de lumière, feux statiques par catégorie (par défaut, haut, bas, stop, recul, jour, clignotants), compounds, feux partagés, gyrophares (avec #alwaysActive et configurations), sons, tableaux de bord et attributs #isTopLight / #isBottomLight. #reverseLightActivationSpeed vaut 1 km/h par défaut.
+--- Registers the "beaconLight" configuration type and the XML paths: light states, static lights by category (default, top, bottom, brake, reverse, daytime, turn signals), compounds, shared lights, beacons (with #alwaysActive and configurations), sounds, dashboards and the #isTopLight / #isBottomLight attributes. #reverseLightActivationSpeed defaults to 1 km/h.
 function Lights.initSpecialization() end
 
---- Enregistre pour un profil réel (low ou high) les sous-clés light, topLight, bottomLight, brakeLight, reverseLight, dayTimeLight, turnLightLeft, turnLightRight et interiorLight via RealLight.registerXMLPaths.
+--- Registers, for one real-light profile (low or high), the sub-keys light, topLight, bottomLight, brakeLight, reverseLight, dayTimeLight, turnLightLeft, turnLightRight and interiorLight through RealLight.registerXMLPaths.
 ---@param schema any
 ---@param basePath any
 function Lights.registerRealLightSetupXMLPath(schema, basePath) end
 
---- Déclare les six événements publiés par la spécialisation (clignotants, feux hauts, stop, recul, masque des types, gyrophares).
+--- Declares the six events published by the specialization (turn signals, top lights, brake, reverse, types mask, beacons).
 ---@param vehicleType any
 function Lights.registerEvents(vehicleType) end
 
---- Enregistre les fonctions publiques d'éclairage (masque, gyrophares, clignotants, feux hauts/stop/recul/intérieur, accès aux feux par nœud, éclairage automatique).
+--- Registers the public lighting functions (mask, beacons, turn signals, top/brake/reverse/interior lights, access to lights by node, automatic lighting).
 ---@param vehicleType any
 function Lights.registerFunctions(vehicleType) end
 
---- Surcharge loadDashboardGroupFromXML et getIsDashboardGroupActive pour y ajouter les filtres de types de lumière.
+--- Overrides loadDashboardGroupFromXML and getIsDashboardGroupActive to add the light type filters.
 ---@param vehicleType any
 function Lights.registerOverwrittenFunctions(vehicleType) end
 
---- Abonne la spécialisation au cycle de vie, au réseau, aux actions d'entrée, à l'entrée/sortie du véhicule, au moteur (onStartMotor/onStopMotor), à l'attelage, à l'IA et au train automatique, à la physique du véhicule (onVehiclePhysicsUpdate) et au changement d'exigence des feux hauts.
+--- Subscribes the specialization to the lifecycle, the network, input actions, vehicle enter/leave, the engine (onStartMotor/onStopMotor), attaching, the AI and the automated train, vehicle physics (onVehiclePhysicsUpdate) and the change of top-light requirement.
 ---@param vehicleType any
 function Lights.registerEventListeners(vehicleType) end
 
---- Lit le seuil de vitesse de recul (valeur XML en km/h divisée par 3600), les états de lumière, les masques automatiques, charge les feux réels (profils low et high), feux statiques, compounds, feux partagés et gyrophares (configuration et toujours-actifs), calcule maxLightState et les huit types supplémentaires, charge les sons et s'abonne aux messages jour/nuit et réglages de lumière. À noter : le test « self.isClient ~= nil » avant le chargement des sons est vrai même sur serveur (intention probable : self.isClient ; non vérifié en jeu).
+--- Reads the reverse speed threshold (XML value in km/h divided by 3600), the light states and the automatic masks, loads the real lights (low and high profiles), static lights, compounds, shared lights and beacons (configuration and always-active), computes maxLightState and the eight extra types, loads the sounds and subscribes to day/night messages and light settings. Note: the "self.isClient ~= nil" test before loading the sounds is true even on the server (probable intent: self.isClient; not verified in game).
 ---@param savegame table
 function Lights:onLoad(savegame) end
 
---- Ajoute les types supplémentaires aux listes de types des feux haut/bas/stop/recul/clignotants/intérieur (clignotants marqués clignotants), finalise chaque feu réel (realLight:finalize) et, dans la salle d'exposition, allume les feux de jour.
+--- Adds the extra types to the type lists of the top/bottom/brake/reverse/turn/interior lights (turn signals flagged as blinking), finalizes each real light (realLight:finalize) and, in the showroom, turns on the daytime lights.
 ---@param savegame table
 function Lights:onLoadFinished(savegame) end
 
---- Enregistre les valeurs de tableau de bord d'éclairage (état de lumière, clignotants, gyrophare). Non relu en détail.
+--- Registers the lighting dashboard values (light state, turn signals, beacon). Not reread in detail.
 function Lights:onRegisterDashboardValueTypes() end
 
---- Supprime feux partagés, gyrophares, fichiers XML de feux en cours de chargement, libère les I3D partagés, vide les compounds et supprime les sons. Aucun désabonnement du centre de messages n'y figure.
+--- Deletes shared lights, beacons, light XML files still loading, releases the shared I3Ds, clears the compounds and deletes the sounds. No message center unsubscription appears in it.
 function Lights:onDelete() end
 
---- Lecture à la connexion : masque de types (totalNumLightTypes bits) puis état des gyrophares, appliqués sans renvoi réseau.
+--- Read on connection: types mask (totalNumLightTypes bits) then beacon state, applied without sending anything back over the network.
 ---@param streamId integer
 ---@param connection Connection
 function Lights:onReadStream(streamId, connection) end
 
---- Écriture à la connexion du masque de types et de l'état des gyrophares.
+--- Writes the types mask and the beacon state on connection.
 ---@param streamId integer
 ---@param connection Connection
 function Lights:onWriteStream(streamId, connection) end
 
---- Client : tant qu'un clignotant est actif, calcule un coefficient de charge de 0 à 1 à partir de la fraction du temps de shader (période d'une seconde) et l'applique aux feux de clignotant gauche/droite ; joue le son de clignotant à chaque période pour le véhicule actif ; maintient le véhicule actif. Aucun dt utilisé.
+--- Client: while a turn signal is active, computes a 0 to 1 load coefficient from the fraction of shader time (one-second period) and applies it to the left/right turn lights; plays the turn signal sound each period for the active vehicle; keeps the vehicle active. No dt used.
 ---@param dt number
 ---@param isActiveForInput boolean
 ---@param isActiveForInputIgnoreSelection boolean
 ---@param isSelected boolean
 function Lights:onUpdate(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Client : active ou coupe les gyrophares « toujours actifs » quand le véhicule devient actif pour les feux, met à jour les feux intérieurs, l'activité des actions d'entrée et, si Platform.gameplay.automaticLights, l'éclairage automatique du véhicule racine non conduit par l'IA selon environment.isSunOn et le sens de marche.
+--- Client: enables or cuts the "always active" beacons when the vehicle becomes active for lights, updates the interior lights, the input action activity and, if Platform.gameplay.automaticLights, the automatic lighting of the root vehicle not driven by the AI according to environment.isSunOn and the driving direction.
 ---@param dt any
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 ---@param isSelected any
 function Lights:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected) end
 
---- Vrai si le joueur est dans le véhicule et peut commander les lumières, ou si le véhicule attelant l'est (récursif). Avec onlyPowered, exige getIsPowered.
+--- True if the player is in the vehicle and can control the lights, or if the attacher vehicle is (recursive). With onlyPowered, requires getIsPowered.
 ---@param onlyPowered any
 ---@return boolean
 function Lights:getIsActiveForLights(onlyPowered) end
 
---- Renvoie faux par défaut ; Motorized le surcharge pour renvoyer vrai quand le contact est mis.
+--- Returns false by default; Motorized overrides it to return true when the ignition is on.
 ---@return boolean
 function Lights:getIsActiveForInteriorLights() end
 
---- Faux si l'IA conduit ou si aucun type de lumière n'est défini ; sinon vrai uniquement pour le véhicule actuellement occupé par le joueur local.
+--- False if the AI is driving or if no light type is defined; otherwise true only for the vehicle currently occupied by the local player.
 ---@return boolean
 function Lights:getCanToggleLight() end
 
---- Vrai si le réglage LIGHTS_PROFILE (ou Platform.gameplay.lightsProfile s'il est défini) est supérieur ou égal à GS_PROFILE_HIGH : sélectionne les feux réels du profil haut.
+--- True if the LIGHTS_PROFILE setting (or Platform.gameplay.lightsProfile if set) is greater than or equal to GS_PROFILE_HIGH: selects the real lights of the high profile.
 ---@return boolean
 function Lights:getUseHighProfile() end
 
---- Passe à l'état de lumière suivant (ou précédent) dans la liste des états du XML, revient à zéro après le dernier ou si des feux étaient allumés depuis l'état 0, recompose le masque en conservant les bits supplémentaires puis appelle setLightsTypesMask.
+--- Moves to the next (or previous) light state in the XML state list, wraps to zero after the last one or if lights were on from state 0, rebuilds the mask keeping the extra bits, then calls setLightsTypesMask.
 ---@param increment any
 function Lights:setNextLightsState(increment) end
 
---- Cœur du système : compose les bits supplémentaires (serveur : clignotants, haut/bas, stop, recul, intérieur ; client : haut/bas et intérieur localement), diffuse VehicleSetLightEvent sauf noEventSend, joue le son de commutation si les bits de base changent, applique le masque à tous les feux statiques et compounds et aux feux réels du profil actif (masque 0 pour l'autre), met à jour le tableau de bord et lève onLightsTypesMaskChanged. Point d'entrée à observer pour synchroniser un effet de brouillard sur les phares.
+--- Core of the system: composes the extra bits (server: turn signals, top/bottom, brake, reverse, interior; client: top/bottom and interior locally), broadcasts VehicleSetLightEvent unless noEventSend, plays the switch sound if the base bits change, applies the mask to all static lights and compounds and to the real lights of the active profile (mask 0 for the other), updates the dashboard and raises onLightsTypesMaskChanged. Entry point to observe to sync a fog effect with headlights.
 ---@param lightsTypesMask integer
 ---@param force boolean
 ---@param noEventSend boolean
 ---@return boolean
 function Lights:setLightsTypesMask(lightsTypesMask, force, noEventSend) end
 
---- Renvoie le masque courant des types de lumière actifs.
+--- Returns the current mask of active light types.
 ---@return integer
 function Lights:getLightsTypesMask() end
 
---- Active ou coupe les gyrophares, diffuse VehicleSetBeaconLightEvent, active aussi l'état « dispositif » si le véhicule est actif pour l'entrée, met à jour le tableau de bord et lève onBeaconLightsVisibilityChanged.
+--- Turns the beacons on or off, broadcasts VehicleSetBeaconLightEvent, also sets the "device" state if the vehicle is active for input, updates the dashboard and raises onBeaconLightsVisibilityChanged.
 ---@param visibility boolean
 ---@param force boolean
 ---@param noEventSend boolean
 ---@return boolean
 function Lights:setBeaconLightsVisibility(visibility, force, noEventSend) end
 
---- Renvoie l'état des gyrophares.
+--- Returns the beacon state.
 ---@return boolean
 function Lights:getBeaconLightsVisibility() end
 
---- Définit l'état des clignotants (constantes Lights.TURNLIGHT_*), diffuse VehicleSetTurnLightEvent, mémorise le profil de feux actif pour les clignotants, réinitialise le compteur de répétition du son, recalcule le masque côté serveur et lève onTurnLightStateChanged.
+--- Sets the turn signal state (Lights.TURNLIGHT_* constants), broadcasts VehicleSetTurnLightEvent, remembers the active light profile for the turn signals, resets the sound repeat counter, recomputes the mask on the server and raises onTurnLightStateChanged.
 ---@param state integer
 ---@param force boolean
 ---@param noEventSend boolean
 ---@return boolean
 function Lights:setTurnLightState(state, force, noEventSend) end
 
---- Renvoie l'état des clignotants.
+--- Returns the turn signal state.
 ---@return integer
 function Lights:getTurnLightState() end
 
---- Choisit entre feux hauts et feux bas, recalcule le masque sans diffusion réseau et lève onTopLightsVisibilityChanged.
+--- Chooses between top and bottom lights, recomputes the mask without network broadcast and raises onTopLightsVisibilityChanged.
 ---@param visibility boolean
 ---@return boolean
 function Lights:setTopLightsVisibility(visibility) end
 
---- Active ou coupe le bit des feux stop, recalcule le masque et lève onBrakeLightsVisibilityChanged.
+--- Turns the brake light bit on or off, recomputes the mask and raises onBrakeLightsVisibilityChanged.
 ---@param visibility boolean
 ---@return boolean
 function Lights:setBrakeLightsVisibility(visibility) end
 
---- Active ou coupe le bit des feux de recul, recalcule le masque et lève onReverseLightsVisibilityChanged.
+--- Turns the reverse light bit on or off, recomputes the mask and raises onReverseLightsVisibilityChanged.
 ---@param visibility boolean
 ---@return boolean
 function Lights:setReverseLightsVisibility(visibility) end
 
---- Active ou coupe les feux d'intérieur selon la luminosité horaire (éteints si elle vaut 0) ; force le recalcul du masque sans diffusion.
+--- Turns the interior lights on or off depending on the time-of-day brightness (off if it is 0); forces the mask to be recomputed without broadcast.
 ---@param visibility boolean
 ---@return boolean
 function Lights:setInteriorLightsVisibility(visibility) end
 
---- Renvoie la luminosité d'intérieur de 0 à 1 d'après l'heure du jeu (currentHour et currentMinute de environment, absent du dump) : décroissance linéaire jusqu'à 10 h, nulle entre 10 h et 16 h, croissante après 16 h ; avec updateState, la recalcule et signale si elle a changé.
+--- Returns the interior brightness from 0 to 1 based on the game time (currentHour and currentMinute of environment, absent from the dump): linear decrease until 10 h, zero between 10 h and 16 h, increasing after 16 h; with updateState, recomputes it and reports whether it changed.
 ---@param updateState boolean
 ---@return number
 ---@return boolean
 function Lights:getInteriorLightBrightness(updateState) end
 
---- Éteint tout : masque à 0, gyrophares et clignotants (sauf warning conservé si demandé), stop, recul, intérieur ; remet l'état de lumière à zéro.
+--- Turns everything off: mask to 0, beacons and turn signals (hazard kept if requested), brake, reverse, interior; resets the light state to zero.
 ---@param keepHazardLightsOn any
 function Lights:deactivateLights(keepHazardLightsOn) end
 
---- Désactive les gyrophares réels et leur état dispositif.
+--- Deactivates the real beacons and their device state.
 function Lights:deactivateBeaconLights() end
 
---- Surcharge : lit en plus #lightTypes et #excludedLightTypes pour un groupe de tableau de bord.
+--- Override: additionally reads #lightTypes and #excludedLightTypes for a dashboard group.
 ---@param superFunc any
 ---@param xmlFile any
 ---@param key any
 ---@param group any
 function Lights:loadDashboardGroupFromXML(superFunc, xmlFile, key, group) end
 
---- Surcharge : un groupe n'est actif que si au moins un type de lumière demandé est allumé et qu'aucun type exclu ne l'est.
+--- Override: a group is active only if at least one requested light type is on and no excluded type is.
 ---@param superFunc any
 ---@param group any
 function Lights:getIsDashboardGroupActive(superFunc, group) end
 
---- Renvoie vrai par défaut (surchargée par Motorized) : les lumières s'éteignent à la sortie du véhicule.
+--- Returns true by default (overridden by Motorized): the lights turn off when leaving the vehicle.
 function Lights:getDeactivateLightsOnLeave() end
 
---- Charge un feu partagé (SharedLight) depuis le XML ; en cas de succès l'ajoute à la liste et, s'il a un compound, à celle des compounds.
+--- Loads a shared light (SharedLight) from the XML; on success adds it to the list and, if it has a compound, to the compounds list.
 ---@param xmlFile any
 ---@param key any
 function Lights:loadSharedLight(xmlFile, key) end
 
---- Lit #isTopLight et #isBottomLight (faux par défaut) d'un feu.
+--- Reads #isTopLight and #isBottomLight (false by default) of a light.
 ---@param xmlFile any
 ---@param key any
 ---@param light any
 function Lights:loadAdditionalLightAttributesFromXML(xmlFile, key, light) end
 
---- Un feu « haut » n'est actif que si les feux hauts sont visibles, un feu « bas » seulement s'ils ne le sont pas, les autres toujours.
+--- A "top" light is active only if top lights are visible, a "bottom" light only if they are not, the others always.
 ---@param light any
 function Lights:getIsLightActive(light) end
 
---- Cherche un feu statique par son nœud dans toutes les catégories ; nil sinon.
+--- Looks up a static light by its node across all categories; nil otherwise.
 ---@param node any
 function Lights:getStaticLightFromNode(node) end
 
---- Cherche un feu réel par son nœud dans les deux profils ; nil sinon.
+--- Looks up a real light by its node in both profiles; nil otherwise.
 ---@param node any
 function Lights:getRealLightFromNode(node) end
 
---- Applique le masque automatique (travail ou non) si allumé, sinon coupe tout si un masque non nul est présent.
+--- Applies the automatic mask (work or not) if on, otherwise cuts everything if a non-zero mask is present.
 ---@param isTurnedOn any
 ---@param isWorking any
 function Lights:updateAutomaticLights(isTurnedOn, isWorking) end
 
---- Rappel du message jour/nuit : affiche le texte de l'action « lumières » seulement quand le soleil est couché (environment.isSunOn faux).
+--- Day/night message callback: shows the "lights" action text only when the sun is down (environment.isSunOn false).
 function Lights:lightsWeatherChanged() end
 
---- Rappel du changement de profil d'éclairage : informe chaque feu réel, puis réapplique le masque sans diffusion (bascule les feux réels actifs).
+--- Callback for the lighting profile change: informs each real light, then reapplies the mask without broadcast (switches the active real lights).
 ---@param lightsProfile any
 function Lights:onLightsProfileChanged(lightsProfile) end
 
---- Rappel du réglage « gyrophares réels » : informe chaque gyrophare.
+--- Callback for the "real beacons" setting: informs each beacon.
 function Lights:onLightsRealBeaconLightChanged() end
 
---- Enregistre les touches de lumière (feux, arrière, avant, travail avant/arrière, route, clignotants, warning, gyrophare) pour le véhicule occupé ; masque leur texte d'aide sauf celui des lumières, visible la nuit.
+--- Registers the light keys (lights, back, front, front/back work, high beam, turn signals, hazard, beacon) for the occupied vehicle; hides their help text except the lights one, visible at night.
 ---@param isActiveForInput any
 ---@param isActiveForInputIgnoreSelection any
 function Lights:onRegisterActionEvents(isActiveForInput, isActiveForInputIgnoreSelection) end
 
---- Enregistre l'action externe « lights » d'un déclencheur si le véhicule a des états de lumière.
+--- Registers the external "lights" action of a trigger if the vehicle has light states.
 ---@param trigger any
 ---@param name any
 ---@param xmlFile any
 ---@param key any
 function Lights:onRegisterExternalActionEvents(trigger, name, xmlFile, key) end
 
---- À l'entrée, réapplique masque, gyrophares et clignotants en forçant l'état.
+--- On entering, reapplies mask, beacons and turn signals, forcing the state.
 ---@param isControlling any
 function Lights:onEnterVehicle(isControlling) end
 
---- À la sortie, éteint lumières et gyrophares si getDeactivateLightsOnLeave, et coupe l'état dispositif des gyrophares.
+--- On leaving, turns off lights and beacons if getDeactivateLightsOnLeave, and cuts the beacons' device state.
 function Lights:onLeaveVehicle() end
 
---- Désactive les gyrophares si getDeactivateLightsOnLeave.
+--- Deactivates the beacons if getDeactivateLightsOnLeave.
 function Lights:onDeactivate() end
 
---- Réagit à l'événement d'exigence de feux hauts en appelant setTopLightsVisibility.
+--- Reacts to the top-light requirement event by calling setTopLightsVisibility.
 ---@param requiresTopLights any
 function Lights:onRequiresTopLightsChanged(requiresTopLights) end
 
---- Réapplique le masque et allume les feux de jour.
+--- Reapplies the mask and turns on the daytime lights.
 function Lights:onStartMotor() end
 
---- Réapplique le masque et éteint les feux de jour (sauf en salle d'exposition).
+--- Reapplies the mask and turns off the daytime lights (except in the showroom).
 function Lights:onStopMotor() end
 
---- Réapplique le masque (force) si des feux sont allumés.
+--- Reapplies the mask (forced) if any lights are on.
 function Lights:onStartReverseDirectionChange() end
 
---- Un outil attelé copie masque, gyrophares et clignotants du véhicule attelant, s'il expose getLightsTypesMask.
+--- An attached implement copies mask, beacons and turn signals from the attacher vehicle, if it exposes getLightsTypesMask.
 ---@param attacherVehicle any
 ---@param inputJointDescIndex any
 ---@param jointDescIndex any
 function Lights:onPostAttach(attacherVehicle, inputJointDescIndex, jointDescIndex) end
 
---- Éteint tous les feux de l'outil détaché.
+--- Turns off all lights of the detached implement.
 function Lights:onPostDetach() end
 
---- Train automatique : éclairage automatique selon environment.isSunOn, sans mode travail.
+--- Automated train: automatic lighting according to environment.isSunOn, without work mode.
 function Lights:onAutomatedTrainTravelActive() end
 
---- Conduite IA : éclairage automatique selon environment.isSunOn, sans mode travail.
+--- AI driving: automatic lighting according to environment.isSunOn, without work mode.
 function Lights:onAIDriveableActive() end
 
---- Fin de conduite IA : éteint les lumières si personne ne contrôle le véhicule et coupe les gyrophares.
+--- End of AI driving: turns off the lights if nobody controls the vehicle and cuts the beacons.
 function Lights:onAIDriveableEnd() end
 
---- Début de travail IA : coupe les gyrophares.
+--- Start of AI work: cuts the beacons.
 function Lights:onAIFieldWorkerStart() end
 
---- Travail IA en cours : éclairage automatique selon environment.isSunOn, en mode travail.
+--- AI work in progress: automatic lighting according to environment.isSunOn, in work mode.
 function Lights:onAIFieldWorkerActive() end
 
---- IA bloquée par un obstacle : allume les gyrophares.
+--- AI blocked by an obstacle: turns on the beacons.
 function Lights:onAIJobVehicleBlock() end
 
---- IA reprend la route : coupe les gyrophares.
+--- AI resumes driving: cuts the beacons.
 function Lights:onAIJobVehicleContinue() end
 
---- Fin de travail IA : éteint les lumières si personne ne contrôle le véhicule et coupe les gyrophares.
+--- End of AI work: turns off the lights if nobody controls the vehicle and cuts the beacons.
 function Lights:onAIFieldWorkerEnd() end
 
---- Appelé par la physique : feux de stop selon la pédale de frein (hors frein automatique) et feux de recul selon la vitesse (seuil reverseLightActivationSpeed) ou la pédale d'accélérateur négative, si le sens du reverser est normal.
+--- Called by the physics: brake lights according to the brake pedal (excluding automatic braking) and reverse lights according to speed (reverseLightActivationSpeed threshold) or a negative throttle pedal, if the reverser direction is normal.
 ---@param acceleratorPedal any
 ---@param brakePedal any
 ---@param automaticBrake any
 ---@param currentSpeed any
 function Lights:onVehiclePhysicsUpdate(acceleratorPedal, brakePedal, automaticBrake, currentSpeed) end
 
---- Charge un profil de feux réels (par défaut, haut, bas, stop, recul, clignotants, intérieur) via RealLight.loadLightsFromXML ; les feux d'intérieur reçoivent getInteriorLightBrightness comme fonction de charge.
+--- Loads a real-light profile (default, top, bottom, brake, reverse, turn signals, interior) through RealLight.loadLightsFromXML; interior lights receive getInteriorLightBrightness as their load function.
 ---@param xmlFile any
 ---@param key any
 ---@param lightTable any
 ---@param realLightToLight any
 function Lights:loadRealLightSetup(xmlFile, key, lightTable, realLightToLight) end
 
---- Ajoute un type de lumière supplémentaire aux feux d'une liste et, si demandé, les marque clignotants.
+--- Adds an extra light type to the lights of a list and, if requested, flags them as blinking.
 ---@param lights any
 ---@param lightType any
 ---@param isBlinking any
 function Lights:applyAdditionalActiveLightType(lights, lightType, isBlinking) end
 
---- Rappel d'entrée : bascule le bit du type LIGHT_TYPE_DEFAULT dans le masque.
+--- Input callback: toggles the LIGHT_TYPE_DEFAULT type bit in the mask.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -318,7 +318,7 @@ function Lights:applyAdditionalActiveLightType(lights, lightType, isBlinking) en
 ---@param isAnalog any
 function Lights.actionEventToggleLightFront(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : passe à l'état de lumière suivant (setNextLightsState(1)).
+--- Input callback: moves to the next light state (setNextLightsState(1)).
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -326,7 +326,7 @@ function Lights.actionEventToggleLightFront(self, actionName, inputValue, callba
 ---@param isAnalog any
 function Lights.actionEventToggleLights(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : passe à l'état de lumière précédent (setNextLightsState(-1)).
+--- Input callback: moves to the previous light state (setNextLightsState(-1)).
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -334,7 +334,7 @@ function Lights.actionEventToggleLights(self, actionName, inputValue, callbackSt
 ---@param isAnalog any
 function Lights.actionEventToggleLightsBack(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : bascule le bit des feux de travail arrière.
+--- Input callback: toggles the rear work lights bit.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -342,7 +342,7 @@ function Lights.actionEventToggleLightsBack(self, actionName, inputValue, callba
 ---@param isAnalog any
 function Lights.actionEventToggleWorkLightBack(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : bascule le bit des feux de travail avant.
+--- Input callback: toggles the front work lights bit.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -350,7 +350,7 @@ function Lights.actionEventToggleWorkLightBack(self, actionName, inputValue, cal
 ---@param isAnalog any
 function Lights.actionEventToggleWorkLightFront(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : bascule le bit des feux de route.
+--- Input callback: toggles the high beam bit.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -358,7 +358,7 @@ function Lights.actionEventToggleWorkLightFront(self, actionName, inputValue, ca
 ---@param isAnalog any
 function Lights.actionEventToggleHighBeamLight(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : active ou coupe les feux de détresse.
+--- Input callback: turns the hazard lights on or off.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -366,7 +366,7 @@ function Lights.actionEventToggleHighBeamLight(self, actionName, inputValue, cal
 ---@param isAnalog any
 function Lights.actionEventToggleTurnLightHazard(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : active ou coupe le clignotant gauche.
+--- Input callback: turns the left turn signal on or off.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -374,7 +374,7 @@ function Lights.actionEventToggleTurnLightHazard(self, actionName, inputValue, c
 ---@param isAnalog any
 function Lights.actionEventToggleTurnLightLeft(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : active ou coupe le clignotant droit.
+--- Input callback: turns the right turn signal on or off.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -382,7 +382,7 @@ function Lights.actionEventToggleTurnLightLeft(self, actionName, inputValue, cal
 ---@param isAnalog any
 function Lights.actionEventToggleTurnLightRight(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Rappel d'entrée : bascule les gyrophares.
+--- Input callback: toggles the beacons.
 ---@param self any
 ---@param actionName any
 ---@param inputValue any
@@ -390,17 +390,17 @@ function Lights.actionEventToggleTurnLightRight(self, actionName, inputValue, ca
 ---@param isAnalog any
 function Lights.actionEventToggleBeaconLights(self, actionName, inputValue, callbackState, isAnalog) end
 
---- Enregistre l'action d'entrée TOGGLE_LIGHTS_EXTERNAL d'un déclencheur externe ; son rappel passe le véhicule à l'état de lumière suivant.
+--- Registers the TOGGLE_LIGHTS_EXTERNAL input action of an external trigger; its callback moves the vehicle to the next light state.
 ---@param data any
 ---@param vehicle any
 function Lights.externalActionEventRegister(data, vehicle) end
 
---- Mise à jour de l'action externe : corps vide.
+--- Update of the external action: empty body.
 ---@param data any
 ---@param vehicle any
 function Lights.externalActionEventUpdate(data, vehicle) end
 
---- Lit les attributs de tableau de bord d'éclairage (#lightTypes, #excludedLightTypes) et initialise l'état de chaque type.
+--- Reads the lighting dashboard attributes (#lightTypes, #excludedLightTypes) and initializes the state of each type.
 ---@param self any
 ---@param xmlFile any
 ---@param key any
@@ -408,7 +408,7 @@ function Lights.externalActionEventUpdate(data, vehicle) end
 ---@param isActive any
 function Lights.dashboardLightAttributes(self, xmlFile, key, dashboard, isActive) end
 
---- Calcule l'état d'un tableau de bord d'éclairage : multi-états (un état par type allumé) ou valeur simple.
+--- Computes the state of a lighting dashboard: multi-state (one state per light type that is on) or single value.
 ---@param self any
 ---@param dashboard any
 ---@param newValue any
@@ -417,8 +417,8 @@ function Lights.dashboardLightAttributes(self, xmlFile, key, dashboard, isActive
 ---@param isActive any
 function Lights.dashboardLightState(self, dashboard, newValue, minValue, maxValue, isActive) end
 
---- Commande console de développement : inverse feux hauts/bas du véhicule occupé.
+--- Development console command: toggles top/bottom lights of the occupied vehicle.
 function Lights.consoleCommandTopLights() end
 
---- Commande console de développement : bascule le réglage LIGHTS_PROFILE entre bas et très haut (journalise le résultat).
+--- Development console command: switches the LIGHTS_PROFILE setting between low and very high (logs the result).
 function Lights.consoleCommandProfile() end

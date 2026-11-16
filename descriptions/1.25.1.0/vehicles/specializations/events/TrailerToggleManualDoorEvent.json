@@ -1,0 +1,33 @@
+{
+  "fichier": "vehicles/specializations/events/TrailerToggleManualDoorEvent.lua",
+  "module": {
+    "en": "Network event that synchronizes the manually operated door of a trailer tip side (open or closed) between server and clients. Part of the vehicle specialization event set; the receiving side only acts if the target object is synchronized.",
+    "fr": "Événement réseau qui synchronise la porte manuelle d'un côté de bennage de remorque (ouverte ou fermée) entre serveur et clients. Fait partie des événements des spécialisations de véhicule ; le récepteur n'agit que si l'objet cible est synchronisé."
+  },
+  "fonctions": {
+    "TrailerToggleManualDoorEvent.emptyNew": {
+      "en": "Creates an empty event instance with the event metatable, used when the network layer receives this event.",
+      "fr": "Crée une instance d'événement vide avec la métatable de l'événement, utilisée quand la couche réseau reçoit cet événement."
+    },
+    "TrailerToggleManualDoorEvent.new": {
+      "en": "Builds the event with the data to send (a node object, a boolean door state and a tip side index (Trailer.TIP_SIDE_NUM_BITS bits)); stored on the instance for `writeStream`.",
+      "fr": "Construit l'événement avec les données à envoyer (un objet nœud, un booléen d'état de porte et un indice de côté de bennage (Trailer.TIP_SIDE_NUM_BITS bits)) ; elles sont conservées sur l'instance pour `writeStream`."
+    },
+    "TrailerToggleManualDoorEvent:readStream": {
+      "en": "Reads a node object, a boolean door state and a tip side index (Trailer.TIP_SIDE_NUM_BITS bits) from the stream, then calls `run(connection)`.",
+      "fr": "Lit un objet nœud, un booléen d'état de porte et un indice de côté de bennage (Trailer.TIP_SIDE_NUM_BITS bits) depuis le flux, puis appelle `run(connection)`."
+    },
+    "TrailerToggleManualDoorEvent:writeStream": {
+      "en": "Writes a node object, a boolean door state and a tip side index (Trailer.TIP_SIDE_NUM_BITS bits) to the stream (same order as `readStream`).",
+      "fr": "Écrit un objet nœud, un booléen d'état de porte et un indice de côté de bennage (Trailer.TIP_SIDE_NUM_BITS bits) dans le flux (même ordre que `readStream`)."
+    },
+    "TrailerToggleManualDoorEvent:run": {
+      "en": "Applies the event on the receiving side: on the server re-broadcasts itself, then calls `setTrailerDoorState(tipSideIndex, state, true)` on the object if synchronized.",
+      "fr": "Applique l'événement côté récepteur : sur le serveur, se retransmet, puis appelle `setTrailerDoorState(indiceCôté, état, true)` sur l'objet s'il est synchronisé."
+    },
+    "TrailerToggleManualDoorEvent.sendEvent": {
+      "en": "Helper to send the event: broadcasts it from the server, or sends it to the server when called on a client. Does nothing when noEventSend is true.",
+      "fr": "Fonction utilitaire d'envoi : diffuse l'événement depuis le serveur, ou l'envoie au serveur quand elle est appelée sur un client. Ne fait rien si noEventSend est vrai."
+    }
+  }
+}

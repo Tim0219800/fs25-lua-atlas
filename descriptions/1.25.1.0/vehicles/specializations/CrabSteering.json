@@ -1,0 +1,125 @@
+{
+ "fichier": "vehicles/specializations/CrabSteering.lua",
+ "module": {
+  "en": "Specialization for vehicles with several selectable steering modes (all-wheel, crab, rear-wheel, etc.). Each mode, loaded from 'vehicle.crabSteering', can offset or lock wheels and steering nodes, move nodes, play animations, change the steering center and the articulated axis; the active mode index is saved and synchronized, and a HUD extension is created. Requires Drivable, Wheels and AnimatedVehicle. Several functions registered here (getCrabSteeringModeAvailable, getNumCrabSteeringModesAvailable, getCrabSteeringMode, setNextCrabSteeringMode, onDelete, onDraw) have no body in the SDK dump: UNVERIFIED.",
+  "fr": "Spécialisation pour les véhicules à plusieurs modes de direction sélectionnables (toutes roues, crabe, roues arrière, etc.). Chaque mode, chargé depuis 'vehicle.crabSteering', peut décaler ou verrouiller roues et noeuds de direction, déplacer des noeuds, jouer des animations, changer le centre de direction et l'axe articulé ; l'indice du mode actif est sauvegardé et synchronisé, et une extension de HUD est créée. Nécessite Drivable, Wheels et AnimatedVehicle. Plusieurs fonctions enregistrées ici (getCrabSteeringModeAvailable, getNumCrabSteeringModesAvailable, getCrabSteeringMode, setNextCrabSteeringMode, onDelete, onDraw) n'ont pas de corps dans le dump du SDK : NON VÉRIFIÉ."
+ },
+ "fonctions": {
+  "CrabSteering.prerequisitesPresent": {
+   "en": "Returns true only if the vehicle type has Drivable, Wheels and AnimatedVehicle.",
+   "fr": "Renvoie true seulement si le type de véhicule possède Drivable, Wheels et AnimatedVehicle."
+  },
+  "CrabSteering.initSpecialization": {
+   "en": "Registers the XML schema for crab steering (rear wheel distance, AI mode index, toggle speed, steering modes, per-configuration modes, dashboards with a 'states' list), the wheel configuration 'crabSteeringIndex' and the savegame state key.",
+   "fr": "Enregistre le schéma XML de la direction crabe (distance roues arrière, mode IA, vitesse de bascule, modes, modes par configuration, tableaux de bord avec liste 'states'), l'indice 'crabSteeringIndex' de configuration de roues et la clé de sauvegarde de l'état."
+  },
+  "CrabSteering.registerSteeringModeXMLPaths": {
+   "en": "Registers the XML paths of one steering mode under a base path: name, input action, wheels, steering center, AI look-ahead, steering nodes, nodes, articulated axis, animations and steering wheel.",
+   "fr": "Enregistre les chemins XML d'un mode de direction sous un chemin de base : nom, action d'entrée, roues, centre de direction, anticipation IA, noeuds de direction, noeuds, axe articulé, animations et volant."
+  },
+  "CrabSteering.registerFunctions": {
+   "en": "Registers the crab steering functions on the vehicle type (mode loading, toggle permission, availability, current mode, next mode, articulated axis update). Some have no body in the dump.",
+   "fr": "Enregistre les fonctions de direction crabe sur le type de véhicule (chargement de mode, autorisation de bascule, disponibilité, mode courant, mode suivant, axe articulé). Certaines n'ont pas de corps dans le dump."
+  },
+  "CrabSteering.registerOverwrittenFunctions": {
+   "en": "Registers overrides for wheel loading, steering angle, selection, steering wheel update, AI field worker start and AI look-ahead distance.",
+   "fr": "Enregistre des surcharges : chargement des roues, angle de braquage, sélection, mise à jour du volant, démarrage du travailleur IA et distance d'anticipation IA."
+  },
+  "CrabSteering.registerEventListeners": {
+   "en": "Subscribes to load, post-load, delete, dashboard registration, stream read/write, update stream read/write, update tick, draw and action event registration.",
+   "fr": "S'abonne aux événements de chargement, post-chargement, suppression, enregistrement des tableaux de bord, lecture/écriture de flux, flux de mise à jour, update tick, affichage et enregistrement des actions."
+  },
+  "CrabSteering:onLoad": {
+   "en": "Reads crab steering settings and the steering modes of the active configuration, warns if there are more modes than the network bits allow, creates the HUD extension and applies mode 1. Without modes, removes its network, tick, draw and input listeners.",
+   "fr": "Lit les réglages de direction crabe et les modes de la configuration active, avertit s'il y a plus de modes que les bits réseau n'en permettent, crée l'extension de HUD et applique le mode 1. Sans mode, retire ses écouteurs réseau, tick, affichage et entrée."
+  },
+  "CrabSteering:onPostLoad": {
+   "en": "Restores the saved steering mode from the savegame (clamped to the valid range) unless vehicles are reset, then fast-forwards animations and wheel physics.",
+   "fr": "Restaure le mode de direction sauvegardé (borné à la plage valide) sauf réinitialisation des véhicules, puis avance animations et physique des roues."
+  },
+  "CrabSteering:onRegisterDashboardValueTypes": {
+   "en": "Registers the 'crabSteering.state' dashboard value: the current mode index, or a boolean telling whether the mode is in the dashboard's configured 'states' list.",
+   "fr": "Enregistre la valeur de tableau de bord 'crabSteering.state' : l'indice du mode courant, ou un booléen indiquant si le mode figure dans la liste 'states' du tableau de bord."
+  },
+  "CrabSteering:saveToXMLFile": {
+   "en": "Writes the current steering mode index to the savegame if the vehicle has steering modes.",
+   "fr": "Écrit l'indice du mode de direction courant dans la sauvegarde si le véhicule a des modes."
+  },
+  "CrabSteering:onReadStream": {
+   "en": "Client on join: reads the mode index, applies it without sending an event and fast-forwards animations and wheel physics.",
+   "fr": "Client à la connexion : lit l'indice de mode, l'applique sans événement et avance animations et physique des roues."
+  },
+  "CrabSteering:onWriteStream": {
+   "en": "Server on join: writes the current mode index into the stream.",
+   "fr": "Serveur à la connexion : écrit l'indice du mode courant dans le flux."
+  },
+  "CrabSteering:onReadUpdateStream": {
+   "en": "Reads the articulated axis current rotation (float) from the update stream when an articulated axis with a component joint exists.",
+   "fr": "Lit la rotation courante de l'axe articulé (flottant) dans le flux de mise à jour quand un axe articulé avec articulation de composant existe."
+  },
+  "CrabSteering:onWriteUpdateStream": {
+   "en": "Writes the articulated axis current rotation into the update stream when an articulated axis with a component joint exists.",
+   "fr": "Écrit la rotation courante de l'axe articulé dans le flux de mise à jour quand un axe articulé avec articulation de composant existe."
+  },
+  "CrabSteering:onUpdateTick": {
+   "en": "Server only: if the current mode is no longer available according to getCrabSteeringModeAvailable (body not in dump), switches to the next mode.",
+   "fr": "Serveur uniquement : si le mode courant n'est plus disponible selon getCrabSteeringModeAvailable (corps absent du dump), passe au mode suivant."
+  },
+  "CrabSteering:loadCrabSteeringModeFromXML": {
+   "en": "Loads one steering mode into the given table: name, input action, steering center and radius, AI look-ahead, wheel entries, steering node entries, node pose changes, articulated axis data, animations and steering wheel. Invalid references are logged and skipped; always returns true.",
+   "fr": "Charge un mode de direction dans la table fournie : nom, action d'entrée, centre et rayon de braquage, anticipation IA, roues, noeuds de direction, poses de noeuds, axe articulé, animations et volant. Les références invalides sont journalisées et ignorées ; renvoie toujours true."
+  },
+  "CrabSteering:getCanToggleCrabSteering": {
+   "en": "Returns whether toggling is allowed plus an optional warning text; by default returns true, nil. Override point for other specializations.",
+   "fr": "Renvoie si la bascule est autorisée et un texte d'avertissement optionnel ; par défaut true, nil. Point d'extension pour d'autres spécialisations."
+  },
+  "CrabSteering:setCrabSteering": {
+   "en": "Switches to the given mode. Sends SetCrabSteeringEvent (broadcast on server, sent to server on client) unless noEventSend, plays or reverses mode animations, sets the target offsets and rotation scales of steering nodes and wheels, applies node poses and refreshes the dashboard on clients.",
+   "fr": "Passe au mode donné. Envoie SetCrabSteeringEvent (diffusion côté serveur, envoi au serveur côté client) sauf noEventSend, joue ou inverse les animations du mode, fixe les décalages et échelles de rotation cibles des noeuds de direction et roues, applique les poses de noeuds et met à jour le tableau de bord côté client."
+  },
+  "CrabSteering:loadWheelFromXML": {
+   "en": "After the parent loads a wheel, initializes its steering offset to 0 and forces a steering angle update. Returns false if the parent fails.",
+   "fr": "Après le chargement parent d'une roue, initialise son décalage de braquage à 0 et force une mise à jour de l'angle. Renvoie false si le parent échoue."
+  },
+  "CrabSteering:updateSteeringAngle": {
+   "en": "Overrides the wheel steering angle for wheels listed in the current mode: smoothly moves the steering offset, scales the rotation, gradually changes the wheel rotation speed and clamps to the wheel limits; locked wheels converge to their offset. Other wheels keep the given angle.",
+   "fr": "Remplace l'angle de braquage des roues listées dans le mode courant : déplace progressivement le décalage, met la rotation à l'échelle, change graduellement la vitesse de rotation et borne aux limites de la roue ; les roues verrouillées convergent vers leur décalage. Les autres roues gardent l'angle donné."
+  },
+  "CrabSteering:updateArticulatedAxisRotation": {
+   "en": "Computes the articulated axis steering angle for the current mode (offset, lock, speed blending). On clients returns the synchronized rotation; on the server, with configured wheels and rear distance, derives the angle from wheel speed and slip, otherwise blends smoothly over 2.5 s.",
+   "fr": "Calcule l'angle de l'axe articulé pour le mode courant (décalage, verrouillage, fondu de vitesse). Côté client renvoie la rotation synchronisée ; côté serveur, avec roues et distance arrière configurées, déduit l'angle de la vitesse et du glissement des roues, sinon fait un fondu sur 2,5 s."
+  },
+  "CrabSteering:getCanBeSelected": {
+   "en": "Returns true if the vehicle has steering modes, otherwise defers to the parent.",
+   "fr": "Renvoie true si le véhicule a des modes de direction, sinon délègue au parent."
+  },
+  "CrabSteering:loadWheelsFromXML": {
+   "en": "After the parent loads the wheels, stores the 'crabSteeringIndex' of the active wheel configuration as the crab steering configuration index.",
+   "fr": "Après le chargement parent des roues, mémorise le 'crabSteeringIndex' de la configuration de roues active comme indice de configuration de direction crabe."
+  },
+  "CrabSteering:updateSteeringWheel": {
+   "en": "If the current mode defines its own steering wheel, uses it instead of the given one, then calls the parent.",
+   "fr": "Si le mode courant définit son propre volant, l'utilise à la place de celui fourni, puis appelle le parent."
+  },
+  "CrabSteering:startFieldWorker": {
+   "en": "Switches to the configured AI steering mode (aiSteeringModeIndex), sending the event, before starting the AI field worker via the parent.",
+   "fr": "Passe au mode de direction IA configuré (aiSteeringModeIndex), en envoyant l'événement, avant de démarrer le travailleur IA via le parent."
+  },
+  "CrabSteering:getAIAutomaticSteeringLookAheadDistance": {
+   "en": "Returns the look-ahead distance defined by the current mode if present; otherwise the parent's value.",
+   "fr": "Renvoie la distance d'anticipation définie par le mode courant si elle existe ; sinon la valeur du parent."
+  },
+  "CrabSteering:onRegisterActionEvents": {
+   "en": "Client only: registers the next/previous mode toggle inputs and one direct input per mode that defines an input action, when the vehicle has modes and is active for input.",
+   "fr": "Client uniquement : enregistre les entrées de mode suivant/précédent et une entrée directe par mode définissant une action, quand le véhicule a des modes et est actif pour les entrées."
+  },
+  "CrabSteering.actionEventToggleCrabSteeringModes": {
+   "en": "Input callback: if getCanToggleCrabSteering allows it, moves to the next or previous mode (callbackState gives the direction); otherwise shows the warning for 2 s.",
+   "fr": "Rappel d'entrée : si getCanToggleCrabSteering l'autorise, passe au mode suivant ou précédent (callbackState donne le sens) ; sinon affiche l'avertissement pendant 2 s."
+  },
+  "CrabSteering.actionEventSetCrabSteeringMode": {
+   "en": "Input callback: selects the mode bound to the pressed action if toggling is allowed and the mode is available; otherwise shows the warning for 2 s.",
+   "fr": "Rappel d'entrée : sélectionne le mode lié à l'action pressée si la bascule est autorisée et le mode disponible ; sinon affiche l'avertissement pendant 2 s."
+  }
+ }
+}

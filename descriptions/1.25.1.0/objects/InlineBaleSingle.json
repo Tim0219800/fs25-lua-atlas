@@ -1,0 +1,49 @@
+{
+ "fichier": "objects/InlineBaleSingle.lua",
+ "module": {
+  "en": "Subclass of Bale for one bale that is part of an InlineBale chain. It cannot be opened or loaded by a bale loader on its own, remembers the owning InlineBale, and manages the skinned connector mesh (loaded from an I3D) that visually links it to the neighbouring bale. Wrapping state changes also toggle the connector visibility.",
+  "fr": "Sous-classe de Bale pour une balle faisant partie d'une chaîne InlineBale. Elle ne peut pas être ouverte seule ni chargée par un chargeur de balles, mémorise l'InlineBale propriétaire et gère le mesh skinné du connecteur (chargé depuis un I3D) qui la relie visuellement à la balle voisine. Le changement d'état d'enrubannage bascule aussi la visibilité du connecteur."
+ },
+ "fonctions": {
+  "InlineBaleSingle.new": {
+   "en": "Creates the bale through Bale.new with this class's metatable, registers the class name 'InlineBaleSingle' and starts with no connected inline bale.",
+   "fr": "Crée la balle via Bale.new avec la metatable de cette classe, enregistre le nom de classe 'InlineBaleSingle' et démarre sans InlineBale associée."
+  },
+  "InlineBaleSingle:getBaleSupportsBaleLoader": {
+   "en": "Always returns false: a bale in an inline chain cannot be picked up by a bale loader.",
+   "fr": "Retourne toujours false : une balle d'une chaîne en ligne ne peut pas être chargée par un chargeur de balles."
+  },
+  "InlineBaleSingle:getCanBeOpened": {
+   "en": "Always returns false; opening is done on the whole InlineBale instead.",
+   "fr": "Retourne toujours false ; l'ouverture se fait sur l'InlineBale entière."
+  },
+  "InlineBaleSingle:setConnectedInlineBale": {
+   "en": "Stores the owning InlineBale (nil to detach).",
+   "fr": "Mémorise l'InlineBale propriétaire (nil pour détacher)."
+  },
+  "InlineBaleSingle:getConnectedInlineBale": {
+   "en": "Returns the owning InlineBale, or nil.",
+   "fr": "Retourne l'InlineBale propriétaire, ou nil."
+  },
+  "InlineBaleSingle:setConnector": {
+   "en": "Loads the connector I3D (shared) and links its end node to the neighbour bale, its start node and skinned mesh to this bale, offset along the given axis. Copies the neighbour's wrap color and sets visibility from the wrapping state. Returns false if the I3D fails to load.",
+   "fr": "Charge l'I3D du connecteur (partagé) et lie son noeud de fin à la balle voisine, son noeud de départ et son mesh skinné à cette balle, décalés sur l'axe donné. Copie la couleur du film de la voisine et règle la visibilité selon l'état d'enrubannage. Retourne false si l'I3D ne se charge pas."
+  },
+  "InlineBaleSingle:setConnectorVisibility": {
+   "en": "Shows or hides the connector mesh if one exists.",
+   "fr": "Affiche ou masque le mesh du connecteur s'il existe."
+  },
+  "InlineBaleSingle:getHasConnector": {
+   "en": "Returns true if this bale currently has a connector.",
+   "fr": "Retourne true si cette balle possède actuellement un connecteur."
+  },
+  "InlineBaleSingle:removeConnector": {
+   "en": "Deletes the connector nodes and mesh when they still exist and releases the shared I3D request. Clears the connector reference.",
+   "fr": "Supprime les noeuds et le mesh du connecteur s'ils existent encore et libère la requête I3D partagée. Efface la référence au connecteur."
+  },
+  "InlineBaleSingle:setWrappingState": {
+   "en": "Makes the connector visible when the state is above 0, then calls Bale's setWrappingState (noEventSend is forwarded).",
+   "fr": "Rend le connecteur visible si l'état est supérieur à 0, puis appelle setWrappingState de Bale (noEventSend est transmis)."
+  }
+ }
+}

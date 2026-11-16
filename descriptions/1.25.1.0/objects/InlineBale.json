@@ -1,0 +1,161 @@
+{
+ "fichier": "objects/InlineBale.lua",
+ "module": {
+  "en": "Network object (extends Object) representing a chain of wrapped bales laid end to end, as made by an inline bale wrapper. It keeps the ordered list of InlineBaleSingle bales, links neighbours with physics joints that stiffen over time, spawns connector visuals and tracks the wrapping progress. It can be cut open by a player through InlineBaleActivatable, is saved/loaded by uniqueId of its bales and is synchronised with dirty flags for bales and wrapper. Config is read from an inlineBale XML (maxOpenDistance, connector, replacementBale, textures, wrapping keys, joint limits).",
+  "fr": "Objet réseau (hérite de Object) représentant une file de balles enrubannées bout à bout, produite par une enrubanneuse en ligne. Il garde la liste ordonnée des InlineBaleSingle, relie les voisines par des joints physiques qui se raidissent avec le temps, crée les connecteurs visuels et suit l'avancement de l'enrubannage. Un joueur peut l'ouvrir via InlineBaleActivatable ; il est sauvegardé/chargé via les uniqueId de ses balles et synchronisé par des dirty flags (balles et enrubanneuse). La config vient d'un XML inlineBale (maxOpenDistance, connector, replacementBale, textures, clés de wrapping, limites de joint)."
+ },
+ "fonctions": {
+  "InlineBale.new": {
+   "en": "Creates the inline bale object: empty bale and joint tables, default joint limits and lock time (5000 ms), registers it with the item system and the class-name registry, and creates its activatable and dirty flags.",
+   "fr": "Crée l'objet de balles en ligne : tables de balles et de joints vides, limites de joint et temps de verrouillage (5000 ms) par défaut, enregistrement dans l'item system et le registre de noms de classe, création de l'activatable et des dirty flags."
+  },
+  "InlineBale:delete": {
+   "en": "Removes the activatable and the item-system entry, unregisters the class name, then calls the parent delete. Does not delete the individual bales.",
+   "fr": "Retire l'activatable et l'entrée de l'item system, désenregistre le nom de classe puis appelle le delete parent. Ne supprime pas les balles individuelles."
+  },
+  "InlineBale:loadFromConfigXML": {
+   "en": "Loads the inline bale XML: open distance, connector file/axis/offset, optional replacement bale, wrap diffuse and normal textures (required), wrapping-state keyframes and joint limits/lock time. Returns false on a missing file or texture.",
+   "fr": "Charge le XML de la balle en ligne : distance d'ouverture, fichier/axe/décalage du connecteur, balle de remplacement optionnelle, textures diffuse et normale du film (obligatoires), clés d'état d'enrubannage et limites de joint/temps de verrouillage. Retourne false si un fichier ou une texture manque."
+  },
+  "InlineBale:loadFromXMLFile": {
+   "en": "Savegame loading: reads the config filename and uniqueId, loads the config, then queues the uniqueIds of the saved bales in balesToLoad. If none were saved the inline bale is flagged for removal.",
+   "fr": "Chargement de sauvegarde : lit le nom du fichier de config et l'uniqueId, charge la config puis met en file les uniqueId des balles sauvegardées dans balesToLoad. S'il n'y en a aucune, l'objet est marqué pour suppression."
+  },
+  "InlineBale:saveToXMLFile": {
+   "en": "Writes config filename, uniqueId and the uniqueId of each bale. Skipped entirely when the only bale is still the pending one.",
+   "fr": "Écrit le nom du fichier de config, l'uniqueId et l'uniqueId de chaque balle. Rien n'est sauvegardé si la seule balle est encore la balle en attente."
+  },
+  "InlineBale:readStream": {
+   "en": "Client-side join: reads the config filename, loads the config, calls the parent readStream, registers in the item system and reads the bale list.",
+   "fr": "Côté client à la connexion : lit le nom du fichier de config, charge la config, appelle le readStream parent, enregistre dans l'item system et lit la liste des balles."
+  },
+  "InlineBale:writeStream": {
+   "en": "Server-side join: writes the config filename, calls the parent writeStream and writes the bale list.",
+   "fr": "Côté serveur à la connexion : écrit le nom du fichier de config, appelle le writeStream parent puis écrit la liste des balles."
+  },
+  "InlineBale:readUpdateStream": {
+   "en": "Client-side update read (only from the server connection): optionally reads the bale list and the current wrapper node object, according to two flags.",
+   "fr": "Lecture de mise à jour côté client (uniquement depuis la connexion serveur) : lit éventuellement la liste des balles et l'objet enrubanneuse courant, selon deux booléens."
+  },
+  "InlineBale:writeUpdateStream": {
+   "en": "Server-side update write: sends the bale list when the bale dirty flag is set and the current wrapper when the wrapper dirty flag is set.",
+   "fr": "Écriture de mise à jour côté serveur : envoie la liste des balles si le dirty flag des balles est levé et l'enrubanneuse courante si celui de l'enrubanneuse est levé."
+  },
+  "InlineBale:readBales": {
+   "en": "Reads the bale count and object ids from a stream. Removes connectors from the old bales, clears the list, queues the ids in balesToLoad and registers the activatable if any bale exists.",
+   "fr": "Lit le nombre de balles et leurs ids d'objet depuis un flux. Retire les connecteurs des anciennes balles, vide la liste, met les ids en file dans balesToLoad et enregistre l'activatable s'il y a des balles."
+  },
+  "InlineBale:writeBales": {
+   "en": "Writes the bale count and node objects to a stream. The last bale is skipped while a pending bale exists because it is about to be replaced; stores the sent count in numBalesSent.",
+   "fr": "Écrit le nombre de balles et leurs objets réseau dans un flux. La dernière balle est omise tant qu'une balle en attente existe, car elle va être remplacée ; le nombre envoyé est mémorisé dans numBalesSent."
+  },
+  "InlineBale:update": {
+   "en": "Empty override, does nothing.",
+   "fr": "Surcharge vide, ne fait rien."
+  },
+  "InlineBale:updateTick": {
+   "en": "Main tick. Server: resolves queued savegame bales by uniqueId, advances joint stiffening, computes per-bale wrapping state along the wrapper position, flags bale changes for sync, handles delayed wake-up and deletion of empty objects. Client: resolves queued network ids, adds the bales and rebuilds connectors.",
+   "fr": "Tick principal. Serveur : résout les balles de sauvegarde en attente par uniqueId, fait avancer le raidissement des joints, calcule l'état d'enrubannage de chaque balle selon la position de l'enrubanneuse, signale les changements pour la synchro, gère le réveil différé et la suppression si vide. Client : résout les ids réseau en attente, ajoute les balles et recrée les connecteurs."
+  },
+  "InlineBale:addBale": {
+   "en": "Adds a bale to the chain. On the server it requires no pending bale and getIsBaleAllowed, then marks it pending, links it and listens for its deletion; on the client it just appends it. Returns true on success and applies any waiting wrapper info.",
+   "fr": "Ajoute une balle à la file. Sur le serveur, il faut l'absence de balle en attente et l'accord de getIsBaleAllowed ; la balle devient la balle en attente, est liée et surveillée pour sa suppression. Sur le client, elle est simplement ajoutée. Retourne true en cas de succès et applique l'info d'enrubanneuse en attente."
+  },
+  "InlineBale:getIsBaleAllowed": {
+   "en": "Returns true for the first bale; otherwise false when the maximum count (InlineBale.MAX_NUM_BALES, defined outside this file) is reached or the bale type's inline config differs from this one.",
+   "fr": "Retourne true pour la première balle ; sinon false si le nombre maximal (InlineBale.MAX_NUM_BALES, défini hors de ce fichier) est atteint ou si la config en ligne du type de balle diffère de celle-ci."
+  },
+  "InlineBale:replacePendingBale": {
+   "en": "Server-side: swaps the pending bale for a new InlineBaleSingle created at spawnNode with the same attributes, wrap textures and optional color. Deletes the old one and returns replaced (boolean) and the new network object id.",
+   "fr": "Côté serveur : remplace la balle en attente par une nouvelle InlineBaleSingle créée à spawnNode avec les mêmes attributs, textures de film et couleur optionnelle. Supprime l'ancienne et retourne replaced (booléen) et le nouvel id d'objet réseau."
+  },
+  "InlineBale:getPendingBale": {
+   "en": "Returns the bale currently waiting to be connected, or nil.",
+   "fr": "Retourne la balle en attente de connexion, ou nil."
+  },
+  "InlineBale:connectPendingBale": {
+   "en": "Registers the activatable and, if a pending bale exists, joins it to the previous bale when there are at least two, then clears the pending slot. Returns true if a bale was pending. The filename argument passed by one caller is ignored.",
+   "fr": "Enregistre l'activatable et, s'il y a une balle en attente, la relie à la précédente quand il y en a au moins deux, puis vide l'emplacement. Retourne true si une balle était en attente. L'argument de nom de fichier passé par un appelant est ignoré."
+  },
+  "InlineBale:connectBale": {
+   "en": "Creates the physics joint and the visual connector between the second-to-last bale and the given last bale.",
+   "fr": "Crée le joint physique et le connecteur visuel entre l'avant-dernière balle et la dernière balle donnée."
+  },
+  "InlineBale:createBaleJoint": {
+   "en": "Builds a physics joint between two bales with collision enabled, using the starting rotation and translation limits, and stores it with a timer keyed by the first bale.",
+   "fr": "Construit un joint physique entre deux balles, collision activée, avec les limites de rotation et de translation de départ, et le mémorise avec un chrono indexé par la première balle."
+  },
+  "InlineBale:updateBaleJoints": {
+   "en": "Advances each joint's timer up to lockTime and interpolates its limits from start to end values, so the chain gradually stiffens.",
+   "fr": "Fait avancer le chrono de chaque joint jusqu'à lockTime et interpole ses limites entre valeurs de départ et de fin, ce qui raidit progressivement la file."
+  },
+  "InlineBale:setBaleJointLimits": {
+   "en": "Applies rotation and translation limits to a joint, linearly interpolated between the start and end limit tables by alpha (0 to 1).",
+   "fr": "Applique les limites de rotation et de translation à un joint, interpolées linéairement entre les tables de départ et de fin selon alpha (0 à 1)."
+  },
+  "InlineBale:loadBaleConnector": {
+   "en": "Attaches a connector visual to bale2 relative to bale1 if a filename is given and bale2 has none. Returns true on success, otherwise false.",
+   "fr": "Attache un connecteur visuel à bale2 par rapport à bale1 si un nom de fichier est donné et que bale2 n'en a pas. Retourne true en cas de succès, sinon false."
+  },
+  "InlineBale:removeBaleConnector": {
+   "en": "Removes the connector from the given bale if not nil.",
+   "fr": "Retire le connecteur de la balle donnée si elle n'est pas nil."
+  },
+  "InlineBale:setCurrentWrapperInfo": {
+   "en": "Stores the wrapping node, wakes the object and, when the wrapper changed, updates it and raises the wrapper dirty flag for network sync.",
+   "fr": "Mémorise le noeud d'enrubannage, réveille l'objet et, si l'enrubanneuse a changé, la met à jour et lève le dirty flag correspondant pour la synchro réseau."
+  },
+  "InlineBale:getNumberOfBales": {
+   "en": "Returns the number of bales in the chain.",
+   "fr": "Retourne le nombre de balles de la file."
+  },
+  "InlineBale:getBales": {
+   "en": "Returns the ordered table of bales.",
+   "fr": "Retourne la table ordonnée des balles."
+  },
+  "InlineBale:setWrappingState": {
+   "en": "Sets the same wrapping state on every bale and on the inline bale itself.",
+   "fr": "Applique le même état d'enrubannage à chaque balle et à l'objet lui-même."
+  },
+  "InlineBale:wakeUp": {
+   "en": "Wakes the physics of all bales now, or after the given delay in ms (processed in updateTick on the server).",
+   "fr": "Réveille la physique de toutes les balles immédiatement, ou après le délai donné en ms (traité dans updateTick côté serveur)."
+  },
+  "InlineBale:getCanInteract": {
+   "en": "True if bales exist, no wrapper is active and the player's interaction position is within maxOpenDistance of the first or last bale.",
+   "fr": "True s'il y a des balles, qu'aucune enrubanneuse n'est active et que la position d'interaction du joueur est à moins de maxOpenDistance de la première ou de la dernière balle."
+  },
+  "InlineBale:getInteractionPosition": {
+   "en": "Returns the local player's position, or nothing if the player is in a vehicle or lacks access to the first bale.",
+   "fr": "Retourne la position du joueur local, ou rien s'il est dans un véhicule ou n'a pas accès à la première balle."
+  },
+  "InlineBale:getCanBeOpened": {
+   "en": "True only when every bale is fully wrapped and none is still fermenting.",
+   "fr": "True uniquement si toutes les balles sont entièrement enrubannées et qu'aucune ne fermente encore."
+  },
+  "InlineBale:openBaleAtPosition": {
+   "en": "Opens the end bale (first or last) nearest to the given world position.",
+   "fr": "Ouvre la balle d'extrémité (première ou dernière) la plus proche de la position monde donnée."
+  },
+  "InlineBale:openBale": {
+   "en": "Detaches an end bale: removes its joint and connector, updates the list, clears its inline link and, unless replaceBale is false, replaces it with a normal opened Bale with the same attributes. Deletes the inline bale when empty.",
+   "fr": "Détache une balle d'extrémité : retire son joint et son connecteur, met à jour la liste, supprime son lien et, sauf si replaceBale vaut false, la remplace par une Bale normale ouverte aux mêmes attributs. Supprime l'objet quand il est vide."
+  },
+  "InlineBale:onBaleDeleted": {
+   "en": "Delete listener. If a bale in the chain is removed, opens (detaches) the bales on the shorter side up to it so the chain stays consistent. Does nothing while a bale is pending.",
+   "fr": "Listener de suppression. Si une balle de la file est supprimée, détache les balles du côté le plus court jusqu'à elle pour garder la file cohérente. Sans effet tant qu'une balle est en attente."
+  },
+  "InlineBaleActivatable.new": {
+   "en": "Creates the activatable for an inline bale and loads the 'action_cutBale' text.",
+   "fr": "Crée l'activatable d'une balle en ligne et charge le texte 'action_cutBale'."
+  },
+  "InlineBaleActivatable:getIsActivatable": {
+   "en": "Active only if the player can interact and the bales can be opened.",
+   "fr": "Actif uniquement si le joueur peut interagir et si les balles peuvent être ouvertes."
+  },
+  "InlineBaleActivatable:run": {
+   "en": "Cuts open the bale nearest to the player: directly on the server, otherwise by sending an InlineBaleOpenEvent (defined elsewhere) to the server.",
+   "fr": "Ouvre la balle la plus proche du joueur : directement sur le serveur, sinon en envoyant un InlineBaleOpenEvent (défini ailleurs) au serveur."
+  }
+ }
+}

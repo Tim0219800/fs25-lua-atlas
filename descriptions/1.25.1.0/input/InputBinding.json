@@ -1,0 +1,13 @@
+{
+ "fichier": "input/InputBinding.lua",
+ "module": {
+  "en": "Input binding manager (`InputBinding`, category Input): it stores the action bindings and the registered action events, grouped by input context, and exposes them to the rest of the scripts. In this SDK dump the file is about 4140 lines long but almost all of it is blank; only the class declaration and one method body remain, so everything else about the class is UNVERIFIED here. Events are looked up through the `contexts` and `nameActions` tables.",
+  "fr": "Gestionnaire des liaisons d'entrées (`InputBinding`, catégorie Input) : il conserve les liaisons d'actions et les événements d'action enregistrés, regroupés par contexte d'entrée, et les expose au reste des scripts. Dans ce dump du SDK, le fichier fait environ 4140 lignes mais presque tout est vide ; seuls la déclaration de la classe et le corps d'une méthode subsistent, le reste de la classe est donc NON VÉRIFIÉ ici. Les événements sont retrouvés via les tables `contexts` et `nameActions`."
+ },
+ "fonctions": {
+  "InputBinding:setContextEventsActive": {
+   "en": "Activates or deactivates every event registered in the named context for the named action, by calling `setEventActive` on each. No guard: an unknown context or action with no events raises a Lua error. Note: the source comment describes a getter, which does not match.",
+   "fr": "Active ou désactive tous les événements enregistrés dans le contexte nommé pour l'action nommée, en appelant `setEventActive` sur chacun. Aucune protection : un contexte inconnu ou une action sans événements provoque une erreur Lua. À noter : le commentaire de la source décrit un getter, ce qui ne correspond pas."
+  }
+ }
+}

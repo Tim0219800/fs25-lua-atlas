@@ -1,0 +1,33 @@
+{
+ "fichier": "vehicles/specializations/events/SetCrabSteeringEvent.lua",
+ "module": {
+  "en": "Network event class `SetCrabSteeringEvent` (extends `Event`) that replicates the crab steering mode. It carries the vehicle and a state (`CrabSteering.STEERING_SEND_NUM_BITS` bits). It belongs to the vehicle specialization events and defines nothing else.",
+  "fr": "Classe d'événement réseau `SetCrabSteeringEvent` (hérite de `Event`) qui réplique le mode de direction en crabe. Elle transporte le véhicule et un état (`CrabSteering.STEERING_SEND_NUM_BITS` bits). Elle fait partie des événements de spécialisations de véhicules et ne définit rien d'autre."
+ },
+ "fonctions": {
+  "SetCrabSteeringEvent.emptyNew": {
+   "en": "Creates an empty `SetCrabSteeringEvent` instance without data, used when the event is read from a network stream.",
+   "fr": "Crée une instance vide de `SetCrabSteeringEvent` sans données, utilisée quand l'événement est lu depuis un flux réseau."
+  },
+  "SetCrabSteeringEvent.new": {
+   "en": "Creates the event with its data: the vehicle and a state (`CrabSteering.STEERING_SEND_NUM_BITS` bits).",
+   "fr": "Crée l'événement avec ses données : le véhicule et un état (`CrabSteering.STEERING_SEND_NUM_BITS` bits)."
+  },
+  "SetCrabSteeringEvent:readStream": {
+   "en": "Reads the event data from the network stream (the vehicle and a state (`CrabSteering.STEERING_SEND_NUM_BITS` bits)), then calls `run`.",
+   "fr": "Lit les données de l'événement depuis le flux réseau (le véhicule et un état (`CrabSteering.STEERING_SEND_NUM_BITS` bits)), puis appelle `run`."
+  },
+  "SetCrabSteeringEvent:writeStream": {
+   "en": "Writes the event data to the network stream (the vehicle and a state (`CrabSteering.STEERING_SEND_NUM_BITS` bits)).",
+   "fr": "Écrit les données de l'événement dans le flux réseau (le véhicule et un état (`CrabSteering.STEERING_SEND_NUM_BITS` bits))."
+  },
+  "SetCrabSteeringEvent:run": {
+   "en": "Executes the event on the receiving side: calls `setCrabSteering(state, true)` on the vehicle. On the server it also forwards the event to the other clients, except the sender.",
+   "fr": "Exécute l'événement côté réception : appelle `setCrabSteering(state, true)` sur le véhicule. Sur le serveur, il retransmet aussi l'événement aux autres clients, sauf l'émetteur."
+  },
+  "SetCrabSteeringEvent.sendEvent": {
+   "en": "Helper that sends the event: the server broadcasts it to clients, a client sends it to the server. Skipped when `noEventSend` is set.",
+   "fr": "Fonction utilitaire d'envoi : le serveur diffuse l'événement aux clients, un client l'envoie au serveur. Ignorée si `noEventSend` est activé."
+  }
+ }
+}

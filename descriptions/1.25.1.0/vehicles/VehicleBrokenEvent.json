@@ -1,0 +1,29 @@
+{
+ "fichier": "vehicles/VehicleBrokenEvent.lua",
+ "module": {
+  "en": "Minimal network event that marks a vehicle as broken on the receiving side. It only carries the vehicle object and calls `setBroken` on it.",
+  "fr": "Événement réseau minimal qui marque un véhicule comme cassé chez le destinataire. Il ne transporte que l'objet véhicule et appelle `setBroken` dessus."
+ },
+ "fonctions": {
+  "VehicleBrokenEvent.emptyNew": {
+   "en": "Creates an empty event instance for stream deserialization.",
+   "fr": "Crée une instance d'événement vide pour la désérialisation depuis un flux."
+  },
+  "VehicleBrokenEvent.new": {
+   "en": "Builds the event for the given vehicle object (stored in `self.object`).",
+   "fr": "Construit l'événement pour l'objet véhicule donné (stocké dans `self.object`)."
+  },
+  "VehicleBrokenEvent:readStream": {
+   "en": "Reads the vehicle node object from the stream and calls `run`.",
+   "fr": "Lit l'objet véhicule depuis le flux et appelle `run`."
+  },
+  "VehicleBrokenEvent:writeStream": {
+   "en": "Writes the vehicle node object to the stream.",
+   "fr": "Écrit l'objet véhicule dans le flux."
+  },
+  "VehicleBrokenEvent:run": {
+   "en": "If the object exists and is synchronized, calls its `setBroken()`. Does not rebroadcast.",
+   "fr": "Si l'objet existe et est synchronisé, appelle son `setBroken()`. Ne rediffuse pas."
+  }
+ }
+}

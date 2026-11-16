@@ -1,5 +1,7 @@
 # Specialization events
 
+*[Version française](fr/evenements.md)*
+
 | Event | Declared by | Listened by |
 |---|---|---|
 | `onAIAutomaticSteeringLineEnd` | vehicles/specializations/AIAutomaticSteering.lua | 1 file(s) |

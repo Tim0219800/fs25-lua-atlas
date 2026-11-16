@@ -1,0 +1,53 @@
+{
+ "fichier": "placeables/specializations/PlaceableVehicle.lua",
+ "module": {
+  "en": "Placeable specialization for a building-menu entry that only spawns vehicles. On the server (or the constructing client in preview) it loads the vehicles listed under `placeable.placeableVehicle.vehicle` and parks them on link nodes; when placement is final the server detaches them, adds them to physics and registers them. The placeable itself is then deleted instead of being registered.",
+  "fr": "Spécialisation de placeable pour une entrée du menu de construction qui ne fait qu'apparaître des véhicules. Sur le serveur (ou le client en aperçu de construction), elle charge les véhicules listés sous `placeable.placeableVehicle.vehicle` et les accroche à des nœuds ; une fois le placement final, le serveur les détache, les ajoute à la physique et les enregistre. Le placeable lui-même est alors supprimé au lieu d'être enregistré."
+ },
+ "fonctions": {
+  "PlaceableVehicle.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableVehicle.registerFunctions": {
+   "en": "Registers `onFinishLoadingVehicle` on the placeable type.",
+   "fr": "Enregistre `onFinishLoadingVehicle` sur le type de placeable."
+  },
+  "PlaceableVehicle.registerOverwrittenFunctions": {
+   "en": "Overrides `collectPickObjects` and `register` on the placeable type.",
+   "fr": "Surcharge `collectPickObjects` et `register` sur le type de placeable."
+  },
+  "PlaceableVehicle.registerEventListeners": {
+   "en": "Subscribes to onLoad, onFinalizePlacement and onDelete.",
+   "fr": "S'abonne à onLoad, onFinalizePlacement et onDelete."
+  },
+  "PlaceableVehicle.registerXMLPaths": {
+   "en": "Declares the per-vehicle XML keys (`#xmlFilename` and `#linkNode`) under `placeable.placeableVehicle.vehicle`. The exact key list comes from the registration lines, partly UNVERIFIED.",
+   "fr": "Déclare les clés XML de chaque véhicule (`#xmlFilename` et `#linkNode`) sous `placeable.placeableVehicle.vehicle`. La liste exacte vient des lignes d'enregistrement, en partie NON VÉRIFIÉ."
+  },
+  "PlaceableVehicle:onLoad": {
+   "en": "Server or construction-preview client only: for each vehicle entry with a filename and link node, starts an asynchronous vehicle load at the node pose, as a shop-config preview or an owned unregistered vehicle, tied to a loading task.",
+   "fr": "Serveur ou client en aperçu de construction seulement : pour chaque véhicule ayant un fichier et un nœud d'accroche, lance un chargement asynchrone à la pose du nœud, en aperçu de boutique ou en véhicule possédé non enregistré, lié à une tâche de chargement."
+  },
+  "PlaceableVehicle:onFinishLoadingVehicle": {
+   "en": "Load callback: if the placeable is being deleted it deletes the loaded vehicles; otherwise it removes them from physics, sets the farm owner and links their components to the link node. Logs an error on failure, and always finishes the loading task.",
+   "fr": "Callback de chargement : si le placeable est en cours de suppression, supprime les véhicules chargés ; sinon les retire de la physique, fixe la ferme propriétaire et lie leurs composants au nœud d'accroche. Journalise une erreur en cas d'échec et termine toujours la tâche de chargement."
+  },
+  "PlaceableVehicle:onFinalizePlacement": {
+   "en": "Server only, and not with an icon generator: moves vehicle components back to the root node keeping their world pose, adds the vehicles to physics and registers them, then clears the pending list.",
+   "fr": "Serveur seulement, et pas avec un générateur d'icônes : remet les composants des véhicules sous le nœud racine en conservant leur pose monde, ajoute les véhicules à la physique et les enregistre, puis vide la liste en attente."
+  },
+  "PlaceableVehicle:onDelete": {
+   "en": "Deletes any vehicle still held in the pending list (those never released at placement).",
+   "fr": "Supprime les véhicules encore présents dans la liste en attente (ceux non libérés lors du placement)."
+  },
+  "PlaceableVehicle:register": {
+   "en": "Overrides registration: outside construction preview, the placeable deletes itself, so it is never synchronized to clients; only the spawned vehicles remain.",
+   "fr": "Surcharge l'enregistrement : hors aperçu de construction, le placeable se supprime lui-même et n'est donc jamais synchronisé aux clients ; seuls les véhicules créés subsistent."
+  },
+  "PlaceableVehicle:collectPickObjects": {
+   "en": "Skips a node that is one of the vehicle link nodes (returns without calling the parent), so those nodes are not collected as pick objects; other nodes go to the parent function.",
+   "fr": "Ignore un nœud qui est l'un des nœuds d'accroche de véhicule (retour sans appeler le parent), afin qu'il ne soit pas collecté comme objet pointable ; les autres nœuds passent à la fonction parente."
+  }
+ }
+}

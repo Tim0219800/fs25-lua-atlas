@@ -1,0 +1,33 @@
+{
+ "fichier": "debug/elements/DebugBitVectorMap.lua",
+ "module": {
+  "en": "DebugBitVectorMap draws a coloured grid of small cells on the terrain around a centre, where each cell colour comes from a value returned by a check function (default palette: 0 red, 1 green, 2 blue, undefined dark grey; default radius 15, cell size 0.5, optional legend). It is not a DebugElement subclass; it has its own `draw`. The grid routine `drawAroundCenter` is not in this dump (UNVERIFIED).",
+  "fr": "DebugBitVectorMap dessine sur le terrain une grille de petites cellules colorées autour d'un centre, chaque couleur venant d'une valeur renvoyée par une fonction de contrôle (palette par défaut : 0 rouge, 1 vert, 2 bleu, indéfini gris foncé ; rayon 15, taille de cellule 0,5, légende optionnelle). Ce n'est pas une sous-classe de DebugElement ; elle a son propre `draw`. La routine de grille `drawAroundCenter` n'est pas dans ce dump (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "DebugBitVectorMap.new": {
+   "en": "Creates the grid object with default radius, cell size, opacity, value-to-colour table, undefined-value colour, Y offset, padding factor and legend enabled.",
+   "fr": "Crée l'objet de grille avec rayon, taille de cellule, opacité, table valeur-couleur, couleur de valeur indéfinie, décalage Y, facteur de marge et légende activée par défaut."
+  },
+  "DebugBitVectorMap:draw": {
+   "en": "Draws the grid centred on the AI vehicle's root node (skipped if the vehicle is deleted or being deleted) with `aiAreaCheck`, or else centred on the active camera with the custom function. Does nothing if neither is set.",
+   "fr": "Dessine la grille centrée sur le noeud racine du véhicule IA (ignoré s'il est supprimé ou en cours de suppression) avec `aiAreaCheck`, sinon centrée sur la caméra active avec la fonction personnalisée. Ne fait rien si aucun des deux n'est défini."
+  },
+  "DebugBitVectorMap:createWithAIVehicle": {
+   "en": "Binds the grid to an AI vehicle so cell values come from the vehicle's AI work area check. Returns self for chaining.",
+   "fr": "Lie la grille à un véhicule IA pour que les valeurs des cellules viennent du contrôle de zone de travail IA du véhicule. Renvoie self pour le chaînage."
+  },
+  "DebugBitVectorMap:createWithCustomFunc": {
+   "en": "Sets a custom function that supplies the cell value for each area; the grid is then drawn around the active camera. Returns self.",
+   "fr": "Définit une fonction personnalisée fournissant la valeur de chaque zone ; la grille est alors dessinée autour de la caméra active. Renvoie self."
+  },
+  "DebugBitVectorMap:setAdditionalDrawInfoFunc": {
+   "en": "Stores a function for extra drawing or information; how and when it is called is in code absent from this dump (UNVERIFIED). Returns self.",
+   "fr": "Mémorise une fonction pour un dessin ou des informations supplémentaires ; comment et quand elle est appelée dépend d'un code absent de ce dump (NON VÉRIFIÉ). Renvoie self."
+  },
+  "DebugBitVectorMap:aiAreaCheck": {
+   "en": "Returns the result of `AIVehicleUtil.getAIAreaOfVehicle` for the stored AI vehicle on the given parallelogram in world XZ coordinates (start, width, height corners).",
+   "fr": "Renvoie le résultat de `AIVehicleUtil.getAIAreaOfVehicle` pour le véhicule IA mémorisé sur le parallélogramme donné en coordonnées monde XZ (coins start, width, height)."
+  }
+ }
+}

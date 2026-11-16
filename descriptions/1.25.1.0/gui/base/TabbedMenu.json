@@ -1,0 +1,173 @@
+{
+ "fichier": "gui/base/TabbedMenu.lua",
+ "module": {
+  "en": "Base class (extends ScreenElement) of full-screen tabbed menus such as the in-game menu. It keeps the registered page frames, their header tabs and enabling predicates, drives a PagingElement and a page selector, and maps the bottom menu buttons to input actions and callbacks. Page frames expose onFrameOpen/onFrameClose, requestClose and menu button info; subclasses override setupMenuButtonInfo and onMenuOpened. Optional depth-of-field blur and game state switching are done on open/close.",
+  "fr": "Classe de base (étend ScreenElement) des menus plein écran à onglets, comme le menu en jeu. Elle conserve les cadres de pages enregistrés, leurs onglets d'en-tête et leurs prédicats d'activation, pilote un PagingElement et un sélecteur de page, et relie les boutons du bas du menu aux actions d'entrée et aux callbacks. Les cadres de page exposent onFrameOpen/onFrameClose, requestClose et les infos de boutons ; les sous-classes surchargent setupMenuButtonInfo et onMenuOpened. Un flou de profondeur de champ optionnel et le changement d'état de jeu se font à l'ouverture/fermeture."
+ },
+ "fonctions": {
+  "TabbedMenu.new": {
+   "en": "Creates the menu with empty page, tab, predicate and button-callback tables, current page index 1, and callbacks for next/previous page. Subclasses can set performBackgroundBlur.",
+   "fr": "Crée le menu avec des tables vides pour pages, onglets, prédicats et callbacks de boutons, la page courante à 1 et des callbacks pour page suivante/précédente. Les sous-classes peuvent activer performBackgroundBlur."
+  },
+  "TabbedMenu:delete": {
+   "en": "Unsubscribes the menu from all message center topics, then deletes it through the parent class.",
+   "fr": "Désabonne le menu de tous les sujets du message center, puis le supprime via la classe parente."
+  },
+  "TabbedMenu:onGuiSetupFinished": {
+   "en": "After GUI loading, creates the back callback, calls setupMenuButtonInfo, and for the profile uiInGameMenuPaging sizes the paging element to the width left beside the header.",
+   "fr": "Après le chargement du GUI, crée le callback de retour, appelle setupMenuButtonInfo et, pour le profil uiInGameMenuPaging, dimensionne l'élément de pagination sur la largeur restant à côté de l'en-tête."
+  },
+  "TabbedMenu:exitMenu": {
+   "en": "Leaves the menu by changing to no screen (nil).",
+   "fr": "Quitte le menu en changeant d'écran vers aucun (nil)."
+  },
+  "TabbedMenu:reset": {
+   "en": "Resets the current page and the remembered page index and scroll offset to their initial values (first page).",
+   "fr": "Remet la page courante, l'index de page mémorisé et le décalage de défilement à leurs valeurs initiales (première page)."
+  },
+  "TabbedMenu:onOpen": {
+   "en": "On opening: optionally pushes a full-screen blur, plays the paging sound unless muted, applies the menu game state, refreshes enabled pages, and restores the last page and tab scroll. Sounds from focus changes are suppressed meanwhile; ends with onMenuOpened.",
+   "fr": "À l'ouverture : pousse éventuellement un flou plein écran, joue le son de pagination sauf si muet, applique l'état de jeu du menu, rafraîchit les pages actives et restaure la dernière page et le défilement des onglets. Les sons de focus sont supprimés entre-temps ; termine par onMenuOpened."
+  },
+  "TabbedMenu:onClose": {
+   "en": "On closing: notifies the current page first, pops the blur, restores input bindings, clears button actions, stores the current page, index and tab scroll for next time, and resets the game state if one was set.",
+   "fr": "À la fermeture : prévient d'abord la page courante, retire le flou, restaure les bindings d'entrée, efface les actions de boutons, mémorise page, index et défilement des onglets pour la prochaine fois et réinitialise l'état de jeu si un était défini."
+  },
+  "TabbedMenu:update": {
+   "en": "Per-frame update. Forces the focus onto the current page when no dialog is visible, pushes the page's button info to the buttons when it is flagged dirty and this menu is the active listener, and updates the header visibility when the page asks for it.",
+   "fr": "Mise à jour par image. Force le focus sur la page courante quand aucun dialogue n'est visible, transmet aux boutons les infos de la page quand elles sont marquées modifiées et que ce menu est l'écouteur actif, et met à jour la visibilité de l'en-tête à la demande de la page."
+  },
+  "TabbedMenu:setupMenuButtonInfo": {
+   "en": "Empty hook in this class; subclasses override it to define their default menu button info.",
+   "fr": "Point d'extension vide ici ; les sous-classes le surchargent pour définir leurs infos de boutons par défaut."
+  },
+  "TabbedMenu:addPageTab": {
+   "en": "Records the tab data (icon file, UVs, slice, sound) for a page frame and builds its click callback, which asks the current page to close and then switches to that page. Must be called together with registerPage to keep ordering consistent.",
+   "fr": "Enregistre les données d'onglet (fichier d'icône, UV, slice, son) d'un cadre de page et construit son callback de clic, qui demande à la page courante de se fermer puis bascule vers cette page. À appeler avec registerPage pour garder un ordre cohérent."
+  },
+  "TabbedMenu:onPageClicked": {
+   "en": "Empty hook called when a tab is clicked; TabbedMenuWithDetails overrides it. Note: the tab callback passes self.activeDetailPage, which this file never sets.",
+   "fr": "Point d'extension vide appelé au clic sur un onglet ; TabbedMenuWithDetails le surcharge. À noter : le callback d'onglet passe self.activeDetailPage, que ce fichier ne définit jamais."
+  },
+  "TabbedMenu:setPageTabEnabled": {
+   "en": "Marks the header tab of a page as enabled or disabled and reloads the tab list unless blockListReload is set.",
+   "fr": "Marque l'onglet d'en-tête d'une page comme actif ou inactif et recharge la liste d'onglets sauf si blockListReload est défini."
+  },
+  "TabbedMenu:rebuildTabList": {
+   "en": "Rebuilds the list of enabled pages in registration order, reloads the tab list and restores the selection to the current list index.",
+   "fr": "Reconstruit la liste des pages actives dans l'ordre d'enregistrement, recharge la liste d'onglets et restaure la sélection sur l'index courant."
+  },
+  "TabbedMenu:updatePages": {
+   "en": "Evaluates every page's enabling predicate (pages disabled via setPageEnabled stay off), updates the paging element and tabs without page-change side effects, then rebuilds the tab list and page selector titles.",
+   "fr": "Évalue le prédicat d'activation de chaque page (les pages désactivées via setPageEnabled restent inactives), met à jour la pagination et les onglets sans effets de changement de page, puis reconstruit la liste d'onglets et les titres du sélecteur."
+  },
+  "TabbedMenu:clearMenuButtonActions": {
+   "en": "Empties the action-to-callback table and removes the input action events registered for custom menu buttons.",
+   "fr": "Vide la table action-vers-callback et retire les événements d'action d'entrée enregistrés pour les boutons personnalisés."
+  },
+  "TabbedMenu:assignMenuButtonInfo": {
+   "en": "Applies a list of button descriptors (inputAction, text, callback, sound, disabled, showWhenPaused...) to the menu buttons: sets action, text, click sound and callback, registers custom input events or stores default-action callbacks, and hides unused buttons. Always guarantees MENU_BACK works, then relayouts the panel.",
+   "fr": "Applique une liste de descripteurs de boutons (inputAction, text, callback, son, disabled, showWhenPaused...) aux boutons du menu : définit action, texte, son de clic et callback, enregistre des événements d'entrée personnalisés ou stocke les callbacks des actions par défaut, et masque les boutons inutilisés. Garantit toujours que MENU_BACK fonctionne, puis recalcule la mise en page."
+  },
+  "TabbedMenu:setPageSelectorTitles": {
+   "en": "Fills the page selector with the titles of the visible pages, disables it when only one exists, and syncs its state to the current page without firing events.",
+   "fr": "Remplit le sélecteur de page avec les titres des pages visibles, le désactive s'il n'y en a qu'une et synchronise son état sur la page courante sans déclencher d'événements."
+  },
+  "TabbedMenu:goToPage": {
+   "en": "Switches to the given page frame through the page selector, with a forced event. Sound is muted for the switch when muteSound is true; the previous mute state is restored afterwards.",
+   "fr": "Bascule vers le cadre de page donné via le sélecteur, avec un événement forcé. Le son est coupé pendant le changement si muteSound vaut true ; l'état précédent est ensuite restauré."
+  },
+  "TabbedMenu:updatePagingVisibility": {
+   "en": "Shows or hides the menu header.",
+   "fr": "Affiche ou masque l'en-tête du menu."
+  },
+  "TabbedMenu:onMenuActionClick": {
+   "en": "Calls the callback stored for an input action name, if any. Returns the callback's result or false when it ran, and true (event not consumed) when there was no callback.",
+   "fr": "Appelle le callback stocké pour une action d'entrée, s'il existe. Renvoie son résultat ou false s'il a été exécuté, et true (événement non consommé) s'il n'y avait pas de callback."
+  },
+  "TabbedMenu:onClickOk": {
+   "en": "Handles the accept input by dispatching MENU_ACCEPT to the stored callback; the parent class is deliberately not called.",
+   "fr": "Gère l'entrée de validation en envoyant MENU_ACCEPT au callback stocké ; la classe parente n'est volontairement pas appelée."
+  },
+  "TabbedMenu:onClickBack": {
+   "en": "Handles back: asks the current page to allow closing, then calls the parent handler and the MENU_BACK callback. Returns whether the event stayed unused.",
+   "fr": "Gère le retour : demande à la page courante d'autoriser la fermeture, puis appelle le gestionnaire parent et le callback MENU_BACK. Renvoie si l'événement est resté inutilisé."
+  },
+  "TabbedMenu:onClickCancel": {
+   "en": "Handles cancel (quit to main menu): runs the parent handler, then the MENU_CANCEL callback if the event is still unused.",
+   "fr": "Gère l'annulation (quitter vers le menu principal) : exécute le gestionnaire parent, puis le callback MENU_CANCEL si l'événement est encore inutilisé."
+  },
+  "TabbedMenu:onClickActivate": {
+   "en": "Handles activate (save the game): runs the parent handler, then the MENU_ACTIVATE callback if the event is still unused.",
+   "fr": "Gère l'activation (sauvegarder la partie) : exécute le gestionnaire parent, puis le callback MENU_ACTIVATE si l'événement est encore inutilisé."
+  },
+  "TabbedMenu:onClickMenuExtra1": {
+   "en": "Runs the parent handler, then the MENU_EXTRA_1 callback if the event is still unused.",
+   "fr": "Exécute le gestionnaire parent, puis le callback MENU_EXTRA_1 si l'événement est encore inutilisé."
+  },
+  "TabbedMenu:onClickMenuExtra2": {
+   "en": "Runs the parent handler, then the MENU_EXTRA_2 callback if the event is still unused.",
+   "fr": "Exécute le gestionnaire parent, puis le callback MENU_EXTRA_2 si l'événement est encore inutilisé."
+  },
+  "TabbedMenu:onClickPageSelection": {
+   "en": "Called when the page selector changes state: sets that page in the paging element and plays the tab's sound (or the default click) unless muted.",
+   "fr": "Appelé quand le sélecteur de page change d'état : active cette page dans la pagination et joue le son de l'onglet (ou le clic par défaut) sauf si muet."
+  },
+  "TabbedMenu:onPagePrevious": {
+   "en": "Goes to the previous page. On mobile it asks the page for its own previous sub-page; otherwise it asks the page for permission to close, then lets the parent change page.",
+   "fr": "Va à la page précédente. Sur mobile, demande à la page sa propre sous-page précédente ; sinon demande à la page l'autorisation de se fermer, puis laisse le parent changer de page."
+  },
+  "TabbedMenu:onPageNext": {
+   "en": "Goes to the next page, with the same mobile and desktop split as onPagePrevious.",
+   "fr": "Va à la page suivante, avec la même distinction mobile/bureau que onPagePrevious."
+  },
+  "TabbedMenu:onPageChange": {
+   "en": "Paging callback on page change: closes and hides the old page, resets bindings, shows the new page, gives it focus with sounds suppressed, updates the tab selection, refreshes buttons and tab display, then calls onFrameOpen on the new page.",
+   "fr": "Callback de pagination au changement de page : ferme et masque l'ancienne page, réinitialise les bindings, affiche la nouvelle, lui donne le focus sons supprimés, met à jour l'onglet sélectionné, rafraîchit boutons et onglets, puis appelle onFrameOpen sur la nouvelle page."
+  },
+  "TabbedMenu:updateButtonsPanel": {
+   "en": "Assigns the page's button info (custom or default) to the buttons and moves the page's own button box to the end of its parent so it draws on top.",
+   "fr": "Assigne aux boutons les infos de la page (personnalisées ou par défaut) et déplace la boîte de boutons de la page en dernier dans son parent pour qu'elle s'affiche au-dessus."
+  },
+  "TabbedMenu:getPageButtonInfo": {
+   "en": "Returns the page's own button info when it declares custom buttons, otherwise the menu's default button info.",
+   "fr": "Renvoie les infos de boutons propres à la page si elle en déclare, sinon celles par défaut du menu."
+  },
+  "TabbedMenu:onPageUpdate": {
+   "en": "Empty hook for when a page is disabled or updated; does nothing here.",
+   "fr": "Point d'extension vide pour la désactivation ou mise à jour d'une page ; ne fait rien ici."
+  },
+  "TabbedMenu:onButtonBack": {
+   "en": "Default back-button action: exits the menu.",
+   "fr": "Action par défaut du bouton retour : quitte le menu."
+  },
+  "TabbedMenu:onMenuOpened": {
+   "en": "Empty hook called at the end of onOpen, after the page has been restored.",
+   "fr": "Point d'extension vide appelé à la fin de onOpen, après restauration de la page."
+  },
+  "TabbedMenu:registerPage": {
+   "en": "Inserts a page frame into the menu's page list (clamped position, appended by default), indexes it by class, stores its root element and optional enabling predicate, and hides it. Does not touch the paging component. Returns the root element and the final position.",
+   "fr": "Insère un cadre de page dans la liste du menu (position bornée, à la fin par défaut), l'indexe par classe, stocke son élément racine et son prédicat d'activation optionnel, et le masque. Ne touche pas au composant de pagination. Renvoie l'élément racine et la position finale."
+  },
+  "TabbedMenu:unregisterPage": {
+   "en": "Removes the page registered for a frame class from the menu's tables. Returns found flag, controller, root and tab. Note: the tab is never looked up, so the returned tab is always nil, and an entry is not removed from pagingElement.",
+   "fr": "Retire des tables du menu la page enregistrée pour une classe de cadre. Renvoie un indicateur, le contrôleur, la racine et l'onglet. À noter : l'onglet n'est jamais recherché, donc l'onglet renvoyé est toujours nil, et rien n'est retiré de pagingElement."
+  },
+  "TabbedMenu:addPage": {
+   "en": "Adds a page at runtime: registers it, creates its header tab from an icon file and UVs, and adds it to the paging element under its title (root title or the l10n key ui_<name>). Lasts until the game restarts or the page is removed.",
+   "fr": "Ajoute une page à l'exécution : l'enregistre, crée son onglet d'en-tête à partir d'un fichier d'icône et d'UV, et l'ajoute à la pagination sous son titre (titre de la racine ou clé l10n ui_<nom>). Dure jusqu'au redémarrage du jeu ou au retrait de la page."
+  },
+  "TabbedMenu:removePage": {
+   "en": "Removes a page by class and deletes it with its children, but only disables built-in pages (those in defaultPageElementIDs, UNVERIFIED where it is filled). Note: unregisterPage returns a nil tab, so the pageTab:delete() call would fail for non-default pages.",
+   "fr": "Retire une page par classe et la supprime avec ses enfants, mais ne fait que désactiver les pages natives (celles de defaultPageElementIDs, NON VÉRIFIÉ où c'est rempli). À noter : unregisterPage renvoie un onglet nil, donc l'appel pageTab:delete() échouerait pour les pages non natives."
+  },
+  "TabbedMenu:setPageEnabled": {
+   "en": "Enables or disables a page by controller class: updates the paging element, the controller's own disabled state, the persistent disabled list and its tab. Survives reset(); undo it by hand.",
+   "fr": "Active ou désactive une page par classe de contrôleur : met à jour la pagination, l'état désactivé du contrôleur, la liste persistante des pages désactivées et son onglet. Survit à reset() ; à annuler manuellement."
+  },
+  "TabbedMenu:makeSelfCallback": {
+   "en": "Returns a closure that calls func with this menu as first argument followed by any call arguments.",
+   "fr": "Renvoie une fermeture qui appelle func avec ce menu en premier argument suivi des arguments reçus."
+  }
+ }
+}

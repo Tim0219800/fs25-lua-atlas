@@ -1,0 +1,49 @@
+{
+ "fichier": "handTools/specializations/HandToolFlashlight.lua",
+ "module": {
+  "en": "Hand tool specialization for a flashlight that shines from a light node. The light node is relinked to the root node so it is not hidden with the tool, and is repositioned each frame depending on held state and camera (hand, first person camera or third person head). Toggling is synchronized through FlashlightToggleLightEvent. XML keys are under `handTool.flashlight`.",
+  "fr": "Spécialisation d'outil à main pour une lampe torche éclairant depuis un nœud de lumière. Ce nœud est relié au nœud racine pour ne pas être masqué avec l'outil, et repositionné à chaque image selon l'état tenu et la caméra (main, caméra première personne ou tête en troisième personne). L'allumage est synchronisé via FlashlightToggleLightEvent. Les clés XML sont sous `handTool.flashlight`."
+ },
+ "fonctions": {
+  "HandToolFlashlight.registerXMLPaths": {
+   "en": "Registers the XML schema entries of `handTool.flashlight.light` (node, self-illuminated mesh, distance, cone angle, colour, drop-off, IES profile) and the toggle sound.",
+   "fr": "Enregistre les entrées de schéma XML de `handTool.flashlight.light` (nœud, maillage auto-éclairé, distance, angle du cône, couleur, atténuation, profil IES) et le son d'allumage."
+  },
+  "HandToolFlashlight.registerFunctions": {
+   "en": "Registers `setFlashlightIsActive` and `updateTransform` on the hand tool type.",
+   "fr": "Enregistre `setFlashlightIsActive` et `updateTransform` sur le type d'outil à main."
+  },
+  "HandToolFlashlight.registerEventListeners": {
+   "en": "Subscribes to `onLoad`, `onDelete`, `onUpdate` and `onHeldEnd`.",
+   "fr": "Abonne la spécialisation à `onLoad`, `onDelete`, `onUpdate` et `onHeldEnd`."
+  },
+  "HandToolFlashlight.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite.",
+   "fr": "Renvoie toujours true : aucun prérequis."
+  },
+  "HandToolFlashlight:onLoad": {
+   "en": "Resolves the light and mesh nodes, remembers the light's offset and forward axis in its parent, relinks the light to the root node, applies range, colour, drop-off, cone angle and optional IES profile, loads the toggle sound on clients, and starts switched off. Note: the parent and translation of the light node are read before the nil check on that node.",
+   "fr": "Résout les nœuds de lumière et de maillage, mémorise le décalage et l'axe avant de la lumière dans son parent, relie la lumière au nœud racine, applique portée, couleur, atténuation, angle de cône et profil IES éventuel, charge le son sur les clients et démarre éteinte. À noter : le parent et la translation du nœud de lumière sont lus avant le test de nullité de ce nœud."
+  },
+  "HandToolFlashlight:onDelete": {
+   "en": "Deletes the light node (which was relinked away from the tool and so is not freed with it), the toggle samples and the original parent node of the light.",
+   "fr": "Supprime le nœud de lumière (relié ailleurs, donc non libéré avec l'outil), les échantillons sonores et le nœud parent d'origine de la lumière."
+  },
+  "HandToolFlashlight:onUpdate": {
+   "en": "Every frame, updates the light transform according to the held state and keeps the object active via `raiseActive`.",
+   "fr": "À chaque image, met à jour la transformation de la lumière selon l'état tenu et garde l'objet actif via `raiseActive`."
+  },
+  "HandToolFlashlight:onHeldEnd": {
+   "en": "Switches the light off without sending an event when the tool stops being held.",
+   "fr": "Éteint la lumière, sans envoyer d'événement, quand l'outil n'est plus tenu."
+  },
+  "HandToolFlashlight:setFlashlightIsActive": {
+   "en": "Sets the active flag, toggles visibility of the light and mesh nodes, plays the toggle sound on a state change (client) and sends a FlashlightToggleLightEvent unless `noEventSend` is set.",
+   "fr": "Définit l'état actif, change la visibilité des nœuds de lumière et de maillage, joue le son lors d'un changement (client) et envoie un FlashlightToggleLightEvent sauf si `noEventSend` est défini."
+  },
+  "HandToolFlashlight:updateTransform": {
+   "en": "Positions and orients the light node. Held: at the tool's light offset. Not held: from the first person camera, otherwise from the third person head node pointing along the model yaw without pitch. Does nothing if nodes or the player are missing.",
+   "fr": "Positionne et oriente le nœud de lumière. Tenu : au décalage de lumière de l'outil. Non tenu : depuis la caméra première personne, sinon depuis la tête du modèle en troisième personne, dans l'axe du lacet sans inclinaison. Ne fait rien si des nœuds ou le joueur manquent."
+  }
+ }
+}

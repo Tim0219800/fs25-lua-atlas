@@ -1,0 +1,17 @@
+{
+ "fichier": "gui/InGameMenu.lua",
+ "module": {
+  "en": "Main in-game pause menu, derived from TabbedMenu, hosting pages such as settings and help line. Only the two page-navigation handlers are described here. Most of the file is outside the described entries.",
+  "fr": "Menu principal en jeu (pause), dérivé de TabbedMenu, qui héberge des pages comme les réglages et l'aide. Seuls les deux gestionnaires de navigation entre pages sont décrits ici. L'essentiel du fichier est hors des entrées décrites."
+ },
+ "fonctions": {
+  "InGameMenu:onPageNext": {
+   "en": "Next-page handler. Skips once if a block flag is set; otherwise asks the current page to close and, if it agrees, opens the save screen when leaving settings or help line, then calls TabbedMenu's onPageNext.",
+   "fr": "Gestionnaire de page suivante. Ignore l'appel une fois si un drapeau de blocage est posé ; sinon demande à la page courante de se fermer et, si elle accepte, ouvre l'écran de sauvegarde en quittant réglages ou aide, puis appelle onPageNext de TabbedMenu."
+  },
+  "InGameMenu:onPagePrevious": {
+   "en": "Previous-page handler. Asks the current page to close; if it agrees, opens the save screen when leaving settings or help line, then calls TabbedMenu's onPagePrevious. Unlike onPageNext, it has no block flag.",
+   "fr": "Gestionnaire de page précédente. Demande à la page courante de se fermer ; si elle accepte, ouvre l'écran de sauvegarde en quittant réglages ou aide, puis appelle onPagePrevious de TabbedMenu. Contrairement à onPageNext, il n'a pas de drapeau de blocage."
+  }
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "fichier": "placeables/specializations/PlaceableWardrobe.lua",
+ "module": {
+  "en": "Placeable specialization for a wardrobe where players change their character. A player trigger adds a WardrobeActivatable for the local player when the wardrobe is free for all or belongs to the player farm. The free-for-all flag is saved and sent to joining clients.",
+  "fr": "Spécialisation de placeable pour une garde-robe où les joueurs changent leur personnage. Un déclencheur joueur ajoute un WardrobeActivatable pour le joueur local si la garde-robe est libre d'accès ou appartient à sa ferme. Le drapeau d'accès libre est sauvegardé et envoyé aux clients qui rejoignent."
+ },
+ "fonctions": {
+  "PlaceableWardrobe.prerequisitesPresent": {
+   "en": "Always returns true: no prerequisite specialization.",
+   "fr": "Renvoie toujours true : aucune spécialisation requise."
+  },
+  "PlaceableWardrobe.registerFunctions": {
+   "en": "Registers `wardrobeTriggerCallback` on the placeable type.",
+   "fr": "Enregistre `wardrobeTriggerCallback` sur le type de placeable."
+  },
+  "PlaceableWardrobe.registerEventListeners": {
+   "en": "Subscribes to onLoad, onDelete, onReadStream and onWriteStream (savegame load/save are handled by the standard placeable hooks, UNVERIFIED).",
+   "fr": "S'abonne à onLoad, onDelete, onReadStream et onWriteStream (le chargement et la sauvegarde passent par les hooks standard des placeables, NON VÉRIFIÉ)."
+  },
+  "PlaceableWardrobe.registerXMLPaths": {
+   "en": "Declares the wardrobe XML keys (trigger node and `#isFreeForAll`).",
+   "fr": "Déclare les clés XML de la garde-robe (nœud de déclencheur et `#isFreeForAll`)."
+  },
+  "PlaceableWardrobe.registerSavegameXMLPaths": {
+   "en": "Declares the savegame attribute `#isFreeForAll`.",
+   "fr": "Déclare l'attribut de sauvegarde `#isFreeForAll`."
+  },
+  "PlaceableWardrobe:onLoad": {
+   "en": "Creates the activatable, reads `placeable.wardrobe#triggerNode` (warning if it lacks the player collision bit) and registers the trigger, then reads `#isFreeForAll` (default false).",
+   "fr": "Crée l'activable, lit `placeable.wardrobe#triggerNode` (avertissement s'il n'a pas le bit de collision joueur) et enregistre le déclencheur, puis lit `#isFreeForAll` (false par défaut)."
+  },
+  "PlaceableWardrobe:loadFromXMLFile": {
+   "en": "Restores `#isFreeForAll` from the savegame when present.",
+   "fr": "Restaure `#isFreeForAll` depuis la sauvegarde s'il est présent."
+  },
+  "PlaceableWardrobe:saveToXMLFile": {
+   "en": "Writes `#isFreeForAll` to the savegame.",
+   "fr": "Écrit `#isFreeForAll` dans la sauvegarde."
+  },
+  "PlaceableWardrobe:onDelete": {
+   "en": "Removes the activatable from the activatable system and removes the trigger.",
+   "fr": "Retire l'activable du système d'activables et supprime le déclencheur."
+  },
+  "PlaceableWardrobe:onReadStream": {
+   "en": "Client side on join: reads the free-for-all boolean.",
+   "fr": "Côté client à la connexion : lit le booléen d'accès libre."
+  },
+  "PlaceableWardrobe:onWriteStream": {
+   "en": "Server side on join: writes the free-for-all boolean.",
+   "fr": "Côté serveur à la connexion : écrit le booléen d'accès libre."
+  },
+  "PlaceableWardrobe:wardrobeTriggerCallback": {
+   "en": "Trigger callback: when the local player enters or leaves, and the wardrobe is free for all or owned by the player farm, adds or removes the activatable. Other actors are ignored.",
+   "fr": "Callback du déclencheur : quand le joueur local entre ou sort, et que la garde-robe est libre ou appartient à sa ferme, ajoute ou retire l'activable. Les autres acteurs sont ignorés."
+  }
+ }
+}

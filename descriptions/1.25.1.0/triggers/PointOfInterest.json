@@ -1,0 +1,13 @@
+{
+ "fichier": "triggers/PointOfInterest.lua",
+ "module": {
+  "en": "Stub file for a point of interest: the only content is the declaration of its XML attributes (triggerNode, text, textFormat, textParams, showOwner, showEveryone). No loading or runtime logic exists in this file; the code that reads these keys is elsewhere (UNVERIFIED).",
+  "fr": "Fichier minimal pour un point d'intérêt : son seul contenu est la déclaration de ses attributs XML (triggerNode, text, textFormat, textParams, showOwner, showEveryone). Aucune logique de chargement ou d'exécution n'existe ici ; le code qui lit ces clés est ailleurs (NON VÉRIFIÉ)."
+ },
+ "fonctions": {
+  "PointOfInterest.registerXMLPaths": {
+   "en": "Registers the XML attributes triggerNode, text, textFormat, textParams, showOwner and showEveryone under the given base path.",
+   "fr": "Enregistre les attributs XML triggerNode, text, textFormat, textParams, showOwner et showEveryone sous le chemin de base donné."
+  }
+ }
+}

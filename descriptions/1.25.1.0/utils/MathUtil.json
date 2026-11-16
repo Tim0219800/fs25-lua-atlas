@@ -1,0 +1,397 @@
+{
+ "fichier": "utils/MathUtil.lua",
+ "module": {
+  "en": "Collection of static math helpers in the global MathUtil table: number checks, rounding, interpolation, 2D and 3D vectors, quaternions, angles, segment and circle intersections, unit conversions (time, speed, length, area) and bit helpers. In this SDK dump almost every function is a signature without body, so most descriptions are inferred from names and annotations; only eulerToDirection and directionToPitchYaw have visible code.",
+  "fr": "Ensemble d'utilitaires mathématiques statiques de la table globale MathUtil : tests de nombres, arrondis, interpolations, vecteurs 2D et 3D, quaternions, angles, intersections de segments et de cercles, conversions d'unités (temps, vitesse, longueur, surface) et manipulation de bits. Dans ce dump du SDK presque toutes les fonctions sont des signatures sans corps ; la plupart des descriptions sont donc déduites des noms et des annotations, seules eulerToDirection et directionToPitchYaw ont du code visible."
+ },
+ "fonctions": {
+  "MathUtil.isNan": {
+   "en": "Signature only (no body in the SDK dump): Tells whether a number is NaN (not a number).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Indique si un nombre vaut NaN (not a number)."
+  },
+  "MathUtil.isInt": {
+   "en": "Signature only (no body in the SDK dump): Tells whether a number is a whole number.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Indique si un nombre est un entier."
+  },
+  "MathUtil.isInf": {
+   "en": "Signature only (no body in the SDK dump): Tells whether a number is positive or negative infinity.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Indique si un nombre est l'infini positif ou négatif."
+  },
+  "MathUtil.isFinite": {
+   "en": "Signature only (no body in the SDK dump): Tells whether a number is finite, i.e. neither NaN nor infinite.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Indique si un nombre est fini, c'est-à-dire ni NaN ni infini."
+  },
+  "MathUtil.getIsValidTransformationValue": {
+   "en": "Signature only (no body in the SDK dump): Takes any number of values and returns true only if none is nil, NaN or infinite. Meant as a guard before applying translations or rotations to a node.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Prend un nombre quelconque de valeurs et renvoie true seulement si aucune n'est nil, NaN ou infinie. Sert de garde-fou avant d'appliquer une translation ou une rotation à un noeud."
+  },
+  "MathUtil.randomFloat": {
+   "en": "Signature only (no body in the SDK dump): Returns a random float between the two given bounds, both included.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie un flottant aléatoire entre les deux bornes données, incluses."
+  },
+  "MathUtil.round": {
+   "en": "Signature only (no body in the SDK dump): Rounds a value to a number of decimals; with no precision given it rounds to the nearest integer.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Arrondit une valeur à un nombre de décimales ; sans précision, arrondit à l'entier le plus proche."
+  },
+  "MathUtil.roundToStep": {
+   "en": "Signature only (no body in the SDK dump): Rounds a value to the nearest multiple of a step size (the step defaults to 0.5 according to the annotations).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Arrondit une valeur au multiple le plus proche d'un pas (le pas vaut 0.5 par défaut selon les annotations)."
+  },
+  "MathUtil.degToRad": {
+   "en": "Signature only (no body in the SDK dump): Converts an angle from degrees to radians.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit un angle de degrés en radians."
+  },
+  "MathUtil.lerp": {
+   "en": "Signature only (no body in the SDK dump): Linear interpolation between two values for a given alpha factor.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation linéaire entre deux valeurs pour un facteur alpha donné."
+  },
+  "MathUtil.inverseLerp": {
+   "en": "Signature only (no body in the SDK dump): Inverse of lerp: returns the alpha factor at which a current value sits between a start and an end value.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Inverse de lerp : renvoie le facteur alpha correspondant à la position d'une valeur courante entre une valeur de départ et une valeur d'arrivée."
+  },
+  "MathUtil.getIsOutOfBounds": {
+   "en": "Signature only (no body in the SDK dump): Returns true if a value lies outside the range given by two limits.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie true si une valeur est en dehors de l'intervalle défini par deux limites."
+  },
+  "MathUtil.getFlooredPercent": {
+   "en": "Signature only (no body in the SDK dump): Computes a value as a percentage of a maximum, with the result floored. The exact rounding and scale (0-100 or 0-1) are UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Calcule une valeur en pourcentage d'un maximum, résultat arrondi à l'inférieur. L'arrondi exact et l'échelle (0-100 ou 0-1) sont NON VÉRIFIÉS."
+  },
+  "MathUtil.getFlooredBounded": {
+   "en": "Signature only (no body in the SDK dump): Clamps a value between a minimum and a maximum and floors it. The order of the two operations is UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Borne une valeur entre un minimum et un maximum et l'arrondit à l'inférieur. L'ordre des deux opérations est NON VÉRIFIÉ."
+  },
+  "MathUtil.getValidLimit": {
+   "en": "Signature only (no body in the SDK dump): Wraps a radian angle into the range from -pi to pi.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Ramène un angle en radians dans l'intervalle de -pi à pi."
+  },
+  "MathUtil.getAngleDifference": {
+   "en": "Signature only (no body in the SDK dump): Difference between two radian angles, returned in the range -pi to pi (sign convention UNVERIFIED).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Différence entre deux angles en radians, renvoyée dans l'intervalle -pi à pi (convention de signe NON VÉRIFIÉE)."
+  },
+  "MathUtil.eulerToDirection": {
+   "en": "Turns a yaw and a pitch (radians) into a unit direction vector x, y, z. Yaw rotates around Y; the vertical component is the sine of minus the pitch, so a positive pitch points downward.",
+   "fr": "Transforme un lacet (yaw) et un tangage (pitch) en radians en vecteur directeur unitaire x, y, z. Le lacet tourne autour de Y ; la composante verticale est le sinus de l'opposé du tangage, donc un tangage positif pointe vers le bas."
+  },
+  "MathUtil.directionToPitchYaw": {
+   "en": "Inverse of eulerToDirection: returns pitch then yaw (radians) for a direction vector. Pitch comes from asin of minus the Y component, yaw from atan2 of x and z. Expects a normalized direction.",
+   "fr": "Inverse de eulerToDirection : renvoie le tangage puis le lacet (radians) d'un vecteur directeur. Le tangage vient de asin de l'opposé de Y, le lacet de atan2 de x et z. Suppose une direction normalisée."
+  },
+  "MathUtil.vector2Length": {
+   "en": "Signature only (no body in the SDK dump): Length of a 2D vector.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Longueur d'un vecteur 2D."
+  },
+  "MathUtil.vector2LengthSq": {
+   "en": "Signature only (no body in the SDK dump): Squared length of a 2D vector, cheaper than the length because it avoids a square root.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Longueur au carré d'un vecteur 2D, moins coûteuse que la longueur car sans racine carrée."
+  },
+  "MathUtil.vector2Normalize": {
+   "en": "Signature only (no body in the SDK dump): Returns the 2D vector scaled to unit length.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie le vecteur 2D ramené à une longueur de 1."
+  },
+  "MathUtil.vector2SetLength": {
+   "en": "Signature only (no body in the SDK dump): Returns the 2D vector rescaled so its length equals the given value.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie le vecteur 2D remis à l'échelle pour que sa longueur égale la valeur donnée."
+  },
+  "MathUtil.vector2Lerp": {
+   "en": "Signature only (no body in the SDK dump): Component-wise linear interpolation between two 2D points for a given alpha.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation linéaire composante par composante entre deux points 2D pour un alpha donné."
+  },
+  "MathUtil.vector3Length": {
+   "en": "Signature only (no body in the SDK dump): Length of a 3D vector.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Longueur d'un vecteur 3D."
+  },
+  "MathUtil.vector3LengthSq": {
+   "en": "Signature only (no body in the SDK dump): Squared length of a 3D vector, avoiding the square root.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Longueur au carré d'un vecteur 3D, sans racine carrée."
+  },
+  "MathUtil.vector3Normalize": {
+   "en": "Signature only (no body in the SDK dump): Returns the 3D vector scaled to unit length.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie le vecteur 3D ramené à une longueur de 1."
+  },
+  "MathUtil.vector3SetLength": {
+   "en": "Signature only (no body in the SDK dump): Returns the 3D vector rescaled so its length equals the given value.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie le vecteur 3D remis à l'échelle pour que sa longueur égale la valeur donnée."
+  },
+  "MathUtil.vector3Clamp": {
+   "en": "Signature only (no body in the SDK dump): Returns the 3D vector with its length limited between a minimum and a maximum length.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie le vecteur 3D dont la longueur est bornée entre une longueur minimale et une longueur maximale."
+  },
+  "MathUtil.vector3Lerp": {
+   "en": "Signature only (no body in the SDK dump): Component-wise linear interpolation between two 3D points for a given alpha.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation linéaire composante par composante entre deux points 3D pour un alpha donné."
+  },
+  "MathUtil.vector3ArrayLerp": {
+   "en": "Signature only (no body in the SDK dump): Linear interpolation between two vectors passed as tables, returning x, y, z. The table layout (indices 1 to 3) is UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation linéaire entre deux vecteurs passés sous forme de tables, renvoyant x, y, z. La disposition des tables (indices 1 à 3) est NON VÉRIFIÉE."
+  },
+  "MathUtil.inverseVector3ArrayLerp": {
+   "en": "Signature only (no body in the SDK dump): Inverse interpolation for vectors given as arrays; takes two arrays and a current-value array and returns a single number. Exact computation UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation inverse pour des vecteurs donnés sous forme de tableaux ; prend deux tableaux et un tableau de valeurs courantes et renvoie un seul nombre. Calcul exact NON VÉRIFIÉ."
+  },
+  "MathUtil.vector3Transformation": {
+   "en": "Signature only (no body in the SDK dump): Multiplies a 3D vector by a 3x3 matrix given as nine values, row by row, and returns the transformed x, y, z.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Multiplie un vecteur 3D par une matrice 3x3 donnée par neuf valeurs, ligne par ligne, et renvoie x, y, z transformés."
+  },
+  "MathUtil.dotProduct": {
+   "en": "Signature only (no body in the SDK dump): Dot product of two 3D vectors.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Produit scalaire de deux vecteurs 3D."
+  },
+  "MathUtil.crossProduct": {
+   "en": "Signature only (no body in the SDK dump): Cross product of two 3D vectors, returned as x, y, z.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Produit vectoriel de deux vecteurs 3D, renvoyé sous la forme x, y, z."
+  },
+  "MathUtil.getVectorAngleDifference": {
+   "en": "Signature only (no body in the SDK dump): Angle between two 3D direction vectors (radians presumably; unit UNVERIFIED).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Angle entre deux vecteurs directeurs 3D (probablement en radians ; unité NON VÉRIFIÉE)."
+  },
+  "MathUtil.getSignedAngleBetweenVectors2D": {
+   "en": "Signature only (no body in the SDK dump): Signed angle between two directions on the XZ plane. Sign convention and unit are UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Angle signé entre deux directions dans le plan XZ. Convention de signe et unité NON VÉRIFIÉES."
+  },
+  "MathUtil.getYRotationFromDirection": {
+   "en": "Signature only (no body in the SDK dump): Returns the rotation around Y for a direction given by dx and dz, measured from the Z axis rather than from the X axis.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie la rotation autour de Y pour une direction donnée par dx et dz, mesurée depuis l'axe Z et non depuis l'axe X."
+  },
+  "MathUtil.getDirectionFromYRotation": {
+   "en": "Signature only (no body in the SDK dump): Returns the x and z direction components for a rotation around Y; counterpart of getYRotationFromDirection.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie les composantes x et z de la direction pour une rotation autour de Y ; pendant de getYRotationFromDirection."
+  },
+  "MathUtil.getRotationLimitedVector2": {
+   "en": "Signature only (no body in the SDK dump): Returns a 2D direction restricted to a rotation range given by a minimum and a maximum angle.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie une direction 2D restreinte à une plage de rotation définie par un angle minimal et un angle maximal."
+  },
+  "MathUtil.quaternionVectorMultiplication": {
+   "en": "Signature only (no body in the SDK dump): Rotates a vector by a quaternion (x, y, z, w) and returns the resulting x, y, z.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fait pivoter un vecteur par un quaternion (x, y, z, w) et renvoie les x, y, z obtenus."
+  },
+  "MathUtil.projectOnLine": {
+   "en": "Signature only (no body in the SDK dump): Projects a point in the XZ plane onto a line given by a point and a normalized direction, returning the projected x and z.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Projette un point du plan XZ sur une droite définie par un point et une direction normalisée, et renvoie x et z projetés."
+  },
+  "MathUtil.getProjectOnLineParameter": {
+   "en": "Signature only (no body in the SDK dump): Returns the signed distance along a line (point plus normalized direction) of the projection of a point in the XZ plane.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie la distance signée le long d'une droite (point et direction normalisée) de la projection d'un point du plan XZ."
+  },
+  "MathUtil.quaternionMult": {
+   "en": "Signature only (no body in the SDK dump): Multiplies two quaternions and returns the four components of the product.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Multiplie deux quaternions et renvoie les quatre composantes du produit."
+  },
+  "MathUtil.quaternionNormalized": {
+   "en": "Signature only (no body in the SDK dump): Returns the given quaternion scaled to unit norm, as four components.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie le quaternion donné ramené à une norme de 1, sous forme de quatre composantes."
+  },
+  "MathUtil.slerpQuaternion": {
+   "en": "Signature only (no body in the SDK dump): Interpolates between two quaternions with factor t. The parameter annotation speaks of linear interpolation despite the name; exact method UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpole entre deux quaternions avec le facteur t. L'annotation parle d'interpolation linéaire malgré le nom ; méthode exacte NON VÉRIFIÉE."
+  },
+  "MathUtil.normalizeRotationForShortestPath": {
+   "en": "Signature only (no body in the SDK dump): Adjusts a target angle relative to the current angle so that turning from current to target takes the shortest way.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Ajuste un angle cible par rapport à l'angle courant pour que la rotation de l'un à l'autre suive le chemin le plus court."
+  },
+  "MathUtil.nlerpQuaternionShortestPath": {
+   "en": "Signature only (no body in the SDK dump): Normalized linear interpolation between two quaternions along the shortest path, with factor t.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation linéaire normalisée entre deux quaternions par le chemin le plus court, avec le facteur t."
+  },
+  "MathUtil.slerpQuaternionShortestPath": {
+   "en": "Signature only (no body in the SDK dump): Spherical interpolation between two quaternions along the shortest path, with factor t.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation sphérique entre deux quaternions par le chemin le plus court, avec le facteur t."
+  },
+  "MathUtil.quaternionMadShortestPath": {
+   "en": "Signature only (no body in the SDK dump): Multiply-and-add style quaternion blend along the shortest path with factor t; the first quaternion is the base. Exact formula UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Mélange de quaternions de type multiplication-addition par le chemin le plus court avec le facteur t ; le premier quaternion sert de base. Formule exacte NON VÉRIFIÉE."
+  },
+  "MathUtil.getDistanceToRectangle2D": {
+   "en": "Signature only (no body in the SDK dump): Distance from a point on the XZ plane to a rectangle defined by a start point, a direction, a length and a half width.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Distance d'un point du plan XZ à un rectangle défini par un point de départ, une direction, une longueur et une demi-largeur."
+  },
+  "MathUtil.getSignedDistanceToLineSegment2D": {
+   "en": "Signature only (no body in the SDK dump): Distance from a point to a segment given by start, normalized direction and length. Returns the distance and a case code: 0 for perpendicular projection (signed distance), 1 or 2 for nearest end point (unsigned).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Distance d'un point à un segment défini par départ, direction normalisée et longueur. Renvoie la distance et un code de cas : 0 pour projection perpendiculaire (distance signée), 1 ou 2 pour l'extrémité la plus proche (non signée)."
+  },
+  "MathUtil.getLineLineIntersection2D": {
+   "en": "Signature only (no body in the SDK dump): Intersection of two infinite lines in the XZ plane, each given by a point and a direction. Return layout and parallel-line behaviour are UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Intersection de deux droites infinies du plan XZ, chacune définie par un point et une direction. Valeurs de retour et cas des droites parallèles NON VÉRIFIÉS."
+  },
+  "MathUtil.getLineSegmentsIntersection": {
+   "en": "Signature only (no body in the SDK dump): Intersection point of two segments given by their end points; the annotations say it returns false for collinear segments.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Point d'intersection de deux segments définis par leurs extrémités ; les annotations indiquent un retour à false pour des segments colinéaires."
+  },
+  "MathUtil.getLineSegmentsIntersectionParameter": {
+   "en": "Signature only (no body in the SDK dump): Like getLineSegmentsIntersection but returns the intersection parameter along the segments instead of a point; false for collinear segments.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Comme getLineSegmentsIntersection mais renvoie le paramètre d'intersection le long des segments plutôt qu'un point ; false pour des segments colinéaires."
+  },
+  "MathUtil.getAreLineSegmentsIntersecting": {
+   "en": "Signature only (no body in the SDK dump): Boolean test of whether two segments cross, collinear ones included. The optional last flag lets a segment continuing the other (shared end point, as in polygon contours) not count as an intersection.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Test booléen de croisement de deux segments, colinéaires inclus. Le dernier drapeau optionnel permet de ne pas compter comme intersection un segment qui prolonge l'autre (extrémité commune, comme dans un contour de polygone)."
+  },
+  "MathUtil.getLineBoundingVolumeIntersect": {
+   "en": "Signature only (no body in the SDK dump): Tells whether the bounding boxes of two 2D lines overlap; a cheap pre-check rather than an exact intersection test.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Indique si les boîtes englobantes de deux lignes 2D se recouvrent ; pré-test peu coûteux et non test d'intersection exact."
+  },
+  "MathUtil.hasRectangleLineIntersection2D": {
+   "en": "Signature only (no body in the SDK dump): Tests whether a rectangle and a line intersect on the XZ plane. Parameter meaning (rectangle by point plus two directions, line by point plus direction) is inferred and UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Teste si un rectangle et une ligne s'intersectent dans le plan XZ. Le sens des paramètres (rectangle par un point et deux directions, ligne par un point et une direction) est déduit et NON VÉRIFIÉ."
+  },
+  "MathUtil.getCircleCircleIntersection": {
+   "en": "Signature only (no body in the SDK dump): Returns the intersection points of two circles given by center and radius. Return layout and the no-intersection case are UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie les points d'intersection de deux cercles donnés par centre et rayon. Valeurs de retour et cas sans intersection NON VÉRIFIÉS."
+  },
+  "MathUtil.hasSphereSphereIntersection": {
+   "en": "Signature only (no body in the SDK dump): Returns whether two spheres, each given by center and radius, intersect.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie si deux sphères, chacune donnée par un centre et un rayon, s'intersectent."
+  },
+  "MathUtil.getDistanceToLineSegment2D": {
+   "en": "Signature only (no body in the SDK dump): Distance from a point to a 2D segment given by start and end coordinates. Argument order is segment start, segment end, then the point.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Distance d'un point à un segment 2D donné par ses coordonnées de début et de fin. L'ordre des arguments est début du segment, fin du segment, puis le point."
+  },
+  "MathUtil.getPointPointDistance": {
+   "en": "Signature only (no body in the SDK dump): Distance between two 2D points.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Distance entre deux points 2D."
+  },
+  "MathUtil.getPointPointDistanceSquared": {
+   "en": "Signature only (no body in the SDK dump): Squared distance between two 2D points; handy when comparing distances because no square root is taken.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Distance au carré entre deux points 2D ; utile pour comparer sans racine carrée."
+  },
+  "MathUtil.areaToHa": {
+   "en": "Signature only (no body in the SDK dump): Converts an area expressed in density-map pixels to hectares, using the size of a pixel in square meters.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit une surface exprimée en pixels de density map en hectares, à partir de la taille d'un pixel en mètres carrés."
+  },
+  "MathUtil.haToSqm": {
+   "en": "Signature only (no body in the SDK dump): Converts hectares to square meters.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des hectares en mètres carrés."
+  },
+  "MathUtil.inchToM": {
+   "en": "Signature only (no body in the SDK dump): Converts inches to meters.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des pouces en mètres."
+  },
+  "MathUtil.mToInch": {
+   "en": "Signature only (no body in the SDK dump): Converts meters to inches.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des mètres en pouces."
+  },
+  "MathUtil.msToMinutes": {
+   "en": "Signature only (no body in the SDK dump): Converts milliseconds to minutes.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des millisecondes en minutes."
+  },
+  "MathUtil.msToHours": {
+   "en": "Signature only (no body in the SDK dump): Converts milliseconds to hours.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des millisecondes en heures."
+  },
+  "MathUtil.msToDays": {
+   "en": "Signature only (no body in the SDK dump): Converts milliseconds to days.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des millisecondes en jours."
+  },
+  "MathUtil.minutesToMs": {
+   "en": "Signature only (no body in the SDK dump): Converts minutes to milliseconds.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des minutes en millisecondes."
+  },
+  "MathUtil.hoursToMs": {
+   "en": "Signature only (no body in the SDK dump): Converts hours to milliseconds.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des heures en millisecondes."
+  },
+  "MathUtil.daysToMs": {
+   "en": "Signature only (no body in the SDK dump): Converts days to milliseconds.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit des jours en millisecondes."
+  },
+  "MathUtil.mpsToKmh": {
+   "en": "Signature only (no body in the SDK dump): Converts a speed from meters per second to kilometers per hour.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit une vitesse de mètres par seconde en kilomètres par heure."
+  },
+  "MathUtil.kmhToMps": {
+   "en": "Signature only (no body in the SDK dump): Converts a speed from kilometers per hour to meters per second.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit une vitesse de kilomètres par heure en mètres par seconde."
+  },
+  "MathUtil.rpmToMps": {
+   "en": "Signature only (no body in the SDK dump): Converts a rotation speed in revolutions per minute and a wheel radius into a linear speed in meters per second (units presumed).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit une vitesse de rotation en tours par minute et un rayon de roue en vitesse linéaire en mètres par seconde (unités présumées)."
+  },
+  "MathUtil.getXZWidthAndHeight": {
+   "en": "Signature only (no body in the SDK dump): Computes width and height from a start point and two world-space offsets (width and height vectors) in the XZ plane, as used for density-map areas. Exact return values UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Calcule largeur et hauteur à partir d'un point de départ et de deux décalages monde (largeur et hauteur) dans le plan XZ, comme pour les zones de density map. Valeurs de retour exactes NON VÉRIFIÉES."
+  },
+  "MathUtil.getWorldParallelogramOffset": {
+   "en": "Signature only (no body in the SDK dump): Offsets a parallelogram defined by a start point and width and height vectors in the XZ plane by a given amount. Exact result UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Décale d'une valeur donnée un parallélogramme défini par un point de départ et des vecteurs de largeur et de hauteur dans le plan XZ. Résultat exact NON VÉRIFIÉ."
+  },
+  "MathUtil.getNumOfSetBits": {
+   "en": "Signature only (no body in the SDK dump): Counts the bits set to 1 in a bitmask.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Compte les bits à 1 d'un masque de bits."
+  },
+  "MathUtil.bitsToMask": {
+   "en": "Signature only (no body in the SDK dump): Builds a bitmask from a list of bit positions, counting from 0.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Construit un masque de bits à partir d'une liste de positions de bits, comptées à partir de 0."
+  },
+  "MathUtil.getBinary": {
+   "en": "Signature only (no body in the SDK dump): Returns the bits of a number as a list of 0 and 1 values, least significant first according to the annotated example.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie les bits d'un nombre sous forme de liste de 0 et de 1, bit de poids faible en premier d'après l'exemple annoté."
+  },
+  "MathUtil.numberToSetBits": {
+   "en": "Signature only (no body in the SDK dump): Returns the list of positions (from 0) of the bits set in a number.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie la liste des positions (à partir de 0) des bits à 1 d'un nombre."
+  },
+  "MathUtil.numberToSetBitsStr": {
+   "en": "Signature only (no body in the SDK dump): Same as numberToSetBits but returns a string, joined with an optional separator (default comma and space).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Comme numberToSetBits mais renvoie une chaîne, assemblée avec un séparateur optionnel (virgule et espace par défaut)."
+  },
+  "MathUtil.getNumRequiredBits": {
+   "en": "Signature only (no body in the SDK dump): Returns how many bits are needed to store a positive integer; the result is at least 1.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie le nombre de bits nécessaires pour stocker un entier positif ; le résultat vaut au moins 1."
+  },
+  "MathUtil.getBrightnessFromColor": {
+   "en": "Signature only (no body in the SDK dump): Returns the brightness of an RGB color in the 0 to 1 range, described as relative luminance.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie la luminosité d'une couleur RVB entre 0 et 1, décrite comme une luminance relative."
+  },
+  "MathUtil.getHorizontalRotationFromDeviceGravity": {
+   "en": "Signature only (no body in the SDK dump): Derives a horizontal rotation from a device gravity vector (x, y, z), presumably from a mobile or motion sensor. Details UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Déduit une rotation horizontale d'un vecteur de gravité d'appareil (x, y, z), probablement issu d'un capteur de mouvement. Détails NON VÉRIFIÉS."
+  },
+  "MathUtil.getSteeringAngleFromDeviceGravity": {
+   "en": "Signature only (no body in the SDK dump): Derives a steering angle from a device gravity vector (x, y, z), presumably for tilt steering. Details UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Déduit un angle de direction d'un vecteur de gravité d'appareil (x, y, z), probablement pour une conduite à l'inclinaison. Détails NON VÉRIFIÉS."
+  },
+  "MathUtil.catmullRom": {
+   "en": "Signature only (no body in the SDK dump): Catmull-Rom spline interpolation of one scalar between the second and third of four control values, with factor t.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation de type spline de Catmull-Rom d'un scalaire entre la deuxième et la troisième de quatre valeurs de contrôle, avec le facteur t."
+  },
+  "MathUtil.equalEpsilon": {
+   "en": "Signature only (no body in the SDK dump): Compares two numbers within a tolerance (default 0.0001); returns false if either value is nil.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Compare deux nombres avec une tolérance (0.0001 par défaut) ; renvoie false si l'une des valeurs est nil."
+  },
+  "MathUtil.floatRange": {
+   "en": "Signature only (no body in the SDK dump): Returns an iterator over a range of floats, both ends included, unlike a numeric for loop that may stop short with floats. Raises an error for an endless range.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie un itérateur sur une plage de flottants, bornes incluses, contrairement à une boucle for numérique qui peut s'arrêter trop tôt avec des flottants. Lève une erreur pour une plage sans fin."
+  },
+  "MathUtil.smoothstep": {
+   "en": "Signature only (no body in the SDK dump): Smooth interpolation (smoothstep) of x between a minimum and a maximum edge. Exact curve UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Interpolation lissée (smoothstep) de x entre un bord minimal et un bord maximal. Courbe exacte NON VÉRIFIÉE."
+  },
+  "MathUtil.snapValue": {
+   "en": "Signature only (no body in the SDK dump): Snaps a value to a multiple of an integer step. Rounding direction UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Aligne une valeur sur un multiple d'un pas entier. Sens d'arrondi NON VÉRIFIÉ."
+  },
+  "MathUtil.getIndexOfFirstNonZeroFractionDigit": {
+   "en": "Signature only (no body in the SDK dump): Returns the 1-based position of the first non-zero digit after the decimal point for inputs strictly between -1 and 1, and 0 otherwise (for example 0.002 gives 3).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie la position (à partir de 1) du premier chiffre non nul après la virgule pour des entrées strictement entre -1 et 1, et 0 sinon (par exemple 0.002 donne 3)."
+  },
+  "MathUtil.vector2Rotate": {
+   "en": "Signature only (no body in the SDK dump): Rotates a 2D vector by an angle in radians; rotation direction UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Fait pivoter un vecteur 2D d'un angle en radians ; sens de rotation NON VÉRIFIÉ."
+  },
+  "MathUtil.getPolygon2DSize": {
+   "en": "Signature only (no body in the SDK dump): Returns the flat size of a polygon in the XZ plane; takes an array of node ids and only uses their x and z translation. Return layout UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie la taille à plat d'un polygone dans le plan XZ ; prend un tableau d'ids de noeuds et n'utilise que leur translation x et z. Valeurs de retour NON VÉRIFIÉES."
+  },
+  "MathUtil.getPolygonLabel": {
+   "en": "Signature only (no body in the SDK dump): Takes an array of vertices and a precision; presumably computes a label position for a polygon. Purpose UNVERIFIED.",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Prend un tableau de sommets et une précision ; calcule probablement une position d'étiquette pour un polygone. Rôle NON VÉRIFIÉ."
+  },
+  "MathUtil.symmetricDipCurve": {
+   "en": "Signature only (no body in the SDK dump): Returns a symmetric curve over an input in 0 to 1, with fixed values at both edges equal to a maximum and a dip in the middle whose strength is set by alpha (0 gives a flat line, 1 the deepest dip).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Renvoie une courbe symétrique pour une entrée entre 0 et 1, avec des valeurs fixes aux deux bords égales à un maximum et un creux au milieu dont l'intensité dépend d'alpha (0 donne une droite, 1 le creux maximal)."
+  },
+  "MathUtil.convertStringToNumber": {
+   "en": "Signature only (no body in the SDK dump): Converts a string or number to a number, tolerating underscores as digit separators and a comma as decimal separator (the annotated example turns 1_087_36,41532 into 108736.41532).",
+   "fr": "Signature seule (pas de corps dans le dump du SDK) : Convertit une chaîne ou un nombre en nombre, en tolérant les underscores comme séparateurs de chiffres et la virgule comme séparateur décimal (l'exemple annoté transforme 1_087_36,41532 en 108736.41532)."
+  }
+ }
+}

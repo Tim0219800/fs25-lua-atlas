@@ -1,0 +1,29 @@
+{
+ "fichier": "animals/events/DogPetEvent.lua",
+ "module": {
+  "en": "Network event sent by a client to make the server pet a dog. On run it calls Dog:pet when the dog exists.",
+  "fr": "Événement réseau envoyé par un client pour faire caresser un chien par le serveur. À l'exécution il appelle Dog:pet si le chien existe."
+ },
+ "fonctions": {
+  "DogPetEvent.emptyNew": {
+   "en": "Creates an empty event instance, used before reading from a stream.",
+   "fr": "Crée une instance d'événement vide, utilisée avant la lecture depuis un flux."
+  },
+  "DogPetEvent.new": {
+   "en": "Creates the event for a dog.",
+   "fr": "Crée l'événement pour un chien."
+  },
+  "DogPetEvent:readStream": {
+   "en": "Reads the dog node object, then runs the event.",
+   "fr": "Lit l'objet de noeud du chien, puis exécute l'événement."
+  },
+  "DogPetEvent:writeStream": {
+   "en": "Writes the dog node object to the stream.",
+   "fr": "Écrit l'objet de noeud du chien dans le flux."
+  },
+  "DogPetEvent:run": {
+   "en": "If the dog exists, calls pet on it.",
+   "fr": "Si le chien existe, appelle pet sur lui."
+  }
+ }
+}
